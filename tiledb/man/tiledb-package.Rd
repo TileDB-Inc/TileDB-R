@@ -16,7 +16,7 @@
 \author{
 Your Name, email optional.
 
-Maintainer: Your Name <your@email.com>
+Maintainer: Your Namer<your@email.com>
 }
 \references{
   This optional section can contain literature or other references for
