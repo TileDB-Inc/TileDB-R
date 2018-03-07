@@ -1,0 +1,3 @@
+useDynLib(tiledb, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
