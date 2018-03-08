@@ -8,6 +8,11 @@
 # Example code in package build process
 *-Ex.R
 
+# Build artifacts
+tiledb/src/*.o
+tiledb/src/*.so
+tiledb/src/*.dll
+
 # Output files from R CMD build
 /*.tar.gz
 
@@ -32,3 +37,6 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 .Rproj.user
+
+
+
