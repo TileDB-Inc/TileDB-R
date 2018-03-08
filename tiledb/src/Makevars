@@ -1,0 +1,5 @@
+## We need the libtiledb library
+PKG_LIBS = -ltiledb
+
+## We need C++11 to use TileDB's C++ API
+CXX_STD = CXX11
