@@ -1,13 +1,12 @@
-#include <tiledb/tiledb.h>
+#include <tiledb/tiledb>
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// [[Rcpp::plugins(cpp11)]]
+
 // [[Rcpp::export]]
-List tiledb_version() {
-    int major = 0; 
-    int minor = 0;
-    int patch = 0;
-    tiledb_version(&major, &minor, &patch);
-    NumericVector ver = NumericVector::create( major, minor, patch ) ;
-    return ver;
+NumericVector tiledb_version() {
+    auto ver = tiledb::Version::version();
+    NumericVector Rver = NumericVector::create( ver.major(), ver.minor(), ver.patch() ) ;
+    return Rver;
 }

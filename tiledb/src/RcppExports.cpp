@@ -5,19 +5,19 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _tiledb_rcpp_hello_world() {
+// tiledb_version
+NumericVector tiledb_version();
+RcppExport SEXP _tiledb_tiledb_version() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
+    rcpp_result_gen = Rcpp::wrap(tiledb_version());
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tiledb_rcpp_hello_world", (DL_FUNC) &_tiledb_rcpp_hello_world, 0},
+    {"_tiledb_tiledb_version", (DL_FUNC) &_tiledb_tiledb_version, 0},
     {NULL, NULL, 0}
 };
 
