@@ -10,3 +10,4 @@ License: MIT
 Imports: Rcpp (>= 0.12.15)
 LinkingTo: Rcpp
 SystemRequirements: C++11
+Suggests: testthat
