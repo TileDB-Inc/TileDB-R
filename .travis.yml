@@ -6,8 +6,8 @@ cache: packages
 
 install:
     # Install TileDB
-    - git clone https://github.com/TileDB-Inc/TileDB
-    - pushd TileDB
+    - git clone https://github.com/TileDB-Inc/TileDB /tmp/TileDB
+    - pushd /tmp/TileDB
     - git checkout 1.2.0
     - mkdir build
     - pushd build
