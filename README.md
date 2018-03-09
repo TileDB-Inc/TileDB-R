@@ -4,4 +4,6 @@
 
 ### Developer Documentation
 
-Instructions for setting up a devlopment environment are here: https://github.com/TileDB-Inc/TileDB-R/wiki
+Instructions for setting up a devlopment environment and building / testing the TileDB-R package are located here: 
+
+https://github.com/TileDB-Inc/TileDB-R/wiki
