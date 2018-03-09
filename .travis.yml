@@ -1,0 +1,27 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+sudo: true
+cache: packages
+
+install:
+    # Install TileDB
+    - git clone https://github.com/TileDB-Inc/TileDB
+    - pushd TileDB
+    - git checkout 1.2.0
+    - mkdir build
+    - pushd build
+    - ../scripts/install-deps.sh
+    - ../bootstrap --enable-verbose --prefix=/usr/
+    - sudo make install -j4
+    - popd
+    - popd
+
+    # Install R package deps 
+    - R -e 'devtools::install_deps(dep = T)'
+
+script:
+    # Build and Test R package
+    - R CMD build .
+    - R CMD check *tar.gz
+
