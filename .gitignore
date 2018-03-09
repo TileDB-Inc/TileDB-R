@@ -9,9 +9,9 @@
 *-Ex.R
 
 # Build artifacts
-tiledb/src/*.o
-tiledb/src/*.so
-tiledb/src/*.dll
+src/*.o
+src/*.so
+src/*.dll
 
 # Output files from R CMD build
 /*.tar.gz

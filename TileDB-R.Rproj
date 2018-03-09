@@ -14,5 +14,4 @@ LaTeX: pdfLaTeX
 
 BuildType: Package
 PackageUseDevtools: Yes
-PackagePath: tiledb
 PackageInstallArgs: --no-multiarch --with-keep.source
