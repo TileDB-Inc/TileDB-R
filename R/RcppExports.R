@@ -5,3 +5,7 @@ tiledb_version <- function() {
     .Call(`_tiledb_tiledb_version`)
 }
 
+tiledb_ctx <- function() {
+    .Call(`_tiledb_tiledb_ctx`)
+}
+
