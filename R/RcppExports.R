@@ -9,3 +9,11 @@ tiledb_ctx <- function() {
     .Call(`_tiledb_tiledb_ctx`)
 }
 
+tiledb_config <- function() {
+    .Call(`_tiledb_tiledb_config`)
+}
+
+tiledb_config_dump <- function(config) {
+    invisible(.Call(`_tiledb_tiledb_config_dump`, config))
+}
+

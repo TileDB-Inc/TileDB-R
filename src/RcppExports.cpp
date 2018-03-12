@@ -24,10 +24,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_config
+XPtr<tiledb::Config> tiledb_config();
+RcppExport SEXP _tiledb_tiledb_config() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    rcpp_result_gen = Rcpp::wrap(tiledb_config());
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_config_dump
+void tiledb_config_dump(XPtr<tiledb::Config> config);
+RcppExport SEXP _tiledb_tiledb_config_dump(SEXP configSEXP) {
+BEGIN_RCPP
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
+    tiledb_config_dump(config);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_version", (DL_FUNC) &_tiledb_tiledb_version, 0},
     {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 0},
+    {"_tiledb_tiledb_config", (DL_FUNC) &_tiledb_tiledb_config, 0},
+    {"_tiledb_tiledb_config_dump", (DL_FUNC) &_tiledb_tiledb_config_dump, 1},
     {NULL, NULL, 0}
 };
 
