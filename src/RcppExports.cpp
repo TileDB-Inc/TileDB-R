@@ -11,6 +11,7 @@ NumericVector tiledb_version();
 RcppExport SEXP _tiledb_tiledb_version() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(tiledb_version());
     return rcpp_result_gen;
 END_RCPP
@@ -20,6 +21,7 @@ XPtr<tiledb::Context> tiledb_ctx();
 RcppExport SEXP _tiledb_tiledb_ctx() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(tiledb_ctx());
     return rcpp_result_gen;
 END_RCPP
@@ -29,16 +31,43 @@ XPtr<tiledb::Config> tiledb_config();
 RcppExport SEXP _tiledb_tiledb_config() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(tiledb_config());
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_config_dump
-void tiledb_config_dump(XPtr<tiledb::Config> config);
-RcppExport SEXP _tiledb_tiledb_config_dump(SEXP configSEXP) {
+// tiledb_config_set
+XPtr<tiledb::Config> tiledb_config_set(XPtr<tiledb::Config> xconfig, std::string param, std::string value);
+RcppExport SEXP _tiledb_tiledb_config_set(SEXP xconfigSEXP, SEXP paramSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
-    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
-    tiledb_config_dump(config);
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type xconfig(xconfigSEXP);
+    Rcpp::traits::input_parameter< std::string >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< std::string >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_config_set(xconfig, param, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_config_get
+CharacterVector tiledb_config_get(XPtr<tiledb::Config> xconfig, std::string param);
+RcppExport SEXP _tiledb_tiledb_config_get(SEXP xconfigSEXP, SEXP paramSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type xconfig(xconfigSEXP);
+    Rcpp::traits::input_parameter< std::string >::type param(paramSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_config_get(xconfig, param));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_config_dump
+void tiledb_config_dump(XPtr<tiledb::Config> xconfig);
+RcppExport SEXP _tiledb_tiledb_config_dump(SEXP xconfigSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type xconfig(xconfigSEXP);
+    tiledb_config_dump(xconfig);
     return R_NilValue;
 END_RCPP
 }
@@ -47,6 +76,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_version", (DL_FUNC) &_tiledb_tiledb_version, 0},
     {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 0},
     {"_tiledb_tiledb_config", (DL_FUNC) &_tiledb_tiledb_config, 0},
+    {"_tiledb_tiledb_config_set", (DL_FUNC) &_tiledb_tiledb_config_set, 3},
+    {"_tiledb_tiledb_config_get", (DL_FUNC) &_tiledb_tiledb_config_get, 2},
     {"_tiledb_tiledb_config_dump", (DL_FUNC) &_tiledb_tiledb_config_dump, 1},
     {NULL, NULL, 0}
 };

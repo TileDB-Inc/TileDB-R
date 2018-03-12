@@ -13,7 +13,15 @@ tiledb_config <- function() {
     .Call(`_tiledb_tiledb_config`)
 }
 
-tiledb_config_dump <- function(config) {
-    invisible(.Call(`_tiledb_tiledb_config_dump`, config))
+tiledb_config_set <- function(xconfig, param, value) {
+    .Call(`_tiledb_tiledb_config_set`, xconfig, param, value)
+}
+
+tiledb_config_get <- function(xconfig, param) {
+    .Call(`_tiledb_tiledb_config_get`, xconfig, param)
+}
+
+tiledb_config_dump <- function(xconfig) {
+    invisible(.Call(`_tiledb_tiledb_config_dump`, xconfig))
 }
 
