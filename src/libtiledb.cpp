@@ -25,17 +25,17 @@ XPtr<tiledb::Context> tiledb_ctx() {
 // [[Rcpp::export]]
 XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   try {
-    auto tiledb_config = new tiledb::Config();
+    XPtr<tiledb::Config> tiledb_config(new tiledb::Config(), true);
     if (config.isNotNull()) {
       CharacterVector config_vec(config);
       CharacterVector config_names = config_vec.names();
       for (auto &name : config_names) {
         std::string param = as<std::string>(name);
         std::string value = as<std::string>(config_vec[param]);
-        (*tiledb_config)[param] = value;
+        tiledb_config->set(param, value);
       }
     }
-    return XPtr<tiledb::Config>(tiledb_config, true);
+    return tiledb_config;
   } catch (tiledb::TileDBError& err) {
     throw  Rcpp::exception(err.what());
   }
