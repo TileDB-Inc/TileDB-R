@@ -9,19 +9,19 @@ tiledb_ctx <- function() {
     .Call(`_tiledb_tiledb_ctx`)
 }
 
-tiledb_config <- function() {
-    .Call(`_tiledb_tiledb_config`)
+tiledb_config <- function(config = NULL) {
+    .Call(`_tiledb_tiledb_config`, config)
 }
 
-tiledb_config_set <- function(xconfig, param, value) {
-    .Call(`_tiledb_tiledb_config_set`, xconfig, param, value)
+tiledb_config_set <- function(config, param, value) {
+    .Call(`_tiledb_tiledb_config_set`, config, param, value)
 }
 
-tiledb_config_get <- function(xconfig, param) {
-    .Call(`_tiledb_tiledb_config_get`, xconfig, param)
+tiledb_config_get <- function(config, param) {
+    .Call(`_tiledb_tiledb_config_get`, config, param)
 }
 
-tiledb_config_dump <- function(xconfig) {
-    invisible(.Call(`_tiledb_tiledb_config_dump`, xconfig))
+tiledb_config_dump <- function(config) {
+    invisible(.Call(`_tiledb_tiledb_config_dump`, config))
 }
 

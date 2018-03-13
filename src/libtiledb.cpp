@@ -22,45 +22,53 @@ XPtr<tiledb::Context> tiledb_ctx() {
   }
 }
 
-
 // [[Rcpp::export]]
-XPtr<tiledb::Config> tiledb_config() {
+XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   try {
-    auto config = new tiledb::Config();
-    return XPtr<tiledb::Config>(config);
+    auto tiledb_config = new tiledb::Config();
+    if (config.isNotNull()) {
+      CharacterVector config_vec(config);
+      CharacterVector config_names = config_vec.names();
+      for (auto &name : config_names) {
+        std::string param = as<std::string>(name);
+        std::string value = as<std::string>(config_vec[param]);
+        (*tiledb_config)[param] = value;
+      }
+    }
+    return XPtr<tiledb::Config>(tiledb_config, true);
   } catch (tiledb::TileDBError& err) {
     throw  Rcpp::exception(err.what());
   }
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Config> tiledb_config_set(XPtr<tiledb::Config> xconfig,
+XPtr<tiledb::Config> tiledb_config_set(XPtr<tiledb::Config> config,
                                        std::string param,
                                        std::string value) {
   try {
-    (*xconfig)[param] = value;
-    return xconfig;
+    (*config)[param] = value;
+    return config;
   } catch (tiledb::TileDBError& err)  {
     throw Rcpp::exception(err.what());
   }
 }
 
 // [[Rcpp::export]]
-CharacterVector tiledb_config_get(XPtr<tiledb::Config> xconfig,
+CharacterVector tiledb_config_get(XPtr<tiledb::Config> config,
                                   std::string param) {
   try {
-    return xconfig->get(param);
+    return config->get(param);
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
 }
 
 // [[Rcpp::export]]
-void tiledb_config_dump(XPtr<tiledb::Config> xconfig) {
+void tiledb_config_dump(XPtr<tiledb::Config> config) {
   try {
-    std::cout << "Config settings:\n";
-    for (auto& p : *xconfig) {
-      std::cout << "\"" << p.first << "\" : \"" << p.second << "\"\n";
+    Rcout << "Config settings:\n";
+    for (auto& p : *config) {
+      Rcout << "\"" << p.first << "\" : \"" << p.second << "\"\n";
     }
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
