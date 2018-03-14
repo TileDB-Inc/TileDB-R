@@ -5,12 +5,20 @@ tiledb_version <- function() {
     .Call(`_tiledb_tiledb_version`)
 }
 
-tiledb_ctx <- function() {
-    .Call(`_tiledb_tiledb_ctx`)
+tiledb_ctx <- function(config = NULL) {
+    .Call(`_tiledb_tiledb_ctx`, config)
 }
 
-tiledb_config <- function(config = NULL) {
-    .Call(`_tiledb_tiledb_config`, config)
+tiledb_ctx_config <- function(ctx) {
+    .Call(`_tiledb_tiledb_ctx_config`, ctx)
+}
+
+tiledb_config_create <- function(config = NULL) {
+    .Call(`_tiledb_tiledb_config_create`, config)
+}
+
+tiledb_config_vector <- function(config) {
+    .Call(`_tiledb_tiledb_config_vector`, config)
 }
 
 tiledb_config_set <- function(config, param, value) {

@@ -17,23 +17,46 @@ BEGIN_RCPP
 END_RCPP
 }
 // tiledb_ctx
-XPtr<tiledb::Context> tiledb_ctx();
-RcppExport SEXP _tiledb_tiledb_ctx() {
+XPtr<tiledb::Context> tiledb_ctx(Nullable<XPtr<tiledb::Config>> config);
+RcppExport SEXP _tiledb_tiledb_ctx(SEXP configSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(tiledb_ctx());
+    Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::Config>> >::type config(configSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_ctx(config));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_config
-XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config);
-RcppExport SEXP _tiledb_tiledb_config(SEXP configSEXP) {
+// tiledb_ctx_config
+XPtr<tiledb::Config> tiledb_ctx_config(XPtr<tiledb::Context> ctx);
+RcppExport SEXP _tiledb_tiledb_ctx_config(SEXP ctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_ctx_config(ctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_config_create
+XPtr<tiledb::Config> tiledb_config_create(Nullable<CharacterVector> config);
+RcppExport SEXP _tiledb_tiledb_config_create(SEXP configSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type config(configSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_config(config));
+    rcpp_result_gen = Rcpp::wrap(tiledb_config_create(config));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_config_vector
+CharacterVector tiledb_config_vector(XPtr<tiledb::Config> config);
+RcppExport SEXP _tiledb_tiledb_config_vector(SEXP configSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_config_vector(config));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -75,8 +98,10 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_version", (DL_FUNC) &_tiledb_tiledb_version, 0},
-    {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 0},
-    {"_tiledb_tiledb_config", (DL_FUNC) &_tiledb_tiledb_config, 1},
+    {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 1},
+    {"_tiledb_tiledb_ctx_config", (DL_FUNC) &_tiledb_tiledb_ctx_config, 1},
+    {"_tiledb_tiledb_config_create", (DL_FUNC) &_tiledb_tiledb_config_create, 1},
+    {"_tiledb_tiledb_config_vector", (DL_FUNC) &_tiledb_tiledb_config_vector, 1},
     {"_tiledb_tiledb_config_set", (DL_FUNC) &_tiledb_tiledb_config_set, 3},
     {"_tiledb_tiledb_config_get", (DL_FUNC) &_tiledb_tiledb_config_get, 2},
     {"_tiledb_tiledb_config_dump", (DL_FUNC) &_tiledb_tiledb_config_dump, 1},
