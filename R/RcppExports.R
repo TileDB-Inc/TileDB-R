@@ -13,6 +13,10 @@ tiledb_ctx_config <- function(ctx) {
     .Call(`_tiledb_tiledb_ctx_config`, ctx)
 }
 
+tiledb_ctx_is_supported_fs <- function(ctx, scheme) {
+    .Call(`_tiledb_tiledb_ctx_is_supported_fs`, ctx, scheme)
+}
+
 tiledb_config_create <- function(config = NULL) {
     .Call(`_tiledb_tiledb_config_create`, config)
 }
