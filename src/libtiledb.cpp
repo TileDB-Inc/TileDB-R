@@ -32,6 +32,18 @@ XPtr<tiledb::Config> tiledb_ctx_config(XPtr<tiledb::Context> ctx) {
 }
 
 // [[Rcpp::export]]
+bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
+  if (scheme == "file") {
+    return true;
+  } else if  (scheme == "s3") {
+    return ctx->is_supported_fs(TILEDB_S3);
+  } else if (scheme == "hdfs") {
+    return ctx->is_supported_fs(TILEDB_HDFS);
+  }
+  return false;
+}
+  
+// [[Rcpp::export]]
 XPtr<tiledb::Config> tiledb_config_create(Nullable<CharacterVector> config=R_NilValue) {
   try {
     XPtr<tiledb::Config> tiledb_config(new tiledb::Config(), true);
