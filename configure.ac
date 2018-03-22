@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([tiledb-r], [0.0.0])
+AC_INIT([TileDB-R], [0.1.0])
 
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}" ; then
@@ -45,9 +45,3 @@ AC_CHECK_HEADER([tiledb/tiledb.h],
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
-
-echo
-echo "configure: src/Makevars"
-echo "-----------------------"
-cat src/Makevars
-echo
