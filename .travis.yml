@@ -12,7 +12,7 @@ install:
     - mkdir build
     - pushd build
     - ../scripts/install-deps.sh
-    - ../bootstrap --enable-verbose --prefix=/usr/
+    - ../bootstrap --enable-verbose
     - sudo make install -j4
     - popd
     - popd
@@ -23,6 +23,9 @@ install:
 
 script:
     # Build and Test R package
-    - R CMD build .
-    - R CMD check *tar.gz
-
+    - R CMD INSTALL --no-multiarch --with-keep.source --configure-args='--with-tiledb=/tmp/TileDB/dist' TileDB-R
+    - R -e 'library(devtools)'
+    - R -e 'devtools::test()'
+    
+    # - R CMD BUILD .
+    # - R CMD check *tar.gz
