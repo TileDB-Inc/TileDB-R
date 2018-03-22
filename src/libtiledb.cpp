@@ -44,7 +44,7 @@ bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
 }
   
 // [[Rcpp::export]]
-XPtr<tiledb::Config> tiledb_config_create(Nullable<CharacterVector> config=R_NilValue) {
+XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   try {
     XPtr<tiledb::Config> tiledb_config(new tiledb::Config(), true);
     if (config.isNotNull()) {
@@ -104,3 +104,53 @@ void tiledb_config_dump(XPtr<tiledb::Config> config) {
     throw Rcpp::exception(err.what());
   }
 }
+
+tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
+  if (typestr == "FLOAT32")  {
+    return TILEDB_FLOAT32; 
+  } else if (typestr == "FLOAT64") {
+    return TILEDB_FLOAT64;
+  } else if (typestr == "INT64") {
+    return TILEDB_INT64;
+  } else if (typestr == "CHAR") {
+    return TILEDB_CHAR;
+  } else if (typestr == "INT8") {
+    return TILEDB_INT8;
+  } else if (typestr == "UINT8") {
+    return TILEDB_UINT8;
+  } else if (typestr == "INT16") {
+    return  TILEDB_INT16;
+  } else if (typestr == "UINT16") {
+    return TILEDB_UINT16;
+  } else if (typestr == "INT32") {
+    return TILEDB_INT32;
+  } else if (typestr == "UINT32") {
+    return TILEDB_UINT32;
+  } else if (typestr == "INT64") {
+    return TILEDB_INT64;   
+  } else if (typestr == "UINT64") {
+    return TILEDB_UINT64;
+  } else {
+    std::string errmsg = "Unknown TileDB type \"" + typestr  + "\"";
+    throw Rcpp::exception(errmsg.c_str());
+  }
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Dimension> tiledb_dimension(XPtr<tiledb::Context> ctx, 
+                                        std::string name,
+                                        std::string type,
+                                        IntegerVector domain,
+                                        unsigned int tile_extent) {
+  try {
+    tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
+    if (domain.length() != 2) {
+      throw Rcpp::exception("dimension domain must be a c(lower bound, upper bound) pair");
+    }
+    std::array<int, 2> _domain = {domain[0], domain[1]};
+    return XPtr<tiledb::Dimension>(
+      new tiledb::Dimension(tiledb::Dimension::create<int>(*ctx.get(), name, _domain, tile_extent)));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  } 
+}  

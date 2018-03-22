@@ -17,8 +17,8 @@ tiledb_ctx_is_supported_fs <- function(ctx, scheme) {
     .Call(`_tiledb_tiledb_ctx_is_supported_fs`, ctx, scheme)
 }
 
-tiledb_config_create <- function(config = NULL) {
-    .Call(`_tiledb_tiledb_config_create`, config)
+tiledb_config <- function(config = NULL) {
+    .Call(`_tiledb_tiledb_config`, config)
 }
 
 tiledb_config_vector <- function(config) {
@@ -35,5 +35,9 @@ tiledb_config_get <- function(config, param) {
 
 tiledb_config_dump <- function(config) {
     invisible(.Call(`_tiledb_tiledb_config_dump`, config))
+}
+
+tiledb_dimension <- function(ctx, name, type, domain, tile_extent) {
+    .Call(`_tiledb_tiledb_dimension`, ctx, name, type, domain, tile_extent)
 }
 

@@ -50,14 +50,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_config_create
-XPtr<tiledb::Config> tiledb_config_create(Nullable<CharacterVector> config);
-RcppExport SEXP _tiledb_tiledb_config_create(SEXP configSEXP) {
+// tiledb_config
+XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config);
+RcppExport SEXP _tiledb_tiledb_config(SEXP configSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type config(configSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_config_create(config));
+    rcpp_result_gen = Rcpp::wrap(tiledb_config(config));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -107,17 +107,33 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// tiledb_dimension
+XPtr<tiledb::Dimension> tiledb_dimension(XPtr<tiledb::Context> ctx, std::string name, std::string type, IntegerVector domain, unsigned int tile_extent);
+RcppExport SEXP _tiledb_tiledb_dimension(SEXP ctxSEXP, SEXP nameSEXP, SEXP typeSEXP, SEXP domainSEXP, SEXP tile_extentSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type domain(domainSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type tile_extent(tile_extentSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_dimension(ctx, name, type, domain, tile_extent));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_version", (DL_FUNC) &_tiledb_tiledb_version, 0},
     {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 1},
     {"_tiledb_tiledb_ctx_config", (DL_FUNC) &_tiledb_tiledb_ctx_config, 1},
     {"_tiledb_tiledb_ctx_is_supported_fs", (DL_FUNC) &_tiledb_tiledb_ctx_is_supported_fs, 2},
-    {"_tiledb_tiledb_config_create", (DL_FUNC) &_tiledb_tiledb_config_create, 1},
+    {"_tiledb_tiledb_config", (DL_FUNC) &_tiledb_tiledb_config, 1},
     {"_tiledb_tiledb_config_vector", (DL_FUNC) &_tiledb_tiledb_config_vector, 1},
     {"_tiledb_tiledb_config_set", (DL_FUNC) &_tiledb_tiledb_config_set, 3},
     {"_tiledb_tiledb_config_get", (DL_FUNC) &_tiledb_tiledb_config_get, 2},
     {"_tiledb_tiledb_config_dump", (DL_FUNC) &_tiledb_tiledb_config_dump, 1},
+    {"_tiledb_tiledb_dimension", (DL_FUNC) &_tiledb_tiledb_dimension, 5},
     {NULL, NULL, 0}
 };
 
