@@ -10,4 +10,8 @@ License: MIT
 Imports: Rcpp (>= 0.12.15)
 LinkingTo: Rcpp
 SystemRequirements: C++11
-Suggests: testthat
+Requires:
+    R (>= 3.1.2)
+Suggests:
+ testthat (>= 2.0.0),
+ roxygen2 (>= 5.0.0)
