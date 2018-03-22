@@ -5,6 +5,9 @@
 # Session Data files
 .RData
 
+# Local R Project files
+TileDB-R.Rproj
+
 # Example code in package build process
 *-Ex.R
 
@@ -44,5 +47,3 @@ config.log
 config.status
 *~
 autom4te.cache
-
-
