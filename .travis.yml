@@ -8,7 +8,7 @@ install:
     # Install TileDB
     - git clone https://github.com/TileDB-Inc/TileDB /tmp/TileDB
     - pushd /tmp/TileDB
-    - git checkout 1.2.0
+    - git checkout dev
     - mkdir build
     - pushd build
     - ../scripts/install-deps.sh
