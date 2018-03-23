@@ -110,8 +110,6 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_FLOAT32; 
   } else if (typestr == "FLOAT64") {
     return TILEDB_FLOAT64;
-  } else if (typestr == "INT64") {
-    return TILEDB_INT64;
   } else if (typestr == "CHAR") {
     return TILEDB_CHAR;
   } else if (typestr == "INT8") {
@@ -136,21 +134,72 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
   }
 }
 
+/**
+ * TileDB Dimension
+ */
 // [[Rcpp::export]]
-XPtr<tiledb::Dimension> tiledb_dimension(XPtr<tiledb::Context> ctx, 
-                                        std::string name,
-                                        std::string type,
-                                        IntegerVector domain,
-                                        unsigned int tile_extent) {
+XPtr<tiledb::Dimension> tiledb_dim(XPtr<tiledb::Context> ctx, 
+                                   std::string name,
+                                   std::string type,
+                                   NumericVector domain,
+                                   NumericVector tile_extent) {
+  const tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
+  if (_type != TILEDB_INT32 && _type != TILEDB_FLOAT64) {
+    throw Rcpp::exception("only integer (INT32), and flaot (FLOAT64) domains are supported");
+  }
+  if (domain.length() != 2) {
+    throw Rcpp::exception("dimension domain must be a c(lower bound, upper bound) pair");
+  } 
+  if (tile_extent.length() != 1) {
+    throw Rcpp::exception("tile_extent must be a scalar");
+  }
   try {
-    tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
-    if (domain.length() != 2) {
-      throw Rcpp::exception("dimension domain must be a c(lower bound, upper bound) pair");
+    if (_type == TILEDB_INT32) {
+      using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+      std::array<Dtype, 2> _domain = {domain[0], domain[1]};
+      std::array<Dtype, 1> _tile_extent = {tile_extent[0]};
+      return XPtr<tiledb::Dimension>(
+        new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
+    } else if (_type == TILEDB_FLOAT64) {
+      using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+      std::array<Dtype, 2> _domain = {domain[0], domain[1]}; 
+      std::array<Dtype, 1> _tile_extent = {tile_extent[0]};
+      return XPtr<tiledb::Dimension>(
+        new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));     
+    } else {
+      std::stringstream errmsg;
+      errmsg << "Unsupported tiledb type (id): " << _type << " this should not happen!";
+      throw Rcpp::exception(errmsg.str().c_str());
     }
-    std::array<int, 2> _domain = {domain[0], domain[1]};
-    return XPtr<tiledb::Dimension>(
-      new tiledb::Dimension(tiledb::Dimension::create<int>(*ctx.get(), name, _domain, tile_extent)));
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
   } 
 }  
+
+// [[Rcpp::export]]
+XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
+  size_t ndims = dims.length();
+  if (ndims == 0) {
+    throw Rcpp::exception("domain must have one or more dimensions");
+  }
+  for (size_t i=0; i < ndims; i++) {
+    SEXP d = dims.at(i);
+    int R_type_id = TYPEOF(d);
+    if (R_type_id != EXTPTRSXP) {
+      std::stringstream errmsg;
+      errmsg << "Invalid tiledb_dim object at index " <<  i << " (typeid " << R_type_id << ")";
+      throw Rcpp::exception(errmsg.str().c_str());
+    }
+  }
+  XPtr<tiledb::Domain> domain(new tiledb::Domain(*ctx.get()));
+  try {
+    for (SEXP val : dims) {
+      // TODO: we can't do much type checking for the cast here until we wrap EXTPTRSXP in S4 classes
+      XPtr<tiledb::Dimension> dim = as<XPtr<tiledb::Dimension>>(val);
+      domain->add_dimension(*dim.get());
+    }
+    return domain;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}

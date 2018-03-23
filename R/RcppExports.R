@@ -37,7 +37,11 @@ tiledb_config_dump <- function(config) {
     invisible(.Call(`_tiledb_tiledb_config_dump`, config))
 }
 
-tiledb_dimension <- function(ctx, name, type, domain, tile_extent) {
-    .Call(`_tiledb_tiledb_dimension`, ctx, name, type, domain, tile_extent)
+tiledb_dim <- function(ctx, name, type, domain, tile_extent) {
+    .Call(`_tiledb_tiledb_dim`, ctx, name, type, domain, tile_extent)
+}
+
+tiledb_domain <- function(ctx, dims) {
+    .Call(`_tiledb_tiledb_domain`, ctx, dims)
 }
 
