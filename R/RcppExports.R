@@ -45,3 +45,51 @@ tiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_tiledb_domain`, ctx, dims)
 }
 
+tiledb_domain_dump <- function(domain) {
+    invisible(.Call(`_tiledb_tiledb_domain_dump`, domain))
+}
+
+tiledb_attr <- function(ctx, name) {
+    .Call(`_tiledb_tiledb_attr`, ctx, name)
+}
+
+tiledb_attr_dump <- function(attr) {
+    invisible(.Call(`_tiledb_tiledb_attr_dump`, attr))
+}
+
+tiledb_array_schema <- function(ctx, domain, attributes, cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE) {
+    .Call(`_tiledb_tiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, sparse)
+}
+
+tiledb_array_schema_dump <- function(schema) {
+    invisible(.Call(`_tiledb_tiledb_array_schema_dump`, schema))
+}
+
+tiledb_array_create <- function(schema, uri) {
+    .Call(`_tiledb_tiledb_array_create`, schema, uri)
+}
+
+tiledb_array_consolidate <- function(ctx, uri) {
+    .Call(`_tiledb_tiledb_array_consolidate`, ctx, uri)
+}
+
+tiledb_array_load <- function(ctx, uri) {
+    .Call(`_tiledb_tiledb_array_load`, ctx, uri)
+}
+
+tiledb_query <- function(ctx, uri, type) {
+    .Call(`_tiledb_tiledb_query`, ctx, uri, type)
+}
+
+tiledb_query_set_layout <- function(query, layout) {
+    .Call(`_tiledb_tiledb_query_set_layout`, query, layout)
+}
+
+tiledb_query_set_buffer <- function(query, attr, buffer) {
+    .Call(`_tiledb_tiledb_query_set_buffer`, query, attr, buffer)
+}
+
+tiledb_query_submit <- function(query) {
+    .Call(`_tiledb_tiledb_query_submit`, query)
+}
+
