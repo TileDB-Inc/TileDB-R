@@ -64,9 +64,12 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
 
 // [[Rcpp::export]]
 NumericVector tiledb_version() {
+  try {
     auto ver = tiledb::Version::version();
-    NumericVector Rver = NumericVector::create(ver.major(), ver.minor(), ver.patch()) ;
-    return Rver;
+    return NumericVector::create(ver.major(), ver.minor(), ver.patch());
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
 }
 
 // [[Rcpp::export]]
@@ -144,7 +147,9 @@ XPtr<tiledb::Config> tiledb_config_set(XPtr<tiledb::Config> config,
 CharacterVector tiledb_config_get(XPtr<tiledb::Config> config,
                                   std::string param) {
   try {
-    return config->get(param);
+    CharacterVector res;
+    res[param] = config->get(param);
+    return res; 
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
