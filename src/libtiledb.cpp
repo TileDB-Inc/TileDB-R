@@ -66,7 +66,9 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
 NumericVector tiledb_version() {
   try {
     auto ver = tiledb::Version::version();
-    return NumericVector::create(ver.major(), ver.minor(), ver.patch());
+    return NumericVector::create(_["major"]=ver.major(),
+                                 _["minor"]=ver.minor(),
+                                 _["patch"]=ver.patch());
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }

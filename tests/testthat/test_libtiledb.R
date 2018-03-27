@@ -4,9 +4,9 @@ context("libtiledb")
 test_that("version is valid", {
   ver <- tiledb_version()
   expect_equal(length(ver), 3)
-  expect_equal(ver[0], 1)
-  expect_gte(ver[1], 0)
-  expect_gte(ver[2], 0)
+  expect_equal(ver[1], c(major=1))
+  expect_gte(ver[2], c(minor=0))
+  expect_gte(ver[3], c(patch=0))
 })
 
 test_that("default tiledb_config constructor", {
