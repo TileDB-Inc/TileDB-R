@@ -350,22 +350,38 @@ std::string tiledb_array_create(XPtr<tiledb::ArraySchema> schema,
   }
 }
 
-/**
-void tiledb_array_nonempty_domain(XPtr<tiledb::ArraySchema> schema,
+// [[Rcpp::export]]
+List tiledb_array_nonempty_domain(XPtr<tiledb::ArraySchema> schema,
                                   std::string uri) {
-  auto domain = schema->domain();
-  auto nonempty = tiledb::Array::non_empty_domain(uri, *schema.get()) ;
-  if (domain.type() == TILEDB_INT32) {
-    using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-       
-  } else if (domain.type() == TILEDB_FLOAT64) {
-     
-  } else {
-    throw Rcpp::exception("Invalid tiledb_schema domain type");
+  List nonempty_domain;
+  try {
+    auto domain = schema->domain();
+    if (domain.type() == TILEDB_INT32) {
+      using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+      auto res = tiledb::Array::non_empty_domain<DType>(uri, *schema.get());
+      for (auto& d: res) {
+        auto dim_name = d.first;
+        auto dim_domain = d.second;
+        nonempty_domain[dim_name] = IntegerVector::create(dim_domain.first,
+                                                          dim_domain.second);
+      }
+    } else if (domain.type() == TILEDB_FLOAT64) {
+      using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+      auto res = tiledb::Array::non_empty_domain<DType>(uri, *schema.get());
+      for (auto& d: res) {
+        auto dim_name = d.first;
+        auto dim_domain = d.second;
+        nonempty_domain[dim_name] = NumericVector::create(dim_domain.first,
+                                                          dim_domain.second);
+      }
+    } else {
+      throw Rcpp::exception("Invalid tiledb_schema domain type");
+    }
+    return nonempty_domain;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
   }
-
 }
-**/
 
 // [[Rcpp::export]]
 std::string tiledb_array_consolidate(XPtr<tiledb::Context> ctx,
@@ -389,7 +405,6 @@ XPtr<tiledb::ArraySchema> tiledb_array_load(XPtr<tiledb::Context> ctx,
     throw Rcpp::exception(err.what());
   }
 }
-
 
 /**
  * Query 
@@ -424,10 +439,15 @@ XPtr<tiledb::Query> tiledb_query_set_layout(XPtr<tiledb::Query> query,
 // [[Rcpp::export]]
 XPtr<tiledb::Query> tiledb_query_set_buffer(XPtr<tiledb::Query> query,
                                             std::string attr,
-                                            NumericVector buffer) {
+                                            SEXP buffer) {
   try {
-    auto vec_buffer = as<std::vector<double>>(buffer);
-    query->set_buffer(attr, vec_buffer);
+    if (TYPEOF(buffer) == INTSXP) {
+      auto vec_buffer = as<std::vector<int>>(buffer);
+      query->set_buffer(attr, vec_buffer);
+    } else if (TYPEOF(buffer) == REALSXP) {
+      auto vec_buffer = as<std::vector<double>>(buffer);
+      query->set_buffer(attr, vec_buffer);
+    }
     return query;
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
@@ -439,6 +459,31 @@ XPtr<tiledb::Query> tiledb_query_submit(XPtr<tiledb::Query> query) {
   try {
     query->submit();
     return query;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+std::string _query_status_to_string(tiledb::Query::Status status) {
+  switch (status) {
+    case tiledb::Query::Status::COMPLETE:
+      return "COMPLETE";
+    case tiledb::Query::Status::FAILED:
+      return "FAILED";
+    case tiledb::Query::Status::INPROGRESS:
+      return "INPROGRESS";
+    case tiledb::Query::Status::INCOMPLETE:
+      return "INCOMPLETE";
+    case tiledb::Query::Status::UNDEF:
+      return "UNDEF";
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_query_status(XPtr<tiledb::Query> query) {
+  try {
+    tiledb::Query::Status status = query->query_status();
+    return _query_status_to_string(status);
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
   }

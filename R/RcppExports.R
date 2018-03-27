@@ -69,6 +69,10 @@ tiledb_array_create <- function(schema, uri) {
     .Call(`_tiledb_tiledb_array_create`, schema, uri)
 }
 
+tiledb_array_nonempty_domain <- function(schema, uri) {
+    .Call(`_tiledb_tiledb_array_nonempty_domain`, schema, uri)
+}
+
 tiledb_array_consolidate <- function(ctx, uri) {
     .Call(`_tiledb_tiledb_array_consolidate`, ctx, uri)
 }
@@ -91,5 +95,9 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
 
 tiledb_query_submit <- function(query) {
     .Call(`_tiledb_tiledb_query_submit`, query)
+}
+
+tiledb_query_status <- function(query) {
+    .Call(`_tiledb_tiledb_query_status`, query)
 }
 
