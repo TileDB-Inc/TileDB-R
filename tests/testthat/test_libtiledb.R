@@ -110,3 +110,25 @@ test_that("basic float64 tiledb_attr constructor works", {
   attr <- tiledb_attr(ctx, "a1", "FLOAT64")
   expect_is(attr, "externalptr") 
 })
+
+test_that("basic tiledb_array_schema construcotor works", {
+  ctx <- tiledb_ctx()
+  dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
+  dom <- tiledb_domain(ctx, c(dim))
+  att <- tiledb_attr(ctx, "a1", "FLOAT64") 
+  sch <- tiledb_array_schema(ctx, dom, c(att), sparse=FALSE)
+  expect_is(sch, "externalptr") 
+})
+
+test_that("basic dense vector tiledb_array creation works", {
+  tmp <- tempdir() 
+  ctx <- tiledb_ctx()
+  dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
+  dom <- tiledb_domain(ctx, c(dim))
+  att <- tiledb_attr(ctx, "a1", "FLOAT64") 
+  sch <- tiledb_array_schema(ctx, dom, c(att), sparse=FALSE)
+  pth <- paste(tmp, "test_array", sep="/")
+  uri <- tiledb_array_create(sch, pth)
+  expect_true(dir.exists(pth))
+  teardown(unlink(pth, recursive = TRUE))
+})
