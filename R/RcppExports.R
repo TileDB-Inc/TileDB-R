@@ -49,8 +49,8 @@ tiledb_domain_dump <- function(domain) {
     invisible(.Call(`_tiledb_tiledb_domain_dump`, domain))
 }
 
-tiledb_attr <- function(ctx, name) {
-    .Call(`_tiledb_tiledb_attr`, ctx, name)
+tiledb_attr <- function(ctx, name, type) {
+    .Call(`_tiledb_tiledb_attr`, ctx, name, type)
 }
 
 tiledb_attr_dump <- function(attr) {

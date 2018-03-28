@@ -81,7 +81,7 @@ XPtr<tiledb::Context> tiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValu
       return XPtr<tiledb::Context>(new tiledb::Context(), true);  
     } else {
       XPtr<tiledb::Config> config_xptr(config);
-      return XPtr<tiledb::Context>(new tiledb::Context(*config_xptr), true);
+      return XPtr<tiledb::Context>(new tiledb::Context(*config_xptr.get()), true);
     }
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
@@ -101,8 +101,11 @@ bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
     return ctx->is_supported_fs(TILEDB_S3);
   } else if (scheme == "hdfs") {
     return ctx->is_supported_fs(TILEDB_HDFS);
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Unknown TileDB fs scheme: \"" << scheme << "://\"";
+    throw Rcpp::exception(errmsg.str().c_str());
   }
-  return false;
 }
   
 // [[Rcpp::export]]
@@ -181,7 +184,7 @@ XPtr<tiledb::Dimension> tiledb_dim(XPtr<tiledb::Context> ctx,
   // check that the dimension type is supported
   const tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
   if (_type != TILEDB_INT32 && _type != TILEDB_FLOAT64) {
-    throw Rcpp::exception("only integer (INT32), and flaot (FLOAT64) domains are supported");
+    throw Rcpp::exception("only integer (INT32), and real (FLOAT64) domains are supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (_type == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
@@ -272,10 +275,20 @@ void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
  * TileDB Attribute 
  */
 //[[Rcpp::export]]
-XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name) {
+XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type) {
  try {
+   tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
+   if (attr_dtype == TILEDB_INT32) {
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
     return XPtr<tiledb::Attribute>(
-      new tiledb::Attribute(tiledb::Attribute::create<double>(*ctx.get(), name)));
+      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+   } else if (attr_dtype == TILEDB_FLOAT64) {
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+    return XPtr<tiledb::Attribute>(
+      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+   } else {
+    throw Rcpp::exception("only integer (INT32), and real (FLOAT64) attributes are supported");
+   }
  } catch (tiledb::TileDBError& err) {
    throw Rcpp::exception(err.what());
  }

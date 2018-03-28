@@ -21,6 +21,11 @@ test_that("construct tiledb_config with vector of parameters", {
   expect_equal(tiledb_config_get(config, "foo"), c("foo"="bar"))
 })
 
+test_that("tiledb_config_get throws an error if paramter does not exist", {
+  config <- tiledb_config()
+  expect_error(tiledb_config_get(config, "don't exist"))
+})
+
 test_that("construct tiledb_config with an empty vector of paramters", {
   params = c()
   default_config <- tiledb_config()
@@ -44,10 +49,64 @@ test_that("can create a tiledb_ctx", {
   expect_is(ctx, "externalptr")
 })
 
-test_that("default tiledb_ctx config is default config", {
+test_that("default tiledb_ctx config is the default config", {
   ctx <- tiledb_ctx()
   ctx_config <- tiledb_ctx_config(ctx)
   default_config <- tiledb_config()
   expect_equal(tiledb_config_vector(ctx_config),
                tiledb_config_vector(default_config))
+})
+
+test_that("tiledb_ctx with config", {
+  config <- tiledb_config(c(foo="bar")) 
+  ctx <- tiledb_ctx(config)
+  expect_equal(tiledb_config_get(tiledb_ctx_config(ctx), "foo"),
+               c(foo="bar"))
+})
+
+test_that("tiledb_ctx fs support", {
+  ctx <- tiledb_ctx()
+  expect_true(tiledb_ctx_is_supported_fs(ctx, "file"))
+  expect_is(tiledb_ctx_is_supported_fs(ctx, "s3"), "logical")
+  expect_is(tiledb_ctx_is_supported_fs(ctx, "hdfs"), "logical")
+  expect_error(tiledb_ctx_is_supported_fs(ctx, "should error"))
+})
+
+test_that("basic int32 tiledb_dim constructor works", {
+  ctx <- tiledb_ctx()
+  dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
+  expect_is(dim, "externalptr")
+})
+
+test_that("basic float64 tiledb_dim constructor works", {
+  ctx <- tiledb_ctx()
+  dim <- tiledb_dim(ctx, "d1", "FLOAT64", c(1.0, 100.0), 10.0)
+  expect_is(dim, "externalptr")
+})
+
+test_that("basic tiledb_domain constructor works", {
+  ctx <- tiledb_ctx()
+  d1 <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
+  d2 <- tiledb_dim(ctx, "d2", "INT32", c(1L, 100L), 10L) 
+  dom <- tiledb_domain(ctx, c(d1, d2))
+  expect_is(dom, "externalptr")
+})
+
+test_that("tiledb_domain throws an error when dimensions are different dtypes", {
+  ctx <- tiledb_ctx()
+  d1 <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
+  d2 <- tiledb_dim(ctx, "d2", "FLOAT64", c(1, 100), 10)
+  expect_error(tiledb_domain(ctx, c(d1, d2)))
+})
+
+test_that("basic integer tiledb_attr constructor works", {
+  ctx <- tiledb_ctx() 
+  attr <- tiledb_attr(ctx, "a1", "INT32")
+  expect_is(attr, "externalptr")
+})
+
+test_that("basic float64 tiledb_attr constructor works", {
+  ctx <- tiledb_ctx()
+  attr <- tiledb_attr(ctx, "a1", "FLOAT64")
+  expect_is(attr, "externalptr") 
 })

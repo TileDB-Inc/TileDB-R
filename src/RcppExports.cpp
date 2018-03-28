@@ -145,14 +145,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // tiledb_attr
-XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name);
-RcppExport SEXP _tiledb_tiledb_attr(SEXP ctxSEXP, SEXP nameSEXP) {
+XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type);
+RcppExport SEXP _tiledb_tiledb_attr(SEXP ctxSEXP, SEXP nameSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_attr(ctx, name));
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_attr(ctx, name, type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -314,7 +315,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_dim", (DL_FUNC) &_tiledb_tiledb_dim, 5},
     {"_tiledb_tiledb_domain", (DL_FUNC) &_tiledb_tiledb_domain, 2},
     {"_tiledb_tiledb_domain_dump", (DL_FUNC) &_tiledb_tiledb_domain_dump, 1},
-    {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 2},
+    {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 3},
     {"_tiledb_tiledb_attr_dump", (DL_FUNC) &_tiledb_tiledb_attr_dump, 1},
     {"_tiledb_tiledb_array_schema", (DL_FUNC) &_tiledb_tiledb_array_schema, 6},
     {"_tiledb_tiledb_array_schema_dump", (DL_FUNC) &_tiledb_tiledb_array_schema_dump, 1},
