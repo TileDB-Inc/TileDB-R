@@ -283,7 +283,7 @@ XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name,
     return XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
    } else if (attr_dtype == TILEDB_FLOAT64) {
-    using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     return XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
    } else {
@@ -462,13 +462,18 @@ XPtr<tiledb::Query> tiledb_query_set_buffer(XPtr<tiledb::Query> query,
                                             SEXP buffer) {
   try {
     if (TYPEOF(buffer) == INTSXP) {
-      auto vec_buffer = as<std::vector<int>>(buffer);
+      using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+      auto vec_buffer = as<std::vector<DType>>(buffer);
       query->set_buffer(attr, vec_buffer);
+      return query;
     } else if (TYPEOF(buffer) == REALSXP) {
-      auto vec_buffer = as<std::vector<double>>(buffer);
+      using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+      auto vec_buffer = as<std::vector<DType>>(buffer);
       query->set_buffer(attr, vec_buffer);
+      return query;
+    } else {
+      throw Rcpp::exception("invalid attribute buffer type");
     }
-    return query;
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
   }  
