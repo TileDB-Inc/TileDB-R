@@ -162,3 +162,13 @@ test_that("basic dense vector writes / reads works", {
   
   teardown(unlink(tmp, recursive = TRUE))
 })
+
+test_that("basic tiledb vfs constructor works", {
+  ctx <- tiledb_ctx()
+  vfs <- tiledb_vfs(ctx)
+  expect_is(vfs, "externalptr")
+  
+  config <- tiledb_config(c(foo="bar"))
+  vfs <- tiledb_vfs(ctx, config)
+  expect_is(vfs, "externalptr")
+})

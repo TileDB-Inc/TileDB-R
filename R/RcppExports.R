@@ -105,3 +105,63 @@ tiledb_query_status <- function(query) {
     .Call(`_tiledb_tiledb_query_status`, query)
 }
 
+tiledb_vfs <- function(ctx, config = NULL) {
+    .Call(`_tiledb_tiledb_vfs`, ctx, config)
+}
+
+tiledb_vfs_create_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_create_bucket`, vfs, uri)
+}
+
+tiledb_vfs_remove_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_remove_bucket`, vfs, uri)
+}
+
+tiledb_vfs_is_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_is_bucket`, vfs, uri)
+}
+
+tiledb_vfs_is_empty_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_is_empty_bucket`, vfs, uri)
+}
+
+tiledb_vfs_empty_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_empty_bucket`, vfs, uri)
+}
+
+tiledb_vfs_create_dir <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_create_dir`, vfs, uri)
+}
+
+tiledb_vfs_is_dir <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_is_dir`, vfs, uri)
+}
+
+tiledb_vfs_remove_dir <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_remove_dir`, vfs, uri)
+}
+
+tiledb_vfs_is_file <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_is_file`, vfs, uri)
+}
+
+tiledb_vfs_remove_file <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_remove_file`, vfs, uri)
+}
+
+tiledb_vfs_file_size <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_file_size`, vfs, uri)
+}
+
+tiledb_vfs_move_file <- function(vfs, old_uri, new_uri) {
+    .Call(`_tiledb_tiledb_vfs_move_file`, vfs, old_uri, new_uri)
+}
+
+tiledb_vfs_move_dir <- function(vfs, old_uri, new_uri) {
+    .Call(`_tiledb_tiledb_vfs_move_dir`, vfs, old_uri, new_uri)
+}
+
+tiledb_vfs_touch <- function(vfs, uri) {
+    .Call(`_tiledb_tiledb_vfs_touch`, vfs, uri)
+}
+

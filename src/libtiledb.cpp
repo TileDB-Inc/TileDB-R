@@ -531,3 +531,162 @@ std::string tiledb_query_status(XPtr<tiledb::Query> query) {
     throw Rcpp::exception(err.what()); 
   }
 }
+
+/**
+ * VFS functionality
+ */
+// [[Rcpp::export]]
+XPtr<tiledb::VFS> tiledb_vfs(XPtr<tiledb::Context> ctx,
+                             Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
+  try {
+    if (config.isNull()) {
+      return XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get()));
+    } else {
+      XPtr<tiledb::Config> config_xptr(config);
+      return XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get(), *config_xptr.get()));
+    }
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_create_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    vfs->create_bucket(uri);
+    return uri; 
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_remove_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    vfs->remove_bucket(uri); 
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+bool tiledb_vfs_is_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    return vfs->is_bucket(uri); 
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+bool tiledb_vfs_is_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    return vfs->is_empty_bucket(uri);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    vfs->empty_bucket(uri);
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_create_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    vfs->create_dir(uri);
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+bool tiledb_vfs_is_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    return vfs->is_dir(uri);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_remove_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    vfs->remove_dir(uri);
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+bool tiledb_vfs_is_file(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    return vfs->is_file(uri); 
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_remove_file(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    vfs->remove_file(uri);
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+R_xlen_t tiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::string uri) {
+ try {
+    // TODO: hack, make this a correct cast
+    uint64_t size = vfs->file_size(uri);
+    return static_cast<R_xlen_t>(size);
+ } catch (tiledb::TileDBError& err) {
+   throw Rcpp::exception(err.what());
+ }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_move_file(XPtr<tiledb::VFS> vfs, 
+                                 std::string old_uri,
+                                 std::string new_uri) {
+  try {
+    vfs->move_file(old_uri, new_uri);
+    return new_uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_move_dir(XPtr<tiledb::VFS> vfs, 
+                                std::string old_uri,
+                                std::string new_uri) {
+  try {
+    vfs->move_dir(old_uri, new_uri);
+    return new_uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_vfs_touch(XPtr<tiledb::VFS> vfs, std::string uri) {
+  try {
+    vfs->touch(uri);
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
