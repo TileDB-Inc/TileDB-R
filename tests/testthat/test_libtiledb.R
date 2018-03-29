@@ -94,13 +94,12 @@ test_that("basic tiledb_domain constructor works", {
   expect_is(dom, "externalptr")
 })
 
-test_that("tiledb_domain throws an error when dimensions are different dtypes",
-          {
-            ctx <- tiledb_ctx()
-            d1 <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
-            d2 <- tiledb_dim(ctx, "d2", "FLOAT64", c(1, 100), 10)
-            expect_error(tiledb_domain(ctx, c(d1, d2)))
-          })
+test_that("tiledb_domain throws an error when dimensions are different dtypes", {
+  ctx <- tiledb_ctx()
+  d1 <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
+  d2 <- tiledb_dim(ctx, "d2", "FLOAT64", c(1, 100), 10)
+  expect_error(tiledb_domain(ctx, c(d1, d2)))
+})
 
 test_that("basic integer tiledb_attr constructor works", {
   ctx <- tiledb_ctx()
@@ -145,7 +144,6 @@ test_that("basic dense vector writes / reads works", {
   sch <- tiledb_array_schema(ctx, dom, c(att), sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(sch, pth)
-  tiledb_array_schema_dump(sch)
   
   qry <- tiledb_query(ctx, uri, "WRITE")
   qry <- tiledb_query_set_buffer(qry, "a1", c(1, 2, 3))
@@ -154,10 +152,13 @@ test_that("basic dense vector writes / reads works", {
   
   # TODO: need to be able to pass a pointer to underlying buffer in the C++ api
   #dat <- c(0, 0, 0)
-  #qry <- tiledb_query(ctx, uri, "READ")
-  #qry <- tiledb_query_set_buffer(qry, "a1", dat)
-  #qry <- tiledb_query_submit(qry)
-  #print("Query result: ", dat)
+  #qry2 <- tiledb_query(ctx, uri, "READ")
+  #qry2 <- tiledb_query_set_buffer(qry2, "a1", dat)
+  #qry2 <- tiledb_query_submit(qry2)
+  qry <- tiledb_query(ctx, uri, "READ")
+  dat <- tiledb_test_read(qry)
+  print("Query result: ")
+  print(dat)
   
   teardown(unlink(tmp, recursive = TRUE))
 })

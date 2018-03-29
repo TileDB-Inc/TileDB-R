@@ -190,7 +190,7 @@ XPtr<tiledb::Dimension> tiledb_dim(XPtr<tiledb::Context> ctx,
   if (_type == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
     throw Rcpp::exception("domain or tile_extent does not match dimension type");
   } else if (_type == TILEDB_FLOAT64 && (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
-    throw Rcpp::exception("domain or tile_extent does not match dimension type");
+    throw Rcpp::exception("domain or tile_extent does not match dimenson type");
   }
   try {
     if (_type == TILEDB_INT32) {
@@ -484,6 +484,24 @@ XPtr<tiledb::Query> tiledb_query_submit(XPtr<tiledb::Query> query) {
   try {
     query->submit();
     return query;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+NumericVector tiledb_test_read(XPtr<tiledb::Query> query) {
+  try {
+    auto result = new std::vector<double>(3);
+    result->operator[](0) = 5;
+    result->operator[](1) = 5;
+    result->operator[](2) = 5;
+    std::cout << "\nQuery result: " << (*result)[0] << "," << (*result)[1] << "," << (*result)[2] << std::endl;
+    query->set_buffer("a1", *result);
+    query->submit();
+    std::cout << "\nQuery Status: " << query->query_status() << std::endl;
+    std::cout << "\nQuery result: " << (*result)[0] << "," << (*result)[1] << "," << (*result)[2] << std::endl;
+    return wrap(*result);
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
   }

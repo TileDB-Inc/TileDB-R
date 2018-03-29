@@ -97,6 +97,10 @@ tiledb_query_submit <- function(query) {
     .Call(`_tiledb_tiledb_query_submit`, query)
 }
 
+tiledb_test_read <- function(query) {
+    .Call(`_tiledb_tiledb_test_read`, query)
+}
+
 tiledb_query_status <- function(query) {
     .Call(`_tiledb_tiledb_query_status`, query)
 }
