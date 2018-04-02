@@ -303,11 +303,9 @@ void tiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
   }
 }
 
-
 /**
  * TileDB Array Schema
  */
-
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchema> tiledb_array_schema(
     XPtr<tiledb::Context> ctx, 
@@ -456,20 +454,34 @@ XPtr<tiledb::Query> tiledb_query_set_layout(XPtr<tiledb::Query> query,
   }
 }
 
+XPtr<tiledb::Query> tiledb_query_set_subarray(XPtr<tiledb::Query> query,
+                                              SEXP subarray) {
+  try {
+    if (TYPEOF(subarray) == INTSXP) {
+      return query; 
+    } else if (TYPEOF(subarray) == REALSXP) {
+      return query; 
+    } else {
+      // TODO: better error
+      throw Rcpp::exception("invalid subarray type");
+    }
+  } catch (tiledb::TileDBError& err){
+    throw Rcpp::exception(err.what());
+  } 
+}
+
 // [[Rcpp::export]]
 XPtr<tiledb::Query> tiledb_query_set_buffer(XPtr<tiledb::Query> query,
                                             std::string attr,
                                             SEXP buffer) {
   try {
     if (TYPEOF(buffer) == INTSXP) {
-      using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-      auto vec_buffer = as<std::vector<DType>>(buffer);
-      query->set_buffer(attr, vec_buffer);
+      IntegerVector vec(buffer);
+      query->set_buffer(attr, vec.begin(), vec.length());
       return query;
     } else if (TYPEOF(buffer) == REALSXP) {
-      using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-      auto vec_buffer = as<std::vector<DType>>(buffer);
-      query->set_buffer(attr, vec_buffer);
+      NumericVector vec(buffer);
+      query->set_buffer(attr, vec.begin(), vec.length());
       return query;
     } else {
       throw Rcpp::exception("invalid attribute buffer type");
@@ -484,24 +496,6 @@ XPtr<tiledb::Query> tiledb_query_submit(XPtr<tiledb::Query> query) {
   try {
     query->submit();
     return query;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what()); 
-  }
-}
-
-// [[Rcpp::export]]
-NumericVector tiledb_test_read(XPtr<tiledb::Query> query) {
-  try {
-    auto result = new std::vector<double>(3);
-    result->operator[](0) = 5;
-    result->operator[](1) = 5;
-    result->operator[](2) = 5;
-    std::cout << "\nQuery result: " << (*result)[0] << "," << (*result)[1] << "," << (*result)[2] << std::endl;
-    query->set_buffer("a1", *result);
-    query->submit();
-    std::cout << "\nQuery Status: " << query->query_status() << std::endl;
-    std::cout << "\nQuery result: " << (*result)[0] << "," << (*result)[1] << "," << (*result)[2] << std::endl;
-    return wrap(*result);
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
   }

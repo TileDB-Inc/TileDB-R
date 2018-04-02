@@ -145,21 +145,42 @@ test_that("basic dense vector writes / reads works", {
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(sch, pth)
   
+  dat <- c(3, 2, 1) 
   qry <- tiledb_query(ctx, uri, "WRITE")
-  qry <- tiledb_query_set_buffer(qry, "a1", c(1, 2, 3))
+  qry <- tiledb_query_set_buffer(qry, "a1", dat)
   qry <- tiledb_query_submit(qry)
   expect_is(qry, "externalptr")
   
-  # TODO: need to be able to pass a pointer to underlying buffer in the C++ api
-  #dat <- c(0, 0, 0)
-  #qry2 <- tiledb_query(ctx, uri, "READ")
-  #qry2 <- tiledb_query_set_buffer(qry2, "a1", dat)
-  #qry2 <- tiledb_query_submit(qry2)
-  qry <- tiledb_query(ctx, uri, "READ")
-  dat <- tiledb_test_read(qry)
-  print("Query result: ")
-  print(dat)
+  res <- c(0, 0, 0)
+  qry2 <- tiledb_query(ctx, uri, "READ")
+  qry2 <- tiledb_query_set_buffer(qry2, "a1", res)
+  qry2 <- tiledb_query_submit(qry2)
+  expect_equal(res, dat)
+  teardown(unlink(tmp, recursive = TRUE))
+})
+
+test_that("basic dense vector read subarray works", {
+  tmp <- tempdir()
+  ctx <- tiledb_ctx()
+  dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
+  dom <- tiledb_domain(ctx, c(dim))
+  att <- tiledb_attr(ctx, "a1", "FLOAT64")
+  sch <- tiledb_array_schema(ctx, dom, c(att), sparse = FALSE)
+  pth <- paste(tmp, "test_dense_read_write", sep = "/")
+  uri <- tiledb_array_create(sch, pth)
   
+  dat <- c(3, 2, 1) 
+  qry <- tiledb_query(ctx, uri, "WRITE")
+  qry <- tiledb_query_set_buffer(qry, "a1", dat)
+  qry <- tiledb_query_submit(qry)
+  expect_is(qry, "externalptr")
+  
+  res <- c(0, 0)
+  sub <- c(1, 2)
+  qry2 <- tiledb_query(ctx, uri, "READ")
+  qry2 <- tiledb_query_set_buffer(qry2, "a1", res)
+  qry2 <- tiledb_query_submit(qry2)
+  expect_equal(res, dat)
   teardown(unlink(tmp, recursive = TRUE))
 })
 
@@ -171,4 +192,25 @@ test_that("basic tiledb vfs constructor works", {
   config <- tiledb_config(c(foo="bar"))
   vfs <- tiledb_vfs(ctx, config)
   expect_is(vfs, "externalptr")
+})
+
+test_that("basic vfs is_dir, is_file functionality works", {
+  tmp <- tempdir()
+  
+  ctx <- tiledb_ctx()
+  vfs <- tiledb_vfs(ctx)
+  
+  # test dir 
+  expect_true(tiledb_vfs_is_dir(vfs, tmp))
+  expect_false(tiledb_vfs_is_dir(vfs, "i don't exist"))
+ 
+  test_file_path <- paste("file:/", tmp, "test_file", sep = "/")
+  test_file = file(test_file_path, "wb")
+  writeChar(c("foo", "bar", "baz"), test_file)
+  close(test_file)
+  
+  # test file
+  expect_true(tiledb_vfs_is_file(vfs, test_file_path))
+  expect_false(tiledb_vfs_is_file(vfs, tmp))
+  teardown(unlink(tmp, recursive = TRUE))
 })
