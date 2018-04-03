@@ -17,6 +17,7 @@ tiledb_ctx_is_supported_fs <- function(ctx, scheme) {
     .Call(`_tiledb_tiledb_ctx_is_supported_fs`, ctx, scheme)
 }
 
+#' @export  
 tiledb_config <- function(config = NULL) {
     .Call(`_tiledb_tiledb_config`, config)
 }
@@ -33,6 +34,7 @@ tiledb_config_get <- function(config, param) {
     .Call(`_tiledb_tiledb_config_get`, config, param)
 }
 
+#' @export  
 tiledb_config_dump <- function(config) {
     invisible(.Call(`_tiledb_tiledb_config_dump`, config))
 }
@@ -95,10 +97,6 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
 
 tiledb_query_submit <- function(query) {
     .Call(`_tiledb_tiledb_query_submit`, query)
-}
-
-tiledb_test_read <- function(query) {
-    .Call(`_tiledb_tiledb_test_read`, query)
 }
 
 tiledb_query_status <- function(query) {

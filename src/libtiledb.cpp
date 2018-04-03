@@ -107,7 +107,8 @@ bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
     throw Rcpp::exception(errmsg.str().c_str());
   }
 }
-  
+
+//' @export  
 // [[Rcpp::export]]
 XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   try {
@@ -160,6 +161,7 @@ CharacterVector tiledb_config_get(XPtr<tiledb::Config> config,
   }
 }
 
+//' @export  
 // [[Rcpp::export]]
 void tiledb_config_dump(XPtr<tiledb::Config> config) {
   try {
