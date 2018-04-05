@@ -3,8 +3,16 @@ Config <- setClass("Config",
                    representation(ptr = "externalptr"))
 
 setMethod("initialize", "Config",
-          function(.Object) {
-            .Object@ptr = tiledb_config()
+          function(.Object, config = NA_character_, ptr = NULL) { 
+            if (!is.na(config)) {
+              stopifnot(typeof(config) == "character")
+              .Object@ptr <- tiledb_config(config)
+            } else if (!is.null(ptr)) {
+              stopifnot(typeof(ptr) == "externalptr") 
+              .Object@ptr <- ptr
+            } else {
+              .Object@ptr <- tiledb_config( )
+            }
             .Object
           })
 
