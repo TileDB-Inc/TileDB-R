@@ -62,8 +62,9 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
   }
 }
 
+//' @export  
 // [[Rcpp::export]]
-NumericVector tiledb_version() {
+NumericVector libtiledb_version() {
   try {
     auto ver = tiledb::Version::version();
     return NumericVector::create(_["major"]=ver.major(),
@@ -89,6 +90,16 @@ XPtr<tiledb::Context> tiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValu
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::Config> tiledb_config_load_from_file(std::string filename) {
+  try {
+    tiledb::Config* config = new tiledb::Config(filename); 
+    return XPtr<tiledb::Config>(config);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::Config> tiledb_ctx_config(XPtr<tiledb::Context> ctx) {
   return XPtr<tiledb::Config>(new tiledb::Config(ctx.get()->config()));
 }
@@ -108,7 +119,6 @@ bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
   }
 }
 
-//' @export  
 // [[Rcpp::export]]
 XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   try {
@@ -161,7 +171,6 @@ CharacterVector tiledb_config_get(XPtr<tiledb::Config> config,
   }
 }
 
-//' @export  
 // [[Rcpp::export]]
 void tiledb_config_dump(XPtr<tiledb::Config> config) {
   try {

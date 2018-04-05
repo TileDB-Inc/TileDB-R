@@ -26,5 +26,16 @@ setGeneric("config", function(object, ...) {
 setMethod("config", "Ctx",
           function(object) {
             ptr <- tiledb_ctx_config(object@ptr)
-            tiledb::Config(ptr = ptr)
+            new("Config", ptr = ptr)
+          })
+
+#' @export
+setGeneric("is_supported_fs", function(object, scheme, ...) {
+  standardGeneric("is_supported_fs")
+})
+
+#' @export
+setMethod("is_supported_fs", signature(object = "Ctx", scheme = "character"),
+          function(object, scheme) {
+            tiledb_ctx_is_supported_fs(object@ptr, scheme)
           })

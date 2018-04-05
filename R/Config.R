@@ -4,12 +4,12 @@ Config <- setClass("Config",
 
 setMethod("initialize", "Config",
           function(.Object, config = NA_character_, ptr = NULL) { 
-            if (!is.na(config)) {
-              stopifnot(typeof(config) == "character")
-              .Object@ptr <- tiledb_config(config)
-            } else if (!is.null(ptr)) {
+            if (!is.null(ptr)) {
               stopifnot(typeof(ptr) == "externalptr") 
               .Object@ptr <- ptr
+            } else if (!is.na(config)) {
+              stopifnot(typeof(config) == "character")
+              .Object@ptr <- tiledb_config(config)
             } else {
               .Object@ptr <- tiledb_config( )
             }
@@ -51,6 +51,13 @@ setMethod("show", signature(object = "Config"),
           function(object) {
             tiledb_config_dump(object@ptr)
           })
+
+#' @export
+Config.from_file <- function(path) {
+  stopifnot(typeof(path) == "character")
+  ptr <- tiledb_config_load_from_file(path)
+  tiledb::Config(ptr = ptr)
+}
 
 as.vector.Config <- function(x, mode="any") {
   tiledb_config_vector(x@ptr)

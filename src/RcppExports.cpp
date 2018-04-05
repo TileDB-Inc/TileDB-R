@@ -6,13 +6,13 @@
 
 using namespace Rcpp;
 
-// tiledb_version
-NumericVector tiledb_version();
-RcppExport SEXP _tiledb_tiledb_version() {
+// libtiledb_version
+NumericVector libtiledb_version();
+RcppExport SEXP _tiledb_libtiledb_version() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(tiledb_version());
+    rcpp_result_gen = Rcpp::wrap(libtiledb_version());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -24,6 +24,17 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::Config>> >::type config(configSEXP);
     rcpp_result_gen = Rcpp::wrap(tiledb_ctx(config));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_config_load_from_file
+XPtr<tiledb::Config> tiledb_config_load_from_file(std::string filename);
+RcppExport SEXP _tiledb_tiledb_config_load_from_file(SEXP filenameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_config_load_from_file(filename));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -485,8 +496,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tiledb_tiledb_version", (DL_FUNC) &_tiledb_tiledb_version, 0},
+    {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 1},
+    {"_tiledb_tiledb_config_load_from_file", (DL_FUNC) &_tiledb_tiledb_config_load_from_file, 1},
     {"_tiledb_tiledb_ctx_config", (DL_FUNC) &_tiledb_tiledb_ctx_config, 1},
     {"_tiledb_tiledb_ctx_is_supported_fs", (DL_FUNC) &_tiledb_tiledb_ctx_is_supported_fs, 2},
     {"_tiledb_tiledb_config", (DL_FUNC) &_tiledb_tiledb_config, 1},
