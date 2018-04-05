@@ -133,6 +133,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_dim_name
+std::string tiledb_dim_name(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_tiledb_dim_name(SEXP dimSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_dim_name(dim));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_dim_domain
+SEXP tiledb_dim_domain(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_tiledb_dim_domain(SEXP dimSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_dim_domain(dim));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_domain
 XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims);
 RcppExport SEXP _tiledb_tiledb_domain(SEXP ctxSEXP, SEXP dimsSEXP) {
@@ -507,6 +529,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_config_get", (DL_FUNC) &_tiledb_tiledb_config_get, 2},
     {"_tiledb_tiledb_config_dump", (DL_FUNC) &_tiledb_tiledb_config_dump, 1},
     {"_tiledb_tiledb_dim", (DL_FUNC) &_tiledb_tiledb_dim, 5},
+    {"_tiledb_tiledb_dim_name", (DL_FUNC) &_tiledb_tiledb_dim_name, 1},
+    {"_tiledb_tiledb_dim_domain", (DL_FUNC) &_tiledb_tiledb_dim_domain, 1},
     {"_tiledb_tiledb_domain", (DL_FUNC) &_tiledb_tiledb_domain, 2},
     {"_tiledb_tiledb_domain_dump", (DL_FUNC) &_tiledb_tiledb_domain_dump, 1},
     {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 3},

@@ -242,6 +242,85 @@ XPtr<tiledb::Dimension> tiledb_dim(XPtr<tiledb::Context> ctx,
   } 
 }  
 
+// [[Rcpp::export]]
+std::string tiledb_dim_name(XPtr<tiledb::Dimension> dim) {
+  try {
+    return dim->name();
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+SEXP tiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
+  try {
+    auto dim_type = dim->type();
+    switch (dim_type) {
+      case TILEDB_FLOAT32:
+        return NumericVector({dim->domain<float>().first, 
+                              dim->domain<float>().second});
+      case TILEDB_FLOAT64:
+        return NumericVector({dim->domain<double>().first, 
+                              dim->domain<double>().second});
+      case TILEDB_CHAR:
+        return IntegerVector({dim->domain<char>().first, 
+                              dim->domain<char>().second});
+      case TILEDB_INT8:
+        return IntegerVector({dim->domain<int8_t>().first, 
+                              dim->domain<int8_t>().second});
+      case TILEDB_UINT8:
+        return IntegerVector({dim->domain<uint8_t>().first, 
+                              dim->domain<uint8_t>().second});
+      case TILEDB_INT16:
+        return IntegerVector({dim->domain<int16_t>().first, 
+                              dim->domain<int16_t>().second});
+      case TILEDB_UINT16:
+        return IntegerVector({dim->domain<uint16_t>().first, 
+                              dim->domain<uint16_t>().second});       
+      case TILEDB_INT32:
+        return IntegerVector({dim->domain<int32_t>().first, 
+                              dim->domain<int32_t>().second});       
+      case TILEDB_UINT32: {
+        auto d1_u32 = dim->domain<uint32_t>().first;
+        auto d2_u32 = dim->domain<uint32_t>().second;
+        if (d1_u32 > std::numeric_limits<int32_t>::max() || 
+            d2_u32 > std::numeric_limits<int32_t>::max()) {
+          throw Rcpp::exception("invalid domain integer value");
+        }
+        return IntegerVector(static_cast<int32_t>(d1_u32), 
+                             static_cast<int32_t>(d2_u32));
+      }
+      case TILEDB_INT64: {
+        auto d1_i64 = dim->domain<int64_t>().first;
+        auto d2_i64 = dim->domain<int64_t>().second;
+        if (d1_i64 < std::numeric_limits<int32_t>::min() ||
+            d1_i64 > std::numeric_limits<int32_t>::max() ||
+            d2_i64 < std::numeric_limits<int32_t>::min() ||
+            d2_i64 > std::numeric_limits<int32_t>::max()) {
+          throw Rcpp::exception("invalid domain integer value"); 
+        }
+        return IntegerVector(static_cast<int32_t>(d1_i64), 
+                             static_cast<int32_t>(d2_i64));
+      }
+      case TILEDB_UINT64: {
+        auto d1_u64 = dim->domain<uint64_t>().first;
+        auto d2_u64 = dim->domain<uint64_t>().second;
+        if (d1_u64 > std::numeric_limits<int32_t>::max() ||
+            d2_u64 > std::numeric_limits<int32_t>::max()) {
+          throw Rcpp::exception("invalid domain integer value"); 
+        }
+        return IntegerVector(static_cast<int32_t>(d1_u64), 
+                             static_cast<int32_t>(d2_u64));
+      }
+      default:
+        throw Rcpp::exception("invalid tiledb::Dim domain type");
+    }
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+
 /**
  * TileDB Domain
  */
@@ -272,7 +351,7 @@ XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
   }
 }
 
-//[[Rcpp::export]]
+// [[Rcpp::export]]
 void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   try {
     domain->dump();
