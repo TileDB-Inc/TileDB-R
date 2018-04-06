@@ -31,6 +31,17 @@ setMethod("initialize",  "Dim",
           })
 
 #' @export
+setGeneric("name", function(object, ...) {
+  standardGeneric("name")
+})
+
+#' @export
+setMethod("name", "Dim",
+          function(object) {
+            tiledb_dim_name(object@ptr)
+          })
+
+#' @export
 setGeneric("domain", function(object, ...) {
   standardGeneric("domain")
 })
@@ -39,4 +50,26 @@ setGeneric("domain", function(object, ...) {
 setMethod("domain", "Dim",
           function(object) {
             tiledb_dim_domain(object@ptr)
+          })
+
+#' @export
+setGeneric("tile", function(object, ...) {
+  standardGeneric("tile")
+})
+
+#' @export
+setMethod("tile", "Dim",
+          function(object) {
+            tiledb_dim_tile_extent(object@ptr)
+          })
+
+#' @export
+setGeneric("dtype", function(object, ...) {
+  standardGeneric("dtype")
+})
+
+#' @export
+setMethod("dtype", "Dim",
+          function(object) {
+            tiledb_dim_datatype(object@ptr)
           })

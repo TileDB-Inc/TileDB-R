@@ -54,6 +54,14 @@ tiledb_dim_domain <- function(dim) {
     .Call(`_tiledb_tiledb_dim_domain`, dim)
 }
 
+tiledb_dim_tile_extent <- function(dim) {
+    .Call(`_tiledb_tiledb_dim_tile_extent`, dim)
+}
+
+tiledb_dim_datatype <- function(dim) {
+    .Call(`_tiledb_tiledb_dim_datatype`, dim)
+}
+
 tiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_tiledb_domain`, ctx, dims)
 }
