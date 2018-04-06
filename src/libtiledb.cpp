@@ -733,8 +733,10 @@ std::string tiledb_vfs_remove_file(XPtr<tiledb::VFS> vfs, std::string uri) {
 // [[Rcpp::export]]
 R_xlen_t tiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::string uri) {
  try {
-    // TODO: hack, make this a correct cast
     uint64_t size = vfs->file_size(uri);
+    if (size > std::numeric_limits<R_xlen_t>::max()) {
+      throw Rcpp::exception("file size is greater than maximum R integer");
+    }
     return static_cast<R_xlen_t>(size);
  } catch (tiledb::TileDBError& err) {
    throw Rcpp::exception(err.what());
