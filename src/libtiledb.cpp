@@ -496,6 +496,32 @@ XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
 }
 
 // [[Rcpp::export]]
+IntegerVector tiledb_domain_rank(XPtr<tiledb::Domain> domain) {
+  try {
+    unsigned int rank = domain->rank();
+    if (rank > std::numeric_limits<int32_t>::max()) {
+      throw Rcpp::exception("tiledb::Domain rank is not representable by an R integer");
+    }
+    return IntegerVector({static_cast<int32_t>(rank),});
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+List tiledb_domain_dimensions(XPtr<tiledb::Domain> domain) {
+  try {
+    List dimensions;
+    for (auto& dim : domain->dimensions()) {
+      dimensions.push_back(XPtr<tiledb::Dimension>(new tiledb::Dimension(dim)));
+    }
+    return dimensions;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
 void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   try {
     domain->dump();

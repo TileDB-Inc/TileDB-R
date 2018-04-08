@@ -1,4 +1,5 @@
-#' @export
+#' @export Ctx
+#' @exportClass Ctx
 Ctx <- setClass("Ctx",
                 representation(ptr = "externalptr"))
 

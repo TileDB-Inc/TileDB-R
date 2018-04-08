@@ -1,8 +1,11 @@
-#' @export
+#' @export Dim
+#' @exportClass Dim
+Dim <- setClass("Dim", 
+                representation(ptr = "externalptr"))
 
-Dim <- setClass("Dim", representation(ptr = "externalptr"))
-
-is.scalar <- function(x, typestr) (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
+is.scalar <- function(x, typestr) {
+  (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
+}
 
 setMethod("initialize",  "Dim",
           function(.Object, ctx, name, domain, tile, type) {

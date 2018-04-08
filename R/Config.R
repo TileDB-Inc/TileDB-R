@@ -1,4 +1,5 @@
-#' @export
+#' @export Config
+#' @exportClass Config
 Config <- setClass("Config", 
                    representation(ptr = "externalptr"))
 
