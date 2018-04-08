@@ -1,21 +1,26 @@
-#' @export Config
 #' @exportClass Config
-Config <- setClass("Config", 
-                   representation(ptr = "externalptr"))
+setClass("Config", 
+         slots = list(ptr = "externalptr"))
 
-setMethod("initialize", "Config",
-          function(.Object, config = NA_character_, ptr = NULL) { 
-            if (!is.null(ptr)) {
-              stopifnot(typeof(ptr) == "externalptr") 
-              .Object@ptr <- ptr
-            } else if (!is.na(config)) {
-              stopifnot(typeof(config) == "character")
-              .Object@ptr <- tiledb_config(config)
-            } else {
-              .Object@ptr <- tiledb_config( )
-            }
-            .Object
-          })
+Config.from_ptr <- function(ptr) {
+  if (typeof(ptr) != "externalptr" || is.null(ptr)) {
+    stop("ptr must be a non NULL externalptr to a tiledb::Config instance")
+  }
+  new("Config", ptr = ptr)
+}
+
+#' @export Config
+Config <- function(config = NA_character_) {
+  if (!is.na(config)) {
+    if (typeof(config) != "character" || is.null(names(config))) {
+      stop("config arugment must be a name, value character vector") 
+    }
+    ptr <- tiledb_config(config)
+  } else {
+    ptr <- tiledb_config()
+  }
+  new("Config", ptr = ptr)
+}
 
 setMethod("[", "Config",
           function(x, i, j, ...) {
@@ -57,9 +62,10 @@ setMethod("show", signature(object = "Config"),
 Config.from_file <- function(path) {
   stopifnot(typeof(path) == "character")
   ptr <- tiledb_config_load_from_file(path)
-  tiledb::Config(ptr = ptr)
+  Config.from_ptr(ptr)
 }
 
+#' @export
 as.vector.Config <- function(x, mode="any") {
   tiledb_config_vector(x@ptr)
 }

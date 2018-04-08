@@ -525,7 +525,7 @@ List tiledb_domain_dimensions(XPtr<tiledb::Domain> domain) {
 void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   try {
     domain->dump();
-    Rcout << domain << std::endl;
+    return;
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
