@@ -2,10 +2,6 @@
 setClass("Dim", 
          slots = list(ptr = "externalptr"))
 
-is.scalar <- function(x, typestr) {
-  (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
-}
-
 Dim.from_ptr <- function(ptr) {
   if (typeof(ptr) != "externalptr" || is.null(ptr)) {
     stop("ptr argument must be a non NULL externalptr to a tiledb::Dim instance")
@@ -14,7 +10,7 @@ Dim.from_ptr <- function(ptr) {
 }
 
 #' @export Dim
-Dim <- function(ctx, name, domain, tile, type) {
+Dim <- function(ctx, name="", domain, tile, type) {
   if (!is(ctx, "Ctx")) {
     stop("ctx argument must be a tiledb::Ctx")
   } else if (!is.scalar(name, "character")) {
@@ -39,46 +35,42 @@ Dim <- function(ctx, name, domain, tile, type) {
   new("Dim", ptr = ptr)
 }
 
-#' @export
-setGeneric("name", function(object, ...) {
-  standardGeneric("name")
-})
+#setGeneric("name", function(object) standardGeneric("name"))
 
 #' @export
-setMethod("name", "Dim",
+setMethod("name", signature(object = "Dim"),
           function(object) {
             tiledb_dim_name(object@ptr)
           })
 
 #' @export
-setGeneric("domain", function(object, ...) {
-  standardGeneric("domain")
-})
+setGeneric("domain", function(object) standardGeneric("domain"))
 
 #' @export
-setMethod("domain", "Dim",
+setMethod("domain", signature(object = "Dim"),
           function(object) {
             tiledb_dim_domain(object@ptr)
           })
 
 #' @export
-setGeneric("tile", function(object, ...) {
-  standardGeneric("tile")
-})
+setGeneric("tile", function(object) standardGeneric("tile"))
 
 #' @export
-setMethod("tile", "Dim",
+setMethod("tile", signature(object = "Dim"),
           function(object) {
             tiledb_dim_tile_extent(object@ptr)
           })
 
-#' @export
-setGeneric("dtype", function(object, ...) {
-  standardGeneric("dtype")
-})
+#setGeneric("datatype", function(object) standardGeneric("datatype"))
 
 #' @export
-setMethod("dtype", "Dim",
+setMethod("datatype", signature(object = "Dim"),
           function(object) {
             tiledb_dim_datatype(object@ptr)
           })
+
+#' @export
+is.anonymous.Dim <- function(object) {
+  name <- tiledb_dim_name(object@ptr)
+  nchar(name) == 0
+}

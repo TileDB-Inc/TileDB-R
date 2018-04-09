@@ -540,12 +540,14 @@ XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name,
    tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
    if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-    return XPtr<tiledb::Attribute>(
+    auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    return attr;
    } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-    return XPtr<tiledb::Attribute>(
+    auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    return attr;
    } else {
     throw Rcpp::exception("only integer (INT32), and real (FLOAT64) attributes are supported");
    }
@@ -554,10 +556,42 @@ XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name,
  }
 }
 
+// [[Rcpp::export]]
+std::string tiledb_attr_name(XPtr<tiledb::Attribute> attr) {
+  try {
+    return attr->name();
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
+  try {
+    return _tiledb_datatype_to_string(attr->type());
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+int tiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
+  try {
+    unsigned int ncells = attr->cell_val_num();
+    if (ncells > std::numeric_limits<int32_t>::max()) {
+      throw Rcpp::exception("tiledb::Attr ncells value not representable as an R integer");
+    }
+    return static_cast<int32_t>(ncells);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
 //[[Rcpp::export]]
 void tiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
   try {
     attr->dump();
+    return;
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }

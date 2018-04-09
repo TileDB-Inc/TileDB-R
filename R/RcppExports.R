@@ -82,6 +82,18 @@ tiledb_attr <- function(ctx, name, type) {
     .Call(`_tiledb_tiledb_attr`, ctx, name, type)
 }
 
+tiledb_attr_name <- function(attr) {
+    .Call(`_tiledb_tiledb_attr_name`, attr)
+}
+
+tiledb_attr_datatype <- function(attr) {
+    .Call(`_tiledb_tiledb_attr_datatype`, attr)
+}
+
+tiledb_attr_ncells <- function(attr) {
+    .Call(`_tiledb_tiledb_attr_ncells`, attr)
+}
+
 tiledb_attr_dump <- function(attr) {
     invisible(.Call(`_tiledb_tiledb_attr_dump`, attr))
 }

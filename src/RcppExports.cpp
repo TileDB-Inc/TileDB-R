@@ -234,6 +234,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_attr_name
+std::string tiledb_attr_name(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_tiledb_attr_name(SEXP attrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_attr_name(attr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_attr_datatype
+std::string tiledb_attr_datatype(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_tiledb_attr_datatype(SEXP attrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_attr_datatype(attr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_attr_ncells
+int tiledb_attr_ncells(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_tiledb_attr_ncells(SEXP attrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_attr_ncells(attr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_attr_dump
 void tiledb_attr_dump(XPtr<tiledb::Attribute> attr);
 RcppExport SEXP _tiledb_tiledb_attr_dump(SEXP attrSEXP) {
@@ -582,6 +615,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_domain_dimensions", (DL_FUNC) &_tiledb_tiledb_domain_dimensions, 1},
     {"_tiledb_tiledb_domain_dump", (DL_FUNC) &_tiledb_tiledb_domain_dump, 1},
     {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 3},
+    {"_tiledb_tiledb_attr_name", (DL_FUNC) &_tiledb_tiledb_attr_name, 1},
+    {"_tiledb_tiledb_attr_datatype", (DL_FUNC) &_tiledb_tiledb_attr_datatype, 1},
+    {"_tiledb_tiledb_attr_ncells", (DL_FUNC) &_tiledb_tiledb_attr_ncells, 1},
     {"_tiledb_tiledb_attr_dump", (DL_FUNC) &_tiledb_tiledb_attr_dump, 1},
     {"_tiledb_tiledb_array_schema", (DL_FUNC) &_tiledb_tiledb_array_schema, 6},
     {"_tiledb_tiledb_array_schema_dump", (DL_FUNC) &_tiledb_tiledb_array_schema_dump, 1},
