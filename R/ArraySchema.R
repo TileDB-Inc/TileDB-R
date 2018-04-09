@@ -2,6 +2,13 @@
 setClass("ArraySchema",
          slots = list(ptr = "externalptr"))
 
+ArraySchema.from_ptr <- function(ptr) {
+   if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
+    stop("ptr argument must be a non NULL externalptr to a tiledb::ArraySchema instance")
+  }
+  new("ArraySchema", ptr = ptr) 
+}
+
 #' @export
 ArraySchema <- function(ctx,
                         domain, 
