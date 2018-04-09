@@ -10,11 +10,12 @@ Attr.from_ptr <- function(ptr) {
 }
 
 #' @export 
-Attr <- function(ctx, name="", 
-                      type="FLOAT64", 
-                      compressor="NO_COMPRESSOR", 
-                      level=-1L,
-                      ncells=1) {
+Attr <- function(ctx, 
+                 name="", 
+                 type="FLOAT64", 
+                 compressor="NO_COMPRESSOR", 
+                 level=-1L,
+                 ncells=1) {
   if (missing(ctx) || !is(ctx, "Ctx")) {
     stop("ctx argument must be a tiledb::Ctx")
   } else if (!is.scalar(name, "character")) {
@@ -51,6 +52,15 @@ setGeneric("datatype", function(object) standardGeneric("datatype"))
 setMethod("datatype", signature(object = "Attr"),
           function(object) {
             tiledb_attr_datatype(object@ptr)
+          })
+
+#' @export
+setGeneric("ncells", function(object) standardGeneric("ncells"))
+
+#' @export
+setMethod("ncells", signature(object = "Attr"),
+          function(object) {
+            tiledb_attr_ncells(object@ptr)
           })
 
 #' @export

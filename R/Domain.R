@@ -8,8 +8,8 @@ Domain <- function(ctx, dims) {
     stop("argument ctx must be a tiledb::Ctx")
   }
   is_dim <- function(obj) is(obj, "Dim")
-  if (missing(dims) || !all(sapply(dims, is_dim))) {
-    stop("argument dims must be a list of tileb::Dim")
+  if (missing(dims) || length(dims) == 0 || !all(sapply(dims, is_dim))) {
+    stop("argument dims must be a list of one or more tileb::Dim")
   }
   dims_ptrs <- lapply(dims, function(obj) slot(obj, "ptr"))
   ptr <- tiledb_domain(ctx@ptr, dims_ptrs)
