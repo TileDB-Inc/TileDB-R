@@ -3,7 +3,7 @@ setClass("Dim",
          slots = list(ptr = "externalptr"))
 
 Dim.from_ptr <- function(ptr) {
-  if (typeof(ptr) != "externalptr" || is.null(ptr)) {
+  if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
     stop("ptr argument must be a non NULL externalptr to a tiledb::Dim instance")
   }
   new("Dim", ptr = ptr)

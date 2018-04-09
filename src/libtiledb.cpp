@@ -641,6 +641,15 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::Domain> tiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema) {
+  try {
+    return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
 void tiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
   try {
     schema->dump();

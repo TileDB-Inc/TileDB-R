@@ -29,5 +29,13 @@ ArraySchema <- function(ctx,
 
 setMethod("show", signature(object = "ArraySchema"),
           function(object) {
-            tiledb_array_schema_dump(object@ptr) 
+            tiledb_array_schema_dump(object@ptr)
           })
+
+#' @export
+dim.ArraySchema <- function(x) {
+  stopifnot(is(x, "ArraySchema"))
+  ptr <- tiledb_array_schema_domain(x@ptr)
+  dom <- Domain.from_ptr(ptr)
+  dim(dom)
+}

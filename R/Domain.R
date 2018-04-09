@@ -2,6 +2,13 @@
 setClass("Domain", 
          slots = list(ptr = "externalptr"))
 
+Domain.from_ptr <- function(ptr) {
+  if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
+    stop("ptr argument must be a non NULL externalptr to a tiledb::Domain instance")
+  }
+  new("Domain", ptr = ptr)
+}
+
 #' @export Domain
 Domain <- function(ctx, dims) {
   if (!is(ctx, "Ctx")) {

@@ -102,6 +102,10 @@ tiledb_array_schema <- function(ctx, domain, attributes, cell_order = "COL_MAJOR
     .Call(`_tiledb_tiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, sparse)
 }
 
+tiledb_array_schema_domain <- function(schema) {
+    .Call(`_tiledb_tiledb_array_schema_domain`, schema)
+}
+
 tiledb_array_schema_dump <- function(schema) {
     invisible(.Call(`_tiledb_tiledb_array_schema_dump`, schema))
 }
