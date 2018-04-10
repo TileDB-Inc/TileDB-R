@@ -20,6 +20,8 @@ If the TileDB library is installed in a custom location, you need to pass the ex
   
     devtools::install_github("TileDB-Inc/TileDB-R",
         args="--configure-args='--with-tiledb=/path/to/tiledb'"")
+        
+**Note** TileDB-R is uisng the `dev` (in development) version / branch of TileDB 
     
 ### Developer Documentation
 
