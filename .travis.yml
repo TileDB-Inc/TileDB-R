@@ -11,9 +11,9 @@ install:
     - git checkout dev
     - mkdir build
     - pushd build
-    - ../scripts/install-deps.sh
     - ../bootstrap --enable-verbose
-    - sudo make install -j4
+    - make -j 4
+    - sudo make -C tiledb install
     - popd
     - popd
 
