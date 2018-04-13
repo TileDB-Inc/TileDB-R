@@ -522,6 +522,16 @@ List tiledb_domain_dimensions(XPtr<tiledb::Domain> domain) {
 }
 
 // [[Rcpp::export]]
+std::string tiledb_domain_datatype(XPtr<tiledb::Domain> domain) {
+  try {
+    auto dtype = domain->type();
+    return _tiledb_datatype_to_string(dtype);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
 void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   try {
     domain->dump();
@@ -646,6 +656,20 @@ XPtr<tiledb::Domain> tiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema
     return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+List tiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
+  try {
+    List result;
+    auto attributes = schema->attributes();
+    for (const auto &attr : attributes) {
+      result[attr.first] = XPtr<tiledb::Attribute>(new tiledb::Attribute(attr.second));
+    }
+    return result;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
   }
 }
 

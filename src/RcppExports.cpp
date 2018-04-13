@@ -211,6 +211,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_domain_datatype
+std::string tiledb_domain_datatype(XPtr<tiledb::Domain> domain);
+RcppExport SEXP _tiledb_tiledb_domain_datatype(SEXP domainSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Domain> >::type domain(domainSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_domain_datatype(domain));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_domain_dump
 void tiledb_domain_dump(XPtr<tiledb::Domain> domain);
 RcppExport SEXP _tiledb_tiledb_domain_dump(SEXP domainSEXP) {
@@ -301,6 +312,17 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
     rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_domain(schema));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_array_schema_attributes
+List tiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_tiledb_array_schema_attributes(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_attributes(schema));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -624,6 +646,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_domain", (DL_FUNC) &_tiledb_tiledb_domain, 2},
     {"_tiledb_tiledb_domain_rank", (DL_FUNC) &_tiledb_tiledb_domain_rank, 1},
     {"_tiledb_tiledb_domain_dimensions", (DL_FUNC) &_tiledb_tiledb_domain_dimensions, 1},
+    {"_tiledb_tiledb_domain_datatype", (DL_FUNC) &_tiledb_tiledb_domain_datatype, 1},
     {"_tiledb_tiledb_domain_dump", (DL_FUNC) &_tiledb_tiledb_domain_dump, 1},
     {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 3},
     {"_tiledb_tiledb_attr_name", (DL_FUNC) &_tiledb_tiledb_attr_name, 1},
@@ -632,6 +655,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_attr_dump", (DL_FUNC) &_tiledb_tiledb_attr_dump, 1},
     {"_tiledb_tiledb_array_schema", (DL_FUNC) &_tiledb_tiledb_array_schema, 6},
     {"_tiledb_tiledb_array_schema_domain", (DL_FUNC) &_tiledb_tiledb_array_schema_domain, 1},
+    {"_tiledb_tiledb_array_schema_attributes", (DL_FUNC) &_tiledb_tiledb_array_schema_attributes, 1},
     {"_tiledb_tiledb_array_schema_dump", (DL_FUNC) &_tiledb_tiledb_array_schema_dump, 1},
     {"_tiledb_tiledb_array_create", (DL_FUNC) &_tiledb_tiledb_array_create, 2},
     {"_tiledb_tiledb_array_nonempty_domain", (DL_FUNC) &_tiledb_tiledb_array_nonempty_domain, 2},

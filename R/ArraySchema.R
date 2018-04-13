@@ -40,9 +40,33 @@ setMethod("show", signature(object = "ArraySchema"),
           })
 
 #' @export
-dim.ArraySchema <- function(x) {
-  stopifnot(is(x, "ArraySchema"))
-  ptr <- tiledb_array_schema_domain(x@ptr)
-  dom <- Domain.from_ptr(ptr)
-  dim(dom)
-}
+setGeneric("domain", function(object, ...) standardGeneric("domain"))
+
+#' @export
+setMethod("domain", "ArraySchema",
+          function(object) {
+            ptr <- tiledb_array_schema_domain(object@ptr)
+            Domain.from_ptr(ptr)
+          })
+
+#' @export
+setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
+
+#' @export
+setMethod("dimensions", "ArraySchema",
+          function(object) dimensions(domain(object)))
+
+#' @export
+setGeneric("attrs", function(object, ...) standardGeneric("attrs"))
+
+#' @export
+setMethod("attrs", "ArraySchema",
+          function (object) {
+            attrs <- tiledb_array_schema_attributes(object@ptr)
+            lapply(attrs, function(ptr) {
+              Attr.from_ptr(ptr) 
+            })
+          })
+
+#' @export
+dim.ArraySchema <- function(x) dim(domain(x))

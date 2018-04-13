@@ -6,7 +6,7 @@ Domain.from_ptr <- function(ptr) {
   if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
     stop("ptr argument must be a non NULL externalptr to a tiledb::Domain instance")
   }
-  new("Domain", ptr = ptr)
+  return(new("Domain", ptr = ptr))
 }
 
 #' @export Domain
@@ -20,28 +20,32 @@ Domain <- function(ctx, dims) {
   }
   dims_ptrs <- lapply(dims, function(obj) slot(obj, "ptr"))
   ptr <- tiledb_domain(ctx@ptr, dims_ptrs)
-  new("Domain", ptr = ptr)
+  return(new("Domain", ptr = ptr))
 }
 
 setMethod("show", "Domain",
           function(object) {
-            tiledb_domain_dump(object@ptr)
+            return(tiledb_domain_dump(object@ptr))
           })
-
-#' @export
-setGeneric("dimensions", function(object, ...) {
-  standardGeneric("dimensions")
-})
 
 #' @export
 setMethod("dimensions", "Domain", 
           function(object) {
             dim_ptrs <- tiledb_domain_dimensions(object@ptr)
-            lapply(dim_ptrs, Dim.from_ptr)
+            return(lapply(dim_ptrs, Dim.from_ptr))
           })
 
 #' @export
+setMethod("datatype", "Domain",
+          function(object) {
+            return(tiledb_domain_datatype(object@ptr))
+          })
+          
+#' @export
 dim.Domain <- function(x) {
-  stopifnot(is(x, "Domain"))
-  tiledb_domain_rank(x@ptr)
+  dtype <- datatype(x)
+  if (dtype == "FLOAT32" || dtype == "FLOAT64")  {
+   stop("dim() is only defined for integral domains") 
+  }
+  return(vapply(dimensions(x), dim, integer(1L)))
 }

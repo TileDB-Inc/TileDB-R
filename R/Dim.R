@@ -6,7 +6,7 @@ Dim.from_ptr <- function(ptr) {
   if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
     stop("ptr argument must be a non NULL externalptr to a tiledb::Dim instance")
   }
-  new("Dim", ptr = ptr)
+  return(new("Dim", ptr = ptr))
 }
 
 #' @export Dim
@@ -32,24 +32,19 @@ Dim <- function(ctx, name="", domain, tile, type) {
     stop("type argument must be \"INT32\" or \"FLOAT64\"")
   }
   ptr <- tiledb_dim(ctx@ptr, name, type, domain, tile)
-  new("Dim", ptr = ptr)
+  return(new("Dim", ptr = ptr))
 }
-
-#setGeneric("name", function(object) standardGeneric("name"))
 
 #' @export
 setMethod("name", signature(object = "Dim"),
           function(object) {
-            tiledb_dim_name(object@ptr)
+            return(tiledb_dim_name(object@ptr))
           })
-
-#' @export
-setGeneric("domain", function(object) standardGeneric("domain"))
 
 #' @export
 setMethod("domain", signature(object = "Dim"),
           function(object) {
-            tiledb_dim_domain(object@ptr)
+            return(tiledb_dim_domain(object@ptr))
           })
 
 #' @export
@@ -58,19 +53,27 @@ setGeneric("tile", function(object) standardGeneric("tile"))
 #' @export
 setMethod("tile", signature(object = "Dim"),
           function(object) {
-            tiledb_dim_tile_extent(object@ptr)
+            return(tiledb_dim_tile_extent(object@ptr))
           })
-
-#setGeneric("datatype", function(object) standardGeneric("datatype"))
 
 #' @export
 setMethod("datatype", signature(object = "Dim"),
           function(object) {
-            tiledb_dim_datatype(object@ptr)
+            return(tiledb_dim_datatype(object@ptr))
           })
 
 #' @export
 is.anonymous.Dim <- function(object) {
   name <- tiledb_dim_name(object@ptr)
-  nchar(name) == 0
+  return(nchar(name) == 0)
+}
+
+#' @export
+dim.Dim <- function(x) {
+  dtype <- datatype(x) 
+  if (dtype == "FLOAT32" || dtype == "FLOAT64") {
+    stop("dim() is only defined for integral domains") 
+  }
+  dom <- domain(x)
+  return(dom[2L] - dom[1L] + 1L)
 }

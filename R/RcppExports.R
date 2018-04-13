@@ -74,6 +74,10 @@ tiledb_domain_dimensions <- function(domain) {
     .Call(`_tiledb_tiledb_domain_dimensions`, domain)
 }
 
+tiledb_domain_datatype <- function(domain) {
+    .Call(`_tiledb_tiledb_domain_datatype`, domain)
+}
+
 tiledb_domain_dump <- function(domain) {
     invisible(.Call(`_tiledb_tiledb_domain_dump`, domain))
 }
@@ -104,6 +108,10 @@ tiledb_array_schema <- function(ctx, domain, attributes, cell_order = "COL_MAJOR
 
 tiledb_array_schema_domain <- function(schema) {
     .Call(`_tiledb_tiledb_array_schema_domain`, schema)
+}
+
+tiledb_array_schema_attributes <- function(schema) {
+    .Call(`_tiledb_tiledb_array_schema_attributes`, schema)
 }
 
 tiledb_array_schema_dump <- function(schema) {
