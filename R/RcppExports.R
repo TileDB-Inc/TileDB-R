@@ -102,7 +102,7 @@ tiledb_attr_dump <- function(attr) {
     invisible(.Call(`_tiledb_tiledb_attr_dump`, attr))
 }
 
-tiledb_array_schema <- function(ctx, domain, attributes, cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE) {
+tiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, sparse) {
     .Call(`_tiledb_tiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, sparse)
 }
 
@@ -112,6 +112,18 @@ tiledb_array_schema_domain <- function(schema) {
 
 tiledb_array_schema_attributes <- function(schema) {
     .Call(`_tiledb_tiledb_array_schema_attributes`, schema)
+}
+
+tiledb_array_schema_cell_order <- function(schema) {
+    .Call(`_tiledb_tiledb_array_schema_cell_order`, schema)
+}
+
+tiledb_array_schema_tile_order <- function(schema) {
+    .Call(`_tiledb_tiledb_array_schema_tile_order`, schema)
+}
+
+tiledb_array_schema_sparse <- function(schema) {
+    .Call(`_tiledb_tiledb_array_schema_sparse`, schema)
 }
 
 tiledb_array_schema_dump <- function(schema) {

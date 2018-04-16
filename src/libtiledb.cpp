@@ -77,6 +77,21 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
   }
 }
 
+const char* _tiledb_layout_to_string(tiledb_layout_t layout) {
+  switch(layout) {
+    case TILEDB_ROW_MAJOR:
+      return "ROW_MAJOR";
+    case TILEDB_COL_MAJOR:
+      return "COL_MAJOR";
+    case TILEDB_GLOBAL_ORDER:
+      return "GLOBAL_ORDER";
+    case TILEDB_UNORDERED:
+      return "UNORDERED";
+    default:
+        throw Rcpp::exception("unknown tiledb_datatype_t");
+  }
+}
+
 tiledb_layout_t _string_to_tiledb_layout(std::string lstr) {
   if (lstr == "ROW_MAJOR")  {
     return TILEDB_ROW_MAJOR;
@@ -615,9 +630,9 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
     XPtr<tiledb::Context> ctx, 
     XPtr<tiledb::Domain> domain,
     List attributes,
-    std::string cell_order="COL_MAJOR",
-    std::string tile_order="COL_MAJOR",
-    bool sparse=false) {
+    std::string cell_order,
+    std::string tile_order,
+    bool sparse) {
   // check that external pointers are supported
   R_xlen_t nattr = attributes.length();
   if (nattr == 0) {
@@ -641,6 +656,10 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
       auto attr = as<XPtr<tiledb::Attribute>>(a);
       schema->add_attribute(*attr.get());
     }
+    Rcout << "DEBUG: " << " cell_order: " << cell_order << " tile_order: " << tile_order << std::endl;
+    Rcout << "DEBUG: " 
+          << " cell_order: " << _tiledb_layout_to_string(_cell_order) 
+          << " tile_order: " << _tiledb_layout_to_string(_tile_order) << std::endl;
     schema->set_cell_order(_cell_order);
     schema->set_tile_order(_tile_order);
     schema->check(); 
@@ -668,6 +687,35 @@ List tiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
       result[attr.first] = XPtr<tiledb::Attribute>(new tiledb::Attribute(attr.second));
     }
     return result;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema) {
+  try {
+    auto order = schema->cell_order();
+    return _tiledb_layout_to_string(order);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
+  try {
+    auto order = schema->tile_order();
+    return _tiledb_layout_to_string(order);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());  
+  }
+}
+
+// [[Rcpp::export]]
+bool tiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
+  try {
+    return (schema->array_type() == TILEDB_SPARSE);
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
   }

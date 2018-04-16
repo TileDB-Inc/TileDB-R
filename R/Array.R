@@ -30,39 +30,66 @@ Array.load <- function(ctx, uri) {
 setMethod("show", "Array",
           function (object) {
             cat("tiledb::Array object @ ", object@uri, "\n")
-            print(object@schema)
-            invisible(object)
+            invisible(print(object[]))
           })
 
+DEBUG_INDEXING <- function(i, j, ...) {
+  if (missing(i)) {
+    print("DEBUG: i missing")
+  } else  {
+    print(cat("DEBUG i: ", i)) 
+  }
+  if (missing(j)) {
+    print("DEBUG: j missing")
+  } else {
+    print(cat("DEBUG i: ", j)) 
+  }
+  if (missing(...)) {
+    print("DEBUG: ... missing")
+  } else {
+    print(cat("DEBUG ...: ", list(...)))
+  }
+}
+
 setMethod("[", "Array",
-          function(x, i, j, value) {
+          function(x, i, j, ...) {
             ctx <- x@ctx
+            schema <- x@schema
             uri <- x@uri
             if (missing(i) && missing(j)) {
-              result <- array(0, c(100, 100))  
+              result <- array(0, dim(schema))
+              attr_name <- name(attrs(schema)[[1L]])
               qry <- tiledb_query(ctx@ptr, uri, "READ")
               qry <- tiledb_query_set_layout(qry, "COL_MAJOR")
-              qry <- tiledb_query_set_buffer(qry, "foo", result)
-              tiledb_query_submit(qry)
+              qry <- tiledb_query_set_buffer(qry, attr_name, result)
+              qry <- tiledb_query_submit(qry)
+              if (tiledb_query_status(qry) != "COMPLETE") {
+                stop("error in read query")
+              }
               return(result);
             } else {
+              DEBUG_INDEXING(i, j, ...)
               stop("indexing functionality not implemented") 
             }           
           })
 
 setMethod("[<-", "Array",
-          function(x, i, j, value) {
+          function(x, i, j, ..., value) {
             ctx <- x@ctx
+            schema <- x@schema
             uri <- x@uri
             if (missing(i) && missing(j)) {
+              attr_name <- name(attrs(schema)[[1L]])
               qry <- tiledb_query(ctx@ptr, uri, "WRITE") 
               qry <- tiledb_query_set_layout(qry, "COL_MAJOR")
-              qry <- tiledb_query_set_buffer(qry, "foo", value)
-              #qry <- tiledb_query_set_subarray(qry, c(1, 100, 1, 100))
-              tiledb_query_submit(qry)
-              return();
+              qry <- tiledb_query_set_buffer(qry, attr_name, value)
+              qry <- tiledb_query_submit(qry)
+              if (tiledb_query_status(qry) != "COMPLETE") {
+                stop("error in query write") 
+              }
+              return(x);
             } else {
+              DEBUG_INDEXING(i, j, ...)
               stop("indexing functionality not implemented") 
             }
           })
-

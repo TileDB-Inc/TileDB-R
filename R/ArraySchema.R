@@ -69,4 +69,31 @@ setMethod("attrs", "ArraySchema",
           })
 
 #' @export
+setGeneric("cell_order", function(object, ...) standardGeneric("cell_order"))
+
+#' @export
+setMethod("cell_order", "ArraySchema",
+          function(object) {
+            tiledb_array_schema_cell_order(object@ptr) 
+          })
+
+#' @export
+setGeneric("tile_order", function(object, ...) standardGeneric("tile_order"))
+
+#' @export
+setMethod("tile_order", "ArraySchema",
+          function(object) {
+            tiledb_array_schema_tile_order(object@ptr) 
+          })
+
+#' @export
+setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
+
+#' @export
+setMethod("is.sparse", "ArraySchema",
+          function(object) {
+            tiledb_array_schema_sparse(object@ptr) 
+          })
+ 
+#' @export
 dim.ArraySchema <- function(x) dim(domain(x))

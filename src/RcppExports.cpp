@@ -326,6 +326,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_array_schema_cell_order
+std::string tiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_tiledb_array_schema_cell_order(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_cell_order(schema));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_array_schema_tile_order
+std::string tiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_tiledb_array_schema_tile_order(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_tile_order(schema));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_array_schema_sparse
+bool tiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_tiledb_array_schema_sparse(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_sparse(schema));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_array_schema_dump
 void tiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_tiledb_array_schema_dump(SEXP schemaSEXP) {
@@ -656,6 +689,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_array_schema", (DL_FUNC) &_tiledb_tiledb_array_schema, 6},
     {"_tiledb_tiledb_array_schema_domain", (DL_FUNC) &_tiledb_tiledb_array_schema_domain, 1},
     {"_tiledb_tiledb_array_schema_attributes", (DL_FUNC) &_tiledb_tiledb_array_schema_attributes, 1},
+    {"_tiledb_tiledb_array_schema_cell_order", (DL_FUNC) &_tiledb_tiledb_array_schema_cell_order, 1},
+    {"_tiledb_tiledb_array_schema_tile_order", (DL_FUNC) &_tiledb_tiledb_array_schema_tile_order, 1},
+    {"_tiledb_tiledb_array_schema_sparse", (DL_FUNC) &_tiledb_tiledb_array_schema_sparse, 1},
     {"_tiledb_tiledb_array_schema_dump", (DL_FUNC) &_tiledb_tiledb_array_schema_dump, 1},
     {"_tiledb_tiledb_array_create", (DL_FUNC) &_tiledb_tiledb_array_create, 2},
     {"_tiledb_tiledb_array_nonempty_domain", (DL_FUNC) &_tiledb_tiledb_array_nonempty_domain, 2},
