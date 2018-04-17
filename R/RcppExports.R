@@ -34,8 +34,8 @@ tiledb_config_set <- function(config, param, value) {
     .Call(`_tiledb_tiledb_config_set`, config, param, value)
 }
 
-tiledb_config_get <- function(config, param) {
-    .Call(`_tiledb_tiledb_config_get`, config, param)
+tiledb_config_get <- function(config, params) {
+    .Call(`_tiledb_tiledb_config_get`, config, params)
 }
 
 tiledb_config_dump <- function(config) {

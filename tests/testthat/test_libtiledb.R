@@ -22,8 +22,8 @@ test_that("construct tiledb_config with vector of parameters", {
 })
 
 test_that("tiledb_config_get throws an error if paramter does not exist", {
-  config <- tiledb_config()
-  expect_error(tiledb_config_get(config, "don't exist"))
+  config <- tiledb_config()u
+  expect_equal(unname(tiledb_config_get(config, "don't exist")), c(NA))
 })
 
 test_that("construct tiledb_config with an empty vector of paramters", {

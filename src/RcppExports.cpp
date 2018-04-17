@@ -97,14 +97,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // tiledb_config_get
-CharacterVector tiledb_config_get(XPtr<tiledb::Config> config, std::string param);
-RcppExport SEXP _tiledb_tiledb_config_get(SEXP configSEXP, SEXP paramSEXP) {
+CharacterVector tiledb_config_get(XPtr<tiledb::Config> config, CharacterVector params);
+RcppExport SEXP _tiledb_tiledb_config_get(SEXP configSEXP, SEXP paramsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
-    Rcpp::traits::input_parameter< std::string >::type param(paramSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_config_get(config, param));
+    Rcpp::traits::input_parameter< CharacterVector >::type params(paramsSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_config_get(config, params));
     return rcpp_result_gen;
 END_RCPP
 }

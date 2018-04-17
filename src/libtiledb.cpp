@@ -219,11 +219,18 @@ XPtr<tiledb::Config> tiledb_config_set(XPtr<tiledb::Config> config,
 
 // [[Rcpp::export]]
 CharacterVector tiledb_config_get(XPtr<tiledb::Config> config,
-                                  std::string param) {
+                                  CharacterVector params) {
   try {
-    CharacterVector res;
-    res[param] = config->get(param);
-    return res; 
+    CharacterVector result;
+    for (auto const& p : params) {
+      auto param = as<std::string>(p);
+      try {
+        result.push_back(config->get(param), param);
+      } catch (std::exception& err) {
+        result.push_back(NA_STRING, as<std::string>(NA_STRING));
+      }
+    }
+    return result; 
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
