@@ -2,7 +2,7 @@ library(tiledb)
 context("libtiledb")
 
 test_that("version is valid", {
-  ver <- tiledb_version()
+  ver <- libtiledb_version()
   expect_equal(length(ver), 3)
   expect_equal(ver[1], c(major = 1))
   expect_gte(ver[2], c(minor = 0))
@@ -118,30 +118,44 @@ test_that("basic tiledb_array_schema construcotor works", {
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   att <- tiledb_attr(ctx, "a1", "FLOAT64")
-  sch <- tiledb_array_schema(ctx, dom, c(att), sparse = FALSE)
+  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   expect_is(sch, "externalptr")
 })
 
 test_that("basic dense vector tiledb_array creation works", {
   tmp <- tempdir()
+  setup({
+   if (dir.exists(tmp)) {
+    unlink(tmp, recursive = TRUE)
+    dir.create(tmp)
+   }
+  })
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   att <- tiledb_attr(ctx, "a1", "FLOAT64")
-  sch <- tiledb_array_schema(ctx, dom, c(att), sparse = FALSE)
+  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_array", sep = "/")
   uri <- tiledb_array_create(sch, pth)
   expect_true(dir.exists(pth))
-  teardown(unlink(tmp, recursive = TRUE))
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
 })
 
 test_that("basic dense vector writes / reads works", {
   tmp <- tempdir()
+  setup({
+   if (dir.exists(tmp)) {
+    unlink(tmp, recursive = TRUE)
+    dir.create(tmp)
+   }
+  })
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   att <- tiledb_attr(ctx, "a1", "FLOAT64")
-  sch <- tiledb_array_schema(ctx, dom, c(att), sparse = FALSE)
+  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(sch, pth)
   
@@ -156,16 +170,24 @@ test_that("basic dense vector writes / reads works", {
   qry2 <- tiledb_query_set_buffer(qry2, "a1", res)
   qry2 <- tiledb_query_submit(qry2)
   expect_equal(res, dat)
-  teardown(unlink(tmp, recursive = TRUE))
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
 })
 
 test_that("basic dense vector read subarray works", {
   tmp <- tempdir()
+  setup({
+   if (dir.exists(tmp)) {
+    unlink(tmp, recursive = TRUE)
+    dir.create(tmp)
+   }
+  })
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   att <- tiledb_attr(ctx, "a1", "FLOAT64")
-  sch <- tiledb_array_schema(ctx, dom, c(att), sparse = FALSE)
+  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(sch, pth)
   
@@ -180,8 +202,10 @@ test_that("basic dense vector read subarray works", {
   qry2 <- tiledb_query(ctx, uri, "READ")
   qry2 <- tiledb_query_set_buffer(qry2, "a1", res)
   qry2 <- tiledb_query_submit(qry2)
-  expect_equal(res, dat)
-  teardown(unlink(tmp, recursive = TRUE))
+  expect_equal(res, dat[sub])
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
 })
 
 test_that("basic tiledb vfs constructor works", {
@@ -196,6 +220,12 @@ test_that("basic tiledb vfs constructor works", {
 
 test_that("basic vfs is_dir, is_file functionality works", {
   tmp <- tempdir()
+  setup({
+   if (dir.exists(tmp)) {
+    unlink(tmp, recursive = TRUE)
+    dir.create(tmp)
+   }
+  })
   
   ctx <- tiledb_ctx()
   vfs <- tiledb_vfs(ctx)
@@ -212,5 +242,7 @@ test_that("basic vfs is_dir, is_file functionality works", {
   # test file
   expect_true(tiledb_vfs_is_file(vfs, test_file_path))
   expect_false(tiledb_vfs_is_file(vfs, tmp))
-  teardown(unlink(tmp, recursive = TRUE))
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
 })

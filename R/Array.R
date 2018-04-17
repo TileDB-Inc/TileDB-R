@@ -33,22 +33,55 @@ setMethod("show", "Array",
             invisible(print(object[]))
           })
 
-DEBUG_INDEXING <- function(i, j, ...) {
-  if (missing(i)) {
-    print("DEBUG: i missing")
-  } else  {
-    print(cat("DEBUG i: ", i)) 
+DEBUG_INDEXING  <- function(i, j, ...) {
+  stopifnot(dom, "Domain")
+  if(missing(i)) {
+    i <- integer(0)
   }
-  if (missing(j)) {
-    print("DEBUG: j missing")
-  } else {
-    print(cat("DEBUG i: ", j)) 
+  if(missing(j)) {
+    j <- integer(0)
   }
-  if (missing(...)) {
-    print("DEBUG: ... missing")
-  } else {
-    print(cat("DEBUG ...: ", list(...)))
+  indices <- list(i, j, ...)
+  indices <- indices[sapply(indices, length) > 0]
+  stopifnot(is.list(indices))
+  if (any(is.na(unlist(indices)))) {
+    stop("NAs are not allowed in element coordinates.")
   }
+  if(any(unlist(indices) < 1L)) {
+    stop("Elements of parameter elem must be greater or equal than one.")
+  }
+  # Calculate contiguous index selections
+  startidx <- lapply(indices, 
+                     function(x) {
+                      if(length(x) > 1) 
+                        which(c(TRUE, diff(x) > 1)) 
+                      else 
+                        1
+                     })
+  print("DEBUG: startidx: ")
+  print(startidx)
+  
+  count <- lapply(1:length(startidx), function(i) 
+    diff(c(startidx[[i]], length(indices[[i]]) + 1)))
+  
+  print("DEBUG: count: ")
+  print(count)
+  
+  countsum <- sapply(count, sum)
+  print("DEBUG: countsum: ")
+  print(countsum) 
+  
+  startidx <- as.matrix(expand.grid(startidx))
+  print("DEBUG: startidx: ")
+  print(startidx)
+  
+  count <- as.matrix(expand.grid(count))
+  print("DEBUG: count: ")
+  print(count) 
+  offset <- do.call(cbind, lapply(1:length(indices), 
+                                  function(i) indices[[i]][startidx[, i]]))
+  print("DEBUG: offset: ")
+  print(offset)
 }
 
 setMethod("[", "Array",
@@ -68,7 +101,7 @@ setMethod("[", "Array",
               }
               return(result);
             } else {
-              DEBUG_INDEXING(i, j, ...)
+              DEBUG_INDEXING(domain(schema), i, j, ...)
               stop("indexing functionality not implemented") 
             }           
           })
@@ -89,7 +122,11 @@ setMethod("[<-", "Array",
               }
               return(x);
             } else {
-              DEBUG_INDEXING(i, j, ...)
+              DEBUG_INDEXING(domain(schema), i, j, ...)
               stop("indexing functionality not implemented") 
             }
           })
+
+as.array.Array <- function(x, ...) {
+ return(x[]) 
+}

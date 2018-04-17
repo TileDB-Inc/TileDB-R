@@ -656,10 +656,6 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
       auto attr = as<XPtr<tiledb::Attribute>>(a);
       schema->add_attribute(*attr.get());
     }
-    Rcout << "DEBUG: " << " cell_order: " << cell_order << " tile_order: " << tile_order << std::endl;
-    Rcout << "DEBUG: " 
-          << " cell_order: " << _tiledb_layout_to_string(_cell_order) 
-          << " tile_order: " << _tiledb_layout_to_string(_tile_order) << std::endl;
     schema->set_cell_order(_cell_order);
     schema->set_tile_order(_tile_order);
     schema->check(); 
