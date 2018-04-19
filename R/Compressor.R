@@ -4,10 +4,7 @@ setClass("Compressor",
 
 Compressor.from_ptr <- function(ptr) {
   stopifnot(is(ptr, "externalptr"))
-  label <- tiledb_compressor_label(ptr)
-  level <- tiledb_compressor_level(ptr)
-  ptr <- tiledb_compressor(label, level)
-  return(new("Compressor", ptr= ptr))
+  return(new("Compressor", ptr = ptr))
 }
 
 #' @export Compressor

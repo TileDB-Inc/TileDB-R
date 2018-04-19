@@ -715,6 +715,14 @@ std::string tiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::Compressor> tiledb_attr_compressor(XPtr<tiledb::Attribute> attr) {
+  try {
+    return XPtr<tiledb::Compressor>(new tiledb::Compressor(attr->compressor()));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());  
+  }
+}
+// [[Rcpp::export]]
 int tiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
   try {
     unsigned int ncells = attr->cell_val_num();

@@ -303,6 +303,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_attr_compressor
+XPtr<tiledb::Compressor> tiledb_attr_compressor(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_tiledb_attr_compressor(SEXP attrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_attr_compressor(attr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_attr_ncells
 int tiledb_attr_ncells(XPtr<tiledb::Attribute> attr);
 RcppExport SEXP _tiledb_tiledb_attr_ncells(SEXP attrSEXP) {
@@ -723,6 +734,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 5},
     {"_tiledb_tiledb_attr_name", (DL_FUNC) &_tiledb_tiledb_attr_name, 1},
     {"_tiledb_tiledb_attr_datatype", (DL_FUNC) &_tiledb_tiledb_attr_datatype, 1},
+    {"_tiledb_tiledb_attr_compressor", (DL_FUNC) &_tiledb_tiledb_attr_compressor, 1},
     {"_tiledb_tiledb_attr_ncells", (DL_FUNC) &_tiledb_tiledb_attr_ncells, 1},
     {"_tiledb_tiledb_attr_dump", (DL_FUNC) &_tiledb_tiledb_attr_dump, 1},
     {"_tiledb_tiledb_array_schema", (DL_FUNC) &_tiledb_tiledb_array_schema, 6},

@@ -106,6 +106,10 @@ tiledb_attr_datatype <- function(attr) {
     .Call(`_tiledb_tiledb_attr_datatype`, attr)
 }
 
+tiledb_attr_compressor <- function(attr) {
+    .Call(`_tiledb_tiledb_attr_compressor`, attr)
+}
+
 tiledb_attr_ncells <- function(attr) {
     .Call(`_tiledb_tiledb_attr_ncells`, attr)
 }
