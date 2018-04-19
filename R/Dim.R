@@ -19,15 +19,16 @@ Dim <- function(ctx, name="", domain, tile, type) {
              || (length(domain) != 2)) {
     stop("domain must be an integer or double vector of length 2")   
   } 
+  # by default, tile extent should span the whole domain
   if (missing(tile)) {
     if (is.integer(domain)) {
-      tile <- 0L
+      tile <- (domain[2L] - domain[1L]) + 1L
     } else {
-      tile <- 0.0
+      tile <- (domain[2L] - domain[1L])
     }
   }
   if (missing(type)) {
-    type <- "FLOAT64"
+    type <- ifelse(is.integer(domain), "INT32", "FLOAT64")
   } else if (type != "INT32" && type != "FLOAT64") {
     stop("type argument must be \"INT32\" or \"FLOAT64\"")
   }

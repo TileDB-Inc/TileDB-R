@@ -232,16 +232,52 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// tiledb_compressor
+XPtr<tiledb::Compressor> tiledb_compressor(std::string compressor, int level);
+RcppExport SEXP _tiledb_tiledb_compressor(SEXP compressorSEXP, SEXP levelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type compressor(compressorSEXP);
+    Rcpp::traits::input_parameter< int >::type level(levelSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_compressor(compressor, level));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_compressor_type
+std::string tiledb_compressor_type(XPtr<tiledb::Compressor> compressor);
+RcppExport SEXP _tiledb_tiledb_compressor_type(SEXP compressorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Compressor> >::type compressor(compressorSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_compressor_type(compressor));
+    return rcpp_result_gen;
+END_RCPP
+}
+// tiledb_compressor_level
+int tiledb_compressor_level(XPtr<tiledb::Compressor> compressor);
+RcppExport SEXP _tiledb_tiledb_compressor_level(SEXP compressorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Compressor> >::type compressor(compressorSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_compressor_level(compressor));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_attr
-XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type);
-RcppExport SEXP _tiledb_tiledb_attr(SEXP ctxSEXP, SEXP nameSEXP, SEXP typeSEXP) {
+XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type, XPtr<tiledb::Compressor> compressor, int ncells);
+RcppExport SEXP _tiledb_tiledb_attr(SEXP ctxSEXP, SEXP nameSEXP, SEXP typeSEXP, SEXP compressorSEXP, SEXP ncellsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_attr(ctx, name, type));
+    Rcpp::traits::input_parameter< XPtr<tiledb::Compressor> >::type compressor(compressorSEXP);
+    Rcpp::traits::input_parameter< int >::type ncells(ncellsSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_attr(ctx, name, type, compressor, ncells));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -681,7 +717,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_domain_dimensions", (DL_FUNC) &_tiledb_tiledb_domain_dimensions, 1},
     {"_tiledb_tiledb_domain_datatype", (DL_FUNC) &_tiledb_tiledb_domain_datatype, 1},
     {"_tiledb_tiledb_domain_dump", (DL_FUNC) &_tiledb_tiledb_domain_dump, 1},
-    {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 3},
+    {"_tiledb_tiledb_compressor", (DL_FUNC) &_tiledb_tiledb_compressor, 2},
+    {"_tiledb_tiledb_compressor_type", (DL_FUNC) &_tiledb_tiledb_compressor_type, 1},
+    {"_tiledb_tiledb_compressor_level", (DL_FUNC) &_tiledb_tiledb_compressor_level, 1},
+    {"_tiledb_tiledb_attr", (DL_FUNC) &_tiledb_tiledb_attr, 5},
     {"_tiledb_tiledb_attr_name", (DL_FUNC) &_tiledb_tiledb_attr_name, 1},
     {"_tiledb_tiledb_attr_datatype", (DL_FUNC) &_tiledb_tiledb_attr_datatype, 1},
     {"_tiledb_tiledb_attr_ncells", (DL_FUNC) &_tiledb_tiledb_attr_ncells, 1},

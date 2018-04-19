@@ -22,8 +22,8 @@ test_that("construct tiledb_config with vector of parameters", {
 })
 
 test_that("tiledb_config_get throws an error if paramter does not exist", {
-  config <- tiledb_config()u
-  expect_equal(unname(tiledb_config_get(config, "don't exist")), c(NA))
+  config <- tiledb_config()
+  expect_equal(unname(tiledb_config_get(config, "don't exist")), NA_character_)
 })
 
 test_that("construct tiledb_config with an empty vector of paramters", {
@@ -103,21 +103,24 @@ test_that("tiledb_domain throws an error when dimensions are different dtypes", 
 
 test_that("basic integer tiledb_attr constructor works", {
   ctx <- tiledb_ctx()
-  attr <- tiledb_attr(ctx, "a1", "INT32")
+  com <- tiledb_compressor("NO_COMPRESSION", -1)
+  attr <- tiledb_attr(ctx, "a1", "INT32", com, 1)
   expect_is(attr, "externalptr")
 })
 
 test_that("basic float64 tiledb_attr constructor works", {
   ctx <- tiledb_ctx()
-  attr <- tiledb_attr(ctx, "a1", "FLOAT64")
+  com <- tiledb_compressor("NO_COMPRESSION", -1)
+  attr <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   expect_is(attr, "externalptr")
 })
 
-test_that("basic tiledb_array_schema construcotor works", {
+test_that("basic tiledb_array_schema constructor works", {
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
-  att <- tiledb_attr(ctx, "a1", "FLOAT64")
+  com <- tiledb_compressor("GZIP", 5)
+  att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   expect_is(sch, "externalptr")
 })
@@ -133,7 +136,8 @@ test_that("basic dense vector tiledb_array creation works", {
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
-  att <- tiledb_attr(ctx, "a1", "FLOAT64")
+  com <- tiledb_compressor("NO_COMPRESSION", -1)
+  att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_array", sep = "/")
   uri <- tiledb_array_create(sch, pth)
@@ -154,7 +158,8 @@ test_that("basic dense vector writes / reads works", {
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
-  att <- tiledb_attr(ctx, "a1", "FLOAT64")
+  com <- tiledb_compressor("NO_COMPRESSION", -1)
+  att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(sch, pth)
@@ -186,7 +191,8 @@ test_that("basic dense vector read subarray works", {
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
-  att <- tiledb_attr(ctx, "a1", "FLOAT64")
+  com <- tiledb_compressor("NO_COMPRESSION", -1)
+  att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(sch, pth)

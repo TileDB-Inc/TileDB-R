@@ -108,6 +108,74 @@ tiledb_layout_t _string_to_tiledb_layout(std::string lstr) {
   }
 }
 
+tiledb_compressor_t _string_to_tiledb_compressor(std::string compr) {
+  if (compr == "NO_COMPRESSION") {
+    return TILEDB_NO_COMPRESSION;    
+  } else if (compr == "GZIP") {
+    return TILEDB_GZIP; 
+  } else if (compr == "ZSTD") {
+    return TILEDB_ZSTD;
+  } else if (compr == "LZ4") {
+    return TILEDB_LZ4; 
+  } else if (compr == "BLOSC_LZ") {
+    return TILEDB_BLOSC_LZ; 
+  } else if (compr == "BLOSC_LZ4") {
+    return TILEDB_BLOSC_LZ4;
+  } else if (compr == "BLOSC_LZ4HC") {
+    return TILEDB_BLOSC_LZ4HC;
+  } else if (compr == "BLOSC_SNAPPY") {
+    return TILEDB_BLOSC_SNAPPY; 
+  } else if (compr == "BLOSC_ZLIB") {
+    return TILEDB_BLOSC_ZLIB; 
+  } else if (compr == "BLOSC_ZSTD") {
+    return TILEDB_BLOSC_ZSTD; 
+  } else if (compr == "RLE") {
+    return TILEDB_RLE; 
+  } else if (compr == "BZIP2") {
+    return TILEDB_BZIP2; 
+  } else if (compr == "DOUBLE_DELTA") {
+    return TILEDB_DOUBLE_DELTA; 
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Unknown TileDB compressor \"" << compr << "\"";
+    throw Rcpp::exception(errmsg.str().c_str());
+  }
+}
+
+const char* _tiledb_compresssor_to_string(tiledb_compressor_t compr) {
+  switch(compr) {
+    case TILEDB_NO_COMPRESSION:
+     return "NO_COMPRESSION";
+    case TILEDB_GZIP:
+      return "GZIP";
+    case TILEDB_ZSTD:
+      return "ZSTD";
+    case TILEDB_LZ4:
+      return "LZ4";
+    case TILEDB_BLOSC_LZ:
+      return "BLOSC_LZ";
+    case TILEDB_BLOSC_LZ4:
+      return "BLOSC_LZ4";
+    case TILEDB_BLOSC_LZ4HC:
+      return "BLOSC_LZ4HC";
+    case TILEDB_BLOSC_SNAPPY:
+      return "BLOSC_SNAPPY";
+    case TILEDB_BLOSC_ZLIB:
+      return "BLOSC_ZLIB";
+    case TILEDB_BLOSC_ZSTD:
+      return "BLOSC_ZSTD";
+    case TILEDB_RLE:
+      return "RLE";
+    case TILEDB_BZIP2:
+      return "BZIP2";
+    case TILEDB_DOUBLE_DELTA:
+      return "DOUBLE_DELTA"; 
+    default: {
+      throw Rcpp::exception("unknown tiledb_compressor_t");
+    }
+  }  
+}
+
 tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
   if (qtstr == "READ") {
     return TILEDB_READ;
@@ -564,21 +632,61 @@ void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
 }
 
 /**
+ * TileDB Compressor
+ */
+//[[Rcpp::export]]
+XPtr<tiledb::Compressor> tiledb_compressor(std::string compressor, int level) {
+  try {
+    tiledb_compressor_t compr = _string_to_tiledb_compressor(compressor);
+    return XPtr<tiledb::Compressor>(new tiledb::Compressor({compr, level}));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+//[[Rcpp::export]]
+std::string tiledb_compressor_type(XPtr<tiledb::Compressor> compressor) {
+  try {
+    return _tiledb_compresssor_to_string(compressor->compressor());
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+//[[Rcpp::export]]
+int tiledb_compressor_level(XPtr<tiledb::Compressor> compressor) {
+  try {
+    return compressor->level(); 
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+/**
  * TileDB Attribute 
  */
 //[[Rcpp::export]]
-XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type) {
+XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, 
+                                    std::string name, 
+                                    std::string type,
+                                    XPtr<tiledb::Compressor> compressor, 
+                                    int ncells) {
  try {
    tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
+   if (ncells < 1) {
+     throw Rcpp::exception("ncells must be >= 1");
+   }
    if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    attr->set_compressor(*compressor);
     return attr;
    } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    attr->set_compressor(*compressor);
     return attr;
    } else {
     throw Rcpp::exception("only integer (INT32), and real (FLOAT64) attributes are supported");

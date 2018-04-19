@@ -82,8 +82,20 @@ tiledb_domain_dump <- function(domain) {
     invisible(.Call(`_tiledb_tiledb_domain_dump`, domain))
 }
 
-tiledb_attr <- function(ctx, name, type) {
-    .Call(`_tiledb_tiledb_attr`, ctx, name, type)
+tiledb_compressor <- function(compressor, level) {
+    .Call(`_tiledb_tiledb_compressor`, compressor, level)
+}
+
+tiledb_compressor_type <- function(compressor) {
+    .Call(`_tiledb_tiledb_compressor_type`, compressor)
+}
+
+tiledb_compressor_level <- function(compressor) {
+    .Call(`_tiledb_tiledb_compressor_level`, compressor)
+}
+
+tiledb_attr <- function(ctx, name, type, compressor, ncells) {
+    .Call(`_tiledb_tiledb_attr`, ctx, name, type, compressor, ncells)
 }
 
 tiledb_attr_name <- function(attr) {

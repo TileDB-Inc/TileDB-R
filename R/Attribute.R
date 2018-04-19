@@ -13,21 +13,20 @@ Attr.from_ptr <- function(ptr) {
 Attr <- function(ctx, 
                  name="", 
                  type="FLOAT64", 
-                 compressor="NO_COMPRESSOR", 
-                 level=-1L,
+                 compressor=tiledb::Compressor(),
                  ncells=1) {
   if (missing(ctx) || !is(ctx, "Ctx")) {
     stop("ctx argument must be a tiledb::Ctx")
   } else if (!is.scalar(name, "character")) {
     stop("name argument must be a scalar string")
-  } else if (type != "INT32" && type != "FLOAT64") {
+  } else if (!is.scalar(type, "character") || (type != "INT32" && type != "FLOAT64")) {
     stop("type argument must be \"INT32\" or \"FLOAT64\"")
-  } else if (!is.scalar(level, "double") && !is.scalar(level, "integer")) {
-    stop("level argument must be a integer or double scalar value")    
+  } else if(!is(compressor, "Compressor")) {
+    stop("compressor argument must be a tiledb::Compressor instance") 
   } else if (ncells != 1) {
     stop("only single cell attributes are supported")
-  } 
-  ptr <- tiledb_attr(ctx@ptr, name, type)
+  }
+  ptr <- tiledb_attr(ctx@ptr, name, type, compressor@ptr, ncells)
   new("Attr", ptr = ptr)
 }
 
@@ -52,6 +51,15 @@ setGeneric("datatype", function(object) standardGeneric("datatype"))
 setMethod("datatype", signature(object = "Attr"),
           function(object) {
             tiledb_attr_datatype(object@ptr)
+          })
+
+#' @export
+setGeneric("ncells", function(object) standardGeneric("ncells"))
+
+#' @export
+setMethod("ncells", signature(object = "Attr"),
+          function(object) {
+            tiledb_attr_ncells(object@ptr)
           })
 
 #' @export
