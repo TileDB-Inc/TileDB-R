@@ -54,9 +54,6 @@ setMethod("datatype", signature(object = "Attr"),
           })
 
 #' @export
-setGeneric("compressor", function(object, ...) standardGeneric("compressor"))
-
-#' @export
 setMethod("compressor", "Attr",
           function(object) {
             ptr <- tiledb_attr_compressor(object@ptr)

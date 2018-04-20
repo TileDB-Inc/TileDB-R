@@ -13,8 +13,10 @@ ArraySchema.from_ptr <- function(ptr) {
 ArraySchema <- function(ctx,
                         domain, 
                         attrs, 
-                        cell_order = "COL_MAJOR", 
+                        cell_order = "COL_MAJOR",
                         tile_order = "COL_MAJOR",
+                        coords_compressor = NULL,
+                        offsets_compressor = NULL,
                         sparse = FALSE) {
   if (missing(ctx) || !is(ctx, "Ctx")) {
     stop("ctx argument must be a tiledb::Ctx")
@@ -26,13 +28,35 @@ ArraySchema <- function(ctx,
   if (missing(attrs) || length(attrs) == 0 || !all(sapply(attrs, is_attr))) {
     stop("attrs argument must be a list of one or tiledb::Attr's")    
   }
+  if (!is.scalar(cell_order, "character")) {
+     stop("cell_order argument must be a scalar string")
+  }
+  if (!is.scalar(tile_order, "character")) {
+    stop("tile_order argument must be a scalar string")
+  }
+  if (!is.null(coords_compressor) && !is(coords_compressor, "Compressor")) {
+    stop("coords_compressor argument must be a tiledb::Compressor instance") 
+  }
+  if (!is.null(offsets_compressor) && !is(offsets_compressor, "Compressor")) {
+    stop("offsets_compressor argument must be a tiledb::Compressor instance") 
+  }
   if (!is.logical(sparse)) {
     stop("sparse argument must be a logical TRUE or FALSE")
   }
   attr_ptrs <- lapply(attrs, function(obj) slot(obj, "ptr"))
-  ptr <- tiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order, sparse)
-  new("ArraySchema", ptr = ptr)
+  coords_compressor_ptr <- NULL
+  if (!is.null(coords_compressor)) {
+    coords_compressor_ptr <- coords_compressor@ptr
+  }
+  offsets_compressor_ptr <- NULL
+  if (!is.null(offsets_compressor)) {
+    offsets_compressor_ptr <- offsets_compressor@ptr 
+  }
+  ptr <- tiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order, 
+                             coords_compressor_ptr, offsets_compressor_ptr, sparse) 
+  return(new("ArraySchema", ptr = ptr))
 }
+
 
 setMethod("show", signature(object = "ArraySchema"),
           function(object) {
@@ -84,6 +108,18 @@ setGeneric("tile_order", function(object, ...) standardGeneric("tile_order"))
 setMethod("tile_order", "ArraySchema",
           function(object) {
             tiledb_array_schema_tile_order(object@ptr) 
+          })
+
+#' @export
+setGeneric("compressor", function(object, ...) standardGeneric("compressor"))
+
+#' @export
+setMethod("compressor", "ArraySchema",
+          function(object) {
+            coords_ptr <- tiledb_array_schema_coords_compressor(object@ptr)
+            offsets_ptr <- tiledb_array_schema_offsets_compressor(object@ptr)
+            return(c(coords = Compressor.from_ptr(coords_ptr), 
+                     offsets = Compressor.from_ptr(offsets_ptr)))
           })
 
 #' @export

@@ -3,14 +3,15 @@ context("tiledb::Attr")
 
 test_that("tiledb::Attr constructor works", {
   ctx <- tiledb::Ctx()
-  a1 <- tiledb::Attr(ctx, "foo")
+  a1 <- tiledb::Attr(ctx)
   expect_is(a1, "Attr")
 })
 
 test_that("tiledb::Attr constructor defaults are correct", {
   ctx <- tiledb::Ctx()
-  a1 <- tiledb::Attr(ctx, "foo")
-  expect_equal(tiledb::name(a1), "foo")
+  a1 <- tiledb::Attr(ctx)
+  expect_equal(tiledb::name(a1), "")
+  expect_true(is.anonymous(a1))
   expect_equal(tiledb::datatype(a1), "FLOAT64")
   expect_equal(tiledb::ncells(a1), 1)
 })
@@ -38,5 +39,5 @@ test_that("tiledb::Attr throws an error with invalid ncells argument", {
   ctx <- tiledb::Ctx() 
   a1 <- tiledb::Attr(ctx, "foo", ncells = 1)
   expect_equal(tiledb::ncells(a1), 1) 
-  expect_error(tiledb::Attr(ctx, "foo", ncells = -1))
+  expect_error(tiledb::Attr(ctx, "foo", ncells = 0))
 })

@@ -755,7 +755,9 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
     List attributes,
     std::string cell_order,
     std::string tile_order,
-    bool sparse) {
+    Nullable<XPtr<tiledb::Compressor>> coords_compressor = R_NilValue,
+    Nullable<XPtr<tiledb::Compressor>> offsets_compressor = R_NilValue,
+    bool sparse = false) {
   // check that external pointers are supported
   R_xlen_t nattr = attributes.length();
   if (nattr == 0) {
@@ -781,6 +783,14 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
     }
     schema->set_cell_order(_cell_order);
     schema->set_tile_order(_tile_order);
+    if (coords_compressor.isNotNull()) {
+      XPtr<tiledb::Compressor> xptr_coords(coords_compressor);
+      schema->set_coords_compressor(*xptr_coords);
+    }
+    if (offsets_compressor.isNotNull()) {
+      XPtr<tiledb::Compressor> xptr_offsets(offsets_compressor);
+      schema->set_offsets_compressor(*xptr_offsets); 
+    }
     schema->check(); 
     return schema;
  } catch (tiledb::TileDBError& err) {
@@ -828,6 +838,24 @@ std::string tiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
     return _tiledb_layout_to_string(order);
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());  
+  }
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Compressor> tiledb_array_schema_coords_compressor(XPtr<tiledb::ArraySchema> schema) {
+  try {
+    return XPtr<tiledb::Compressor>(new tiledb::Compressor(schema->coords_compressor()));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Compressor> tiledb_array_schema_offsets_compressor(XPtr<tiledb::ArraySchema> schema) {
+  try {
+    return XPtr<tiledb::Compressor>(new tiledb::Compressor(schema->offsets_compressor())); 
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
   }
 }
 
