@@ -130,9 +130,10 @@ test_that("basic dense vector tiledb_array creation works", {
   setup({
    if (dir.exists(tmp)) {
     unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
    }
+   dir.create(tmp)
   })
+  
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
@@ -152,9 +153,10 @@ test_that("basic dense vector writes / reads works", {
   setup({
    if (dir.exists(tmp)) {
     unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
    }
+   dir.create(tmp)
   })
+  
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
@@ -185,8 +187,8 @@ test_that("basic dense vector read subarray works", {
   setup({
    if (dir.exists(tmp)) {
     unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
    }
+   dir.create(tmp)
   })
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
@@ -229,8 +231,8 @@ test_that("basic vfs is_dir, is_file functionality works", {
   setup({
    if (dir.exists(tmp)) {
     unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
    }
+   dir.create(tmp)
   })
   
   ctx <- tiledb_ctx()
