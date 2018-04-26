@@ -513,6 +513,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_query_set_subarray
+XPtr<tiledb::Query> tiledb_query_set_subarray(XPtr<tiledb::Query> query, SEXP subarray);
+RcppExport SEXP _tiledb_tiledb_query_set_subarray(SEXP querySEXP, SEXP subarraySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_query_set_subarray(query, subarray));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_query_set_buffer
 XPtr<tiledb::Query> tiledb_query_set_buffer(XPtr<tiledb::Query> query, std::string attr, SEXP buffer);
 RcppExport SEXP _tiledb_tiledb_query_set_buffer(SEXP querySEXP, SEXP attrSEXP, SEXP bufferSEXP) {
@@ -776,6 +788,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_array_load", (DL_FUNC) &_tiledb_tiledb_array_load, 2},
     {"_tiledb_tiledb_query", (DL_FUNC) &_tiledb_tiledb_query, 3},
     {"_tiledb_tiledb_query_set_layout", (DL_FUNC) &_tiledb_tiledb_query_set_layout, 2},
+    {"_tiledb_tiledb_query_set_subarray", (DL_FUNC) &_tiledb_tiledb_query_set_subarray, 2},
     {"_tiledb_tiledb_query_set_buffer", (DL_FUNC) &_tiledb_tiledb_query_set_buffer, 3},
     {"_tiledb_tiledb_query_submit", (DL_FUNC) &_tiledb_tiledb_query_submit, 1},
     {"_tiledb_tiledb_query_status", (DL_FUNC) &_tiledb_tiledb_query_status, 1},

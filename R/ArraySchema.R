@@ -122,6 +122,7 @@ setMethod("compressor", "ArraySchema",
                      offsets = Compressor.from_ptr(offsets_ptr)))
           })
 
+
 #' @export
 setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
 
@@ -132,4 +133,14 @@ setMethod("is.sparse", "ArraySchema",
           })
  
 #' @export
-dim.ArraySchema <- function(x) dim(domain(x))
+setGeneric("ndim", function(object, ...) standardGeneric("ndim"))
+
+#' @export
+setMethod("ndim", "ArraySchema",
+          function(object) {
+            dom <- tiledb::domain(object)
+           return(tiledb::ndim(dom)) 
+          })
+
+#' @export
+dim.ArraySchema <- function(x) dim(tiledb::domain(x))

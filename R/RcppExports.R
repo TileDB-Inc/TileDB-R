@@ -178,6 +178,10 @@ tiledb_query_set_layout <- function(query, layout) {
     .Call(`_tiledb_tiledb_query_set_layout`, query, layout)
 }
 
+tiledb_query_set_subarray <- function(query, subarray) {
+    .Call(`_tiledb_tiledb_query_set_subarray`, query, subarray)
+}
+
 tiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_tiledb_query_set_buffer`, query, attr, buffer)
 }

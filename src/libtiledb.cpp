@@ -976,16 +976,20 @@ XPtr<tiledb::Query> tiledb_query_set_layout(XPtr<tiledb::Query> query,
   }
 }
 
+// [[Rcpp::export]]
 XPtr<tiledb::Query> tiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                               SEXP subarray) {
   try {
     if (TYPEOF(subarray) == INTSXP) {
+      IntegerVector sub(subarray);
+      query->set_subarray(sub.begin(), sub.length());
       return query; 
     } else if (TYPEOF(subarray) == REALSXP) {
-      return query; 
+      NumericVector sub(subarray);
+      query->set_subarray(sub.begin(), sub.length());
+      return query;
     } else {
-      // TODO: better error
-      throw Rcpp::exception("invalid subarray type");
+      throw Rcpp::exception("invalid subarray datatype");
     }
   } catch (tiledb::TileDBError& err){
     throw Rcpp::exception(err.what());

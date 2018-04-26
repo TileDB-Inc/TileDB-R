@@ -64,6 +64,12 @@ setMethod("datatype", signature(object = "Dim"),
           })
 
 #' @export
+setMethod("ndim", "Dim",
+          function(object) {
+            return(1)            
+          })
+
+#' @export
 is.anonymous.Dim <- function(object) {
   name <- tiledb_dim_name(object@ptr)
   return(nchar(name) == 0)

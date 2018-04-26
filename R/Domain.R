@@ -40,7 +40,26 @@ setMethod("datatype", "Domain",
           function(object) {
             return(tiledb_domain_datatype(object@ptr))
           })
-          
+
+#' @export
+setMethod("ndim", "Domain",
+          function(object) {
+            return(tiledb_domain_rank(object@ptr))          
+          })
+
+#' @export
+setGeneric("is.integral", function(object) standardGeneric("is.integral"))
+ 
+#' @export
+setMethod("is.integral", "Domain",
+          function(object) {
+            dt <- tiledb::datatype(object) 
+            if (dt == "FLOAT32" || dt == "FLOAT64") {
+              return(FALSE) 
+            }
+            return(TRUE) 
+          })
+
 #' @export
 dim.Domain <- function(x) {
   dtype <- datatype(x)
