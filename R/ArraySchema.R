@@ -81,15 +81,32 @@ setMethod("dimensions", "ArraySchema",
           function(object) dimensions(domain(object)))
 
 #' @export
-setGeneric("attrs", function(object, ...) standardGeneric("attrs"))
+setGeneric("attrs", function(object, idx, ...) standardGeneric("attrs"))
 
 #' @export
-setMethod("attrs", "ArraySchema",
-          function (object) {
-            attrs <- tiledb_array_schema_attributes(object@ptr)
-            lapply(attrs, function(ptr) {
-              Attr.from_ptr(ptr) 
+setMethod("attrs", signature("ArraySchema"),
+          function (object, ...) {
+            attr_ptrs <- tiledb_array_schema_attributes(object@ptr)
+            attrs <- lapply(attr_ptrs, function(ptr) Attr.from_ptr(ptr))
+            names(attrs) <- sapply(attrs, function(attr) {
+              n <- tiledb::name(attr)
+              return(ifelse(n == "__attr", "", n))
             })
+            return(attrs)
+          })
+
+#' @export
+setMethod("attrs", signature("ArraySchema", "character"),
+          function(object, idx, ...) {
+            attrs <- tiledb::attrs(object)
+            return(attrs)
+          })
+
+#' @export
+setMethod("attrs", signature("ArraySchema", "numeric"),
+          function(object, idx, ...) {
+            attrs <- tiledb::attrs(object) 
+            return(attrs[idx])
           })
 
 #' @export

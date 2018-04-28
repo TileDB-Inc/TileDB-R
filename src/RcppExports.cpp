@@ -6,6 +6,17 @@
 
 using namespace Rcpp;
 
+// tiledb_datatype_R_type
+std::string tiledb_datatype_R_type(std::string datatype);
+RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type datatype(datatypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_datatype_R_type(datatype));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_version
 NumericVector libtiledb_version();
 RcppExport SEXP _tiledb_libtiledb_version() {
@@ -744,6 +755,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 1},
     {"_tiledb_tiledb_config_load_from_file", (DL_FUNC) &_tiledb_tiledb_config_load_from_file, 1},

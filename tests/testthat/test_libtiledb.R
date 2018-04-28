@@ -206,8 +206,9 @@ test_that("basic dense vector read subarray works", {
   expect_is(qry, "externalptr")
   
   res <- c(0, 0)
-  sub <- c(1, 2)
+  sub <- c(1L, 2L)
   qry2 <- tiledb_query(ctx, uri, "READ")
+  qry2 <- tiledb_query_set_subarray(qry2, sub)
   qry2 <- tiledb_query_set_buffer(qry2, "a1", res)
   qry2 <- tiledb_query_submit(qry2)
   expect_equal(res, dat[sub])

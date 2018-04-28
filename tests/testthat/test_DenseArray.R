@@ -111,7 +111,7 @@ test_that("Can read / write a simple 3D matrix", {
                dat[c(3, 4, 5), c(3, 4, 5), c(1, 2)])
   
   # vector range syntax
-  expect_equal(arr[1:3, 1:3, 1:2], dat[1:3, 1:3, 1:2]) 
+  expect_equal(arr[1:3, 1:3, 1:2], dat[1:3, 1:3, 1:2])
   
   # scalar indexing
   expect_equal(arr[3, 3, 3], dat[3, 3, 3])

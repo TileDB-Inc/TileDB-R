@@ -98,7 +98,7 @@ domain_subarray <- function(dom, i, j, ...) {
   sub <- integer(ndim * 2)
   for (i in 1L:ndim) {
     start <- offset[[i]]
-    end <- start + (count[[i]] - 1)
+    end <- start + (count[[i]] - 1L)
     idx <- (i - 1L) * 2L + 1L
     sub[idx] <- start
     sub[idx + 1L] <- end
@@ -106,6 +106,39 @@ domain_subarray <- function(dom, i, j, ...) {
   #print("Debug: subarray: ")
   #print(sub)
   return(sub)
+}
+
+subarray_shape <- function(sub) {
+  len <- length(sub) 
+  if ((len %% 2) != 0){
+    stop("invalid subarray length, must be a multiple of 2")
+  }
+  nd <- as.integer(len / 2)
+  shp <- integer(length = nd)
+  for (i in 1L:nd) {
+    idx <- (i - 1L) * 2L + 1L
+    shp[i] <- sub[idx + 1L] - sub[idx] + 1L
+  }
+  return(shp)
+}
+
+attribute_buffers <- function(sch, dom, sub) {
+  stopifnot(is(sch, "ArraySchema"))
+  stopifnot(is(dom, "Domain"))
+  shp <- subarray_shape(sub)
+  ncells <- prod(shp)
+  scalar <- all(shp == 1L)
+  attrs <- list()
+  for(attr in tiledb::attrs(sch)) {
+    type <- tiledb_datatype_R_type(tiledb::datatype(attr))
+    buff <- vector(mode = type, length = ncells)
+    if (!scalar) {
+      attr(buff, "dim") <- shp
+      #TODO: dimnames
+    }
+    attrs[[tiledb::name(attr)]] <- buff
+  }
+  return(attrs)
 }
 
 setMethod("[", "Array",
@@ -130,29 +163,22 @@ setMethod("[", "Array",
                 stop("subscript indexing only valid for integral Domain's")  
               }
               sub <- domain_subarray(dom, i, j, ...)
-              nd  <- tiledb::ndim(dom) 
-              shp <- integer(nd)
-              for (i in 1L:nd) {
-                idx <- (i - 1L) * 2L + 1L
-                shp[i] <- sub[idx + 1] - sub[idx] + 1L
-              }
-              if (all(shp == 1L)) {
-                # shape a scalar
-                result <- c(NA_real_)
-              } else {
-                # shape indicates an ND array 
-                result <- array(NA_real_ , shp)
-              }
-              attr_name <- name(attrs(schema)[[1L]])
+              buffers <- attribute_buffers(schema, dom, sub)
               qry <- tiledb_query(ctx@ptr, uri, "READ")
               qry <- tiledb_query_set_layout(qry, "COL_MAJOR")
               qry <- tiledb_query_set_subarray(qry, as.integer(sub))
-              qry <- tiledb_query_set_buffer(qry, attr_name, result)
+              for (attr_name in names(buffers)) {
+                qry <- tiledb_query_set_buffer(qry, attr_name, buffers[[attr_name]])
+              }
               qry <- tiledb_query_submit(qry)
               if (tiledb_query_status(qry) != "COMPLETE") {
-                stop("error in read query") 
+                stop("error in read query")
               }
-              return(result)
+              # if there is only one buffer, don't return a list of attribute buffers
+              if (length(buffers) == 1L) {
+                return(buffers[[1L]])
+              }
+              return(buffers)
             }           
           })
 
@@ -176,9 +202,30 @@ setMethod("[<-", "Array",
               if (!tiledb::is.integral(dom)) {
                 stop("subscript indexing only valid for integral Domain's")  
               }
-              sub <- domain_subarray(domain(schema), i, j, ...)
+              sub <- domain_subarray(dom, i, j, ...)
+              shp <- subarray_shape(sub)
+              if (!is.list(value)) { 
+                if (is.array(value) || is.vector(value)) {
+                  value <- list(value) 
+                } else {
+                  stop(paste("cannot assign value of type \"", typeof(value), "\""))
+                }
+              }
+              attrs <- tiledb::attrs(schema)
+              # check the list shape / types against attributes
+              value_names <- names(attrs)
+              if (is.null(value_names)) {
+                nvalue <- length(value)
+                nattrs <- length(attrs)
+                if (length(value) != length(attrs)) {
+                  stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
+                }
+              } else {
+                # check associative assignment
+                value_names <- names(attrs)
+              } 
               stop("indexing functionality not implemented") 
-            }
+             }
           })
 
 as.array.Array <- function(x, ...) {

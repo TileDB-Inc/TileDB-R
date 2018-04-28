@@ -72,6 +72,7 @@ test_that("tiledb::ArraySchema full constructor arugment values are correct",  {
   # test attrs
   as <- tiledb::attrs(sch) 
   expect_equal(length(as), 2)
+  expect_equal(names(as), c("attribute1", "attribute2"))
   expect_is(as[[1]], "Attr") 
   expect_is(as[[2]], "Attr") 
   

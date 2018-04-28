@@ -77,6 +77,39 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
   }
 }
 
+// [[Rcpp::export]]
+std::string tiledb_datatype_R_type(std::string datatype) {
+  tiledb_datatype_t dtype = _string_to_tiledb_datatype(datatype);
+  switch (dtype) {
+    case TILEDB_INT8:
+    case TILEDB_UINT8:
+    case TILEDB_INT16:
+    case TILEDB_UINT16:
+    case TILEDB_INT32:
+    case TILEDB_UINT32:
+    case TILEDB_INT64:
+    case TILEDB_UINT64:
+      return "integer";
+    case TILEDB_FLOAT32:
+    case TILEDB_FLOAT64:
+      return "double";
+    case TILEDB_CHAR:
+      return "raw";
+    case TILEDB_STRING_ASCII:
+    case TILEDB_STRING_UTF8:
+    case TILEDB_STRING_UTF16:
+    case TILEDB_STRING_UTF32:
+    case TILEDB_STRING_UCS2:
+    case TILEDB_STRING_UCS4:
+      return "character";
+    case TILEDB_ANY:
+      return "any"; 
+    default: {
+      throw Rcpp::exception("unknown tiledb_datatype_t");
+    }
+  }    
+}
+
 const char* _tiledb_layout_to_string(tiledb_layout_t layout) {
   switch(layout) {
     case TILEDB_ROW_MAJOR:
@@ -188,7 +221,6 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
   }
 }
 
-//' @export  
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
   try {
@@ -811,9 +843,10 @@ XPtr<tiledb::Domain> tiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema
 List tiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
   try {
     List result;
-    auto attributes = schema->attributes();
-    for (const auto &attr : attributes) {
-      result[attr.first] = XPtr<tiledb::Attribute>(new tiledb::Attribute(attr.second));
+    int nattr = schema->attribute_num();
+    for (unsigned int i=0; i < nattr; i++) {
+      auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(i)));
+      result[attr->name()] = attr;
     }
     return result;
   } catch (tiledb::TileDBError& err) {
