@@ -188,10 +188,16 @@ setMethod("[<-", "Array",
             schema <- x@schema
             uri <- x@uri
             if (missing(i) && missing(j)) {
-              attr_name <- name(attrs(schema)[[1L]])
+              if (typeof(value) != "list") {
+                attr_name <- tiledb::name(attrs(schema)[[1L]])
+                value <- list(value)
+                names(value) <- attr_name
+              }
               qry <- tiledb_query(ctx@ptr, uri, "WRITE") 
               qry <- tiledb_query_set_layout(qry, "COL_MAJOR")
-              qry <- tiledb_query_set_buffer(qry, attr_name, value)
+              for (i in seq_along(value)) {
+                qry <- tiledb_query_set_buffer(qry, names(value)[i], value[[i]])
+              }
               qry <- tiledb_query_submit(qry)
               if (tiledb_query_status(qry) != "COMPLETE") {
                 stop("error in write query") 
@@ -222,8 +228,7 @@ setMethod("[<-", "Array",
                 }
               } else {
                 # check associative assignment
-                value_names <- names(attrs)
-              } 
+              }
               stop("indexing functionality not implemented") 
              }
           })

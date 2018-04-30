@@ -120,3 +120,36 @@ test_that("Can read / write a simple 3D matrix", {
     unlink(tmp, recursive = TRUE)
   }) 
 })
+
+
+test_that("Can read / write 1D multi-attribute array", {
+  tmp <- tempdir()
+  setup({
+   if (dir.exists(tmp)) {
+    unlink(tmp, recursive = TRUE)
+    dir.create(tmp)
+   } else {
+    dir.create(tmp) 
+   }
+  })
+  
+  ctx <- tiledb::Ctx()
+  dim <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
+  dom <- tiledb::Domain(ctx, c(dim))
+  a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
+  a2  <- tiledb::Attr(ctx, "a2", type = "FLOAT64")
+  sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2)) 
+  
+  arr <- tiledb::Array(ctx, sch, tmp)
+  
+  a1_dat <- as.array(as.double(1:10))
+  a2_dat <- as.array(as.double(11:20))
+  
+  dat <- list(a1 = a1_dat, a2 = a2_dat) 
+  arr[] <- dat
+  expect_equal(arr[1:10], dat)
+  
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  }) 
+})

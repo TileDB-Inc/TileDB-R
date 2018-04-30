@@ -72,8 +72,9 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
   } else if (typestr == "UINT64") {
     return TILEDB_UINT64;
   } else {
-    std::string errmsg = "Unknown TileDB type \"" + typestr  + "\"";
-    throw Rcpp::exception(errmsg.c_str());
+    std::stringstream errmsg;
+    errmsg << "Unknown TileDB type \"" << typestr << "\"";
+    throw Rcpp::exception(errmsg.str().c_str());
   }
 }
 
@@ -1043,7 +1044,10 @@ XPtr<tiledb::Query> tiledb_query_set_buffer(XPtr<tiledb::Query> query,
       query->set_buffer(attr, vec.begin(), vec.length());
       return query;
     } else {
-      throw Rcpp::exception("invalid attribute buffer type");
+      std::stringstream errmsg;
+      errmsg << "Invalid attribute buffer type for attribute "
+             << "\""<< attr << "\": " << Rcpp::type2name(buffer); 
+      throw Rcpp::exception(errmsg.str().c_str());
     }
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
