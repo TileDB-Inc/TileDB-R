@@ -225,10 +225,10 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
   try {
-    auto ver = tiledb::Version::version();
-    return NumericVector::create(_["major"]=ver.major(),
-                                 _["minor"]=ver.minor(),
-                                 _["patch"]=ver.patch());
+    auto ver = tiledb::version();
+    return NumericVector::create(_["major"]=std::get<0>(ver),
+                                 _["minor"]=std::get<1>(ver),
+                                 _["patch"]=std::get<2>(ver));
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
@@ -588,6 +588,54 @@ std::string tiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
   }
 }
 
+// Computes the TileDB subarray for a given dimension domain
+// [[Rcpp::export]]
+NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript) {
+  if (domain.length() != 2) {
+    throw Rcpp::exception("invalid tiledb::Dimension domain"); 
+  }
+  double domain_lb = domain[0];
+  double domain_ub = domain[1];
+  auto sub0 = subscript[0];
+  if (sub0 == R_NaReal) {
+    throw Rcpp::exception("NA subscript not supported"); 
+  }
+  if (sub0 < domain_lb || sub0 > domain_ub) {
+    throw Rcpp::exception("subscript out of domain bounds");
+  }
+  if (subscript.length() == 1) {
+    return NumericVector({sub0, sub0});
+  }
+  // allocate 
+  auto sub = std::vector<double>();
+  sub.push_back(sub0);
+  R_xlen_t subscript_length = subscript.length();
+  for (R_xlen_t i = 1; i < subscript_length; i++) {
+    auto low = subscript[i - 1];
+    auto high = subscript[i]; 
+    if (high == R_NaReal) {
+      throw Rcpp::exception("NA subscripting not supported");
+    }
+    if (high < domain_lb || high > domain_ub) {
+      std::stringstream errmsg;
+      errmsg << "subscript out of domain bounds: (at index: [" << i << "] "
+             << high << " < " << domain_lb;
+      throw Rcpp::exception(errmsg.str().c_str());
+    }
+    double diff = high - low;
+    if (diff > 1.0 || diff < 1.0) {
+      // end one subarray range
+      sub.push_back(low);
+      // begin another subarray range
+      sub.push_back(high); 
+    }
+  }
+  // end final subarray range
+  double end = subscript[subscript_length - 1];
+  sub.push_back(end);
+  return wrap(sub);
+}
+
 /**
  * TileDB Domain
  */
@@ -663,6 +711,7 @@ void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
     throw Rcpp::exception(err.what());
   }
 }
+
 
 /**
  * TileDB Compressor
@@ -1064,6 +1113,16 @@ XPtr<tiledb::Query> tiledb_query_submit(XPtr<tiledb::Query> query) {
   }
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::Query> tiledb_query_finalize(XPtr<tiledb::Query> query) {
+  try {
+    query->finalize(); 
+    return query;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
 std::string _query_status_to_string(tiledb::Query::Status status) {
   switch (status) {
     case tiledb::Query::Status::COMPLETE:
@@ -1074,8 +1133,8 @@ std::string _query_status_to_string(tiledb::Query::Status status) {
       return "INPROGRESS";
     case tiledb::Query::Status::INCOMPLETE:
       return "INCOMPLETE";
-    case tiledb::Query::Status::UNDEF:
-      return "UNDEF";
+    case tiledb::Query::Status::UNINITIALIZED:
+      return "UNINITIALIZED";
   }
 }
 

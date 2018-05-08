@@ -65,6 +65,10 @@ tiledb_dim_datatype <- function(dim) {
     .Call(`_tiledb_tiledb_dim_datatype`, dim)
 }
 
+dim_domain_subarray <- function(domain, subscript) {
+    .Call(`_tiledb_dim_domain_subarray`, domain, subscript)
+}
+
 tiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_tiledb_domain`, ctx, dims)
 }
@@ -191,6 +195,10 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
 
 tiledb_query_submit <- function(query) {
     .Call(`_tiledb_tiledb_query_submit`, query)
+}
+
+tiledb_query_finalize <- function(query) {
+    .Call(`_tiledb_tiledb_query_finalize`, query)
 }
 
 tiledb_query_status <- function(query) {

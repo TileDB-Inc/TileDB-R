@@ -1,15 +1,55 @@
 library(tiledb)
-context("tiledb::Array")
+context("tiledb::DenseArray")
+
+unlink_and_create <- function(tmp) {
+  if (dir.exists(tmp)) {
+    unlink(tmp, recursive = TRUE)
+    dir.create(tmp)
+  } else {
+    dir.create(tmp)
+  }
+  return(tmp)
+}
+
+# test_that("1D Domain subarray subscripting works", {
+#   ctx <- tiledb::Ctx()
+#   dim1 <- tiledb::Dim(ctx, domain = c(1L, 10L))
+#   dom <- tiledb::Domain(ctx, c(dim1))
+# 
+#   expect_equal(tiledb::subset_dense_subarray(dom, 1), list(c(1, 1)))
+#   expect_equal(tiledb::subset_dense_subarray(dom, 8), list(c(8, 8)))
+#   expect_equal(tiledb::subset_dense_subarray(dom, 10), list(c(10, 10)))
+# 
+#   expect_equal(tiledb::subset_dense_subarray(dom, c(1, 5, 10)), list(c(1, 1, 5, 5, 10, 10)))
+#   expect_equal(tiledb::subset_dense_subarray(dom, c(5, 1, 10)), list(c(5, 5, 1, 1, 10, 10)))
+#   expect_equal(tiledb::subset_dense_subarray(dom, c(1:3, 5:7, 10)), list(c(1, 3, 5, 7, 10, 10)))
+#   expect_equal(tiledb::subset_dense_subarray(dom, c(5:2)), list(c(5, 5, 4, 4, 3, 3, 2, 2)))
+#   expect_equal(tiledb::subset_dense_subarray(dom, 1:10), list(c(1, 10)))
+# })
+# 
+# test_that("2D Domain subarray subscripting works", {
+#   ctx <- tiledb::Ctx()
+#   dim1 <- tiledb::Dim(ctx, domain = c(1L, 10L))
+#   dim2 <- tiledb::Dim(ctx, domain = c(1L, 10L))
+#   dom <- tiledb::Domain(ctx, c(dim1, dim2))
+# 
+#   expect_equal(tiledb::subset_dense_subarray(dom, 1, 1), list(c(1, 1), c(1, 1)))
+# })
+#
+# test_that("3D Domain subarray subscripting works", {
+#   ctx <- tiledb::Ctx()
+#   dim1 <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
+#   dim2 <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
+#   dim3 <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
+#   dom <- tiledb::Domain(ctx, c(dim1, dim2, dim3))
+#   
+#   expect_equal(tiledb::subset_dense_subarray(dom, 1, 1, 1,  , 1), list(c(1, 1), c(1, 10), c(1, 1)))
+# })
 
 test_that("Can read / write a simple 1D vector", {
   tmp <- tempdir()
   setup({
-   if (dir.exists(tmp)) {
-    unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
-   } else {
-    dir.create(tmp) 
-   }
+    unlink_and_create(tmp)
   })
   
   ctx <- tiledb::Ctx()
@@ -33,10 +73,16 @@ test_that("Can read / write a simple 1D vector", {
   # vector range syntax (reversed)
   # TODO: find a way to efficiently do this
   # expect_equal(arr[7:3], dat[7:3]) 
-    
+  
   # scalar indexing
   expect_equal(arr[8], dat[8])
   
+  arr[6] <- 1000
+  expect_equal(arr[6], 1000)
+  
+  arr[7:10] <- c(97, 98, 99, 100)
+  expect_equal(arr[6:10], as.array(c(1000, 97, 98, 99, 100)))
+   
   teardown({
     unlink(tmp, recursive = TRUE)
   }) 
@@ -45,111 +91,144 @@ test_that("Can read / write a simple 1D vector", {
 test_that("Can read / write a simple 2D matrix", {
   tmp <- tempdir()
   setup({
-   if (dir.exists(tmp)) {
-    unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
-   } else {
-    dir.create(tmp) 
-   }
+    unlink_and_create(tmp)
   })
-  
+
   ctx <- tiledb::Ctx()
-  d1  <- tiledb::Dim(ctx, domain = c(1L, 5L)) 
-  d2  <- tiledb::Dim(ctx, domain = c(1L, 5L)) 
+  d1  <- tiledb::Dim(ctx, domain = c(1L, 5L))
+  d2  <- tiledb::Dim(ctx, domain = c(1L, 5L))
   dom <- tiledb::Domain(ctx, c(d1, d2))
-  val <- tiledb::Attr(ctx) 
-  sch <- tiledb::ArraySchema(ctx, dom, c(val)) 
-  
+  val <- tiledb::Attr(ctx)
+  sch <- tiledb::ArraySchema(ctx, dom, c(val))
+
   dat <- matrix(rnorm(25), 5, 5)
   arr <- tiledb::Array(ctx, sch, tmp)
-  
+
   arr[] <- dat
   expect_equal(arr[], dat)
 
   # explicit range enumeration
-  expect_equal(arr[c(3,4,5), c(3,4,5)], 
+  expect_equal(arr[c(3,4,5), c(3,4,5)],
                dat[c(3,4,5), c(3,4,5)])
-  
+
   # vector range syntax
-  expect_equal(arr[1:3, 1:3], dat[1:3, 1:3]) 
-  
+  expect_equal(arr[1:3, 1:3], dat[1:3, 1:3])
+
+  # missing index range
+  expect_equal(arr[1:3,], dat[1:3,])
+
   # scalar indexing
   expect_equal(arr[3, 3], dat[3, 3])
-  
+
   teardown({
     unlink(tmp, recursive = TRUE)
-  }) 
+  })
 })
 
 test_that("Can read / write a simple 3D matrix", {
   tmp <- tempdir()
   setup({
-   if (dir.exists(tmp)) {
-    unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
-   } else {
-    dir.create(tmp) 
-   }
+    unlink_and_create(tmp)
   })
-  
+
   ctx <- tiledb::Ctx()
-  d1  <- tiledb::Dim(ctx, domain = c(1L, 5L)) 
-  d2  <- tiledb::Dim(ctx, domain = c(1L, 5L)) 
-  d3  <- tiledb::Dim(ctx, domain = c(1L, 5L)) 
+  d1  <- tiledb::Dim(ctx, domain = c(1L, 5L))
+  d2  <- tiledb::Dim(ctx, domain = c(1L, 5L))
+  d3  <- tiledb::Dim(ctx, domain = c(1L, 5L))
   dom <- tiledb::Domain(ctx, c(d1, d2, d3))
-  val <- tiledb::Attr(ctx) 
-  sch <- tiledb::ArraySchema(ctx, dom, c(val)) 
-  
+  val <- tiledb::Attr(ctx)
+  sch <- tiledb::ArraySchema(ctx, dom, c(val))
+
   dat <- array(rnorm(125), dim = c(5, 5, 5))
   arr <- tiledb::Array(ctx, sch, tmp)
-  
+
   arr[] <- dat
   expect_equal(arr[], dat)
 
   # explicit range enumeration
-  expect_equal(arr[c(3, 4, 5), c(3, 4, 5), c(1, 2)], 
+  expect_equal(arr[c(3, 4, 5), c(3, 4, 5), c(1, 2)],
                dat[c(3, 4, 5), c(3, 4, 5), c(1, 2)])
-  
+
   # vector range syntax
   expect_equal(arr[1:3, 1:3, 1:2], dat[1:3, 1:3, 1:2])
-  
+
   # scalar indexing
   expect_equal(arr[3, 3, 3], dat[3, 3, 3])
-  
+
   teardown({
     unlink(tmp, recursive = TRUE)
-  }) 
+  })
 })
 
 
 test_that("Can read / write 1D multi-attribute array", {
   tmp <- tempdir()
   setup({
-   if (dir.exists(tmp)) {
-    unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
-   } else {
-    dir.create(tmp) 
-   }
+   unlink_and_create(tmp)
   })
-  
+
   ctx <- tiledb::Ctx()
-  dim <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
+  dim <- tiledb::Dim(ctx, domain = c(1L, 10L))
   dom <- tiledb::Domain(ctx, c(dim))
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
   a2  <- tiledb::Attr(ctx, "a2", type = "FLOAT64")
-  sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2)) 
-  
+  sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2))
+
   arr <- tiledb::Array(ctx, sch, tmp)
-  
+
   a1_dat <- as.array(as.double(1:10))
   a2_dat <- as.array(as.double(11:20))
-  
-  dat <- list(a1 = a1_dat, a2 = a2_dat) 
+
+  dat <- list(a1 = a1_dat, 
+              a2 = a2_dat)
   arr[] <- dat
+
+  expect_equal(arr[], dat)
+  expect_equal(names(arr[]), names(dat))
   expect_equal(arr[1:10], dat)
+
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
+})
+
+test_that("Can read / write 2D multi-attribute array", {
+  tmp <- tempdir()
+  setup({
+   unlink_and_create(tmp)
+  })
+
+  ctx <- tiledb::Ctx()
+  d1  <- tiledb::Dim(ctx, domain = c(1L, 10L))
+  d2  <- tiledb::Dim(ctx, domain = c(1L, 10L))
+  dom <- tiledb::Domain(ctx, c(d1, d2))
+  a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
+  a2  <- tiledb::Attr(ctx, "a2", type = "FLOAT64")
+  sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2))
+  
+  arr <- tiledb::Array(ctx, sch, tmp)
+
+  a1_dat <- array(rnorm(100), dim = c(10, 10))
+  a2_dat <- array(rnorm(100), dim = c(10, 10))
+
+  dat <- list(a1 = a1_dat, a2 = a2_dat)
+  arr[] <- dat
+  
+  expect_equal(arr[], dat)
+  expect_equal(names(arr[]), names(dat))
+  expect_equal(arr[1:10, 1:10], dat)
+  expect_equal(arr[2, 2][["a2"]], dat[["a2"]][2, 2])
+  expect_equal(arr[1:5,][["a1"]], dat[["a1"]][1:5,])
+  expect_equal(arr[,1:3][["a2"]], dat[["a2"]][,1:3])
+  
+  arr[1:3, 1:3] <- list(a1 = array(1.0, c(3, 3)), a2 = array(2.0, c(3, 3)))
+  expect_true(all(arr[1:3, 1:3][["a1"]] == 1.0))
+  expect_true(all(arr[1:3, 1:3][["a2"]] == 2.0))
+  
+  dat[["a1"]][1:3, 1:3] <- array(1.0, c(3, 3))
+  expect_equal(arr[][["a1"]], dat[["a1"]][])
   
   teardown({
     unlink(tmp, recursive = TRUE)
-  }) 
+  })
 })
