@@ -6,7 +6,7 @@ setClass("Array",
 Array <- function(ctx, schema, uri) {
   if (missing(ctx) || !is(ctx, "Ctx"))  {
     stop("argument ctx must be a tiledb::Ctx") 
-  } else if (missing(ctx) || !is(schema, "ArraySchema")) {
+  } else if (missing(schema) || !is(schema, "ArraySchema")) {
     stop("argument schema must a tiledb::ArraySchema") 
   } else if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar")
@@ -105,14 +105,13 @@ attribute_buffers <- function(sch, dom, sub) {
   stopifnot(is(dom, "Domain"))
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
-  scalar <- all(sub_dim == 1L)
+  is_scalar <- all(sub_dim == 1L)
   attrs <- list()
   for(attr in tiledb::attrs(sch)) {
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
     buff <- vector(mode = type, length = ncells)
-    if (!scalar) {
+    if (!is_scalar) {
       attr(buff, "dim") <- sub_dim
-      #TODO: dimnames
     }
     attrs[[tiledb::name(attr)]] <- buff
   }
@@ -235,4 +234,19 @@ setMethod("[<-", "Array",
 
 as.array.Array <- function(x, ...) {
  return(x[]) 
+}
+
+as.data.frame.Array <- function(x, row.names = NULL, optional = FALSE, ...,
+                                cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
+                                stringsAsFactors = default.stringsAsFactors()) {
+  lst <- x[]
+  if (!is(lst, "list")) {
+    lst <- list(lst) 
+  }
+  if (is.null(col.names)) {
+    col.names <- sapply(tiledb::attrs(x@schema), tiledb::name)
+  }
+  return(as.data.frame(lst, row.names = row.names, optional = optional, ..., 
+                       cut.names = cut.names, col.names = col.names, fix.empty.names = fix.empty.names,
+                       stringsAsFactors = default.stringsAsFactors()))
 }

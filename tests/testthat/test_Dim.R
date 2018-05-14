@@ -75,7 +75,7 @@ test_that("tiledb::Dim empty name is anonymous", {
   expect_false(is.anonymous(dim))
 })
 
-test_that("tiledb::Dim datatype is correct", {
+test_that("tiledb::Dim tiledb::datatype()", {
   ctx <- tiledb::Ctx() 
   dim <- tiledb::Dim(ctx,"", c(1L, 100L), type = "INT32")
   expect_equal(tiledb::datatype(dim), "INT32")
@@ -84,7 +84,7 @@ test_that("tiledb::Dim datatype is correct", {
   expect_equal(tiledb::datatype(dim), "FLOAT64")
 })
 
-test_that("tiledb::Dim dim S3 method is correct", {
+test_that("tiledb::Dim dim() method", {
   ctx <- tiledb::Ctx()
   d <- tiledb::Dim(ctx, "", c(-1L, 100L))
   expect_equal(dim(d), 102L)
