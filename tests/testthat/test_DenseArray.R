@@ -233,7 +233,29 @@ test_that("Can read / write 2D multi-attribute array", {
   })
 })
 
-test_that("as.array conversion method", {
+test_that("as.array() conversion method", {
+  tmp <- tempdir()
+  setup({
+   unlink_and_create(tmp)
+  })
+  
+  ctx <- tiledb::Ctx()
+  d1  <- tiledb::Dim(ctx, domain = c(1L, 10L))
+  dom <- tiledb::Domain(ctx, c(d1))
+  a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
+  sch <- tiledb::ArraySchema(ctx, dom, c(a1))
+  arr <- tiledb::Array(ctx, sch, tmp)
+  
+  dat <- as.double(1:10)
+  arr[] <- dat
+  expect_equal(as.array(arr), as.array(dat))
+  
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  }) 
+})
+
+test_that("as.data.frame() conversion method", {
   tmp <- tempdir()
   setup({
    unlink_and_create(tmp)
