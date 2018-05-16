@@ -273,7 +273,8 @@ test_that("as.data.frame() conversion method", {
               a2 = array(as.double(1:10)))
   arr[] <- dat
   
-  expect_equal(as.data.frame(arr), as.data.frame(dat))
+  expect_equal(as.data.frame(arr), 
+               as.data.frame(dat))
    
   teardown({
     unlink(tmp, recursive = TRUE)

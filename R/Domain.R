@@ -54,10 +54,7 @@ setGeneric("is.integral", function(object) standardGeneric("is.integral"))
 setMethod("is.integral", "Domain",
           function(object) {
             dt <- tiledb::datatype(object) 
-            if (dt == "FLOAT32" || dt == "FLOAT64") {
-              return(FALSE) 
-            }
-            return(TRUE) 
+            return(ifelse(dt == "FLOAT32" || dt == "FLOAT64", FALSE, TRUE))
           })
 
 #' @export

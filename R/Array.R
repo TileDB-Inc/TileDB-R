@@ -23,7 +23,10 @@ Array.load <- function(ctx, uri) {
     stop("argument uri must be a string scalar") 
   }
   ptr <- tiledb_array_load(ctx@ptr, uri)
-  schema <- ArraySchema.from_ptr(ptr) 
+  schema <- ArraySchema.from_ptr(ptr)
+  if (is.sparse(schema)) {
+    stop("array URI must be a dense array") 
+  }
   new("Array", ctx = ctx, schema = schema, uri = uri)
 }
 
