@@ -18,7 +18,7 @@ test_that("Can read / write simple 1D sparse vector", {
   })
   
   ctx <- tiledb::Ctx()
-  d1 <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
+  d1  <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
   dom <- tiledb::Domain(ctx, c(d1))
   atr <- tiledb::Attr(ctx)
   sch <- tiledb::ArraySchema(ctx, dom, c(atr), sparse = TRUE)

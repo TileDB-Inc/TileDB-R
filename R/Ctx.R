@@ -14,7 +14,7 @@ Ctx <- function(config = NULL) {
   } else {
     stop("invalid tiledb::Ctx config argument type")
   }
-  new("Ctx", ptr = ptr)
+  return(new("Ctx", ptr = ptr))
 }
 
 #' @export

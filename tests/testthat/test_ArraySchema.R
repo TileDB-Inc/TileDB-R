@@ -40,7 +40,7 @@ test_that("tiledb::ArraySchema default constructor arugment values are correct",
   expect_false(is.sparse(sch))
 })
 
-test_that("tiledb::ArraySchema full constructor arugment values are correct",  {
+test_that("tiledb::ArraySchema full constructor argument values are correct",  {
   ctx <- tiledb::Ctx()
   
   d1  <- tiledb::Dim(ctx, domain = c(1L, 100L))

@@ -16,6 +16,18 @@ Array <- function(ctx, schema, uri) {
 }
 
 #' @export
+Array.save <- function(ctx, x, uri) {
+  if (missing(ctx) || !is(ctx, "Ctx")) {
+    stop("argument ctx must be a tiledb::Ctx")  
+  } else if (missing(x) || !is.vector(x) || !is.array(x)) {
+    stop("x must be an array or vector")
+  } else if (missing(uri) || !is.scalar(uri, "character")) {
+    stop("argument uri must be a string scalar") 
+  } 
+  stop("NOT IMPLEMENTED!")
+}
+
+#' @export
 Array.load <- function(ctx, uri) {
   if (missing(ctx) || !is(ctx, "Ctx")) {
     stop("argument ctx must be a tiledb::Ctx")  
@@ -36,23 +48,11 @@ setMethod("show", "Array",
             invisible(print(object[]))
           })
 
-# Adapted from the DelayedArray package
-nd_index_from_syscall <- function(call, env_frame) {
-  index <- lapply(seq_len(length(call) - 2L),
-                  function(idx){
-                    subscript <- call[[2L + idx]]
-                    if (missing(subscript))
-                      return(NULL)
-                    subscript <- eval(subscript, envir = env_frame, enclos = env_frame)
-                    return(subscript)
-                  })
-  argnames <- tail(names(call), n = -2L) 
-  if (!is.null(argnames))
-    index <- index[!(argnames %in% c("drop", "exact", "value"))]
-  if (length(index) == 1L && is.null(index[[1L]]))
-    index <- list() 
-  return(index)
-}
+#' @export
+setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
+
+#' @export
+setMethod("is.sparse", "Array", function(object) FALSE)
 
 domain_subarray <- function(dom, index = NULL) {
   stopifnot(is(dom, "Domain"))
