@@ -46,6 +46,21 @@ unlink_and_create <- function(tmp) {
 #   expect_equal(tiledb::subset_dense_subarray(dom, 1, 1, 1,  , 1), list(c(1, 1), c(1, 10), c(1, 1)))
 # })
 
+test_that("DenseArray is not sparse", {
+  tmp <- tempdir()
+  setup({
+    unlink_and_create(tmp)
+  })
+  
+  ctx <- tiledb::Ctx()
+  arr <- tiledb::Array.save(c(1, 2, 3), uri = tmp)
+  expect_false(is.sparse(arr))
+  
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })  
+})
+
 test_that("Can read / write a simple 1D vector", {
   tmp <- tempdir()
   setup({
@@ -269,7 +284,7 @@ test_that("as.data.frame() conversion method", {
   sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2))
   arr <- tiledb::Array(ctx, sch, tmp)
   
-  dat <- list(a1 = array(as.double(1:10)),
+  dat <- list(a1 = array(as.double(1:10)), 
               a2 = array(as.double(1:10)))
   arr[] <- dat
   

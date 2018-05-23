@@ -57,6 +57,28 @@ ArraySchema <- function(ctx,
   return(new("ArraySchema", ptr = ptr))
 }
 
+ArraySchema.from_array <- function(ctx, x) {
+  if (missing(ctx) || !is(ctx, "Ctx")) {
+    stop("ctx argument must be a tiledb::Ctx")
+  } else if (missing(x) || !is.array(x)) {
+    stop("x argument must be a valid array object") 
+  }
+  xdim <- dim(x)
+  dims <- lapply(seq_len(xdim), function(i) {
+    tiledb::Dim(ctx, c(1L, xdim[i]), type = "INT32")
+  })
+  dom <- tiledb::Domain(ctx, dims)
+  #TODO: better datatype checking
+  if (is.double(x)) {
+    typestr <- "FLOAT64"   
+  } else if (is.integer(x)) {
+    typestr <- "INT32"
+  } else {
+    stop(paste("invalid array type \"", typeof(x), "\""))
+  }
+  val <- tiledb::Attr(ctx, "", type = typestr)
+  return(tiledb::ArraySchema(ctx, dom, c(val)))
+}
 
 setMethod("show", signature(object = "ArraySchema"),
           function(object) {
@@ -138,10 +160,6 @@ setMethod("compressor", "ArraySchema",
             return(c(coords = Compressor.from_ptr(coords_ptr), 
                      offsets = Compressor.from_ptr(offsets_ptr)))
           })
-
-
-#' @export
-setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
 
 #' @export
 setMethod("is.sparse", "ArraySchema",

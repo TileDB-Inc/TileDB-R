@@ -1,5 +1,5 @@
 library(tiledb)
-context("libtiledb")
+context("tiledb::libtiledb")
 
 test_that("version is valid", {
   ver <- libtiledb_version()
