@@ -669,7 +669,7 @@ XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
 // [[Rcpp::export]]
 IntegerVector tiledb_domain_rank(XPtr<tiledb::Domain> domain) {
   try {
-    unsigned int rank = domain->rank();
+    unsigned int rank = domain->ndim();
     if (rank > std::numeric_limits<int32_t>::max()) {
       throw Rcpp::exception("tiledb::Domain rank is not representable by an R integer");
     }
