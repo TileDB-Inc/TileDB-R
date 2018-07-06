@@ -162,6 +162,9 @@ setMethod("compressor", "ArraySchema",
           })
 
 #' @export
+setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
+
+#' @export
 setMethod("is.sparse", "ArraySchema",
           function(object) {
             tiledb_array_schema_sparse(object@ptr) 

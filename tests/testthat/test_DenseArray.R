@@ -46,21 +46,6 @@ unlink_and_create <- function(tmp) {
 #   expect_equal(tiledb::subset_dense_subarray(dom, 1, 1, 1,  , 1), list(c(1, 1), c(1, 10), c(1, 1)))
 # })
 
-test_that("DenseArray is not sparse", {
-  tmp <- tempdir()
-  setup({
-    unlink_and_create(tmp)
-  })
-  
-  ctx <- tiledb::Ctx()
-  arr <- tiledb::Array.save(c(1, 2, 3), uri = tmp)
-  expect_false(is.sparse(arr))
-  
-  teardown({
-    unlink(tmp, recursive = TRUE)
-  })  
-})
-
 test_that("Can read / write a simple 1D vector", {
   tmp <- tempdir()
   setup({
@@ -72,11 +57,15 @@ test_that("Can read / write a simple 1D vector", {
   dom <- tiledb::Domain(ctx, c(dim))
   val <- tiledb::Attr(ctx) 
   sch <- tiledb::ArraySchema(ctx, dom, c(val)) 
+  tiledb::DenseArray.create(tmp, sch) 
   
+  arr <- tiledb::DenseArray(ctx, tmp)
   dat <- as.array(as.double(1:10))
-  arr <- tiledb::Array(ctx, sch, tmp)
   
   arr[] <- dat
+  close(arr) 
+  
+  arr <- tiledb::DenseArray(ctx, tmp)
   expect_equal(arr[], dat)
   
   # explicit range enumeration
@@ -115,9 +104,10 @@ test_that("Can read / write a simple 2D matrix", {
   dom <- tiledb::Domain(ctx, c(d1, d2))
   val <- tiledb::Attr(ctx)
   sch <- tiledb::ArraySchema(ctx, dom, c(val))
+  tiledb::DenseArray.create(tmp, sch)
 
   dat <- matrix(rnorm(25), 5, 5)
-  arr <- tiledb::Array(ctx, sch, tmp)
+  arr <- tiledb::DenseArray(ctx, tmp)
 
   arr[] <- dat
   expect_equal(arr[], dat)
@@ -153,9 +143,10 @@ test_that("Can read / write a simple 3D matrix", {
   dom <- tiledb::Domain(ctx, c(d1, d2, d3))
   val <- tiledb::Attr(ctx)
   sch <- tiledb::ArraySchema(ctx, dom, c(val))
+  tiledb::DenseArray.create(tmp, sch)
 
   dat <- array(rnorm(125), dim = c(5, 5, 5))
-  arr <- tiledb::Array(ctx, sch, tmp)
+  arr <- tiledb::DenseArray(ctx, tmp)
 
   arr[] <- dat
   expect_equal(arr[], dat)
@@ -188,13 +179,14 @@ test_that("Can read / write 1D multi-attribute array", {
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
   a2  <- tiledb::Attr(ctx, "a2", type = "FLOAT64")
   sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2))
+  tiledb::DenseArray.create(tmp, sch)
 
-  arr <- tiledb::Array(ctx, sch, tmp)
+  arr <- tiledb::DenseArray(ctx, tmp)
 
   a1_dat <- as.array(as.double(1:10))
   a2_dat <- as.array(as.double(11:20))
 
-  dat <- list(a1 = a1_dat, 
+  dat <- list(a1 = a1_dat,
               a2 = a2_dat)
   arr[] <- dat
 
@@ -220,29 +212,30 @@ test_that("Can read / write 2D multi-attribute array", {
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
   a2  <- tiledb::Attr(ctx, "a2", type = "FLOAT64")
   sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2))
-  
-  arr <- tiledb::Array(ctx, sch, tmp)
+  tiledb::DenseArray.create(tmp, sch)
+
+  arr <- tiledb::DenseArray(ctx, tmp)
 
   a1_dat <- array(rnorm(100), dim = c(10, 10))
   a2_dat <- array(rnorm(100), dim = c(10, 10))
 
   dat <- list(a1 = a1_dat, a2 = a2_dat)
   arr[] <- dat
-  
+
   expect_equal(arr[], dat)
   expect_equal(names(arr[]), names(dat))
   expect_equal(arr[1:10, 1:10], dat)
   expect_equal(arr[2, 2][["a2"]], dat[["a2"]][2, 2])
   expect_equal(arr[1:5,][["a1"]], dat[["a1"]][1:5,])
   expect_equal(arr[,1:3][["a2"]], dat[["a2"]][,1:3])
-  
+
   arr[1:3, 1:3] <- list(a1 = array(1.0, c(3, 3)), a2 = array(2.0, c(3, 3)))
   expect_true(all(arr[1:3, 1:3][["a1"]] == 1.0))
   expect_true(all(arr[1:3, 1:3][["a2"]] == 2.0))
-  
+
   dat[["a1"]][1:3, 1:3] <- array(1.0, c(3, 3))
   expect_equal(arr[][["a1"]], dat[["a1"]][])
-  
+
   teardown({
     unlink(tmp, recursive = TRUE)
   })
@@ -253,21 +246,22 @@ test_that("as.array() conversion method", {
   setup({
    unlink_and_create(tmp)
   })
-  
+
   ctx <- tiledb::Ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 10L))
   dom <- tiledb::Domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
   sch <- tiledb::ArraySchema(ctx, dom, c(a1))
-  arr <- tiledb::Array(ctx, sch, tmp)
-  
+  tiledb::DenseArray.create(tmp, sch)
+
+  arr <- tiledb::DenseArray(ctx, tmp)
   dat <- as.double(1:10)
   arr[] <- dat
   expect_equal(as.array(arr), as.array(dat))
-  
+
   teardown({
     unlink(tmp, recursive = TRUE)
-  }) 
+  })
 })
 
 test_that("as.data.frame() conversion method", {
@@ -275,22 +269,24 @@ test_that("as.data.frame() conversion method", {
   setup({
    unlink_and_create(tmp)
   })
-  
+
   ctx <- tiledb::Ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 10L))
   dom <- tiledb::Domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
   a2  <- tiledb::Attr(ctx, "a2", type = "FLOAT64")
   sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2))
-  arr <- tiledb::Array(ctx, sch, tmp)
-  
-  dat <- list(a1 = array(as.double(1:10)), 
+  tiledb::DenseArray.create(tmp, sch)
+
+  arr <- tiledb::DenseArray(ctx, tmp)
+
+  dat <- list(a1 = array(as.double(1:10)),
               a2 = array(as.double(1:10)))
   arr[] <- dat
-  
-  expect_equal(as.data.frame(arr), 
+
+  expect_equal(as.data.frame(arr),
                as.data.frame(dat))
-   
+
   teardown({
     unlink(tmp, recursive = TRUE)
   })

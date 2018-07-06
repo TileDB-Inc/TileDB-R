@@ -13,10 +13,6 @@ tiledb_ctx <- function(config = NULL) {
     .Call(`_tiledb_tiledb_ctx`, config)
 }
 
-tiledb_config_load_from_file <- function(filename) {
-    .Call(`_tiledb_tiledb_config_load_from_file`, filename)
-}
-
 tiledb_ctx_config <- function(ctx) {
     .Call(`_tiledb_tiledb_ctx_config`, ctx)
 }
@@ -157,28 +153,60 @@ tiledb_array_schema_sparse <- function(schema) {
     .Call(`_tiledb_tiledb_array_schema_sparse`, schema)
 }
 
+tiledb_array_schema_load <- function(ctx, uri) {
+    .Call(`_tiledb_tiledb_array_schema_load`, ctx, uri)
+}
+
 tiledb_array_schema_dump <- function(schema) {
     invisible(.Call(`_tiledb_tiledb_array_schema_dump`, schema))
 }
 
-tiledb_array_create <- function(schema, uri) {
-    .Call(`_tiledb_tiledb_array_create`, schema, uri)
+tiledb_array_create <- function(uri, schema) {
+    .Call(`_tiledb_tiledb_array_create`, uri, schema)
 }
 
-tiledb_array_nonempty_domain <- function(schema, uri) {
-    .Call(`_tiledb_tiledb_array_nonempty_domain`, schema, uri)
+tiledb_array <- function(ctx, uri, type) {
+    .Call(`_tiledb_tiledb_array`, ctx, uri, type)
+}
+
+tiledb_array_is_open <- function(array) {
+    .Call(`_tiledb_tiledb_array_is_open`, array)
+}
+
+tiledb_array_get_uri <- function(array) {
+    .Call(`_tiledb_tiledb_array_get_uri`, array)
+}
+
+tiledb_array_get_schema <- function(array) {
+    .Call(`_tiledb_tiledb_array_get_schema`, array)
+}
+
+tiledb_array_open <- function(array, query_type) {
+    .Call(`_tiledb_tiledb_array_open`, array, query_type)
+}
+
+tiledb_array_reopen <- function(array) {
+    .Call(`_tiledb_tiledb_array_reopen`, array)
+}
+
+tiledb_array_close <- function(array) {
+    .Call(`_tiledb_tiledb_array_close`, array)
+}
+
+tiledb_array_query_type <- function(array) {
+    .Call(`_tiledb_tiledb_array_query_type`, array)
+}
+
+tiledb_array_nonempty_domain <- function(array) {
+    .Call(`_tiledb_tiledb_array_nonempty_domain`, array)
 }
 
 tiledb_array_consolidate <- function(ctx, uri) {
     .Call(`_tiledb_tiledb_array_consolidate`, ctx, uri)
 }
 
-tiledb_array_load <- function(ctx, uri) {
-    .Call(`_tiledb_tiledb_array_load`, ctx, uri)
-}
-
-tiledb_query <- function(ctx, uri, type) {
-    .Call(`_tiledb_tiledb_query`, ctx, uri, type)
+tiledb_query <- function(ctx, array, type) {
+    .Call(`_tiledb_tiledb_query`, ctx, array, type)
 }
 
 tiledb_query_set_layout <- function(query, layout) {

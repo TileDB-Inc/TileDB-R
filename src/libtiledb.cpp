@@ -222,6 +222,17 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
   }
 }
 
+std::string _tiledb_query_type_to_string(tiledb_query_type_t qtype) {
+  switch (qtype) {
+    case TILEDB_READ:
+      return "READ";
+    case TILEDB_WRITE:
+      return "WRITE";
+    default:
+      throw Rcpp::exception("unknown tiledb_query_type_t");
+  } 
+}
+
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
   try {
@@ -249,7 +260,7 @@ XPtr<tiledb::Context> tiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValu
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Config> tiledb_config_load_from_file(std::string filename) {
+XPtr<tiledb::Config>libtiledb_config_load_from_file(std::string filename) {
   try {
     tiledb::Config* config = new tiledb::Config(filename); 
     return XPtr<tiledb::Config>(config);
@@ -281,17 +292,17 @@ bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
 // [[Rcpp::export]]
 XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   try {
-    XPtr<tiledb::Config> tiledb_config(new tiledb::Config(), true);
+    XPtr<tiledb::Config> libtiledb_config(new tiledb::Config(), true);
     if (config.isNotNull()) {
       auto config_vec = config.as();
       auto config_names = as<CharacterVector>(config_vec.names());
       for (auto &name : config_names) {
         auto param = as<std::string>(name);
         auto value = as<std::string>(config_vec[param]);
-        tiledb_config->set(param, value);
+        libtiledb_config->set(param, value);
       }
     }
-    return tiledb_config;
+    return libtiledb_config;
   } catch (tiledb::TileDBError& err) {
     throw  Rcpp::exception(err.what());
   }
@@ -952,6 +963,17 @@ bool tiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> tiledb_array_schema_load(
+    XPtr<tiledb::Context> ctx,std::string uri) {
+  try {
+    return XPtr<tiledb::ArraySchema>(
+      new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
 void tiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
   try {
     schema->dump();
@@ -961,11 +983,8 @@ void tiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_array_create(XPtr<tiledb::ArraySchema> schema,
-                                std::string uri) {
+std::string tiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema) {
   try {
-    // TODO: check that the ctx / schema ctx are the same
-    // TODO: return the full expanded array path?
     tiledb::Array::create(uri, *schema.get()); 
     return uri;
   } catch (tiledb::TileDBError& err) {
@@ -974,14 +993,95 @@ std::string tiledb_array_create(XPtr<tiledb::ArraySchema> schema,
 }
 
 // [[Rcpp::export]]
-List tiledb_array_nonempty_domain(XPtr<tiledb::ArraySchema> schema,
-                                  std::string uri) {
+XPtr<tiledb::Array> tiledb_array(XPtr<tiledb::Context> ctx,
+                                 std::string uri,
+                                 std::string type) {
+  auto query_type = _string_to_tiledb_query_type(type); 
+  try {
+     auto array = XPtr<tiledb::Array>(
+      new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
+    return array;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+bool tiledb_array_is_open(XPtr<tiledb::Array> array) {
+  try {
+    return array->is_open(); 
+  } catch(tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_array_get_uri(XPtr<tiledb::Array> array) {
+  try {
+      return array->uri(); 
+   } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  } 
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> tiledb_array_get_schema(XPtr<tiledb::Array> array) {
+  try {
+    return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }    
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> tiledb_array_open(XPtr<tiledb::Array> array, std::string query_type) {
+  tiledb_query_type_t qtype = _string_to_tiledb_query_type(query_type);
+  try {
+    array->open(qtype);
+    return array;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> tiledb_array_reopen(XPtr<tiledb::Array> array) {
+  try {
+    array->reopen();
+    return array;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> tiledb_array_close(XPtr<tiledb::Array> array) {
+  try {
+    array->close();
+    return array;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string tiledb_array_query_type(XPtr<tiledb::Array> array) {
+  try {
+    tiledb_query_type_t qtype = array->query_type();
+    return _tiledb_query_type_to_string(qtype);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());   
+  }
+}
+
+// [[Rcpp::export]]
+List tiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
   List nonempty_domain;
   try {
-    auto domain = schema->domain();
+    auto domain = array->schema().domain();
     if (domain.type() == TILEDB_INT32) {
       using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-      auto res = tiledb::Array::non_empty_domain<DType>(uri, *schema.get());
+      auto res = array->non_empty_domain<DType>();
       for (auto& d: res) {
         auto dim_name = d.first;
         auto dim_domain = d.second;
@@ -990,7 +1090,7 @@ List tiledb_array_nonempty_domain(XPtr<tiledb::ArraySchema> schema,
       }
     } else if (domain.type() == TILEDB_FLOAT64) {
       using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-      auto res = tiledb::Array::non_empty_domain<DType>(uri, *schema.get());
+      auto res = array->non_empty_domain<DType>();
       for (auto& d: res) {
         auto dim_name = d.first;
         auto dim_domain = d.second;
@@ -1010,22 +1110,10 @@ List tiledb_array_nonempty_domain(XPtr<tiledb::ArraySchema> schema,
 std::string tiledb_array_consolidate(XPtr<tiledb::Context> ctx,
                                      std::string uri) {
   try {
-    // TODO: return the full expanded array path?
     tiledb::Array::consolidate(*ctx.get(), uri);
     return uri;
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
-  }
-}
-
-// [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> tiledb_array_load(XPtr<tiledb::Context> ctx, 
-                                            std::string uri) {
-  try {
-    return XPtr<tiledb::ArraySchema>(
-      new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
   }
 }
 
@@ -1034,12 +1122,12 @@ XPtr<tiledb::ArraySchema> tiledb_array_load(XPtr<tiledb::Context> ctx,
  */
 // [[Rcpp::export]]
 XPtr<tiledb::Query> tiledb_query(XPtr<tiledb::Context> ctx,
-                                 std::string uri,
+                                 XPtr<tiledb::Array> array,
                                  std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   try {
     auto query = XPtr<tiledb::Query>(
-      new tiledb::Query(tiledb::Query(*ctx.get(), uri, query_type)));
+      new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type)));
     query->set_layout(TILEDB_COL_MAJOR);
     return query;
   } catch (tiledb::TileDBError& err) {
