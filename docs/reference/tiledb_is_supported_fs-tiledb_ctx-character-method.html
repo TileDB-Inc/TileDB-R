@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert a <code>tiledb_config</code> object to an R named character vector — as.vector.tiledb_config • tiledb</title>
+<title>Query if a TileDB backend is supported — tiledb_is_supported_fs,tiledb_ctx,character-method • tiledb</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,14 @@
 
 
 
-<meta property="og:title" content="Convert a <code>tiledb_config</code> object to an R named character vector — as.vector.tiledb_config" />
+<meta property="og:title" content="Query if a TileDB backend is supported — tiledb_is_supported_fs,tiledb_ctx,character-method" />
 
-<meta property="og:description" content="Convert a tiledb_config object to an R named character vector" />
+<meta property="og:description" content="The scheme corresponds to the URI scheme for TileDB resouces.
+Ex:
+{file}:///path/to/file
+{hdfs}:///path/to/file
+{s3}://hostname:port/path/to/file
+" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,66 +102,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Convert a <code>tiledb_config</code> object to an R named character vector</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Config.R'><code>R/Config.R</code></a></small>
-    <div class="hidden name"><code>as.vector.tiledb_config.Rd</code></div>
+    <h1>Query if a TileDB backend is supported</h1>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Ctx.R'><code>R/Ctx.R</code></a></small>
+    <div class="hidden name"><code>tiledb_is_supported_fs-tiledb_ctx-character-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Convert a <code>tiledb_config</code> object to an R named character vector</p>
+    <p>The scheme corresponds to the URI scheme for TileDB resouces.</p>
+<p>Ex:</p><ul>
+<li><p><code>{file}:///path/to/file</code></p></li>
+<li><p><code>{hdfs}:///path/to/file</code></p></li>
+<li><p><code>{s3}://hostname:port/path/to/file</code></p></li>
+</ul>
     
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for tiledb_config</span>
-<span class='fu'>as.vector</span>(<span class='no'>x</span>, <span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"any"</span>)</pre>
+    <pre class="usage"><span class='co'># S4 method for tiledb_ctx,character</span>
+<span class='fu'>tiledb_is_supported_fs</span>(<span class='no'>object</span>, <span class='no'>scheme</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p><code>tiledb_config</code> object</p></td>
+      <th>object</th>
+      <td><p><code>tiledb_ctx</code> object</p></td>
+    </tr>
+    <tr>
+      <th>schema</th>
+      <td><p>URI string scheme ("file", "hdfs", "s3")</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a character vector of config parameter names, values</p>
+    <p>TRUE if tiledb backend is supported, FALSE otherwise</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span>()
-<span class='fu'>as.vector</span>(<span class='no'>cfg</span>)</div><div class='output co'>#&gt;      sm.array_schema_cache_size             sm.check_coord_dups 
-#&gt;                      "10000000"                          "true" 
-#&gt;                 sm.dedup_coords       sm.enable_signal_handlers 
-#&gt;                         "false"                          "true" 
-#&gt; sm.fragment_metadata_cache_size            sm.num_async_threads 
-#&gt;                      "10000000"                             "1" 
-#&gt;              sm.num_tbb_threads              sm.tile_cache_size 
-#&gt;                            "-1"                      "10000000" 
-#&gt;       vfs.file.max_parallel_ops vfs.hdfs.kerb_ticket_cache_path 
-#&gt;                             "8"                              "" 
-#&gt;          vfs.hdfs.name_node_uri               vfs.hdfs.username 
-#&gt;                              ""                              "" 
-#&gt;           vfs.min_parallel_size                 vfs.num_threads 
-#&gt;                      "10485760"                             "8" 
-#&gt;        vfs.s3.connect_max_tries     vfs.s3.connect_scale_factor 
-#&gt;                             "5"                            "25" 
-#&gt;       vfs.s3.connect_timeout_ms        vfs.s3.endpoint_override 
-#&gt;                          "3000"                              "" 
-#&gt;         vfs.s3.max_parallel_ops      vfs.s3.multipart_part_size 
-#&gt;                             "8"                       "5242880" 
-#&gt;               vfs.s3.proxy_host           vfs.s3.proxy_password 
-#&gt;                              ""                              "" 
-#&gt;               vfs.s3.proxy_port             vfs.s3.proxy_scheme 
-#&gt;                             "0"                         "https" 
-#&gt;           vfs.s3.proxy_username                   vfs.s3.region 
-#&gt;                              ""                     "us-east-1" 
-#&gt;       vfs.s3.request_timeout_ms                   vfs.s3.scheme 
-#&gt;                          "3000"                         "https" 
-#&gt;   vfs.s3.use_virtual_addressing 
-#&gt;                          "true" </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>()
+<span class='fu'>tiledb_is_supported_fs</span>(<span class='no'>ctx</span>, <span class='st'>"file"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='fu'>tiledb_is_supported_fs</span>(<span class='no'>ctx</span>, <span class='st'>"s3"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
