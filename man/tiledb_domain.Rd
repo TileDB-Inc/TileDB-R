@@ -2,8 +2,7 @@
 % Please edit documentation in R/Domain.R
 \name{tiledb_domain}
 \alias{tiledb_domain}
-\title{Constructs a \code{tiledb_domain} object
-All dimension's must be of the same TileDB type.}
+\title{Constructs a \code{tiledb_domain} object}
 \usage{
 tiledb_domain(ctx, dims)
 }
@@ -16,8 +15,7 @@ tiledb_domain(ctx, dims)
 tiledb_domain
 }
 \description{
-Constructs a \code{tiledb_domain} object
-All dimension's must be of the same TileDB type.
+All \code{tiledb_dim} must be of the same TileDB type.
 }
 \examples{
 ctx <- tiledb_ctx()
