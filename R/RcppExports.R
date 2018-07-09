@@ -169,8 +169,8 @@ libtiledb_array_schema_dump <- function(schema) {
     invisible(.Call(`_tiledb_libtiledb_array_schema_dump`, schema))
 }
 
-tiledb_array_create <- function(uri, schema) {
-    .Call(`_tiledb_tiledb_array_create`, uri, schema)
+libtiledb_array_create <- function(uri, schema) {
+    .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }
 
 tiledb_array <- function(ctx, uri, type) {
@@ -239,6 +239,26 @@ tiledb_query_finalize <- function(query) {
 
 tiledb_query_status <- function(query) {
     .Call(`_tiledb_tiledb_query_status`, query)
+}
+
+libtiledb_group_create <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_group_create`, ctx, uri)
+}
+
+libtiledb_object_type <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_object_type`, ctx, uri)
+}
+
+libtiledb_object_remove <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_object_remove`, ctx, uri)
+}
+
+libtiledb_object_move <- function(ctx, old_uri, new_uri) {
+    .Call(`_tiledb_libtiledb_object_move`, ctx, old_uri, new_uri)
+}
+
+libtiledb_object_walk <- function(ctx, uri, order, recursive = FALSE) {
+    .Call(`_tiledb_libtiledb_object_walk`, ctx, uri, order, recursive)
 }
 
 tiledb_vfs <- function(ctx, config = NULL) {

@@ -993,7 +993,7 @@ void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema) {
+std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema) {
   try {
     tiledb::Array::create(uri, *schema.get()); 
     return uri;
@@ -1241,6 +1241,112 @@ std::string tiledb_query_status(XPtr<tiledb::Query> query) {
   try {
     tiledb::Query::Status status = query->query_status();
     return _query_status_to_string(status);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+/**
+ * Object functionality
+ */
+// [[Rcpp::export]]
+std::string libtiledb_group_create(XPtr<tiledb::Context> ctx, std::string uri) {
+  try {
+    tiledb::create_group(*ctx.get(), uri);
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+std::string _object_type_to_string(tiledb::Object::Type otype) {
+  switch (otype) {
+    case tiledb::Object::Type::Array:
+      return "ARRAY";
+    case tiledb::Object::Type::KeyValue:
+      return "KEY_VALUE";
+    case tiledb::Object::Type::Group:
+      return "GROUP";
+    case tiledb::Object::Type::Invalid:
+      return "INVALID";
+  }
+}
+  
+// [[Rcpp::export]]
+std::string libtiledb_object_type(XPtr<tiledb::Context> ctx, std::string uri) {
+  try {
+    auto obj = tiledb::Object::object(*ctx.get(), uri);
+    return _object_type_to_string(obj.type());
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_object_remove(XPtr<tiledb::Context> ctx, std::string uri) {
+  try {
+    tiledb::Object::remove(*ctx.get(), uri);
+    return uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_object_move(XPtr<tiledb::Context> ctx, std::string old_uri, std::string new_uri) {
+  try {
+    tiledb::Object::move(*ctx.get(), old_uri, new_uri);
+    return new_uri;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+tiledb::Object::Type _string_to_object_type(std::string otype) {
+  if (otype == "ARRAY") {
+    return tiledb::Object::Type::Array; 
+  } else if (otype == "KEY_VALUE") {
+    return tiledb::Object::Type::KeyValue;
+  } else if (otype == "GROUP") {
+    return tiledb::Object::Type::Group;
+  } else {
+    throw Rcpp::exception("invalid object type string"); 
+  }
+}
+ 
+// [[Rcpp::export]]
+DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx, 
+                              std::string uri, 
+                              std::string order,
+                              bool recursive = false) {
+  try {
+    tiledb_walk_order_t walk_order;
+    if (recursive) {
+      if (order == "PREORDER") {
+        walk_order = TILEDB_PREORDER;
+      } else if (order == "POSTORDER") {
+        walk_order = TILEDB_POSTORDER;
+      } else {
+        throw Rcpp::exception("invalid recursive walk order, must be \"PREORDER\" or \"POSTORDER\"");
+      }
+    }
+    std::vector<std::string> uris;
+    std::vector<std::string> types;
+    tiledb::ObjectIter obj_iter(*ctx.get(), uri);
+    if (recursive) {
+      obj_iter.set_recursive(walk_order);
+    } else {
+      obj_iter.set_non_recursive(); 
+    }
+    for (const auto& object : obj_iter) {
+      uris.push_back(object.uri());
+      types.push_back(_object_type_to_string(object.type()));
+    }
+    Rcpp::StringVector r_uris(uris.size());
+    r_uris = uris;
+    Rcpp::StringVector r_types(types.size());
+    r_types = types;
+    return Rcpp::DataFrame::create(_["TYPE"] = r_types, _["URI"] = r_uris); 
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
   }

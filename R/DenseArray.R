@@ -3,20 +3,6 @@ setClass("DenseArray",
          slots = list(ctx = "tiledb_ctx", uri = "character", ptr = "externalptr"))
 
 #' @export
-DenseArray.create <- function(uri, schema) {
-  if (missing(uri) || !is.scalar(uri, "character")) {
-    stop("argument uri must be a string scalar")
-  } else if (missing(schema) || !is(schema, "tiledb_array_schema")) {
-    stop("argument schema must a tiledb_array_schema") 
-  }
-  if (tiledb::is.sparse(schema)) {
-    stop("tiledb_array_schema is not a dense") 
-  }
-  tiledb_array_create(uri, schema@ptr) 
-  return()
-}
-
-#' @export
 DenseArray <- function(ctx, uri, query_type = NULL) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")  

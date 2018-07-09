@@ -141,7 +141,7 @@ test_that("basic dense vector tiledb_array creation works", {
   att <- libtiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_array", sep = "/")
-  uri <- tiledb_array_create(pth, sch)
+  uri <- libtiledb_array_create(pth, sch)
   expect_true(dir.exists(pth))
   teardown({
     unlink(tmp, recursive = TRUE)
@@ -164,7 +164,7 @@ test_that("basic dense vector writes / reads works", {
   att <- libtiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
-  uri <- tiledb_array_create(pth, sch)
+  uri <- libtiledb_array_create(pth, sch)
   
   dat <- c(3, 2, 1) 
   arr <- tiledb_array(ctx, uri, "WRITE")
@@ -201,7 +201,7 @@ test_that("basic dense vector read subarray works", {
   att <- libtiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
-  uri <- tiledb_array_create(pth, sch)
+  uri <- libtiledb_array_create(pth, sch)
   
   dat <- c(3, 2, 1) 
   arr <- tiledb_array(ctx, uri, "WRITE") 

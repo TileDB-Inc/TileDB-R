@@ -57,7 +57,7 @@ test_that("Can read / write a simple 1D vector", {
   dom <- tiledb_domain(ctx, c(dim))
   val <- tiledb_attr(ctx) 
   sch <- tiledb_array_schema(ctx, dom, c(val)) 
-  tiledb::DenseArray.create(tmp, sch) 
+  tiledb_array_create(tmp, sch) 
   
   arr <- tiledb::DenseArray(ctx, tmp)
   dat <- as.array(as.double(1:10))
@@ -104,7 +104,7 @@ test_that("Can read / write a simple 2D matrix", {
   dom <- tiledb_domain(ctx, c(d1, d2))
   val <- tiledb_attr(ctx)
   sch <- tiledb_array_schema(ctx, dom, c(val))
-  tiledb::DenseArray.create(tmp, sch)
+  tiledb_array_create(tmp, sch)
 
   dat <- matrix(rnorm(25), 5, 5)
   arr <- tiledb::DenseArray(ctx, tmp)
@@ -143,7 +143,7 @@ test_that("Can read / write a simple 3D matrix", {
   dom <- tiledb_domain(ctx, c(d1, d2, d3))
   val <- tiledb_attr(ctx)
   sch <- tiledb_array_schema(ctx, dom, c(val))
-  tiledb::DenseArray.create(tmp, sch)
+  tiledb_array_create(tmp, sch)
 
   dat <- array(rnorm(125), dim = c(5, 5, 5))
   arr <- tiledb::DenseArray(ctx, tmp)
@@ -179,7 +179,7 @@ test_that("Can read / write 1D multi-attribute array", {
   a1  <- tiledb_attr(ctx, "a1", type = "FLOAT64")
   a2  <- tiledb_attr(ctx, "a2", type = "FLOAT64")
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
-  tiledb::DenseArray.create(tmp, sch)
+  tiledb_array_create(tmp, sch)
 
   arr <- tiledb::DenseArray(ctx, tmp)
 
@@ -212,7 +212,7 @@ test_that("Can read / write 2D multi-attribute array", {
   a1  <- tiledb_attr(ctx, "a1", type = "FLOAT64")
   a2  <- tiledb_attr(ctx, "a2", type = "FLOAT64")
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
-  tiledb::DenseArray.create(tmp, sch)
+  tiledb_array_create(tmp, sch)
 
   arr <- tiledb::DenseArray(ctx, tmp)
 
@@ -252,7 +252,7 @@ test_that("as.array() conversion method", {
   dom <- tiledb_domain(ctx, c(d1))
   a1  <- tiledb_attr(ctx, "a1", type = "FLOAT64")
   sch <- tiledb_array_schema(ctx, dom, c(a1))
-  tiledb::DenseArray.create(tmp, sch)
+  tiledb_array_create(tmp, sch)
 
   arr <- tiledb::DenseArray(ctx, tmp)
   dat <- as.double(1:10)
@@ -276,7 +276,7 @@ test_that("as.data.frame() conversion method", {
   a1  <- tiledb_attr(ctx, "a1", type = "FLOAT64")
   a2  <- tiledb_attr(ctx, "a2", type = "FLOAT64")
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
-  tiledb::DenseArray.create(tmp, sch)
+  tiledb_array_create(tmp, sch)
 
   arr <- tiledb::DenseArray(ctx, tmp)
 

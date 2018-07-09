@@ -80,6 +80,20 @@ setMethod("datatype", "tiledb_domain",
             return(libtiledb_domain_datatype(object@ptr))
           })
 
+#' Returns the number of dimensions of the `tiledb_domain`
+#' 
+#' @param object tiledb_domain
+#' @return integer number of dimensions 
+#' @examples 
+#' ctx <- tiledb_ctx()
+#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64")))
+#' 
+#' tiledb_ndim(dom)
+#' 
+#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64"), 
+#'                                    tiledb_dim(ctx, "d2", c(0.5, 100.0), dtype = "FLOAT64")))
+#' tiledb_ndim(dom)
+#' 
 #' @export
 setMethod("tiledb_ndim", "tiledb_domain",
           function(object) {

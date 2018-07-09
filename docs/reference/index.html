@@ -121,6 +121,36 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="attrs-tiledb_array_schema-ANY-method.html">attrs(<i>&lt;tiledb_array_schema&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns a list of all <code>tiledb_attr</code> objects associated with the <code>tiledb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="attrs-tiledb_array_schema-character-method.html">attrs(<i>&lt;tiledb_array_schema&gt;</i>,<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns a <code>tiledb_attr</code> object associated with the <code>tiledb_array_schema</code> with a given name.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="attrs-tiledb_array_schema-numeric-method.html">attrs(<i>&lt;tiledb_array_schema&gt;</i>,<i>&lt;numeric&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns a <code>tiledb_attr</code> object associated with the <code>tiledb_array_schema</code> with a given index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cell_order-tiledb_array_schema-method.html">cell_order(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the cell layout string associated with the <code>tiledb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="compressor-tiledb_array_schema-method.html">compressor(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the offsets and coordinate compressors associated with the <code>tiledb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="compressor-tiledb_attr-method.html">compressor(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the <code>tiledb_compressor</code> object associated with the given <code>tiledb_attr</code></p></td>
@@ -163,6 +193,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="dim.tiledb_array_schema.html">dim(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Retrieve the dimension (domain extent) of the domain</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="dim.tiledb_dim.html">dim(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Retrieves the dimension of the tiledb_dim domain</p></td>
@@ -175,9 +211,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="dimensions-tiledb_array_schema-method.html">dimensions(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="dimensions-tiledb_domain-method.html">dimensions(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns a list of the tiledb_domain dimension objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="domain-tiledb_array_schema-method.html">domain(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the <code>tiledb_domain</code> object associated with a given <code>tiledb_array_schema</code></p></td>
       </tr><tr>
         
         <td>
@@ -202,6 +250,12 @@
           <p><code><a href="is.integral-tiledb_domain-method.html">is.integral(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns TRUE is tiledb_domain is an integral (integer) domain</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="is.sparse-tiledb_array_schema-method.html">is.sparse(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns TRUE if the tiledb_array_schema is sparse, else FALSE</p></td>
       </tr><tr>
         
         <td>
@@ -247,9 +301,27 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="tile_order-tiledb_array_schema-method.html">tile_order(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the tile layout string associated with the <code>tiledb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb-package.html">tiledb-package</a></code> </p>
         </td>
         <td><p>tiledb - Interface to the TileDB Storage Manager API</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_create.html">tiledb_array_create()</a></code> </p>
+        </td>
+        <td><p>Creates a new TileDB array given an input schema.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema.html">tiledb_array_schema()</a></code> </p>
+        </td>
+        <td><p>Constructs a <code>tiledb_array_schema</code> object</p></td>
       </tr><tr>
         
         <td>
@@ -301,15 +373,63 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_group_create.html">tiledb_group_create()</a></code> </p>
+        </td>
+        <td><p>Creates a TileDB group object at given uri path</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_is_supported_fs-tiledb_ctx-character-method.html">tiledb_is_supported_fs(<i>&lt;tiledb_ctx&gt;</i>,<i>&lt;character&gt;</i>)</a></code> </p>
         </td>
         <td><p>Query if a TileDB backend is supported</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_ndim-tiledb_array_schema-method.html">tiledb_ndim(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Return the number of dimensions associated with the <code>tieldb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_ndim-tiledb_dim-method.html">tiledb_ndim(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the number of dimensions for a tiledb domain object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_ndim-tiledb_domain-method.html">tiledb_ndim(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the number of dimensions of the <code>tiledb_domain</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_object_ls.html">tiledb_object_ls()</a></code> </p>
+        </td>
+        <td><p>List TileDB resources at a given root URI path</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_object_mv.html">tiledb_object_mv()</a></code> </p>
+        </td>
+        <td><p>Move a TileDB resource to new uri path</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_object_rm.html">tiledb_object_rm()</a></code> </p>
+        </td>
+        <td><p>Removes a TileDB resource</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_object_type.html">tiledb_object_type()</a></code> </p>
+        </td>
+        <td><p>Return the TileDB object type string of a TileDB resource</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_object_walk.html">tiledb_object_walk()</a></code> </p>
+        </td>
+        <td><p>Recursively discover TileDB resources at a given root URI path</p></td>
       </tr><tr>
         
         <td>
