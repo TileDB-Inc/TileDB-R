@@ -852,7 +852,7 @@ void tiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
  * TileDB Array Schema
  */
 //[[Rcpp::export]]
-XPtr<tiledb::ArraySchema> tiledb_array_schema(
+XPtr<tiledb::ArraySchema> libtiledb_array_schema(
     XPtr<tiledb::Context> ctx, 
     XPtr<tiledb::Domain> domain,
     List attributes,
@@ -864,7 +864,7 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
   // check that external pointers are supported
   R_xlen_t nattr = attributes.length();
   if (nattr == 0) {
-    throw Rcpp::exception("tiledb_array_schema requires one or more attributes");
+    throw Rcpp::exception("libtiledb_array_schema requires one or more attributes");
   }
   for (R_xlen_t i=0; i < nattr; i++)  {
     SEXP attr = attributes[i];
@@ -902,7 +902,7 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema(
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Domain> tiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::Domain> libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema) {
   try {
     return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
   } catch (tiledb::TileDBError& err) {
@@ -911,7 +911,7 @@ XPtr<tiledb::Domain> tiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema
 }
 
 // [[Rcpp::export]]
-List tiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
+List libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
   try {
     List result;
     int nattr = schema->attribute_num();
@@ -926,7 +926,7 @@ List tiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema) {
+std::string libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema) {
   try {
     auto order = schema->cell_order();
     return _tiledb_layout_to_string(order);
@@ -936,7 +936,7 @@ std::string tiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
+std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
   try {
     auto order = schema->tile_order();
     return _tiledb_layout_to_string(order);
@@ -946,7 +946,7 @@ std::string tiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Compressor> tiledb_array_schema_coords_compressor(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::Compressor> libtiledb_array_schema_coords_compressor(XPtr<tiledb::ArraySchema> schema) {
   try {
     return XPtr<tiledb::Compressor>(new tiledb::Compressor(schema->coords_compressor()));
   } catch (tiledb::TileDBError& err) {
@@ -955,7 +955,7 @@ XPtr<tiledb::Compressor> tiledb_array_schema_coords_compressor(XPtr<tiledb::Arra
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Compressor> tiledb_array_schema_offsets_compressor(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::Compressor> libtiledb_array_schema_offsets_compressor(XPtr<tiledb::ArraySchema> schema) {
   try {
     return XPtr<tiledb::Compressor>(new tiledb::Compressor(schema->offsets_compressor())); 
   } catch (tiledb::TileDBError& err) {
@@ -964,7 +964,7 @@ XPtr<tiledb::Compressor> tiledb_array_schema_offsets_compressor(XPtr<tiledb::Arr
 }
 
 // [[Rcpp::export]]
-bool tiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
+bool libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
   try {
     return (schema->array_type() == TILEDB_SPARSE);
   } catch (tiledb::TileDBError& err) {
@@ -973,7 +973,7 @@ bool tiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> tiledb_array_schema_load(
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(
     XPtr<tiledb::Context> ctx,std::string uri) {
   try {
     return XPtr<tiledb::ArraySchema>(
@@ -984,7 +984,7 @@ XPtr<tiledb::ArraySchema> tiledb_array_schema_load(
 }
 
 // [[Rcpp::export]]
-void tiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
+void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
   try {
     schema->dump();
   } catch (tiledb::TileDBError& err) {

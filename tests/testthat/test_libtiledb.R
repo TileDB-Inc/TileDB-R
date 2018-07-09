@@ -115,13 +115,13 @@ test_that("basic float64 tiledb_attr constructor works", {
   expect_is(attr, "externalptr")
 })
 
-test_that("basic tiledb_array_schema constructor works", {
+test_that("basic libtiledb_array_schema constructor works", {
   ctx <- libtiledb_ctx()
   dim <- libtiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- libtiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("GZIP", 5)
   att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
-  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
+  sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   expect_is(sch, "externalptr")
 })
 
@@ -139,7 +139,7 @@ test_that("basic dense vector tiledb_array creation works", {
   dom <- libtiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("NO_COMPRESSION", -1)
   att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
-  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
+  sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_array", sep = "/")
   uri <- tiledb_array_create(pth, sch)
   expect_true(dir.exists(pth))
@@ -162,7 +162,7 @@ test_that("basic dense vector writes / reads works", {
   dom <- libtiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("NO_COMPRESSION", -1)
   att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
-  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
+  sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(pth, sch)
   
@@ -199,7 +199,7 @@ test_that("basic dense vector read subarray works", {
   dom <- libtiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("NO_COMPRESSION", -1)
   att <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
-  sch <- tiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
+  sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- tiledb_array_create(pth, sch)
   

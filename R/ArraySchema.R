@@ -1,16 +1,16 @@
-#' @exportClass ArraySchema
-setClass("ArraySchema",
+#' @exportClass tiledb_array_schema
+setClass("tiledb_array_schema",
          slots = list(ptr = "externalptr"))
 
-ArraySchema.from_ptr <- function(ptr) {
+tiledb_array_schema.from_ptr <- function(ptr) {
    if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
-    stop("ptr argument must be a non NULL externalptr to a tiledb::ArraySchema instance")
+    stop("ptr argument must be a non NULL externalptr to a tiledb_array_schema instance")
   }
-  new("ArraySchema", ptr = ptr) 
+  new("tiledb_array_schema", ptr = ptr) 
 }
 
 #' @export
-ArraySchema <- function(ctx,
+tiledb_array_schema <- function(ctx,
                         domain, 
                         attrs, 
                         cell_order = "COL_MAJOR",
@@ -52,12 +52,12 @@ ArraySchema <- function(ctx,
   if (!is.null(offsets_compressor)) {
     offsets_compressor_ptr <- offsets_compressor@ptr 
   }
-  ptr <- tiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order, 
+  ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order, 
                              coords_compressor_ptr, offsets_compressor_ptr, sparse) 
-  return(new("ArraySchema", ptr = ptr))
+  return(new("tiledb_array_schema", ptr = ptr))
 }
 
-ArraySchema.from_array <- function(ctx, x) {
+libtiledb_array_schema.from_array <- function(ctx, x) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (missing(x) || !is.array(x)) {
@@ -77,21 +77,21 @@ ArraySchema.from_array <- function(ctx, x) {
     stop(paste("invalid array type \"", typeof(x), "\""))
   }
   val <- tiledb::Attr(ctx, "", type = typestr)
-  return(tiledb::ArraySchema(ctx, dom, c(val)))
+  return(tiledb_array_schema(ctx, dom, c(val)))
 }
 
-setMethod("show", signature(object = "ArraySchema"),
+setMethod("show", signature(object = "tiledb_array_schema"),
           function(object) {
-            tiledb_array_schema_dump(object@ptr)
+            libtiledb_array_schema_dump(object@ptr)
           })
 
 #' @export
 setGeneric("domain", function(object, ...) standardGeneric("domain"))
 
 #' @export
-setMethod("domain", "ArraySchema",
+setMethod("domain", "tiledb_array_schema",
           function(object) {
-            ptr <- tiledb_array_schema_domain(object@ptr)
+            ptr <- libtiledb_array_schema_domain(object@ptr)
             tiledb_domain.from_ptr(ptr)
           })
 
@@ -99,16 +99,16 @@ setMethod("domain", "ArraySchema",
 setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 
 #' @export
-setMethod("dimensions", "ArraySchema",
+setMethod("dimensions", "tiledb_array_schema",
           function(object) dimensions(domain(object)))
 
 #' @export
 setGeneric("attrs", function(object, idx, ...) standardGeneric("attrs"))
 
 #' @export
-setMethod("attrs", signature("ArraySchema"),
+setMethod("attrs", signature("tiledb_array_schema"),
           function (object, ...) {
-            attr_ptrs <- tiledb_array_schema_attributes(object@ptr)
+            attr_ptrs <- libtiledb_array_schema_attributes(object@ptr)
             attrs <- lapply(attr_ptrs, function(ptr) Attr.from_ptr(ptr))
             names(attrs) <- sapply(attrs, function(attr) {
               n <- tiledb::name(attr)
@@ -118,14 +118,14 @@ setMethod("attrs", signature("ArraySchema"),
           })
 
 #' @export
-setMethod("attrs", signature("ArraySchema", "character"),
+setMethod("attrs", signature("tiledb_array_schema", "character"),
           function(object, idx, ...) {
             attrs <- tiledb::attrs(object)
             return(attrs)
           })
 
 #' @export
-setMethod("attrs", signature("ArraySchema", "numeric"),
+setMethod("attrs", signature("tiledb_array_schema", "numeric"),
           function(object, idx, ...) {
             attrs <- tiledb::attrs(object) 
             return(attrs[idx])
@@ -135,28 +135,28 @@ setMethod("attrs", signature("ArraySchema", "numeric"),
 setGeneric("cell_order", function(object, ...) standardGeneric("cell_order"))
 
 #' @export
-setMethod("cell_order", "ArraySchema",
+setMethod("cell_order", "tiledb_array_schema",
           function(object) {
-            tiledb_array_schema_cell_order(object@ptr) 
+            libtiledb_array_schema_cell_order(object@ptr) 
           })
 
 #' @export
 setGeneric("tile_order", function(object, ...) standardGeneric("tile_order"))
 
 #' @export
-setMethod("tile_order", "ArraySchema",
+setMethod("tile_order", "tiledb_array_schema",
           function(object) {
-            tiledb_array_schema_tile_order(object@ptr) 
+            libtiledb_array_schema_tile_order(object@ptr) 
           })
 
 #' @export
 setGeneric("compressor", function(object, ...) standardGeneric("compressor"))
 
 #' @export
-setMethod("compressor", "ArraySchema",
+setMethod("compressor", "tiledb_array_schema",
           function(object) {
-            coords_ptr <- tiledb_array_schema_coords_compressor(object@ptr)
-            offsets_ptr <- tiledb_array_schema_offsets_compressor(object@ptr)
+            coords_ptr <- libtiledb_array_schema_coords_compressor(object@ptr)
+            offsets_ptr <- libtiledb_array_schema_offsets_compressor(object@ptr)
             return(c(coords = Compressor.from_ptr(coords_ptr), 
                      offsets = Compressor.from_ptr(offsets_ptr)))
           })
@@ -165,20 +165,20 @@ setMethod("compressor", "ArraySchema",
 setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
 
 #' @export
-setMethod("is.sparse", "ArraySchema",
+setMethod("is.sparse", "tiledb_array_schema",
           function(object) {
-            tiledb_array_schema_sparse(object@ptr) 
+            libtiledb_array_schema_sparse(object@ptr) 
           })
  
 #' @export
 setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 
 #' @export
-setMethod("tiledb_ndim", "ArraySchema",
+setMethod("tiledb_ndim", "tiledb_array_schema",
           function(object) {
             dom <- tiledb::domain(object)
            return(tiledb_ndim(dom)) 
           })
 
 #' @export
-dim.ArraySchema <- function(x) dim(tiledb::domain(x))
+dim.tiledb_array_schema <- function(x) dim(tiledb::domain(x))

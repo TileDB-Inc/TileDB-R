@@ -370,9 +370,9 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// tiledb_array_schema
-XPtr<tiledb::ArraySchema> tiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order, Nullable<XPtr<tiledb::Compressor>> coords_compressor, Nullable<XPtr<tiledb::Compressor>> offsets_compressor, bool sparse);
-RcppExport SEXP _tiledb_tiledb_array_schema(SEXP ctxSEXP, SEXP domainSEXP, SEXP attributesSEXP, SEXP cell_orderSEXP, SEXP tile_orderSEXP, SEXP coords_compressorSEXP, SEXP offsets_compressorSEXP, SEXP sparseSEXP) {
+// libtiledb_array_schema
+XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order, Nullable<XPtr<tiledb::Compressor>> coords_compressor, Nullable<XPtr<tiledb::Compressor>> offsets_compressor, bool sparse);
+RcppExport SEXP _tiledb_libtiledb_array_schema(SEXP ctxSEXP, SEXP domainSEXP, SEXP attributesSEXP, SEXP cell_orderSEXP, SEXP tile_orderSEXP, SEXP coords_compressorSEXP, SEXP offsets_compressorSEXP, SEXP sparseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -384,106 +384,106 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::Compressor>> >::type coords_compressor(coords_compressorSEXP);
     Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::Compressor>> >::type offsets_compressor(offsets_compressorSEXP);
     Rcpp::traits::input_parameter< bool >::type sparse(sparseSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema(ctx, domain, attributes, cell_order, tile_order, coords_compressor, offsets_compressor, sparse));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema(ctx, domain, attributes, cell_order, tile_order, coords_compressor, offsets_compressor, sparse));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_domain
-XPtr<tiledb::Domain> tiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_domain(SEXP schemaSEXP) {
+// libtiledb_array_schema_domain
+XPtr<tiledb::Domain> libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_domain(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_domain(schema));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_domain(schema));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_attributes
-List tiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_attributes(SEXP schemaSEXP) {
+// libtiledb_array_schema_attributes
+List libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_attributes(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_attributes(schema));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_attributes(schema));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_cell_order
-std::string tiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_cell_order(SEXP schemaSEXP) {
+// libtiledb_array_schema_cell_order
+std::string libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_cell_order(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_cell_order(schema));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_cell_order(schema));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_tile_order
-std::string tiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_tile_order(SEXP schemaSEXP) {
+// libtiledb_array_schema_tile_order
+std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_tile_order(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_tile_order(schema));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_tile_order(schema));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_coords_compressor
-XPtr<tiledb::Compressor> tiledb_array_schema_coords_compressor(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_coords_compressor(SEXP schemaSEXP) {
+// libtiledb_array_schema_coords_compressor
+XPtr<tiledb::Compressor> libtiledb_array_schema_coords_compressor(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_coords_compressor(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_coords_compressor(schema));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_coords_compressor(schema));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_offsets_compressor
-XPtr<tiledb::Compressor> tiledb_array_schema_offsets_compressor(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_offsets_compressor(SEXP schemaSEXP) {
+// libtiledb_array_schema_offsets_compressor
+XPtr<tiledb::Compressor> libtiledb_array_schema_offsets_compressor(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_offsets_compressor(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_offsets_compressor(schema));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_offsets_compressor(schema));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_sparse
-bool tiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_sparse(SEXP schemaSEXP) {
+// libtiledb_array_schema_sparse
+bool libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_sparse(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_sparse(schema));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_sparse(schema));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_load
-XPtr<tiledb::ArraySchema> tiledb_array_schema_load(XPtr<tiledb::Context> ctx, std::string uri);
-RcppExport SEXP _tiledb_tiledb_array_schema_load(SEXP ctxSEXP, SEXP uriSEXP) {
+// libtiledb_array_schema_load
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx, std::string uri);
+RcppExport SEXP _tiledb_libtiledb_array_schema_load(SEXP ctxSEXP, SEXP uriSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_array_schema_load(ctx, uri));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_load(ctx, uri));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_array_schema_dump
-void tiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema);
-RcppExport SEXP _tiledb_tiledb_array_schema_dump(SEXP schemaSEXP) {
+// libtiledb_array_schema_dump
+void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_dump(SEXP schemaSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    tiledb_array_schema_dump(schema);
+    libtiledb_array_schema_dump(schema);
     return R_NilValue;
 END_RCPP
 }
@@ -912,16 +912,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_attr_compressor", (DL_FUNC) &_tiledb_tiledb_attr_compressor, 1},
     {"_tiledb_tiledb_attr_ncells", (DL_FUNC) &_tiledb_tiledb_attr_ncells, 1},
     {"_tiledb_tiledb_attr_dump", (DL_FUNC) &_tiledb_tiledb_attr_dump, 1},
-    {"_tiledb_tiledb_array_schema", (DL_FUNC) &_tiledb_tiledb_array_schema, 8},
-    {"_tiledb_tiledb_array_schema_domain", (DL_FUNC) &_tiledb_tiledb_array_schema_domain, 1},
-    {"_tiledb_tiledb_array_schema_attributes", (DL_FUNC) &_tiledb_tiledb_array_schema_attributes, 1},
-    {"_tiledb_tiledb_array_schema_cell_order", (DL_FUNC) &_tiledb_tiledb_array_schema_cell_order, 1},
-    {"_tiledb_tiledb_array_schema_tile_order", (DL_FUNC) &_tiledb_tiledb_array_schema_tile_order, 1},
-    {"_tiledb_tiledb_array_schema_coords_compressor", (DL_FUNC) &_tiledb_tiledb_array_schema_coords_compressor, 1},
-    {"_tiledb_tiledb_array_schema_offsets_compressor", (DL_FUNC) &_tiledb_tiledb_array_schema_offsets_compressor, 1},
-    {"_tiledb_tiledb_array_schema_sparse", (DL_FUNC) &_tiledb_tiledb_array_schema_sparse, 1},
-    {"_tiledb_tiledb_array_schema_load", (DL_FUNC) &_tiledb_tiledb_array_schema_load, 2},
-    {"_tiledb_tiledb_array_schema_dump", (DL_FUNC) &_tiledb_tiledb_array_schema_dump, 1},
+    {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 8},
+    {"_tiledb_libtiledb_array_schema_domain", (DL_FUNC) &_tiledb_libtiledb_array_schema_domain, 1},
+    {"_tiledb_libtiledb_array_schema_attributes", (DL_FUNC) &_tiledb_libtiledb_array_schema_attributes, 1},
+    {"_tiledb_libtiledb_array_schema_cell_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_cell_order, 1},
+    {"_tiledb_libtiledb_array_schema_tile_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_tile_order, 1},
+    {"_tiledb_libtiledb_array_schema_coords_compressor", (DL_FUNC) &_tiledb_libtiledb_array_schema_coords_compressor, 1},
+    {"_tiledb_libtiledb_array_schema_offsets_compressor", (DL_FUNC) &_tiledb_libtiledb_array_schema_offsets_compressor, 1},
+    {"_tiledb_libtiledb_array_schema_sparse", (DL_FUNC) &_tiledb_libtiledb_array_schema_sparse, 1},
+    {"_tiledb_libtiledb_array_schema_load", (DL_FUNC) &_tiledb_libtiledb_array_schema_load, 2},
+    {"_tiledb_libtiledb_array_schema_dump", (DL_FUNC) &_tiledb_libtiledb_array_schema_dump, 1},
     {"_tiledb_tiledb_array_create", (DL_FUNC) &_tiledb_tiledb_array_create, 2},
     {"_tiledb_tiledb_array", (DL_FUNC) &_tiledb_tiledb_array, 3},
     {"_tiledb_tiledb_array_is_open", (DL_FUNC) &_tiledb_tiledb_array_is_open, 1},

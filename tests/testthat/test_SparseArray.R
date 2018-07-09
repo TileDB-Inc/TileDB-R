@@ -21,7 +21,7 @@ unlink_and_create <- function(tmp) {
 #   d1  <- tiledb_dim(ctx, domain = c(1L, 10L)) 
 #   dom <- tiledb_domain(ctx, c(d1))
 #   atr <- tiledb::Attr(ctx)
-#   sch <- tiledb::ArraySchema(ctx, dom, c(atr), sparse = TRUE)
+#   sch <- tiledb_array_schema(ctx, dom, c(atr), sparse = TRUE)
 #   
 #   arr <- tiledb::SparseArray(ctx, sch, tmp) 
 #   expect_true(is.sparse(arr))   

@@ -1,22 +1,22 @@
 library(tiledb)
-context("tiledb::ArraySchema")
+context("tiledb_array_schema")
 
-test_that("tiledb::ArraySchema default constructor works", {
+test_that("tiledb_array_schema default constructor works", {
   ctx <- tiledb_ctx()
   d1  <- tiledb_dim(ctx, domain=c(1L, 100L))
   dom <- tiledb_domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx)
-  sch <- tiledb::ArraySchema(ctx, dom, c(a1))
-  expect_is(sch, "ArraySchema")
+  sch <- tiledb_array_schema(ctx, dom, c(a1))
+  expect_is(sch, "tiledb_array_schema")
 })
 
-test_that("tiledb::ArraySchema default constructor arugment values are correct",  {
+test_that("tiledb_array_schema default constructor arugment values are correct",  {
   ctx <- tiledb_ctx()
   d1  <- tiledb_dim(ctx, domain = c(1L, 100L))
   d2  <- tiledb_dim(ctx, domain = c(1L, 100L))
   dom <- tiledb_domain(ctx, c(d1, d2))
   a1  <- tiledb::Attr(ctx)
-  sch <- tiledb::ArraySchema(ctx, dom, c(a1)) 
+  sch <- tiledb_array_schema(ctx, dom, c(a1)) 
   
   # test domain
   expect_is(domain(sch), "tiledb_domain")
@@ -40,7 +40,7 @@ test_that("tiledb::ArraySchema default constructor arugment values are correct",
   expect_false(is.sparse(sch))
 })
 
-test_that("tiledb::ArraySchema full constructor argument values are correct",  {
+test_that("tiledb_array_schema full constructor argument values are correct",  {
   ctx <- tiledb_ctx()
   
   d1  <- tiledb_dim(ctx, domain = c(1L, 100L))
@@ -52,7 +52,7 @@ test_that("tiledb::ArraySchema full constructor argument values are correct",  {
   a1  <- tiledb::Attr(ctx, "attribute1", type = "FLOAT64")
   a2  <- tiledb::Attr(ctx, "attribute2", type = "INT32")
   
-  sch <- tiledb::ArraySchema(ctx, dom, c(a1, a2), 
+  sch <- tiledb_array_schema(ctx, dom, c(a1, a2), 
                              cell_order = "ROW_MAJOR", 
                              tile_order = "ROW_MAJOR",
                              coords_compressor = tiledb::Compressor("GZIP", 10),

@@ -1,16 +1,16 @@
 setClass("SparseArray",
-         slots = list(ctx = "tiledb_ctx", schema = "ArraySchema", uri = "character"))
+         slots = list(ctx = "tiledb_ctx", schema = "tiledb_array_schema", uri = "character"))
 
 #' @export
 SparseArray <- function(ctx, schema, uri) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   }
-  if (missing(schema) || !is(schema, "ArraySchema")) {
+  if (missing(schema) || !is(schema, "tiledb_array_schema")) {
     if (!is.sparse(schema)) {
       stop("schema must be a sparse array schema") 
     }
-    stop("argument schema must a tiledb::ArraySchema") 
+    stop("argument schema must a tiledb_array_schema") 
   } else if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar")
   }
@@ -25,7 +25,7 @@ SparseArray.load <- function(ctx, uri) {
     stop("argument uri must be a string scalar")
   }
   schema_ptr <- tiledb_array_load(ctx@ptr, uri)
-  schema <- ArraySchema.from_ptr(schema_ptr)
+  schema <- tiledb_array_schema.from_ptr(schema_ptr)
   if (!is.sparse(schema)) {
     stop("array URI must be a sparse array") 
   }

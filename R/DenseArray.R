@@ -6,11 +6,11 @@ setClass("DenseArray",
 DenseArray.create <- function(uri, schema) {
   if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar")
-  } else if (missing(schema) || !is(schema, "ArraySchema")) {
-    stop("argument schema must a tiledb::ArraySchema") 
+  } else if (missing(schema) || !is(schema, "tiledb_array_schema")) {
+    stop("argument schema must a tiledb_array_schema") 
   }
   if (tiledb::is.sparse(schema)) {
-    stop("ArraySchema is not a DenseArray schema") 
+    stop("tiledb_array_schema is not a dense") 
   }
   tiledb_array_create(uri, schema@ptr) 
   return()
@@ -32,7 +32,7 @@ DenseArray <- function(ctx, uri, query_type = NULL) {
   }
   array_xptr <- tiledb_array(ctx@ptr, uri, "WRITE")
   schema_xptr <- tiledb_array_get_schema(array_xptr) 
-  if (tiledb_array_schema_sparse(schema_xptr)) {
+  if (libtiledb_array_schema_sparse(schema_xptr)) {
     tiledb_array_close(array_xptr)
     stop("array URI must be a dense array") 
   }
@@ -71,8 +71,8 @@ setGeneric("schema", function(object, ...) standardGeneric("schema"))
 setMethod("schema", "DenseArray", function(object, ...) {
   ctx <- object@ctx
   uri <- object@uri
-  schema_xptr <- tiledb_array_schema_load(ctx@ptr, uri)
-  return(ArraySchema.from_ptr(schema_xptr))
+  schema_xptr <- libtiledb_array_schema_load(ctx@ptr, uri)
+  return(tiledb_array_schema.from_ptr(schema_xptr))
 })
 
 domain_subarray <- function(dom, index = NULL) {
@@ -125,7 +125,7 @@ subarray_dim <- function(sub) {
 }
 
 attribute_buffers <- function(sch, dom, sub) {
-  stopifnot(is(sch, "ArraySchema"))
+  stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
