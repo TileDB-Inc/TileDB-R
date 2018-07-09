@@ -121,15 +121,39 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="compressor-tiledb_attr-method.html">compressor(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the <code>tiledb_compressor</code> object associated with the given <code>tiledb_attr</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="compressor_level-tiledb_compressor-method.html">compressor_level(<i>&lt;tiledb_compressor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the compressor's compression level</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="compressor_type-tiledb_compressor-method.html">compressor_type(<i>&lt;tiledb_compressor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the compressor's compression type</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="config-tiledb_ctx-method.html">config(<i>&lt;tiledb_ctx&gt;</i>)</a></code> </p>
         </td>
         <td><p>Retrieve the <code>tiledb_config</code> object from the <code>tiledb_ctx</code></p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="datatype-tiledb_attr-method.html">datatype(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Return the <code>tiledb_attr</code> datatype</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="datatype-tiledb_dim-method.html">datatype(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Return the <code>tiledb_dim</code> tile extent</p></td>
+        <td><p>Return the <code>tiledb_dim</code> datatype</p></td>
       </tr><tr>
         
         <td>
@@ -163,6 +187,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="is.anonymous.tiledb_attr.html">is.anonymous(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns TRUE if the tiledb_dim is anonymous</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="is.anonymous.tiledb_dim.html">is.anonymous(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns TRUE if the tiledb_dim is anonymous</p></td>
@@ -175,9 +205,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="name-tiledb_attr-method.html">name(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Return the <code>tiledb_attr</code> name</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="name-tiledb_dim-method.html">name(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Return the <code>tiledb_dim</code> name</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ncells-tiledb_attr-method.html">ncells(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Return the number of scalar values per attribute cell</p></td>
       </tr><tr>
         
         <td>
@@ -208,6 +250,18 @@
           <p><code><a href="tiledb-package.html">tiledb-package</a></code> </p>
         </td>
         <td><p>tiledb - Interface to the TileDB Storage Manager API</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attr.html">tiledb_attr()</a></code> </p>
+        </td>
+        <td><p>Contructs a <code>tiledb_attr</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_compressor.html">tiledb_compressor()</a></code> </p>
+        </td>
+        <td><p>Constructs a <code>tiledb_compressor</code> object</p></td>
       </tr><tr>
         
         <td>
@@ -243,8 +297,7 @@
         <td>
           <p><code><a href="tiledb_domain.html">tiledb_domain()</a></code> </p>
         </td>
-        <td><p>Constructs a <code>tiledb_domain</code> object
-All dimension's must be of the same TileDB type.</p></td>
+        <td><p>Constructs a <code>tiledb_domain</code> object</p></td>
       </tr><tr>
         
         <td>

@@ -96,6 +96,11 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #'
 #' @param object tiledb_attr
 #' @return a tiledb_compressor object
+#' @examples 
+#' ctx <- tiledb_ctx()
+#' attr <- tiledb_attr(ctx, compressor=tiledb_compressor("ZSTD", 10))
+#' compressor(attr)
+#' 
 #' @export
 setMethod("compressor", "tiledb_attr",
           function(object) {

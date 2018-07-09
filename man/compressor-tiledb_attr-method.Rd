@@ -16,3 +16,9 @@ a tiledb_compressor object
 \description{
 Returns the \code{tiledb_compressor} object associated with the given \code{tiledb_attr}
 }
+\examples{
+ctx <- tiledb_ctx()
+attr <- tiledb_attr(ctx, compressor=tiledb_compressor("ZSTD", 10))
+compressor(attr)
+
+}
