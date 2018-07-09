@@ -4,7 +4,7 @@ context("tiledb::ArraySchema")
 test_that("tiledb::ArraySchema default constructor works", {
   ctx <- tiledb_ctx()
   d1  <- tiledb_dim(ctx, domain=c(1L, 100L))
-  dom <- tiledb::Domain(ctx, c(d1))
+  dom <- tiledb_domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx)
   sch <- tiledb::ArraySchema(ctx, dom, c(a1))
   expect_is(sch, "ArraySchema")
@@ -14,12 +14,12 @@ test_that("tiledb::ArraySchema default constructor arugment values are correct",
   ctx <- tiledb_ctx()
   d1  <- tiledb_dim(ctx, domain = c(1L, 100L))
   d2  <- tiledb_dim(ctx, domain = c(1L, 100L))
-  dom <- tiledb::Domain(ctx, c(d1, d2))
+  dom <- tiledb_domain(ctx, c(d1, d2))
   a1  <- tiledb::Attr(ctx)
   sch <- tiledb::ArraySchema(ctx, dom, c(a1)) 
   
   # test domain
-  expect_is(tiledb::domain(sch), "Domain")
+  expect_is(domain(sch), "tiledb_domain")
   
   # test dimensions
   ds <- tiledb::dimensions(sch)
@@ -47,7 +47,7 @@ test_that("tiledb::ArraySchema full constructor argument values are correct",  {
   d2  <- tiledb_dim(ctx, domain = c(1L, 100L))
   d3  <- tiledb_dim(ctx, domain = c(1L, 100L))
   
-  dom <- tiledb::Domain(ctx, c(d1, d2, d3))
+  dom <- tiledb_domain(ctx, c(d1, d2, d3))
   
   a1  <- tiledb::Attr(ctx, "attribute1", type = "FLOAT64")
   a2  <- tiledb::Attr(ctx, "attribute2", type = "INT32")
@@ -60,7 +60,7 @@ test_that("tiledb::ArraySchema full constructor argument values are correct",  {
                              sparse = TRUE)
   
   # test domain
-  expect_is(tiledb::domain(sch), "Domain")
+  expect_is(domain(sch), "tiledb_domain")
   
   # test dimensions
   ds <- tiledb::dimensions(sch)

@@ -21,7 +21,7 @@ ArraySchema <- function(ctx,
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   }
-  if (missing(domain) || !is(domain, "Domain")) {
+  if (missing(domain) || !is(domain, "tiledb_domain")) {
     stop("domain argument must be a tiledb::Domain") 
   }
   is_attr <- function(obj) is(obj, "Attr") 
@@ -67,7 +67,7 @@ ArraySchema.from_array <- function(ctx, x) {
   dims <- lapply(seq_len(xdim), function(i) {
     tiledb::Dim(ctx, c(1L, xdim[i]), type = "INT32")
   })
-  dom <- tiledb::Domain(ctx, dims)
+  dom <- tiledb_domain(ctx, dims)
   #TODO: better datatype checking
   if (is.double(x)) {
     typestr <- "FLOAT64"   
@@ -92,7 +92,7 @@ setGeneric("domain", function(object, ...) standardGeneric("domain"))
 setMethod("domain", "ArraySchema",
           function(object) {
             ptr <- tiledb_array_schema_domain(object@ptr)
-            Domain.from_ptr(ptr)
+            tiledb_domain.from_ptr(ptr)
           })
 
 #' @export

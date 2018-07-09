@@ -1,17 +1,18 @@
-#' @exportClass Domain
-setClass("Domain", 
+#' @exportClass tiledb_domain
+setClass("tiledb_domain", 
          slots = list(ptr = "externalptr"))
 
-Domain.from_ptr <- function(ptr) {
+tiledb_domain.from_ptr <- function(ptr) {
   if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
-    stop("ptr argument must be a non NULL externalptr to a tiledb::Domain instance")
+    stop("ptr argument must be a non NULL externalptr to a tiledb_domain instance")
   }
-  return(new("Domain", ptr = ptr))
+  return(new("tiledb_domain", ptr = ptr))
 }
 
 #' @importFrom methods slot
-#' @export Domain
-Domain <- function(ctx, dims) {
+#' @importFrom methods new
+#' @export tiledb_domain
+tiledb_domain <- function(ctx, dims) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   }
@@ -20,46 +21,46 @@ Domain <- function(ctx, dims) {
     stop("argument dims must be a list of one or more tileb_dim")
   }
   dims_ptrs <- lapply(dims, function(obj) slot(obj, "ptr"))
-  ptr <- tiledb_domain(ctx@ptr, dims_ptrs)
-  return(new("Domain", ptr = ptr))
+  ptr <- libtiledb_domain(ctx@ptr, dims_ptrs)
+  return(new("tiledb_domain", ptr = ptr))
 }
 
-setMethod("show", "Domain",
+setMethod("show", "tiledb_domain",
           function(object) {
-            return(tiledb_domain_dump(object@ptr))
+            return(libtiledb_domain_dump(object@ptr))
           })
 
 #' @export
-setMethod("dimensions", "Domain", 
+setMethod("dimensions", "tiledb_domain", 
           function(object) {
-            dim_ptrs <- tiledb_domain_dimensions(object@ptr)
+            dim_ptrs <- libtiledb_domain_dimensions(object@ptr)
             return(lapply(dim_ptrs, tiledb_dim.from_ptr))
           })
 
 #' @export
-setMethod("datatype", "Domain",
+setMethod("datatype", "tiledb_domain",
           function(object) {
-            return(tiledb_domain_datatype(object@ptr))
+            return(libtiledb_domain_datatype(object@ptr))
           })
 
 #' @export
-setMethod("tiledb_ndim", "Domain",
+setMethod("tiledb_ndim", "tiledb_domain",
           function(object) {
-            return(tiledb_domain_ndim(object@ptr))          
+            return(libtiledb_domain_ndim(object@ptr))          
           })
 
 #' @export
 setGeneric("is.integral", function(object) standardGeneric("is.integral"))
  
 #' @export
-setMethod("is.integral", "Domain",
+setMethod("is.integral", "tiledb_domain",
           function(object) {
-            dt <- tiledb::datatype(object) 
+            dt <- datatype(object) 
             return(ifelse(dt == "FLOAT32" || dt == "FLOAT64", FALSE, TRUE))
           })
 
 #' @export
-dim.Domain <- function(x) {
+dim.tiledb_domain <- function(x) {
   dtype <- datatype(x)
   if (dtype == "FLOAT32" || dtype == "FLOAT64")  {
    stop("dim() is only defined for integral domains") 

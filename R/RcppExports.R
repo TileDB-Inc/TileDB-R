@@ -73,24 +73,24 @@ dim_domain_subarray <- function(domain, subscript) {
     .Call(`_tiledb_dim_domain_subarray`, domain, subscript)
 }
 
-tiledb_domain <- function(ctx, dims) {
-    .Call(`_tiledb_tiledb_domain`, ctx, dims)
+libtiledb_domain <- function(ctx, dims) {
+    .Call(`_tiledb_libtiledb_domain`, ctx, dims)
 }
 
-tiledb_domain_ndim <- function(domain) {
-    .Call(`_tiledb_tiledb_domain_ndim`, domain)
+libtiledb_domain_ndim <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_ndim`, domain)
 }
 
-tiledb_domain_dimensions <- function(domain) {
-    .Call(`_tiledb_tiledb_domain_dimensions`, domain)
+libtiledb_domain_dimensions <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_dimensions`, domain)
 }
 
-tiledb_domain_datatype <- function(domain) {
-    .Call(`_tiledb_tiledb_domain_datatype`, domain)
+libtiledb_domain_datatype <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_datatype`, domain)
 }
 
-tiledb_domain_dump <- function(domain) {
-    invisible(.Call(`_tiledb_tiledb_domain_dump`, domain))
+libtiledb_domain_dump <- function(domain) {
+    invisible(.Call(`_tiledb_libtiledb_domain_dump`, domain))
 }
 
 tiledb_compressor <- function(compressor, level) {

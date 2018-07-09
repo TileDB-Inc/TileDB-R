@@ -453,7 +453,7 @@ SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
         auto d1 = dim->domain<DataType>().first;
         auto d2 = dim->domain<DataType>().second;
         if (d1 == R_NaReal || d2 == R_NaReal) {
-          throw Rcpp::exception("tiledb::Dim domain FLOAT64 value not representable as an R double"); 
+          throw Rcpp::exception("tiledb_dim domain FLOAT64 value not representable as an R double"); 
         }
         return NumericVector({d1, d2});
       }
@@ -482,7 +482,7 @@ SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
         auto d1 = dim->domain<DataType>().first;
         auto d2 = dim->domain<DataType>().second;
         if (d1 == R_NaInt || d2 == R_NaInt) {
-          throw Rcpp::exception("tiledb::Dim domain INT32 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim domain INT32 value not representable as an R integer"); 
         }
         return IntegerVector({d1, d2});
       }
@@ -492,7 +492,7 @@ SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
         auto d2 = dim->domain<DataType>().second;
         if (d1 > std::numeric_limits<int32_t>::max() || 
             d2 > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb::Dim domain UINT32 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim domain UINT32 value not representable as an R integer"); 
         }
         return IntegerVector({static_cast<int32_t>(d1), 
                               static_cast<int32_t>(d2)});
@@ -503,7 +503,7 @@ SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
         auto d2 = dim->domain<DataType>().second;
         if (d1 <= R_NaInt || d1 > std::numeric_limits<int32_t>::max() ||
             d2 <= R_NaInt || d2 > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb::Dim domain INT64 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim domain INT64 value not representable as an R integer"); 
         }
         return IntegerVector({static_cast<int32_t>(d1), 
                               static_cast<int32_t>(d2)});
@@ -514,13 +514,13 @@ SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
         auto d2 = dim->domain<DataType>().second;
         if (d1 > std::numeric_limits<int32_t>::max() ||
             d2 > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb::Dim domain UINT64 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim domain UINT64 value not representable as an R integer"); 
         }
         return IntegerVector({static_cast<int32_t>(d1), 
                               static_cast<int32_t>(d2)});
       }
       default:
-        throw Rcpp::exception("invalid tiledb::Dim domain type");
+        throw Rcpp::exception("invalid tiledb_dim domain type");
     }
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
@@ -540,7 +540,7 @@ SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
         using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
         auto t = dim->tile_extent<DataType>();
         if (t == R_NaReal) {
-          throw Rcpp::exception("tiledb::Dim tile FLOAT64 value not representable as an R double"); 
+          throw Rcpp::exception("tiledb_dim tile FLOAT64 value not representable as an R double"); 
         }
         return NumericVector({t});
       }
@@ -564,7 +564,7 @@ SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
         using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
         auto t = dim->tile_extent<DataType>();
         if (t == R_NaInt) {
-          throw Rcpp::exception("tiledb::Dim tile INT32 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim tile INT32 value not representable as an R integer"); 
         }
         return IntegerVector({t,});
       }
@@ -572,7 +572,7 @@ SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
         using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
         auto t = dim->tile_extent<DataType>();
         if (t > std::numeric_limits<int32_t>::max()) { 
-          throw Rcpp::exception("tiledb::Dim tile UINT32 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim tile UINT32 value not representable as an R integer"); 
         }
         return IntegerVector({static_cast<int32_t>(t),});
       }
@@ -580,7 +580,7 @@ SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
         using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT64>::type;
         auto t = dim->tile_extent<DataType>();
         if (t <= R_NaInt || t > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb::Dim tile INT64 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim tile INT64 value not representable as an R integer"); 
         }
         return IntegerVector({static_cast<int32_t>(t),});
       }
@@ -588,12 +588,12 @@ SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
         using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
         auto t = dim->tile_extent<DataType>();
         if (t > std::numeric_limits<int32_t>::max()) { 
-          throw Rcpp::exception("tiledb::Dim tile UINT64 value not representable as an R integer"); 
+          throw Rcpp::exception("tiledb_dim tile UINT64 value not representable as an R integer"); 
         }
         return IntegerVector({static_cast<int32_t>(t),});
       }
       default:
-        throw Rcpp::exception("invalid tiledb::Dim domain type");
+        throw Rcpp::exception("invalid tiledb_dim domain type");
     }
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
@@ -613,7 +613,7 @@ std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
 // [[Rcpp::export]]
 NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript) {
   if (domain.length() != 2) {
-    throw Rcpp::exception("invalid tiledb::Dimension domain"); 
+    throw Rcpp::exception("invalid tiledb_dim domain"); 
   }
   double domain_lb = domain[0];
   double domain_ub = domain[1];
@@ -661,7 +661,7 @@ NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript)
  * TileDB Domain
  */
 // [[Rcpp::export]]
-XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
+XPtr<tiledb::Domain> libtiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
   R_xlen_t ndims = dims.length();
   if (ndims == 0) {
     throw Rcpp::exception("domain must have one or more dimensions");
@@ -688,7 +688,7 @@ XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
 }
 
 // [[Rcpp::export]]
-IntegerVector tiledb_domain_ndim(XPtr<tiledb::Domain> domain) {
+IntegerVector libtiledb_domain_ndim(XPtr<tiledb::Domain> domain) {
   try {
     unsigned int rank = domain->ndim();
     if (rank > std::numeric_limits<int32_t>::max()) {
@@ -701,7 +701,7 @@ IntegerVector tiledb_domain_ndim(XPtr<tiledb::Domain> domain) {
 }
 
 // [[Rcpp::export]]
-List tiledb_domain_dimensions(XPtr<tiledb::Domain> domain) {
+List libtiledb_domain_dimensions(XPtr<tiledb::Domain> domain) {
   try {
     List dimensions;
     for (auto& dim : domain->dimensions()) {
@@ -714,7 +714,7 @@ List tiledb_domain_dimensions(XPtr<tiledb::Domain> domain) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_domain_datatype(XPtr<tiledb::Domain> domain) {
+std::string libtiledb_domain_datatype(XPtr<tiledb::Domain> domain) {
   try {
     auto dtype = domain->type();
     return _tiledb_datatype_to_string(dtype);
@@ -724,7 +724,7 @@ std::string tiledb_domain_datatype(XPtr<tiledb::Domain> domain) {
 }
 
 // [[Rcpp::export]]
-void tiledb_domain_dump(XPtr<tiledb::Domain> domain) {
+void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   try {
     domain->dump();
     return;

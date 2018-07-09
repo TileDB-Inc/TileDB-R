@@ -76,7 +76,7 @@ setMethod("schema", "DenseArray", function(object, ...) {
 })
 
 domain_subarray <- function(dom, index = NULL) {
-  stopifnot(is(dom, "Domain"))
+  stopifnot(is(dom, "tiledb_domain"))
   nd <- tiledb_ndim(dom)
   dims <- tiledb::dimensions(dom)
   # return the whole domain
@@ -126,7 +126,7 @@ subarray_dim <- function(sub) {
 
 attribute_buffers <- function(sch, dom, sub) {
   stopifnot(is(sch, "ArraySchema"))
-  stopifnot(is(dom, "Domain"))
+  stopifnot(is(dom, "tiledb_domain"))
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
   is_scalar <- all(sub_dim == 1L)

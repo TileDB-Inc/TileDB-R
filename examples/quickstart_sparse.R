@@ -50,8 +50,8 @@ create_array <- function() {
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
     dom <- tiledb_domain(ctx, 
-		dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "TILEDB_INT32"),
-			 tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "TILEDB_INT32")))
+              dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "TILEDB_INT32"),
+			                 tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "TILEDB_INT32")))
 
    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
     schema = tiledb_array_schema(ctx,
