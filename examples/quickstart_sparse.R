@@ -43,9 +43,10 @@ create_array <- function() {
     ctx <- tiledb_ctx()
 
     # Check if the array already exists.
-    if tiledb_object_type(ctx, array_name) == "TILEDB_ARRAY":
+    if (tiledb_object_type(ctx, array_name) == "TILEDB_ARRAY") {
         stop("Array already exists.")
-	quit(0)
+	      quit(0)
+    }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
     dom <- tiledb_domain(ctx, 
@@ -80,7 +81,7 @@ read_array <- function() {
     coords <- data[["coords"]] 
     a_vals <- data[["a"]]
     for (i in seq_along(a_vals)) {
-	i <- coords[((i - 1) * 2) + 1]
+	      i <- coords[((i - 1) * 2) + 1]
         j <- coords[((i - 1) * 2) + 2]
         cat(sprintf("Cell (%d,%d) has data %d\n", i, j, a_vals[i]))
     }
