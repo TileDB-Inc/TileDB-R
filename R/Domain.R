@@ -9,6 +9,7 @@ Domain.from_ptr <- function(ptr) {
   return(new("Domain", ptr = ptr))
 }
 
+#' @importFrom methods slot
 #' @export Domain
 Domain <- function(ctx, dims) {
   if (!is(ctx, "tiledb_ctx")) {
