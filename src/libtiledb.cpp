@@ -1131,7 +1131,7 @@ std::string libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
  * Query 
  */
 // [[Rcpp::export]]
-XPtr<tiledb::Query> tiledb_query(XPtr<tiledb::Context> ctx,
+XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
                                  XPtr<tiledb::Array> array,
                                  std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
@@ -1146,7 +1146,7 @@ XPtr<tiledb::Query> tiledb_query(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> tiledb_query_set_layout(XPtr<tiledb::Query> query,
+XPtr<tiledb::Query> libtiledb_query_set_layout(XPtr<tiledb::Query> query,
                                             std::string layout) {
   auto _layout = _string_to_tiledb_layout(layout);
   try {
@@ -1158,7 +1158,7 @@ XPtr<tiledb::Query> tiledb_query_set_layout(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> tiledb_query_set_subarray(XPtr<tiledb::Query> query,
+XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                               SEXP subarray) {
   try {
     if (TYPEOF(subarray) == INTSXP) {
@@ -1178,7 +1178,7 @@ XPtr<tiledb::Query> tiledb_query_set_subarray(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> tiledb_query_set_buffer(XPtr<tiledb::Query> query,
+XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
                                             std::string attr,
                                             SEXP buffer) {
   try {
@@ -1202,7 +1202,7 @@ XPtr<tiledb::Query> tiledb_query_set_buffer(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> tiledb_query_submit(XPtr<tiledb::Query> query) {
+XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {
   try {
     query->submit();
     return query;
@@ -1212,7 +1212,7 @@ XPtr<tiledb::Query> tiledb_query_submit(XPtr<tiledb::Query> query) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> tiledb_query_finalize(XPtr<tiledb::Query> query) {
+XPtr<tiledb::Query> libtiledb_query_finalize(XPtr<tiledb::Query> query) {
   try {
     query->finalize(); 
     return query;
@@ -1237,7 +1237,7 @@ std::string _query_status_to_string(tiledb::Query::Status status) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_query_status(XPtr<tiledb::Query> query) {
+std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
   try {
     tiledb::Query::Status status = query->query_status();
     return _query_status_to_string(status);

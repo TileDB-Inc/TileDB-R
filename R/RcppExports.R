@@ -213,32 +213,32 @@ libtiledb_array_consolidate <- function(ctx, uri) {
     .Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri)
 }
 
-tiledb_query <- function(ctx, array, type) {
-    .Call(`_tiledb_tiledb_query`, ctx, array, type)
+libtiledb_query <- function(ctx, array, type) {
+    .Call(`_tiledb_libtiledb_query`, ctx, array, type)
 }
 
-tiledb_query_set_layout <- function(query, layout) {
-    .Call(`_tiledb_tiledb_query_set_layout`, query, layout)
+libtiledb_query_set_layout <- function(query, layout) {
+    .Call(`_tiledb_libtiledb_query_set_layout`, query, layout)
 }
 
-tiledb_query_set_subarray <- function(query, subarray) {
-    .Call(`_tiledb_tiledb_query_set_subarray`, query, subarray)
+libtiledb_query_set_subarray <- function(query, subarray) {
+    .Call(`_tiledb_libtiledb_query_set_subarray`, query, subarray)
 }
 
-tiledb_query_set_buffer <- function(query, attr, buffer) {
-    .Call(`_tiledb_tiledb_query_set_buffer`, query, attr, buffer)
+libtiledb_query_set_buffer <- function(query, attr, buffer) {
+    .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
-tiledb_query_submit <- function(query) {
-    .Call(`_tiledb_tiledb_query_submit`, query)
+libtiledb_query_submit <- function(query) {
+    .Call(`_tiledb_libtiledb_query_submit`, query)
 }
 
-tiledb_query_finalize <- function(query) {
-    .Call(`_tiledb_tiledb_query_finalize`, query)
+libtiledb_query_finalize <- function(query) {
+    .Call(`_tiledb_libtiledb_query_finalize`, query)
 }
 
-tiledb_query_status <- function(query) {
-    .Call(`_tiledb_tiledb_query_status`, query)
+libtiledb_query_status <- function(query) {
+    .Call(`_tiledb_libtiledb_query_status`, query)
 }
 
 libtiledb_group_create <- function(ctx, uri) {

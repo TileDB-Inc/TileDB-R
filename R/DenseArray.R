@@ -143,19 +143,19 @@ setMethod("[", "DenseArray",
               {
                 subarray <- domain_subarray(dom, index = index)
                 buffers <- attribute_buffers(schema, dom, subarray)
-                qry <- tiledb_query(ctx@ptr, x@ptr, "READ")
-                qry <- tiledb_query_set_layout(qry, "COL_MAJOR")
+                qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
+                qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
                 if (is.integral(dom)) {
-                  qry <- tiledb_query_set_subarray(qry, as.integer(subarray))
+                  qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
                 } else {
-                  qry <- tiledb_query_set_subarray(qry, as.double(subarray))
+                  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
                 }
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
-                  qry <- tiledb_query_set_buffer(qry, attr_names[[idx]], buffers[[idx]])
+                  qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], buffers[[idx]])
                 }
-                qry <- tiledb_query_submit(qry)
-                if (tiledb_query_status(qry) != "COMPLETE") {
+                qry <- libtiledb_query_submit(qry)
+                if (libtiledb_query_status(qry) != "COMPLETE") {
                   stop("error in read query")
                 }
                 # If true, delete the dimensions of an array which have only one level
@@ -237,22 +237,22 @@ setMethod("[<-", "DenseArray",
             libtiledb_array_open(x@ptr, "WRITE")
             out <- tryCatch(
               {
-                qry <- tiledb_query(ctx@ptr, x@ptr, "WRITE") 
-                qry <- tiledb_query_set_layout(qry, "COL_MAJOR")
+                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE") 
+                qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
                 if (is.integral(dom)) {
-                  qry <- tiledb_query_set_subarray(qry, as.integer(subarray))
+                  qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
                 } else {
-                  qry <- tiledb_query_set_subarray(qry, as.double(subarray))
+                  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
                 }
                 attr_names <- names(value)
                 for (idx in seq_along(value)) {
-                  qry <- tiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
+                  qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
                 }
-                qry <- tiledb_query_submit(qry)
-                if (tiledb_query_status(qry) != "COMPLETE") {
+                qry <- libtiledb_query_submit(qry)
+                if (libtiledb_query_status(qry) != "COMPLETE") {
                   stop("error in write query") 
                 }
-                qry <- tiledb_query_finalize(qry)
+                qry <- libtiledb_query_finalize(qry)
                 return(x);
               },
               finally = {
