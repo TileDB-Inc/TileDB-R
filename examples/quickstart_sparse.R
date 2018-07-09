@@ -33,6 +33,8 @@
 # to it, and read a slice of the data back.
 #
 
+library(tiledb)
+
 # Name of the array to create.
 array_name = "quickstart_sparse"
 
