@@ -1,14 +1,14 @@
-#' @exportClass Compressor
-setClass("Compressor",
+#' @exportClass tiledb_compressor
+setClass("tiledb_compressor",
          slots = list(ptr = "externalptr"))
 
-Compressor.from_ptr <- function(ptr) {
+tiledb_compressor.from_ptr <- function(ptr) {
   stopifnot(is(ptr, "externalptr"))
-  return(new("Compressor", ptr = ptr))
+  return(new("tiledb_compressor", ptr = ptr))
 }
 
-#' @export Compressor
-Compressor <- function(type = "NO_COMPRESSION", level = -1L) {
+#' @export tiledb_compressor
+tiledb_compressor <- function(type = "NO_COMPRESSION", level = -1L) {
   if (!is.scalar(type, "character")) {
     stop("compressor argument must be scalar string")
   }
@@ -17,31 +17,31 @@ Compressor <- function(type = "NO_COMPRESSION", level = -1L) {
   } else {
     level <- as.integer(level)
   }
-  ptr <- tiledb_compressor(type, level)
-  return(new("Compressor", ptr = ptr))
+  ptr <- libtiledb_compressor(type, level)
+  return(new("tiledb_compressor", ptr = ptr))
 }
 
 #' @export
 setGeneric("compressor_type", function(object, ...) standardGeneric("compressor_type"))
 
 #' @export
-setMethod("compressor_type", "Compressor",
+setMethod("compressor_type", "tiledb_compressor",
           function(object) {
-            return(tiledb_compressor_type(object@ptr))  
+            return(libtiledb_compressor_type(object@ptr))  
           })
 
 #' @export
 setGeneric("compressor_level", function(object, ...) standardGeneric("compressor_level"))
 
 #' @export
-setMethod("compressor_level", "Compressor",
+setMethod("compressor_level", "tiledb_compressor",
           function(object) {
-            return(tiledb_compressor_level(object@ptr));
+            return(libtiledb_compressor_level(object@ptr));
           })
 
-setMethod("show", "Compressor",
+setMethod("show", "tiledb_compressor",
           function(object) {
             type <- compressor_type(object)
             level <- compression_level(object)
-            cat("tiledb::Compressor(\"", type, "\", level = ", level, ")", sep="")
+            cat("tiledb_compressor(\"", type, "\", level = ", level, ")", sep="")
           })

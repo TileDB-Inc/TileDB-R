@@ -5,7 +5,7 @@
 \title{Contructs a \code{tiledb_attr} object}
 \usage{
 tiledb_attr(ctx, name = "", type = "FLOAT64",
-  compressor = tiledb::Compressor(), ncells = 1)
+  compressor = tiledb_compressor(), ncells = 1)
 }
 \arguments{
 \item{name}{(default "") The dimension name / label string.}

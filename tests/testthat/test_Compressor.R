@@ -1,18 +1,18 @@
 library(tiledb)
-context("tiledb::Compressor")
+context("tiledb_compressor")
 
-test_that("tiledb::Compressor default constructor", {
-  com <- tiledb::Compressor()  
-  expect_is(com, "Compressor")
+test_that("tiledb_compressor default constructor", {
+  com <- tiledb_compressor()  
+  expect_is(com, "tiledb_compressor")
 })
 
-test_that("tiledb::Compressor defaults to no compression", {
-  com <- tiledb::Compressor() 
+test_that("tiledb_compressor defaults to no compression", {
+  com <- tiledb_compressor() 
   expect_equal(tiledb::compressor_type(com), "NO_COMPRESSION")
   expect_equal(tiledb::compressor_level(com), -1)
 })
 
-test_that("tiledb::Compressor type is correct", {
+test_that("tiledb_compressor type is correct", {
   type_list <- c("NO_COMPRESSION",
                  "GZIP",
                  "ZSTD",
@@ -27,9 +27,9 @@ test_that("tiledb::Compressor type is correct", {
                  "BZIP2",
                  "DOUBLE_DELTA") 
   for (type in type_list) {
-    com <- tiledb::Compressor(type = type, level = 10) 
+    com <- tiledb_compressor(type = type, level = 10) 
     expect_equal(tiledb::compressor_type(com), type)
     expect_equal(tiledb::compressor_level(com), 10)
   }
-  expect_error(tiledb::Compressor("UNKNOWN", 10))
+  expect_error(tiledb_compressor("UNKNOWN", 10))
 })

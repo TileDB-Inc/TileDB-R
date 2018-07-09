@@ -27,7 +27,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 tiledb_attr <- function(ctx, 
                         name="", 
                         type="FLOAT64", 
-                        compressor=tiledb::Compressor(),
+                        compressor=tiledb_compressor(),
                         ncells=1) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
@@ -35,8 +35,8 @@ tiledb_attr <- function(ctx,
     stop("name argument must be a scalar string")
   } else if (!is.scalar(type, "character") || (type != "INT32" && type != "FLOAT64")) {
     stop("type argument must be \"INT32\" or \"FLOAT64\"")
-  } else if(!is(compressor, "Compressor")) {
-    stop("compressor argument must be a tiledb::Compressor instance") 
+  } else if(!is(compressor, "tiledb_compressor")) {
+    stop("compressor argument must be a tiledb_compressor instance") 
   } else if (ncells != 1) {
     stop("only single cell attributes are supported")
   }
@@ -95,12 +95,12 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #' Returns the `tiledb_compressor` object associated with the given `tiledb_attr`
 #'
 #' @param object tiledb_attr
-#' @returns a tiledb_compressor object
+#' @return a tiledb_compressor object
 #' @export
 setMethod("compressor", "tiledb_attr",
           function(object) {
             ptr <- libtiledb_attr_compressor(object@ptr)
-            return(Compressor.from_ptr(ptr))
+            return(tiledb_compressor.from_ptr(ptr))
           })
 
 #' @export

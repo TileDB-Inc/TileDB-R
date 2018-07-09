@@ -738,7 +738,7 @@ void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
  * TileDB Compressor
  */
 //[[Rcpp::export]]
-XPtr<tiledb::Compressor> tiledb_compressor(std::string compressor, int level) {
+XPtr<tiledb::Compressor> libtiledb_compressor(std::string compressor, int level) {
   try {
     tiledb_compressor_t compr = _string_to_tiledb_compressor(compressor);
     return XPtr<tiledb::Compressor>(new tiledb::Compressor({compr, level}));
@@ -748,7 +748,7 @@ XPtr<tiledb::Compressor> tiledb_compressor(std::string compressor, int level) {
 }
 
 //[[Rcpp::export]]
-std::string tiledb_compressor_type(XPtr<tiledb::Compressor> compressor) {
+std::string libtiledb_compressor_type(XPtr<tiledb::Compressor> compressor) {
   try {
     return _tiledb_compresssor_to_string(compressor->compressor());
   } catch (tiledb::TileDBError& err) {
@@ -757,7 +757,7 @@ std::string tiledb_compressor_type(XPtr<tiledb::Compressor> compressor) {
 }
 
 //[[Rcpp::export]]
-int tiledb_compressor_level(XPtr<tiledb::Compressor> compressor) {
+int libtiledb_compressor_level(XPtr<tiledb::Compressor> compressor) {
   try {
     return compressor->level(); 
   } catch (tiledb::TileDBError& err) {

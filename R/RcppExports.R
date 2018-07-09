@@ -93,16 +93,16 @@ libtiledb_domain_dump <- function(domain) {
     invisible(.Call(`_tiledb_libtiledb_domain_dump`, domain))
 }
 
-tiledb_compressor <- function(compressor, level) {
-    .Call(`_tiledb_tiledb_compressor`, compressor, level)
+libtiledb_compressor <- function(compressor, level) {
+    .Call(`_tiledb_libtiledb_compressor`, compressor, level)
 }
 
-tiledb_compressor_type <- function(compressor) {
-    .Call(`_tiledb_tiledb_compressor_type`, compressor)
+libtiledb_compressor_type <- function(compressor) {
+    .Call(`_tiledb_libtiledb_compressor_type`, compressor)
 }
 
-tiledb_compressor_level <- function(compressor) {
-    .Call(`_tiledb_tiledb_compressor_level`, compressor)
+libtiledb_compressor_level <- function(compressor) {
+    .Call(`_tiledb_libtiledb_compressor_level`, compressor)
 }
 
 libtiledb_attr <- function(ctx, name, type, compressor, ncells) {

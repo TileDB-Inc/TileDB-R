@@ -10,6 +10,9 @@
 \arguments{
 \item{object}{tiledb_attr}
 }
+\value{
+a tiledb_compressor object
+}
 \description{
 Returns the \code{tiledb_compressor} object associated with the given \code{tiledb_attr}
 }

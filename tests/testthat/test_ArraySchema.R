@@ -55,8 +55,8 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2), 
                              cell_order = "ROW_MAJOR", 
                              tile_order = "ROW_MAJOR",
-                             coords_compressor = tiledb::Compressor("GZIP", 10),
-                             offsets_compressor = tiledb::Compressor("ZSTD", 5),
+                             coords_compressor = tiledb_compressor("GZIP", 10),
+                             offsets_compressor = tiledb_compressor("ZSTD", 5),
                              sparse = TRUE)
   
   # test domain

@@ -26,13 +26,13 @@ test_that("tiledb_attr is.anonymous is correct", {
 
 test_that("tiledb_attr with compression", {
   ctx <- tiledb_ctx()
-  a1 <- tiledb_attr(ctx, "foo", compressor = tiledb::Compressor("GZIP", 10))
+  a1 <- tiledb_attr(ctx, "foo", compressor = tiledb_compressor("GZIP", 10))
   com <- tiledb::compressor(a1)
-  expect_is(com, "Compressor")
+  expect_is(com, "tiledb_compressor")
   expect_equal(tiledb::compressor_type(com), "GZIP")
   expect_equal(tiledb::compressor_level(com), 10)
   
-  expect_error(tiledb_attr(ctx, "foo", compressor = tiledb::Compressor("UNKNOWN", -1)))
+  expect_error(tiledb_attr(ctx, "foo", compressor = tiledb_compressor("UNKNOWN", -1)))
 })
 
 test_that("tiledb_attr throws an error with invalid ncells argument", {

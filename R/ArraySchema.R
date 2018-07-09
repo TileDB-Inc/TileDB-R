@@ -34,11 +34,11 @@ tiledb_array_schema <- function(ctx,
   if (!is.scalar(tile_order, "character")) {
     stop("tile_order argument must be a scalar string")
   }
-  if (!is.null(coords_compressor) && !is(coords_compressor, "Compressor")) {
-    stop("coords_compressor argument must be a tiledb::Compressor instance") 
+  if (!is.null(coords_compressor) && !is(coords_compressor, "tiledb_compressor")) {
+    stop("coords_compressor argument must be a tiledb_compressor instance") 
   }
-  if (!is.null(offsets_compressor) && !is(offsets_compressor, "Compressor")) {
-    stop("offsets_compressor argument must be a tiledb::Compressor instance") 
+  if (!is.null(offsets_compressor) && !is(offsets_compressor, "tiledb_compressor")) {
+    stop("offsets_compressor argument must be a tiledb_compressor instance") 
   }
   if (!is.logical(sparse)) {
     stop("sparse argument must be a logical TRUE or FALSE")
@@ -157,8 +157,8 @@ setMethod("compressor", "tiledb_array_schema",
           function(object) {
             coords_ptr <- libtiledb_array_schema_coords_compressor(object@ptr)
             offsets_ptr <- libtiledb_array_schema_offsets_compressor(object@ptr)
-            return(c(coords = Compressor.from_ptr(coords_ptr), 
-                     offsets = Compressor.from_ptr(offsets_ptr)))
+            return(c(coords = tiledb_compressor.from_ptr(coords_ptr), 
+                     offsets = tiledb_compressor.from_ptr(offsets_ptr)))
           })
 
 #' @export
