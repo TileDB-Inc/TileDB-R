@@ -688,7 +688,7 @@ XPtr<tiledb::Domain> tiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
 }
 
 // [[Rcpp::export]]
-IntegerVector tiledb_domain_rank(XPtr<tiledb::Domain> domain) {
+IntegerVector tiledb_domain_ndim(XPtr<tiledb::Domain> domain) {
   try {
     unsigned int rank = domain->ndim();
     if (rank > std::numeric_limits<int32_t>::max()) {

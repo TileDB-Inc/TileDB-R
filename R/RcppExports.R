@@ -77,8 +77,8 @@ tiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_tiledb_domain`, ctx, dims)
 }
 
-tiledb_domain_rank <- function(domain) {
-    .Call(`_tiledb_tiledb_domain_rank`, domain)
+tiledb_domain_ndim <- function(domain) {
+    .Call(`_tiledb_tiledb_domain_ndim`, domain)
 }
 
 tiledb_domain_dimensions <- function(domain) {

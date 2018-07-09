@@ -42,9 +42,9 @@ setMethod("datatype", "Domain",
           })
 
 #' @export
-setMethod("ndim", "Domain",
+setMethod("tiledb_ndim", "Domain",
           function(object) {
-            return(tiledb_domain_rank(object@ptr))          
+            return(tiledb_domain_ndim(object@ptr))          
           })
 
 #' @export

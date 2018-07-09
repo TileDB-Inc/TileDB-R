@@ -171,13 +171,13 @@ setMethod("is.sparse", "ArraySchema",
           })
  
 #' @export
-setGeneric("ndim", function(object, ...) standardGeneric("ndim"))
+setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 
 #' @export
-setMethod("ndim", "ArraySchema",
+setMethod("tiledb_ndim", "ArraySchema",
           function(object) {
             dom <- tiledb::domain(object)
-           return(tiledb::ndim(dom)) 
+           return(tiledb_ndim(dom)) 
           })
 
 #' @export

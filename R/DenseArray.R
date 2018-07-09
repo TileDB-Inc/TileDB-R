@@ -77,7 +77,7 @@ setMethod("schema", "DenseArray", function(object, ...) {
 
 domain_subarray <- function(dom, index = NULL) {
   stopifnot(is(dom, "Domain"))
-  nd <- tiledb::ndim(dom)
+  nd <- tiledb_ndim(dom)
   dims <- tiledb::dimensions(dom)
   # return the whole domain
   if (is.null(index) || length(index) == 0L) {
