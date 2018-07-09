@@ -27,14 +27,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_ctx
-XPtr<tiledb::Context> tiledb_ctx(Nullable<XPtr<tiledb::Config>> config);
-RcppExport SEXP _tiledb_tiledb_ctx(SEXP configSEXP) {
+// libtiledb_ctx
+XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config);
+RcppExport SEXP _tiledb_libtiledb_ctx(SEXP configSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::Config>> >::type config(configSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_ctx(config));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_ctx(config));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -61,26 +61,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_ctx_config
-XPtr<tiledb::Config> tiledb_ctx_config(XPtr<tiledb::Context> ctx);
-RcppExport SEXP _tiledb_tiledb_ctx_config(SEXP ctxSEXP) {
+// libtiledb_ctx_config
+XPtr<tiledb::Config> libtiledb_ctx_config(XPtr<tiledb::Context> ctx);
+RcppExport SEXP _tiledb_libtiledb_ctx_config(SEXP ctxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_ctx_config(ctx));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_ctx_config(ctx));
     return rcpp_result_gen;
 END_RCPP
 }
-// tiledb_ctx_is_supported_fs
-bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme);
-RcppExport SEXP _tiledb_tiledb_ctx_is_supported_fs(SEXP ctxSEXP, SEXP schemeSEXP) {
+// libtiledb_ctx_is_supported_fs
+bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme);
+RcppExport SEXP _tiledb_libtiledb_ctx_is_supported_fs(SEXP ctxSEXP, SEXP schemeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type scheme(schemeSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_ctx_is_supported_fs(ctx, scheme));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_ctx_is_supported_fs(ctx, scheme));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -882,11 +882,11 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
-    {"_tiledb_tiledb_ctx", (DL_FUNC) &_tiledb_tiledb_ctx, 1},
+    {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
     {"_tiledb_libtiledb_config_save_to_file", (DL_FUNC) &_tiledb_libtiledb_config_save_to_file, 2},
     {"_tiledb_libtiledb_config_load_from_file", (DL_FUNC) &_tiledb_libtiledb_config_load_from_file, 1},
-    {"_tiledb_tiledb_ctx_config", (DL_FUNC) &_tiledb_tiledb_ctx_config, 1},
-    {"_tiledb_tiledb_ctx_is_supported_fs", (DL_FUNC) &_tiledb_tiledb_ctx_is_supported_fs, 2},
+    {"_tiledb_libtiledb_ctx_config", (DL_FUNC) &_tiledb_libtiledb_ctx_config, 1},
+    {"_tiledb_libtiledb_ctx_is_supported_fs", (DL_FUNC) &_tiledb_libtiledb_ctx_is_supported_fs, 2},
     {"_tiledb_libtiledb_config", (DL_FUNC) &_tiledb_libtiledb_config, 1},
     {"_tiledb_libtiledb_config_vector", (DL_FUNC) &_tiledb_libtiledb_config_vector, 1},
     {"_tiledb_libtiledb_config_set", (DL_FUNC) &_tiledb_libtiledb_config_set, 3},

@@ -17,7 +17,7 @@ unlink_and_create <- function(tmp) {
 #     unlink_and_create(tmp) 
 #   })
 #   
-#   ctx <- tiledb::Ctx()
+#   ctx <- tiledb_ctx()
 #   d1  <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
 #   dom <- tiledb::Domain(ctx, c(d1))
 #   atr <- tiledb::Attr(ctx)

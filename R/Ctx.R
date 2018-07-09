@@ -1,20 +1,20 @@
-#' @exportClass Ctx
-setClass("Ctx",
+#' @exportClass tiledb_ctx
+setClass("tiledb_ctx",
          slots = list(ptr = "externalptr"))
 
-#' @export Ctx
-Ctx <- function(config = NULL) {
+#' @export tiledb_ctx
+tiledb_ctx <- function(config = NULL) {
   if (is.null(config)) {
-    ptr <- tiledb_ctx()
+    ptr <- libtiledb_ctx()
   } else if (typeof(config) == "character") {
     config <- tiledb_config(config)
-    ptr <- tiledb_ctx(config@ptr)
+    ptr <- libtiledb_ctx(config@ptr)
   } else if (is(config, "tiledb_config")) {
-    ptr <- tiledb_ctx(config@ptr)
+    ptr <- libtiledb_ctx(config@ptr)
   } else {
-    stop("invalid tiledb::Ctx config argument type")
+    stop("invalid tiledb_ctx config argument type")
   }
-  return(new("Ctx", ptr = ptr))
+  return(new("tiledb_ctx", ptr = ptr))
 }
 
 #' @export
@@ -23,19 +23,19 @@ setGeneric("config", function(object, ...) {
 })
 
 #' @export
-setMethod("config", signature(object = "Ctx"),
+setMethod("config", signature(object = "tiledb_ctx"),
           function(object) {
-            ptr <- tiledb_ctx_config(object@ptr)
+            ptr <- libtiledb_ctx_config(object@ptr)
             tiledb_config.from_ptr(ptr)
           })
 
 #' @export
-setGeneric("is_supported_fs", function(object, scheme, ...) {
-  standardGeneric("is_supported_fs")
+setGeneric("tiledb_is_supported_fs", function(object, scheme, ...) {
+  standardGeneric("tiledb_is_supported_fs")
 })
 
 #' @export
-setMethod("is_supported_fs", signature(object = "Ctx", scheme = "character"),
+setMethod("tiledb_is_supported_fs", signature(object = "tiledb_ctx", scheme = "character"),
           function(object, scheme) {
-            tiledb_ctx_is_supported_fs(object@ptr, scheme)
+            libtiledb_ctx_is_supported_fs(object@ptr, scheme)
           })

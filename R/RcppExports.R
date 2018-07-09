@@ -9,8 +9,8 @@ libtiledb_version <- function() {
     .Call(`_tiledb_libtiledb_version`)
 }
 
-tiledb_ctx <- function(config = NULL) {
-    .Call(`_tiledb_tiledb_ctx`, config)
+libtiledb_ctx <- function(config = NULL) {
+    .Call(`_tiledb_libtiledb_ctx`, config)
 }
 
 libtiledb_config_save_to_file <- function(config, filename) {
@@ -21,12 +21,12 @@ libtiledb_config_load_from_file <- function(filename) {
     .Call(`_tiledb_libtiledb_config_load_from_file`, filename)
 }
 
-tiledb_ctx_config <- function(ctx) {
-    .Call(`_tiledb_tiledb_ctx_config`, ctx)
+libtiledb_ctx_config <- function(ctx) {
+    .Call(`_tiledb_libtiledb_ctx_config`, ctx)
 }
 
-tiledb_ctx_is_supported_fs <- function(ctx, scheme) {
-    .Call(`_tiledb_tiledb_ctx_is_supported_fs`, ctx, scheme)
+libtiledb_ctx_is_supported_fs <- function(ctx, scheme) {
+    .Call(`_tiledb_libtiledb_ctx_is_supported_fs`, ctx, scheme)
 }
 
 libtiledb_config <- function(config = NULL) {

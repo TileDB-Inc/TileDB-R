@@ -1,6 +1,6 @@
 #' @exportClass DenseArray
 setClass("DenseArray",
-         slots = list(ctx = "Ctx", uri = "character", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx", uri = "character", ptr = "externalptr"))
 
 #' @export
 DenseArray.create <- function(uri, schema) {
@@ -18,8 +18,8 @@ DenseArray.create <- function(uri, schema) {
 
 #' @export
 DenseArray <- function(ctx, uri, query_type = NULL) {
-  if (missing(ctx) || !is(ctx, "Ctx")) {
-    stop("argument ctx must be a tiledb::Ctx")  
+  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+    stop("argument ctx must be a tiledb_ctx")  
   } else if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar") 
   }

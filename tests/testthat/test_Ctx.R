@@ -1,29 +1,29 @@
 library(tiledb)
-context("tiledb::Ctx")
+context("tiledb_ctx")
 
-test_that("tiledb::Ctx default constructor", {
-  ctx <- tiledb::Ctx()
-  expect_is(ctx, "Ctx")
+test_that("tiledb_ctx default constructor", {
+  ctx <- tiledb_ctx()
+  expect_is(ctx, "tiledb_ctx")
 })
 
-test_that("tiledb::Ctx constructor with tiledb_config", {
+test_that("tiledb_ctx constructor with tiledb_config", {
   cfg <- tiledb_config(c(foo = "bar"))
-  ctx <- tiledb::Ctx(cfg)
-  expect_is(ctx, "Ctx")
+  ctx <- tiledb_ctx(cfg)
+  expect_is(ctx, "tiledb_ctx")
   ctx_cfg <- tiledb::config(ctx)
   expect_equal(cfg["foo"], ctx_cfg["foo"])
 })
 
-test_that("tiledb::Ctx constructor with named vector config", {
-  ctx <- tiledb::Ctx(c(foo = "bar"))
-  expect_is(ctx, "Ctx")
+test_that("tiledb_ctx constructor with named vector config", {
+  ctx <- tiledb_ctx(c(foo = "bar"))
+  expect_is(ctx, "tiledb_ctx")
   cfg <- tiledb::config(ctx)
   expect_is(cfg, "tiledb_config")
   expect_equal(cfg["foo"], c(foo = "bar"))
 })
 
-test_that("tiledb::Ctx is_supported_fs works", {
-  ctx <- tiledb::Ctx()
-  expect_true(tiledb::is_supported_fs(ctx, "file"))
-  expect_error(tiledb::is_supported_fs(ctx, "should_error"))
+test_that("tiledb_ctx tiledb_is_supported_fs works", {
+  ctx <- tiledb_ctx()
+  expect_true(tiledb_is_supported_fs(ctx, "file"))
+  expect_error(tiledb_is_supported_fs(ctx, "should_error"))
 })

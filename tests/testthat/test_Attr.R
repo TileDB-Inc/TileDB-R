@@ -2,13 +2,13 @@ library(tiledb)
 context("tiledb::Attr")
 
 test_that("tiledb::Attr constructor works", {
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   a1 <- tiledb::Attr(ctx)
   expect_is(a1, "Attr")
 })
 
 test_that("tiledb::Attr constructor defaults are correct", {
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   a1 <- tiledb::Attr(ctx)
   expect_equal(tiledb::name(a1), "")
   expect_true(is.anonymous(a1))
@@ -17,7 +17,7 @@ test_that("tiledb::Attr constructor defaults are correct", {
 })
 
 test_that("tiledb::Attr is.anonymous is correct", {
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   a1  <- tiledb::Attr(ctx, "")
   expect_true(is.anonymous(a1))
   a2  <- tiledb::Attr(ctx, "foo") 
@@ -25,7 +25,7 @@ test_that("tiledb::Attr is.anonymous is correct", {
 }) 
 
 test_that("tiledb::Attr with compression", {
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   a1 <- tiledb::Attr(ctx, "foo", compressor = tiledb::Compressor("GZIP", 10))
   com <- tiledb::compressor(a1)
   expect_is(com, "Compressor")
@@ -36,7 +36,7 @@ test_that("tiledb::Attr with compression", {
 })
 
 test_that("tiledb::Attr throws an error with invalid ncells argument", {
-  ctx <- tiledb::Ctx() 
+  ctx <- tiledb_ctx() 
   a1 <- tiledb::Attr(ctx, "foo", ncells = 1)
   expect_equal(tiledb::ncells(a1), 1) 
   expect_error(tiledb::Attr(ctx, "foo", ncells = 0))

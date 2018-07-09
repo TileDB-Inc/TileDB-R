@@ -15,8 +15,8 @@ Attr <- function(ctx,
                  type="FLOAT64", 
                  compressor=tiledb::Compressor(),
                  ncells=1) {
-  if (missing(ctx) || !is(ctx, "Ctx")) {
-    stop("ctx argument must be a tiledb::Ctx")
+  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+    stop("ctx argument must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {
     stop("name argument must be a scalar string")
   } else if (!is.scalar(type, "character") || (type != "INT32" && type != "FLOAT64")) {

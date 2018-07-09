@@ -2,6 +2,7 @@
 setClass("tiledb_config", 
          slots = list(ptr = "externalptr"))
 
+#' @importFrom methods new
 tiledb_config.from_ptr <- function(ptr) {
   if (typeof(ptr) != "externalptr" || is.null(ptr)) {
     stop("ptr must be a non NULL externalptr to a tiledb_config instance")
@@ -139,7 +140,7 @@ tiledb_config_load <- function(path) {
   tiledb_config.from_ptr(ptr)
 }
 
-#' Convert a `tiledb_config`` object to an R named character vector
+#' Convert a `tiledb_config` object to an R named character vector
 #' 
 #' @param x `tiledb_config` object
 #' @return a character vector of config parameter names, values

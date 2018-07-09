@@ -12,7 +12,7 @@ unlink_and_create <- function(tmp) {
 }
 
 # test_that("1D Domain subarray subscripting works", {
-#   ctx <- tiledb::Ctx()
+#   ctx <- tiledb_ctx()
 #   dim1 <- tiledb::Dim(ctx, domain = c(1L, 10L))
 #   dom <- tiledb::Domain(ctx, c(dim1))
 # 
@@ -28,7 +28,7 @@ unlink_and_create <- function(tmp) {
 # })
 # 
 # test_that("2D Domain subarray subscripting works", {
-#   ctx <- tiledb::Ctx()
+#   ctx <- tiledb_ctx()
 #   dim1 <- tiledb::Dim(ctx, domain = c(1L, 10L))
 #   dim2 <- tiledb::Dim(ctx, domain = c(1L, 10L))
 #   dom <- tiledb::Domain(ctx, c(dim1, dim2))
@@ -37,7 +37,7 @@ unlink_and_create <- function(tmp) {
 # })
 #
 # test_that("3D Domain subarray subscripting works", {
-#   ctx <- tiledb::Ctx()
+#   ctx <- tiledb_ctx()
 #   dim1 <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
 #   dim2 <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
 #   dim3 <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
@@ -52,7 +52,7 @@ test_that("Can read / write a simple 1D vector", {
     unlink_and_create(tmp)
   })
   
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   dim <- tiledb::Dim(ctx, domain = c(1L, 10L)) 
   dom <- tiledb::Domain(ctx, c(dim))
   val <- tiledb::Attr(ctx) 
@@ -98,7 +98,7 @@ test_that("Can read / write a simple 2D matrix", {
     unlink_and_create(tmp)
   })
 
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 5L))
   d2  <- tiledb::Dim(ctx, domain = c(1L, 5L))
   dom <- tiledb::Domain(ctx, c(d1, d2))
@@ -136,7 +136,7 @@ test_that("Can read / write a simple 3D matrix", {
     unlink_and_create(tmp)
   })
 
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 5L))
   d2  <- tiledb::Dim(ctx, domain = c(1L, 5L))
   d3  <- tiledb::Dim(ctx, domain = c(1L, 5L))
@@ -173,7 +173,7 @@ test_that("Can read / write 1D multi-attribute array", {
    unlink_and_create(tmp)
   })
 
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   dim <- tiledb::Dim(ctx, domain = c(1L, 10L))
   dom <- tiledb::Domain(ctx, c(dim))
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
@@ -205,7 +205,7 @@ test_that("Can read / write 2D multi-attribute array", {
    unlink_and_create(tmp)
   })
 
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 10L))
   d2  <- tiledb::Dim(ctx, domain = c(1L, 10L))
   dom <- tiledb::Domain(ctx, c(d1, d2))
@@ -247,7 +247,7 @@ test_that("as.array() conversion method", {
    unlink_and_create(tmp)
   })
 
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 10L))
   dom <- tiledb::Domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")
@@ -270,7 +270,7 @@ test_that("as.data.frame() conversion method", {
    unlink_and_create(tmp)
   })
 
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 10L))
   dom <- tiledb::Domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx, "a1", type = "FLOAT64")

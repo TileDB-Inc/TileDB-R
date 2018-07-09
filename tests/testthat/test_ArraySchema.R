@@ -2,7 +2,7 @@ library(tiledb)
 context("tiledb::ArraySchema")
 
 test_that("tiledb::ArraySchema default constructor works", {
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   d1  <- tiledb::Dim(ctx, domain=c(1L, 100L))
   dom <- tiledb::Domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx)
@@ -11,7 +11,7 @@ test_that("tiledb::ArraySchema default constructor works", {
 })
 
 test_that("tiledb::ArraySchema default constructor arugment values are correct",  {
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   d1  <- tiledb::Dim(ctx, domain = c(1L, 100L))
   d2  <- tiledb::Dim(ctx, domain = c(1L, 100L))
   dom <- tiledb::Domain(ctx, c(d1, d2))
@@ -41,7 +41,7 @@ test_that("tiledb::ArraySchema default constructor arugment values are correct",
 })
 
 test_that("tiledb::ArraySchema full constructor argument values are correct",  {
-  ctx <- tiledb::Ctx()
+  ctx <- tiledb_ctx()
   
   d1  <- tiledb::Dim(ctx, domain = c(1L, 100L))
   d2  <- tiledb::Dim(ctx, domain = c(1L, 100L))

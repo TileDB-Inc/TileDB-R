@@ -18,8 +18,8 @@ ArraySchema <- function(ctx,
                         coords_compressor = NULL,
                         offsets_compressor = NULL,
                         sparse = FALSE) {
-  if (missing(ctx) || !is(ctx, "Ctx")) {
-    stop("ctx argument must be a tiledb::Ctx")
+  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+    stop("ctx argument must be a tiledb_ctx")
   }
   if (missing(domain) || !is(domain, "Domain")) {
     stop("domain argument must be a tiledb::Domain") 
@@ -58,8 +58,8 @@ ArraySchema <- function(ctx,
 }
 
 ArraySchema.from_array <- function(ctx, x) {
-  if (missing(ctx) || !is(ctx, "Ctx")) {
-    stop("ctx argument must be a tiledb::Ctx")
+  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+    stop("ctx argument must be a tiledb_ctx")
   } else if (missing(x) || !is.array(x)) {
     stop("x argument must be a valid array object") 
   }

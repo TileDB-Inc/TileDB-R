@@ -46,48 +46,48 @@ test_that("tiledb_config can be converted to an R vector", {
   }
 })
 
-test_that("can create a tiledb_ctx", {
-  ctx <- tiledb_ctx()
+test_that("can create a libtiledb_ctx", {
+  ctx <- libtiledb_ctx()
   expect_is(ctx, "externalptr")
 })
 
-test_that("default tiledb_ctx config is the default config", {
-  ctx <- tiledb_ctx()
-  ctx_config <- tiledb_ctx_config(ctx)
+test_that("default libtiledb_ctx config is the default config", {
+  ctx <- libtiledb_ctx()
+  ctx_config <- libtiledb_ctx_config(ctx)
   default_config <- libtiledb_config()
   expect_equal(libtiledb_config_vector(ctx_config),
                libtiledb_config_vector(default_config))
 })
 
-test_that("tiledb_ctx with config", {
+test_that("libtiledb_ctx with config", {
   config <- libtiledb_config(c(foo = "bar"))
-  ctx <- tiledb_ctx(config)
-  expect_equal(libtiledb_config_get(tiledb_ctx_config(ctx), "foo"),
+  ctx <- libtiledb_ctx(config)
+  expect_equal(libtiledb_config_get(libtiledb_ctx_config(ctx), "foo"),
                c(foo = "bar"))
 })
 
-test_that("tiledb_ctx fs support", {
-  ctx <- tiledb_ctx()
-  expect_true(tiledb_ctx_is_supported_fs(ctx, "file"))
-  expect_is(tiledb_ctx_is_supported_fs(ctx, "s3"), "logical")
-  expect_is(tiledb_ctx_is_supported_fs(ctx, "hdfs"), "logical")
-  expect_error(tiledb_ctx_is_supported_fs(ctx, "should error"))
+test_that("libtiledb_ctx fs support", {
+  ctx <- libtiledb_ctx()
+  expect_true(libtiledb_ctx_is_supported_fs(ctx, "file"))
+  expect_is(libtiledb_ctx_is_supported_fs(ctx, "s3"), "logical")
+  expect_is(libtiledb_ctx_is_supported_fs(ctx, "hdfs"), "logical")
+  expect_error(libtiledb_ctx_is_supported_fs(ctx, "should error"))
 })
 
 test_that("basic int32 tiledb_dim constructor works", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
   expect_is(dim, "externalptr")
 })
 
 test_that("basic float64 tiledb_dim constructor works", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "FLOAT64", c(1.0, 100.0), 10.0)
   expect_is(dim, "externalptr")
 })
 
 test_that("basic tiledb_domain constructor works", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   d1 <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
   d2 <- tiledb_dim(ctx, "d2", "INT32", c(1L, 100L), 10L)
   dom <- tiledb_domain(ctx, c(d1, d2))
@@ -95,28 +95,28 @@ test_that("basic tiledb_domain constructor works", {
 })
 
 test_that("tiledb_domain throws an error when dimensions are different dtypes", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   d1 <- tiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
   d2 <- tiledb_dim(ctx, "d2", "FLOAT64", c(1, 100), 10)
   expect_error(tiledb_domain(ctx, c(d1, d2)))
 })
 
 test_that("basic integer tiledb_attr constructor works", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   com <- tiledb_compressor("NO_COMPRESSION", -1)
   attr <- tiledb_attr(ctx, "a1", "INT32", com, 1)
   expect_is(attr, "externalptr")
 })
 
 test_that("basic float64 tiledb_attr constructor works", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   com <- tiledb_compressor("NO_COMPRESSION", -1)
   attr <- tiledb_attr(ctx, "a1", "FLOAT64", com, 1)
   expect_is(attr, "externalptr")
 })
 
 test_that("basic tiledb_array_schema constructor works", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("GZIP", 5)
@@ -134,7 +134,7 @@ test_that("basic dense vector tiledb_array creation works", {
    dir.create(tmp)
   })
   
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("NO_COMPRESSION", -1)
@@ -157,7 +157,7 @@ test_that("basic dense vector writes / reads works", {
    dir.create(tmp)
   })
   
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("NO_COMPRESSION", -1)
@@ -194,7 +194,7 @@ test_that("basic dense vector read subarray works", {
    }
    dir.create(tmp)
   })
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   dim <- tiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- tiledb_domain(ctx, c(dim))
   com <- tiledb_compressor("NO_COMPRESSION", -1)
@@ -226,7 +226,7 @@ test_that("basic dense vector read subarray works", {
 })
 
 test_that("basic tiledb vfs constructor works", {
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   vfs <- tiledb_vfs(ctx)
   expect_is(vfs, "externalptr")
   
@@ -244,7 +244,7 @@ test_that("basic vfs is_dir, is_file functionality works", {
    dir.create(tmp)
   })
   
-  ctx <- tiledb_ctx()
+  ctx <- libtiledb_ctx()
   vfs <- tiledb_vfs(ctx)
   
   # test dir 

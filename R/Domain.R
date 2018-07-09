@@ -11,8 +11,8 @@ Domain.from_ptr <- function(ptr) {
 
 #' @export Domain
 Domain <- function(ctx, dims) {
-  if (!is(ctx, "Ctx")) {
-    stop("argument ctx must be a tiledb::Ctx")
+  if (!is(ctx, "tiledb_ctx")) {
+    stop("argument ctx must be a tiledb_ctx")
   }
   is_dim <- function(obj) is(obj, "Dim")
   if (missing(dims) || length(dims) == 0 || !all(sapply(dims, is_dim))) {

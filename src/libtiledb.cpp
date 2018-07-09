@@ -246,7 +246,7 @@ NumericVector libtiledb_version() {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Context> tiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
+XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
   try {
     if (config.isNull()) {
       return XPtr<tiledb::Context>(new tiledb::Context(), true);  
@@ -280,12 +280,12 @@ XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Config> tiledb_ctx_config(XPtr<tiledb::Context> ctx) {
+XPtr<tiledb::Config> libtiledb_ctx_config(XPtr<tiledb::Context> ctx) {
   return XPtr<tiledb::Config>(new tiledb::Config(ctx.get()->config()));
 }
 
 // [[Rcpp::export]]
-bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
+bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
   if (scheme == "file") {
     return true;
   } else if  (scheme == "s3") {

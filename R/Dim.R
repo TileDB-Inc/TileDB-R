@@ -11,8 +11,8 @@ Dim.from_ptr <- function(ptr) {
 
 #' @export Dim
 Dim <- function(ctx, name="", domain, tile, type) {
-  if (!is(ctx, "Ctx")) {
-    stop("ctx argument must be a tiledb::Ctx")
+  if (!is(ctx, "tiledb_ctx")) {
+    stop("ctx argument must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {
     stop("name argument must be a scalar string")
   } else if ((typeof(domain) != "integer" && typeof(domain) != "double") 
