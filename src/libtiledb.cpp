@@ -374,7 +374,7 @@ void libtiledb_config_dump(XPtr<tiledb::Config> config) {
  * TileDB Dimension
  */
 // [[Rcpp::export]]
-XPtr<tiledb::Dimension> tiledb_dim(XPtr<tiledb::Context> ctx, 
+XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx, 
                                    std::string name,
                                    std::string type,
                                    SEXP domain,
@@ -430,7 +430,7 @@ XPtr<tiledb::Dimension> tiledb_dim(XPtr<tiledb::Context> ctx,
 }  
 
 // [[Rcpp::export]]
-std::string tiledb_dim_name(XPtr<tiledb::Dimension> dim) {
+std::string libtiledb_dim_name(XPtr<tiledb::Dimension> dim) {
   try {
     return dim->name();
   } catch (tiledb::TileDBError& err) {
@@ -439,7 +439,7 @@ std::string tiledb_dim_name(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-SEXP tiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
+SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
   try {
     auto dim_type = dim->type();
     switch (dim_type) {
@@ -528,7 +528,7 @@ SEXP tiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-SEXP tiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
+SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
   try {
     auto dim_type = dim->type();
     switch (dim_type) {
@@ -601,7 +601,7 @@ SEXP tiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
+std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
   try {
     return _tiledb_datatype_to_string(dim->type());
   } catch (tiledb::TileDBError& err) {

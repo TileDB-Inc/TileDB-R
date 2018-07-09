@@ -49,24 +49,24 @@ libtiledb_config_dump <- function(config) {
     invisible(.Call(`_tiledb_libtiledb_config_dump`, config))
 }
 
-tiledb_dim <- function(ctx, name, type, domain, tile_extent) {
-    .Call(`_tiledb_tiledb_dim`, ctx, name, type, domain, tile_extent)
+libtiledb_dim <- function(ctx, name, type, domain, tile_extent) {
+    .Call(`_tiledb_libtiledb_dim`, ctx, name, type, domain, tile_extent)
 }
 
-tiledb_dim_name <- function(dim) {
-    .Call(`_tiledb_tiledb_dim_name`, dim)
+libtiledb_dim_name <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_name`, dim)
 }
 
-tiledb_dim_domain <- function(dim) {
-    .Call(`_tiledb_tiledb_dim_domain`, dim)
+libtiledb_dim_domain <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_domain`, dim)
 }
 
-tiledb_dim_tile_extent <- function(dim) {
-    .Call(`_tiledb_tiledb_dim_tile_extent`, dim)
+libtiledb_dim_tile_extent <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_tile_extent`, dim)
 }
 
-tiledb_dim_datatype <- function(dim) {
-    .Call(`_tiledb_tiledb_dim_datatype`, dim)
+libtiledb_dim_datatype <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_datatype`, dim)
 }
 
 dim_domain_subarray <- function(domain, subscript) {

@@ -14,9 +14,9 @@ Domain <- function(ctx, dims) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   }
-  is_dim <- function(obj) is(obj, "Dim")
+  is_dim <- function(obj) is(obj, "tiledb_dim")
   if (missing(dims) || length(dims) == 0 || !all(sapply(dims, is_dim))) {
-    stop("argument dims must be a list of one or more tileb::Dim")
+    stop("argument dims must be a list of one or more tileb_dim")
   }
   dims_ptrs <- lapply(dims, function(obj) slot(obj, "ptr"))
   ptr <- tiledb_domain(ctx@ptr, dims_ptrs)
@@ -32,7 +32,7 @@ setMethod("show", "Domain",
 setMethod("dimensions", "Domain", 
           function(object) {
             dim_ptrs <- tiledb_domain_dimensions(object@ptr)
-            return(lapply(dim_ptrs, Dim.from_ptr))
+            return(lapply(dim_ptrs, tiledb_dim.from_ptr))
           })
 
 #' @export

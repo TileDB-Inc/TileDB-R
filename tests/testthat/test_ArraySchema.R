@@ -3,7 +3,7 @@ context("tiledb::ArraySchema")
 
 test_that("tiledb::ArraySchema default constructor works", {
   ctx <- tiledb_ctx()
-  d1  <- tiledb::Dim(ctx, domain=c(1L, 100L))
+  d1  <- tiledb_dim(ctx, domain=c(1L, 100L))
   dom <- tiledb::Domain(ctx, c(d1))
   a1  <- tiledb::Attr(ctx)
   sch <- tiledb::ArraySchema(ctx, dom, c(a1))
@@ -12,8 +12,8 @@ test_that("tiledb::ArraySchema default constructor works", {
 
 test_that("tiledb::ArraySchema default constructor arugment values are correct",  {
   ctx <- tiledb_ctx()
-  d1  <- tiledb::Dim(ctx, domain = c(1L, 100L))
-  d2  <- tiledb::Dim(ctx, domain = c(1L, 100L))
+  d1  <- tiledb_dim(ctx, domain = c(1L, 100L))
+  d2  <- tiledb_dim(ctx, domain = c(1L, 100L))
   dom <- tiledb::Domain(ctx, c(d1, d2))
   a1  <- tiledb::Attr(ctx)
   sch <- tiledb::ArraySchema(ctx, dom, c(a1)) 
@@ -24,8 +24,8 @@ test_that("tiledb::ArraySchema default constructor arugment values are correct",
   # test dimensions
   ds <- tiledb::dimensions(sch)
   expect_equal(length(ds), 2)
-  expect_is(ds[[1]], "Dim")
-  expect_is(ds[[2]], "Dim")
+  expect_is(ds[[1]], "tiledb_dim")
+  expect_is(ds[[2]], "tiledb_dim")
   
   # test attrs
   as <- tiledb::attrs(sch) 
@@ -43,9 +43,9 @@ test_that("tiledb::ArraySchema default constructor arugment values are correct",
 test_that("tiledb::ArraySchema full constructor argument values are correct",  {
   ctx <- tiledb_ctx()
   
-  d1  <- tiledb::Dim(ctx, domain = c(1L, 100L))
-  d2  <- tiledb::Dim(ctx, domain = c(1L, 100L))
-  d3  <- tiledb::Dim(ctx, domain = c(1L, 100L))
+  d1  <- tiledb_dim(ctx, domain = c(1L, 100L))
+  d2  <- tiledb_dim(ctx, domain = c(1L, 100L))
+  d3  <- tiledb_dim(ctx, domain = c(1L, 100L))
   
   dom <- tiledb::Domain(ctx, c(d1, d2, d3))
   
@@ -65,9 +65,9 @@ test_that("tiledb::ArraySchema full constructor argument values are correct",  {
   # test dimensions
   ds <- tiledb::dimensions(sch)
   expect_equal(length(ds), 3)
-  expect_is(ds[[1]], "Dim")
-  expect_is(ds[[2]], "Dim")
-  expect_is(ds[[3]], "Dim")
+  expect_is(ds[[1]], "tiledb_dim")
+  expect_is(ds[[2]], "tiledb_dim")
+  expect_is(ds[[3]], "tiledb_dim")
   
   # test attrs
   as <- tiledb::attrs(sch) 
