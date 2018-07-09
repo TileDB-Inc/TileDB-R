@@ -24,9 +24,9 @@ tiledb_array_schema <- function(ctx,
   if (missing(domain) || !is(domain, "tiledb_domain")) {
     stop("domain argument must be a tiledb::Domain") 
   }
-  is_attr <- function(obj) is(obj, "Attr") 
+  is_attr <- function(obj) is(obj, "tiledb_attr") 
   if (missing(attrs) || length(attrs) == 0 || !all(sapply(attrs, is_attr))) {
-    stop("attrs argument must be a list of one or tiledb::Attr's")    
+    stop("attrs argument must be a list of one or tiled_attr objects")    
   }
   if (!is.scalar(cell_order, "character")) {
      stop("cell_order argument must be a scalar string")
@@ -109,7 +109,7 @@ setGeneric("attrs", function(object, idx, ...) standardGeneric("attrs"))
 setMethod("attrs", signature("tiledb_array_schema"),
           function (object, ...) {
             attr_ptrs <- libtiledb_array_schema_attributes(object@ptr)
-            attrs <- lapply(attr_ptrs, function(ptr) Attr.from_ptr(ptr))
+            attrs <- lapply(attr_ptrs, function(ptr) tiledb_attr.from_ptr(ptr))
             names(attrs) <- sapply(attrs, function(attr) {
               n <- tiledb::name(attr)
               return(ifelse(n == "__attr", "", n))

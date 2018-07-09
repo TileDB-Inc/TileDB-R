@@ -105,28 +105,28 @@ tiledb_compressor_level <- function(compressor) {
     .Call(`_tiledb_tiledb_compressor_level`, compressor)
 }
 
-tiledb_attr <- function(ctx, name, type, compressor, ncells) {
-    .Call(`_tiledb_tiledb_attr`, ctx, name, type, compressor, ncells)
+libtiledb_attr <- function(ctx, name, type, compressor, ncells) {
+    .Call(`_tiledb_libtiledb_attr`, ctx, name, type, compressor, ncells)
 }
 
-tiledb_attr_name <- function(attr) {
-    .Call(`_tiledb_tiledb_attr_name`, attr)
+libtiledb_attr_name <- function(attr) {
+    .Call(`_tiledb_libtiledb_attr_name`, attr)
 }
 
-tiledb_attr_datatype <- function(attr) {
-    .Call(`_tiledb_tiledb_attr_datatype`, attr)
+libtiledb_attr_datatype <- function(attr) {
+    .Call(`_tiledb_libtiledb_attr_datatype`, attr)
 }
 
-tiledb_attr_compressor <- function(attr) {
-    .Call(`_tiledb_tiledb_attr_compressor`, attr)
+libtiledb_attr_compressor <- function(attr) {
+    .Call(`_tiledb_libtiledb_attr_compressor`, attr)
 }
 
-tiledb_attr_ncells <- function(attr) {
-    .Call(`_tiledb_tiledb_attr_ncells`, attr)
+libtiledb_attr_ncells <- function(attr) {
+    .Call(`_tiledb_libtiledb_attr_ncells`, attr)
 }
 
-tiledb_attr_dump <- function(attr) {
-    invisible(.Call(`_tiledb_tiledb_attr_dump`, attr))
+libtiledb_attr_dump <- function(attr) {
+    invisible(.Call(`_tiledb_libtiledb_attr_dump`, attr))
 }
 
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_compressor = NULL, offsets_compressor = NULL, sparse = FALSE) {

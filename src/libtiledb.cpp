@@ -769,7 +769,7 @@ int tiledb_compressor_level(XPtr<tiledb::Compressor> compressor) {
  * TileDB Attribute 
  */
 //[[Rcpp::export]]
-XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx, 
+XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx, 
                                     std::string name, 
                                     std::string type,
                                     XPtr<tiledb::Compressor> compressor, 
@@ -800,7 +800,7 @@ XPtr<tiledb::Attribute> tiledb_attr(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string tiledb_attr_name(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attr_name(XPtr<tiledb::Attribute> attr) {
   try {
     return attr->name();
   } catch (tiledb::TileDBError& err) {
@@ -809,7 +809,7 @@ std::string tiledb_attr_name(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
   try {
     return _tiledb_datatype_to_string(attr->type());
   } catch (tiledb::TileDBError& err) {
@@ -818,7 +818,7 @@ std::string tiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Compressor> tiledb_attr_compressor(XPtr<tiledb::Attribute> attr) {
+XPtr<tiledb::Compressor> libtiledb_attr_compressor(XPtr<tiledb::Attribute> attr) {
   try {
     return XPtr<tiledb::Compressor>(new tiledb::Compressor(attr->compressor()));
   } catch (tiledb::TileDBError& err) {
@@ -826,11 +826,11 @@ XPtr<tiledb::Compressor> tiledb_attr_compressor(XPtr<tiledb::Attribute> attr) {
   }
 }
 // [[Rcpp::export]]
-int tiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
+int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
   try {
     unsigned int ncells = attr->cell_val_num();
     if (ncells > std::numeric_limits<int32_t>::max()) {
-      throw Rcpp::exception("tiledb::Attr ncells value not representable as an R integer");
+      throw Rcpp::exception("tiledb_attr ncells value not representable as an R integer");
     }
     return static_cast<int32_t>(ncells);
   } catch (tiledb::TileDBError& err) {
@@ -839,7 +839,7 @@ int tiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
 }
 
 //[[Rcpp::export]]
-void tiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
+void libtiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
   try {
     attr->dump();
     return;

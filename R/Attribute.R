@@ -1,20 +1,20 @@
-#' @exportClass Attr
-setClass("Attr",
+#' @exportClass tiledb_attr
+setClass("tiledb_attr",
          slots = list(ptr = "externalptr"))
 
-Attr.from_ptr <- function(ptr) {
+tiledb_attr.from_ptr <- function(ptr) {
    if (typeof(ptr) != "externalptr" || is.null(ptr)) {
     stop("ptr argument must be a non NULL externalptr to a tiledb::Attribute instance")
   }
-  new("Attr", ptr = ptr)
+  new("tiledb_attr", ptr = ptr)
 }
 
 #' @export 
-Attr <- function(ctx, 
-                 name="", 
-                 type="FLOAT64", 
-                 compressor=tiledb::Compressor(),
-                 ncells=1) {
+tiledb_attr <- function(ctx, 
+                        name="", 
+                        type="FLOAT64", 
+                        compressor=tiledb::Compressor(),
+                        ncells=1) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {
@@ -26,37 +26,37 @@ Attr <- function(ctx,
   } else if (ncells != 1) {
     stop("only single cell attributes are supported")
   }
-  ptr <- tiledb_attr(ctx@ptr, name, type, compressor@ptr, ncells)
-  new("Attr", ptr = ptr)
+  ptr <- libtiledb_attr(ctx@ptr, name, type, compressor@ptr, ncells)
+  new("tiledb_attr", ptr = ptr)
 }
 
-setMethod("show", "Attr", 
+setMethod("show", "tiledb_attr", 
           function(object) {
-            tiledb_attr_dump(object@ptr)
+            libtiledb_attr_dump(object@ptr)
           })
 
 #' @export
 setGeneric("name", function(object) standardGeneric("name"))
 
 #' @export
-setMethod("name", signature(object = "Attr"),
+setMethod("name", signature(object = "tiledb_attr"),
           function(object) {
-            tiledb_attr_name(object@ptr) 
+            libtiledb_attr_name(object@ptr) 
           })
 
 #' @export
 setGeneric("datatype", function(object) standardGeneric("datatype"))
 
 #' @export
-setMethod("datatype", signature(object = "Attr"),
+setMethod("datatype", signature(object = "tiledb_attr"),
           function(object) {
-            tiledb_attr_datatype(object@ptr)
+            libtiledb_attr_datatype(object@ptr)
           })
 
 #' @export
-setMethod("compressor", "Attr",
+setMethod("compressor", "tiledb_attr",
           function(object) {
-            ptr <- tiledb_attr_compressor(object@ptr)
+            ptr <- libtiledb_attr_compressor(object@ptr)
             return(Compressor.from_ptr(ptr))
           })
 
@@ -64,25 +64,25 @@ setMethod("compressor", "Attr",
 setGeneric("ncells", function(object) standardGeneric("ncells"))
 
 #' @export
-setMethod("ncells", signature(object = "Attr"),
+setMethod("ncells", signature(object = "tiledb_attr"),
           function(object) {
-            tiledb_attr_ncells(object@ptr)
+            libtiledb_attr_ncells(object@ptr)
           })
 
 #' @export
 setGeneric("ncells", function(object) standardGeneric("ncells"))
 
 #' @export
-setMethod("ncells", signature(object = "Attr"),
+setMethod("ncells", signature(object = "tiledb_attr"),
           function(object) {
-            tiledb_attr_ncells(object@ptr)
+            libtiledb_attr_ncells(object@ptr)
           })
 
 #' @export
 is.anonymous <- function(object) UseMethod("is.anonymous", object)
 
 #' @export
-is.anonymous.Attr <- function(object) {
-  name <- tiledb_attr_name(object@ptr)
+is.anonymous.tiledb_attr <- function(object) {
+  name <- libtiledb_attr_name(object@ptr)
   nchar(name) == 0
 }
