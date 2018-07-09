@@ -3,7 +3,7 @@
 \docType{methods}
 \name{datatype,tiledb_dim-method}
 \alias{datatype,tiledb_dim-method}
-\title{Return the \code{tiledb_dim} tile extent}
+\title{Return the \code{tiledb_dim} datatype}
 \usage{
 \S4method{datatype}{tiledb_dim}(object)
 }
@@ -13,7 +13,7 @@
 \item{tiledb}{datatype string}
 }
 \description{
-Return the \code{tiledb_dim} tile extent
+Return the \code{tiledb_dim} datatype
 }
 \examples{
 ctx <- tiledb_ctx()

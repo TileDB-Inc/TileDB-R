@@ -53,7 +53,7 @@ tiledb_dim <- function(ctx, name="", domain, tile, type) {
 #' Return the `tiledb_dim` name
 #'
 #' @param `tiledb_dim` object 
-#' @param string name, empty string if the dimension is anonymous 
+#' @return string name, empty string if the dimension is anonymous 
 #' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", c(1L, 10L))
@@ -101,7 +101,7 @@ setMethod("tile", signature(object = "tiledb_dim"),
             return(libtiledb_dim_tile_extent(object@ptr))
           })
 
-#' Return the `tiledb_dim` tile extent
+#' Return the `tiledb_dim` datatype
 #' 
 #' @param `tiledb_dim` object
 #' @param tiledb datatype string

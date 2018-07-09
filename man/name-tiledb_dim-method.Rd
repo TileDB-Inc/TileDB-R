@@ -9,8 +9,9 @@
 }
 \arguments{
 \item{`tiledb_dim`}{object}
-
-\item{string}{name, empty string if the dimension is anonymous}
+}
+\value{
+string name, empty string if the dimension is anonymous
 }
 \description{
 Return the \code{tiledb_dim} name

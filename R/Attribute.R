@@ -9,6 +9,20 @@ tiledb_attr.from_ptr <- function(ptr) {
   new("tiledb_attr", ptr = ptr)
 }
 
+#' Contructs a `tiledb_attr` object
+#'    
+#' @param name (default "") The dimension name / label string. 
+#' @param type (default "FLOAT64") The tiledb_attr TileDB datatype string 
+#' @param compressor (default tiledb_compressor("NOCOMPRESSION")) The tiledb_attr compressor
+#' @param ncells (default 1) The number of cells
+#' @return `tiledb_dim` object
+#' @examples 
+#' ctx <- tiledb_ctx()
+#' attr <- tiledb_attr(ctx, name = "a1", type = "INT32",
+#'                     compressor = tiledb_compressor("GZIP", 5))
+#' attr 
+#'  
+#' @importFrom methods new
 #' @export 
 tiledb_attr <- function(ctx, 
                         name="", 
@@ -35,9 +49,22 @@ setMethod("show", "tiledb_attr",
             libtiledb_attr_dump(object@ptr)
           })
 
+
 #' @export
 setGeneric("name", function(object) standardGeneric("name"))
 
+#' Return the `tiledb_attr` name
+#'
+#' @param `tiledb_attr` object 
+#' @return string name, empty string if the attribute is anonymous 
+#' @examples
+#' ctx <- tiledb_ctx()
+#' a1 <- tiledb_attr(ctx, "a1")
+#' name(a1)
+#' 
+#' a2 <- tiledb_attr(ctx)
+#' name(a2)
+#'
 #' @export
 setMethod("name", signature(object = "tiledb_attr"),
           function(object) {
@@ -47,12 +74,28 @@ setMethod("name", signature(object = "tiledb_attr"),
 #' @export
 setGeneric("datatype", function(object) standardGeneric("datatype"))
 
+#' Return the `tiledb_attr` datatype
+#' 
+#' @param `tiledb_attr` object
+#' @param tiledb datatype string
+#' @examples
+#' ctx <- tiledb_ctx()
+#' a1 <- tiledb_attr(ctx, "a1", type = "INT32")
+#' datatype(a1)
+#' 
+#' a2 <- tiledb_attr(ctx, "a1", type = "FLOAT64")
+#' datatype(a2)
+#' 
 #' @export
 setMethod("datatype", signature(object = "tiledb_attr"),
           function(object) {
             libtiledb_attr_datatype(object@ptr)
           })
 
+#' Returns the `tiledb_compressor` object associated with the given `tiledb_attr`
+#'
+#' @param object tiledb_attr
+#' @returns a tiledb_compressor object
 #' @export
 setMethod("compressor", "tiledb_attr",
           function(object) {
@@ -63,15 +106,15 @@ setMethod("compressor", "tiledb_attr",
 #' @export
 setGeneric("ncells", function(object) standardGeneric("ncells"))
 
-#' @export
-setMethod("ncells", signature(object = "tiledb_attr"),
-          function(object) {
-            libtiledb_attr_ncells(object@ptr)
-          })
-
-#' @export
-setGeneric("ncells", function(object) standardGeneric("ncells"))
-
+#' Return the number of scalar values per attribute cell
+#' 
+#' @param `tiledb_attr` object
+#' @return integer number of cells
+#' @examples 
+#' ctx <- tiledb_ctx()
+#' a1 <- tiledb_attr(ctx, "a1", type = "FLOAT64", ncells = 3)
+#' ncells(a1) 
+#' 
 #' @export
 setMethod("ncells", signature(object = "tiledb_attr"),
           function(object) {
@@ -81,6 +124,20 @@ setMethod("ncells", signature(object = "tiledb_attr"),
 #' @export
 is.anonymous <- function(object) UseMethod("is.anonymous", object)
 
+#' Returns TRUE if the tiledb_dim is anonymous 
+#' 
+#' A TileDB attribute is anonymous if no name/label is defined
+#' 
+#' @param `tiledb_attr` object
+#' @return TRUE or FALSE
+#' @examples
+#' ctx <- tiledb_ctx()
+#' a1 <- tiledb_attr(ctx, "a1", type = "FLOAT64")
+#' is.anonymous(a1) 
+#' 
+#' d2 <- tiledb_attr(ctx, "", type = "FLOAT64")
+#' is.anonymous(a2)
+#' 
 #' @export
 is.anonymous.tiledb_attr <- function(object) {
   name <- libtiledb_attr_name(object@ptr)
