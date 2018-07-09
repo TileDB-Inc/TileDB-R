@@ -260,7 +260,17 @@ XPtr<tiledb::Context> tiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValu
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Config>libtiledb_config_load_from_file(std::string filename) {
+std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename) {
+  try {
+    config->save_to_file(filename);
+    return filename;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename) {
   try {
     tiledb::Config* config = new tiledb::Config(filename); 
     return XPtr<tiledb::Config>(config);
@@ -290,26 +300,26 @@ bool tiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Config> tiledb_config(Nullable<CharacterVector> config=R_NilValue) {
+XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   try {
-    XPtr<tiledb::Config> libtiledb_config(new tiledb::Config(), true);
+      XPtr<tiledb::Config> _config(new tiledb::Config(), true);
     if (config.isNotNull()) {
       auto config_vec = config.as();
       auto config_names = as<CharacterVector>(config_vec.names());
       for (auto &name : config_names) {
         auto param = as<std::string>(name);
         auto value = as<std::string>(config_vec[param]);
-        libtiledb_config->set(param, value);
+        _config->set(param, value);
       }
     }
-    return libtiledb_config;
+    return _config;
   } catch (tiledb::TileDBError& err) {
     throw  Rcpp::exception(err.what());
   }
 }
 
 // [[Rcpp::export]]
-CharacterVector tiledb_config_vector(XPtr<tiledb::Config> config) {
+CharacterVector libtiledb_config_vector(XPtr<tiledb::Config> config) {
   CharacterVector config_vec;
   for (auto& p : *config) {
     config_vec[p.first]  = p.second;
@@ -318,9 +328,9 @@ CharacterVector tiledb_config_vector(XPtr<tiledb::Config> config) {
 }
                                     
 // [[Rcpp::export]]
-XPtr<tiledb::Config> tiledb_config_set(XPtr<tiledb::Config> config,
-                                       std::string param,
-                                       std::string value) {
+XPtr<tiledb::Config> libtiledb_config_set(XPtr<tiledb::Config> config,
+                                          std::string param,
+                                          std::string value) {
   try {
     (*config)[param] = value;
     return config;
@@ -330,8 +340,8 @@ XPtr<tiledb::Config> tiledb_config_set(XPtr<tiledb::Config> config,
 }
 
 // [[Rcpp::export]]
-CharacterVector tiledb_config_get(XPtr<tiledb::Config> config,
-                                  CharacterVector params) {
+CharacterVector libtiledb_config_get(XPtr<tiledb::Config> config,
+                                     CharacterVector params) {
   try {
     CharacterVector result;
     for (auto const& p : params) {
@@ -349,7 +359,7 @@ CharacterVector tiledb_config_get(XPtr<tiledb::Config> config,
 }
 
 // [[Rcpp::export]]
-void tiledb_config_dump(XPtr<tiledb::Config> config) {
+void libtiledb_config_dump(XPtr<tiledb::Config> config) {
   try {
     Rcout << "Config settings:\n";
     for (auto& p : *config) {

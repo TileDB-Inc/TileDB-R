@@ -6,8 +6,8 @@ test_that("tiledb::Ctx default constructor", {
   expect_is(ctx, "Ctx")
 })
 
-test_that("tiledb::Ctx constructor with tiledb::Config", {
-  cfg <- tiledb::Config(c(foo = "bar"))
+test_that("tiledb::Ctx constructor with tiledb_config", {
+  cfg <- tiledb_config(c(foo = "bar"))
   ctx <- tiledb::Ctx(cfg)
   expect_is(ctx, "Ctx")
   ctx_cfg <- tiledb::config(ctx)
@@ -18,7 +18,7 @@ test_that("tiledb::Ctx constructor with named vector config", {
   ctx <- tiledb::Ctx(c(foo = "bar"))
   expect_is(ctx, "Ctx")
   cfg <- tiledb::config(ctx)
-  expect_is(cfg, "Config")
+  expect_is(cfg, "tiledb_config")
   expect_equal(cfg["foo"], c(foo = "bar"))
 })
 

@@ -7,9 +7,9 @@ Ctx <- function(config = NULL) {
   if (is.null(config)) {
     ptr <- tiledb_ctx()
   } else if (typeof(config) == "character") {
-    config <- tiledb::Config(config)
+    config <- tiledb_config(config)
     ptr <- tiledb_ctx(config@ptr)
-  } else if (is(config, "Config")) {
+  } else if (is(config, "tiledb_config")) {
     ptr <- tiledb_ctx(config@ptr)
   } else {
     stop("invalid tiledb::Ctx config argument type")
@@ -26,7 +26,7 @@ setGeneric("config", function(object, ...) {
 setMethod("config", signature(object = "Ctx"),
           function(object) {
             ptr <- tiledb_ctx_config(object@ptr)
-            Config.from_ptr(ptr)
+            tiledb_config.from_ptr(ptr)
           })
 
 #' @export

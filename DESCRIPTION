@@ -2,17 +2,22 @@ Package: tiledb
 Type: Package
 Title: Sparse and dense multidimensional array data management
 Version: 0.1
-Authors@R: c(person("TileDB, Inc.", role = c("aut", "cre"), email = "help@tiledb.io"))
+Authors@R: c(
+    person("TileDB-Inc.", email = "help@tiledb.io", role = c("cre", "fnd"), comment = c("https://tiledb.io"))
+    )
 Description: TileDB is an efficient multi-dimensional array management system which introduces a novel on-disk format that can effectively store dense and sparse array data with support for fast updates and reads. It features excellent compression, an efficient parallel I/O system with high scalability, and bindings to multiple languages.
-License: MIT
+License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
-Imports: Rcpp (>= 0.12.15)
+Imports: 
+    methods, 
+    Rcpp (>= 0.12.15)
 LinkingTo: Rcpp
-SystemRequirements: C++11
+SystemRequirements: C++11, pandoc
 Requires:
-    R (>= 3.1.2)
+    R (>= 3.1.0)
 Suggests:
  testthat (>= 2.0.0),
- roxygen2 (>= 5.0.0)
+ roxygen2 (>= 5.0.0),
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1

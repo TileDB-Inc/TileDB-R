@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sparse and dense multidimensional array data management • tiledb</title>
-<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Sparse and dense multidimensional array data management">
@@ -68,23 +68,38 @@
 <a href="#tiledb-r" class="anchor"></a>TileDB-R</h1></div>
 
 <p><code>TileDB-R</code> is a <a href="https://www.r-project.org/">R</a> interface to the <a href="http://tiledb.io">TileDB Storage Manager</a>.</p>
+<div id="quickstart" class="section level2">
+<h2 class="hasAnchor">
+<a href="#quickstart" class="anchor"></a>Quickstart</h2>
+<p>TileDB needs to be installed beforehand (from a package or from source) for the TileDB-R package to build and link correctly:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(devtools)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="op">&gt;</span><span class="st"> </span>devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R@latest"</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">...</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(tiledb)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="op">&gt;</span><span class="st"> </span>tiledb<span class="op">::</span><span class="kw">libtiledb_version</span>()</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">major minor patch</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="dv">1</span>     <span class="dv">3</span>     <span class="dv">0</span> </a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="op">&gt;</span><span class="st"> </span><span class="kw">help</span>(tiledb)</a></code></pre></div>
+</div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p><code>TileDB-R</code> has not been published on <a href="https://cran.r-project.org/web/packages/h5/index.html">CRAN</a> so it must be installed from source.</p>
-<p>The most recent devlopment version can be installed from <a href="https://github.com/TileDB-Inc/TileDB-R">Github</a> using the package <a href="https://github.com/r-lib/devtools">devtools</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(devtools)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</a></code></pre></div>
+<p>The <code>TileDB-R</code>package has not been published on <a href="https://cran.r-project.org/web/packages/h5/index.html">CRAN</a> and must be installed from source.</p>
+<p>The most recent released version can be installed from <a href="https://github.com/TileDB-Inc/TileDB-R">Github</a> using the package <a href="https://github.com/r-lib/devtools">devtools</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>) </a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(devtools)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R@latest"</span>)</a></code></pre></div>
 <p>If the TileDB library is installed in a custom location, you need to pass the explicit path:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R"</span>,</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="dt">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"")</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">    </span></a></code></pre></div>
-<p><strong>Note</strong> TileDB-R is uisng the <code>dev</code> (in development) version / branch of TileDB</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R@latest"</span>,</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="dt">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"")</span></a></code></pre></div>
+<p>To build the latest development version of TileDB-R:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</a></code></pre></div>
+<p><strong>Note</strong> The TileDB-R package is developed against latest stable (<code>v1.3.x</code>) version of TileDB</p>
 <div id="developer-documentation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#developer-documentation" class="anchor"></a>Developer Documentation</h3>
-<p>Instructions for setting up a RStudio devlopment environment, building, and testing the TileDB-R package are located here:</p>
-<p><a href="https://github.com/TileDB-Inc/TileDB-R/wiki" class="uri">https://github.com/TileDB-Inc/TileDB-R/wiki</a></p>
+<p>Instructions for setting up a RStudio devlopment environment, building, and testing the TileDB-R package are located in the <a href="https://github.com/TileDB-Inc/TileDB-R/wiki">developer documentation wiki</a>.</p>
 </div>
 </div>
 </div>
@@ -103,13 +118,16 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://opensource.org/licenses/mit-license.php">MIT</a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>TileDB, Inc. <br><small class="roles"> Author, maintainer </small>  </li>
+<li>TileDB-Inc. <br><small class="roles"> Maintainer, funder </small>  <br><small>(https://tiledb.io)</small>
+</li>
 </ul>
 </div>
 
@@ -124,7 +142,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by TileDB, Inc..</p>
+  <p>Developed by TileDB-Inc..</p>
 </div>
 
 <div class="pkgdown">

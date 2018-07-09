@@ -9,40 +9,40 @@ test_that("version is valid", {
   expect_gte(ver[3], c(patch = 0))
 })
 
-test_that("default tiledb_config constructor", {
-  config <- tiledb_config()
-  config <- tiledb_config_set(config, "foo", "10")
-  expect_equal(tiledb_config_get(config, "foo"), c("foo" = "10"))
+test_that("default libtiledb_config constructor", {
+  config <- libtiledb_config()
+  config <- libtiledb_config_set(config, "foo", "10")
+  expect_equal(libtiledb_config_get(config, "foo"), c("foo" = "10"))
 })
 
-test_that("construct tiledb_config with vector of parameters", {
+test_that("construct libtiledb_config with vector of parameters", {
   params = c("foo" = "bar")
-  config <- tiledb_config(params)
-  expect_equal(tiledb_config_get(config, "foo"), c("foo" = "bar"))
+  config <- libtiledb_config(params)
+  expect_equal(libtiledb_config_get(config, "foo"), c("foo" = "bar"))
 })
 
-test_that("tiledb_config_get throws an error if paramter does not exist", {
-  config <- tiledb_config()
-  expect_equal(unname(tiledb_config_get(config, "don't exist")), NA_character_)
+test_that("libtiledb_config_get throws an error if paramter does not exist", {
+  config <- libtiledb_config()
+  expect_equal(unname(libtiledb_config_get(config, "don't exist")), NA_character_)
 })
 
-test_that("construct tiledb_config with an empty vector of paramters", {
+test_that("construct libtiledb_config with an empty vector of paramters", {
   params = c()
-  default_config <- tiledb_config()
-  params_config <- tiledb_config(params)
+  default_config <- libtiledb_config()
+  params_config <- libtiledb_config(params)
   expect_equal(
-    tiledb_config_get(default_config, "sm.tile_cache_size"),
-    tiledb_config_get(params_config, "sm.tile_cache_size")
+    libtiledb_config_get(default_config, "sm.tile_cache_size"),
+    libtiledb_config_get(params_config, "sm.tile_cache_size")
   )
 })
 
 test_that("tiledb_config can be converted to an R vector", {
-  config <- tiledb_config()
-  config_vec <- tiledb_config_vector(config)
+  config <- libtiledb_config()
+  config_vec <- libtiledb_config_vector(config)
   expect_is(config_vec, "character")
   check <- c()
   for (n in names(config_vec)) {
-    expect_equal(tiledb_config_get(config, n), config_vec[n])
+    expect_equal(libtiledb_config_get(config, n), config_vec[n])
   }
 })
 
@@ -54,15 +54,15 @@ test_that("can create a tiledb_ctx", {
 test_that("default tiledb_ctx config is the default config", {
   ctx <- tiledb_ctx()
   ctx_config <- tiledb_ctx_config(ctx)
-  default_config <- tiledb_config()
-  expect_equal(tiledb_config_vector(ctx_config),
-               tiledb_config_vector(default_config))
+  default_config <- libtiledb_config()
+  expect_equal(libtiledb_config_vector(ctx_config),
+               libtiledb_config_vector(default_config))
 })
 
 test_that("tiledb_ctx with config", {
-  config <- tiledb_config(c(foo = "bar"))
+  config <- libtiledb_config(c(foo = "bar"))
   ctx <- tiledb_ctx(config)
-  expect_equal(tiledb_config_get(tiledb_ctx_config(ctx), "foo"),
+  expect_equal(libtiledb_config_get(tiledb_ctx_config(ctx), "foo"),
                c(foo = "bar"))
 })
 
@@ -230,7 +230,7 @@ test_that("basic tiledb vfs constructor works", {
   vfs <- tiledb_vfs(ctx)
   expect_is(vfs, "externalptr")
   
-  config <- tiledb_config(c(foo="bar"))
+  config <- libtiledb_config(c(foo="bar"))
   vfs <- tiledb_vfs(ctx, config)
   expect_is(vfs, "externalptr")
 })
