@@ -125,7 +125,7 @@ test_that("basic libtiledb_array_schema constructor works", {
   expect_is(sch, "externalptr")
 })
 
-test_that("basic dense vector tiledb_array creation works", {
+test_that("basic dense vector libtiledb_array creation works", {
   tmp <- tempdir()
   setup({
    if (dir.exists(tmp)) {
@@ -167,19 +167,19 @@ test_that("basic dense vector writes / reads works", {
   uri <- libtiledb_array_create(pth, sch)
   
   dat <- c(3, 2, 1) 
-  arr <- tiledb_array(ctx, uri, "WRITE")
+  arr <- libtiledb_array(ctx, uri, "WRITE")
   qry <- tiledb_query(ctx, arr, "WRITE")
   qry <- tiledb_query_set_buffer(qry, "a1", dat)
   qry <- tiledb_query_submit(qry)
-  tiledb_array_close(arr)
+  libtiledb_array_close(arr)
   expect_is(qry, "externalptr")
   
   res <- c(0, 0, 0)
-  arr <- tiledb_array(ctx, uri, "READ")
+  arr <- libtiledb_array(ctx, uri, "READ")
   qry2 <- tiledb_query(ctx, arr, "READ")
   qry2 <- tiledb_query_set_buffer(qry2, "a1", res)
   qry2 <- tiledb_query_submit(qry2)
-  tiledb_array_close(arr)
+  libtiledb_array_close(arr)
   expect_equal(res, dat)
   teardown({
     unlink(tmp, recursive = TRUE)
@@ -204,21 +204,21 @@ test_that("basic dense vector read subarray works", {
   uri <- libtiledb_array_create(pth, sch)
   
   dat <- c(3, 2, 1) 
-  arr <- tiledb_array(ctx, uri, "WRITE") 
+  arr <- libtiledb_array(ctx, uri, "WRITE") 
   qry <- tiledb_query(ctx, arr, "WRITE")
   qry <- tiledb_query_set_buffer(qry, "a1", dat)
   qry <- tiledb_query_submit(qry)
-  tiledb_array_close(arr)
+  libtiledb_array_close(arr)
   expect_is(qry, "externalptr")
   
   res <- c(0, 0)
   sub <- c(1L, 2L)
-  arr <- tiledb_array(ctx, uri, "READ") 
+  arr <- libtiledb_array(ctx, uri, "READ") 
   qry2 <- tiledb_query(ctx, arr, "READ")
   qry2 <- tiledb_query_set_subarray(qry2, sub)
   qry2 <- tiledb_query_set_buffer(qry2, "a1", res)
   qry2 <- tiledb_query_submit(qry2)
-  tiledb_array_close(arr)
+  libtiledb_array_close(arr)
   expect_equal(res, dat[sub])
   teardown({
     unlink(tmp, recursive = TRUE)

@@ -173,44 +173,44 @@ libtiledb_array_create <- function(uri, schema) {
     .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }
 
-tiledb_array <- function(ctx, uri, type) {
-    .Call(`_tiledb_tiledb_array`, ctx, uri, type)
+libtiledb_array <- function(ctx, uri, type) {
+    .Call(`_tiledb_libtiledb_array`, ctx, uri, type)
 }
 
-tiledb_array_is_open <- function(array) {
-    .Call(`_tiledb_tiledb_array_is_open`, array)
+libtiledb_array_is_open <- function(array) {
+    .Call(`_tiledb_libtiledb_array_is_open`, array)
 }
 
-tiledb_array_get_uri <- function(array) {
-    .Call(`_tiledb_tiledb_array_get_uri`, array)
+libtiledb_array_get_uri <- function(array) {
+    .Call(`_tiledb_libtiledb_array_get_uri`, array)
 }
 
-tiledb_array_get_schema <- function(array) {
-    .Call(`_tiledb_tiledb_array_get_schema`, array)
+libtiledb_array_get_schema <- function(array) {
+    .Call(`_tiledb_libtiledb_array_get_schema`, array)
 }
 
-tiledb_array_open <- function(array, query_type) {
-    .Call(`_tiledb_tiledb_array_open`, array, query_type)
+libtiledb_array_open <- function(array, query_type) {
+    .Call(`_tiledb_libtiledb_array_open`, array, query_type)
 }
 
-tiledb_array_reopen <- function(array) {
-    .Call(`_tiledb_tiledb_array_reopen`, array)
+libtiledb_array_reopen <- function(array) {
+    .Call(`_tiledb_libtiledb_array_reopen`, array)
 }
 
-tiledb_array_close <- function(array) {
-    .Call(`_tiledb_tiledb_array_close`, array)
+libtiledb_array_close <- function(array) {
+    .Call(`_tiledb_libtiledb_array_close`, array)
 }
 
-tiledb_array_query_type <- function(array) {
-    .Call(`_tiledb_tiledb_array_query_type`, array)
+libtiledb_array_query_type <- function(array) {
+    .Call(`_tiledb_libtiledb_array_query_type`, array)
 }
 
-tiledb_array_nonempty_domain <- function(array) {
-    .Call(`_tiledb_tiledb_array_nonempty_domain`, array)
+libtiledb_array_nonempty_domain <- function(array) {
+    .Call(`_tiledb_libtiledb_array_nonempty_domain`, array)
 }
 
-tiledb_array_consolidate <- function(ctx, uri) {
-    .Call(`_tiledb_tiledb_array_consolidate`, ctx, uri)
+libtiledb_array_consolidate <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri)
 }
 
 tiledb_query <- function(ctx, array, type) {

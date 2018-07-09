@@ -1003,9 +1003,9 @@ std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> sc
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> tiledb_array(XPtr<tiledb::Context> ctx,
-                                 std::string uri,
-                                 std::string type) {
+XPtr<tiledb::Array> libtiledb_array(XPtr<tiledb::Context> ctx,
+                                    std::string uri,
+                                    std::string type) {
   auto query_type = _string_to_tiledb_query_type(type); 
   try {
      auto array = XPtr<tiledb::Array>(
@@ -1017,7 +1017,7 @@ XPtr<tiledb::Array> tiledb_array(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-bool tiledb_array_is_open(XPtr<tiledb::Array> array) {
+bool libtiledb_array_is_open(XPtr<tiledb::Array> array) {
   try {
     return array->is_open(); 
   } catch(tiledb::TileDBError& err) {
@@ -1026,7 +1026,7 @@ bool tiledb_array_is_open(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_array_get_uri(XPtr<tiledb::Array> array) {
+std::string libtiledb_array_get_uri(XPtr<tiledb::Array> array) {
   try {
       return array->uri(); 
    } catch (tiledb::TileDBError& err) {
@@ -1035,7 +1035,7 @@ std::string tiledb_array_get_uri(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> tiledb_array_get_schema(XPtr<tiledb::Array> array) {
+XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) {
   try {
     return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
   } catch (tiledb::TileDBError& err) {
@@ -1044,7 +1044,7 @@ XPtr<tiledb::ArraySchema> tiledb_array_get_schema(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> tiledb_array_open(XPtr<tiledb::Array> array, std::string query_type) {
+XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Array> array, std::string query_type) {
   tiledb_query_type_t qtype = _string_to_tiledb_query_type(query_type);
   try {
     array->open(qtype);
@@ -1055,7 +1055,7 @@ XPtr<tiledb::Array> tiledb_array_open(XPtr<tiledb::Array> array, std::string que
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> tiledb_array_reopen(XPtr<tiledb::Array> array) {
+XPtr<tiledb::Array> libtiledb_array_reopen(XPtr<tiledb::Array> array) {
   try {
     array->reopen();
     return array;
@@ -1065,7 +1065,7 @@ XPtr<tiledb::Array> tiledb_array_reopen(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> tiledb_array_close(XPtr<tiledb::Array> array) {
+XPtr<tiledb::Array> libtiledb_array_close(XPtr<tiledb::Array> array) {
   try {
     array->close();
     return array;
@@ -1075,7 +1075,7 @@ XPtr<tiledb::Array> tiledb_array_close(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_array_query_type(XPtr<tiledb::Array> array) {
+std::string libtiledb_array_query_type(XPtr<tiledb::Array> array) {
   try {
     tiledb_query_type_t qtype = array->query_type();
     return _tiledb_query_type_to_string(qtype);
@@ -1085,7 +1085,7 @@ std::string tiledb_array_query_type(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-List tiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
+List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
   List nonempty_domain;
   try {
     auto domain = array->schema().domain();
@@ -1117,7 +1117,7 @@ List tiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_array_consolidate(XPtr<tiledb::Context> ctx,
+std::string libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
                                      std::string uri) {
   try {
     tiledb::Array::consolidate(*ctx.get(), uri);

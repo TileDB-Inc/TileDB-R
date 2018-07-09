@@ -16,13 +16,13 @@ DenseArray <- function(ctx, uri, query_type = NULL) {
       stop("query_type") 
     }
   }
-  array_xptr <- tiledb_array(ctx@ptr, uri, "WRITE")
-  schema_xptr <- tiledb_array_get_schema(array_xptr) 
+  array_xptr <- libtiledb_array(ctx@ptr, uri, "WRITE")
+  schema_xptr <- libtiledb_array_get_schema(array_xptr) 
   if (libtiledb_array_schema_sparse(schema_xptr)) {
-    tiledb_array_close(array_xptr)
+    libtiledb_array_close(array_xptr)
     stop("array URI must be a dense array") 
   }
-  array_xptr <- tiledb_array_close(array_xptr)
+  array_xptr <- libtiledb_array_close(array_xptr)
   new("DenseArray", ctx = ctx, uri = uri, ptr = array_xptr)
 }
 
@@ -37,13 +37,13 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))
 
 #' @export
 setMethod("reopen", "DenseArray", function(object) {
-  tiledb_array_reopen(object@ptr)
+  libtiledb_array_reopen(object@ptr)
   return()
 })
 
 close.DenseArray <- function(conn, ...)  {
   stopifnot(is(conn, "DenseArray"))
-  tiledb_array_close(conn@ptr)
+  libtiledb_array_close(conn@ptr)
   return();
 }
 
@@ -138,7 +138,7 @@ setMethod("[", "DenseArray",
             if (!tiledb::is.integral(dom)) {
               stop("subscript indexing only valid for integral Domain's")  
             }
-            tiledb_array_open(x@ptr, "READ")
+            libtiledb_array_open(x@ptr, "READ")
             out <- tryCatch(
               {
                 subarray <- domain_subarray(dom, index = index)
@@ -171,7 +171,7 @@ setMethod("[", "DenseArray",
                 return(buffers)
               }, 
               finally = {
-                tiledb_array_close(x@ptr)
+                libtiledb_array_close(x@ptr)
               }
             )
             return(out);
@@ -234,7 +234,7 @@ setMethod("[<-", "DenseArray",
                 stop(paste("cannot assign value of type \"", typeof(value), "\""))
               }
             }
-            tiledb_array_open(x@ptr, "WRITE")
+            libtiledb_array_open(x@ptr, "WRITE")
             out <- tryCatch(
               {
                 qry <- tiledb_query(ctx@ptr, x@ptr, "WRITE") 
@@ -256,7 +256,7 @@ setMethod("[<-", "DenseArray",
                 return(x);
               },
               finally = {
-                tiledb_array_close(x@ptr)
+                libtiledb_array_close(x@ptr)
               })
             return(out)
           })
