@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a TileDB group object at given uri path — tiledb_group_create • tiledb</title>
+<title>Dump stats to file — tiledb_stats_dump • tiledb</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Creates a TileDB group object at given uri path — tiledb_group_create" />
+<meta property="og:title" content="Dump stats to file — tiledb_stats_dump" />
 
-<meta property="og:description" content="Creates a TileDB group object at given uri path" />
+<meta property="og:description" content="Dump stats to file" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,51 +97,49 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a TileDB group object at given uri path</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Object.R'><code>R/Object.R</code></a></small>
-    <div class="hidden name"><code>tiledb_group_create.Rd</code></div>
+    <h1>Dump stats to file</h1>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Stats.R'><code>R/Stats.R</code></a></small>
+    <div class="hidden name"><code>tiledb_stats_dump.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Creates a TileDB group object at given uri path</p>
+    <p>Dump stats to file</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_group_create</span>(<span class='no'>ctx</span>, <span class='no'>uri</span>)</pre>
+    <pre class="usage"><span class='fu'>tiledb_stats_dump</span>(<span class='no'>path</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ctx</th>
-      <td><p>tiledb_ctx</p></td>
-    </tr>
-    <tr>
-      <th>uri</th>
-      <td><p>path which to create group</p></td>
+      <th>path</th>
+      <td><p>to stats file</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>uri of created group</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>pth</span> <span class='kw'>&lt;-</span> <span class='fu'>tempdir</span>()
-<span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>()
-<span class='fu'>tiledb_group_create</span>(<span class='no'>ctx</span>, <span class='no'>pth</span>)</div><div class='output co'>#&gt; [1] "/var/folders/yn/_1781_c548z33m_qsc1q0q1m0000gn/T//Rtmp4qKbOP"</div><div class='input'>
-<span class='fu'><a href='tiledb_object_type.html'>tiledb_object_type</a></span>(<span class='no'>ctx</span>, <span class='no'>pth</span>)</div><div class='output co'>#&gt; [1] "ARRAY"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>pth</span> <span class='kw'>&lt;-</span> <span class='fu'>tempfile</span>()
+<span class='fu'>tiledb_stats_dump</span>(<span class='no'>pth</span>)
+<span class='fu'>cat</span>(<span class='fu'>readLines</span>(<span class='no'>pth</span>)[<span class='fl'>1</span>:<span class='fl'>10</span>], <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"\n"</span>)</div><div class='output co'>#&gt; ===================================== TileDB Statistics Report =======================================
+#&gt; 
+#&gt; Individual function statistics:
+#&gt;   Function name                                                          # calls       Total time (ns)
+#&gt;   ----------------------------------------------------------------------------------------------------
+#&gt;   compressor_blosc_compress,                                                   0,                   0
+#&gt;   compressor_blosc_decompress,                                                 0,                   0
+#&gt;   compressor_bzip_compress,                                                    0,                   0
+#&gt;   compressor_bzip_decompress,                                                  0,                   0
+#&gt;   compressor_dd_compress,                                                      0,                   0</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 

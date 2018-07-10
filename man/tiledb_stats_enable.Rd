@@ -9,3 +9,6 @@ tiledb_stats_enable()
 \description{
 Enable stats counters
 }
+\concept{
+stats
+}

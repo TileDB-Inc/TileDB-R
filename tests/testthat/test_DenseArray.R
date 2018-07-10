@@ -60,9 +60,7 @@ test_that("Can read / write a simple 1D vector", {
   
   arr <- tiledb_dense(ctx, tmp)
   dat <- as.array(as.double(1:10))
-  
   arr[] <- dat
-  close(arr) 
   
   arr <- tiledb_dense(ctx, tmp)
   expect_equal(arr[], dat)

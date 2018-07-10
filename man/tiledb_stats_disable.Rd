@@ -9,3 +9,6 @@ tiledb_stats_disable()
 \description{
 Disable stats counters
 }
+\concept{
+stats
+}

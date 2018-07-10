@@ -235,6 +235,14 @@ setMethod("tile_order", "tiledb_array_schema",
             libtiledb_array_schema_tile_order(object@ptr) 
           })
 
+#' @export 
+tiledb_compressor.tiledb_array_schema <- function(object) {
+            coords_ptr <- libtiledb_array_schema_coords_compressor(object@ptr)
+            offsets_ptr <- libtiledb_array_schema_offsets_compressor(object@ptr)
+            return(c(coords = tiledb_compressor.from_ptr(coords_ptr), 
+                     offsets = tiledb_compressor.from_ptr(offsets_ptr)))
+}
+
 #' @export
 setGeneric("compressor", function(object, ...) standardGeneric("compressor"))
 

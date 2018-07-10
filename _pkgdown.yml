@@ -1,3 +1,52 @@
 template:
   params:
     bootswatch: lumen
+reference:
+- title: Ctx
+  contents:
+  - starts_with("tiledb_ctx")
+  - starts_with("tiledb_is_supported_fs")
+- title: Config
+  contents:
+  - starts_with("tiledb_config")
+  - starts_with("`[`.tiledb_config")
+  - starts_with("as.vector.tiledb_config")
+  - starts_with("as.data.frame.tiledb_config")
+- title: Array
+  contents:
+  - starts_with("tiledb_array_create")
+  - starts_with("tiledb_dense")
+  - starts_with("tiledb_sparse")
+- title: ArraySchema
+  contents:
+  - starts_with("tiledb_array_schema")
+- title: Attribute
+  contents:
+  - starts_with("tiledb_attr")
+  - starts_with("attr")
+- title: Compressor
+  contents:
+  - starts_with("tiledb_compressor")
+  - starts_with("compress")
+- title: Domain
+  contents:
+  - starts_with("tiledb_domain") 
+  - starts_with("tiledb_ndim")
+- title: Dim
+  contents:
+  - starts_with("tiledb_dim")
+  - starts_with("dim")
+- title: Group
+  contents:
+  - starts_with("tiledb_group")
+- title: Object
+  desc: object management functions
+  contents:
+  - starts_with("tiledb_object") 
+- title: Stats
+  desc:  performance stat collection functions
+  contents:
+  - starts_with("tiledb_stats")
+- title: Version
+  contents:
+  - starts_with("tiledb_version")

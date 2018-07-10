@@ -140,7 +140,7 @@ tiledb_config_load <- function(path) {
   tiledb_config.from_ptr(ptr)
 }
 
-#' Convert a `tiledb_config` object to an R named character vector
+#' Convert a `tiledb_config` object to a R vector
 #' 
 #' @param x `tiledb_config` object
 #' @return a character vector of config parameter names, values
@@ -152,3 +152,18 @@ tiledb_config_load <- function(path) {
 as.vector.tiledb_config <- function(x, mode="any") {
   libtiledb_config_vector(x@ptr)
 }
+
+#' Convert a `tiledb_config` object to a R data.frame
+#' @param x `tiledb_config` object
+#' @return a data.frame wth parameter, value columns
+#' @examples
+#' cfg <- tiledb_config()
+#' as.data.frame(cfg)
+#' 
+#' @export
+as.data.frame.tiledb_config <- function(x, ...) {
+  v <- libtiledb_config_vector(x@ptr)
+  params <- names(v)
+  values <- as.vector(v) 
+  return(data.frame("parameter" = params, "value" = values, stringsAsFactors = FALSE))
+} 

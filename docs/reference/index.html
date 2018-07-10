@@ -108,16 +108,114 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <h2 id="section-ctx" class="hasAnchor"><a href="#section-ctx" class="anchor"></a>Ctx</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
       <tr>
         
         <td>
+          <p><code><a href="tiledb_ctx.html">tiledb_ctx()</a></code> </p>
+        </td>
+        <td><p>Creates a <code>tiledb_ctx</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_is_supported_fs-tiledb_ctx-character-method.html">tiledb_is_supported_fs(<i>&lt;tiledb_ctx&gt;</i>,<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Query if a TileDB backend is supported</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-config" class="hasAnchor"><a href="#section-config" class="anchor"></a>Config</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_config.html">tiledb_config()</a></code> </p>
+        </td>
+        <td><p>Creates a <code>tiledb_config</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_config_load.html">tiledb_config_load()</a></code> </p>
+        </td>
+        <td><p>Load a saved <code>tiledb_config</code> file from disk</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_config_save.html">tiledb_config_save()</a></code> </p>
+        </td>
+        <td><p>Save a <code>tiledb_config</code> object ot a local text file</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="as.vector.tiledb_config.html">as.vector(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Convert a <code>tiledb_config</code> object to an R named character vector</p></td>
+        <td><p>Convert a <code>tiledb_config</code> object to a R vector</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="as.data.frame.tiledb_config.html">as.data.frame(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Convert a <code>tiledb_config</code> object to a R data.frame</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-array" class="hasAnchor"><a href="#section-array" class="anchor"></a>Array</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_create.html">tiledb_array_create()</a></code> </p>
+        </td>
+        <td><p>Creates a new TileDB array given an input schema.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_dense.html">tiledb_dense()</a></code> </p>
+        </td>
+        <td><p>Constructs a tiledb_dense object backed by a persisted tiledb array uri</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_sparse.html">tiledb_sparse()</a></code> </p>
+        </td>
+        <td><p>Constructs a tiledb_sparse object backed by a persisted tiledb array uri</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-arrayschema" class="hasAnchor"><a href="#section-arrayschema" class="anchor"></a>ArraySchema</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema.html">tiledb_array_schema()</a></code> </p>
+        </td>
+        <td><p>Constructs a <code>tiledb_array_schema</code> object</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-attribute" class="hasAnchor"><a href="#section-attribute" class="anchor"></a>Attribute</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_attr.html">tiledb_attr()</a></code> </p>
+        </td>
+        <td><p>Contructs a <code>tiledb_attr</code> object</p></td>
       </tr><tr>
         
         <td>
@@ -136,18 +234,20 @@
           <p><code><a href="attrs-tiledb_array_schema-numeric-method.html">attrs(<i>&lt;tiledb_array_schema&gt;</i>,<i>&lt;numeric&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns a <code>tiledb_attr</code> object associated with the <code>tiledb_array_schema</code> with a given index</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-compressor" class="hasAnchor"><a href="#section-compressor" class="anchor"></a>Compressor</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
-          <p><code><a href="cell_order-tiledb_array_schema-method.html">cell_order(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
+          <p><code><a href="tiledb_compressor.html">tiledb_compressor()</a></code> </p>
         </td>
-        <td><p>Returns the cell layout string associated with the <code>tiledb_array_schema</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="close.tiledb_dense.html">close(<i>&lt;tiledb_dense&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Closes a tiledb array object</p></td>
+        <td><p>Constructs a <code>tiledb_compressor</code> object</p></td>
       </tr><tr>
         
         <td>
@@ -172,30 +272,52 @@
           <p><code><a href="compressor_type-tiledb_compressor-method.html">compressor_type(<i>&lt;tiledb_compressor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the compressor's compression type</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-domain" class="hasAnchor"><a href="#section-domain" class="anchor"></a>Domain</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_domain.html">tiledb_domain()</a></code> </p>
+        </td>
+        <td><p>Constructs a <code>tiledb_domain</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="config-tiledb_ctx-method.html">config(<i>&lt;tiledb_ctx&gt;</i>)</a></code> </p>
+          <p><code><a href="tiledb_ndim-tiledb_array_schema-method.html">tiledb_ndim(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Retrieve the <code>tiledb_config</code> object from the <code>tiledb_ctx</code></p></td>
+        <td><p>Return the number of dimensions associated with the <code>tieldb_array_schema</code></p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="datatype-tiledb_attr-method.html">datatype(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+          <p><code><a href="tiledb_ndim-tiledb_dim-method.html">tiledb_ndim(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Return the <code>tiledb_attr</code> datatype</p></td>
+        <td><p>Returns the number of dimensions for a tiledb domain object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="datatype-tiledb_dim-method.html">datatype(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
+          <p><code><a href="tiledb_ndim-tiledb_domain-method.html">tiledb_ndim(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Return the <code>tiledb_dim</code> datatype</p></td>
-      </tr><tr>
+        <td><p>Returns the number of dimensions of the <code>tiledb_domain</code></p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-dim" class="hasAnchor"><a href="#section-dim" class="anchor"></a>Dim</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
-          <p><code><a href="datatype-tiledb_domain-method.html">datatype(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
+          <p><code><a href="tiledb_dim.html">tiledb_dim()</a></code> </p>
         </td>
-        <td><p>Returns tiledb_domain TileDB type string</p></td>
+        <td><p>Contructs a <code>tiledb_dim</code> object</p></td>
       </tr><tr>
         
         <td>
@@ -226,211 +348,29 @@
           <p><code><a href="dimensions-tiledb_domain-method.html">dimensions(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns a list of the tiledb_domain dimension objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="domain-tiledb_array_schema-method.html">domain(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns the <code>tiledb_domain</code> object associated with a given <code>tiledb_array_schema</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="domain-tiledb_dim-method.html">domain(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the <code>tiledb_dim</code> domain</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is.anonymous.tiledb_attr.html">is.anonymous(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns TRUE if the tiledb_dim is anonymous</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is.anonymous.tiledb_dim.html">is.anonymous(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns TRUE if the tiledb_dim is anonymous</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is.integral-tiledb_domain-method.html">is.integral(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns TRUE is tiledb_domain is an integral (integer) domain</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is.sparse-tiledb_array_schema-method.html">is.sparse(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns TRUE if the tiledb_array_schema is sparse, else FALSE</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is.sparse-tiledb_dense-method.html">is.sparse(<i>&lt;tiledb_dense&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns true is if the array or array_schema is sparse</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="name-tiledb_attr-method.html">name(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the <code>tiledb_attr</code> name</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="name-tiledb_dim-method.html">name(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the <code>tiledb_dim</code> name</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ncells-tiledb_attr-method.html">ncells(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the number of scalar values per attribute cell</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="reopen.html">reopen()</a></code> </p>
-        </td>
-        <td><p>Reopens a TileDB array an opened tiledb array</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="schema-tiledb_dense-method.html">schema(<i>&lt;tiledb_dense&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns the <code>tiledb_dense</code> array <code>tiledb_schema</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="show-tiledb_config-method.html">show(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Prints the config object to STDOUT</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sub-tiledb_config-method.html">`[`(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Gets a config parameter value</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="subset-tiledb_config-method.html">`[<-`(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Sets a config parameter value</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tile-tiledb_dim-method.html">tile(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the <code>tiledb_dim</code> tile extent</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tile_order-tiledb_array_schema-method.html">tile_order(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns the tile layout string associated with the <code>tiledb_array_schema</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb-package.html">tiledb-package</a></code> </p>
-        </td>
-        <td><p>tiledb - Interface to the TileDB Storage Manager API</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_array_create.html">tiledb_array_create()</a></code> </p>
-        </td>
-        <td><p>Creates a new TileDB array given an input schema.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_array_schema.html">tiledb_array_schema()</a></code> </p>
-        </td>
-        <td><p>Constructs a <code>tiledb_array_schema</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_attr.html">tiledb_attr()</a></code> </p>
-        </td>
-        <td><p>Contructs a <code>tiledb_attr</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_compressor.html">tiledb_compressor()</a></code> </p>
-        </td>
-        <td><p>Constructs a <code>tiledb_compressor</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_config.html">tiledb_config()</a></code> </p>
-        </td>
-        <td><p>Creates a <code>tiledb_config</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_config_load.html">tiledb_config_load()</a></code> </p>
-        </td>
-        <td><p>Load a saved <code>tiledb_config</code> file from disk</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_config_save.html">tiledb_config_save()</a></code> </p>
-        </td>
-        <td><p>Save a <code>tiledb_config</code> object ot a local text file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_ctx.html">tiledb_ctx()</a></code> </p>
-        </td>
-        <td><p>Creates a <code>tiledb_ctx</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_dense.html">tiledb_dense()</a></code> </p>
-        </td>
-        <td><p>Constructs a tiledb_dense object backed by a persisted tiledb array uri</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_dim.html">tiledb_dim()</a></code> </p>
-        </td>
-        <td><p>Contructs a <code>tiledb_dim</code> object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_domain.html">tiledb_domain()</a></code> </p>
-        </td>
-        <td><p>Constructs a <code>tiledb_domain</code> object</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-group" class="hasAnchor"><a href="#section-group" class="anchor"></a>Group</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="tiledb_group_create.html">tiledb_group_create()</a></code> </p>
         </td>
         <td><p>Creates a TileDB group object at given uri path</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_is_supported_fs-tiledb_ctx-character-method.html">tiledb_is_supported_fs(<i>&lt;tiledb_ctx&gt;</i>,<i>&lt;character&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Query if a TileDB backend is supported</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_ndim-tiledb_array_schema-method.html">tiledb_ndim(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the number of dimensions associated with the <code>tieldb_array_schema</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_ndim-tiledb_dim-method.html">tiledb_ndim(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns the number of dimensions for a tiledb domain object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tiledb_ndim-tiledb_domain-method.html">tiledb_ndim(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns the number of dimensions of the <code>tiledb_domain</code></p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-object" class="hasAnchor"><a href="#section-object" class="anchor"></a>Object</h2>
+          <p class="section-desc"><p>object management functions</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="tiledb_object_ls.html">tiledb_object_ls()</a></code> </p>
@@ -460,7 +400,47 @@
           <p><code><a href="tiledb_object_walk.html">tiledb_object_walk()</a></code> </p>
         </td>
         <td><p>Recursively discover TileDB resources at a given root URI path</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-stats" class="hasAnchor"><a href="#section-stats" class="anchor"></a>Stats</h2>
+          <p class="section-desc"><p>performance stat collection functions</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_disable.html">tiledb_stats_disable()</a></code> </p>
+        </td>
+        <td><p>Disable stats counters</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_dump.html">tiledb_stats_dump()</a></code> </p>
+        </td>
+        <td><p>Dump stats to file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_enable.html">tiledb_stats_enable()</a></code> </p>
+        </td>
+        <td><p>Enable stats counters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_print.html">tiledb_stats_print()</a></code> </p>
+        </td>
+        <td><p>Print stats dump to STDOUT</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-version" class="hasAnchor"><a href="#section-version" class="anchor"></a>Version</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="tiledb_version.html">tiledb_version()</a></code> </p>
@@ -474,7 +454,18 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-ctx">Ctx</a></li>
+      <li><a href="#section-config">Config</a></li>
+      <li><a href="#section-array">Array</a></li>
+      <li><a href="#section-arrayschema">ArraySchema</a></li>
+      <li><a href="#section-attribute">Attribute</a></li>
+      <li><a href="#section-compressor">Compressor</a></li>
+      <li><a href="#section-domain">Domain</a></li>
+      <li><a href="#section-dim">Dim</a></li>
+      <li><a href="#section-group">Group</a></li>
+      <li><a href="#section-object">Object</a></li>
+      <li><a href="#section-stats">Stats</a></li>
+      <li><a href="#section-version">Version</a></li>
     </ul>
   </div>
 </div>

@@ -1138,7 +1138,6 @@ XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
   try {
     auto query = XPtr<tiledb::Query>(
       new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type)));
-    query->set_layout(TILEDB_COL_MAJOR);
     return query;
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
@@ -1159,7 +1158,7 @@ XPtr<tiledb::Query> libtiledb_query_set_layout(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
-                                              SEXP subarray) {
+                                                 SEXP subarray) {
   try {
     if (TYPEOF(subarray) == INTSXP) {
       IntegerVector sub(subarray);
@@ -1168,6 +1167,26 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
     } else if (TYPEOF(subarray) == REALSXP) {
       NumericVector sub(subarray);
       query->set_subarray(sub.begin(), sub.length());
+      return query;
+    } else {
+      throw Rcpp::exception("invalid subarray datatype");
+    }
+  } catch (tiledb::TileDBError& err){
+    throw Rcpp::exception(err.what());
+  } 
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
+                                                    SEXP coords) {
+  try {
+    if (TYPEOF(coords) == INTSXP) {
+      IntegerVector sub(coords);
+      query->set_coordinates(sub.begin(), sub.length());
+      return query; 
+    } else if (TYPEOF(coords) == REALSXP) {
+      NumericVector sub(coords);
+      query->set_coordinates(sub.begin(), sub.length());
       return query;
     } else {
       throw Rcpp::exception("invalid subarray datatype");
@@ -1243,6 +1262,85 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
     return _query_status_to_string(status);
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what()); 
+  }
+}
+
+// [[Rcpp::export]]
+R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
+                                                std::string attribute) {
+  try {
+    R_xlen_t nelem = query->result_buffer_elements()[attribute].second;    
+    return nelem; 
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what()); 
+  }
+}
+
+/**
+ * Array helper functions 
+ */
+// [[Rcpp::export]]
+NumericVector libtiledb_zip_coords_numeric( List coords, R_xlen_t coord_length) {
+  auto ndim = coords.length();
+  NumericVector result(ndim * coord_length);
+  if (result.length() < 2) {
+    return result;
+  }
+  for (R_xlen_t dim = 0; dim < ndim; dim++) {
+    NumericVector cur_dim = coords[dim];
+    R_xlen_t result_idx = dim;
+    for (R_xlen_t i = 0; i < coord_length; i++) {
+      result[result_idx] = cur_dim[i];
+      result_idx += ndim;
+    }
+  }
+  return result;
+}
+
+// [[Rcpp::export]]
+IntegerVector libtiledb_zip_coords_integer( List coords, R_xlen_t coord_length) {
+  auto ndim = coords.length();
+  IntegerVector result(ndim * coord_length);
+  if (result.length() < 2) {
+    return result;
+  }
+  for (R_xlen_t dim = 0; dim < ndim; dim++) {
+    IntegerVector cur_dim = coords[dim];
+    R_xlen_t result_idx = dim;
+    for (R_xlen_t i = 0; i < coord_length; i++) {
+      result[result_idx] = cur_dim[i];
+      result_idx += ndim;
+    }
+  }
+  return result;
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_coords() {
+  return tiledb_coords();
+}
+
+// [[Rcpp::export]]
+R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array,
+                                             SEXP subarray,
+                                             std::string attribute) {
+  try {
+    if (TYPEOF(subarray) == INTSXP) {
+      auto sub = as<std::vector<int32_t>>(subarray);
+      auto max_elements = array->max_buffer_elements(sub);
+      return max_elements[attribute].second;
+    } else if (TYPEOF(subarray) == REALSXP) {
+      auto sub = as<std::vector<double>>(subarray);
+      auto max_elements = array->max_buffer_elements(sub);
+      return max_elements[attribute].second;
+    } else {
+      std::stringstream errmsg;
+      errmsg << "Invalid subarray buffer type for domain :" 
+             << Rcpp::type2name(subarray); 
+      throw Rcpp::exception(errmsg.str().c_str());
+    }    
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
   }
 }
 

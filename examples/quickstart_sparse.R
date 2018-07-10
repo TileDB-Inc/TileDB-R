@@ -43,23 +43,23 @@ create_array <- function() {
     ctx <- tiledb_ctx()
 
     # Check if the array already exists.
-    if (tiledb_object_type(ctx, array_name) == "TILEDB_ARRAY") {
+    if (tiledb_object_type(ctx, array_name) == "ARRAY") {
         stop("Array already exists.")
 	      quit(0)
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
     dom <- tiledb_domain(ctx, 
-              dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "TILEDB_INT32"),
-			                 tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "TILEDB_INT32")))
+              dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "INT32"),
+			                 tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "INT32")))
 
    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
     schema = tiledb_array_schema(ctx,
-		dom, attrs=c(tiledb_attr(ctx, "a", type = "TILEDB_INT32")),
-		sparse = TRUE)
+                                 dom, attrs=c(tiledb_attr(ctx, "a", type = "INT32")),
+                                 sparse = TRUE)
 
     # Create the (empty) array on disk.
-    tiledb_array_create(array_name, uri = schema)
+    tiledb_array_create(array_name, schema)
 }
 
 write_array <- function() {
@@ -73,17 +73,16 @@ write_array <- function() {
 }
 
 read_array <- function() {
-    ctx = tiledb_ctx()
+    ctx <- tiledb_ctx()
     # Open the array and read from it.
-    A <- tiledb_dense(ctx, uri = array_name)
+    A <- tiledb_sparse(ctx, uri = array_name)
     data <- A[1:2, 2:4]
-
     coords <- data[["coords"]] 
     a_vals <- data[["a"]]
-    for (i in seq_along(a_vals)) {
-	      i <- coords[((i - 1) * 2) + 1]
-        j <- coords[((i - 1) * 2) + 2]
-        cat(sprintf("Cell (%d,%d) has data %d\n", i, j, a_vals[i]))
+    for (idx in seq_along(a_vals)) {
+	      i <- coords[((idx - 1) * 2) + 1]
+        j <- coords[((idx - 1) * 2) + 2]
+        cat(sprintf("Cell (%d,%d) has data %d\n", i, j, a_vals[idx]))
     }
 }
 

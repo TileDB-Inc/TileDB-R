@@ -6,7 +6,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns true is if the array or array_schema is sparse — is.sparse,tiledb_dense-method • tiledb</title>
+<title>#' Reopens a TileDB array an opened tiledb array
+#'
+#' Reopening an array is useful when the array got updated after it got opened
+#' and the tiledb array object got created. To sync-up with the updates,
+#' the user must either close the array and open again,
+#' or just use tiledb_reopen(array) which can be faster because
+#' only metdata regarding updates has to be loaded.
+#'
+#' @param object tileb array object
+#' @return the reopened array object
+#' @export
+setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.sparse,tiledb_dense-method • tiledb</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +41,24 @@
 
 
 
-<meta property="og:title" content="Returns true is if the array or array_schema is sparse — is.sparse,tiledb_dense-method" />
+<meta property="og:title" content="#' Reopens a TileDB array an opened tiledb array
+#'
+#' Reopening an array is useful when the array got updated after it got opened
+#' and the tiledb array object got created. To sync-up with the updates,
+#' the user must either close the array and open again,
+#' or just use tiledb_reopen(array) which can be faster because
+#' only metdata regarding updates has to be loaded.
+#'
+#' @param object tileb array object
+#' @return the reopened array object
+#' @export
+setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.sparse,tiledb_dense-method" />
 
-<meta property="og:description" content="Returns true is if the array or array_schema is sparse" />
+<meta property="og:description" content="#' @export
+setMethod(&quot;reopen&quot;, &quot;tiledb_dense&quot;, function(object) 
+libtiledb_array_reopen(object@ptr)
+return(object)
+)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,14 +123,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns true is if the array or array_schema is sparse</h1>
+    <h1>#' Reopens a TileDB array an opened tiledb array
+#'
+#' Reopening an array is useful when the array got updated after it got opened
+#' and the tiledb array object got created. To sync-up with the updates,
+#' the user must either close the array and open again,
+#' or just use tiledb_reopen(array) which can be faster because
+#' only metdata regarding updates has to be loaded.
+#'
+#' @param object tileb array object
+#' @return the reopened array object
+#' @export
+setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</h1>
     <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/DenseArray.R'><code>R/DenseArray.R</code></a></small>
     <div class="hidden name"><code>is.sparse-tiledb_dense-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Returns true is if the array or array_schema is sparse</p>
+    <p>#' @export
+setMethod("reopen", "tiledb_dense", function(object) 
+libtiledb_array_reopen(object@ptr)
+return(object)
+)</p>
     
     </div>
 
@@ -124,6 +165,18 @@
 
     <p>FALSE</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>#' Closes a tiledb array object
+#'
+#' @param conn tiledb array object
+#' @return returns the closed array object
+close.tiledb_dense &lt;- function(conn, ...)  
+stopifnot(is(conn, "tiledb_dense"))
+libtiledb_array_close(conn@ptr)
+return(conn);
+    Returns true is if the array or array_schema is sparse</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -132,6 +185,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

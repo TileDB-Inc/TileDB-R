@@ -34,38 +34,37 @@ tiledb_dense <- function(ctx, uri, query_type = NULL) {
 
 setMethod("show", "tiledb_dense",
           function (object) {
-            cat("tiledb::Array object @ ", object@uri, "\n")
-            invisible(print(object[]))
+            cat("tiledb_dense(uri = \"", object@uri, "\")")
           })
 
-#' Reopens a TileDB array an opened tiledb array
+#' #' Reopens a TileDB array an opened tiledb array
+#' #' 
+#' #' Reopening an array is useful when the array got updated after it got opened 
+#' #' and the tiledb array object got created. To sync-up with the updates, 
+#' #' the user must either close the array and open again, 
+#' #' or just use tiledb_reopen(array) which can be faster because 
+#' #' only metdata regarding updates has to be loaded.
+#' #' 
+#' #' @param object tileb array object
+#' #' @return the reopened array object 
+#' #' @export
+#' setGeneric("reopen", function(object, ...) standardGeneric("reopen"))
 #' 
-#' Reopening an array is useful when the array got updated after it got opened 
-#' and the tiledb array object got created. To sync-up with the updates, 
-#' the user must either close the array and open again, 
-#' or just use tiledb_reopen(array) which can be faster because 
-#' only metdata regarding updates has to be loaded.
+#' #' @export 
+#' setMethod("reopen", "tiledb_dense", function(object) {
+#'   libtiledb_array_reopen(object@ptr)
+#'   return(object)
+#' })
 #' 
-#' @param object tileb array object
-#' @return the reopened array object 
-#' @export
-setGeneric("reopen", function(object, ...) standardGeneric("reopen"))
-
-#' @export 
-setMethod("reopen", "tiledb_dense", function(object) {
-  libtiledb_array_reopen(object@ptr)
-  return(object)
-})
-
-#' Closes a tiledb array object
-#'
-#' @param conn tiledb array object 
-#' @return returns the closed array object
-close.tiledb_dense <- function(conn, ...)  {
-  stopifnot(is(conn, "tiledb_dense"))
-  libtiledb_array_close(conn@ptr)
-  return(conn);
-}
+#' #' Closes a tiledb array object
+#' #'
+#' #' @param conn tiledb array object 
+#' #' @return returns the closed array object
+#' close.tiledb_dense <- function(conn, ...)  {
+#'   stopifnot(is(conn, "tiledb_dense"))
+#'   libtiledb_array_close(conn@ptr)
+#'   return(conn);
+#' }
 
 #'Returns true is if the array or array_schema is sparse
 #'
@@ -184,7 +183,7 @@ setMethod("[", "tiledb_dense",
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in read query")
+                  stop("error in read query (not 'COMPLETE')")
                 }
                 # If true, delete the dimensions of an array which have only one level
                 if (drop) {
@@ -288,6 +287,7 @@ setMethod("[<-", "tiledb_dense",
               })
             return(out)
           })
+
 
 as.array.tiledb_dense <- function(x, ...) {
  return(x[]) 

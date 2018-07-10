@@ -2,7 +2,7 @@
 % Please edit documentation in R/Config.R
 \name{as.vector.tiledb_config}
 \alias{as.vector.tiledb_config}
-\title{Convert a \code{tiledb_config} object to an R named character vector}
+\title{Convert a \code{tiledb_config} object to a R vector}
 \usage{
 \method{as.vector}{tiledb_config}(x, mode = "any")
 }
@@ -13,7 +13,7 @@
 a character vector of config parameter names, values
 }
 \description{
-Convert a \code{tiledb_config} object to an R named character vector
+Convert a \code{tiledb_config} object to a R vector
 }
 \examples{
 cfg <- tiledb_config()

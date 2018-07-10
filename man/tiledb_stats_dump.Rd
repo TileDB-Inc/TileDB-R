@@ -12,3 +12,12 @@ tiledb_stats_dump(path)
 \description{
 Dump stats to file
 }
+\examples{
+pth <- tempfile()
+tiledb_stats_dump(pth) 
+cat(readLines(pth)[1:10], sep = "\\n")
+
+}
+\concept{
+stats
+}
