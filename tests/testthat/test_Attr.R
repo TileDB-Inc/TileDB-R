@@ -29,8 +29,8 @@ test_that("tiledb_attr with compression", {
   a1 <- tiledb_attr(ctx, "foo", compressor = tiledb_compressor("GZIP", 10))
   com <- tiledb::compressor(a1)
   expect_is(com, "tiledb_compressor")
-  expect_equal(tiledb::compressor_type(com), "GZIP")
-  expect_equal(tiledb::compressor_level(com), 10)
+  expect_equal(tiledb_compressor_name(com), "GZIP")
+  expect_equal(tiledb_compressor_level(com), 10)
   
   expect_error(tiledb_attr(ctx, "foo", compressor = tiledb_compressor("UNKNOWN", -1)))
 })

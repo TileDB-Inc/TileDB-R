@@ -80,10 +80,10 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
   expect_equal(tiledb::tile_order(sch), "ROW_MAJOR")
  
   compr <- tiledb::compressor(sch)
-  expect_equal(tiledb::compressor_type(compr[["coords"]]), "GZIP")
-  expect_equal(tiledb::compressor_level(compr[["coords"]]), 10)
-  expect_equal(tiledb::compressor_type(compr[["offsets"]]), "ZSTD")
-  expect_equal(tiledb::compressor_level(compr[["offsets"]]), 5)
+  expect_equal(tiledb_compressor_name(compr[["coords"]]), "GZIP")
+  expect_equal(tiledb_compressor_level(compr[["coords"]]), 10)
+  expect_equal(tiledb_compressor_name(compr[["offsets"]]), "ZSTD")
+  expect_equal(tiledb_compressor_level(compr[["offsets"]]), 5)
   
   expect_true(is.sparse(sch))
 })

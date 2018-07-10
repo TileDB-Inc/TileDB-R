@@ -4,10 +4,10 @@
 \alias{tiledb_compressor}
 \title{Constructs a \code{tiledb_compressor} object}
 \usage{
-tiledb_compressor(type = "NO_COMPRESSION", level = -1L)
+tiledb_compressor(name = "NO_COMPRESSION", level = -1L)
 }
 \arguments{
-\item{type}{(default "NO_COMPRESSION") TileDB compression type string}
+\item{name}{(default "NO_COMPRESSION") TileDB compressor name string}
 
 \item{level}{(default -1) compression level, -1 will fallback to the compression algorithm's default}
 }

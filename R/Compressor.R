@@ -25,7 +25,7 @@ tiledb_compressor.from_ptr <- function(ptr) {
 #' Valid compression levels vary depending on the compressor used,
 #' consult the TileDB docs for more information.
 #' 
-#' @param type (default "NO_COMPRESSION") TileDB compression type string
+#' @param name (default "NO_COMPRESSION") TileDB compressor name string
 #' @param level (default -1) compression level, -1 will fallback to the compression algorithm's default
 #' @return tiledb_compressor object
 #' @examples 
@@ -33,8 +33,8 @@ tiledb_compressor.from_ptr <- function(ptr) {
 #' c
 #' 
 #' @export tiledb_compressor
-tiledb_compressor <- function(type = "NO_COMPRESSION", level = -1L) {
-  if (!is.scalar(type, "character")) {
+tiledb_compressor <- function(name = "NO_COMPRESSION", level = -1L) {
+  if (!is.scalar(name, "character")) {
     stop("compressor argument must be scalar string")
   }
   if (!is.scalar(level, "double") && ! is.scalar(level, "integer")) {
@@ -42,31 +42,23 @@ tiledb_compressor <- function(type = "NO_COMPRESSION", level = -1L) {
   } else {
     level <- as.integer(level)
   }
-  ptr <- libtiledb_compressor(type, level)
+  ptr <- libtiledb_compressor(name, level)
   return(new("tiledb_compressor", ptr = ptr))
 }
 
-#' @export
-setGeneric("compressor_type", function(object, ...) standardGeneric("compressor_type"))
-
-#' Returns the compressor's compression type
-#'
-#' Compression library used
+#' Returns the name of the compression library used
 #'  
 #' @param object tiledb_compressor
-#' @return TileDB compression type string
+#' @return TileDB compression name string
 #' @examples 
 #' c <- tiledb_compressor("ZSTD", 3)
-#' compressor_type(c)
+#' tiledb_compressor_name(c)
 #'
 #' @export
-setMethod("compressor_type", "tiledb_compressor",
-          function(object) {
-            return(libtiledb_compressor_type(object@ptr))  
-          })
-
-#' @export
-setGeneric("compressor_level", function(object, ...) standardGeneric("compressor_level"))
+tiledb_compressor_name <- function(object) {
+  stopifnot(is(object, "tiledb_compressor"))
+  return(libtiledb_compressor_type(object@ptr))
+}
 
 #' Returns the compressor's compression level
 #' 
@@ -77,14 +69,14 @@ setGeneric("compressor_level", function(object, ...) standardGeneric("compressor
 #' compressor_level(c)
 #' 
 #' @export
-setMethod("compressor_level", "tiledb_compressor",
-          function(object) {
-            return(libtiledb_compressor_level(object@ptr));
-          })
+tiledb_compressor_level <- function(object) {
+  stopifnot(is(object, "tiledb_compressor")) 
+  return(libtiledb_compressor_level(object@ptr))
+}
 
 setMethod("show", "tiledb_compressor",
           function(object) {
-            type <- compressor_type(object)
+            name <- tiledb_compressor_naem(object)
             level <- compressor_level(object)
-            cat("tiledb_compressor(\"", type, "\", level = ", level, ")", sep="")
+            cat("tiledb_compressor(\"", name, "\", level = ", level, ")", sep="")
           })
