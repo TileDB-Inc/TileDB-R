@@ -1,19 +1,25 @@
-#' @exportClass DenseArray
-setClass("DenseArray",
+#' @exportClass tiledb_dense
+setClass("tiledb_dense",
          slots = list(ctx = "tiledb_ctx", uri = "character", ptr = "externalptr"))
 
+#' Constructs a tiledb_dense object backed by a persisted tiledb array uri
+#' 
+#' @param ctx tiledb_ctx
+#' @param uri uri path to the tiledb dense array 
+#' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
+#' @return tiledb_dense array object 
 #' @export
-DenseArray <- function(ctx, uri, query_type = NULL) {
+tiledb_dense <- function(ctx, uri, query_type = NULL) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")  
   } else if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar") 
   }
   if (is.null(query_type)) {
-    query_type = "READWRITE"
+    query_type = "RW"
   } else {
     if (query_type != "READ" || query_type != "WRITE") {
-      stop("query_type") 
+      stop("argument query_type must be \"READ\", \"WRITE\", or \"RW\" (default)")
     }
   }
   array_xptr <- libtiledb_array(ctx@ptr, uri, "WRITE")
@@ -23,38 +29,60 @@ DenseArray <- function(ctx, uri, query_type = NULL) {
     stop("array URI must be a dense array") 
   }
   array_xptr <- libtiledb_array_close(array_xptr)
-  new("DenseArray", ctx = ctx, uri = uri, ptr = array_xptr)
+  new("tiledb_dense", ctx = ctx, uri = uri, ptr = array_xptr)
 }
 
-setMethod("show", "DenseArray",
+setMethod("show", "tiledb_dense",
           function (object) {
             cat("tiledb::Array object @ ", object@uri, "\n")
             invisible(print(object[]))
           })
 
+#' Reopens a TileDB array an opened tiledb array
+#' 
+#' Reopening an array is useful when the array got updated after it got opened 
+#' and the tiledb array object got created. To sync-up with the updates, 
+#' the user must either close the array and open again, 
+#' or just use tiledb_reopen(array) which can be faster because 
+#' only metdata regarding updates has to be loaded.
+#' 
+#' @param object tileb array object
+#' @return the reopened array object 
 #' @export
 setGeneric("reopen", function(object, ...) standardGeneric("reopen"))
 
-#' @export
-setMethod("reopen", "DenseArray", function(object) {
+#' @export 
+setMethod("reopen", "tiledb_dense", function(object) {
   libtiledb_array_reopen(object@ptr)
-  return()
+  return(object)
 })
 
-close.DenseArray <- function(conn, ...)  {
-  stopifnot(is(conn, "DenseArray"))
+#' Closes a tiledb array object
+#'
+#' @param conn tiledb array object 
+#' @return returns the closed array object
+close.tiledb_dense <- function(conn, ...)  {
+  stopifnot(is(conn, "tiledb_dense"))
   libtiledb_array_close(conn@ptr)
-  return();
+  return(conn);
 }
 
+#'Returns true is if the array or array_schema is sparse
+#'
+#' @param object tiledb_dense
+#' @return FALSE 
 #' @export
-setMethod("is.sparse", "DenseArray", function(object) FALSE)
+setMethod("is.sparse", "tiledb_dense", function(object) FALSE)
 
 #' @export
 setGeneric("schema", function(object, ...) standardGeneric("schema")) 
 
+#' Returns the `tiledb_dense` array `tiledb_schema` object
+#' 
+#' @param object tiledb_dense array object
+#' @return tiledb_schema
 #' @export
-setMethod("schema", "DenseArray", function(object, ...) {
+setMethod("schema", "tiledb_dense", function(object, ...) {
   ctx <- object@ctx
   uri <- object@uri
   schema_xptr <- libtiledb_array_schema_load(ctx@ptr, uri)
@@ -128,7 +156,7 @@ attribute_buffers <- function(sch, dom, sub) {
   return(attrs)
 }
 
-setMethod("[", "DenseArray",
+setMethod("[", "tiledb_dense",
           function(x, i, j, ..., drop = FALSE) {
             index <- nd_index_from_syscall(sys.call(), parent.frame())
             ctx <- x@ctx
@@ -177,7 +205,7 @@ setMethod("[", "DenseArray",
             return(out);
           })
 
-setMethod("[<-", "DenseArray",
+setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
              if (!is.list(value)) { 
               if (is.array(value) || is.vector(value)) {
@@ -261,11 +289,11 @@ setMethod("[<-", "DenseArray",
             return(out)
           })
 
-as.array.DenseArray <- function(x, ...) {
+as.array.tiledb_dense <- function(x, ...) {
  return(x[]) 
 }
 
-as.data.frame.DenseArray <- function(x, row.names = NULL, optional = FALSE, ...,
+as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ...,
                                     cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
                                     stringsAsFactors = default.stringsAsFactors()) {
   lst <- x[]

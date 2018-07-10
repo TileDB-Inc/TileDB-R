@@ -941,6 +941,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_stats_enable
+void libtiledb_stats_enable();
+RcppExport SEXP _tiledb_libtiledb_stats_enable() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    libtiledb_stats_enable();
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_stats_disable
+void libtiledb_stats_disable();
+RcppExport SEXP _tiledb_libtiledb_stats_disable() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    libtiledb_stats_disable();
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_stats_print
+void libtiledb_stats_print();
+RcppExport SEXP _tiledb_libtiledb_stats_print() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    libtiledb_stats_print();
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_stats_dump
+void libtiledb_stats_dump(std::string path);
+RcppExport SEXP _tiledb_libtiledb_stats_dump(SEXP pathSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
+    libtiledb_stats_dump(path);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
@@ -1023,6 +1060,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_vfs_move_file", (DL_FUNC) &_tiledb_tiledb_vfs_move_file, 3},
     {"_tiledb_tiledb_vfs_move_dir", (DL_FUNC) &_tiledb_tiledb_vfs_move_dir, 3},
     {"_tiledb_tiledb_vfs_touch", (DL_FUNC) &_tiledb_tiledb_vfs_touch, 2},
+    {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
+    {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
+    {"_tiledb_libtiledb_stats_print", (DL_FUNC) &_tiledb_libtiledb_stats_print, 0},
+    {"_tiledb_libtiledb_stats_dump", (DL_FUNC) &_tiledb_libtiledb_stats_dump, 1},
     {NULL, NULL, 0}
 };
 

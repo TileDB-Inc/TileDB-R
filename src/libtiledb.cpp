@@ -1512,3 +1512,56 @@ std::string tiledb_vfs_touch(XPtr<tiledb::VFS> vfs, std::string uri) {
     throw Rcpp::exception(err.what());
   }
 }
+
+/**
+ * Stats
+ */
+
+// [[Rcpp::export]]
+void libtiledb_stats_enable() {
+  try {
+    tiledb::Stats::enable();
+    return;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+void libtiledb_stats_disable() {
+  try {
+    tiledb::Stats::disable();
+    return;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+void libtiledb_stats_print() {
+  // TODO: look up the proper way to do this in R
+  try {
+    tiledb::Stats::dump(stdout);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+// [[Rcpp::export]]
+void libtiledb_stats_dump(std::string path) {
+  FILE* fptr = nullptr;
+  try {
+    fptr = fopen(path.c_str(), "w");
+    if (fptr == nullptr) {
+      throw Rcpp::exception("error opening stats dump file for writing");
+    }
+    tiledb::Stats::dump(fptr);
+  } catch (std::exception& err) {
+    if (fptr != nullptr) {
+      fclose(fptr); 
+    }
+    throw Rcpp::exception(err.what());
+  } 
+  fclose(fptr);
+  return;
+}

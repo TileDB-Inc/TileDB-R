@@ -43,22 +43,22 @@ create_array <- function() {
     ctx <- tiledb_ctx()
 
     # Check if the array already exists.
-    if (tiledb_object_type(ctx, array_name) == "TILEDB_ARRAY") {
+    if (tiledb_object_type(ctx, array_name) == "ARRAY") {
         stop("Array already exists.")
 	      quit(0)
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
     dom <- tiledb_domain(ctx,
-               dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "TILEDB_INT32"),
-		                    tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "TILEDB_INT32")))
+               dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "INT32"),
+		                    tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "INT32")))
 
     # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
     schema <- tiledb_array_schema(ctx,
-                  dom, attrs = c(tiledb_attr(ctx, "a", type = "TILEDB_INT32")))
+                  dom, attrs = c(tiledb_attr(ctx, "a", type = "INT32")))
 
     # Create the (empty) array on disk.
-    tiledb_array_create(array_name, uri = schema)
+    tiledb_array_create(array_name, schema)
 }
 
 write_array <- function() {

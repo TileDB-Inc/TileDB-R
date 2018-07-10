@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code> — dimensions,tiledb_array_schema-method • tiledb</title>
+<title>Returns true is if the array or array_schema is sparse — is.sparse,tiledb_dense-method • tiledb</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code> — dimensions,tiledb_array_schema-method" />
+<meta property="og:title" content="Returns true is if the array or array_schema is sparse — is.sparse,tiledb_dense-method" />
 
-<meta property="og:description" content="Returns a list of tiledb_dim objects associated with the tiledb_array_schema" />
+<meta property="og:description" content="Returns true is if the array or array_schema is sparse" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,58 +97,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/ArraySchema.R'><code>R/ArraySchema.R</code></a></small>
-    <div class="hidden name"><code>dimensions-tiledb_array_schema-method.Rd</code></div>
+    <h1>Returns true is if the array or array_schema is sparse</h1>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/DenseArray.R'><code>R/DenseArray.R</code></a></small>
+    <div class="hidden name"><code>is.sparse-tiledb_dense-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code></p>
+    <p>Returns true is if the array or array_schema is sparse</p>
     
     </div>
 
-    <pre class="usage"><span class='co'># S4 method for tiledb_array_schema</span>
-<span class='fu'>dimensions</span>(<span class='no'>object</span>)</pre>
+    <pre class="usage"><span class='co'># S4 method for tiledb_dense</span>
+<span class='fu'>is.sparse</span>(<span class='no'>object</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>tiledb_array_schema</p></td>
+      <td><p>tiledb_dense</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of tiledb_dim objects</p>
+    <p>FALSE</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>()
-<span class='no'>dom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_domain.html'>tiledb_domain</a></span>(<span class='no'>ctx</span>, <span class='kw'>dims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span>(<span class='no'>ctx</span>, <span class='st'>"d1"</span>, <span class='fu'>c</span>(<span class='fl'>1L</span>, <span class='fl'>100L</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>),
-                                   <span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span>(<span class='no'>ctx</span>, <span class='st'>"d2"</span>, <span class='fu'>c</span>(<span class='fl'>1L</span>, <span class='fl'>50L</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>)))
-<span class='no'>sch</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_array_schema.html'>tiledb_array_schema</a></span>(<span class='no'>ctx</span>, <span class='no'>dom</span>, <span class='kw'>attrs</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span>(<span class='no'>ctx</span>, <span class='st'>"a1"</span>)))
-<span class='fu'>dimensions</span>(<span class='no'>dom</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; An object of class "tiledb_dim"
-#&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x7fda81e52f20&gt;
-#&gt; 
-#&gt; 
-#&gt; [[2]]
-#&gt; An object of class "tiledb_dim"
-#&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x7fda81e2a040&gt;
-#&gt; 
-#&gt; </div><div class='input'>
-<span class='fu'>lapply</span>(<span class='fu'>dimensions</span>(<span class='no'>dom</span>), <span class='no'>name</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] "d1"
-#&gt; 
-#&gt; [[2]]
-#&gt; [1] "d2"
-#&gt; </div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -156,9 +132,7 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

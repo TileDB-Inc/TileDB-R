@@ -321,3 +321,19 @@ tiledb_vfs_touch <- function(vfs, uri) {
     .Call(`_tiledb_tiledb_vfs_touch`, vfs, uri)
 }
 
+libtiledb_stats_enable <- function() {
+    invisible(.Call(`_tiledb_libtiledb_stats_enable`))
+}
+
+libtiledb_stats_disable <- function() {
+    invisible(.Call(`_tiledb_libtiledb_stats_disable`))
+}
+
+libtiledb_stats_print <- function() {
+    invisible(.Call(`_tiledb_libtiledb_stats_print`))
+}
+
+libtiledb_stats_dump <- function(path) {
+    invisible(.Call(`_tiledb_libtiledb_stats_dump`, path))
+}
+

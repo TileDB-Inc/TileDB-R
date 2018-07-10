@@ -1,5 +1,5 @@
 library(tiledb)
-context("tiledb::DenseArray")
+context("tiledb_dense")
 
 unlink_and_create <- function(tmp) {
   if (dir.exists(tmp)) {
@@ -14,7 +14,6 @@ unlink_and_create <- function(tmp) {
 # test_that("1D Domain subarray subscripting works", {
 #   ctx <- tiledb_ctx()
 #   dim1 <- tiledb_dim(ctx, domain = c(1L, 10L))
-#   dom <- tiledb_domain(ctx, c(dim1))
 # 
 #   expect_equal(tiledb::subset_dense_subarray(dom, 1), list(c(1, 1)))
 #   expect_equal(tiledb::subset_dense_subarray(dom, 8), list(c(8, 8)))
@@ -59,13 +58,13 @@ test_that("Can read / write a simple 1D vector", {
   sch <- tiledb_array_schema(ctx, dom, c(val)) 
   tiledb_array_create(tmp, sch) 
   
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
   dat <- as.array(as.double(1:10))
   
   arr[] <- dat
   close(arr) 
   
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
   expect_equal(arr[], dat)
   
   # explicit range enumeration
@@ -107,7 +106,7 @@ test_that("Can read / write a simple 2D matrix", {
   tiledb_array_create(tmp, sch)
 
   dat <- matrix(rnorm(25), 5, 5)
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
 
   arr[] <- dat
   expect_equal(arr[], dat)
@@ -146,7 +145,7 @@ test_that("Can read / write a simple 3D matrix", {
   tiledb_array_create(tmp, sch)
 
   dat <- array(rnorm(125), dim = c(5, 5, 5))
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
 
   arr[] <- dat
   expect_equal(arr[], dat)
@@ -181,7 +180,7 @@ test_that("Can read / write 1D multi-attribute array", {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
 
   a1_dat <- as.array(as.double(1:10))
   a2_dat <- as.array(as.double(11:20))
@@ -214,7 +213,7 @@ test_that("Can read / write 2D multi-attribute array", {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
 
   a1_dat <- array(rnorm(100), dim = c(10, 10))
   a2_dat <- array(rnorm(100), dim = c(10, 10))
@@ -254,7 +253,7 @@ test_that("as.array() conversion method", {
   sch <- tiledb_array_schema(ctx, dom, c(a1))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
   dat <- as.double(1:10)
   arr[] <- dat
   expect_equal(as.array(arr), as.array(dat))
@@ -278,7 +277,7 @@ test_that("as.data.frame() conversion method", {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb::DenseArray(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp)
 
   dat <- list(a1 = array(as.double(1:10)),
               a2 = array(as.double(1:10)))
