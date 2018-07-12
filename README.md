@@ -4,7 +4,7 @@
 
 `TileDB-R` is a [R](https://www.r-project.org/) interface to the [TileDB Storage Manager](http://tiledb.io). 
 
-**Warning**: The R interface to TileDB is still under development and the API is subject to change.
+**Warning**: The R interface to TileDB is under development and the API is subject to change.
 
 ## Quickstart
 
