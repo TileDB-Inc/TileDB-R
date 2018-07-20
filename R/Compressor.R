@@ -21,24 +21,24 @@ tiledb_compressor.from_ptr <- function(ptr) {
 #'   - "RLE"
 #'   - "BZIP2"
 #'   - "DOUBLE_DELTA"
-#' 
+#'
 #' Valid compression levels vary depending on the compressor used,
 #' consult the TileDB docs for more information.
-#' 
+#'
 #' @param name (default "NO_COMPRESSION") TileDB compressor name string
 #' @param level (default -1) compression level, -1 will fallback to the compression algorithm's default
 #' @return tiledb_compressor object
-#' @examples 
+#' @examples
 #' c <- tiledb_compressor("ZSTD", 3)
 #' c
-#' 
+#'
 #' @export tiledb_compressor
 tiledb_compressor <- function(name = "NO_COMPRESSION", level = -1L) {
   if (!is.scalar(name, "character")) {
     stop("compressor argument must be scalar string")
   }
   if (!is.scalar(level, "double") && ! is.scalar(level, "integer")) {
-    stop("level argument must be a integer or double scalar value")    
+    stop("level argument must be a integer or double scalar value")
   } else {
     level <- as.integer(level)
   }
@@ -47,10 +47,10 @@ tiledb_compressor <- function(name = "NO_COMPRESSION", level = -1L) {
 }
 
 #' Returns the name of the compression library used
-#'  
+#'
 #' @param object tiledb_compressor
 #' @return TileDB compression name string
-#' @examples 
+#' @examples
 #' c <- tiledb_compressor("ZSTD", 3)
 #' tiledb_compressor_name(c)
 #'
@@ -61,22 +61,22 @@ tiledb_compressor_name <- function(object) {
 }
 
 #' Returns the compressor's compression level
-#' 
+#'
 #' @param object tiledb_compressor
 #' @return integer level
-#' @examples 
+#' @examples
 #' c <- tiledb_compressor("ZSTD", 3)
 #' compressor_level(c)
-#' 
+#'
 #' @export
 tiledb_compressor_level <- function(object) {
-  stopifnot(is(object, "tiledb_compressor")) 
+  stopifnot(is(object, "tiledb_compressor"))
   return(libtiledb_compressor_level(object@ptr))
 }
 
 setMethod("show", "tiledb_compressor",
           function(object) {
-            name <- tiledb_compressor_naem(object)
+            name <- tiledb_compressor_name(object)
             level <- compressor_level(object)
             cat("tiledb_compressor(\"", name, "\", level = ", level, ")", sep="")
           })
