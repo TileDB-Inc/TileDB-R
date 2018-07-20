@@ -3,32 +3,27 @@ setClass("tiledb_sparse",
          slots = list(ctx = "tiledb_ctx", uri = "character", ptr = "externalptr"))
 
 #' Constructs a tiledb_sparse object backed by a persisted tiledb array uri
-#' 
+#'
 #' tiledb_sparse returns a list of coordinates and attributes vectors for reads
-#' 
+#'
 #' @param ctx tiledb_ctx
-#' @param uri uri path to the tiledb dense array 
+#' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
-#' @return tiledb_sparse array object 
+#' @return tiledb_sparse array object
 #' @export
-tiledb_sparse <- function(ctx, uri, query_type = NULL) {
+tiledb_sparse <- function(ctx, uri, query_type = c("RW", "READ", "WRITE")) {
+    query_type = match.arg(query_type)
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   } else if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar")
   }
-  if (is.null(query_type)) {
-    query_type = "RW"
-  } else {
-    if (query_type != "READ" || query_type != "WRITE") {
-      stop("argument query_type must be \"READ\", \"WRITE\", or \"RW\" (default)")
-    }
-  }
-  array_xptr <- libtiledb_array(ctx@ptr, uri, "WRITE")
-  schema_xptr <- libtiledb_array_get_schema(array_xptr) 
+
+  array_xptr <- libtiledb_array(ctx@ptr, uri, query_type)
+  schema_xptr <- libtiledb_array_get_schema(array_xptr)
   if (!libtiledb_array_schema_sparse(schema_xptr)) {
     libtiledb_array_close(array_xptr)
-    stop("array URI must be a sparse array") 
+    stop("array URI must be a sparse array")
   }
   array_xptr <- libtiledb_array_close(array_xptr)
   new("tiledb_sparse", ctx = ctx, uri = uri, ptr = array_xptr)
@@ -49,7 +44,7 @@ sparse_attribute_buffers <- function(array, sch, dom, sub) {
   # first alloc coordinate buffer
   ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
   if (is.integral(dom)) {
-    attrs[["coords"]] <- integer(length = ncells)  
+    attrs[["coords"]] <- integer(length = ncells)
   } else {
     attrs[["coords"]]  <- numeric(length = ncells)
   }
@@ -72,7 +67,7 @@ setMethod("[", "tiledb_sparse",
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) {
-              stop("subscript indexing only valid for integral Domain's")  
+              stop("subscript indexing only valid for integral Domain's")
             }
             libtiledb_array_open(x@ptr, "READ")
             out <- tryCatch(
@@ -81,7 +76,7 @@ setMethod("[", "tiledb_sparse",
                 if (is.integral(dom)) {
                   subarray <- as.integer(subarray)
                 } else {
-                  subarray <- as.double(subarray) 
+                  subarray <- as.double(subarray)
                 }
                 buffers <- sparse_attribute_buffers(x, schema, dom, subarray)
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
@@ -89,7 +84,7 @@ setMethod("[", "tiledb_sparse",
                 qry <- libtiledb_query_set_subarray(qry, subarray)
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
-                  aname <- attr_names[[idx]] 
+                  aname <- attr_names[[idx]]
                   if (aname == "coords") {
                     qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
                   } else {
@@ -119,7 +114,7 @@ setMethod("[", "tiledb_sparse",
                   return(buffers[[1L]])
                 }
                 return(buffers)
-              }, 
+              },
               finally = {
                 libtiledb_array_close(x@ptr)
               }
@@ -129,7 +124,7 @@ setMethod("[", "tiledb_sparse",
 
 setMethod("[<-", "tiledb_sparse",
           function(x, i, j, ..., value) {
-            if (!is.list(value)) { 
+            if (!is.list(value)) {
               if (is.array(value) || is.vector(value)) {
                 value <- list(value)
               } else {
@@ -144,8 +139,8 @@ setMethod("[<-", "tiledb_sparse",
             attrs <- tiledb::attrs(schema)
             # check that we have the right number of index buffers
             if (length(coords) != tiledb_ndim(dom)) {
-              stop(paste("number of coordinate vectors does not match the array domain")) 
-            } 
+              stop(paste("number of coordinate vectors does not match the array domain"))
+            }
             # check that all the indexing and value buffers are the same length
             coord_length <- length(index[[1]])
             for (i in seq_along(index)) {
@@ -153,7 +148,7 @@ setMethod("[<-", "tiledb_sparse",
                 stop("invalid sparse coordinates, all coordinates must be the same length")
               }
             }
-            # check that attributes are correct 
+            # check that attributes are correct
             if (length(value) > length(attrs)) {
               stop("number of values to assign does not match the number of array attributes")
             }
@@ -171,12 +166,12 @@ setMethod("[<-", "tiledb_sparse",
               # check associative assignment
               for (name in value_names)  {
                 if (!(name %in%  attr_names)) {
-                  stop(paste("invalid array attribute value name: \"", name, "\"")) 
+                  stop(paste("invalid array attribute value name: \"", name, "\""))
                 }
               }
             }
             # do type conversion based on the domain
-            integral_domain <- is.integral(dom) 
+            integral_domain <- is.integral(dom)
             coords <- list()
             for (i in seq_along(index)) {
               coord <- index[[i]]
@@ -194,7 +189,7 @@ setMethod("[<-", "tiledb_sparse",
                 }
               }
             }
-            # zip the coordinates into a single buffer for sparse write 
+            # zip the coordinates into a single buffer for sparse write
             if (integral_domain) {
               zip_coords <- libtiledb_zip_coords_integer(coords, coord_length)
             } else {
@@ -203,7 +198,7 @@ setMethod("[<-", "tiledb_sparse",
             libtiledb_array_open(x@ptr, "WRITE")
             out <- tryCatch(
               {
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE") 
+                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
                 qry <- libtiledb_query_set_layout(qry, "UNORDERED")
                 qry <- libtiledb_query_set_coordinates(qry, zip_coords)
                 # set attribute buffers
@@ -213,7 +208,7 @@ setMethod("[<-", "tiledb_sparse",
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in incomplete sparse write query") 
+                  stop("error in incomplete sparse write query")
                 }
                 qry <- libtiledb_query_finalize(qry)
                 return(x);

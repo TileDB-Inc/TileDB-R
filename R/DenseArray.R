@@ -3,30 +3,25 @@ setClass("tiledb_dense",
          slots = list(ctx = "tiledb_ctx", uri = "character", ptr = "externalptr"))
 
 #' Constructs a tiledb_dense object backed by a persisted tiledb array uri
-#' 
+#'
 #' @param ctx tiledb_ctx
-#' @param uri uri path to the tiledb dense array 
+#' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
-#' @return tiledb_dense array object 
+#' @return tiledb_dense array object
 #' @export
-tiledb_dense <- function(ctx, uri, query_type = NULL) {
+tiledb_dense <- function(ctx, uri, query_type = c("RW", "READ", "WRITE")) {
+  query_type = match.arg(query_type)
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
-    stop("argument ctx must be a tiledb_ctx")  
+    stop("argument ctx must be a tiledb_ctx")
   } else if (missing(uri) || !is.scalar(uri, "character")) {
-    stop("argument uri must be a string scalar") 
+    stop("argument uri must be a string scalar")
   }
-  if (is.null(query_type)) {
-    query_type = "RW"
-  } else {
-    if (query_type != "READ" || query_type != "WRITE") {
-      stop("argument query_type must be \"READ\", \"WRITE\", or \"RW\" (default)")
-    }
-  }
-  array_xptr <- libtiledb_array(ctx@ptr, uri, "WRITE")
-  schema_xptr <- libtiledb_array_get_schema(array_xptr) 
+
+  array_xptr <- libtiledb_array(ctx@ptr, uri, query_type)
+  schema_xptr <- libtiledb_array_get_schema(array_xptr)
   if (libtiledb_array_schema_sparse(schema_xptr)) {
     libtiledb_array_close(array_xptr)
-    stop("array URI must be a dense array") 
+    stop("array URI must be a dense array")
   }
   array_xptr <- libtiledb_array_close(array_xptr)
   new("tiledb_dense", ctx = ctx, uri = uri, ptr = array_xptr)
@@ -38,27 +33,27 @@ setMethod("show", "tiledb_dense",
           })
 
 #' #' Reopens a TileDB array an opened tiledb array
-#' #' 
-#' #' Reopening an array is useful when the array got updated after it got opened 
-#' #' and the tiledb array object got created. To sync-up with the updates, 
-#' #' the user must either close the array and open again, 
-#' #' or just use tiledb_reopen(array) which can be faster because 
+#' #'
+#' #' Reopening an array is useful when the array got updated after it got opened
+#' #' and the tiledb array object got created. To sync-up with the updates,
+#' #' the user must either close the array and open again,
+#' #' or just use tiledb_reopen(array) which can be faster because
 #' #' only metdata regarding updates has to be loaded.
-#' #' 
+#' #'
 #' #' @param object tileb array object
-#' #' @return the reopened array object 
+#' #' @return the reopened array object
 #' #' @export
 #' setGeneric("reopen", function(object, ...) standardGeneric("reopen"))
-#' 
-#' #' @export 
+#'
+#' #' @export
 #' setMethod("reopen", "tiledb_dense", function(object) {
 #'   libtiledb_array_reopen(object@ptr)
 #'   return(object)
 #' })
-#' 
+#'
 #' #' Closes a tiledb array object
 #' #'
-#' #' @param conn tiledb array object 
+#' #' @param conn tiledb array object
 #' #' @return returns the closed array object
 #' close.tiledb_dense <- function(conn, ...)  {
 #'   stopifnot(is(conn, "tiledb_dense"))
@@ -69,15 +64,15 @@ setMethod("show", "tiledb_dense",
 #'Returns true is if the array or array_schema is sparse
 #'
 #' @param object tiledb_dense
-#' @return FALSE 
+#' @return FALSE
 #' @export
 setMethod("is.sparse", "tiledb_dense", function(object) FALSE)
 
 #' @export
-setGeneric("schema", function(object, ...) standardGeneric("schema")) 
+setGeneric("schema", function(object, ...) standardGeneric("schema"))
 
 #' Returns the `tiledb_dense` array `tiledb_schema` object
-#' 
+#'
 #' @param object tiledb_dense array object
 #' @return tiledb_schema
 #' @export
@@ -118,13 +113,13 @@ domain_subarray <- function(dom, index = NULL) {
     }
   }
   if (!all(sapply(dim_subarray, function(sub) length(sub) == 2L))) {
-    stop("non-contiguous subscript ranges are not supported") 
+    stop("non-contiguous subscript ranges are not supported")
   }
   return(unlist(dim_subarray))
 }
 
 subarray_dim <- function(sub) {
-  len <- length(sub) 
+  len <- length(sub)
   if ((len %% 2) != 0){
     stop("invalid subarray length, must be a multiple of 2")
   }
@@ -163,7 +158,7 @@ setMethod("[", "tiledb_dense",
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) {
-              stop("subscript indexing only valid for integral Domain's")  
+              stop("subscript indexing only valid for integral Domain's")
             }
             libtiledb_array_open(x@ptr, "READ")
             out <- tryCatch(
@@ -189,14 +184,14 @@ setMethod("[", "tiledb_dense",
                 if (drop) {
                   for (i in seq_len(length(buffers))) {
                     buffers[[i]] <- drop(buffers[[i]])
-                  } 
+                  }
                 }
                 # if there is only one buffer, don't return a list of attribute buffers
                 if (length(buffers) == 1L) {
                   return(buffers[[1L]])
                 }
                 return(buffers)
-              }, 
+              },
               finally = {
                 libtiledb_array_close(x@ptr)
               }
@@ -206,7 +201,7 @@ setMethod("[", "tiledb_dense",
 
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
-             if (!is.list(value)) { 
+             if (!is.list(value)) {
               if (is.array(value) || is.vector(value)) {
                 value <- list(value)
               } else {
@@ -219,7 +214,7 @@ setMethod("[<-", "tiledb_dense",
             uri <- x@uri
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) {
-              stop("subscript indexing only valid for integral Domain's")  
+              stop("subscript indexing only valid for integral Domain's")
             }
             subarray <- domain_subarray(dom, index = index)
             attrs <- tiledb::attrs(schema)
@@ -240,13 +235,14 @@ setMethod("[<-", "tiledb_dense",
               # check associative assignment
               for (name in value_names)  {
                 if (!(name %in%  attr_names)) {
-                  stop(paste("invalid array attribute value name: \"", name, "\"")) 
+                  stop(paste("invalid array attribute value name: \"", name, "\""))
                 }
               }
             }
             # check that value shapes match the subarray shape
             # TODO: R doesn't check this and just assigns values that overlap the domain
             sub_dim <- subarray_dim(subarray)
+
             for (i in seq_along(value)) {
               val <- value[[i]]
               if (is.vector(val)) {
@@ -264,7 +260,7 @@ setMethod("[<-", "tiledb_dense",
             libtiledb_array_open(x@ptr, "WRITE")
             out <- tryCatch(
               {
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE") 
+                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
                 qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
                 if (is.integral(dom)) {
                   qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
@@ -277,7 +273,7 @@ setMethod("[<-", "tiledb_dense",
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in write query") 
+                  stop("error in write query")
                 }
                 qry <- libtiledb_query_finalize(qry)
                 return(x);
@@ -290,7 +286,7 @@ setMethod("[<-", "tiledb_dense",
 
 
 as.array.tiledb_dense <- function(x, ...) {
- return(x[]) 
+ return(x[])
 }
 
 as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ...,
@@ -298,13 +294,13 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
                                     stringsAsFactors = default.stringsAsFactors()) {
   lst <- x[]
   if (!is(lst, "list")) {
-    lst <- list(lst) 
+    lst <- list(lst)
   }
   if (is.null(col.names)) {
-    schema <- tiledb::schema(x) 
+    schema <- tiledb::schema(x)
     col.names <- sapply(tiledb::attrs(schema), tiledb::name)
   }
-  return(as.data.frame(lst, row.names = row.names, optional = optional, ..., 
+  return(as.data.frame(lst, row.names = row.names, optional = optional, ...,
                        cut.names = cut.names, col.names = col.names, fix.empty.names = fix.empty.names,
                        stringsAsFactors = default.stringsAsFactors()))
 }
