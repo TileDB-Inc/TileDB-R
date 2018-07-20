@@ -4,7 +4,7 @@
 \alias{tiledb_sparse}
 \title{Constructs a tiledb_sparse object backed by a persisted tiledb array uri}
 \usage{
-tiledb_sparse(ctx, uri, query_type = NULL)
+tiledb_sparse(ctx, uri, query_type = c("RW", "READ", "WRITE"))
 }
 \arguments{
 \item{ctx}{tiledb_ctx}
