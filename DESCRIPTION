@@ -5,12 +5,14 @@ Version: 0.1
 Authors@R: c(
     person("TileDB-Inc.", email = "help@tiledb.io", role = c("cre", "fnd"), comment = c("https://tiledb.io"))
     )
+Author: TileDB <help@tiledb.io>
+Maintainer: TileDB <help@tiledb.io>
 Description: TileDB is an efficient multi-dimensional array management system which introduces a novel on-disk format that can effectively store dense and sparse array data with support for fast updates and reads. It features excellent compression, an efficient parallel I/O system with high scalability, and bindings to multiple languages.
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
-Imports: 
-    methods, 
+Imports:
+    methods,
     Rcpp (>= 0.12.15)
 LinkingTo: Rcpp
 SystemRequirements: C++11, pandoc
@@ -20,4 +22,5 @@ Suggests:
  testthat (>= 2.0.0),
  roxygen2 (>= 5.0.0),
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.0.1
+RoxygenNote: 6.0.1.9000
+Encoding: UTF-8
