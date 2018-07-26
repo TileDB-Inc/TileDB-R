@@ -42,7 +42,13 @@ To build the latest development version of TileDB-R:
     devtools::install_github("TileDB-Inc/TileDB-R")
     
 **Note** The TileDB-R package is developed against latest stable (`v1.3.x`) version of TileDB 
-    
+
+### Conda
+
+If you are using the TileDB Conda package, you may need to explicitly add the conda path
+after activating the environment with `conda activate tiledb`.  More information on the
+[TileDB conda installation documentation page](https://docs.tiledb.io/en/stable/installation.html#conda).
+
 ### Developer Documentation
 
 Instructions for setting up a RStudio devlopment environment, building, and testing the TileDB-R package are located in the [developer documentation wiki](https://github.com/TileDB-Inc/TileDB-R/wiki).

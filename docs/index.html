@@ -68,6 +68,7 @@
 <a href="#tiledb-r" class="anchor"></a>TileDB-R</h1></div>
 
 <p><code>TileDB-R</code> is a <a href="https://www.r-project.org/">R</a> interface to the <a href="http://tiledb.io">TileDB Storage Manager</a>.</p>
+<p><strong>Warning</strong>: The R interface to TileDB is under development and the API is subject to change.</p>
 <div id="quickstart" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quickstart" class="anchor"></a>Quickstart</h2>
@@ -96,6 +97,11 @@
 <p>To build the latest development version of TileDB-R:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</a></code></pre></div>
 <p><strong>Note</strong> The TileDB-R package is developed against latest stable (<code>v1.3.x</code>) version of TileDB</p>
+<div id="conda" class="section level3">
+<h3 class="hasAnchor">
+<a href="#conda" class="anchor"></a>Conda</h3>
+<p>If you are using the TileDB Conda package, you may need to explicitly add the conda path after activating the environment with <code>conda activate tiledb</code>. More information on the <a href="https://docs.tiledb.io/en/stable/installation.html#conda">TileDB conda installation documentation page</a>.</p>
+</div>
 <div id="developer-documentation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#developer-documentation" class="anchor"></a>Developer Documentation</h3>

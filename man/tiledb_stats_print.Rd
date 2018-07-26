@@ -9,4 +9,6 @@ tiledb_stats_print()
 \description{
 Print stats dump to STDOUT
 }
-\concept{stats}
+\concept{
+stats
+}
