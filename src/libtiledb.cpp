@@ -186,6 +186,94 @@ const char* _tiledb_compresssor_to_string(tiledb_compressor_t compr) {
   }
 }
 
+tiledb_filter_type_t _string_to_tiledb_filter(std::string filter) {
+  if (filter == "NONE") {
+    return TILEDB_FILTER_NONE;
+  } else if (filter == "GZIP") {
+    return TILEDB_FILTER_GZIP;
+  } else if (filter == "ZSTD") {
+    return TILEDB_FILTER_ZSTD;
+  } else if (filter == "LZ4") {
+    return TILEDB_FILTER_LZ4;
+  } else if (filter == "RLE") {
+    return TILEDB_FILTER_RLE;
+  } else if (filter == "BZIP2") {
+    return TILEDB_FILTER_BZIP2;
+  } else if (filter == "DOUBLE_DELTA") {
+    return TILEDB_FILTER_DOUBLE_DELTA;
+  } else if (filter == "BIT_WIDTH_REDUCTION") {
+    return TILEDB_FILTER_BIT_WIDTH_REDUCTION;
+  } else if (filter == "BITSHUFFLE") {
+    return TILEDB_FILTER_BITSHUFFLE;
+  } else if (filter == "BYTESHUFFLE") {
+    return TILEDB_FILTER_BYTESHUFFLE;
+  } else if (filter == "POSITIVE_DELTA") {
+    return TILEDB_FILTER_POSITIVE_DELTA;
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Unknown TileDB filter \"" << filter << "\"";
+    throw Rcpp::exception(errmsg.str().c_str());
+  }
+}
+
+const char* _tiledb_filter_to_string(tiledb_filter_type_t filter) {
+  switch(filter) {
+    case TILEDB_FILTER_NONE:
+     return "NONE";
+    case TILEDB_FILTER_GZIP:
+      return "GZIP";
+    case TILEDB_FILTER_ZSTD:
+      return "ZSTD";
+    case TILEDB_FILTER_LZ4:
+      return "LZ4";
+    case TILEDB_FILTER_RLE:
+      return "RLE";
+    case TILEDB_FILTER_BZIP2:
+      return "BZIP2";
+    case TILEDB_FILTER_DOUBLE_DELTA:
+      return "DOUBLE_DELTA";
+    case TILEDB_FILTER_BIT_WIDTH_REDUCTION:
+      return "BIT_WIDTH_REDUCTION";
+    case TILEDB_FILTER_BITSHUFFLE:
+      return "BITSHUFFLE";
+    case TILEDB_FILTER_BYTESHUFFLE:
+      return "BYTESHUFFLE";
+    case TILEDB_FILTER_POSITIVE_DELTA:
+      return "POSITIVE_DELTA";
+    default: {
+      throw Rcpp::exception("unknown tiledb_filter_t");
+    }
+  }
+}
+
+tiledb_filter_option_t _string_to_tiledb_filter_option(std::string filter_option) {
+  if (filter_option == "COMPRESSION_LEVEL") {
+    return TILEDB_COMPRESSION_LEVEL;
+  } else if (filter_option == "BIT_WIDTH_MAX_WINDOW") {
+    return TILEDB_BIT_WIDTH_MAX_WINDOW;
+  } else if (filter_option == "POSITIVE_DELTA_MAX_WINDOW") {
+    return TILEDB_POSITIVE_DELTA_MAX_WINDOW;
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Unknown TileDB filter option \"" << filter_option << "\"";
+    throw Rcpp::exception(errmsg.str().c_str());
+  }
+}
+
+const char* _tiledb_filter_option_to_string(tiledb_filter_option_t filter_option) {
+  switch(filter_option) {
+  case TILEDB_COMPRESSION_LEVEL:
+    return "COMPRESSION_LEVEL";
+  case TILEDB_BIT_WIDTH_MAX_WINDOW:
+    return "BIT_WIDTH_MAX_WINDOW";
+  case TILEDB_POSITIVE_DELTA_MAX_WINDOW:
+    return "POSITIVE_DELTA_MAX_WINDOW";
+  default: {
+    throw Rcpp::exception("unknown tiledb_filter_option_t");
+  }
+  }
+}
+
 tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
   if (qtstr == "READ") {
     return TILEDB_READ;
@@ -704,6 +792,113 @@ void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   try {
     domain->dump();
     return;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+/**
+ * TileDB Filter
+ */
+//[[Rcpp::export]]
+XPtr<tiledb::Filter> libtiledb_filter(XPtr<tiledb::Context> ctx, std::string filter) {
+  try {
+    tiledb_filter_type_t fltr = _string_to_tiledb_filter(filter);
+    return XPtr<tiledb::Filter>(new tiledb::Filter(*ctx.get(), fltr));
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+//[[Rcpp::export]]
+std::string libtiledb_filter_type(XPtr<tiledb::Filter> filter) {
+  try {
+    return _tiledb_filter_to_string(filter->filter_type());
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+//[[Rcpp::export]]
+R_xlen_t libtiledb_filter_get_option(XPtr<tiledb::Filter> filter, std::string filter_option_str) {
+  try {
+    tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
+    if (filter_option == TILEDB_BIT_WIDTH_MAX_WINDOW || filter_option == TILEDB_POSITIVE_DELTA_MAX_WINDOW) {
+      uint32_t value;
+      filter->get_option(filter_option, &value);
+      return static_cast<R_xlen_t>(value);
+    }
+    int value;
+    filter->get_option(filter_option, &value);
+    return static_cast<R_xlen_t>(value);
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+//[[Rcpp::export]]
+void libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value) {
+  try {
+    tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
+    filter->set_option(filter_option, &value);
+    return;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+/**
+ * TileDB Filter List
+ */
+//[[Rcpp::export]]
+XPtr<tiledb::FilterList> libtiledb_filter_list(XPtr<tiledb::Context> ctx, List filters) {
+  try {
+    XPtr<tiledb::FilterList> filter_list(new tiledb::FilterList(*ctx.get()));
+    // check that external pointers are supported
+    R_xlen_t nfilters = filters.length();
+    if (nfilters > 0) {
+      for (R_xlen_t i=0; i < nfilters; i++)  {
+        SEXP filter = filters[i];
+        if (TYPEOF(filter) != EXTPTRSXP) {
+          std::stringstream errmsg;
+          errmsg << "Invalid filter object at index " <<  i << " (type " << Rcpp::type2name(filter) << ")";
+          throw Rcpp::exception(errmsg.str().c_str());
+        }
+      }
+      for (SEXP f : filters) {
+        auto filter = as<XPtr<tiledb::Filter>>(f);
+        filter_list->add_filter(*filter.get());
+      }
+    }
+    return filter_list;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+//[[Rcpp::export]]
+void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_sie) {
+  try {
+    filterList->set_max_chunk_size(max_chunk_sie);
+    return;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+//[[Rcpp::export]]
+int libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList) {
+  try {
+    return filterList->max_chunk_size();
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
+//[[Rcpp::export]]
+int libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList) {
+  try {
+    return filterList->nfilters();
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }

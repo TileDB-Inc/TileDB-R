@@ -93,6 +93,38 @@ libtiledb_domain_dump <- function(domain) {
     invisible(.Call(`_tiledb_libtiledb_domain_dump`, domain))
 }
 
+libtiledb_filter <- function(ctx, filter) {
+    .Call(`_tiledb_libtiledb_filter`, ctx, filter)
+}
+
+libtiledb_filter_type <- function(filter) {
+    .Call(`_tiledb_libtiledb_filter_type`, filter)
+}
+
+libtiledb_filter_get_option <- function(filter, filter_option_str) {
+    .Call(`_tiledb_libtiledb_filter_get_option`, filter, filter_option_str)
+}
+
+libtiledb_filter_set_option <- function(filter, filter_option_str, value) {
+    invisible(.Call(`_tiledb_libtiledb_filter_set_option`, filter, filter_option_str, value))
+}
+
+libtiledb_filter_list <- function(ctx, filters) {
+    .Call(`_tiledb_libtiledb_filter_list`, ctx, filters)
+}
+
+libtiledb_filter_list_set_max_chunk_size <- function(filterList, max_chunk_sie) {
+    invisible(.Call(`_tiledb_libtiledb_filter_list_set_max_chunk_size`, filterList, max_chunk_sie))
+}
+
+libtiledb_filter_list_max_chunk_size <- function(filterList) {
+    .Call(`_tiledb_libtiledb_filter_list_max_chunk_size`, filterList)
+}
+
+libtiledb_filter_list_nfilters <- function(filterList) {
+    .Call(`_tiledb_libtiledb_filter_list_nfilters`, filterList)
+}
+
 libtiledb_compressor <- function(compressor, level) {
     .Call(`_tiledb_libtiledb_compressor`, compressor, level)
 }

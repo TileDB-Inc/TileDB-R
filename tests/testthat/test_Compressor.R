@@ -17,12 +17,6 @@ test_that("tiledb_compressor name is correct", {
                  "GZIP",
                  "ZSTD",
                  "LZ4",
-                 "BLOSC_LZ",
-                 "BLOSC_LZ4",
-                 "BLOSC_LZ4HC",
-                 "BLOSC_SNAPPY",
-                 "BLOSC_ZLIB",
-                 "BLOSC_ZSTD",
                  "RLE",
                  "BZIP2",
                  "DOUBLE_DELTA") 
