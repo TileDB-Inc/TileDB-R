@@ -5,8 +5,8 @@
 \title{Constructs a \code{tiledb_array_schema} object}
 \usage{
 tiledb_array_schema(ctx, domain, attrs, cell_order = "COL_MAJOR",
-  tile_order = "COL_MAJOR", sparse = FALSE, coords_compressor = NULL,
-  offsets_compressor = NULL)
+  tile_order = "COL_MAJOR", sparse = FALSE,
+  coords_filter_list = NULL, offsets_filter_list = NULL)
 }
 \arguments{
 \item{ctx}{tiledb_ctx object}
@@ -21,9 +21,9 @@ tiledb_array_schema(ctx, domain, attrs, cell_order = "COL_MAJOR",
 
 \item{sparse}{(default FALSE)}
 
-\item{coords_compressor}{(optional)}
+\item{coords_filter_list}{(optional)}
 
-\item{offsets_compressor}{(optional)}
+\item{offsets_filter_list}{(optional)}
 }
 \description{
 Constructs a \code{tiledb_array_schema} object

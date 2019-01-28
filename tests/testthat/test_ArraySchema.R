@@ -55,8 +55,8 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2), 
                              cell_order = "ROW_MAJOR", 
                              tile_order = "ROW_MAJOR",
-                             coords_compressor = tiledb_compressor("GZIP", 10),
-                             offsets_compressor = tiledb_compressor("ZSTD", 5),
+                             coords_filter_list = tiledb_filter_list(ctx, c(tiledb_filter(ctx, "GZIP"))),
+                             offsets_filter_list = tiledb_filter_list(ctx, c(tiledb_filter(ctx, "ZSTD"))),
                              sparse = TRUE)
   
   # test domain
@@ -79,11 +79,11 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
   expect_equal(tiledb::cell_order(sch), "ROW_MAJOR")
   expect_equal(tiledb::tile_order(sch), "ROW_MAJOR")
  
-  compr <- tiledb::compressor(sch)
-  expect_equal(tiledb_compressor_name(compr[["coords"]]), "GZIP")
-  expect_equal(tiledb_compressor_level(compr[["coords"]]), 10)
-  expect_equal(tiledb_compressor_name(compr[["offsets"]]), "ZSTD")
-  expect_equal(tiledb_compressor_level(compr[["offsets"]]), 5)
+  filter_list <- tiledb::filter_list(sch)
+  expect_equal(tiledb_filter_type(filter_list[["coords"]][0]), "GZIP")
+  expect_equal(tiledb_filter_get_option(filter_list[["coords"]][0], "COMPRESSION_LEVEL"), -1)
+  expect_equal(tiledb_filter_type(filter_list[["offsets"]][0]), "ZSTD")
+  expect_equal(tiledb_filter_get_option(filter_list[["offsets"]][0], "COMPRESSION_LEVEL"), -1)
   
   expect_true(is.sparse(sch))
 })

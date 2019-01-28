@@ -142,50 +142,6 @@ tiledb_layout_t _string_to_tiledb_layout(std::string lstr) {
   }
 }
 
-tiledb_compressor_t _string_to_tiledb_compressor(std::string compr) {
-  if (compr == "NO_COMPRESSION") {
-    return TILEDB_NO_COMPRESSION;
-  } else if (compr == "GZIP") {
-    return TILEDB_GZIP;
-  } else if (compr == "ZSTD") {
-    return TILEDB_ZSTD;
-  } else if (compr == "LZ4") {
-    return TILEDB_LZ4;
-  } else if (compr == "RLE") {
-    return TILEDB_RLE;
-  } else if (compr == "BZIP2") {
-    return TILEDB_BZIP2;
-  } else if (compr == "DOUBLE_DELTA") {
-    return TILEDB_DOUBLE_DELTA;
-  } else {
-    std::stringstream errmsg;
-    errmsg << "Unknown TileDB compressor \"" << compr << "\"";
-    throw Rcpp::exception(errmsg.str().c_str());
-  }
-}
-
-const char* _tiledb_compresssor_to_string(tiledb_compressor_t compr) {
-  switch(compr) {
-    case TILEDB_NO_COMPRESSION:
-     return "NO_COMPRESSION";
-    case TILEDB_GZIP:
-      return "GZIP";
-    case TILEDB_ZSTD:
-      return "ZSTD";
-    case TILEDB_LZ4:
-      return "LZ4";
-    case TILEDB_RLE:
-      return "RLE";
-    case TILEDB_BZIP2:
-      return "BZIP2";
-    case TILEDB_DOUBLE_DELTA:
-      return "DOUBLE_DELTA";
-    default: {
-      throw Rcpp::exception("unknown tiledb_compressor_t");
-    }
-  }
-}
-
 tiledb_filter_type_t _string_to_tiledb_filter(std::string filter) {
   if (filter == "NONE") {
     return TILEDB_FILTER_NONE;
@@ -904,33 +860,10 @@ int libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList) {
   }
 }
 
-
-/**
- * TileDB Compressor
- */
 //[[Rcpp::export]]
-XPtr<tiledb::Compressor> libtiledb_compressor(std::string compressor, int level) {
+XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index) {
   try {
-    tiledb_compressor_t compr = _string_to_tiledb_compressor(compressor);
-    return XPtr<tiledb::Compressor>(new tiledb::Compressor({compr, level}));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
-}
-
-//[[Rcpp::export]]
-std::string libtiledb_compressor_type(XPtr<tiledb::Compressor> compressor) {
-  try {
-    return _tiledb_compresssor_to_string(compressor->compressor());
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
-}
-
-//[[Rcpp::export]]
-int libtiledb_compressor_level(XPtr<tiledb::Compressor> compressor) {
-  try {
-    return compressor->level();
+    return XPtr<tiledb::Filter>(new tiledb::Filter(filterList->filter(filter_index)));
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
@@ -943,7 +876,7 @@ int libtiledb_compressor_level(XPtr<tiledb::Compressor> compressor) {
 XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
                                     std::string name,
                                     std::string type,
-                                    XPtr<tiledb::Compressor> compressor,
+                                    XPtr<tiledb::FilterList> filter_list,
                                     int ncells) {
  try {
    tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
@@ -954,13 +887,13 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    attr->set_compressor(*compressor);
+    attr->set_filter_list(*filter_list);
     return attr;
    } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    attr->set_compressor(*compressor);
+    attr->set_filter_list(*filter_list);
     return attr;
    } else {
     throw Rcpp::exception("only integer (INT32), and real (FLOAT64) attributes are supported");
@@ -989,9 +922,9 @@ std::string libtiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Compressor> libtiledb_attr_compressor(XPtr<tiledb::Attribute> attr) {
+XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr) {
   try {
-    return XPtr<tiledb::Compressor>(new tiledb::Compressor(attr->compressor()));
+    return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
@@ -1029,8 +962,8 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
     List attributes,
     std::string cell_order,
     std::string tile_order,
-    Nullable<XPtr<tiledb::Compressor>> coords_compressor = R_NilValue,
-    Nullable<XPtr<tiledb::Compressor>> offsets_compressor = R_NilValue,
+    Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue,
+    Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue,
     bool sparse = false) {
   // check that external pointers are supported
   R_xlen_t nattr = attributes.length();
@@ -1057,13 +990,13 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
     }
     schema->set_cell_order(_cell_order);
     schema->set_tile_order(_tile_order);
-    if (coords_compressor.isNotNull()) {
-      XPtr<tiledb::Compressor> xptr_coords(coords_compressor);
-      schema->set_coords_compressor(*xptr_coords);
+    if (coords_filter_list.isNotNull()) {
+      XPtr<tiledb::FilterList> xptr_coords(coords_filter_list);
+      schema->set_coords_filter_list(*xptr_coords);
     }
-    if (offsets_compressor.isNotNull()) {
-      XPtr<tiledb::Compressor> xptr_offsets(offsets_compressor);
-      schema->set_offsets_compressor(*xptr_offsets);
+    if (offsets_filter_list.isNotNull()) {
+      XPtr<tiledb::FilterList> xptr_offsets(offsets_filter_list);
+      schema->set_offsets_filter_list(*xptr_offsets);
     }
     schema->check();
     return schema;
@@ -1117,18 +1050,18 @@ std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) 
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Compressor> libtiledb_array_schema_coords_compressor(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::FilterList> libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
   try {
-    return XPtr<tiledb::Compressor>(new tiledb::Compressor(schema->coords_compressor()));
+    return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->coords_filter_list()));
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Compressor> libtiledb_array_schema_offsets_compressor(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::FilterList> libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema) {
   try {
-    return XPtr<tiledb::Compressor>(new tiledb::Compressor(schema->offsets_compressor()));
+    return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->offsets_filter_list()));
   } catch (tiledb::TileDBError& err) {
     throw Rcpp::exception(err.what());
   }

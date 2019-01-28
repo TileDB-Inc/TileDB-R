@@ -21,6 +21,6 @@ flt = tiledb_filter(ctx, "ZSTD")
 tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 flt.set
 filter_list <- tiledb_filter_list(ctx, c(flt))
-filter_list.max_chunk_size()
+max_chunk_size(filter_list)
 
 }

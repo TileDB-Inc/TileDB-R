@@ -21,6 +21,6 @@ flt = tiledb_filter(ctx, "ZSTD")
 tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 flt.set
 filter_list <- tiledb_filter_list(ctx, c(flt))
-filter_list.nfilters()
+nfilters(filter_list)
 
 }

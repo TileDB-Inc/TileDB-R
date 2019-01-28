@@ -5,14 +5,14 @@
 \title{Contructs a \code{tiledb_attr} object}
 \usage{
 tiledb_attr(ctx, name = "", type = "FLOAT64",
-  compressor = tiledb_compressor(), ncells = 1)
+  filter_list = tiledb_filter_list(ctx), ncells = 1)
 }
 \arguments{
 \item{name}{(default "") The dimension name / label string.}
 
 \item{type}{(default "FLOAT64") The tiledb_attr TileDB datatype string}
 
-\item{compressor}{(default tiledb_compressor("NOCOMPRESSION")) The tiledb_attr compressor}
+\item{filter_list}{(default filter_list("NONE")) The tiledb_attr filter_list}
 
 \item{ncells}{(default 1) The number of cells}
 }
@@ -24,8 +24,9 @@ Contructs a \code{tiledb_attr} object
 }
 \examples{
 ctx <- tiledb_ctx()
+flt = filter_list("GZIP")
 attr <- tiledb_attr(ctx, name = "a1", type = "INT32",
-                    compressor = tiledb_compressor("GZIP", 5))
+                    filter_list = flt)
 attr 
  
 }

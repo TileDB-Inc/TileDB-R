@@ -34,7 +34,9 @@ tiledb_filter.from_ptr <- function(ptr) {
 #'
 #' @export tiledb_filter
 tiledb_filter <- function(ctx, name = "NONE") {
-  if (!is.scalar(name, "character")) {
+  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+    stop("argument ctx must be a tiledb_ctx")
+  } else if (!is.scalar(name, "character")) {
     stop("filter argument must be scalar string")
   }
   ptr <- libtiledb_filter(ctx@ptr, name)

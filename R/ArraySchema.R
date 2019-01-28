@@ -17,8 +17,8 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param cell_order (default "COL_MAJOR")
 #' @param tile_order (default "COL_MAJOR")
 #' @param sparse (default FALSE)
-#' @param coords_compressor (optional)
-#' @param offsets_compressor (optional)
+#' @param coords_filter_list (optional)
+#' @param offsets_filter_list (optional)
 #' @examples 
 #' ctx <- tiledb_ctx()
 #' schema <- tiledb_array_schema(ctx,
@@ -38,8 +38,8 @@ tiledb_array_schema <- function(ctx,
                         cell_order = "COL_MAJOR",
                         tile_order = "COL_MAJOR",
                         sparse = FALSE,
-                        coords_compressor = NULL,
-                        offsets_compressor = NULL) {
+                        coords_filter_list = NULL,
+                        offsets_filter_list = NULL) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   }
@@ -56,26 +56,26 @@ tiledb_array_schema <- function(ctx,
   if (!is.scalar(tile_order, "character")) {
     stop("tile_order argument must be a scalar string")
   }
-  if (!is.null(coords_compressor) && !is(coords_compressor, "tiledb_compressor")) {
-    stop("coords_compressor argument must be a tiledb_compressor instance") 
+  if (!is.null(coords_filter_list) && !is(coords_filter_list, "tiledb_filter_list")) {
+    stop("coords_filter_list argument must be a tiledb_filter_list instance") 
   }
-  if (!is.null(offsets_compressor) && !is(offsets_compressor, "tiledb_compressor")) {
-    stop("offsets_compressor argument must be a tiledb_compressor instance") 
+  if (!is.null(offsets_filter_list) && !is(offsets_filter_list, "tiledb_filter_list")) {
+    stop("offsets_filter_list argument must be a tiledb_filter_list instance") 
   }
   if (!is.logical(sparse)) {
     stop("sparse argument must be a logical TRUE or FALSE")
   }
   attr_ptrs <- lapply(attrs, function(obj) slot(obj, "ptr"))
-  coords_compressor_ptr <- NULL
-  if (!is.null(coords_compressor)) {
-    coords_compressor_ptr <- coords_compressor@ptr
+  coords_filter_list_ptr <- NULL
+  if (!is.null(coords_filter_list)) {
+    coords_filter_list_ptr <- coords_filter_list@ptr
   }
-  offsets_compressor_ptr <- NULL
-  if (!is.null(offsets_compressor)) {
-    offsets_compressor_ptr <- offsets_compressor@ptr 
+  offsets_filter_list_ptr <- NULL
+  if (!is.null(offsets_filter_list)) {
+    offsets_filter_list_ptr <- offsets_filter_list@ptr 
   }
   ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order, 
-                             coords_compressor_ptr, offsets_compressor_ptr, sparse) 
+                             coords_filter_list_ptr, offsets_filter_list_ptr, sparse) 
   return(new("tiledb_array_schema", ptr = ptr))
 }
 
@@ -111,7 +111,7 @@ setMethod("show", signature(object = "tiledb_array_schema"),
 setGeneric("domain", function(object, ...) standardGeneric("domain"))
 
 #' Returns the `tiledb_domain` object associated with a given `tiledb_array_schema`
-#' 
+
 #' @param object tiledb_array_schema
 #' @param a tiledb_domain object
 #' @examples 
@@ -236,27 +236,27 @@ setMethod("tile_order", "tiledb_array_schema",
           })
 
 #' @export 
-tiledb_compressor.tiledb_array_schema <- function(object) {
-            coords_ptr <- libtiledb_array_schema_coords_compressor(object@ptr)
-            offsets_ptr <- libtiledb_array_schema_offsets_compressor(object@ptr)
-            return(c(coords = tiledb_compressor.from_ptr(coords_ptr), 
-                     offsets = tiledb_compressor.from_ptr(offsets_ptr)))
+tiledb_filter_list.tiledb_array_schema <- function(object) {
+            coords_ptr <- libtiledb_array_schema_coords_filter_list(object@ptr)
+            offsets_ptr <- libtiledb_array_schema_offsets_filter_list(object@ptr)
+            return(c(coords = tiledb_filter_list.from_ptr(coords_ptr), 
+                     offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
 }
 
 #' @export
-setGeneric("compressor", function(object, ...) standardGeneric("compressor"))
+setGeneric("filter_list", function(object, ...) standardGeneric("filter_list"))
 
-#' Returns the offsets and coordinate compressors associated with the `tiledb_array_schema`
+#' Returns the offsets and coordinate filter_lists associated with the `tiledb_array_schema`
 #' 
 #' @param object tiledb_array_schema
-#' @return a list of tiledb_compressor objects
+#' @return a list of tiledb_filter_list objects
 #' @export
-setMethod("compressor", "tiledb_array_schema",
+setMethod("filter_list", "tiledb_array_schema",
           function(object) {
-            coords_ptr <- libtiledb_array_schema_coords_compressor(object@ptr)
-            offsets_ptr <- libtiledb_array_schema_offsets_compressor(object@ptr)
-            return(c(coords = tiledb_compressor.from_ptr(coords_ptr), 
-                     offsets = tiledb_compressor.from_ptr(offsets_ptr)))
+            coords_ptr <- libtiledb_array_schema_coords_filter_list(object@ptr)
+            offsets_ptr <- libtiledb_array_schema_offsets_filter_list(object@ptr)
+            return(c(coords = tiledb_filter_list.from_ptr(coords_ptr), 
+                     offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
           })
 
 #' @export

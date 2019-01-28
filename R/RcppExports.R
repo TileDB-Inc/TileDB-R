@@ -125,20 +125,12 @@ libtiledb_filter_list_nfilters <- function(filterList) {
     .Call(`_tiledb_libtiledb_filter_list_nfilters`, filterList)
 }
 
-libtiledb_compressor <- function(compressor, level) {
-    .Call(`_tiledb_libtiledb_compressor`, compressor, level)
+libtiledb_filter_list_filter <- function(filterList, filter_index) {
+    .Call(`_tiledb_libtiledb_filter_list_filter`, filterList, filter_index)
 }
 
-libtiledb_compressor_type <- function(compressor) {
-    .Call(`_tiledb_libtiledb_compressor_type`, compressor)
-}
-
-libtiledb_compressor_level <- function(compressor) {
-    .Call(`_tiledb_libtiledb_compressor_level`, compressor)
-}
-
-libtiledb_attr <- function(ctx, name, type, compressor, ncells) {
-    .Call(`_tiledb_libtiledb_attr`, ctx, name, type, compressor, ncells)
+libtiledb_attr <- function(ctx, name, type, filter_list, ncells) {
+    .Call(`_tiledb_libtiledb_attr`, ctx, name, type, filter_list, ncells)
 }
 
 libtiledb_attr_name <- function(attr) {
@@ -149,8 +141,8 @@ libtiledb_attr_datatype <- function(attr) {
     .Call(`_tiledb_libtiledb_attr_datatype`, attr)
 }
 
-libtiledb_attr_compressor <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_compressor`, attr)
+libtiledb_attr_filter_list <- function(attr) {
+    .Call(`_tiledb_libtiledb_attr_filter_list`, attr)
 }
 
 libtiledb_attr_ncells <- function(attr) {
@@ -161,8 +153,8 @@ libtiledb_attr_dump <- function(attr) {
     invisible(.Call(`_tiledb_libtiledb_attr_dump`, attr))
 }
 
-libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_compressor = NULL, offsets_compressor = NULL, sparse = FALSE) {
-    .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_compressor, offsets_compressor, sparse)
+libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, sparse = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, sparse)
 }
 
 libtiledb_array_schema_domain <- function(schema) {
@@ -181,12 +173,12 @@ libtiledb_array_schema_tile_order <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_tile_order`, schema)
 }
 
-libtiledb_array_schema_coords_compressor <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_coords_compressor`, schema)
+libtiledb_array_schema_coords_filter_list <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_coords_filter_list`, schema)
 }
 
-libtiledb_array_schema_offsets_compressor <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_offsets_compressor`, schema)
+libtiledb_array_schema_offsets_filter_list <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_offsets_filter_list`, schema)
 }
 
 libtiledb_array_schema_sparse <- function(schema) {
