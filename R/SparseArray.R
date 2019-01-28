@@ -11,7 +11,7 @@ setClass("tiledb_sparse",
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @return tiledb_sparse array object
 #' @export
-tiledb_sparse <- function(ctx, uri, query_type = c("RW", "READ", "WRITE")) {
+tiledb_sparse <- function(ctx, uri, query_type = c("READ", "WRITE")) {
     query_type = match.arg(query_type)
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")

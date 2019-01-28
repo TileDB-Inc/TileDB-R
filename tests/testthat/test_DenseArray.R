@@ -52,11 +52,11 @@ test_that("Can read / write a simple 1D vector", {
   })
   
   ctx <- tiledb_ctx()
-  dim <- tiledb_dim(ctx, domain = c(1L, 10L)) 
+  dim <- tiledb_dim(ctx, domain = c(1L, 10L))
   dom <- tiledb_domain(ctx, c(dim))
-  val <- tiledb_attr(ctx) 
-  sch <- tiledb_array_schema(ctx, dom, c(val)) 
-  tiledb_array_create(tmp, sch) 
+  val <- tiledb_attr(ctx, name="val")
+  sch <- tiledb_array_schema(ctx, dom, c(val))
+  tiledb_array_create(tmp, sch)
   
   arr <- tiledb_dense(ctx, tmp)
   dat <- as.array(as.double(1:10))
@@ -99,7 +99,7 @@ test_that("Can read / write a simple 2D matrix", {
   d1  <- tiledb_dim(ctx, domain = c(1L, 5L))
   d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
   dom <- tiledb_domain(ctx, c(d1, d2))
-  val <- tiledb_attr(ctx)
+  val <- tiledb_attr(ctx, name="val")
   sch <- tiledb_array_schema(ctx, dom, c(val))
   tiledb_array_create(tmp, sch)
 
@@ -138,7 +138,7 @@ test_that("Can read / write a simple 3D matrix", {
   d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
   d3  <- tiledb_dim(ctx, domain = c(1L, 5L))
   dom <- tiledb_domain(ctx, c(d1, d2, d3))
-  val <- tiledb_attr(ctx)
+  val <- tiledb_attr(ctx, name="val")
   sch <- tiledb_array_schema(ctx, dom, c(val))
   tiledb_array_create(tmp, sch)
 

@@ -26,11 +26,11 @@ test_that("tiledb_attr is.anonymous is correct", {
 
 test_that("tiledb_attr with compression", {
   ctx <- tiledb_ctx()
-  a1 <- tiledb_attr(ctx, "foo", compressor = tiledb_compressor("GZIP", 10))
-  com <- tiledb::compressor(a1)
-  expect_is(com, "tiledb_compressor")
-  expect_equal(tiledb_compressor_name(com), "GZIP")
-  expect_equal(tiledb_compressor_level(com), 10)
+  a1 <- tiledb_attr(ctx, "foo", filter_list = tiledb_filter_list(ctx, c(tiledb_filter(ctx, "GZIP"))))
+  filter_list <- tiledb::filter_list(a1)
+  expect_is(filter_list, "tiledb_filter_list")
+  expect_equal(tiledb_filter_type(filter_list[0]), "GZIP")
+  expect_equal(tiledb_filter_get_option(filter_list[0], "COMPRESSION_LEVEL"), -1)
   
   expect_error(tiledb_attr(ctx, "foo", compressor = tiledb_compressor("UNKNOWN", -1)))
 })

@@ -18,6 +18,4 @@ tiledb_stats_dump(pth)
 cat(readLines(pth)[1:10], sep = "\\n")
 
 }
-\concept{
-stats
-}
+\concept{stats}
