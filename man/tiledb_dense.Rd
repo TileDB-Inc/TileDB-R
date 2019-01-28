@@ -4,7 +4,7 @@
 \alias{tiledb_dense}
 \title{Constructs a tiledb_dense object backed by a persisted tiledb array uri}
 \usage{
-tiledb_dense(ctx, uri, query_type = c("RW", "READ", "WRITE"))
+tiledb_dense(ctx, uri, query_type = c("READ", "WRITE"))
 }
 \arguments{
 \item{ctx}{tiledb_ctx}
