@@ -288,3 +288,71 @@ test_that("as.data.frame() conversion method", {
     unlink(tmp, recursive = TRUE)
   })
 })
+
+test_that("test tiledb_subarray read for dense array", {
+  tmp <- tempdir()
+  setup({
+    unlink_and_create(tmp)
+  })
+
+  ctx <- tiledb_ctx()
+  d1  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  dom <- tiledb_domain(ctx, c(d1, d2))
+  val <- tiledb_attr(ctx, name="val")
+  sch <- tiledb_array_schema(ctx, dom, c(val))
+  tiledb_array_create(tmp, sch)
+
+  dat <- matrix(rnorm(25), 5, 5)
+  arr <- tiledb_dense(ctx, tmp)
+
+  arr[] <- dat
+  expect_equal(arr[], dat)
+
+  # explicit range enumeration
+  expect_equal(tiledb_subarray(arr, list(3,5, 3,5)),
+               dat[c(3,4,5), c(3,4,5)])
+
+  # vector range syntax
+  expect_equal(tiledb_subarray(arr, list(1,3,1,3)), dat[1:3, 1:3])
+
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
+})
+
+test_that("test tiledb_subarray read for dense array with select attributes", {
+  tmp <- tempdir()
+  setup({
+    unlink_and_create(tmp)
+  })
+  
+  ctx <- tiledb_ctx()
+  d1  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  dom <- tiledb_domain(ctx, c(d1, d2))
+  val1 <- tiledb_attr(ctx, name="val1")
+  val2 <- tiledb_attr(ctx, name="val2")
+  sch <- tiledb_array_schema(ctx, dom, c(val1, val2))
+  tiledb_array_create(tmp, sch)
+  
+  dat1 <- matrix(rnorm(25), 5, 5)
+  dat2 <- matrix(rnorm(25), 5, 5)
+  arr <- tiledb_dense(ctx, tmp)
+  
+  arr[] <- list(val1=dat1, val2=dat2)
+  expect_equal(arr[]$val1, dat1)
+  expect_equal(arr[]$val2, dat2)
+  
+  # explicit range enumeration
+  show(tiledb_subarray(arr, list(3,5, 3,5), attrs=c("val1")))
+  expect_equal(tiledb_subarray(arr, list(3,5, 3,5), attrs=c("val1")),
+               dat1[c(3,4,5), c(3,4,5)])
+  
+  # vector range syntax
+  expect_equal(tiledb_subarray(arr, list(1,3,1,3), attrs=c("val2")), dat2[1:3, 1:3])
+  
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
+})
