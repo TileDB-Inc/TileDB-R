@@ -7,7 +7,7 @@
 tiledb_subarray(A, subarray_vector, attrs = c())
 }
 \arguments{
-\item{A}{tiledb_sparse_array or tiledb_dense_array}
+\item{A}{tiledb_sparse or tiledb_dense}
 
 \item{subarray_vector}{subarray to query}
 

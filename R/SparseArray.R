@@ -1,6 +1,6 @@
 #' @exportClass "tiledb_sparse"
 setClass("tiledb_sparse",
-         slots = list(ctx = "tiledb_ctx", uri = "character", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx", uri = "character", as.data.frame = "logical", ptr = "externalptr"))
 
 #' Constructs a tiledb_sparse object backed by a persisted tiledb array uri
 #'
@@ -11,7 +11,7 @@ setClass("tiledb_sparse",
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @return tiledb_sparse array object
 #' @export
-tiledb_sparse <- function(ctx, uri, query_type = c("READ", "WRITE")) {
+tiledb_sparse <- function(ctx, uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE) {
     query_type = match.arg(query_type)
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -26,7 +26,7 @@ tiledb_sparse <- function(ctx, uri, query_type = c("READ", "WRITE")) {
     stop("array URI must be a sparse array")
   }
   array_xptr <- libtiledb_array_close(array_xptr)
-  new("tiledb_sparse", ctx = ctx, uri = uri, ptr = array_xptr)
+  new("tiledb_sparse", ctx = ctx, uri = uri, as.data.frame = as.data.frame, ptr = array_xptr)
 }
 
 
@@ -64,6 +64,26 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
   return(attributes)
 }
 
+#' Construct a data.frame from query results
+as_data_frame <- function(dom, data) {
+  if (!is(dom, "tiledb_domain")) {
+    stop("as_data_frame must be called with a tiledb_domain object")
+  }
+  # If coordinates are present convert to columns in the data.frame
+  if (!is.null(data[["coords"]])) {
+    ndim <- tiledb_ndim(dom)
+    dimensions <- dimensions(dom)
+    for (i in seq(1, ndim, 1)) {
+      dim_name <- name(dimensions[[i]])
+      l = list()
+      l[[dim_name]] = data$coords[seq(i, length(data$coords), ndim)]
+      data = c(data, l)
+    }
+    data$coords <- NULL
+  }
+  return(as.data.frame(data))
+}
+
 setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -93,7 +113,7 @@ setMethod("[", "tiledb_sparse",
                   if (aname == "coords") {
                     qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
                   } else {
-                    qry <-  libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
+                    qry <- libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
@@ -114,11 +134,15 @@ setMethod("[", "tiledb_sparse",
                     buffers[[idx]] <- old_buffer[1:ncells]
                   }
                 }
+                if (x@as.data.frame) {
+                  return(as_data_frame(dom, buffers))
+                } else {
                 # if there is only one buffer, don't return a list of attribute buffers
                 if (length(buffers) == 1L) {
                   return(buffers[[1L]])
                 }
-                return(buffers)
+                  return(buffers)
+                }
               },
               finally = {
                 libtiledb_array_close(x@ptr)
@@ -265,7 +289,7 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
       if (is.sparse(A)) {
         buffers <- sparse_attribute_buffers(A, schema, dom, subarray_vector, attrs)
       } else {
-        buffers <- attribute_buffers(schema, dom, subarray_vector, attrs)
+        buffers <- attribute_buffers(A, schema, dom, subarray_vector, attrs)
       }
       qry <- libtiledb_query(ctx@ptr, A@ptr, "READ")
       qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
@@ -297,11 +321,15 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
           buffers[[idx]] <- old_buffer[1:ncells]
         }
       }
-      # if there is only one buffer, don't return a list of attribute buffers
-      if (length(buffers) == 1L) {
-        return(buffers[[1L]])
+      if (A@as.data.frame) {
+        return(as_data_frame(dom, buffers))
+      } else {
+        # if there is only one buffer, don't return a list of attribute buffers
+        if (length(buffers) == 1L) {
+          return(buffers[[1L]])
+        }
+        return(buffers)
       }
-      return(buffers)
     },
     finally = {
       libtiledb_array_close(A@ptr)
