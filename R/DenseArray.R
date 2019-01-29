@@ -99,7 +99,7 @@ domain_subarray <- function(dom, index = NULL) {
     return(subarray)
   }
   if (length(index) != nd) {
-    stop("incorrect number of dimensions")
+    stop(paste0("incorrect number of dimensions (given) ", length(index), " != ", nd, " (expected)"))
   }
   dim_subarray <- list()
   for (i in seq_len(nd)) {
