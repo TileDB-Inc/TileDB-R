@@ -37,26 +37,31 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
   return(tiledb_array_schema.from_ptr(schema_xptr))
 })
 
-sparse_attribute_buffers <- function(array, sch, dom, sub) {
+sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
-  attrs <- list()
+  attributes <- list()
   # first alloc coordinate buffer
   ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
   if (is.integral(dom)) {
-    attrs[["coords"]] <- integer(length = ncells)
+    attributes[["coords"]] <- integer(length = ncells)
   } else {
-    attrs[["coords"]]  <- numeric(length = ncells)
+    attributes[["coords"]]  <- numeric(length = ncells)
+  }
+  
+  attrs <- tiledb::attrs(sch)
+  if (length(filter_attributes) > 0) {
+    attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
   }
   # for every attribute, compute the number of cells and allocate vectors
-  for(attr in tiledb::attrs(sch)) {
+  for(attr in attrs) {
     aname <- tiledb::name(attr)
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
     ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
     buff <- vector(mode = type, length = ncells)
-    attrs[[aname]] <- buff
+    attributes[[aname]] <- buff
   }
-  return(attrs)
+  return(attributes)
 }
 
 setMethod("[", "tiledb_sparse",
@@ -137,10 +142,7 @@ setMethod("[<-", "tiledb_sparse",
             uri <- x@uri
             dom <- tiledb::domain(schema)
             attrs <- tiledb::attrs(schema)
-            # check that we have the right number of index buffers
-            if (length(coords) != tiledb_ndim(dom)) {
-              stop(paste("number of coordinate vectors does not match the array domain"))
-            }
+
             # check that all the indexing and value buffers are the same length
             coord_length <- length(index[[1]])
             for (i in seq_along(index)) {
@@ -189,6 +191,10 @@ setMethod("[<-", "tiledb_sparse",
                 }
               }
             }
+            # check that we have the right number of index buffers
+            if (length(coords) != tiledb_ndim(dom)) {
+              stop(paste("number of coordinate vectors does not match the array domain"))
+            }
             # zip the coordinates into a single buffer for sparse write
             if (integral_domain) {
               zip_coords <- libtiledb_zip_coords_integer(coords, coord_length)
@@ -226,3 +232,80 @@ setMethod("show", "tiledb_sparse",
 
 #' @export
 setMethod("is.sparse", "tiledb_sparse", function(object) TRUE)
+
+
+#' Query a array using a subarray vector
+#'
+#' tiledb_subarray returns a results of query
+#'
+#' @param A tiledb_sparse or tiledb_dense
+#' @param subarray_vector subarray to query
+#' @param attributes list of attributes to query
+#' @return list of attributes being returned with query results
+#' @export
+tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
+  if (!is(A, "tiledb_sparse") && !is(A, "tiledb_dense")) {
+    stop("tiledb_subarray must be called with a tiledb_dense or tiledb_sparse object")
+  }
+  ctx <- A@ctx
+  uri <- A@uri
+  schema <- tiledb::schema(A)
+  dom <- tiledb::domain(schema)
+  if (!tiledb::is.integral(dom)) {
+    stop("subscript indexing only valid for integral Domain's")
+  }
+  libtiledb_array_open(A@ptr, "READ")
+  out <- tryCatch(
+    {
+      if (is.integral(dom)) {
+        subarray_vector <- as.integer(subarray_vector)
+      } else {
+        subarray_vector <- as.double(subarray_vector)
+      }
+      if (is.sparse(A)) {
+        buffers <- sparse_attribute_buffers(A, schema, dom, subarray_vector, attrs)
+      } else {
+        buffers <- attribute_buffers(schema, dom, subarray_vector, attrs)
+      }
+      qry <- libtiledb_query(ctx@ptr, A@ptr, "READ")
+      qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
+      qry <- libtiledb_query_set_subarray(qry, subarray_vector)
+      attr_names <- names(buffers)
+      for (idx in seq_along(buffers)) {
+        aname <- attr_names[[idx]]
+        if (aname == "coords") {
+          qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
+        } else {
+          qry <-  libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
+        }
+      }
+      qry <- libtiledb_query_submit(qry)
+      if (libtiledb_query_status(qry) != "COMPLETE") {
+        stop("error in read query (not 'COMPLETE')")
+      }
+      # get the actual number of results, instead of realloc
+      # just modify the vector length so there is no additional copy
+      for (idx in seq_along(attr_names)) {
+        old_buffer <- buffers[[idx]]
+        aname <- attr_names[[idx]]
+        if (aname == "coords") {
+          ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
+        } else {
+          ncells <- libtiledb_query_result_buffer_elements(qry, aname)
+        }
+        if (ncells < length(old_buffer)) {
+          buffers[[idx]] <- old_buffer[1:ncells]
+        }
+      }
+      # if there is only one buffer, don't return a list of attribute buffers
+      if (length(buffers) == 1L) {
+        return(buffers[[1L]])
+      }
+      return(buffers)
+    },
+    finally = {
+      libtiledb_array_close(A@ptr)
+    }
+  )
+  return(out);
+}

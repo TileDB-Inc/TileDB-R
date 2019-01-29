@@ -99,7 +99,7 @@ domain_subarray <- function(dom, index = NULL) {
     return(subarray)
   }
   if (length(index) != nd) {
-    stop("incorrect number of dimensions")
+    stop(paste0("incorrect number of dimensions (given) ", length(index), " != ", nd, " (expected)"))
   }
   dim_subarray <- list()
   for (i in seq_len(nd)) {
@@ -132,22 +132,27 @@ subarray_dim <- function(sub) {
   return(sub_dim)
 }
 
-attribute_buffers <- function(sch, dom, sub) {
+attribute_buffers <- function(sch, dom, sub, filter_attributes=list()) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
   is_scalar <- all(sub_dim == 1L)
-  attrs <- list()
-  for(attr in tiledb::attrs(sch)) {
+  
+  attributes <- list()
+  attrs <- tiledb::attrs(sch)
+  if (length(filter_attributes) > 0) {
+    attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
+  }
+  for(attr in attrs) {
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
     buff <- vector(mode = type, length = ncells)
     if (!is_scalar) {
       attr(buff, "dim") <- sub_dim
     }
-    attrs[[tiledb::name(attr)]] <- buff
+    attributes[[tiledb::name(attr)]] <- buff
   }
-  return(attrs)
+  return(attributes)
 }
 
 setMethod("[", "tiledb_dense",
