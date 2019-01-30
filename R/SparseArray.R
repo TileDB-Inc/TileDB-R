@@ -87,6 +87,11 @@ as_data_frame <- function(dom, data) {
 setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
             index <- nd_index_from_syscall(sys.call(), parent.frame())
+            # If we have a list of lists of lists we need to remove one layer
+            # This happens when a user uses a list of coordinates
+            if (isNestedList(index[1])) {
+              index <- index[[1]]
+            }
             ctx <- x@ctx
             uri <- x@uri
             schema <- tiledb::schema(x)
@@ -161,6 +166,11 @@ setMethod("[<-", "tiledb_sparse",
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
+            # If we have a list of lists of lists we need to remove one layer
+            # This happens when a user uses a list of coordinates
+            if (isNestedList(index[1])) {
+              index <- index[[1]]
+            }
             ctx <- x@ctx
             schema <- tiledb::schema(x)
             uri <- x@uri
