@@ -19,3 +19,11 @@ nd_index_from_syscall <- function(call, env_frame) {
     index <- list() 
   return(index)
 }
+
+isNestedList <- function(l) {
+  stopifnot(is.list(l))
+  for (i in l) {
+    if (is.list(i)) return(TRUE)
+  }
+  return(FALSE)
+}

@@ -147,3 +147,39 @@ test_that("test tiledb_subarray read for sparse array as dataframe", {
     unlink(tmp, recursive = TRUE)
   })
 })
+
+
+test_that("test tiledb_subarray read/write for sparse array with list of coordinates", {
+  tmp <- tempdir()
+  setup({
+    unlink_and_create(tmp)
+  })
+
+  ctx <- tiledb_ctx()
+  d1  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  dom <- tiledb_domain(ctx, c(d1, d2))
+  val <- tiledb_attr(ctx, name="val")
+  sch <- tiledb_array_schema(ctx, dom, c(val), sparse=TRUE)
+  tiledb_array_create(tmp, sch)
+
+  dat <- matrix(rnorm(25), 5, 5)
+  arr <- tiledb_sparse(ctx, tmp, as.data.frame=FALSE)
+  I <- c(1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5,1,2,3,4,5)
+  J <- c(1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5,5,5)
+
+  coords = list(I, J)
+  arr[coords] <- dat
+  expect_equal(arr[]$val, unlist(as.list(dat)))
+
+  # explicit range enumeration
+  expect_equal(arr[list(c(3,4,5), c(3,4,5))]$val,
+               unlist(as.list(dat[c(3,4,5), c(3,4,5)])))
+
+  # vector range syntax
+  expect_equal(arr[list(c(1:3), c(1:3))]$val, unlist(as.list(dat[1:3, 1:3])))
+
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
+})

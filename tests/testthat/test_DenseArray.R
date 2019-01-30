@@ -391,3 +391,38 @@ test_that("test tiledb_subarray read for dense array as dataframe", {
     unlink(tmp, recursive = TRUE)
   })
 })
+
+test_that("Can read / write a simple 2D matrix with list of coordinates", {
+  tmp <- tempdir()
+  setup({
+    unlink_and_create(tmp)
+  })
+
+  ctx <- tiledb_ctx()
+  d1  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  dom <- tiledb_domain(ctx, c(d1, d2))
+  val <- tiledb_attr(ctx, name="val")
+  sch <- tiledb_array_schema(ctx, dom, c(val))
+  tiledb_array_create(tmp, sch)
+
+  dat <- matrix(rnorm(25), 5, 5)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
+
+  arr[] <- dat
+  expect_equal(arr[], dat)
+
+  # explicit range enumeration
+  expect_equal(arr[list(c(3,4,5), c(3,4,5))],
+               dat[c(3,4,5), c(3,4,5)])
+
+  # vector range syntax
+  expect_equal(arr[list(c(1:3), c(1:3))], dat[1:3, 1:3])
+
+  # scalar indexing
+  expect_equal(arr[list(c(3), c(3))], dat[3, 3])
+
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
+})
