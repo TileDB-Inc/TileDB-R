@@ -50,40 +50,40 @@ test_that("Can read / write a simple 1D vector", {
   setup({
     unlink_and_create(tmp)
   })
-  
+
   ctx <- tiledb_ctx()
   dim <- tiledb_dim(ctx, domain = c(1L, 10L))
   dom <- tiledb_domain(ctx, c(dim))
   val <- tiledb_attr(ctx, name="val")
   sch <- tiledb_array_schema(ctx, dom, c(val))
   tiledb_array_create(tmp, sch)
-  
-  arr <- tiledb_dense(ctx, tmp)
+
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
   dat <- as.array(as.double(1:10))
   arr[] <- dat
-  
-  arr <- tiledb_dense(ctx, tmp)
+
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
   expect_equal(arr[], dat)
-  
+
   # explicit range enumeration
   expect_equal(arr[c(3,4,5,6,7)], dat[c(3,4,5,6,7)])
-  
+
   # vector range syntax
   expect_equal(arr[3:7], dat[3:7])
-  
+
   # vector range syntax (reversed)
   # TODO: find a way to efficiently do this
   # expect_equal(arr[7:3], dat[7:3]) 
-  
+
   # scalar indexing
   expect_equal(arr[8], dat[8])
-  
+
   arr[6] <- 1000
   expect_equal(arr[6], 1000)
-  
+
   arr[7:10] <- c(97, 98, 99, 100)
   expect_equal(arr[6:10], as.array(c(1000, 97, 98, 99, 100)))
-   
+
   teardown({
     unlink(tmp, recursive = TRUE)
   }) 
@@ -104,7 +104,7 @@ test_that("Can read / write a simple 2D matrix", {
   tiledb_array_create(tmp, sch)
 
   dat <- matrix(rnorm(25), 5, 5)
-  arr <- tiledb_dense(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
 
   arr[] <- dat
   expect_equal(arr[], dat)
@@ -143,7 +143,7 @@ test_that("Can read / write a simple 3D matrix", {
   tiledb_array_create(tmp, sch)
 
   dat <- array(rnorm(125), dim = c(5, 5, 5))
-  arr <- tiledb_dense(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
 
   arr[] <- dat
   expect_equal(arr[], dat)
@@ -178,7 +178,7 @@ test_that("Can read / write 1D multi-attribute array", {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb_dense(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
 
   a1_dat <- as.array(as.double(1:10))
   a2_dat <- as.array(as.double(11:20))
@@ -211,7 +211,7 @@ test_that("Can read / write 2D multi-attribute array", {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb_dense(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
 
   a1_dat <- array(rnorm(100), dim = c(10, 10))
   a2_dat <- array(rnorm(100), dim = c(10, 10))
@@ -251,7 +251,7 @@ test_that("as.array() conversion method", {
   sch <- tiledb_array_schema(ctx, dom, c(a1))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb_dense(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
   dat <- as.double(1:10)
   arr[] <- dat
   expect_equal(as.array(arr), as.array(dat))
@@ -275,7 +275,7 @@ test_that("as.data.frame() conversion method", {
   sch <- tiledb_array_schema(ctx, dom, c(a1, a2))
   tiledb_array_create(tmp, sch)
 
-  arr <- tiledb_dense(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
 
   dat <- list(a1 = array(as.double(1:10)),
               a2 = array(as.double(1:10)))
@@ -304,7 +304,7 @@ test_that("test tiledb_subarray read for dense array", {
   tiledb_array_create(tmp, sch)
 
   dat <- matrix(rnorm(25), 5, 5)
-  arr <- tiledb_dense(ctx, tmp)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
 
   arr[] <- dat
   expect_equal(arr[], dat)
@@ -326,7 +326,7 @@ test_that("test tiledb_subarray read for dense array with select attributes", {
   setup({
     unlink_and_create(tmp)
   })
-  
+
   ctx <- tiledb_ctx()
   d1  <- tiledb_dim(ctx, domain = c(1L, 5L))
   d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
@@ -335,23 +335,58 @@ test_that("test tiledb_subarray read for dense array with select attributes", {
   val2 <- tiledb_attr(ctx, name="val2")
   sch <- tiledb_array_schema(ctx, dom, c(val1, val2))
   tiledb_array_create(tmp, sch)
-  
+
   dat1 <- matrix(rnorm(25), 5, 5)
   dat2 <- matrix(rnorm(25), 5, 5)
-  arr <- tiledb_dense(ctx, tmp)
-  
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=FALSE)
+
   arr[] <- list(val1=dat1, val2=dat2)
   expect_equal(arr[]$val1, dat1)
   expect_equal(arr[]$val2, dat2)
-  
+
   # explicit range enumeration
-  show(tiledb_subarray(arr, list(3,5, 3,5), attrs=c("val1")))
   expect_equal(tiledb_subarray(arr, list(3,5, 3,5), attrs=c("val1")),
                dat1[c(3,4,5), c(3,4,5)])
-  
+
   # vector range syntax
   expect_equal(tiledb_subarray(arr, list(1,3,1,3), attrs=c("val2")), dat2[1:3, 1:3])
-  
+
+  teardown({
+    unlink(tmp, recursive = TRUE)
+  })
+})
+
+
+test_that("test tiledb_subarray read for dense array as dataframe", {
+  tmp <- tempdir()
+  setup({
+    unlink_and_create(tmp)
+  })
+
+  ctx <- tiledb_ctx()
+  d1  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  d2  <- tiledb_dim(ctx, domain = c(1L, 5L))
+  dom <- tiledb_domain(ctx, c(d1, d2))
+  val1 <- tiledb_attr(ctx, name="val1")
+  val2 <- tiledb_attr(ctx, name="val2")
+  sch <- tiledb_array_schema(ctx, dom, c(val1, val2))
+  tiledb_array_create(tmp, sch)
+
+  dat1 <- matrix(rnorm(25), 5, 5)
+  dat2 <- matrix(rnorm(25), 5, 5)
+  arr <- tiledb_dense(ctx, tmp, as.data.frame=TRUE)
+
+  arr[] <- list(val1=dat1, val2=dat2)
+  expect_equal(arr[]$val1, unlist(as.list(dat1)))
+  expect_equal(arr[]$val2, unlist(as.list(dat2)))
+
+  # explicit range enumeration
+  expect_equal(tiledb_subarray(arr, list(3,5, 3,5), attrs=c("val1"))$val1,
+               unlist(as.list(dat1[c(3,4,5), c(3,4,5)])))
+
+  # vector range syntax
+  expect_equal(tiledb_subarray(arr, list(1,3,1,3), attrs=c("val2"))$val2, unlist(as.list(dat2[1:3, 1:3])))
+
   teardown({
     unlink(tmp, recursive = TRUE)
   })
