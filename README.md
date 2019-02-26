@@ -6,6 +6,8 @@
 
 **Warning**: The R interface to TileDB is under development and the API is subject to change.
 
+## [Documentation](https://tiledb-inc.github.io/TileDB-R/)
+
 ## Quickstart
 
 TileDB needs to be installed beforehand (from a package or from source)
@@ -23,7 +25,7 @@ for the TileDB-R package to build and link correctly:
 
 ## Installation
 
-The `TileDB-R`package has not been published on [CRAN](https://cran.r-project.org/web/packages/h5/index.html)
+The `TileDB-R`package has not been published on [CRAN](https://cran.r-project.org/)
 and must be installed from source.
 
 The most recent released version can be installed from [Github](https://github.com/TileDB-Inc/TileDB-R) using the package [devtools](https://github.com/r-lib/devtools).
