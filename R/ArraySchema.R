@@ -275,7 +275,7 @@ setMethod("is.sparse", "tiledb_array_schema",
 #' @export
 setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 
-#' Return the number of dimensions associated with the `tieldb_array_schema`
+#' Return the number of dimensions associated with the `tiledb_array_schema`
 #'
 #' @param object tiledb_array_schema
 #' @return integer number of dimensions
