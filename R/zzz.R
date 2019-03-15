@@ -4,5 +4,5 @@
       "ctx", tiledb_ctx(),
       eval.env = ns, assign.env = ns
   )
-  #namespaceExport(ns, "IGIS") # uncomment to export and access via tiledb::ctx rather than tiledb:::ctx
+  #namespaceExport(ns, "ctx") # uncomment to export and access via tiledb::ctx rather than tiledb:::ctx
 }
