@@ -3,16 +3,16 @@ setClass("tiledb_ctx",
          slots = list(ptr = "externalptr"))
 
 #' Creates a `tiledb_ctx` object
-#' 
+#'
 #' @param config (optonal) character vector of config parameter names, values
-#' @return `tiledb_ctx` object 
+#' @return `tiledb_ctx` object
 #' @examples
 #' # default configuration
 #' ctx <- tiledb_ctx()
 #'
 #' # optionally set config parameters
-#' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "100")) 
-#' 
+#' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "100"))
+#'
 #' @importFrom methods new
 #' @export tiledb_ctx
 tiledb_ctx <- function(config = NULL) {
@@ -35,14 +35,14 @@ setGeneric("config", function(object, ...) {
 })
 
 #' Retrieve the `tiledb_config` object from the `tiledb_ctx`
-#' 
+#'
 #' @param `tiledb_ctx` object
 #' @return `tiledb_config` object associated with the `tiledb_ctx` instance
-#' @examples 
-#' ctx <- tieldb_ctx(c("sm.tile_cache_size" = "10")) 
+#' @examples
+#' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 #' cfg <- config(ctx)
 #' cfg["sm.tile_cache_size"]
-#' 
+#'
 #' @export
 setMethod("config", signature(object = "tiledb_ctx"),
           function(object) {
@@ -56,23 +56,23 @@ setGeneric("tiledb_is_supported_fs", function(object, scheme, ...) {
 })
 
 #' Query if a TileDB backend is supported
-#' 
+#'
 #' The scheme corresponds to the URI scheme for TileDB resouces.
-#'  
+#'
 #' Ex:
 #'  * `{file}:///path/to/file`
 #'  * `{hdfs}:///path/to/file`
 #'  * `{s3}://hostname:port/path/to/file`
-#' 
-#' @param object `tiledb_ctx` object 
+#'
+#' @param object `tiledb_ctx` object
 #' @param schema URI string scheme ("file", "hdfs", "s3")
 #' @return TRUE if tiledb backend is supported, FALSE otherwise
 #' @examples
 #' ctx <- tiledb_ctx()
-#' tiledb_is_supported_fs(ctx, "file") 
-#' 
+#' tiledb_is_supported_fs(ctx, "file")
+#'
 #' tiledb_is_supported_fs(ctx, "s3")
-#' 
+#'
 #' @export
 setMethod("tiledb_is_supported_fs", signature(object = "tiledb_ctx", scheme = "character"),
           function(object, scheme) {

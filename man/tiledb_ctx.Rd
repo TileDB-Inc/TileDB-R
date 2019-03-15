@@ -20,6 +20,6 @@ Creates a \code{tiledb_ctx} object
 ctx <- tiledb_ctx()
 
 # optionally set config parameters
-ctx <- tiledb_ctx(c("sm.tile_cache_size" = "100")) 
+ctx <- tiledb_ctx(c("sm.tile_cache_size" = "100"))
 
 }

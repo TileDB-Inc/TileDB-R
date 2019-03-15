@@ -21,7 +21,7 @@ check_object_arguments <- function(ctx = tiledb:::ctx, uri) {
 #' tiledb_object_type(ctx, pth)
 #'
 #'@export
-tiledb_group_create <- function(ctx-tiledb:::ctx, uri) {
+tiledb_group_create <- function(ctx = tiledb:::ctx, uri) {
   check_object_arguments(ctx, uri)
   return(libtiledb_group_create(ctx@ptr, uri))
 }

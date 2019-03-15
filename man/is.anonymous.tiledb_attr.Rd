@@ -18,7 +18,7 @@ A TileDB attribute is anonymous if no name/label is defined
 \examples{
 ctx <- tiledb_ctx()
 a1 <- tiledb_attr(ctx, "a1", type = "FLOAT64")
-is.anonymous(a1) 
+is.anonymous(a1)
 
 d2 <- tiledb_attr(ctx, "", type = "FLOAT64")
 is.anonymous(a2)

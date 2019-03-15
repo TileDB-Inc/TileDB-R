@@ -17,7 +17,8 @@ TRUE if tiledb backend is supported, FALSE otherwise
 }
 \description{
 The scheme corresponds to the URI scheme for TileDB resouces.
-
+}
+\details{
 Ex:
 \itemize{
 \item \code{{file}:///path/to/file}
@@ -27,7 +28,7 @@ Ex:
 }
 \examples{
 ctx <- tiledb_ctx()
-tiledb_is_supported_fs(ctx, "file") 
+tiledb_is_supported_fs(ctx, "file")
 
 tiledb_is_supported_fs(ctx, "s3")
 

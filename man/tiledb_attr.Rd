@@ -4,7 +4,7 @@
 \alias{tiledb_attr}
 \title{Contructs a \code{tiledb_attr} object}
 \usage{
-tiledb_attr(ctx, name = "", type = "FLOAT64",
+tiledb_attr(ctx = tiledb:::ctx, name = "", type = "FLOAT64",
   filter_list = tiledb_filter_list(ctx), ncells = 1)
 }
 \arguments{
@@ -27,6 +27,6 @@ ctx <- tiledb_ctx()
 flt = filter_list("GZIP")
 attr <- tiledb_attr(ctx, name = "a1", type = "INT32",
                     filter_list = flt)
-attr 
- 
+attr
+
 }

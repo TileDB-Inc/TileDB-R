@@ -4,7 +4,7 @@
 \alias{tiledb_object_ls}
 \title{List TileDB resources at a given root URI path}
 \usage{
-tiledb_object_ls(ctx, uri, filter = NULL)
+tiledb_object_ls(ctx = tiledb:::ctx, uri, filter = NULL)
 }
 \arguments{
 \item{ctx}{tiledb_ctx}

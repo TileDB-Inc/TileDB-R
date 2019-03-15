@@ -19,6 +19,6 @@ Return the number of scalar values per attribute cell
 \examples{
 ctx <- tiledb_ctx()
 a1 <- tiledb_attr(ctx, "a1", type = "FLOAT64", ncells = 3)
-ncells(a1) 
+ncells(a1)
 
 }
