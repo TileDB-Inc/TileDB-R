@@ -21,7 +21,7 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #' filter_list
 #'
 #' @export tiledb_filter_list
-tiledb_filter_list <- function(ctx, filters = c()) {
+tiledb_filter_list <- function(ctx = tiledb::ctx, filters = c()) {
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   }
@@ -29,7 +29,7 @@ tiledb_filter_list <- function(ctx, filters = c()) {
   filter_ptrs = c()
   if (length(filters) > 0) {
     if (!all(sapply(filters, is_filter))) {
-      stop("filters argument must be a list of one or tiled_filter objects")    
+      stop("filters argument must be a list of one or tiled_filter objects")
     }
     filter_ptrs <- lapply(filters, function(obj) slot(obj, "ptr"))
   }
@@ -56,7 +56,7 @@ setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_ma
 #' @export
 setMethod("set_max_chunk_size", signature(object = "tiledb_filter_list", value = "numeric"),
           function(object, value) {
-            libtiledb_filter_list_set_max_chunk_size(object@ptr, value) 
+            libtiledb_filter_list_set_max_chunk_size(object@ptr, value)
           })
 
 #' @export
@@ -76,7 +76,7 @@ setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
 #' @export
 setMethod("max_chunk_size", signature(object = "tiledb_filter_list"),
           function(object) {
-            libtiledb_filter_list_max_chunk_size(object@ptr) 
+            libtiledb_filter_list_max_chunk_size(object@ptr)
           })
 
 #' @export
@@ -96,7 +96,7 @@ setGeneric("nfilters", function(object) standardGeneric("nfilters"))
 #' @export
 setMethod("nfilters", signature(object = "tiledb_filter_list"),
           function(object) {
-            libtiledb_filter_list_nfilters(object@ptr) 
+            libtiledb_filter_list_nfilters(object@ptr)
           })
 
 #' Returns the filter at given index

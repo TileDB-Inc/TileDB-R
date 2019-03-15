@@ -11,7 +11,7 @@ setClass("tiledb_sparse",
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @return tiledb_sparse array object
 #' @export
-tiledb_sparse <- function(ctx, uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE) {
+tiledb_sparse <- function(ctx = tiledb:::ctx, uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE) {
     query_type = match.arg(query_type)
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -48,7 +48,7 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
   } else {
     attributes[["coords"]]  <- numeric(length = ncells)
   }
-  
+
   attrs <- tiledb::attrs(sch)
   if (length(filter_attributes) > 0) {
     attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
