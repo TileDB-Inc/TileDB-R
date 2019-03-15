@@ -14,6 +14,7 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #' @param filter an optional list of one or more tiledb_filter_list objects
 #' @return tiledb_filter_list object
 #' @examples
+#' ctx = tiledb_ctx()
 #' flt = tiledb_filter(ctx, "ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 #' flt.set
