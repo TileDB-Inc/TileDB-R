@@ -21,7 +21,6 @@ Creates a TileDB group object at given uri path
 pth <- tempdir()
 ctx <- tiledb_ctx()
 tiledb_group_create(ctx, pth)
-
 tiledb_object_type(ctx, pth)
 
 }

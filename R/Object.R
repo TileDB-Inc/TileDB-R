@@ -17,7 +17,6 @@ check_object_arguments <- function(ctx = tiledb:::ctx, uri) {
 #' pth <- tempdir()
 #' ctx <- tiledb_ctx()
 #' tiledb_group_create(ctx, pth)
-#'
 #' tiledb_object_type(ctx, pth)
 #'
 #'@export

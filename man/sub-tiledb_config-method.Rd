@@ -21,7 +21,6 @@ Gets a config parameter value
 \examples{
 cfg <- tiledb_config()
 cfg["sm.tile_cache_size"]
-
 cfg["does_not_exist"]
 
 }

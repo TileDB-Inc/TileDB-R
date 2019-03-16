@@ -14,10 +14,9 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #' @param filter an optional list of one or more tiledb_filter_list objects
 #' @return tiledb_filter_list object
 #' @examples
-#' ctx = tiledb_ctx()
-#' flt = tiledb_filter(ctx, "ZSTD")
+#' ctx <- tiledb_ctx()
+#' flt <- tiledb_filter(ctx, "ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
-#' flt.set
 #' filter_list <- tiledb_filter_list(ctx, c(flt))
 #' filter_list
 #'
@@ -30,7 +29,7 @@ tiledb_filter_list <- function(ctx = tiledb::ctx, filters = c()) {
   filter_ptrs = c()
   if (length(filters) > 0) {
     if (!all(sapply(filters, is_filter))) {
-      stop("filters argument must be a list of one or tiled_filter objects")
+      stop("filters argument must be a list of one or tiledb_filter objects")
     }
     filter_ptrs <- lapply(filters, function(obj) slot(obj, "ptr"))
   }
@@ -47,13 +46,11 @@ setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_ma
 #' @param string option
 #' @param int value
 #' @examples
-#' flt = tiledb_filter(ctx, "ZSTD")
+#' ctx <- tiledb_ctx()
+#' flt <- tiledb_filter(ctx, "ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
-#' flt.set
 #' filter_list <- tiledb_filter_list(ctx, c(flt))
-#' set_max_chunk_size(filter_list, value)
-#'
-#'
+#' set_max_chunk_size(filter_list, 10)
 #' @export
 setMethod("set_max_chunk_size", signature(object = "tiledb_filter_list", value = "numeric"),
           function(object, value) {
@@ -68,9 +65,9 @@ setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
 #' @param object tiledb_filter_list
 #' @return integer max_chunk_size
 #' @examples
-#' flt = tiledb_filter(ctx, "ZSTD")
+#' ctx <- tiledb_ctx()
+#' flt <- tiledb_filter(ctx, "ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
-#' flt.set
 #' filter_list <- tiledb_filter_list(ctx, c(flt))
 #' max_chunk_size(filter_list)
 #'
@@ -88,9 +85,9 @@ setGeneric("nfilters", function(object) standardGeneric("nfilters"))
 #' @param object tiledb_filter_list
 #' @return integer number of filters
 #' @examples
-#' flt = tiledb_filter(ctx, "ZSTD")
+#' ctx <- tiledb_ctx()
+#' flt <- tiledb_filter(ctx, "ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
-#' flt.set
 #' filter_list <- tiledb_filter_list(ctx, c(flt))
 #' nfilters(filter_list)
 #'
@@ -104,9 +101,9 @@ setMethod("nfilters", signature(object = "tiledb_filter_list"),
 #'
 #' @return object tiledb_filter
 #' @examples
-#' flt = tiledb_filter(ctx, "ZSTD")
+#' ctx <- tiledb_ctx()
+#' flt <- tiledb_filter(ctx, "ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
-#' flt.set
 #' filter_list <- tiledb_filter_list(ctx, c(flt))
 #' filter_list[0]
 #'

@@ -1,5 +1,5 @@
 #' @exportClass tiledb_config
-setClass("tiledb_config", 
+setClass("tiledb_config",
          slots = list(ptr = "externalptr"))
 
 #' @importFrom methods new
@@ -13,21 +13,21 @@ tiledb_config.from_ptr <- function(ptr) {
 #' Creates a `tiledb_config` object
 #'
 #' @param config (optonal) character vector of config parameter names, values
-#' @return `tiledb_config` object 
+#' @return `tiledb_config` object
 #' @examples
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
-#' 
+#'
 #' # set tile cache size to custom value
-#' cfg <- tiledb_config(c("sm.tile_cache_size" = "100")) 
-#' cfg["sm.tile_cache_size"] 
+#' cfg <- tiledb_config(c("sm.tile_cache_size" = "100"))
+#' cfg["sm.tile_cache_size"]
 #'
 #' @importFrom methods new
 #' @export tiledb_config
 tiledb_config <- function(config = NA_character_) {
   if (!is.na(config)) {
     if (typeof(config) != "character" || is.null(names(config))) {
-      stop("config arugment must be a name, value character vector") 
+      stop("config arugment must be a name, value character vector")
     }
     ptr <- libtiledb_config(config)
   } else {
@@ -37,16 +37,15 @@ tiledb_config <- function(config = NA_character_) {
 }
 
 #' Gets a config parameter value
-#' 
+#'
 #' @param x `tiledb_config`object
 #' @param i parameter key string
 #' @return a config string value if parameter exists, else NA
 #' @examples
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
-#' 
 #' cfg["does_not_exist"]
-#' 
+#'
 setMethod("[", "tiledb_config",
           function(x, i, j, ...) {
             if (!is.character(i)) {
@@ -60,7 +59,7 @@ setMethod("[", "tiledb_config",
           })
 
 #' Sets a config parameter value
-#' 
+#'
 #' @param x `tiledb_config`object
 #' @param i parameter key string
 #' @param value value to set, will be converted into a stringa
@@ -68,11 +67,11 @@ setMethod("[", "tiledb_config",
 #' @examples
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
-#' 
+#'
 #' # set tile cache size to custom value
 #' cfg["sm.tile_cache_size"] <- 100
 #' cfg["sm.tile_cache_size"]
-#' 
+#'
 setMethod("[<-", "tiledb_config",
           function(x, i, j, value) {
             if (!is.character(i)) {
@@ -81,7 +80,7 @@ setMethod("[<-", "tiledb_config",
               stop("incorrect number of subscripts")
             } else if (!is.character(value)) {
               if (is.double(value) || is.integer(value)) {
-                value <- as.character(value)    
+                value <- as.character(value)
               } else if (is.logical(value)) {
                 value <- if (isTRUE(value)) "true" else "false"
               } else {
@@ -93,38 +92,38 @@ setMethod("[<-", "tiledb_config",
           })
 
 #' Prints the config object to STDOUT
-#' 
+#'
 #' @param object `tiledb_config` object
 #' @examples
 #' cfg <- tiledb_config()
 #' show(cfg)
-#' 
+#'
 setMethod("show", signature(object = "tiledb_config"),
           function(object) {
             libtiledb_config_dump(object@ptr)
           })
 
 #' Save a `tiledb_config` object ot a local text file
-#' 
+#'
 #' @param config The `tiledb_config` object
-#' @param path The path to config file to be created 
+#' @param path The path to config file to be created
 #' @return path to created config file
 #' @examples
 #' tmp <- tempfile()
 #' cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 #' pth <- tiledb_config_save(cfg, tmp)
-#' 
-#' cat(readLines(pth), sep = "\n") 
-#' 
+#'
+#' cat(readLines(pth), sep = "\n")
+#'
 #' @export
 tiledb_config_save <- function(config, path) {
   stopifnot(class(config) == "tiledb_config")
   stopifnot(typeof(path) == "character")
-  libtiledb_config_save_to_file(config@ptr, path) 
+  libtiledb_config_save_to_file(config@ptr, path)
 }
 
 #' Load a saved `tiledb_config` file from disk
-#' 
+#'
 #' @param path path to the config file
 #' @examples
 #' tmp <- tempfile()
@@ -132,7 +131,7 @@ tiledb_config_save <- function(config, path) {
 #' pth <- tiledb_config_save(cfg, tmp)
 #' cfg <- tiledb_config_load(pth)
 #' cfg["sm.tile_cache_size"]
-#' 
+#'
 #' @export
 tiledb_config_load <- function(path) {
   stopifnot(typeof(path) == "character")
@@ -141,13 +140,13 @@ tiledb_config_load <- function(path) {
 }
 
 #' Convert a `tiledb_config` object to a R vector
-#' 
+#'
 #' @param x `tiledb_config` object
 #' @return a character vector of config parameter names, values
 #' @examples
 #' cfg <- tiledb_config()
 #' as.vector(cfg)
-#' 
+#'
 #' @export
 as.vector.tiledb_config <- function(x, mode="any") {
   libtiledb_config_vector(x@ptr)
@@ -159,11 +158,11 @@ as.vector.tiledb_config <- function(x, mode="any") {
 #' @examples
 #' cfg <- tiledb_config()
 #' as.data.frame(cfg)
-#' 
+#'
 #' @export
 as.data.frame.tiledb_config <- function(x, ...) {
   v <- libtiledb_config_vector(x@ptr)
   params <- names(v)
-  values <- as.vector(v) 
+  values <- as.vector(v)
   return(data.frame("parameter" = params, "value" = values, stringsAsFactors = FALSE))
-} 
+}

@@ -35,7 +35,7 @@ Valid compression options vary depending on the filter used,
 consult the TileDB docs for more information.
 }
 \examples{
-c <- tiledb_filter(ctx, "ZSTD")
-c
+ctx <- tiledb_ctx()
+tiledb_filter(ctx, "ZSTD")
 
 }

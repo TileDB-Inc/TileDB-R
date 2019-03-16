@@ -14,11 +14,11 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @param name (default "") The dimension name / label string.
 #' @param type (default "FLOAT64") The tiledb_attr TileDB datatype string
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
-#' @param ncells (default 1) The number of cells
+#' @param ncells (default 1) The number of cells, must be 1 for now
 #' @return `tiledb_dim` object
 #' @examples
 #' ctx <- tiledb_ctx()
-#' flt = filter_list("GZIP")
+#' flt <- tiledb_filter_list(ctx,list(tiledb_filter(ctx,"GZIP")))
 #' attr <- tiledb_attr(ctx, name = "a1", type = "INT32",
 #'                     filter_list = flt)
 #' attr
@@ -99,7 +99,7 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #' @return a tiledb_filter_list object
 #' @examples
 #' ctx <- tiledb_ctx()
-#' attr <- tiledb_attr(ctx, filter_list=tiledb_filter_list("ZSTD"))
+#' attr <- tiledb_attr(ctx, filter_list=tiledb_filter_list(ctx,list(tiledb_filter(ctx,"ZSTD"))))
 #' filter_list(attr)
 #'
 #' @export
@@ -118,7 +118,7 @@ setGeneric("ncells", function(object) standardGeneric("ncells"))
 #' @return integer number of cells
 #' @examples
 #' ctx <- tiledb_ctx()
-#' a1 <- tiledb_attr(ctx, "a1", type = "FLOAT64", ncells = 3)
+#' a1 <- tiledb_attr(ctx, "a1", type = "FLOAT64", ncells = 1)
 #' ncells(a1)
 #'
 #' @export
@@ -141,7 +141,7 @@ is.anonymous <- function(object) UseMethod("is.anonymous", object)
 #' a1 <- tiledb_attr(ctx, "a1", type = "FLOAT64")
 #' is.anonymous(a1)
 #'
-#' d2 <- tiledb_attr(ctx, "", type = "FLOAT64")
+#' a2 <- tiledb_attr(ctx, "", type = "FLOAT64")
 #' is.anonymous(a2)
 #'
 #' @export

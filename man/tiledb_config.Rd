@@ -20,7 +20,7 @@ cfg <- tiledb_config()
 cfg["sm.tile_cache_size"]
 
 # set tile cache size to custom value
-cfg <- tiledb_config(c("sm.tile_cache_size" = "100")) 
-cfg["sm.tile_cache_size"] 
+cfg <- tiledb_config(c("sm.tile_cache_size" = "100"))
+cfg["sm.tile_cache_size"]
 
 }
