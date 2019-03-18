@@ -27,7 +27,7 @@ tiledb_config.from_ptr <- function(ptr) {
 tiledb_config <- function(config = NA_character_) {
   if (!is.na(config)) {
     if (typeof(config) != "character" || is.null(names(config))) {
-      stop("config arugment must be a name, value character vector")
+      stop("config argument must be a name, value character vector")
     }
     ptr <- libtiledb_config(config)
   } else {
