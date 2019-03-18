@@ -4,8 +4,8 @@
 \alias{tiledb_array_schema}
 \title{Constructs a \code{tiledb_array_schema} object}
 \usage{
-tiledb_array_schema(ctx, domain, attrs, cell_order = "COL_MAJOR",
-  tile_order = "COL_MAJOR", sparse = FALSE,
+tiledb_array_schema(ctx = tiledb:::ctx, domain, attrs,
+  cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE,
   coords_filter_list = NULL, offsets_filter_list = NULL)
 }
 \arguments{
@@ -31,13 +31,13 @@ Constructs a \code{tiledb_array_schema} object
 \examples{
 ctx <- tiledb_ctx()
 schema <- tiledb_array_schema(ctx,
-              dom = tiledb_domain(ctx, 
+              dom = tiledb_domain(ctx,
                         dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "INT32"),
                                  tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "INT32"))),
-              attrs = c(tiledb_attr(ctx, "a", type = "INT32")), 
+              attrs = c(tiledb_attr(ctx, "a", type = "INT32")),
               cell_order = "COL_MAJOR",
               tile_order = "COL_MAJOR",
               sparse = FALSE)
-schema 
+schema
 
 }

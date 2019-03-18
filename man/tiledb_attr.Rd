@@ -4,7 +4,7 @@
 \alias{tiledb_attr}
 \title{Contructs a \code{tiledb_attr} object}
 \usage{
-tiledb_attr(ctx, name = "", type = "FLOAT64",
+tiledb_attr(ctx = tiledb:::ctx, name = "", type = "FLOAT64",
   filter_list = tiledb_filter_list(ctx), ncells = 1)
 }
 \arguments{
@@ -14,7 +14,7 @@ tiledb_attr(ctx, name = "", type = "FLOAT64",
 
 \item{filter_list}{(default filter_list("NONE")) The tiledb_attr filter_list}
 
-\item{ncells}{(default 1) The number of cells}
+\item{ncells}{(default 1) The number of cells, must be 1 for now}
 }
 \value{
 \code{tiledb_dim} object
@@ -24,9 +24,9 @@ Contructs a \code{tiledb_attr} object
 }
 \examples{
 ctx <- tiledb_ctx()
-flt = filter_list("GZIP")
+flt <- tiledb_filter_list(ctx,list(tiledb_filter(ctx,"GZIP")))
 attr <- tiledb_attr(ctx, name = "a1", type = "INT32",
                     filter_list = flt)
-attr 
- 
+attr
+
 }

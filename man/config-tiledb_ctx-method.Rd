@@ -17,7 +17,7 @@
 Retrieve the \code{tiledb_config} object from the \code{tiledb_ctx}
 }
 \examples{
-ctx <- tieldb_ctx(c("sm.tile_cache_size" = "10")) 
+ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 cfg <- config(ctx)
 cfg["sm.tile_cache_size"]
 

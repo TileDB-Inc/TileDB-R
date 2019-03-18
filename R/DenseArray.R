@@ -9,7 +9,7 @@ setClass("tiledb_dense",
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @return tiledb_dense array object
 #' @export
-tiledb_dense <- function(ctx, uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE) {
+tiledb_dense <- function(ctx = tiledb:::ctx, uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE) {
   query_type = match.arg(query_type)
   if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -138,7 +138,7 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
   is_scalar <- all(sub_dim == 1L)
-  
+
   attributes <- list()
 
   # first alloc coordinate buffer if we are returning a data.frame

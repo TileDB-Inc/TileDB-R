@@ -19,7 +19,7 @@ Return the number of dimensions associated with the \code{tieldb_array_schema}
 \examples{
 ctx <- tiledb_ctx()
 dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 10L), type = "INT32")))
-sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1", type = "INT32"), 
+sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1", type = "INT32"),
                                                tiledb_attr(ctx, "a2", type = "FLOAT64")))
 tiledb_ndim(sch)
 

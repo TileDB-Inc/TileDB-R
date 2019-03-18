@@ -16,8 +16,9 @@ integer option
 Returns the filter's option
 }
 \examples{
-c <- tiledb_filter("ZSTD")
-c.set_option(TILEDB_COMPRESSION_LEVEL, 5)
-filter_option(c)
+ctx <- tiledb_ctx()
+c <- tiledb_filter(ctx, "ZSTD")
+tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
+tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
 
 }

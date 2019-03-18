@@ -1,5 +1,5 @@
 #' @exportClass tiledb_dim
-setClass("tiledb_dim", 
+setClass("tiledb_dim",
          slots = list(ptr = "externalptr"))
 
 #' @importFrom methods new
@@ -11,28 +11,28 @@ tiledb_dim.from_ptr <- function(ptr) {
 }
 
 #' Contructs a `tiledb_dim` object
-#'    
+#'
 #' @param name The dimension name / label string.  If emtpy, the domain is anonymous and will be assigned a positional label.
 #' @param domain The dimension (inclusive) domain. The dimension’s domain is defined by a (lower bound, upper bound) vector
 #' @param tile The tile dimension tile extent
-#' @param type The dimension TileDB datatype string 
+#' @param type The dimension TileDB datatype string
 #' @return `tiledb_dim` object
-#' @examples 
+#' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, name = "d1", domain = c(1L, 10L), tile = 5L, type = "INT32")
-#' d1 
-#'  
+#' d1
+#'
 #' @importFrom methods new
 #' @export tiledb_dim
-tiledb_dim <- function(ctx, name="", domain, tile, type) {
+tiledb_dim <- function(ctx = tiledb::ctx, name="", domain, tile, type) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {
     stop("name argument must be a scalar string")
-  } else if ((typeof(domain) != "integer" && typeof(domain) != "double") 
+  } else if ((typeof(domain) != "integer" && typeof(domain) != "double")
              || (length(domain) != 2)) {
-    stop("domain must be an integer or double vector of length 2")   
-  } 
+    stop("domain must be an integer or double vector of length 2")
+  }
   # by default, tile extent should span the whole domain
   if (missing(tile)) {
     if (is.integer(domain)) {
@@ -52,16 +52,16 @@ tiledb_dim <- function(ctx, name="", domain, tile, type) {
 
 #' Return the `tiledb_dim` name
 #'
-#' @param `tiledb_dim` object 
-#' @return string name, empty string if the dimension is anonymous 
+#' @param `tiledb_dim` object
+#' @return string name, empty string if the dimension is anonymous
 #' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", c(1L, 10L))
 #' name(d1)
-#' 
+#'
 #' d2 <- tiledb_dim(ctx, "", c(1L, 10L))
 #' name(d2)
-#' 
+#'
 #' @export
 setMethod("name", signature(object = "tiledb_dim"),
           function(object) {
@@ -69,14 +69,14 @@ setMethod("name", signature(object = "tiledb_dim"),
           })
 
 #' Return the `tiledb_dim` domain
-#' 
+#'
 #' @param `tiledb_dim` object
 #' @param a vector of (lb, ub) inclusive domain of the dimension
 #' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", domain = c(5L, 10L))
 #' domain(d1)
-#' 
+#'
 #' @export
 setMethod("domain", signature(object = "tiledb_dim"),
           function(object) {
@@ -87,14 +87,14 @@ setMethod("domain", signature(object = "tiledb_dim"),
 setGeneric("tile", function(object) standardGeneric("tile"))
 
 #' Return the `tiledb_dim` tile extent
-#' 
+#'
 #' @param `tiledb_dim` object
 #' @param a scalar tile extent
 #' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", domain = c(5L, 10L), tile = 2L)
 #' tile(d1)
-#' 
+#'
 #' @export
 setMethod("tile", signature(object = "tiledb_dim"),
           function(object) {
@@ -102,14 +102,14 @@ setMethod("tile", signature(object = "tiledb_dim"),
           })
 
 #' Return the `tiledb_dim` datatype
-#' 
+#'
 #' @param `tiledb_dim` object
 #' @param tiledb datatype string
 #' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", domain = c(5L, 10L), tile = 2L, type = "INT32")
 #' datatype(d1)
-#' 
+#'
 #' @export
 setMethod("datatype", signature(object = "tiledb_dim"),
           function(object) {
@@ -117,34 +117,34 @@ setMethod("datatype", signature(object = "tiledb_dim"),
           })
 
 #' Returns the number of dimensions for a tiledb domain object
-#'  
-#' @param `tiledb_ndim` object 
-#' @return 1L 
+#'
+#' @param `tiledb_ndim` object
+#' @return 1L
 #' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", c(1L, 10L), 10L)
 #' tiledb_ndim(d1)
-#' 
+#'
 #' @export
 setMethod("tiledb_ndim", "tiledb_dim",
           function(object) {
-            return(1L)            
+            return(1L)
           })
 
-#' Returns TRUE if the tiledb_dim is anonymous 
-#' 
+#' Returns TRUE if the tiledb_dim is anonymous
+#'
 #' A TileDB dimension is anonymous if no name/label is defined
-#' 
+#'
 #' @param `tiledb_dim` object
 #' @return TRUE or FALSE
 #' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", c(1L, 10L), 10L)
-#' is.anonymous(d1) 
-#' 
+#' is.anonymous(d1)
+#'
 #' d2 <- tiledb_dim(ctx, "", c(1L, 10L), 10L)
 #' is.anonymous(d2)
-#' 
+#'
 #' @export
 is.anonymous.tiledb_dim <- function(object) {
   name <- libtiledb_dim_name(object@ptr)
@@ -152,19 +152,19 @@ is.anonymous.tiledb_dim <- function(object) {
 }
 
 #' Retrieves the dimension of the tiledb_dim domain
-#' 
+#'
 #' @param `tiledb_dim` object
 #' @return a vector of the tile_dim domain type, of the dim domain dimension (extent)
-#' @examples 
+#' @examples
 #' ctx <- tiledb_ctx()
 #' d1 <- tiledb_dim(ctx, "d1", c(1L, 10L), 5L)
 #' dim(d1)
-#' 
+#'
 #' @export
 dim.tiledb_dim <- function(x) {
-  dtype <- datatype(x) 
+  dtype <- datatype(x)
   if (dtype == "FLOAT32" || dtype == "FLOAT64") {
-    stop("dim() is only defined for integral domains") 
+    stop("dim() is only defined for integral domains")
   }
   dom <- domain(x)
   return(dom[2L] - dom[1L] + 1L)

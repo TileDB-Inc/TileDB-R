@@ -4,7 +4,7 @@
 \alias{tiledb_object_type}
 \title{Return the TileDB object type string of a TileDB resource}
 \usage{
-tiledb_object_type(ctx, uri)
+tiledb_object_type(ctx = tiledb::ctx, uri)
 }
 \arguments{
 \item{ctx}{tiledb_ctx}

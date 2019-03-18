@@ -4,7 +4,7 @@
 \alias{tiledb_object_mv}
 \title{Move a TileDB resource to new uri path}
 \usage{
-tiledb_object_mv(ctx, old_uri, new_uri)
+tiledb_object_mv(ctx = tiledb:::ctx, old_uri, new_uri)
 }
 \arguments{
 \item{ctx}{tiledb_ctx}

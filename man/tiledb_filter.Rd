@@ -4,7 +4,7 @@
 \alias{tiledb_filter}
 \title{Constructs a \code{tiledb_filter} object}
 \usage{
-tiledb_filter(ctx, name = "NONE")
+tiledb_filter(ctx = tiledb::ctx, name = "NONE")
 }
 \arguments{
 \item{ctx}{tiledb_ctx object}
@@ -35,7 +35,7 @@ Valid compression options vary depending on the filter used,
 consult the TileDB docs for more information.
 }
 \examples{
-c <- tiledb_filter(ctx, "ZSTD")
-c
+ctx <- tiledb_ctx()
+tiledb_filter(ctx, "ZSTD")
 
 }

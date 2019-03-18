@@ -22,6 +22,6 @@ tmp <- tempfile()
 cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 pth <- tiledb_config_save(cfg, tmp)
 
-cat(readLines(pth), sep = "\\n") 
+cat(readLines(pth), sep = "\\n")
 
 }
