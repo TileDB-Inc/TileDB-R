@@ -4,12 +4,12 @@
 \alias{tiledb_domain}
 \title{Constructs a \code{tiledb_domain} object}
 \usage{
-tiledb_domain(ctx = tiledb::ctx, dims)
+tiledb_domain(dims, ctx = tiledb:::ctx)
 }
 \arguments{
-\item{ctx}{tiledb_ctx}
-
 \item{dims}{list() of tiledb_dim objects}
+
+\item{ctx}{tiledb_ctx}
 }
 \value{
 tiledb_domain
@@ -18,7 +18,6 @@ tiledb_domain
 All \code{tiledb_dim} must be of the same TileDB type.
 }
 \examples{
-ctx <- tiledb_ctx()
-dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32"),
-                                   tiledb_dim(ctx, "d2", c(1L, 50L), type = "INT32")))
+dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
+                              tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 }

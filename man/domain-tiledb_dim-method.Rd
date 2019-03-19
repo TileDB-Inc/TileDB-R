@@ -16,8 +16,7 @@
 Return the \code{tiledb_dim} domain
 }
 \examples{
-ctx <- tiledb_ctx()
-d1 <- tiledb_dim(ctx, "d1", domain = c(5L, 10L))
+d1 <- tiledb_dim("d1", domain = c(5L, 10L))
 domain(d1)
 
 }

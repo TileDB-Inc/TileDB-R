@@ -16,8 +16,7 @@ TileDB filter type string
 Returns the type of the filter used
 }
 \examples{
-ctx <- tiledb_ctx()
-c <- tiledb_filter(ctx, "ZSTD")
+c <- tiledb_filter("ZSTD")
 tiledb_filter_type(c)
 
 }

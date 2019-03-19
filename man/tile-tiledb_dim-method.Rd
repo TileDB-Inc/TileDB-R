@@ -16,8 +16,7 @@
 Return the \code{tiledb_dim} tile extent
 }
 \examples{
-ctx <- tiledb_ctx()
-d1 <- tiledb_dim(ctx, "d1", domain = c(5L, 10L), tile = 2L)
+d1 <- tiledb_dim("d1", domain = c(5L, 10L), tile = 2L)
 tile(d1)
 
 }

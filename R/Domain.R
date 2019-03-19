@@ -17,13 +17,12 @@ tiledb_domain.from_ptr <- function(ptr) {
 #' @param dims list() of tiledb_dim objects
 #' @return tiledb_domain
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32"),
-#'                                    tiledb_dim(ctx, "d2", c(1L, 50L), type = "INT32")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
+#'                               tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 #' @importFrom methods slot
 #' @importFrom methods new
 #' @export tiledb_domain
-tiledb_domain <- function(ctx = tiledb::ctx, dims) {
+tiledb_domain <- function(dims, ctx = tiledb:::ctx) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   }
@@ -47,9 +46,8 @@ setMethod("show", "tiledb_domain",
 #' @param object tiledb_domain
 #' @return a list of tiledb_dim
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32"),
-#'                                    tiledb_dim(ctx, "d2", c(1L, 50L), type = "INT32")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
+#'                               tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 #' dimensions(dom)
 #'
 #' lapply(dimensions(dom), name)
@@ -66,10 +64,9 @@ setMethod("dimensions", "tiledb_domain",
 #' @param object tiledb_domain
 #' @return tiledb_domain type string
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32")))
 #' datatype(dom)
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
 #' datatype(dom)
 #'
 #' @export
@@ -83,11 +80,10 @@ setMethod("datatype", "tiledb_domain",
 #' @param object tiledb_domain
 #' @return integer number of dimensions
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
 #' tiledb_ndim(dom)
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64"),
-#'                                    tiledb_dim(ctx, "d2", c(0.5, 100.0), type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64"),
+#'                                    tiledb_dim("d2", c(0.5, 100.0), type = "FLOAT64")))
 #' tiledb_ndim(dom)
 #'
 #' @export
@@ -104,10 +100,9 @@ setGeneric("is.integral", function(object) standardGeneric("is.integral"))
 #' @param object tiledb_domain
 #' @return TRUE if the domain is an integral domain, else FALSE
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32")))
 #' is.integral(dom)
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
 #' is.integral(dom)
 #'
 #' @export
@@ -124,9 +119,8 @@ setMethod("is.integral", "tiledb_domain",
 #' @param x tiledb_domain
 #' @return dimension vector
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32"),
-#'                                    tiledb_dim(ctx, "d2", c(1L, 100L), type = "INT32")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
+#'                               tiledb_dim("d2", c(1L, 100L), type = "INT32")))
 #' dim(dom)
 #'
 #' @export

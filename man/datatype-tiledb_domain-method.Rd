@@ -17,10 +17,9 @@ tiledb_domain type string
 Returns tiledb_domain TileDB type string
 }
 \examples{
-ctx <- tiledb_ctx()
-dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32")))
+dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32")))
 datatype(dom)
-dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64")))
+dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
 datatype(dom)
 
 }

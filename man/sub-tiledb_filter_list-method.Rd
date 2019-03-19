@@ -14,10 +14,9 @@ object tiledb_filter
 Returns the filter at given index
 }
 \examples{
-ctx <- tiledb_ctx()
-flt <- tiledb_filter(ctx, "ZSTD")
+flt <- tiledb_filter("ZSTD")
 tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
-filter_list <- tiledb_filter_list(ctx, c(flt))
+filter_list <- tiledb_filter_list(c(flt))
 filter_list[0]
 
 }

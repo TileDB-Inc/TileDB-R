@@ -17,11 +17,10 @@ string name, empty string if the attribute is anonymous
 Return the \code{tiledb_attr} name
 }
 \examples{
-ctx <- tiledb_ctx()
-a1 <- tiledb_attr(ctx, "a1")
+a1 <- tiledb_attr("a1")
 name(a1)
 
-a2 <- tiledb_attr(ctx)
+a2 <- tiledb_attr()
 name(a2)
 
 }

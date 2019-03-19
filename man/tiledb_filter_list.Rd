@@ -4,7 +4,7 @@
 \alias{tiledb_filter_list}
 \title{Constructs a \code{tiledb_filter_list} object}
 \usage{
-tiledb_filter_list(ctx = tiledb::ctx, filters = c())
+tiledb_filter_list(filters = c(), ctx = tiledb:::ctx)
 }
 \arguments{
 \item{ctx}{tiledb_ctx object}
@@ -18,10 +18,9 @@ tiledb_filter_list object
 Constructs a \code{tiledb_filter_list} object
 }
 \examples{
-ctx <- tiledb_ctx()
-flt <- tiledb_filter(ctx, "ZSTD")
+flt <- tiledb_filter("ZSTD")
 tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
-filter_list <- tiledb_filter_list(ctx, c(flt))
+filter_list <- tiledb_filter_list(c(flt))
 filter_list
 
 }

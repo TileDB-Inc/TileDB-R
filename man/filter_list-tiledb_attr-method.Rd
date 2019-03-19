@@ -17,8 +17,7 @@ a tiledb_filter_list object
 Returns the \code{tiledb_filter_list} object associated with the given \code{tiledb_attr}
 }
 \examples{
-ctx <- tiledb_ctx()
-attr <- tiledb_attr(ctx, filter_list=tiledb_filter_list(ctx,list(tiledb_filter(ctx,"ZSTD"))))
+attr <- tiledb_attr(filter_list=tiledb_filter_list(list(tiledb_filter("ZSTD"))))
 filter_list(attr)
 
 }

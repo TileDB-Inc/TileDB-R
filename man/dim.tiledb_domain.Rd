@@ -16,9 +16,8 @@ dimension vector
 Only valid for integral (integer) domains
 }
 \examples{
-ctx <- tiledb_ctx()
-dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32"),
-                                   tiledb_dim(ctx, "d2", c(1L, 100L), type = "INT32")))
+dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
+                              tiledb_dim("d2", c(1L, 100L), type = "INT32")))
 dim(dom)
 
 }

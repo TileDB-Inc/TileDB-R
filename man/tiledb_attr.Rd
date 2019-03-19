@@ -4,8 +4,8 @@
 \alias{tiledb_attr}
 \title{Contructs a \code{tiledb_attr} object}
 \usage{
-tiledb_attr(ctx = tiledb:::ctx, name = "", type = "FLOAT64",
-  filter_list = tiledb_filter_list(ctx), ncells = 1)
+tiledb_attr(name = "", type = "FLOAT64",
+  filter_list = tiledb_filter_list(), ncells = 1, ctx = tiledb:::ctx)
 }
 \arguments{
 \item{name}{(default "") The dimension name / label string.}
@@ -23,9 +23,8 @@ tiledb_attr(ctx = tiledb:::ctx, name = "", type = "FLOAT64",
 Contructs a \code{tiledb_attr} object
 }
 \examples{
-ctx <- tiledb_ctx()
-flt <- tiledb_filter_list(ctx,list(tiledb_filter(ctx,"GZIP")))
-attr <- tiledb_attr(ctx, name = "a1", type = "INT32",
+flt <- tiledb_filter_list(list(tiledb_filter("GZIP")))
+attr <- tiledb_attr(name = "a1", type = "INT32",
                     filter_list = flt)
 attr
 

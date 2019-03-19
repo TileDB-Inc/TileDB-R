@@ -4,14 +4,14 @@
 \alias{tiledb_object_walk}
 \title{Recursively discover TileDB resources at a given root URI path}
 \usage{
-tiledb_object_walk(ctx = tiledb:::ctx, uri, order = "PREORDER")
+tiledb_object_walk(uri, order = "PREORDER", ctx = tiledb:::ctx)
 }
 \arguments{
-\item{ctx}{tiledb_ctx}
-
 \item{uri}{root uri path to walk}
 
 \item{order}{(default "PREORDER") specify "POSTORDER" for "POSTORDER" traversal}
+
+\item{ctx}{tiledb_ctx}
 }
 \value{
 a dataframe with object type, object uri string columns

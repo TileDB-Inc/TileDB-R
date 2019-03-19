@@ -5,7 +5,7 @@
 \alias{config,tiledb_ctx-method}
 \title{Retrieve the \code{tiledb_config} object from the \code{tiledb_ctx}}
 \usage{
-\S4method{config}{tiledb_ctx}(object)
+\S4method{config}{tiledb_ctx}(object = tiledb:::ctx)
 }
 \arguments{
 \item{`tiledb_ctx`}{object}

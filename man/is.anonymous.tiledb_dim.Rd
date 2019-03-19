@@ -16,11 +16,10 @@ TRUE or FALSE
 A TileDB dimension is anonymous if no name/label is defined
 }
 \examples{
-ctx <- tiledb_ctx()
-d1 <- tiledb_dim(ctx, "d1", c(1L, 10L), 10L)
+d1 <- tiledb_dim("d1", c(1L, 10L), 10L)
 is.anonymous(d1)
 
-d2 <- tiledb_dim(ctx, "", c(1L, 10L), 10L)
+d2 <- tiledb_dim("", c(1L, 10L), 10L)
 is.anonymous(d2)
 
 }

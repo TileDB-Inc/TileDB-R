@@ -16,11 +16,10 @@
 Return the \code{tiledb_attr} datatype
 }
 \examples{
-ctx <- tiledb_ctx()
-a1 <- tiledb_attr(ctx, "a1", type = "INT32")
+a1 <- tiledb_attr("a1", type = "INT32")
 datatype(a1)
 
-a2 <- tiledb_attr(ctx, "a1", type = "FLOAT64")
+a2 <- tiledb_attr("a1", type = "FLOAT64")
 datatype(a2)
 
 }

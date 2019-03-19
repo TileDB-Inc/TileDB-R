@@ -4,13 +4,12 @@
 \alias{tiledb_array_schema}
 \title{Constructs a \code{tiledb_array_schema} object}
 \usage{
-tiledb_array_schema(ctx = tiledb:::ctx, domain, attrs,
-  cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE,
-  coords_filter_list = NULL, offsets_filter_list = NULL)
+tiledb_array_schema(domain, attrs, cell_order = "COL_MAJOR",
+  tile_order = "COL_MAJOR", sparse = FALSE,
+  coords_filter_list = NULL, offsets_filter_list = NULL,
+  ctx = tiledb:::ctx)
 }
 \arguments{
-\item{ctx}{tiledb_ctx object}
-
 \item{domain}{tiledb_domain object}
 
 \item{attrs}{a list of one or more tiledb_attr objects}
@@ -24,17 +23,18 @@ tiledb_array_schema(ctx = tiledb:::ctx, domain, attrs,
 \item{coords_filter_list}{(optional)}
 
 \item{offsets_filter_list}{(optional)}
+
+\item{ctx}{tiledb_ctx object}
 }
 \description{
 Constructs a \code{tiledb_array_schema} object
 }
 \examples{
-ctx <- tiledb_ctx()
-schema <- tiledb_array_schema(ctx,
-              dom = tiledb_domain(ctx,
-                        dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "INT32"),
-                                 tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "INT32"))),
-              attrs = c(tiledb_attr(ctx, "a", type = "INT32")),
+schema <- tiledb_array_schema(
+              dom = tiledb_domain(
+                        dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                 tiledb_dim("cols", c(1L, 4L), 4L, "INT32"))),
+              attrs = c(tiledb_attr("a", type = "INT32")),
               cell_order = "COL_MAJOR",
               tile_order = "COL_MAJOR",
               sparse = FALSE)

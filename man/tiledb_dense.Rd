@@ -4,15 +4,15 @@
 \alias{tiledb_dense}
 \title{Constructs a tiledb_dense object backed by a persisted tiledb array uri}
 \usage{
-tiledb_dense(ctx = tiledb:::ctx, uri, query_type = c("READ", "WRITE"),
-  as.data.frame = FALSE)
+tiledb_dense(uri, query_type = c("READ", "WRITE"),
+  as.data.frame = FALSE, ctx = tiledb:::ctx)
 }
 \arguments{
-\item{ctx}{tiledb_ctx}
-
 \item{uri}{uri path to the tiledb dense array}
 
 \item{query_type}{optionally loads the array in "READ" or "WRITE" only modes.}
+
+\item{ctx}{tiledb_ctx}
 }
 \value{
 tiledb_dense array object

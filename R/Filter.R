@@ -29,12 +29,11 @@ tiledb_filter.from_ptr <- function(ptr) {
 #' @param name (default "NONE") TileDB filter name string
 #' @return tiledb_filter object
 #' @examples
-#' ctx <- tiledb_ctx()
-#' tiledb_filter(ctx, "ZSTD")
+#' tiledb_filter("ZSTD")
 #'
 #' @export tiledb_filter
-tiledb_filter <- function(ctx = tiledb::ctx, name = "NONE") {
-  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+tiledb_filter <- function(name = "NONE", ctx = tiledb:::ctx) {
+  if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {
     stop("filter argument must be scalar string")
@@ -48,8 +47,7 @@ tiledb_filter <- function(ctx = tiledb::ctx, name = "NONE") {
 #' @param object tiledb_filter
 #' @return TileDB filter type string
 #' @examples
-#' ctx <- tiledb_ctx()
-#' c <- tiledb_filter(ctx, "ZSTD")
+#' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_type(c)
 #'
 #' @export
@@ -64,8 +62,7 @@ tiledb_filter_type <- function(object) {
 #' @param string option
 #' @param int value
 #' @examples
-#' ctx <- tiledb_ctx()
-#' c <- tiledb_filter(ctx, "ZSTD")
+#' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
 #' tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
 #' @export
@@ -79,8 +76,7 @@ tiledb_filter_set_option <- function(object, option, value) {
 #' @param object tiledb_filter
 #' @return integer option
 #' @examples
-#' ctx <- tiledb_ctx()
-#' c <- tiledb_filter(ctx, "ZSTD")
+#' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
 #' tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
 #'

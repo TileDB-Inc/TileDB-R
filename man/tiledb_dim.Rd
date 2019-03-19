@@ -4,7 +4,7 @@
 \alias{tiledb_dim}
 \title{Contructs a \code{tiledb_dim} object}
 \usage{
-tiledb_dim(ctx = tiledb::ctx, name = "", domain, tile, type)
+tiledb_dim(name = "", domain, tile, type, ctx = tiledb:::ctx)
 }
 \arguments{
 \item{name}{The dimension name / label string.  If emtpy, the domain is anonymous and will be assigned a positional label.}
@@ -22,8 +22,6 @@ tiledb_dim(ctx = tiledb::ctx, name = "", domain, tile, type)
 Contructs a \code{tiledb_dim} object
 }
 \examples{
-ctx <- tiledb_ctx()
-d1 <- tiledb_dim(ctx, name = "d1", domain = c(1L, 10L), tile = 5L, type = "INT32")
-d1
+tiledb_dim(name = "d1", domain = c(1L, 10L), tile = 5L, type = "INT32")
 
 }
