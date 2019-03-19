@@ -12,7 +12,7 @@ unlink_and_create <- function(tmp) {
 }
 #
 # test_that("Can read / write simple 1D sparse vector", {
-#   tmp <- tempdir()
+#   tmp <- tempfile()
 #   setup({
 #     unlink_and_create(tmp)
 #   })
@@ -35,7 +35,7 @@ unlink_and_create <- function(tmp) {
 # })
 
 test_that("test tiledb_subarray read for sparse array", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -69,7 +69,7 @@ test_that("test tiledb_subarray read for sparse array", {
 })
 
 test_that("test tiledb_subarray read for sparse array with attribute list", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -107,7 +107,7 @@ test_that("test tiledb_subarray read for sparse array with attribute list", {
 })
 
 test_that("test tiledb_subarray read for sparse array as dataframe", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -147,7 +147,7 @@ test_that("test tiledb_subarray read for sparse array as dataframe", {
 
 
 test_that("test tiledb_subarray read/write for sparse array with list of coordinates", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })

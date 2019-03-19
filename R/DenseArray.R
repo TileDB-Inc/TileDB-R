@@ -342,11 +342,12 @@ setMethod("[<-", "tiledb_dense",
             return(out)
           })
 
-
+#' @export
 as.array.tiledb_dense <- function(x, ...) {
  return(x[])
 }
 
+#' @export
 as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ...,
                                     cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
                                     stringsAsFactors = default.stringsAsFactors()) {

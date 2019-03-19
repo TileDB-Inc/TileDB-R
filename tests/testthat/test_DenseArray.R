@@ -355,8 +355,8 @@ test_that("test tiledb_subarray read for dense array as dataframe", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(c(1L, 5L))
-  d2  <- tiledb_dim(c(1L, 5L))
+  d1  <- tiledb_dim(domain = c(1L, 5L))
+  d2  <- tiledb_dim(domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val1 <- tiledb_attr("val1")
   val2 <- tiledb_attr("val2")
@@ -365,7 +365,7 @@ test_that("test tiledb_subarray read for dense array as dataframe", {
 
   dat1 <- matrix(rnorm(25), 5, 5)
   dat2 <- matrix(rnorm(25), 5, 5)
-  arr <- tiledb_dense(ctx, tmp, as.data.frame=TRUE)
+  arr <- tiledb_dense(tmp, as.data.frame=TRUE)
 
   arr[] <- list(val1=dat1, val2=dat2)
   expect_equal(arr[]$val1, unlist(as.list(dat1)))

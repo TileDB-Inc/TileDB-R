@@ -11,7 +11,6 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 
 #' Constructs a `tiledb_array_schema` object
 #'
-#' @param ctx tiledb_ctx object
 #' @param domain tiledb_domain object
 #' @param attrs a list of one or more tiledb_attr objects
 #' @param cell_order (default "COL_MAJOR")
@@ -19,6 +18,7 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param sparse (default FALSE)
 #' @param coords_filter_list (optional)
 #' @param offsets_filter_list (optional)
+#' @param ctx tiledb_ctx object
 #' @examples
 #' schema <- tiledb_array_schema(
 #'               dom = tiledb_domain(

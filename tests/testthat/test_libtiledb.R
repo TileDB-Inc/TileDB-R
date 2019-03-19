@@ -1,3 +1,4 @@
+library(testthat)
 library(tiledb)
 context("tiledb::libtiledb")
 
