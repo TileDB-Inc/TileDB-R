@@ -47,7 +47,7 @@ unlink_and_create <- function(tmp) {
 # })
 
 test_that("Can read / write a simple 1D vector", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -90,7 +90,7 @@ test_that("Can read / write a simple 1D vector", {
 })
 
 test_that("Can read / write a simple 2D matrix", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -127,7 +127,7 @@ test_that("Can read / write a simple 2D matrix", {
 })
 
 test_that("Can read / write a simple 3D matrix", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -163,12 +163,12 @@ test_that("Can read / write a simple 3D matrix", {
 
 
 test_that("Can read / write 1D multi-attribute array", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
    unlink_and_create(tmp)
   })
 
-  dim <- tiledb_dim(c(1L, 10L))
+  dim <- tiledb_dim(domain = c(1L, 10L))
   dom <- tiledb_domain(c(dim))
   a1  <- tiledb_attr("a1", type = "FLOAT64")
   a2  <- tiledb_attr("a2", type = "FLOAT64")
@@ -189,12 +189,12 @@ test_that("Can read / write 1D multi-attribute array", {
   expect_equal(arr[1:10], dat)
 
   teardown({
-    unlink(tmp, recursive = TRUE)
+    unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
 
 test_that("Can read / write 2D multi-attribute array", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
    unlink_and_create(tmp)
   })
@@ -235,7 +235,7 @@ test_that("Can read / write 2D multi-attribute array", {
 })
 
 test_that("as.array() conversion method", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
    unlink_and_create(tmp)
   })
@@ -252,12 +252,12 @@ test_that("as.array() conversion method", {
   expect_equal(as.array(arr), as.array(dat))
 
   teardown({
-    unlink(tmp, recursive = TRUE)
+      unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
 
 test_that("as.data.frame() conversion method", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
    unlink_and_create(tmp)
   })
@@ -279,12 +279,12 @@ test_that("as.data.frame() conversion method", {
                as.data.frame(dat))
 
   teardown({
-    unlink(tmp, recursive = TRUE)
+    unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
 
 test_that("test tiledb_subarray read for dense array", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -310,12 +310,12 @@ test_that("test tiledb_subarray read for dense array", {
   expect_equal(tiledb_subarray(arr, list(1,3,1,3)), dat[1:3, 1:3])
 
   teardown({
-    unlink(tmp, recursive = TRUE)
+    unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
 
 test_that("test tiledb_subarray read for dense array with select attributes", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -344,13 +344,13 @@ test_that("test tiledb_subarray read for dense array with select attributes", {
   expect_equal(tiledb_subarray(arr, list(1,3,1,3), attrs=c("val2")), dat2[1:3, 1:3])
 
   teardown({
-    unlink(tmp, recursive = TRUE)
+    unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
 
 
 test_that("test tiledb_subarray read for dense array as dataframe", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -379,12 +379,12 @@ test_that("test tiledb_subarray read for dense array as dataframe", {
   expect_equal(tiledb_subarray(arr, list(1,3,1,3), attrs=c("val2"))$val2, unlist(as.list(dat2[1:3, 1:3])))
 
   teardown({
-    unlink(tmp, recursive = TRUE)
+    unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
 
 test_that("Can read / write a simple 2D matrix with list of coordinates", {
-  tmp <- tempdir()
+  tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
   })
@@ -413,6 +413,6 @@ test_that("Can read / write a simple 2D matrix with list of coordinates", {
   expect_equal(arr[list(c(3), c(3))], dat[3, 3])
 
   teardown({
-    unlink(tmp, recursive = TRUE)
+    unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
