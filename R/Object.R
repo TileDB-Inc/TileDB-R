@@ -1,5 +1,5 @@
-check_object_arguments <- function(ctx = tiledb:::ctx, uri) {
-  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+check_object_arguments <- function(uri, ctx = tiledb:::ctx) {
+  if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must a a tiledb_ctx")
   }
   if (missing(uri) || !is.scalar(uri, "character")) {
@@ -15,13 +15,12 @@ check_object_arguments <- function(ctx = tiledb:::ctx, uri) {
 #' @return uri of created group
 #' @examples
 #' pth <- tempdir()
-#' ctx <- tiledb_ctx()
-#' tiledb_group_create(ctx, pth)
-#' tiledb_object_type(ctx, pth)
+#' tiledb_group_create(pth)
+#' tiledb_object_type(pth)
 #'
 #'@export
-tiledb_group_create <- function(ctx = tiledb:::ctx, uri) {
-  check_object_arguments(ctx, uri)
+tiledb_group_create <- function(uri, ctx = tiledb:::ctx) {
+  check_object_arguments(uri, ctx)
   return(libtiledb_group_create(ctx@ptr, uri))
 }
 
@@ -38,8 +37,8 @@ tiledb_group_create <- function(ctx = tiledb:::ctx, uri) {
 #' @return TileDB object type string
 #'
 #' @export
-tiledb_object_type <- function(ctx = tiledb::ctx, uri) {
-  check_object_arguments(ctx, uri)
+tiledb_object_type <- function(uri, ctx = tiledb:::ctx) {
+  check_object_arguments(uri, ctx)
   return(libtiledb_object_type(ctx@ptr, uri))
 }
 
@@ -50,8 +49,8 @@ tiledb_object_type <- function(ctx = tiledb::ctx, uri) {
 #' @param uri path which to create group
 #' @return uri of removed TileDB resource
 #' @export
-tiledb_object_rm <- function(ctx = tiledb:::ctx, uri) {
-  check_object_arguments(ctx, uri)
+tiledb_object_rm <- function(uri, ctx = tiledb:::ctx) {
+  check_object_arguments(uri, ctx)
   return(libtiledb_object_remove(ctx@ptr, uri))
 }
 
@@ -64,8 +63,8 @@ tiledb_object_rm <- function(ctx = tiledb:::ctx, uri) {
 #' @param new_uri new uri to move tiledb resource
 #' @return new uri of moved tiledb resource
 #' @export
-tiledb_object_mv <- function(ctx = tiledb:::ctx, old_uri, new_uri) {
-  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb:::ctx) {
+  if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must a a tiledb_ctx")
   }
   if (missing(old_uri) || !is.scalar(old_uri, "character")) {
@@ -83,8 +82,8 @@ tiledb_object_mv <- function(ctx = tiledb:::ctx, old_uri, new_uri) {
 #' @param uri uri path to walk
 #' @return a dataframe with object type, object uri string columns
 #' @export
-tiledb_object_ls <- function(ctx = tiledb:::ctx, uri, filter = NULL) {
-  check_object_arguments(ctx, uri)
+tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb:::ctx) {
+  check_object_arguments(uri, ctx)
   return(libtiledb_object_walk(ctx@ptr, uri, order = "PREORDER"))
 }
 
@@ -95,7 +94,7 @@ tiledb_object_ls <- function(ctx = tiledb:::ctx, uri, filter = NULL) {
 #' @param order (default "PREORDER") specify "POSTORDER" for "POSTORDER" traversal
 #' @return a dataframe with object type, object uri string columns
 #' @export
-tiledb_object_walk <- function(ctx = tiledb:::ctx, uri, order = "PREORDER") {
-  check_object_arguments(ctx, uri)
+tiledb_object_walk <- function(uri, order = "PREORDER", ctx = tiledb:::ctx) {
+  check_object_arguments(uri, ctx)
   return(libtiledb_object_walk(ctx@ptr, uri, order = order, recursive = TRUE))
 }

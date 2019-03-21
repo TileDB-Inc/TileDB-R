@@ -11,7 +11,6 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 
 #' Constructs a `tiledb_array_schema` object
 #'
-#' @param ctx tiledb_ctx object
 #' @param domain tiledb_domain object
 #' @param attrs a list of one or more tiledb_attr objects
 #' @param cell_order (default "COL_MAJOR")
@@ -19,28 +18,30 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param sparse (default FALSE)
 #' @param coords_filter_list (optional)
 #' @param offsets_filter_list (optional)
+#' @param ctx tiledb_ctx object
 #' @examples
-#' ctx <- tiledb_ctx()
-#' schema <- tiledb_array_schema(ctx,
-#'               dom = tiledb_domain(ctx,
-#'                         dims = c(tiledb_dim(ctx, "rows", c(1L, 4L), 4L, "INT32"),
-#'                                  tiledb_dim(ctx, "cols", c(1L, 4L), 4L, "INT32"))),
-#'               attrs = c(tiledb_attr(ctx, "a", type = "INT32")),
+#' schema <- tiledb_array_schema(
+#'               dom = tiledb_domain(
+#'                         dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+#'                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32"))),
+#'               attrs = c(tiledb_attr("a", type = "INT32")),
 #'               cell_order = "COL_MAJOR",
 #'               tile_order = "COL_MAJOR",
 #'               sparse = FALSE)
 #' schema
 #'
 #' @export
-tiledb_array_schema <- function(ctx = tiledb:::ctx,
+tiledb_array_schema <- function(
                         domain,
                         attrs,
                         cell_order = "COL_MAJOR",
                         tile_order = "COL_MAJOR",
                         sparse = FALSE,
                         coords_filter_list = NULL,
-                        offsets_filter_list = NULL) {
-  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+                        offsets_filter_list = NULL,
+                        ctx = tiledb:::ctx
+                        ) {
+  if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   }
   if (missing(domain) || !is(domain, "tiledb_domain")) {
@@ -79,17 +80,17 @@ tiledb_array_schema <- function(ctx = tiledb:::ctx,
   return(new("tiledb_array_schema", ptr = ptr))
 }
 
-tiledb_array_schema.from_array <- function(ctx = tiledb:::ctx, x) {
-  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+tiledb_array_schema.from_array <- function(x, ctx = tiledb:::ctx) {
+  if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (missing(x) || !is.array(x)) {
     stop("x argument must be a valid array object")
   }
   xdim <- dim(x)
   dims <- lapply(seq_len(xdim), function(i) {
-    tiledb::Dim(ctx, c(1L, xdim[i]), type = "INT32")
+    tiledb::Dim(c(1L, xdim[i]), type = "INT32", ctx)
   })
-  dom <- tiledb_domain(ctx, dims)
+  dom <- tiledb_domain(dims, ctx)
   #TODO: better datatype checking
   if (is.double(x)) {
     typestr <- "FLOAT64"
@@ -98,8 +99,8 @@ tiledb_array_schema.from_array <- function(ctx = tiledb:::ctx, x) {
   } else {
     stop(paste("invalid array type \"", typeof(x), "\""))
   }
-  val <- tiledb_attr(ctx, "", type = typestr)
-  return(tiledb_array_schema(ctx, dom, c(val)))
+  val <- tiledb_attr("", type = typestr, ctx)
+  return(tiledb_array_schema(dom, c(val), ctx))
 }
 
 setMethod("show", signature(object = "tiledb_array_schema"),
@@ -115,9 +116,8 @@ setGeneric("domain", function(object, ...) standardGeneric("domain"))
 #' @param object tiledb_array_schema
 #' @param a tiledb_domain object
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 10L), type = "INT32")))
-#' sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1")))
 #' domain(sch)
 #'
 #' @export
@@ -135,10 +135,9 @@ setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 #' @param object tiledb_array_schema
 #' @return a list of tiledb_dim objects
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 100L), type = "INT32"),
-#'                                    tiledb_dim(ctx, "d2", c(1L, 50L), type = "INT32")))
-#' sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
+#'                                    tiledb_dim("d2", c(1L, 50L), type = "INT32")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1")))
 #' dimensions(dom)
 #'
 #' lapply(dimensions(dom), name)
@@ -155,10 +154,9 @@ setGeneric("attrs", function(object, idx, ...) standardGeneric("attrs"))
 #' @param object tiledb_array_schema
 #' @return a list of tiledb_attr objects
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 10L), type = "INT32")))
-#' sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1", type = "INT32"),
-#'                                                tiledb_attr(ctx, "a2", type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
+#'                                                tiledb_attr("a2", type = "FLOAT64")))
 #' attrs(sch)
 #'
 #' lapply(attrs(sch), datatype)
@@ -181,10 +179,9 @@ setMethod("attrs", signature("tiledb_array_schema"),
 #' @param idx attribute name string
 #' @return a `tiledb_attr` object
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 10L), type = "INT32")))
-#' sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1", type = "INT32"),
-#'                                                tiledb_attr(ctx, "a2", type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
+#'                                                tiledb_attr("a2", type = "FLOAT64")))
 #' attrs(sch, "a2")
 #'
 #' @export
@@ -202,10 +199,9 @@ setMethod("attrs", signature("tiledb_array_schema", "character"),
 #' @param idx attribute index
 #' @return a `tiledb_attr` object
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 10L), type = "INT32")))
-#' sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1", type = "INT32"),
-#'                                                tiledb_attr(ctx, "a2", type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
+#'                                                tiledb_attr("a2", type = "FLOAT64")))
 #' attrs(sch, 2)
 #'
 #' @export
@@ -280,10 +276,9 @@ setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 #' @param object tiledb_array_schema
 #' @return integer number of dimensions
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 10L), type = "INT32")))
-#' sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1", type = "INT32"),
-#'                                                tiledb_attr(ctx, "a2", type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
+#'                                                tiledb_attr("a2", type = "FLOAT64")))
 #' tiledb_ndim(sch)
 #'
 #' @export
@@ -300,10 +295,9 @@ setMethod("tiledb_ndim", "tiledb_array_schema",
 #' @param object tiledb_array_schema
 #' @return a dimension vector
 #' @examples
-#' ctx <- tiledb_ctx()
-#' dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(1L, 10L), type = "INT32")))
-#' sch <- tiledb_array_schema(ctx, dom, attrs = c(tiledb_attr(ctx, "a1", type = "INT32"),
-#'                                                tiledb_attr(ctx, "a2", type = "FLOAT64")))
+#' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
+#'                                                tiledb_attr("a2", type = "FLOAT64")))
 #' dim(sch)
 #'
 #' @export

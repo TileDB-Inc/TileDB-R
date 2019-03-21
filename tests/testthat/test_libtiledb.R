@@ -1,3 +1,4 @@
+library(testthat)
 library(tiledb)
 context("tiledb::libtiledb")
 
@@ -137,7 +138,7 @@ test_that("basic dense vector libtiledb_array creation works", {
    }
    dir.create(tmp)
   })
-  
+
   ctx <- libtiledb_ctx()
   dim <- libtiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- libtiledb_domain(ctx, c(dim))
@@ -161,7 +162,7 @@ test_that("basic dense vector writes / reads works", {
    }
    dir.create(tmp)
   })
-  
+
   ctx <- libtiledb_ctx()
   dim <- libtiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
   dom <- libtiledb_domain(ctx, c(dim))
@@ -171,15 +172,15 @@ test_that("basic dense vector writes / reads works", {
   sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- libtiledb_array_create(pth, sch)
-  
-  dat <- c(3, 2, 1) 
+
+  dat <- c(3, 2, 1)
   arr <- libtiledb_array(ctx, uri, "WRITE")
   qry <- libtiledb_query(ctx, arr, "WRITE")
   qry <- libtiledb_query_set_buffer(qry, "a1", dat)
   qry <- libtiledb_query_submit(qry)
   libtiledb_array_close(arr)
   expect_is(qry, "externalptr")
-  
+
   res <- c(0, 0, 0)
   arr <- libtiledb_array(ctx, uri, "READ")
   qry2 <- libtiledb_query(ctx, arr, "READ")
@@ -209,18 +210,18 @@ test_that("basic dense vector read subarray works", {
   sch <- libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
   pth <- paste(tmp, "test_dense_read_write", sep = "/")
   uri <- libtiledb_array_create(pth, sch)
-  
-  dat <- c(3, 2, 1) 
-  arr <- libtiledb_array(ctx, uri, "WRITE") 
+
+  dat <- c(3, 2, 1)
+  arr <- libtiledb_array(ctx, uri, "WRITE")
   qry <- libtiledb_query(ctx, arr, "WRITE")
   qry <- libtiledb_query_set_buffer(qry, "a1", dat)
   qry <- libtiledb_query_submit(qry)
   libtiledb_array_close(arr)
   expect_is(qry, "externalptr")
-  
+
   res <- c(0, 0)
   sub <- c(1L, 2L)
-  arr <- libtiledb_array(ctx, uri, "READ") 
+  arr <- libtiledb_array(ctx, uri, "READ")
   qry2 <- libtiledb_query(ctx, arr, "READ")
   qry2 <- libtiledb_query_set_subarray(qry2, sub)
   qry2 <- libtiledb_query_set_buffer(qry2, "a1", res)
@@ -236,7 +237,7 @@ test_that("basic tiledb vfs constructor works", {
   ctx <- libtiledb_ctx()
   vfs <- tiledb_vfs(ctx)
   expect_is(vfs, "externalptr")
-  
+
   config <- libtiledb_config(c(foo="bar"))
   vfs <- tiledb_vfs(ctx, config)
   expect_is(vfs, "externalptr")
@@ -250,19 +251,19 @@ test_that("basic vfs is_dir, is_file functionality works", {
    }
    dir.create(tmp)
   })
-  
+
   ctx <- libtiledb_ctx()
   vfs <- tiledb_vfs(ctx)
-  
-  # test dir 
+
+  # test dir
   expect_true(tiledb_vfs_is_dir(vfs, tmp))
   expect_false(tiledb_vfs_is_dir(vfs, "i don't exist"))
- 
+
   test_file_path <- paste("file:/", tmp, "test_file", sep = "/")
   test_file = file(test_file_path, "wb")
   writeChar(c("foo", "bar", "baz"), test_file)
   close(test_file)
-  
+
   # test file
   expect_true(tiledb_vfs_is_file(vfs, test_file_path))
   expect_false(tiledb_vfs_is_file(vfs, tmp))

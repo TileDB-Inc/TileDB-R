@@ -45,15 +45,10 @@ setGeneric("config", function(object, ...) {
 #'
 #' @export
 setMethod("config", signature(object = "tiledb_ctx"),
-          function(object) {
+          function(object = tiledb:::ctx) {
             ptr <- libtiledb_ctx_config(object@ptr)
             tiledb_config.from_ptr(ptr)
           })
-
-#' @export
-setGeneric("tiledb_is_supported_fs", function(object, scheme, ...) {
-  standardGeneric("tiledb_is_supported_fs")
-})
 
 #' Query if a TileDB backend is supported
 #'
@@ -68,13 +63,10 @@ setGeneric("tiledb_is_supported_fs", function(object, scheme, ...) {
 #' @param schema URI string scheme ("file", "hdfs", "s3")
 #' @return TRUE if tiledb backend is supported, FALSE otherwise
 #' @examples
-#' ctx <- tiledb_ctx()
-#' tiledb_is_supported_fs(ctx, "file")
-#'
-#' tiledb_is_supported_fs(ctx, "s3")
+#' tiledb_is_supported_fs("file")
+#' tiledb_is_supported_fs("s3")
 #'
 #' @export
-setMethod("tiledb_is_supported_fs", signature(object = "tiledb_ctx", scheme = "character"),
-          function(object, scheme) {
+tiledb_is_supported_fs <- function(scheme, object = tiledb:::ctx) {
             libtiledb_ctx_is_supported_fs(object@ptr, scheme)
-          })
+}

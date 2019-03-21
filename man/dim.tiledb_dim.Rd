@@ -16,8 +16,7 @@ a vector of the tile_dim domain type, of the dim domain dimension (extent)
 Retrieves the dimension of the tiledb_dim domain
 }
 \examples{
-ctx <- tiledb_ctx()
-d1 <- tiledb_dim(ctx, "d1", c(1L, 10L), 5L)
+d1 <- tiledb_dim("d1", c(1L, 10L), 5L)
 dim(d1)
 
 }

@@ -9,9 +9,9 @@ setClass("tiledb_dense",
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @return tiledb_dense array object
 #' @export
-tiledb_dense <- function(ctx = tiledb:::ctx, uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE) {
+tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::ctx) {
   query_type = match.arg(query_type)
-  if (missing(ctx) || !is(ctx, "tiledb_ctx")) {
+  if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   } else if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar")
@@ -188,6 +188,7 @@ setMethod("[", "tiledb_dense",
               stop("subscript indexing only valid for integral Domain's")
             }
             libtiledb_array_open(x@ptr, "READ")
+
             out <- tryCatch(
               {
                 subarray <- domain_subarray(dom, index = index)
@@ -341,11 +342,12 @@ setMethod("[<-", "tiledb_dense",
             return(out)
           })
 
-
+#' @export
 as.array.tiledb_dense <- function(x, ...) {
  return(x[])
 }
 
+#' @export
 as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ...,
                                     cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
                                     stringsAsFactors = default.stringsAsFactors()) {

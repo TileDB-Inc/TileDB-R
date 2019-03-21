@@ -17,11 +17,10 @@ integer number of dimensions
 Returns the number of dimensions of the \code{tiledb_domain}
 }
 \examples{
-ctx <- tiledb_ctx()
-dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64")))
+dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
 tiledb_ndim(dom)
-dom <- tiledb_domain(ctx, dims = c(tiledb_dim(ctx, "d1", c(0.5, 100.0), type = "FLOAT64"),
-                                   tiledb_dim(ctx, "d2", c(0.5, 100.0), type = "FLOAT64")))
+dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64"),
+                                   tiledb_dim("d2", c(0.5, 100.0), type = "FLOAT64")))
 tiledb_ndim(dom)
 
 }

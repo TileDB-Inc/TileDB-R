@@ -16,8 +16,7 @@
 Return the \code{tiledb_dim} datatype
 }
 \examples{
-ctx <- tiledb_ctx()
-d1 <- tiledb_dim(ctx, "d1", domain = c(5L, 10L), tile = 2L, type = "INT32")
+d1 <- tiledb_dim("d1", domain = c(5L, 10L), tile = 2L, type = "INT32")
 datatype(d1)
 
 }

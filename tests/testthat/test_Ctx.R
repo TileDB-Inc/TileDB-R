@@ -24,6 +24,6 @@ test_that("tiledb_ctx constructor with named vector config", {
 
 test_that("tiledb_ctx tiledb_is_supported_fs works", {
   ctx <- tiledb_ctx()
-  expect_true(tiledb_is_supported_fs(ctx, "file"))
-  expect_error(tiledb_is_supported_fs(ctx, "should_error"))
+  expect_true(tiledb_is_supported_fs("file"))
+  expect_error(tiledb_is_supported_fs("should_error"))
 })

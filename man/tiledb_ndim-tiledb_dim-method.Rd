@@ -17,8 +17,7 @@
 Returns the number of dimensions for a tiledb domain object
 }
 \examples{
-ctx <- tiledb_ctx()
-d1 <- tiledb_dim(ctx, "d1", c(1L, 10L), 10L)
+d1 <- tiledb_dim("d1", c(1L, 10L), 10L)
 tiledb_ndim(d1)
 
 }

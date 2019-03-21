@@ -4,12 +4,12 @@
 \alias{tiledb_object_ls}
 \title{List TileDB resources at a given root URI path}
 \usage{
-tiledb_object_ls(ctx = tiledb:::ctx, uri, filter = NULL)
+tiledb_object_ls(uri, filter = NULL, ctx = tiledb:::ctx)
 }
 \arguments{
-\item{ctx}{tiledb_ctx}
-
 \item{uri}{uri path to walk}
+
+\item{ctx}{tiledb_ctx}
 }
 \value{
 a dataframe with object type, object uri string columns

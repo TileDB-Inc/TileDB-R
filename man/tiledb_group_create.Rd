@@ -4,12 +4,12 @@
 \alias{tiledb_group_create}
 \title{Creates a TileDB group object at given uri path}
 \usage{
-tiledb_group_create(ctx = tiledb:::ctx, uri)
+tiledb_group_create(uri, ctx = tiledb:::ctx)
 }
 \arguments{
-\item{ctx}{tiledb_ctx}
-
 \item{uri}{path which to create group}
+
+\item{ctx}{tiledb_ctx}
 }
 \value{
 uri of created group
@@ -19,8 +19,7 @@ Creates a TileDB group object at given uri path
 }
 \examples{
 pth <- tempdir()
-ctx <- tiledb_ctx()
-tiledb_group_create(ctx, pth)
-tiledb_object_type(ctx, pth)
+tiledb_group_create(pth)
+tiledb_object_type(pth)
 
 }
