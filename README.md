@@ -18,9 +18,9 @@ for the TileDB-R package to build and link correctly:
     > devtools::install_github("TileDB-Inc/TileDB-R@latest")
     ...
     > library(tiledb)
-    > tiledb::libtiledb_version()
+    > tiledb_version()
     major minor patch
-    1     3     0 
+    1     4     2 
     > help(tiledb)
 
 ## Installation
