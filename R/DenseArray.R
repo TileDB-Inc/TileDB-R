@@ -112,7 +112,8 @@ domain_subarray <- function(dom, index = NULL) {
       dim_subarray[[i]] <- dim_domain_subarray(dim_domain, index[[i]])
     }
   }
-  if (!all(sapply(dim_subarray, function(sub) length(sub) == 2L))) {
+
+  if (!all(lengths(dim_subarray) == 2L, logical(1))) {
     stop("non-contiguous subscript ranges are not supported")
   }
   return(unlist(dim_subarray))
