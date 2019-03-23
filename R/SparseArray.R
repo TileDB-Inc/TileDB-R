@@ -197,7 +197,7 @@ setMethod("[<-", "tiledb_sparse",
               if (length(value) != length(attrs)) {
                 stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
               }
-              names(value) <- sapply(attr_names, function(n) ifelse(n == "", "__attr", n))
+              names(value) <- ifelse(attr_names == "", "__attr", attr_names)
             } else {
               # check associative assignment
               for (name in value_names)  {

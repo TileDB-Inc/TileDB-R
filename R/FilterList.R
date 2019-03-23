@@ -27,7 +27,7 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb:::ctx) {
   is_filter <- function(obj) is(obj, "tiledb_filter")
   filter_ptrs = c()
   if (length(filters) > 0) {
-    if (!all(sapply(filters, is_filter))) {
+    if (!all(vapply(filters, is_filter, logical(1)))) {
       stop("filters argument must be a list of one or tiledb_filter objects")
     }
     filter_ptrs <- lapply(filters, function(obj) slot(obj, "ptr"))

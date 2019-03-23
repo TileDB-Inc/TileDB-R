@@ -113,7 +113,7 @@ domain_subarray <- function(dom, index = NULL) {
     }
   }
 
-  if (!all(lengths(dim_subarray) == 2L, logical(1))) {
+  if (!all(lengths(dim_subarray) == 2L)) {
     stop("non-contiguous subscript ranges are not supported")
   }
   return(unlist(dim_subarray))
@@ -289,7 +289,7 @@ setMethod("[<-", "tiledb_dense",
               if (length(value) != length(attrs)) {
                 stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
               }
-              names(value) <- sapply(attr_names, function(n) ifelse(n == "", "__attr", n))
+              names(value) <- ifelse(attr_names == "", "__attr", attr_names)
             } else {
               # check associative assignment
               for (name in value_names)  {
@@ -358,7 +358,7 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
   }
   if (is.null(col.names)) {
     schema <- tiledb::schema(x)
-    col.names <- sapply(tiledb::attrs(schema), tiledb::name)
+    col.names <- vapply(tiledb::attrs(schema), tiledb::name, character(1))
   }
   return(as.data.frame(lst, row.names = row.names, optional = optional, ...,
                        cut.names = cut.names, col.names = col.names, fix.empty.names = fix.empty.names,

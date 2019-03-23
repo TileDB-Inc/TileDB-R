@@ -48,7 +48,7 @@ tiledb_array_schema <- function(
     stop("domain argument must be a tiledb::Domain")
   }
   is_attr <- function(obj) is(obj, "tiledb_attr")
-  if (missing(attrs) || length(attrs) == 0 || !all(sapply(attrs, is_attr))) {
+  if (missing(attrs) || length(attrs) == 0 || !all(vapply(attrs, is_attr, logical(1)))) {
     stop("attrs argument must be a list of one or tiled_attr objects")
   }
   if (!is.scalar(cell_order, "character")) {
@@ -166,10 +166,10 @@ setMethod("attrs", signature("tiledb_array_schema"),
           function (object, ...) {
             attr_ptrs <- libtiledb_array_schema_attributes(object@ptr)
             attrs <- lapply(attr_ptrs, function(ptr) tiledb_attr.from_ptr(ptr))
-            names(attrs) <- sapply(attrs, function(attr) {
+            names(attrs) <- vapply(attrs, function(attr) {
               n <- tiledb::name(attr)
               return(ifelse(n == "__attr", "", n))
-            })
+            }, character(1))
             return(attrs)
           })
 
