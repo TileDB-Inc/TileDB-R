@@ -25,7 +25,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export
 tiledb_attr <- function(name="",
-                        type=c("FLOAT64", "INT32"),
+                        type=c("FLOAT64", "INT32", "UTF8"),
                         filter_list=tiledb_filter_list(),
                         ncells=1,
                         ctx = tiledb:::ctx
@@ -40,6 +40,7 @@ tiledb_attr <- function(name="",
   } else if (ncells != 1) {
     stop("only single cell attributes are supported")
   }
+  type <- match.arg(type)
   ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
   new("tiledb_attr", ptr = ptr)
 }
@@ -84,6 +85,8 @@ setGeneric("datatype", function(object) standardGeneric("datatype"))
 #' a2 <- tiledb_attr("a1", type = "FLOAT64")
 #' datatype(a2)
 #'
+#' a2 <- tiledb_attr("a1", type = "UTF8")
+#' datatype(a2)
 #' @export
 setMethod("datatype", signature(object = "tiledb_attr"),
           function(object) {

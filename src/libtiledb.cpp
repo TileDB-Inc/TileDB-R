@@ -71,6 +71,8 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_INT64;
   } else if (typestr == "UINT64") {
     return TILEDB_UINT64;
+  } else if (typestr == "UTF8") {
+    return TILEDB_STRING_UTF8;
   } else {
     std::stringstream errmsg;
     errmsg << "Unknown TileDB type \"" << typestr << "\"";
@@ -895,8 +897,15 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
+   } else if (attr_dtype == TILEDB_STRING_UTF8) {
+    //    FIXME: No such thing as tiledb::impl::tiledb_to_type<TILEDB_STRING_UTF8>::type, something with TILEDB_CHAR ?
+        using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
+        auto attr = XPtr<tiledb::Attribute>(
+          new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+        attr->set_filter_list(*filter_list);
+        return attr;
    } else {
-    throw Rcpp::exception("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
+    throw Rcpp::exception("only integer (INT32), logical (INT32), real (FLOAT64) and character (UTF8) attributes are supported");
    }
  } catch (tiledb::TileDBError& err) {
    throw Rcpp::exception(err.what());
@@ -1263,7 +1272,9 @@ XPtr<tiledb::Query> libtiledb_query_set_layout(XPtr<tiledb::Query> query,
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                                  SEXP subarray) {
-  try {
+
+						 // FIXME: Support for UTF8 here
+    try {
     if (TYPEOF(subarray) == INTSXP) {
       IntegerVector sub(subarray);
       query->set_subarray(sub.begin(), sub.length());
@@ -1317,6 +1328,43 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
       LogicalVector vec(buffer);
       query->set_buffer(attr, vec.begin(), vec.length());
       return query;
+    } else {
+      std::stringstream errmsg;
+      errmsg << "Invalid attribute buffer type for attribute "
+             << "\""<< attr << "\": " << Rcpp::type2name(buffer);
+      throw Rcpp::exception(errmsg.str().c_str());
+    }
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
+						   std::string attr,
+						   SEXP buffer) {
+  try {
+    if (TYPEOF(buffer) == STRSXP) {
+      StringVector buffer_strings(buffer);
+      std::string string(buffer_strings[0]);
+      std::vector<uint64_t> offsets;
+      uint64_t current_offset = 0;
+      for (int i = 0; i < buffer_strings.size(); i++) {
+	offsets.push_back(current_offset);
+	current_offset = current_offset + buffer_strings[i].size();
+	string += buffer_strings[i];
+      }
+      query->set_buffer(attr, offsets, string);
+      return query;
+//    } else if (TYPEOF(buffer) == INTSXP) {
+//      IntegerVector vec(buffer);
+//      IntegerVector off(offsets); // FIXME: we need to make this a pointer to a uint64_t array, not an int array
+//      query->set_buffer(attr, off.begin(), off.length(), vec.begin(), vec.length()); // FIXME, should length really be the num of bytes per element?
+//      return query;
+//    } else if (TYPEOF(buffer) == REALSXP) {
+//      NumericVector vec(buffer);
+//      IntegerVector off(offsets);  // FIXME: we need to make this a pointer to a uint64_t array, not an int array
+//      query->set_buffer(attr, off.begin(), off.length(), vec.begin(), vec.length());
+//      return query;
     } else {
       std::stringstream errmsg;
       errmsg << "Invalid attribute buffer type for attribute "

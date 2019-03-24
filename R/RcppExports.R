@@ -257,6 +257,10 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
+libtiledb_query_set_buffer_var <- function(query, attr, buffer) {
+    .Call(`_tiledb_libtiledb_query_set_buffer_var`, query, attr, buffer)
+}
+
 libtiledb_query_submit <- function(query) {
     .Call(`_tiledb_libtiledb_query_submit`, query)
 }
