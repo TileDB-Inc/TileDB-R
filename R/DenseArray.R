@@ -204,10 +204,14 @@ setMethod("[", "tiledb_dense",
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                   aname <- attr_names[[idx]]
+                  val = buffers[[idx]]
                   if (aname == "coords") {
-                    qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
+                      qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
                   } else {
-                    qry <- libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
+                      if (is.character(val) || is.list(val))
+                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                      else
+                          qry <- libtiledb_query_set_buffer(qry, aname, val)
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
@@ -277,16 +281,16 @@ setMethod("[<-", "tiledb_dense",
             }
             subarray <- domain_subarray(dom, index = index)
             attrs <- tiledb::attrs(schema)
-            if (length(value) > length(attrs)) {
-              stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
+            nvalue <- length(value)
+            nattrs <- length(attrs)
+            if (nvalue > nattrs) {
+               stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
             }
             attr_names <- names(attrs)
             value_names <- names(value)
             if (is.null(value_names)) {
               # check the list shape / types against attributes
-              nvalue <- length(value)
-              nattrs <- length(attrs)
-              if (length(value) != length(attrs)) {
+              if (nvalue != nattrs) {
                 stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
               }
               names(value) <- ifelse(attr_names == "", "__attr", attr_names)
@@ -328,7 +332,12 @@ setMethod("[<-", "tiledb_dense",
                 }
                 attr_names <- names(value)
                 for (idx in seq_along(value)) {
-                  qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
+                  aname <- attr_names[[idx]]
+                  val = value[[idx]]
+                  if (is.list(val) || is.character(val))
+                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                  else
+                      qry <- libtiledb_query_set_buffer(qry, aname, val)
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
