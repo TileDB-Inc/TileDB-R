@@ -208,7 +208,9 @@ setMethod("[", "tiledb_dense",
                   if (aname == "coords") {
                       qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
                   } else {
-                      if (is.character(val) || is.list(val))
+                      if (is.character(val))
+                          qry <- libtiledb_query_set_buffer_var(qry, aname, enc2utf8(val))
+                      else if (is.list(val))
                           qry <- libtiledb_query_set_buffer_var(qry, aname, val)
                       else
                           qry <- libtiledb_query_set_buffer(qry, aname, val)
