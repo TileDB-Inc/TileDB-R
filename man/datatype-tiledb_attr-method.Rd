@@ -22,4 +22,6 @@ datatype(a1)
 a2 <- tiledb_attr("a1", type = "FLOAT64")
 datatype(a2)
 
+a2 <- tiledb_attr("a1", type = "UTF8")
+datatype(a2)
 }
