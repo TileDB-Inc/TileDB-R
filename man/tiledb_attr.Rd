@@ -4,7 +4,7 @@
 \alias{tiledb_attr}
 \title{Contructs a \code{tiledb_attr} object}
 \usage{
-tiledb_attr(name = "", type = "FLOAT64",
+tiledb_attr(name = "", type = c("FLOAT64", "INT32"),
   filter_list = tiledb_filter_list(), ncells = 1, ctx = tiledb:::ctx)
 }
 \arguments{

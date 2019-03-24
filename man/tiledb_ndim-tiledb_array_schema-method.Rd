@@ -3,7 +3,7 @@
 \docType{methods}
 \name{tiledb_ndim,tiledb_array_schema-method}
 \alias{tiledb_ndim,tiledb_array_schema-method}
-\title{Return the number of dimensions associated with the \code{tieldb_array_schema}}
+\title{Return the number of dimensions associated with the \code{tiledb_array_schema}}
 \usage{
 \S4method{tiledb_ndim}{tiledb_array_schema}(object)
 }
@@ -14,7 +14,7 @@
 integer number of dimensions
 }
 \description{
-Return the number of dimensions associated with the \code{tieldb_array_schema}
+Return the number of dimensions associated with the \code{tiledb_array_schema}
 }
 \examples{
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
