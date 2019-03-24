@@ -8,4 +8,7 @@ test_that("Utility functions for variable length arrays work", {
     expect_equal( varlen_offsets(x), c(0,16,24,44) )
     y = matrix(list(1:4 + 0.1, 2:3 + 0.1, 100:104 + 0.1, 99:102 + 0.1), ncol = 2)
     expect_equal( varlen_offsets(y), c(0,32,48,88) )
+
+    expect_equal( varlen_list_eltype(matrix(list(1:4, 2:3, 9:10, 14:15), ncol = 2)), "integer" )
+    expect_error( varlen_list_eltype(matrix(list(1:4, 2:3 + 0.1, 9:10, 14:15), ncol = 2)) )
 })
