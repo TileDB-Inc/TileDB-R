@@ -305,7 +305,7 @@ setMethod("[<-", "tiledb_dense",
             # check that value shapes match the subarray shape
             # TODO: R doesn't check this and just assigns values that overlap the domain
             sub_dim <- subarray_dim(subarray)
-browser()
+
             for (i in seq_along(value)) {
               val <- value[[i]]
               if (is.vector(val)) {
