@@ -48,3 +48,18 @@ r_to_tiledb_type <- function(x) {
     }
     type
 }
+##' Get R type of elements in a list
+##'
+##' TileDB varlen arrays are implemented as R lists of arrays with a uniform storage mode.
+##' @param x a list
+##' @return single character, e.g. "numeric"
+##' @export
+varlen_list_eltype <- function(x) {
+    stopifnot(is.list(x))
+    eltypes = vapply(x, storage.mode, character(1))
+    eltype = eltypes[1]
+    if (! all(eltypes == eltype)) {
+        stop("Variable length arrays must be of a uniform type.")
+    }
+    eltype
+}
