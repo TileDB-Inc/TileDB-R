@@ -37,7 +37,7 @@ r_to_tiledb_type <- function(x) {
     storage_mode = storage.mode(x)
     if (storage_mode == "list")
         storage_mode = storage.mode(x[[1]])
-    if (storage_mode == "integer") {
+    if (storage_mode == "integer" || storage_mode == "logical") {
         type = "INT32"
     } else if (storage_mode == "double"){
         type = "FLOAT64"

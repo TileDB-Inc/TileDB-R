@@ -416,3 +416,27 @@ test_that("Can read / write a simple 2D matrix with list of coordinates", {
     unlink(tmp, recursive = TRUE, force = TRUE)
   })
 })
+
+test_that( "treating logical as INT32 works", {
+  tmp <- tempfile()
+  setup({
+    unlink_and_create(tmp)
+  })
+
+  dat <- matrix(rnorm(25) > 0, 5, 5)
+
+  d1  <- tiledb_dim(domain = c(1L, 5L))
+  d2  <- tiledb_dim(domain = c(1L, 5L))
+  dom <- tiledb_domain(c(d1, d2))
+  val <- tiledb_attr("val", type = r_to_tiledb_type(dat))
+  sch <- tiledb_array_schema(dom, c(val))
+  tiledb_array_create(tmp, sch)
+
+  arr <- tiledb_dense(tmp, as.data.frame=FALSE)
+
+  arr[] <- dat
+  int_dat = dat
+  storage.mode(int_dat) = "integer"
+  expect_equal(arr[], int_dat)
+
+})
