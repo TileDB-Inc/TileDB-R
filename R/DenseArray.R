@@ -112,7 +112,8 @@ domain_subarray <- function(dom, index = NULL) {
       dim_subarray[[i]] <- dim_domain_subarray(dim_domain, index[[i]])
     }
   }
-  if (!all(sapply(dim_subarray, function(sub) length(sub) == 2L))) {
+
+  if (!all(lengths(dim_subarray) == 2L)) {
     stop("non-contiguous subscript ranges are not supported")
   }
   return(unlist(dim_subarray))
@@ -203,10 +204,14 @@ setMethod("[", "tiledb_dense",
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                   aname <- attr_names[[idx]]
+                  val = buffers[[idx]]
                   if (aname == "coords") {
-                    qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
+                      qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
                   } else {
-                    qry <- libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
+                      if (is.character(val) || is.list(val))
+                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                      else
+                          qry <- libtiledb_query_set_buffer(qry, aname, val)
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
@@ -276,19 +281,19 @@ setMethod("[<-", "tiledb_dense",
             }
             subarray <- domain_subarray(dom, index = index)
             attrs <- tiledb::attrs(schema)
-            if (length(value) > length(attrs)) {
-              stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
+            nvalue <- length(value)
+            nattrs <- length(attrs)
+            if (nvalue > nattrs) {
+               stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
             }
             attr_names <- names(attrs)
             value_names <- names(value)
             if (is.null(value_names)) {
               # check the list shape / types against attributes
-              nvalue <- length(value)
-              nattrs <- length(attrs)
-              if (length(value) != length(attrs)) {
+              if (nvalue != nattrs) {
                 stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
               }
-              names(value) <- sapply(attr_names, function(n) ifelse(n == "", "__attr", n))
+              names(value) <- ifelse(attr_names == "", "__attr", attr_names)
             } else {
               # check associative assignment
               for (name in value_names)  {
@@ -327,7 +332,12 @@ setMethod("[<-", "tiledb_dense",
                 }
                 attr_names <- names(value)
                 for (idx in seq_along(value)) {
-                  qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
+                  aname <- attr_names[[idx]]
+                  val = value[[idx]]
+                  if (is.list(val) || is.character(val))
+                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                  else
+                      qry <- libtiledb_query_set_buffer(qry, aname, val)
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
@@ -357,7 +367,7 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
   }
   if (is.null(col.names)) {
     schema <- tiledb::schema(x)
-    col.names <- sapply(tiledb::attrs(schema), tiledb::name)
+    col.names <- vapply(tiledb::attrs(schema), tiledb::name, character(1))
   }
   return(as.data.frame(lst, row.names = row.names, optional = optional, ...,
                        cut.names = cut.names, col.names = col.names, fix.empty.names = fix.empty.names,

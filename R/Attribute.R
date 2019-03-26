@@ -25,17 +25,16 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export
 tiledb_attr <- function(name="",
-                        type="FLOAT64",
+                        type=c("FLOAT64", "INT32"),
                         filter_list=tiledb_filter_list(),
                         ncells=1,
                         ctx = tiledb:::ctx
                         ) {
+  type = match.arg(type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {
     stop("name argument must be a scalar string")
-  } else if (!is.scalar(type, "character") || (type != "INT32" && type != "FLOAT64")) {
-    stop("type argument must be \"INT32\" or \"FLOAT64\"")
   } else if(!is(filter_list, "tiledb_filter_list")) {
     stop("filter_list argument must be a tiledb_filter_list instance")
   } else if (ncells != 1) {

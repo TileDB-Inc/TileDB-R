@@ -114,12 +114,16 @@ setMethod("[", "tiledb_sparse",
                 qry <- libtiledb_query_set_subarray(qry, subarray)
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
-                  aname <- attr_names[[idx]]
-                  if (aname == "coords") {
-                    qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
-                  } else {
-                    qry <- libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
-                  }
+                    aname <- attr_names[[idx]]
+                    val = buffers[[idx]]
+                    if (aname == "coords") {
+                        qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+                    } else {
+                      if (is.character(val) || is.list(val))
+                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                      else
+                          qry <- libtiledb_query_set_buffer(qry, aname, val)
+                    }
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
@@ -184,20 +188,21 @@ setMethod("[<-", "tiledb_sparse",
                 stop("invalid sparse coordinates, all coordinates must be the same length")
               }
             }
+
             # check that attributes are correct
-            if (length(value) > length(attrs)) {
+            nvalue <- length(value)
+            nattrs <- length(attrs)
+            if (nvalue > nattrs) {
               stop("number of values to assign does not match the number of array attributes")
             }
             attr_names <- names(attrs)
             value_names <- names(value)
             if (is.null(value_names)) {
               # check the list shape / types against attributes
-              nvalue <- length(value)
-              nattrs <- length(attrs)
-              if (length(value) != length(attrs)) {
+              if (nvalue != nattrs) {
                 stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
               }
-              names(value) <- sapply(attr_names, function(n) ifelse(n == "", "__attr", n))
+              names(value) <- ifelse(attr_names == "", "__attr", attr_names)
             } else {
               # check associative assignment
               for (name in value_names)  {

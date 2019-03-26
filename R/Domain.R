@@ -27,7 +27,7 @@ tiledb_domain <- function(dims, ctx = tiledb:::ctx) {
     stop("argument ctx must be a tiledb_ctx")
   }
   is_dim <- function(obj) is(obj, "tiledb_dim")
-  if (missing(dims) || length(dims) == 0 || !all(sapply(dims, is_dim))) {
+  if (missing(dims) || length(dims) == 0 || !all(vapply(dims, is_dim, logical(1)))) {
     stop("argument dims must be a list of one or more tileb_dim")
   }
   dims_ptrs <- lapply(dims, function(obj) slot(obj, "ptr"))

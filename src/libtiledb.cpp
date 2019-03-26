@@ -896,7 +896,7 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
     attr->set_filter_list(*filter_list);
     return attr;
    } else {
-    throw Rcpp::exception("only integer (INT32), and real (FLOAT64) attributes are supported");
+    throw Rcpp::exception("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
    }
  } catch (tiledb::TileDBError& err) {
    throw Rcpp::exception(err.what());
@@ -1311,6 +1311,10 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
       return query;
     } else if (TYPEOF(buffer) == REALSXP) {
       NumericVector vec(buffer);
+      query->set_buffer(attr, vec.begin(), vec.length());
+      return query;
+    } else if (TYPEOF(buffer) == LGLSXP) {
+      LogicalVector vec(buffer);
       query->set_buffer(attr, vec.begin(), vec.length());
       return query;
     } else {
