@@ -3,7 +3,7 @@ context("tiledb::SparseArray")
 
 unlink_and_create <- function(tmp) {
   if (dir.exists(tmp)) {
-    unlink(tmp, recursive = TRUE)
+    unlink(tmp, recursive = TRUE, force = TRUE)
     dir.create(tmp)
   } else {
     dir.create(tmp)
@@ -35,7 +35,7 @@ unlink_and_create <- function(tmp) {
 # })
 
 test_that("test tiledb_subarray read for sparse array", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -69,7 +69,7 @@ test_that("test tiledb_subarray read for sparse array", {
 })
 
 test_that("test tiledb_subarray read for sparse array with attribute list", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -107,7 +107,7 @@ test_that("test tiledb_subarray read for sparse array with attribute list", {
 })
 
 test_that("test tiledb_subarray read for sparse array as dataframe", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -147,7 +147,7 @@ test_that("test tiledb_subarray read for sparse array as dataframe", {
 
 
 test_that("test tiledb_subarray read/write for sparse array with list of coordinates", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })

@@ -47,7 +47,7 @@ unlink_and_create <- function(tmp) {
 # })
 
 test_that("Can read / write a simple 1D vector", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -81,7 +81,7 @@ test_that("Can read / write a simple 1D vector", {
   arr[6] <- 1000
   expect_equal(arr[6], 1000)
 
-  arr[7:10] <- c(97, 98, 99, 100)
+  arr[7:10] <- as.array(c(97, 98, 99, 100))
   expect_equal(arr[6:10], as.array(c(1000, 97, 98, 99, 100)))
 
   teardown({
@@ -90,7 +90,7 @@ test_that("Can read / write a simple 1D vector", {
 })
 
 test_that("Can read / write a simple 2D matrix", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -127,7 +127,7 @@ test_that("Can read / write a simple 2D matrix", {
 })
 
 test_that("Can read / write a simple 3D matrix", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -163,7 +163,7 @@ test_that("Can read / write a simple 3D matrix", {
 
 
 test_that("Can read / write 1D multi-attribute array", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
    unlink_and_create(tmp)
   })
@@ -194,7 +194,7 @@ test_that("Can read / write 1D multi-attribute array", {
 })
 
 test_that("Can read / write 2D multi-attribute array", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
    unlink_and_create(tmp)
   })
@@ -235,7 +235,7 @@ test_that("Can read / write 2D multi-attribute array", {
 })
 
 test_that("as.array() conversion method", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
    unlink_and_create(tmp)
   })
@@ -257,7 +257,7 @@ test_that("as.array() conversion method", {
 })
 
 test_that("as.data.frame() conversion method", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
    unlink_and_create(tmp)
   })
@@ -284,7 +284,7 @@ test_that("as.data.frame() conversion method", {
 })
 
 test_that("test tiledb_subarray read for dense array", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -315,7 +315,7 @@ test_that("test tiledb_subarray read for dense array", {
 })
 
 test_that("test tiledb_subarray read for dense array with select attributes", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -349,7 +349,7 @@ test_that("test tiledb_subarray read for dense array with select attributes", {
 })
 
 test_that("test tiledb_subarray read for dense array as dataframe", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -383,7 +383,7 @@ test_that("test tiledb_subarray read for dense array as dataframe", {
 })
 
 test_that("Can read / write a simple 2D matrix with list of coordinates", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -417,7 +417,7 @@ test_that("Can read / write a simple 2D matrix with list of coordinates", {
 })
 
 test_that( "treating logical as INT32 works", {
-  tmp <- tempfile()
+  tmp <- tempfile(tmpdir = tempdir(check = TRUE))
   setup({
     unlink_and_create(tmp)
   })
@@ -440,7 +440,7 @@ test_that( "treating logical as INT32 works", {
 
 })
 
-testthat( "We can verify the shape and type of replacement values", {
+test_that( "We can verify the shape and type of replacement values", {
     expect_true( check_replacement_value(1:4, c(4)) )
     expect_true( check_replacement_value(matrix(1:12, ncol = 3), c(4,3)) )
     expect_true( check_replacement_value(list(1:4, 2:3, 9), c(3)) )
