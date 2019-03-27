@@ -372,17 +372,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_attr
-XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type, XPtr<tiledb::FilterList> filter_list, int ncells);
-RcppExport SEXP _tiledb_libtiledb_attr(SEXP ctxSEXP, SEXP nameSEXP, SEXP typeSEXP, SEXP filter_listSEXP, SEXP ncellsSEXP) {
+XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type, int ncells, XPtr<tiledb::FilterList> filter_list);
+RcppExport SEXP _tiledb_libtiledb_attr(SEXP ctxSEXP, SEXP nameSEXP, SEXP typeSEXP, SEXP ncellsSEXP, SEXP filter_listSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filter_list(filter_listSEXP);
     Rcpp::traits::input_parameter< int >::type ncells(ncellsSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attr(ctx, name, type, filter_list, ncells));
+    Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filter_list(filter_listSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attr(ctx, name, type, ncells, filter_list));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -878,32 +878,25 @@ XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filte
 XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
                                     std::string name,
                                     std::string type,
-                                    XPtr<tiledb::FilterList> filter_list,
-                                    int ncells) {
+                                    int ncells,
+                                    XPtr<tiledb::FilterList> filter_list) {
  try {
    tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
-   //  FIXME: why do we need to know ncells here?
-   if (ncells < 1) {
-     ncells = TILEDB_VAR_NUM;
+   if ((attr_dtype != TILEDB_INT32) && (attr_dtype != TILEDB_FLOAT64) && (attr_dtype != TILEDB_STRING_UTF8)) {
+    throw Rcpp::exception("only R integer (INT32), logical (INT32), real (FLOAT64) and character (UTF8) attributes are supported");
    }
-   if (attr_dtype == TILEDB_INT32) {
-     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-     attr->set_filter_list(*filter_list);
-     return attr;
-   } else if (attr_dtype == TILEDB_FLOAT64) {
-     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-     attr->set_filter_list(*filter_list);
-     return attr;
-   } else if (attr_dtype == TILEDB_STRING_UTF8) {
-     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<std::string>(*ctx.get(), name)));
-     attr->set_filter_list(*filter_list);
-     return attr;
-     // FIXME: add stanzas for list becoming varlen arrays of various types
+   unsigned int ncells_;
+   if (ncells == 0) {
+    throw Rcpp::exception("ncells must be > 0 or TILEDB_VAR_NUM"); 
+   } else if (ncells < 0) {
+     ncells_ = TILEDB_VAR_NUM; 
    } else {
-    throw Rcpp::exception("only integer (INT32), logical (INT32), real (FLOAT64) and character (UTF8) attributes are supported");
+     ncells_ = ncells;
    }
+   auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+   attr->set_cell_val_num(ncells);
+   attr->set_filter_list(*filter_list);
+   return attr;
  } catch (tiledb::TileDBError& err) {
    throw Rcpp::exception(err.what());
  }

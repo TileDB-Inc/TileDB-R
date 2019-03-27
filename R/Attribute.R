@@ -26,8 +26,8 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @export
 tiledb_attr <- function(name="",
                         type=c("FLOAT64", "INT32", "UTF8"),
-                        filter_list=tiledb_filter_list(),
                         ncells=1,
+                        filter_list=tiledb_filter_list(),
                         ctx = tiledb:::ctx
                         ) {
   type = match.arg(type)
@@ -38,8 +38,7 @@ tiledb_attr <- function(name="",
   } else if(!is(filter_list, "tiledb_filter_list")) {
     stop("filter_list argument must be a tiledb_filter_list instance")
   }
-
-  ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
+  ptr <- libtiledb_attr(ctx@ptr, name, type, ncells, filter_list@ptr)
   new("tiledb_attr", ptr = ptr)
 }
 

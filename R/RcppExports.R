@@ -129,8 +129,8 @@ libtiledb_filter_list_filter <- function(filterList, filter_index) {
     .Call(`_tiledb_libtiledb_filter_list_filter`, filterList, filter_index)
 }
 
-libtiledb_attr <- function(ctx, name, type, filter_list, ncells) {
-    .Call(`_tiledb_libtiledb_attr`, ctx, name, type, filter_list, ncells)
+libtiledb_attr <- function(ctx, name, type, ncells, filter_list) {
+    .Call(`_tiledb_libtiledb_attr`, ctx, name, type, ncells, filter_list)
 }
 
 libtiledb_attr_name <- function(attr) {
