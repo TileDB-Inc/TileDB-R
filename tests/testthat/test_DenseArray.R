@@ -348,7 +348,6 @@ test_that("test tiledb_subarray read for dense array with select attributes", {
   })
 })
 
-
 test_that("test tiledb_subarray read for dense array as dataframe", {
   tmp <- tempfile()
   setup({
@@ -439,4 +438,18 @@ test_that( "treating logical as INT32 works", {
   storage.mode(int_dat) = "integer"
   expect_equal(arr[], int_dat)
 
+})
+
+testthat( "We can verify the shape and type of replacement values", {
+    expect_true( check_replacement_value(1:4, c(4)) )
+    expect_true( check_replacement_value(matrix(1:12, ncol = 3), c(4,3)) )
+    expect_true( check_replacement_value(list(1:4, 2:3, 9), c(3)) )
+    expect_true( check_replacement_value(matrix(list(1:4, 2:3, 9, 4:5), ncol = 2), c(2,2)) )
+
+    expect_error( check_replacement_value(1:4, c(3)) )
+    expect_error( check_replacement_value(matrix(1:12, ncol = 3), c(4,1)) )
+    expect_error( check_replacement_value(list(1:4, 2:3, 9), c(9)) )
+    expect_error( suppressWarnings(check_replacement_value(matrix(list(1:4, 2:3, 9, 4:5), ncol = 2), c(2,2,12))) )
+
+    expect_error( check_replacement_value( new.env(), 99))
 })

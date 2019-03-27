@@ -268,7 +268,7 @@ setMethod("[<-", "tiledb_sparse",
 
 setMethod("show", "tiledb_sparse",
           function (object) {
-            cat("tiledb_sparse(uri = \"", object@uri, "\")")
+            message("tiledb_sparse(uri = \"", object@uri, "\")")
           })
 
 #' @export

@@ -14,7 +14,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @param name (default "") The dimension name / label string.
 #' @param type (default "FLOAT64") The tiledb_attr TileDB datatype string
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
-#' @param ncells (default 1) The number of cells, must be 1 for now
+#' @param ncells The number of cells
 #' @return `tiledb_dim` object
 #' @examples
 #' flt <- tiledb_filter_list(list(tiledb_filter("GZIP")))
@@ -37,9 +37,8 @@ tiledb_attr <- function(name="",
     stop("name argument must be a scalar string")
   } else if(!is(filter_list, "tiledb_filter_list")) {
     stop("filter_list argument must be a tiledb_filter_list instance")
-  } else if (ncells != 1) {
-    stop("only single cell attributes are supported")
   }
+
   type <- match.arg(type)
   ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
   new("tiledb_attr", ptr = ptr)

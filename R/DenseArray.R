@@ -29,7 +29,7 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FAL
 
 setMethod("show", "tiledb_dense",
           function (object) {
-            cat("tiledb_dense(uri = \"", object@uri, "\")")
+            message("tiledb_dense(uri = \"", object@uri, "\")")
           })
 
 #' #' Reopens a TileDB array an opened tiledb array
@@ -182,7 +182,6 @@ setMethod("[", "tiledb_dense",
               index <- index[[1]]
             }
             ctx <- x@ctx
-            uri <- x@uri
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) {
@@ -261,13 +260,6 @@ setMethod("[", "tiledb_dense",
 
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
-             if (!is.list(value)) {
-              if (is.array(value) || is.vector(value)) {
-                value <- list(value)
-              } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
-              }
-            }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
             # If we have a list of lists of lists we need to remove one layer
             # This happens when a user uses a list of coordinates
@@ -276,51 +268,44 @@ setMethod("[<-", "tiledb_dense",
             }
             ctx <- x@ctx
             schema <- tiledb::schema(x)
-            uri <- x@uri
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) {
-              stop("subscript indexing only valid for integral Domain's")
+              stop("subscript indexing only valid for integral domains")
             }
             subarray <- domain_subarray(dom, index = index)
+            ## Check the incoming value
+            ## single attribute, fixed-length tiledb arrays expect a single vector/array as input
+            ## single attribute, variable-length tiledb arrays expect a list with the same ndim as the the tiledb array
             attrs <- tiledb::attrs(schema)
-            nvalue <- length(value)
             nattrs <- length(attrs)
-            if (nvalue > nattrs) {
-               stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
-            }
-            attr_names <- names(attrs)
-            value_names <- names(value)
-            if (is.null(value_names)) {
-              # check the list shape / types against attributes
-              if (nvalue != nattrs) {
-                stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
-              }
-              names(value) <- ifelse(attr_names == "", "__attr", attr_names)
-            } else {
-              # check associative assignment
-              for (name in value_names)  {
-                if (!(name %in%  attr_names)) {
-                  stop(paste("invalid array attribute value name: \"", name, "\""))
-                }
-              }
-            }
-            # check that value shapes match the subarray shape
-            # TODO: R doesn't check this and just assigns values that overlap the domain
-            sub_dim <- subarray_dim(subarray)
 
-            for (i in seq_along(value)) {
-              val <- value[[i]]
-              if (is.vector(val)) {
-                if (length(sub_dim) != 1 || sub_dim[1L] != length(val)) {
-                  stop("value dim does not match array subscript")
+            sub_dim <- subarray_dim(subarray)
+            attr_names <- names(attrs)
+
+            if (nattrs == 1) {
+                check_replacement_value(value, sub_dim)
+                value = list(value)
+                names(value) = attr_names
+            } else {
+                # check associative assignment
+                value_names <- names(value)
+                if (!is.list(value)) {
+                    stop("Replacement values for multi-attribute arrays must be a list.")
                 }
-              } else if (is.array(val)) {
-                if (!all(sub_dim == dim(val))) {
-                  stop("value dim does not match array subscript")
+                if (length(value) != nattrs) {
+                    stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
                 }
-              } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
-              }
+                if (!identical(value_names, attr_names)) {
+                    if (setequal(value_names, attr_names)) {
+                        value = value[attr_names]
+                    } else {
+                        bad_names = setdiff(value_names, attr_names)
+                        stop(paste("invalid array attribute value name(s):", paste(bad_names, collapse = ",")))
+                    }
+                }
+                for (val in value) {
+                    check_replacement_value(value, sub_dim)
+                }
             }
             libtiledb_array_open(x@ptr, "WRITE")
             out <- tryCatch(
@@ -353,6 +338,24 @@ setMethod("[<-", "tiledb_dense",
               })
             return(out)
           })
+
+check_replacement_value <- function(val, sub_dim) {
+    # check that value shapes match the subarray shape
+    # R doesn't check this and just assigns values that overlap the domain
+    # N.B. a list without dimensions is a vector, with dimensions it is an array
+    if (is.vector(val)) {
+        if (length(sub_dim) != 1 || sub_dim[1L] != length(val)) {
+            stop("value dim does not match array subscript")
+        }
+    } else if (is.array(val)) {
+        if (!all(sub_dim == dim(val))) {
+            stop("value dim does not match array subscript")
+        }
+    } else {
+        stop(paste("cannot assign value of type \"", typeof(val), "\""))
+    }
+    invisible(TRUE)
+}
 
 #' @export
 as.array.tiledb_dense <- function(x, ...) {

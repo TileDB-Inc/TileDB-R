@@ -883,27 +883,23 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
  try {
    tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
    if (ncells < 1) {
-     throw Rcpp::exception("ncells must be >= 1");
+     ncells = TILEDB_VAR_NUM;
    }
    if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-    auto attr = XPtr<tiledb::Attribute>(
-      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
    } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-    auto attr = XPtr<tiledb::Attribute>(
-      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
    } else if (attr_dtype == TILEDB_STRING_UTF8) {
-    //    FIXME: No such thing as tiledb::impl::tiledb_to_type<TILEDB_STRING_UTF8>::type, something with TILEDB_CHAR ?
-        using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
-        auto attr = XPtr<tiledb::Attribute>(
-          new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-        attr->set_filter_list(*filter_list);
-        return attr;
+     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<std::string>(*ctx.get(), name)));
+     attr->set_filter_list(*filter_list);
+     return attr;
+     // FIXME: add stanzas for list becoming varlen arrays of various types
    } else {
     throw Rcpp::exception("only integer (INT32), logical (INT32), real (FLOAT64) and character (UTF8) attributes are supported");
    }
@@ -1342,33 +1338,67 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 						   std::string attr,
 						   SEXP buffer) {
+  std::vector<uint64_t> offsets;
+  uint64_t current_offset = 0;
   try {
     if (TYPEOF(buffer) == STRSXP) {
       StringVector buffer_strings(buffer);
-      std::string string(buffer_strings[0]);
-      std::vector<uint64_t> offsets;
-      uint64_t current_offset = 0;
+      std::string out(buffer_strings[0]);
       for (int i = 0; i < buffer_strings.size(); i++) {
 	offsets.push_back(current_offset);
 	current_offset = current_offset + buffer_strings[i].size();
-	string += buffer_strings[i];
+	out += buffer_strings[i];
       }
-      query->set_buffer(attr, offsets, string);
+      query->set_buffer(attr, offsets, out);
       return query;
-//    } else if (TYPEOF(buffer) == INTSXP) {
-//      IntegerVector vec(buffer);
-//      IntegerVector off(offsets); // FIXME: we need to make this a pointer to a uint64_t array, not an int array
-//      query->set_buffer(attr, off.begin(), off.length(), vec.begin(), vec.length()); // FIXME, should length really be the num of bytes per element?
-//      return query;
-//    } else if (TYPEOF(buffer) == REALSXP) {
-//      NumericVector vec(buffer);
-//      IntegerVector off(offsets);  // FIXME: we need to make this a pointer to a uint64_t array, not an int array
-//      query->set_buffer(attr, off.begin(), off.length(), vec.begin(), vec.length());
-//      return query;
+    } else if (TYPEOF(buffer) == VECSXP) {
+      List buffer_elements(buffer);
+      if (TYPEOF(buffer_elements[0]) == INTSXP) {
+	IntegerVector out {};
+	for (int i = 0; i < buffer_elements.size(); i++) {
+	  offsets.push_back(current_offset);
+	  IntegerVector subvec(buffer_elements[i]);
+	  current_offset = current_offset + subvec.size();
+	  for (int j = 0; j < subvec.size(); j++) {
+	    out.push_back(subvec[j]);
+	  }
+	}
+	query->set_buffer(attr, offsets, out);
+	return query;
+      } else if (TYPEOF(buffer_elements[0]) == REALSXP) {
+	NumericVector out {};
+	for (int i = 0; i < buffer_elements.size(); i++) {
+	  offsets.push_back(current_offset);
+	  IntegerVector subvec(buffer_elements[i]);
+	  current_offset = current_offset + subvec.size();
+	  for (int j = 0; j < subvec.size(); j++) {
+	    out.push_back(subvec[j]);
+	  }
+	}
+	query->set_buffer(attr, offsets, out);
+	return query;
+      } else if (TYPEOF(buffer_elements[0]) == LGLSXP) {
+	LogicalVector out {};
+	for (int i = 0; i < buffer_elements.size(); i++) {
+	  offsets.push_back(current_offset);
+	  IntegerVector subvec(buffer_elements[i]);
+	  current_offset = current_offset + subvec.size();
+	  for (int j = 0; j < subvec.size(); j++) {
+	    out.push_back(subvec[j]);
+	  }
+	}
+	query->set_buffer(attr, offsets, out);
+	return query;
+      } else {
+	std::stringstream errmsg;
+	errmsg << "Invalid list element type type for varlen attribute "
+	       << "\""<< attr << "\": " << Rcpp::type2name(buffer);
+	throw Rcpp::exception(errmsg.str().c_str());
+      }
     } else {
       std::stringstream errmsg;
       errmsg << "Invalid attribute buffer type for attribute "
-             << "\""<< attr << "\": " << Rcpp::type2name(buffer);
+	     << "\""<< attr << "\": " << Rcpp::type2name(buffer);
       throw Rcpp::exception(errmsg.str().c_str());
     }
   } catch (tiledb::TileDBError& err) {
