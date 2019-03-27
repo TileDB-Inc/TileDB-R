@@ -882,19 +882,20 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
                                     int ncells) {
  try {
    tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
+   //  FIXME: why do we need to know ncells here?
    if (ncells < 1) {
      ncells = TILEDB_VAR_NUM;
    }
    if (attr_dtype == TILEDB_INT32) {
-    using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    attr->set_filter_list(*filter_list);
-    return attr;
+     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+     attr->set_filter_list(*filter_list);
+     return attr;
    } else if (attr_dtype == TILEDB_FLOAT64) {
-    using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    attr->set_filter_list(*filter_list);
-    return attr;
+     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+     attr->set_filter_list(*filter_list);
+     return attr;
    } else if (attr_dtype == TILEDB_STRING_UTF8) {
      auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<std::string>(*ctx.get(), name)));
      attr->set_filter_list(*filter_list);

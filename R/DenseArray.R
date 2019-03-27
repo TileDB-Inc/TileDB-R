@@ -158,6 +158,7 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   }
   for(attr in attrs) {
     aname <- tiledb::name(attr)
+    browser()
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
     # If we are going to get it as a dataframe we need to use max buffer elements to get proper buffer size
     if(array@as.data.frame) {
