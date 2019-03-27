@@ -39,7 +39,6 @@ tiledb_attr <- function(name="",
     stop("filter_list argument must be a tiledb_filter_list instance")
   }
 
-  type <- match.arg(type)
   ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
   new("tiledb_attr", ptr = ptr)
 }
