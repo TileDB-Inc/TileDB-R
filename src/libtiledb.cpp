@@ -887,9 +887,9 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
    }
    unsigned int ncells_;
    if (ncells == 0) {
-    throw Rcpp::exception("ncells must be > 0 or TILEDB_VAR_NUM"); 
+    throw Rcpp::exception("ncells must be > 0 or TILEDB_VAR_NUM");
    } else if (ncells < 0) {
-     ncells_ = TILEDB_VAR_NUM; 
+     ncells_ = TILEDB_VAR_NUM;
    } else {
      ncells_ = ncells;
    }
@@ -1269,6 +1269,10 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
       IntegerVector sub(subarray);
       query->set_subarray(sub.begin(), sub.length());
       return query;
+    } else if (TYPEOF(subarray) == LGLSXP) {
+      LogicalVector sub(subarray);
+      query->set_subarray(sub.begin(), sub.length());
+      return query;
     } else if (TYPEOF(subarray) == REALSXP) {
       NumericVector sub(subarray);
       query->set_subarray(sub.begin(), sub.length());
@@ -1287,6 +1291,10 @@ XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
   try {
     if (TYPEOF(coords) == INTSXP) {
       IntegerVector sub(coords);
+      query->set_coordinates(sub.begin(), sub.length());
+      return query;
+    } else if (TYPEOF(coords) == LGLSXP) {
+      LogicalVector sub(coords);
       query->set_coordinates(sub.begin(), sub.length());
       return query;
     } else if (TYPEOF(coords) == REALSXP) {
@@ -1328,6 +1336,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
     throw Rcpp::exception(err.what());
   }
 }
+
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 						   std::string attr,
