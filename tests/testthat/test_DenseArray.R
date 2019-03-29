@@ -443,8 +443,8 @@ test_that( "treating logical as INT32 works", {
 test_that( "We can verify the shape and type of replacement values", {
     expect_true( check_replacement_value(1:4, c(4)) )
     expect_true( check_replacement_value(matrix(1:12, ncol = 3), c(4,3)) )
-    expect_true( check_replacement_value(list(1:4, 2:3, 9), c(3)) )
-    expect_true( check_replacement_value(matrix(list(1:4, 2:3, 9, 4:5), ncol = 2), c(2,2)) )
+    expect_true( check_replacement_value(list(a = 1:4, b = 2:3, c = 9), c(3)) )
+    expect_true( check_replacement_value(matrix(list(a = 1:4, b = 2:3, c = 9, d = 4:5), ncol = 2), c(2,2)) )
 
     expect_error( check_replacement_value(1:4, c(3)) )
     expect_error( check_replacement_value(matrix(1:12, ncol = 3), c(4,1)) )
