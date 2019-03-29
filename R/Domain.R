@@ -131,3 +131,21 @@ dim.tiledb_domain <- function(x) {
   }
   return(vapply(dimensions(x), dim, integer(1L)))
 }
+##' Simplified constructor for tiledb domain
+##'
+##' Takes the dimensiosn of the array. Dimensions will be anonymous,
+##' and have an INT32 domain from 1 to n for each dimension.
+##' @param dims integer or numeric vector, one value per dimension
+##' @return `tiledb_domain`, which contains a list of `tiledb_dim`
+##' @export
+##' @examples
+##' tiledb_domain_simple(c(2,3))
+##' tiledb_domain_simple(c(2L,3L))
+tiledb_domain_simple <- function(dims) {
+    dims = as.integer(dims)
+    out = lapply(dims,
+           function(x) {
+               tiledb_dim("", c(1L, x), x, "INT32")
+           })
+    tiledb_domain(out)
+}
