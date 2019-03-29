@@ -97,10 +97,8 @@ assert_uniform_dimensions <- function(x) {
 ##' for variable length arrays (including character arrays).
 ##' @return a TileDB array object with the specified properties
 ##' @examples
-##' filename = tempfile()
-##' create_tiledb_array(filename, c(2,3), "FLOAT64")
-##' filename = tempfile()
-##' create_tiledb_array(filename, c(2,3), c("FLOAT64", "FLOAT64"))
+##' create_tiledb_array(tempfile(), c(2,3), "FLOAT64")
+##' create_tiledb_array(tempfile(), c(2,3), c("FLOAT64", "FLOAT64"))
 ##' @export
 create_tiledb_array <- function(array_name, dims, type, sparse = FALSE, ncells = rep.int(1, length(type))) {
     stopifnot(all(type %in% c("FLOAT64","INT32","UTF8")))
@@ -111,7 +109,7 @@ create_tiledb_array <- function(array_name, dims, type, sparse = FALSE, ncells =
     if (tiledb_object_type(array_name) == "ARRAY") {
         stop("Array already exists.")
     }
-
+browser()
     ## Make Schema
     attr_names = paste("attr", seq_along(type), sep = "_")
     schema <- tiledb_array_schema(
