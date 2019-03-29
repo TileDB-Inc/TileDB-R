@@ -105,7 +105,6 @@ create_tiledb_array <- function(array_name, dims, type, sparse = FALSE, ncells =
     stopifnot(length(type) == length(ncells))
     dims = as.integer(dims)
 
-    ## Check if the array already exists.
     if (tiledb_object_type(array_name) == "ARRAY") {
         stop("Array already exists.")
     }
@@ -124,6 +123,7 @@ create_tiledb_array <- function(array_name, dims, type, sparse = FALSE, ncells =
 
     ## Create the (empty) array on disk.
     tiledb_array_create(array_name, schema)
+
     if (sparse)
         A <- tiledb_sparse(array_name)
     else

@@ -283,7 +283,6 @@ setMethod("[<-", "tiledb_dense",
             attr_names <- names(attrs)
 
             if (nattrs == 1) {
-                check_replacement_value(value, sub_dim)
                 value = list(value)
                 names(value) = attr_names
             } else {
@@ -303,10 +302,9 @@ setMethod("[<-", "tiledb_dense",
                         stop(paste("invalid array attribute value name(s):", paste(bad_names, collapse = ",")))
                     }
                 }
-                for (val in value) {
-                    check_replacement_value(value, sub_dim)
-                }
+                assert_uniform_dimensions(value)
             }
+            check_replacement_value(value[[1]], sub_dim)
             libtiledb_array_open(x@ptr, "WRITE")
             out <- tryCatch(
               {
@@ -343,11 +341,6 @@ check_replacement_value <- function(val, sub_dim) {
     # check that value shapes match the subarray shape
     # R doesn't check this and just assigns values that overlap the domain
     # N.B. a list without dimensions is a vector, with dimensions it is an array
-    if (is.list(val)) {
-        ## multi-attribute replacment case
-        assert_uniform_dimensions(val)
-        val = val[[1]]
-    }
     if (is.vector(val)) {
         if (length(sub_dim) != 1 || sub_dim[1L] != length(val)) {
             stop("value dim does not match array subscript")
