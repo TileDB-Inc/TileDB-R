@@ -27,8 +27,6 @@ a TileDB array object with the specified properties
 Creates a dense or sparse array using sensible defaults.
 }
 \examples{
-filename = tempfile()
-create_tiledb_array(filename, c(2,3), "FLOAT64")
-filename = tempfile()
-create_tiledb_array(filename, c(2,3), c("FLOAT64", "FLOAT64"))
+create_tiledb_array(tempfile(), c(2,3), "FLOAT64")
+create_tiledb_array(tempfile(), c(2,3), c("FLOAT64", "FLOAT64"))
 }
