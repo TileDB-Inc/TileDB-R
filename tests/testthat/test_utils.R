@@ -1,6 +1,15 @@
 library(testthat)
 library(tiledb)
 
+unlink_and_create <- function(tmp) {
+    if (dir.exists(tmp)) {
+        unlink(tmp, recursive = TRUE, force = TRUE)
+        dir.create(tmp)
+    } else {
+        dir.create(tmp)
+    }
+}
+
 test_that( "Multi-attribute array input can be validated", {
     expect_error( assert_uniform_dimensions( list(1:4, 2:3, 4:5, 9:9 ) ) )
     expect_error( assert_uniform_dimensions( c(a = 1, b = 2, c = 4, d = 9) ) )
@@ -13,9 +22,12 @@ test_that( "Multi-attribute array input can be validated", {
 })
 
 test_that( "Simple array creators work", {
-    expect_s4_class( create_tiledb_array(tempfile(), c(2,3), "FLOAT64"), "tiledb_dense")
-    expect_s4_class( create_tiledb_array(tempfile(), c(2,3), c("FLOAT64", "FLOAT64")), "tiledb_dense")
-    expect_s4_class( create_tiledb_array(tempfile(), c(2,3), "FLOAT64", sparse = TRUE), "tiledb_sparse")
+    tmp <- tempdir(check = TRUE)
+    expect_s4_class( create_tiledb_array(tempfile(tmpdir = tmp), c(2,3), "FLOAT64"), "tiledb_dense")
+    expect_s4_class( create_tiledb_array(tempfile(tmpdir = tmp), c(2,3), c("FLOAT64", "FLOAT64")), "tiledb_dense")
+    expect_s4_class( create_tiledb_array(tempfile(tmpdir = tmp), c(2,3), "FLOAT64", sparse = TRUE), "tiledb_sparse")
     x = matrix( c(1.3, 1, 2, 4), ncol = 2)
-    expect_s4_class( tiledb_array( x, tempfile() ), "tiledb_dense")
+    expect_s4_class( tiledb_array( x, tempfile(tmpdir = tmp) ), "tiledb_dense")
+    x = matrix( c(1.3, 1, 2, 4), ncol = 2)
+    expect_s4_class( tiledb_array( x, tempfile(tmpdir = tmp) ), "tiledb_dense" )
 })
