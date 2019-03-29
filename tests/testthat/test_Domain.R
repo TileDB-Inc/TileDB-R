@@ -34,3 +34,8 @@ test_that("tiledb_domain dimensions works", {
   expect_equal(length(dims), 3L)
   expect_true(all(as.logical(lapply(dims, function(o) is(o, "tiledb_dim")))))
 })
+
+test_that("simple domain constructor works", {
+    expect_s4_class( tiledb_domain_simple(c(2,3)), "tiledb_domain")
+    expect_s4_class(tiledb_domain_simple(c(2L,3L)), "tiledb_domain")
+})
