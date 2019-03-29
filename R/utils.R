@@ -109,12 +109,16 @@ create_tiledb_array <- function(array_name, dims, type, sparse = FALSE, ncells =
     if (tiledb_object_type(array_name) == "ARRAY") {
         stop("Array already exists.")
     }
-browser()
+
     ## Make Schema
     attr_names = paste("attr", seq_along(type), sep = "_")
     schema <- tiledb_array_schema(
         tiledb_domain_simple(dims),
-        attrs = mapply(tiledb_attr, attr_names, type, ncells, SIMPLIFY = FALSE),
+        attrs = mapply(
+            attr_names, type, ncells,
+            FUN = function(n, t, c) {
+                tiledb_attr(n, t, ncells = c)
+            }, SIMPLIFY = FALSE),
         sparse = sparse
     )
 

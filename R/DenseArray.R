@@ -343,6 +343,11 @@ check_replacement_value <- function(val, sub_dim) {
     # check that value shapes match the subarray shape
     # R doesn't check this and just assigns values that overlap the domain
     # N.B. a list without dimensions is a vector, with dimensions it is an array
+    if (is.list(val)) {
+        ## multi-attribute replacment case
+        assert_uniform_dimensions(val)
+        val = val[[1]]
+    }
     if (is.vector(val)) {
         if (length(sub_dim) != 1 || sub_dim[1L] != length(val)) {
             stop("value dim does not match array subscript")
