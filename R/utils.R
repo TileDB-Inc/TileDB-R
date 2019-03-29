@@ -63,3 +63,89 @@ varlen_list_eltype <- function(x) {
     }
     eltype
 }
+##' Check for unifomity of array dims for a list of arrays
+##'
+##' Given a list of arrays, make sure they all have the same dimensions,
+##' and thus are viable input for creating or updating a multi-attribute
+##' TileDB array.
+##' @param x a named list of arrays or vectors
+##' @return TRUE (or error)
+##' @examples
+##' assert_uniform_dimensions( list(a = matrix(1:4,ncol=2), b = matrix(1:4,ncol=2)))
+##' @export
+assert_uniform_dimensions <- function(x) {
+    if (!is.list(x) || is.null(names(x))) {
+        stop("`x` must be a named list.")
+    }
+    dims = dim(x[[1]])
+    for (el in x) {
+        if (!identical(dim(el), dims)) {
+            stop("All arrays must be the same size.")
+        }
+    }
+    invisible(TRUE)
+}
+##' All-in-one function to create a TileDB array
+##'
+##' Creates a dense or sparse array using sensible defaults.
+##' @param array_name single character, tne name of the TileDB array file to be created
+##' @param dims integer or numeric, desired dimensions of an attribute, to be repeated for
+##' every attribute, e.g. c(2,3) for a 2 row, 3 column matrix
+##' @param type character, one value per attribute
+##' @param sparse single logical, will the created array be sparse?
+##' @param ncells integer, one per attribute. Use 1 for fixed-length arrays and -1
+##' for variable length arrays (including character arrays).
+##' @return a TileDB array object with the specified properties
+##' @examples
+##' filename = tempfile()
+##' create_tiledb_array(filename, c(2,3), "FLOAT64")
+##' filename = tempfile()
+##' create_tiledb_array(filename, c(2,3), c("FLOAT64", "FLOAT64"))
+##' @export
+create_tiledb_array <- function(array_name, dims, type, sparse = FALSE, ncells = rep.int(1, length(type))) {
+    stopifnot(all(type %in% c("FLOAT64","INT32","UTF8")))
+    stopifnot(length(type) == length(ncells))
+    dims = as.integer(dims)
+
+    ## Check if the array already exists.
+    if (tiledb_object_type(array_name) == "ARRAY") {
+        stop("Array already exists.")
+    }
+
+    ## Make Schema
+    attr_names = paste("attr", seq_along(type), sep = "_")
+    schema <- tiledb_array_schema(
+        tiledb_domain_simple(dims),
+        attrs = mapply(tiledb_attr, attr_names, type, ncells, SIMPLIFY = FALSE),
+        sparse = sparse
+    )
+
+    ## Create the (empty) array on disk.
+    tiledb_array_create(array_name, schema)
+    if (sparse)
+        A <- tiledb_sparse(array_name)
+    else
+        A <- tiledb_dense(array_name)
+    A
+}
+##' Create a TileDB array
+##'
+##' Creates and fills a single-attribute, dense TileDB array using sensible defaults.
+##' @param x an array to fill a new TileDB array
+##' @param array_name single character, name of new TileDB array file
+##' @return TileDB array object
+##' @examples
+##' x = matrix( c(1.3, 1, 2, 4), ncol = 2)
+##' tiledb_array( x, tempfile() )
+##' @export
+tiledb_array <- function(x, array_name) {
+    if (is.list(x) || is.character(x))
+        ncells = -1
+    else
+        ncells = 1
+
+    type = r_to_tiledb_type(x)
+    A = create_tiledb_array(array_name, dim(x), type, sparse = FALSE, ncells = ncells)
+    A[] <- x # sparse [<- does not accept this, which makes sense
+    A
+}
