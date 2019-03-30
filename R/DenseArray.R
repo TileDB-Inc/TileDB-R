@@ -388,3 +388,8 @@ setMethod("dim", "tiledb_dense",
           function(x) {
               vapply(dimensions(schema(x)), dim, integer(1))
           })
+
+setMethod("length", "tiledb_dense",
+          function(x) {
+              prod(dim(x))
+          })
