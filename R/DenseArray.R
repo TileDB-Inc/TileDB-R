@@ -30,10 +30,11 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FAL
 setMethod("show", "tiledb_dense",
           function (object) {
               message("## Dense TileDB Array")
-              message(sprintf("## Dimensions: %s", paste(dim(object), collapse = ", ")))
-              message("- tiledb_dense(uri = \"", object@uri, "\")")
+              message("- URI: \"", object@uri, "\"")
+              message(sprintf("- Dimensions: %s", paste(dim(object), collapse = ", ")))
               array_attrs = attrs(schema(object))
-              lapply(array_attrs, show)
+              an = vapply(array_attrs, datatype, character(1))
+              message(sprintf("- Attributes: %s", paste(names(an), an, collapse = ", ", sep = ": ")))
           })
 
 #' #' Reopens a TileDB array an opened tiledb array

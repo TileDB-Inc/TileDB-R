@@ -269,11 +269,12 @@ setMethod("[<-", "tiledb_sparse",
 setMethod("show", "tiledb_sparse",
           function (object) {
               message("## Sparse TileDB Array")
-              message(sprintf("## Dimensions: %s", paste(dim(object), collapse = ", ")))
-              message("- tiledb_sparse(uri = \"", object@uri, "\")")
+              message("- URI: \"", object@uri, "\"")
+              message(sprintf("- Dimensions: %s", paste(dim(object), collapse = ", ")))
               array_attrs = attrs(schema(object))
-              lapply(array_attrs, show)
-          })
+              an = vapply(array_attrs, datatype, character(1))
+              message(sprintf("- Attributes: %s", paste(names(an), an, collapse = ", ", sep = ": ")))
+           })
 
 #' @export
 setMethod("is.sparse", "tiledb_sparse", function(object) TRUE)
