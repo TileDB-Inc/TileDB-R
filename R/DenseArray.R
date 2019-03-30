@@ -309,7 +309,7 @@ setMethod("[<-", "tiledb_dense",
                     }
                 }
                 for (val in value) {
-                    check_replacement_value(value, sub_dim)
+                    check_replacement_value(val, sub_dim)
                 }
             }
             libtiledb_array_open(x@ptr, "WRITE")
