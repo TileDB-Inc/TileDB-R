@@ -444,7 +444,7 @@ test_that( "treating logical as INT32 works", {
 
 })
 
-testthat( "We can verify the shape and type of replacement values", {
+test_that( "We can verify the shape and type of replacement values", {
     expect_true( check_replacement_value(1:4, c(4)) )
     expect_true( check_replacement_value(matrix(1:12, ncol = 3), c(4,3)) )
     expect_true( check_replacement_value(list(1:4, 2:3, 9), c(3)) )
