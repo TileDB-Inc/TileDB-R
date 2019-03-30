@@ -14,7 +14,7 @@ tiledb_attr(name = "", type = c("FLOAT64", "INT32", "UTF8"),
 
 \item{filter_list}{(default filter_list("NONE")) The tiledb_attr filter_list}
 
-\item{ncells}{(default 1) The number of cells, must be 1 for now}
+\item{ncells}{The number of cells}
 }
 \value{
 \code{tiledb_dim} object

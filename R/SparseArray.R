@@ -360,11 +360,13 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
   return(out);
 }
 
+#' @export
 setMethod("dim", "tiledb_sparse",
           function(x) {
               vapply(dimensions(schema(x)), dim, integer(1))
           })
 
+#' @export
 setMethod("length", "tiledb_sparse",
           function(x) {
               prod(dim(x))
