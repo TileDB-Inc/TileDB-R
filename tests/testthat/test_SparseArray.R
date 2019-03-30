@@ -55,6 +55,9 @@ test_that("test tiledb_subarray read for sparse array", {
   arr[I, J] <- dat
   expect_equal(arr[]$val, unlist(as.list(dat)))
 
+  # describe array
+  expect_equal(dim(arr), c(5,5))
+
   # explicit range enumeration
   res <- tiledb_subarray(arr, list(3,5, 3,5))
   expect_equal(res$val,

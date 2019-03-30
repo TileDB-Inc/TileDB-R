@@ -380,3 +380,8 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
                        cut.names = cut.names, col.names = col.names, fix.empty.names = fix.empty.names,
                        stringsAsFactors = default.stringsAsFactors()))
 }
+
+setMethod("dim", "tiledb_dense",
+          function(x) {
+              vapply(dimensions(schema(x)), dim, integer(1))
+          })
