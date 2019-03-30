@@ -121,6 +121,9 @@ test_that("Can read / write a simple 2D matrix", {
   # scalar indexing
   expect_equal(arr[3, 3], dat[3, 3])
 
+  # describe array
+  expect_equal(dim(arr), c(5,5))
+
   teardown({
     unlink(tmp, recursive = TRUE)
   })

@@ -356,3 +356,8 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
   )
   return(out);
 }
+
+setMethod("dim", "tiledb_sparse",
+          function(x) {
+              vapply(dimensions(schema(x)), dim, integer(1))
+          })
