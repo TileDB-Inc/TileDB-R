@@ -29,7 +29,9 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FAL
 
 setMethod("show", "tiledb_dense",
           function (object) {
-            message("tiledb_dense(uri = \"", object@uri, "\")")
+              message("## Dense TileDB Array")
+              message("- tiledb_dense(uri = \"", object@uri, "\")")
+              show(schema(object))
           })
 
 #' #' Reopens a TileDB array an opened tiledb array

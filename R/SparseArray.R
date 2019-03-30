@@ -268,7 +268,9 @@ setMethod("[<-", "tiledb_sparse",
 
 setMethod("show", "tiledb_sparse",
           function (object) {
-            message("tiledb_sparse(uri = \"", object@uri, "\")")
+              message("## Sparse TileDB Array")
+              message("- tiledb_sparse(uri = \"", object@uri, "\")")
+              show(schema(object))
           })
 
 #' @export
