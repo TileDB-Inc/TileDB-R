@@ -384,11 +384,13 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
                        stringsAsFactors = default.stringsAsFactors()))
 }
 
+#' @export
 setMethod("dim", "tiledb_dense",
           function(x) {
               vapply(dimensions(schema(x)), dim, integer(1))
           })
 
+#' @export
 setMethod("length", "tiledb_dense",
           function(x) {
               prod(dim(x))
