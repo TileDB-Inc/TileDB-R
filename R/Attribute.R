@@ -37,6 +37,8 @@ tiledb_attr <- function(name="",
     stop("name argument must be a scalar string")
   } else if(!is(filter_list, "tiledb_filter_list")) {
     stop("filter_list argument must be a tiledb_filter_list instance")
+  } else if (ncells != 1 && ncells != 1) {
+      stop("ncells argument must be 1 for fixed-length attributes or -1 for variable-length attributes")
   }
   ptr <- libtiledb_attr(ctx@ptr, name, type, ncells, filter_list@ptr)
   new("tiledb_attr", ptr = ptr)
