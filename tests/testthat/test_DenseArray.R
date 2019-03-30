@@ -84,6 +84,10 @@ test_that("Can read / write a simple 1D vector", {
   arr[7:10] <- c(97, 98, 99, 100)
   expect_equal(arr[6:10], as.array(c(1000, 97, 98, 99, 100)))
 
+  # attribute indexing
+  expect_s4_class( arr[[1]], "tiledb_attr")
+  expect_s4_class( arr[["val"]], "tiledb_attr")
+
   teardown({
     unlink(tmp, recursive = TRUE)
   })
@@ -228,6 +232,13 @@ test_that("Can read / write 2D multi-attribute array", {
 
   dat[["a1"]][1:3, 1:3] <- array(1.0, c(3, 3))
   expect_equal(arr[][["a1"]], dat[["a1"]][])
+
+  # attribute indexing
+  expect_s4_class( arr[["a1"]], "tiledb_attr")
+  expect_s4_class( arr[[1]], "tiledb_attr")
+  expect_s4_class( arr[["a2"]], "tiledb_attr")
+  expect_s4_class( arr[[2]], "tiledb_attr")
+  expect_error( arr[[2]] <- dat[[2]] )
 
   teardown({
     unlink(tmp, recursive = TRUE)

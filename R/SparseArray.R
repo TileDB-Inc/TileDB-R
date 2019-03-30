@@ -84,6 +84,16 @@ as_data_frame <- function(dom, data) {
   return(as.data.frame(data))
 }
 
+setMethod("[[", "tiledb_sparse",
+          function(x, i, exact = TRUE) {
+              attrs(schema(x))[[i]]
+          })
+
+setMethod("[[<-", "tiledb_sparse",
+          function(x, i, value) {
+              stop("TileDB attributes objects can not be replaced. You may want to replace all the values with x[[i]][] <- value.")
+          })
+
 setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
             index <- nd_index_from_syscall(sys.call(), parent.frame())

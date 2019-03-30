@@ -63,6 +63,11 @@ test_that("test tiledb_subarray read for sparse array", {
   # vector range syntax
   expect_equal(tiledb_subarray(arr, list(1,3,1,3))$val, unlist(as.list(dat[1:3, 1:3])))
 
+  # attribute indexing
+  expect_s4_class( arr[["val"]], "tiledb_attr")
+  expect_s4_class( arr[[1]], "tiledb_attr")
+  expect_error( arr[[1]] <- 4 )
+
   teardown({
     unlink(tmp, recursive = TRUE)
   })

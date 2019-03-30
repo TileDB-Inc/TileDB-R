@@ -173,6 +173,16 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   return(attributes)
 }
 
+setMethod("[[", "tiledb_dense",
+          function(x, i, exact = TRUE) {
+              attrs(schema(x))[[i]]
+          })
+
+setMethod("[[<-", "tiledb_dense",
+          function(x, i, value) {
+              stop("TileDB attributes objects can not be replaced. You may want to replace all the values with x[[i]][] <- value.")
+          })
+
 setMethod("[", "tiledb_dense",
           function(x, i, j, ..., drop = FALSE) {
             index <- nd_index_from_syscall(sys.call(), parent.frame())
