@@ -364,3 +364,8 @@ setMethod("dim", "tiledb_sparse",
           function(x) {
               vapply(dimensions(schema(x)), dim, integer(1))
           })
+
+setMethod("length", "tiledb_sparse",
+          function(x) {
+              prod(dim(x))
+          })

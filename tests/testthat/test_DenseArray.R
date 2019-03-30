@@ -123,6 +123,7 @@ test_that("Can read / write a simple 2D matrix", {
 
   # describe array
   expect_equal(dim(arr), c(5,5))
+  expect_equal(length(arr), 25)
 
   teardown({
     unlink(tmp, recursive = TRUE)
