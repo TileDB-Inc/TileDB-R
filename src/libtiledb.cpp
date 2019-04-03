@@ -1352,7 +1352,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 	current_offset = current_offset + buffer_strings[i].size();
 	out += buffer_strings[i];
       }
-      query->set_buffer(attr, offsets, out);
+      query->set_buffer(attr, &offsets[0], buffer_strings.size(), &out[0], buffer_strings.size());
       return query;
     } else if (TYPEOF(buffer) == VECSXP) {
       List buffer_elements(buffer);
@@ -1366,7 +1366,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 	    out.push_back(subvec[j]);
 	  }
 	}
-	query->set_buffer(attr, offsets, out);
+	query->set_buffer(attr, &offsets[0], buffer_elements.size(), out.begin(), out.length());
 	return query;
       } else if (TYPEOF(buffer_elements[0]) == REALSXP) {
 	NumericVector out {};
@@ -1378,7 +1378,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 	    out.push_back(subvec[j]);
 	  }
 	}
-	query->set_buffer(attr, offsets, out);
+	query->set_buffer(attr, &offsets[0], buffer_elements.size(), out.begin(), out.length());
 	return query;
       } else if (TYPEOF(buffer_elements[0]) == LGLSXP) {
 	LogicalVector out {};
@@ -1390,7 +1390,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 	    out.push_back(subvec[j]);
 	  }
 	}
-	query->set_buffer(attr, offsets, out);
+	query->set_buffer(attr, &offsets[0], buffer_elements.size(), out.begin(), out.length());
 	return query;
       } else {
 	std::stringstream errmsg;
