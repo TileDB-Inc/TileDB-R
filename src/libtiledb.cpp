@@ -1346,13 +1346,15 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
   try {
     if (TYPEOF(buffer) == STRSXP) {
       StringVector buffer_strings(buffer);
-      std::string out(buffer_strings[0]);
+      std::string out;
       for (int i = 0; i < buffer_strings.size(); i++) {
+	//	Rcout << "current_offset " << current_offset << std::endl;
 	offsets.push_back(current_offset);
 	current_offset = current_offset + buffer_strings[i].size();
 	out += buffer_strings[i];
       }
-      query->set_buffer(attr, &offsets[0], buffer_strings.size(), &out[0], buffer_strings.size());
+      //      Rcout << "out string  " << out << std::endl;
+      query->set_buffer(attr, &offsets[0], offsets.size(), &out[0], out.size());
       return query;
     } else if (TYPEOF(buffer) == VECSXP) {
       List buffer_elements(buffer);
@@ -1366,7 +1368,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 	    out.push_back(subvec[j]);
 	  }
 	}
-	query->set_buffer(attr, &offsets[0], buffer_elements.size(), out.begin(), out.length());
+	query->set_buffer(attr, &offsets[0], offsets.size(), out.begin(), out.size());
 	return query;
       } else if (TYPEOF(buffer_elements[0]) == REALSXP) {
 	NumericVector out {};
@@ -1378,7 +1380,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 	    out.push_back(subvec[j]);
 	  }
 	}
-	query->set_buffer(attr, &offsets[0], buffer_elements.size(), out.begin(), out.length());
+	query->set_buffer(attr, &offsets[0], offsets.size(), out.begin(), out.size());
 	return query;
       } else if (TYPEOF(buffer_elements[0]) == LGLSXP) {
 	LogicalVector out {};
@@ -1390,7 +1392,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var(XPtr<tiledb::Query> query,
 	    out.push_back(subvec[j]);
 	  }
 	}
-	query->set_buffer(attr, &offsets[0], buffer_elements.size(), out.begin(), out.length());
+	query->set_buffer(attr, &offsets[0], offsets.size(), out.begin(), out.size());
 	return query;
       } else {
 	std::stringstream errmsg;
