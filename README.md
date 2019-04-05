@@ -37,7 +37,7 @@ The most recent released version can be installed from [Github](https://github.c
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
   
     devtools::install_github("TileDB-Inc/TileDB-R@latest",
-        args="--configure-args='--with-tiledb=/path/to/tiledb'"")
+        args="--configure-args='--with-tiledb=/path/to/tiledb'")
 
 To build the latest development version of TileDB-R:
 
