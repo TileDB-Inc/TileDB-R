@@ -45,6 +45,8 @@ To build the latest development version of TileDB-R:
     
 **Note** The TileDB-R package is developed against latest stable (`v1.3.x`) version of TileDB 
 
+**Note** `install_github` will delete all temporary files upon failure. To debug build failures, clone this repository locally and run `devtools::install("/path/to/TileDB-R")`.
+
 ### Conda
 
 If you are using the TileDB Conda package, you may need to explicitly add the conda path
