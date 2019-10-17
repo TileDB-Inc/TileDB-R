@@ -15,12 +15,12 @@ for the TileDB-R package to build and link correctly:
   
     > install.packages("devtools")
     > library(devtools)
-    > devtools::install_github("TileDB-Inc/TileDB-R@latest")
+    > devtools::install_github("TileDB-Inc/TileDB-R@0.2.0")
     ...
     > library(tiledb)
     > tiledb_version()
     major minor patch
-    1     4     2 
+    1     6     3 
     > help(tiledb)
 
 ## Installation
@@ -32,18 +32,18 @@ The most recent released version can be installed from [Github](https://github.c
     
     install.packages("devtools") 
     library(devtools)
-    devtools::install_github("TileDB-Inc/TileDB-R@latest")
+    devtools::install_github("TileDB-Inc/TileDB-R@0.2.0")
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
   
-    devtools::install_github("TileDB-Inc/TileDB-R@latest",
+    devtools::install_github("TileDB-Inc/TileDB-R@0.2.0",
         args="--configure-args='--with-tiledb=/path/to/tiledb'"")
 
 To build the latest development version of TileDB-R:
 
     devtools::install_github("TileDB-Inc/TileDB-R")
     
-**Note** The TileDB-R package is developed against latest stable (`v1.3.x`) version of TileDB 
+**Note** The TileDB-R package is developed against latest stable (`v1.6.x`) version of TileDB 
 
 **Note** `install_github` will delete all temporary files upon failure. To debug build failures, clone this repository locally and run `devtools::install("/path/to/TileDB-R")`.
 
@@ -56,3 +56,14 @@ after activating the environment with `conda activate tiledb`.  More information
 ### Developer Documentation
 
 Instructions for setting up a RStudio devlopment environment, building, and testing the TileDB-R package are located in the [developer documentation wiki](https://github.com/TileDB-Inc/TileDB-R/wiki).
+
+## Compatibility
+
+TileDB-R follows semantic versioning. Currently tiledb core library does not,
+as such the below table reference which versions are compatible.
+
+| TileDB-R Version | TileDB Version |
+| ----------------- | -------------- |
+| 0.1.X             | 1.3.X          |
+| 0.2.X             | 1.6.X          |
+
