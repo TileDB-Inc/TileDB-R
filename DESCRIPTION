@@ -1,7 +1,7 @@
 Package: tiledb
 Type: Package
 Title: Sparse and dense multidimensional array data management
-Version: 0.1
+Version: 0.2
 Authors@R: c(
     person("TileDB-Inc.", email = "help@tiledb.io", role = c("cre", "fnd"), comment = c("https://tiledb.io"))
     )

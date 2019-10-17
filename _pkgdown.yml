@@ -24,10 +24,14 @@ reference:
   contents:
   - starts_with("tiledb_attr")
   - starts_with("attr")
-- title: Compressor
+- title: Filter
   contents:
-  - starts_with("tiledb_compressor")
-  - starts_with("compress")
+  - starts_with("tiledb_filter")
+  - starts_with("filter")
+- title: FilterList
+  contents:
+  - starts_with("tiledb_filterlist")
+  - starts_with("filterlist")
 - title: Domain
   contents:
   - starts_with("tiledb_domain") 
