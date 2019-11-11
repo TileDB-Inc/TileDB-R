@@ -38,6 +38,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_ctx_set_tag
+void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value);
+RcppExport SEXP _tiledb_libtiledb_ctx_set_tag(SEXP ctxSEXP, SEXP keySEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type key(keySEXP);
+    Rcpp::traits::input_parameter< std::string >::type value(valueSEXP);
+    libtiledb_ctx_set_tag(ctx, key, value);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_config_save_to_file
 std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename);
 RcppExport SEXP _tiledb_libtiledb_config_save_to_file(SEXP configSEXP, SEXP filenameSEXP) {
@@ -1124,6 +1136,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
+    {"_tiledb_libtiledb_ctx_set_tag", (DL_FUNC) &_tiledb_libtiledb_ctx_set_tag, 3},
     {"_tiledb_libtiledb_config_save_to_file", (DL_FUNC) &_tiledb_libtiledb_config_save_to_file, 2},
     {"_tiledb_libtiledb_config_load_from_file", (DL_FUNC) &_tiledb_libtiledb_config_load_from_file, 1},
     {"_tiledb_libtiledb_ctx_config", (DL_FUNC) &_tiledb_libtiledb_ctx_config, 1},

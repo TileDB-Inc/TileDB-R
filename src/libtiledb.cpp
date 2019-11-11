@@ -279,6 +279,17 @@ XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilV
   }
 }
 
+
+// [[Rcpp::export]]
+void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value) {
+  try {
+    ctx->set_tag(key, value);
+    return;
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
+}
+
 // [[Rcpp::export]]
 std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename) {
   try {
