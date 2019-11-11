@@ -25,12 +25,11 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export
 tiledb_attr <- function(name="",
-                        type,
+                        type="",
                         filter_list=tiledb_filter_list(),
                         ncells=1,
                         ctx = tiledb:::ctx
                         ) {
-  type = match.arg(type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {
