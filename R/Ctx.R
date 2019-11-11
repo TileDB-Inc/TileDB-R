@@ -26,7 +26,11 @@ tiledb_ctx <- function(config = NULL) {
   } else {
     stop("invalid tiledb_ctx config argument type")
   }
-  return(new("tiledb_ctx", ptr = ptr))
+  ctx = new("tiledb_ctx", ptr = ptr)
+  
+  tiledb_context_set_default_tags(ctx)
+  
+  return(ctx)
 }
 
 #' @export
@@ -69,4 +73,32 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #' @export
 tiledb_is_supported_fs <- function(scheme, object = tiledb:::ctx) {
             libtiledb_ctx_is_supported_fs(object@ptr, scheme)
+}
+
+#' Sets a string:string "tag" on the Ctx
+#'
+#' @param `tiledb_ctx` object
+#' @param `key` string
+#' @param `value` string
+#' @examples
+#' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
+#' cfg <- tiledb_context_set_tag(ctx, "tag", "value")
+#'
+#' @export
+tiledb_ctx_set_tag <- function(object, key, value) {
+  stopifnot(is(object, "tiledb_ctx"))
+  return(libtiledb_ctx_set_tag(object@ptr, key, value))
+}
+
+#' Sets default context tags
+#'
+#' @param `tiledb_ctx` object
+#'
+tiledb_context_set_default_tags <- function(object) {
+  stopifnot(is(object, "tiledb_ctx"))
+
+  tiledb_ctx_set_tag(object, "x-tiledb-api-language", "r")
+  tiledb_ctx_set_tag(object, "x-tiledb-api-language-version", paste(version(), sep=".", collapse=""))
+  info <- Sys.info()
+  tiledb_ctx_set_tag(object, "x-tiledb-api-sys-platform", paste(info["sysname"], info["release"], info["machine"], collapse=""))
 }

@@ -6,6 +6,7 @@ reference:
   contents:
   - starts_with("tiledb_ctx")
   - starts_with("tiledb_is_supported_fs")
+  - starts_with("tiledb_ctx_set_tag")
 - title: Config
   contents:
   - starts_with("tiledb_config")

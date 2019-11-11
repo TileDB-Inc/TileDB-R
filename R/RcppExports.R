@@ -13,6 +13,10 @@ libtiledb_ctx <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_ctx`, config)
 }
 
+libtiledb_ctx_set_tag <- function(ctx, key, value) {
+    invisible(.Call(`_tiledb_libtiledb_ctx_set_tag`, ctx, key, value))
+}
+
 libtiledb_config_save_to_file <- function(config, filename) {
     .Call(`_tiledb_libtiledb_config_save_to_file`, config, filename)
 }
