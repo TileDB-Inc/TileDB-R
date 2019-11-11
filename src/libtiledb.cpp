@@ -1469,8 +1469,6 @@ std::string _object_type_to_string(tiledb::Object::Type otype) {
   switch (otype) {
     case tiledb::Object::Type::Array:
       return "ARRAY";
-    case tiledb::Object::Type::KeyValue:
-      return "KEY_VALUE";
     case tiledb::Object::Type::Group:
       return "GROUP";
     case tiledb::Object::Type::Invalid:
@@ -1511,8 +1509,6 @@ std::string libtiledb_object_move(XPtr<tiledb::Context> ctx, std::string old_uri
 tiledb::Object::Type _string_to_object_type(std::string otype) {
   if (otype == "ARRAY") {
     return tiledb::Object::Type::Array;
-  } else if (otype == "KEY_VALUE") {
-    return tiledb::Object::Type::KeyValue;
   } else if (otype == "GROUP") {
     return tiledb::Object::Type::Group;
   } else {

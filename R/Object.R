@@ -28,7 +28,6 @@ tiledb_group_create <- function(uri, ctx = tiledb:::ctx) {
 #'
 #' Object types:
 #'  - `"ARRAY"`, dense or sparse TileDB array
-#'  - `"KEY_VALUE"`, TileDB kv array
 #'  - `"GROUP"`, TileDB group
 #'  - `"INVALID"``, not a TileDB resource
 #'
