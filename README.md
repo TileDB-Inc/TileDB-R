@@ -15,12 +15,15 @@ for the TileDB-R package to build and link correctly:
   
     > install.packages("devtools")
     > library(devtools)
-    > devtools::install_github("TileDB-Inc/TileDB-R@0.2.0")
+    > devtools::install_github("TileDB-Inc/TileDB-R@0.3.0")
     ...
     > library(tiledb)
     > tiledb_version()
     major minor patch
-    1     6     3 
+    1     7     0
+    > version()
+    major minor patch
+    0     3     0 
     > help(tiledb)
 
 ## Installation
@@ -32,18 +35,18 @@ The most recent released version can be installed from [Github](https://github.c
     
     install.packages("devtools") 
     library(devtools)
-    devtools::install_github("TileDB-Inc/TileDB-R@0.2.0")
+    devtools::install_github("TileDB-Inc/TileDB-R@0.3.0")
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
   
-    devtools::install_github("TileDB-Inc/TileDB-R@0.2.0",
+    devtools::install_github("TileDB-Inc/TileDB-R@0.3.0",
         args="--configure-args='--with-tiledb=/path/to/tiledb'"")
 
 To build the latest development version of TileDB-R:
 
     devtools::install_github("TileDB-Inc/TileDB-R")
     
-**Note** The TileDB-R package is developed against latest stable (`v1.6.x`) version of TileDB 
+**Note** The TileDB-R package is developed against latest stable (`v1.7.x`) version of TileDB 
 
 **Note** `install_github` will delete all temporary files upon failure. To debug build failures, clone this repository locally and run `devtools::install("/path/to/TileDB-R")`.
 
@@ -66,4 +69,5 @@ as such the below table reference which versions are compatible.
 | ----------------- | -------------- |
 | 0.1.X             | 1.3.X          |
 | 0.2.X             | 1.6.X          |
+| 0.3.X             | 1.7.X          |
 
