@@ -18,7 +18,6 @@ TileDB object type string
 Object types:
 \itemize{
 \item \code{"ARRAY"}, dense or sparse TileDB array
-\item \code{"KEY_VALUE"}, TileDB kv array
 \item \code{"GROUP"}, TileDB group
 \item `"INVALID"``, not a TileDB resource
 }
