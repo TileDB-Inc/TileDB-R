@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -137,13 +137,13 @@
 <span class='no'>sch</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_array_schema.html'>tiledb_array_schema</a></span>(<span class='no'>dom</span>, <span class='kw'>attrs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span>(<span class='st'>"a1"</span>)))</div><div class='output co'>#&gt; <span class='error'>Error in libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells): Unknown TileDB type ""</span></div><div class='input'><span class='fu'>dimensions</span>(<span class='no'>dom</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; An object of class "tiledb_dim"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x55ec295d98b0&gt;
+#&gt; &lt;pointer: 0x55c002e08e30&gt;
 #&gt; 
 #&gt; 
 #&gt; [[2]]
 #&gt; An object of class "tiledb_dim"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x55ec2489bbb0&gt;
+#&gt; &lt;pointer: 0x55c00337ad80&gt;
 #&gt; 
 #&gt; </div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'>dimensions</span>(<span class='no'>dom</span>), <span class='no'>name</span>)</div><div class='output co'>#&gt; [[1]]
