@@ -8,17 +8,9 @@
 
 **Warning**: The R interface to TileDB is under development and the API is subject to change.
 
+## Quick Links
 
-## Installation
-
-
-TileDB needs to be installed beforehand (from a package or from source)
-for the TileDB-R package to build and link correctly.
-See the [official installation docs](https://docs.tiledb.com/developer/installation)
-for details on installing libtiledb and the R api.
-
-## Documentation
-
+- [Installation](https://docs.tiledb.com/developer/installation)
 - [Quickstart](https://docs.tiledb.com/developer/quickstart)
 - [Reference Docs](https://tiledb-inc.github.io/TileDB-R/)
 
