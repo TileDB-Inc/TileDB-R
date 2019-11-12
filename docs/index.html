@@ -66,59 +66,26 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
+
+<p><a href="https://travis-ci.org/TileDB-Inc/TileDB-R"><img src="https://travis-ci.org/TileDB-Inc/TileDB-R.svg?branch=master" alt="Build Status"></a></p>
 <div id="tiledb-r" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#tiledb-r" class="anchor"></a>TileDB-R</h1></div>
-
-<p><code>TileDB-R</code> is a <a href="https://www.r-project.org/">R</a> interface to the <a href="http://tiledb.io">TileDB Storage Manager</a>.</p>
+<p><code>TileDB-R</code> is a <a href="https://www.r-project.org/">R</a> interface to the <a href="http://tiledb.com">TileDB Storage Manager</a>.</p>
 <p><strong>Warning</strong>: The R interface to TileDB is under development and the API is subject to change.</p>
-<div id="documentation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#documentation" class="anchor"></a><a href="https://tiledb-inc.github.io/TileDB-R/">Documentation</a>
-</h2>
-</div>
-<div id="quickstart" class="section level2">
-<h2 class="hasAnchor">
-<a href="#quickstart" class="anchor"></a>Quickstart</h2>
-<p>TileDB needs to be installed beforehand (from a package or from source) for the TileDB-R package to build and link correctly:</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
-<span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(devtools)
-<span class="op">&gt;</span><span class="st"> </span>devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R@0.3.0"</span>)
-...
-<span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tiledb)
-<span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="reference/tiledb_version.html">tiledb_version</a></span>()
-major minor patch
-<span class="dv">1</span>     <span class="dv">7</span>     <span class="dv">0</span>
-<span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Version.html">version</a></span>()
-major minor patch
-<span class="dv">0</span>     <span class="dv">3</span>     <span class="dv">0</span> 
-<span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/utils/help.html">help</a></span>(tiledb)</code></pre></div>
-</div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>The <code>TileDB-R</code>package has not been published on <a href="https://cran.r-project.org/">CRAN</a> and must be installed from source.</p>
-<p>The most recent released version can be installed from <a href="https://github.com/TileDB-Inc/TileDB-R">Github</a> using the package <a href="https://github.com/r-lib/devtools">devtools</a>.</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>) 
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(devtools)
-devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R@0.3.0"</span>)</code></pre></div>
-<p>If the TileDB library is installed in a custom location, you need to pass the explicit path:</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R@0.3.0"</span>,
-    <span class="dt">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"")</span></code></pre></div>
-<p>To build the latest development version of TileDB-R:</p>
-<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</code></pre></div>
-<p><strong>Note</strong> The TileDB-R package is developed against latest stable (<code>v1.7.x</code>) version of TileDB</p>
-<p><strong>Note</strong> <code>install_github</code> will delete all temporary files upon failure. To debug build failures, clone this repository locally and run <code><a href="https://rdrr.io/pkg/devtools/man/install.html">devtools::install("/path/to/TileDB-R")</a></code>.</p>
-<div id="conda" class="section level3">
-<h3 class="hasAnchor">
-<a href="#conda" class="anchor"></a>Conda</h3>
-<p>If you are using the TileDB Conda package, you may need to explicitly add the conda path after activating the environment with <code>conda activate tiledb</code>. More information on the <a href="https://docs.tiledb.io/en/stable/installation.html#conda">TileDB conda installation documentation page</a>.</p>
+<p>TileDB needs to be installed beforehand (from a package or from source) for the TileDB-R package to build and link correctly. See the <a href="https://docs.tiledb.com/developer/installation">official installation docs</a> for details on installing libtiledb and the R api.</p>
 </div>
-<div id="developer-documentation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#developer-documentation" class="anchor"></a>Developer Documentation</h3>
-<p>Instructions for setting up a RStudio devlopment environment, building, and testing the TileDB-R package are located in the <a href="https://github.com/TileDB-Inc/TileDB-R/wiki">developer documentation wiki</a>.</p>
-</div>
+<div id="documentation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#documentation" class="anchor"></a>Documentation</h2>
+<ul>
+<li><a href="https://docs.tiledb.com/developer/quickstart">Quickstart</a></li>
+<li><a href="https://tiledb-inc.github.io/TileDB-R/">Reference Docs</a></li>
+</ul>
 </div>
 <div id="compatibility" class="section level2">
 <h2 class="hasAnchor">
@@ -146,6 +113,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/
 </table>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -177,7 +145,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/TileDB-Inc/TileDB-R"><img src="https://travis-ci.org/TileDB-Inc/TileDB-R.svg?branch=master" alt="Build Status"></a></li>
+<li><a href="https://tiledb.com"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a></li>
 </ul>
 </div>
 </div>
