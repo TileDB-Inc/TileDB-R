@@ -2,7 +2,7 @@ AC_PREREQ([2.69])
 AC_INIT([TileDB-R], [0.1.0])
 
 : ${R_HOME=`R RHOME`}
-if test -z "${R_HOME}" ; then
+if test -z "${R_HOME}"; then
     echo "could not determine R_HOME"
     exit 1
 fi
