@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R], [0.1.0])
+AC_INIT([TileDB-R], [0.3.0])
 
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
