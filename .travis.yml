@@ -19,7 +19,7 @@ install:
     - popd
 
     # Install R package deps 
-    - Rscript -e 'install.packages(c("devtools", "testthat", "roxygen2"); devtools::install_deps(dependencies=T)'
+    - Rscript -e 'install.packages(c("devtools", "testthat", "roxygen2")); devtools::install_deps(dependencies=T)'
 
 script:
     # Build and Test R package
