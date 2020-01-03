@@ -4,7 +4,7 @@
 #
 # The MIT License
 #
-# Copyright (c) 2018 TileDB, Inc.
+# Copyright (c) 2018 - 2020 TileDB, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@
 library(tiledb)
 
 # Name of the array to create.
-array_name = "quickstart_sparse"
+array_name <- "quickstart_sparse"
 
 create_array <- function() {
     # Create a TileDB context
@@ -44,18 +44,16 @@ create_array <- function() {
 
     # Check if the array already exists.
     if (tiledb_object_type(array_name, ctx=ctx) == "ARRAY") {
-        stop("Array already exists.")
-	      quit(0)
+        message("Array already exists.")
+        return(invisible(NULL))
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
-    dom <- tiledb_domain(
-              dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32", ctx=ctx),
-			                 tiledb_dim("cols", c(1L, 4L), 4L, "INT32", ctx=ctx)), ctx=ctx)
+    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32", ctx=ctx),
+                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32", ctx=ctx)), ctx=ctx)
 
    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    schema = tiledb_array_schema(
-                                 dom, attrs=c(tiledb_attr("a", type = "INT32", ctx=ctx)),
+    schema = tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32", ctx=ctx)),
                                  sparse = TRUE, ctx=ctx)
 
     # Create the (empty) array on disk.
@@ -77,10 +75,10 @@ read_array <- function() {
     # Open the array and read from it.
     A <- tiledb_sparse(uri = array_name, ctx=ctx)
     data <- A[1:2, 2:4]
-    coords <- data[["coords"]] 
+    coords <- data[["coords"]]
     a_vals <- data[["a"]]
     for (idx in seq_along(a_vals)) {
-	      i <- coords[((idx - 1) * 2) + 1]
+        i <- coords[((idx - 1) * 2) + 1]
         j <- coords[((idx - 1) * 2) + 2]
         cat(sprintf("Cell (%d,%d) has data %d\n", i, j, a_vals[idx]))
     }
