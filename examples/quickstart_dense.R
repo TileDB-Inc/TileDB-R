@@ -44,8 +44,8 @@ create_array <- function() {
 
     # Check if the array already exists.
     if (tiledb_object_type(array_name, ctx=ctx) == "ARRAY") {
-        stop("Array already exists.")
-	      quit(0)
+        message("Array already exists.")
+        return(invisible(NULL))
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
