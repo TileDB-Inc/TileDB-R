@@ -88,7 +88,7 @@ tiledb_array_schema.from_array <- function(x, ctx = tiledb:::ctx) {
   }
   xdim <- dim(x)
   dims <- lapply(seq_len(xdim), function(i) {
-    tiledb::Dim(c(1L, xdim[i]), type = "INT32", ctx)
+    tiledb_dim(c(1L, xdim[i]), type = "INT32", ctx)
   })
   dom <- tiledb_domain(dims, ctx)
   #TODO: better datatype checking

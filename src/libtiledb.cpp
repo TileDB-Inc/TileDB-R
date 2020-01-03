@@ -1370,6 +1370,7 @@ std::string _query_status_to_string(tiledb::Query::Status status) {
     case tiledb::Query::Status::INCOMPLETE:
       return "INCOMPLETE";
     case tiledb::Query::Status::UNINITIALIZED:
+    default:
       return "UNINITIALIZED";
   }
 }
@@ -1483,6 +1484,7 @@ std::string _object_type_to_string(tiledb::Object::Type otype) {
     case tiledb::Object::Type::Group:
       return "GROUP";
     case tiledb::Object::Type::Invalid:
+    default:
       return "INVALID";
   }
 }

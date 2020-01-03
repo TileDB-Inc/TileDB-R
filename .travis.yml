@@ -11,21 +11,19 @@ install:
     - git checkout dev
     - mkdir build
     - pushd build
-    - ../bootstrap --enable-verbose
+    - ../bootstrap --enable-verbose --prefix=/usr/local
     - make -j 4
     - sudo make -C tiledb install
+    - sudo ldconfig
     - popd
     - popd
 
     # Install R package deps 
-    - R -e 'install.packages("devtools")'
-    - R -e 'devtools::install_deps(dependencies=T)'
-    - R -e 'install.packages(c("testthat", "roxygen2"))'
+    - Rscript -e 'install.packages(c("devtools", "testthat", "roxygen2")); devtools::install_deps(dependencies=T)'
 
 script:
     # Build and Test R package
-    - R CMD INSTALL --no-multiarch --with-keep.source --configure-args='--with-tiledb=/tmp/TileDB/dist' .
-    - R -e 'library(tiledb); library(devtools); devtools::test()'
-    
-    # - R CMD BUILD .
-    # - R CMD check *tar.gz
+    #- R CMD INSTALL --no-multiarch --with-keep.source --configure-args='--with-tiledb=/tmp/TileDB/dist' .
+    #- R -e 'library(tiledb); library(devtools); devtools::test()'
+    - R CMD build .
+    - R CMD check --no-examples $(ls -1tr tiledb_*tar.gz | tail -1)

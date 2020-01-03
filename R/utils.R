@@ -2,7 +2,8 @@ is.scalar <- function(x, typestr) {
   (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
 }
 
-# Adapted from the DelayedArray package
+## Adapted from the DelayedArray package
+##' @importFrom utils tail
 nd_index_from_syscall <- function(call, env_frame) {
   index <- lapply(seq_len(length(call) - 2L),
                   function(idx){

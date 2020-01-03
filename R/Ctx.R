@@ -14,6 +14,7 @@ setClass("tiledb_ctx",
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "100"))
 #'
 #' @importFrom methods new
+#' @importFrom methods is
 #' @export tiledb_ctx
 tiledb_ctx <- function(config = NULL) {
   if (is.null(config)) {
