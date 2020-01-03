@@ -36,7 +36,7 @@
 library(tiledb)
 
 # Name of the array to create.
-array_name = "quickstart_dense"
+array_name <- "quickstart_dense"
 
 create_array <- function() {
     # Create a TileDB context
@@ -49,22 +49,20 @@ create_array <- function() {
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
-    dom <- tiledb_domain(
-               dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32", ctx=ctx),
-		                    tiledb_dim("cols", c(1L, 4L), 4L, "INT32", ctx=ctx)), ctx=ctx)
+    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32", ctx=ctx),
+                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32", ctx=ctx)), ctx=ctx)
 
     # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    schema <- tiledb_array_schema(
-                  dom, attrs = c(tiledb_attr("a", type = "INT32", ctx=ctx)), ctx=ctx)
+    schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32", ctx=ctx)), ctx=ctx)
 
     # Create the (empty) array on disk.
     tiledb_array_create(array_name, schema)
 }
 
 write_array <- function() {
-    data <- array(c(c(1L, 5L, 9L, 13L), 
+    data <- array(c(c(1L, 5L, 9L, 13L),
                     c(2L, 6L, 10L, 14L),
-                    c(3L, 7L, 11L, 15L), 
+                    c(3L, 7L, 11L, 15L),
                     c(4L, 8L, 12L, 16L)), dim = c(4,4))
     # Open the array and write to it.
     ctx <- tiledb_ctx()
