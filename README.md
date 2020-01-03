@@ -4,9 +4,46 @@
 
 # TileDB-R
 
-`TileDB-R` is a [R](https://www.r-project.org/) interface to the [TileDB Storage Engine](https://github.com/TileDB-Inc/TileDB).
+`TileDB-R` is a [R](https://www.r-project.org/) interface to the [storage engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
 
-**Warning**: The R interface to TileDB is under development and the API is subject to change.
+Note that the R interface to TileDB is under development, and the API is subject to change.
+
+## [Documentation](https://tiledb-inc.github.io/TileDB-R/)
+
+## Quickstart
+
+TileDB needs to be installed first (from a package or from source)
+for the TileDB-R package to build and link correctly:
+  
+    > install.packages("remotes")
+    > library(remotes)
+    > remotes::install_github("TileDB-Inc/TileDB-R")
+    ...
+    > library(tiledb)
+    > tiledb_version()
+    major minor patch
+    1     7     0 
+    > help(package=tiledb)
+
+## Installation
+
+As the `TileDB-R`package has not been published on [CRAN](https://cran.r-project.org/),
+it must be installed from source.
+
+The most recent released version can be installed from [Github](https://github.com/TileDB-Inc/TileDB-R) using the package [remotes](https://cran.r-project.org/package=remotes).
+    
+    install.packages("remotes") 
+    library(remotes)
+    remotes::install_github("TileDB-Inc/TileDB-R")
+
+If the TileDB library is installed in a custom location, you need to pass the explicit path:
+  
+    remotes::install_github("TileDB-Inc/TileDB-R",
+        args="--configure-args='--with-tiledb=/path/to/tiledb'")
+
+Note that the TileDB-R package is developed against latest stable (`v1.7.x`) version of TileDB 
+
+Note that `install_github` will delete all temporary files upon failure. To debug build failures, clone this repository locally and run either `devtools::install("/path/to/TileDB-R")`, or create and install from a `tar.gz` as usual.
 
 ## Quick Links
 
@@ -14,11 +51,10 @@
 - [Quickstart](https://docs.tiledb.com/developer/quickstart)
 - [Reference Docs](https://tiledb-inc.github.io/TileDB-R/)
 
-
 ## Compatibility
 
 TileDB-R follows semantic versioning. Currently tiledb core library does not,
-as such the below table reference which versions are compatible.
+so the table below references which versions are compatible.
 
 | TileDB-R Version | TileDB Version |
 | ----------------- | -------------- |
