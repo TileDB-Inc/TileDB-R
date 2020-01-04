@@ -25,7 +25,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export
 tiledb_attr <- function(name="",
-                        type="",
+                        type="FLOAT64",
                         filter_list=tiledb_filter_list(),
                         ncells=1,
                         ctx = tiledb:::ctx

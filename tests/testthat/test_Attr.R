@@ -1,18 +1,18 @@
 library(tiledb)
 context("tiledb_attr")
 
-## test_that("tiledb_attr constructor works", {
-##   a1 <- tiledb_attr()
-##   expect_is(a1, "tiledb_attr")
-## })
+test_that("tiledb_attr constructor works", {
+  a1 <- tiledb_attr()
+  expect_is(a1, "tiledb_attr")
+})
 
-## test_that("tiledb_attr constructor defaults are correct", {
-##   a1 <- tiledb_attr()
-##   expect_equal(tiledb::name(a1), "")
-##   expect_true(is.anonymous(a1))
-##   expect_equal(tiledb::datatype(a1), "FLOAT64")
-##   expect_equal(tiledb::ncells(a1), 1)
-## })
+test_that("tiledb_attr constructor defaults are correct", {
+  a1 <- tiledb_attr()
+  expect_equal(tiledb::name(a1), "")
+  expect_true(is.anonymous(a1))
+  expect_equal(tiledb::datatype(a1), "FLOAT64")
+  expect_equal(tiledb::ncells(a1), 1)
+})
 
 ## test_that("tiledb_attr is.anonymous is correct", {
 ##   a1  <- tiledb_attr("")

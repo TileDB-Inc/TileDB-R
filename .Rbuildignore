@@ -3,3 +3,4 @@
 ^\.travis\.yml$
 ^\docs
 ^_pgkdown.yml
+^.*\.tar\.gz$
