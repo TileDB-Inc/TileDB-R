@@ -1,3 +1,9 @@
+#' An S4 class for a TileDB dense array
+#'
+#' @slot ctx A TileDB context object
+#' @slot uri A character despription
+#' @slot as.data.frame A logical value
+#' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_dense
 setClass("tiledb_dense",
          slots = list(ctx = "tiledb_ctx", uri = "character", as.data.frame = "logical", ptr = "externalptr"))
@@ -7,6 +13,7 @@ setClass("tiledb_dense",
 #' @param ctx tiledb_ctx
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
+#' @param as.data.frame optional logical switch, defaults to "FALSE"
 #' @return tiledb_dense array object
 #' @export
 tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::ctx) {
@@ -61,19 +68,22 @@ setMethod("show", "tiledb_dense",
 #'   return(conn);
 #' }
 
-#'Returns true is if the array or array_schema is sparse
+#' Returns true is if the array or array_schema is sparse
 #'
 #' @param object tiledb_dense
+#' @param ... Extra parameter for method signature, currently unused.
 #' @return FALSE
 #' @export
 setMethod("is.sparse", "tiledb_dense", function(object) FALSE)
 
+#' @rdname generics
 #' @export
 setGeneric("schema", function(object, ...) standardGeneric("schema"))
 
 #' Returns the `tiledb_dense` array `tiledb_schema` object
 #'
 #' @param object tiledb_dense array object
+#' @param ... Extra parameter for method signature, currently unused.
 #' @return tiledb_schema
 #' @export
 setMethod("schema", "tiledb_dense", function(object, ...) {
@@ -173,6 +183,14 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   return(attributes)
 }
 
+#' Gets a dense array value
+#'
+#' @param x dense array object
+#' @param i parameter key string
+#' @param j parameter key string, currently unused.
+#' @param ... Extra parameter for method signature, currently unused.
+#' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
+#' @return An element from a dense array
 setMethod("[", "tiledb_dense",
           function(x, i, j, ..., drop = FALSE) {
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -257,6 +275,15 @@ setMethod("[", "tiledb_dense",
             return(out);
           })
 
+
+#' Sets a dense array value
+#'
+#' @param x dense array object
+#' @param i parameter key string
+#' @param j parameter key string, currently unused.
+#' @param ... Extra parameter for method signature, currently unused.
+#' @param value The value being assigned
+#' @return The modified object
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
              if (!is.list(value)) {

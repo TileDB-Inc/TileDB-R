@@ -7,7 +7,7 @@
 \method{dim}{tiledb_dim}(x)
 }
 \arguments{
-\item{`tiledb_dim`}{object}
+\item{x}{\code{tiledb_dim} object}
 }
 \value{
 a vector of the tile_dim domain type, of the dim domain dimension (extent)

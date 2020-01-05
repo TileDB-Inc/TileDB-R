@@ -7,7 +7,7 @@
 \S4method{name}{tiledb_dim}(object)
 }
 \arguments{
-\item{`tiledb_dim`}{object}
+\item{object}{\code{tiledb_dim} object}
 }
 \value{
 string name, empty string if the dimension is anonymous

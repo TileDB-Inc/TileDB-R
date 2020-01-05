@@ -9,9 +9,9 @@ tiledb_filter_set_option(object, option, value)
 \arguments{
 \item{object}{tiledb_filter}
 
-\item{string}{option}
+\item{option}{string}
 
-\item{int}{value}
+\item{value}{int}
 }
 \description{
 Set the filter's option

@@ -8,8 +8,6 @@
 }
 \arguments{
 \item{object}{tiledb_array_schema}
-
-\item{a}{tiledb_domain object}
 }
 \description{
 Returns the \code{tiledb_domain} object associated with a given \code{tiledb_array_schema}

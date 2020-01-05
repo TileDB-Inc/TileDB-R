@@ -9,9 +9,7 @@
 \arguments{
 \item{object}{tiledb_filter_list}
 
-\item{string}{option}
-
-\item{int}{value}
+\item{value}{string}
 }
 \description{
 Set the filter_list's max_chunk_size

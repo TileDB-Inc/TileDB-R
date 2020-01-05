@@ -1,5 +1,7 @@
 #include "libtiledb.h"
 
+#include <fstream>
+#include <unistd.h>
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -1030,7 +1032,7 @@ List libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
   try {
     List result;
     int nattr = schema->attribute_num();
-    for (unsigned int i=0; i < nattr; i++) {
+    for (auto i=0; i < nattr; i++) {
       auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(i)));
       result[attr->name()] = attr;
     }
@@ -1753,16 +1755,6 @@ void libtiledb_stats_disable() {
 }
 
 // [[Rcpp::export]]
-void libtiledb_stats_print() {
-  // TODO: look up the proper way to do this in R
-  try {
-    tiledb::Stats::dump(stdout);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
-}
-
-// [[Rcpp::export]]
 void libtiledb_stats_dump(std::string path) {
   FILE* fptr = nullptr;
   try {
@@ -1779,4 +1771,34 @@ void libtiledb_stats_dump(std::string path) {
   }
   fclose(fptr);
   return;
+}
+
+// [[Rcpp::export]]
+void libtiledb_stats_print() {
+  // TODO: look up the proper way to do this in R
+  // Done -- at least in a first pass
+  try {
+    // get a temporary filename from the per-session directory R uses
+    Rcpp::Function rfunc("tempfile");
+    std::string filename = Rcpp::as<std::string>(rfunc());
+    // dump to the file
+    libtiledb_stats_dump(filename);
+
+    // and read and print from the file
+    std::ifstream f(filename);
+    std::string line;
+    if (f.is_open()) {
+      while (getline(f, line)) {
+        Rprintf("%s\n", line.c_str());
+      }
+      f.close();
+    }
+    // remove tempfile (though R would too at end of session)
+    if (unlink(filename.c_str()) == -1) {
+      Rcpp::stop("Error removing temporary file ", filename);
+    }
+
+  } catch (tiledb::TileDBError& err) {
+    throw Rcpp::exception(err.what());
+  }
 }

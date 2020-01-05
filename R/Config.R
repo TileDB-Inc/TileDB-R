@@ -1,3 +1,6 @@
+#' An S4 class for a TileDB configuration
+#'
+#' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_config
 setClass("tiledb_config",
          slots = list(ptr = "externalptr"))
@@ -38,8 +41,11 @@ tiledb_config <- function(config = NA_character_) {
 
 #' Gets a config parameter value
 #'
-#' @param x `tiledb_config`object
+#' @param x `tiledb_config` object
 #' @param i parameter key string
+#' @param j parameter key string, currently unused.
+#' @param ... Extra parameter for method signature, currently unused.
+#' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return a config string value if parameter exists, else NA
 #' @examples
 #' cfg <- tiledb_config()
@@ -47,7 +53,7 @@ tiledb_config <- function(config = NA_character_) {
 #' cfg["does_not_exist"]
 #'
 setMethod("[", "tiledb_config",
-          function(x, i, j, ...) {
+          function(x, i, j, ..., drop=FALSE) {
             if (!is.character(i)) {
               stop("tiledb_config subscript must be of type 'character'")
             }
@@ -60,8 +66,9 @@ setMethod("[", "tiledb_config",
 
 #' Sets a config parameter value
 #'
-#' @param x `tiledb_config`object
+#' @param x `tiledb_config` object
 #' @param i parameter key string
+#' @param j parameter key string
 #' @param value value to set, will be converted into a stringa
 #' @return updated `tiledb_config` object
 #' @examples
@@ -142,6 +149,7 @@ tiledb_config_load <- function(path) {
 #' Convert a `tiledb_config` object to a R vector
 #'
 #' @param x `tiledb_config` object
+#' @param mode Character value `"any"`, currently unused
 #' @return a character vector of config parameter names, values
 #' @examples
 #' cfg <- tiledb_config()
@@ -154,6 +162,7 @@ as.vector.tiledb_config <- function(x, mode="any") {
 
 #' Convert a `tiledb_config` object to a R data.frame
 #' @param x `tiledb_config` object
+#' @param ... Extra parameter for method signature, currently unused.
 #' @return a data.frame wth parameter, value columns
 #' @examples
 #' cfg <- tiledb_config()

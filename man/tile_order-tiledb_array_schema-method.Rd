@@ -6,6 +6,9 @@
 \usage{
 \S4method{tile_order}{tiledb_array_schema}(object)
 }
+\arguments{
+\item{object}{tiledb object}
+}
 \description{
 Returns the tile layout string associated with the \code{tiledb_array_schema}
 }

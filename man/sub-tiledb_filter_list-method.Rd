@@ -4,7 +4,18 @@
 \alias{[,tiledb_filter_list-method}
 \title{Returns the filter at given index}
 \usage{
-\S4method{[}{tiledb_filter_list}(x, i, j, ..., drop = TRUE)
+\S4method{[}{tiledb_filter_list}(x, i, j, ..., drop = FALSE)
+}
+\arguments{
+\item{x}{\code{tiledb_config} object}
+
+\item{i}{parameter key string}
+
+\item{j}{parameter key string, currently unused.}
+
+\item{...}{Extra parameter for method signature, currently unused.}
+
+\item{drop}{Optional logical switch to drop dimensions, default false.}
 }
 \value{
 object tiledb_filter

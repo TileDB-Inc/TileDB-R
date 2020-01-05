@@ -6,6 +6,14 @@
 \usage{
 as_data_frame(dom, data)
 }
+\arguments{
+\item{dom}{tiledb_domain object}
+
+\item{data}{tiledb object to be converted}
+}
+\value{
+data.frame object constructed from \code{data}
+}
 \description{
-Construct a data.frame from query results
+Converts a tiledb object to a data.frame object
 }

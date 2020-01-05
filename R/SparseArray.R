@@ -1,3 +1,9 @@
+#' An S4 class for a TileDB sparse array
+#'
+#' @slot ctx A TileDB context object
+#' @slot uri A character despription
+#' @slot as.data.frame A logical value
+#' @slot ptr External pointer to the underlying implementation
 #' @exportClass "tiledb_sparse"
 setClass("tiledb_sparse",
          slots = list(ctx = "tiledb_ctx", uri = "character", as.data.frame = "logical", ptr = "externalptr"))
@@ -9,6 +15,7 @@ setClass("tiledb_sparse",
 #' @param ctx tiledb_ctx
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
+#' @param as.data.frame optional logical switch, defaults to "FALSE"
 #' @return tiledb_sparse array object
 #' @export
 tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::ctx) {
@@ -29,7 +36,11 @@ tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FA
   new("tiledb_sparse", ctx = ctx, uri = uri, as.data.frame = as.data.frame, ptr = array_xptr)
 }
 
-
+#' Return a schema from a sparse array
+#'
+#' @param object sparse array object
+#' @param ... Extra parameter for function signature, currently unused
+#' @return The scheme for the object
 setMethod("schema", "tiledb_sparse", function(object, ...) {
   ctx <- object@ctx
   uri <- object@uri
@@ -65,6 +76,13 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
 }
 
 #' Construct a data.frame from query results
+#'
+#' Converts a tiledb object to a data.frame object
+#'
+#' @param dom tiledb_domain object
+#' @param data tiledb object to be converted
+#' @return data.frame object constructed from `data`
+#' @export
 as_data_frame <- function(dom, data) {
   if (!is(dom, "tiledb_domain")) {
     stop("as_data_frame must be called with a tiledb_domain object")
@@ -84,6 +102,14 @@ as_data_frame <- function(dom, data) {
   return(as.data.frame(data))
 }
 
+#' Gets a sparse array value
+#'
+#' @param x sparse array object
+#' @param i parameter key string
+#' @param j parameter key string, currently unused.
+#' @param ... Extra parameter for method signature, currently unused.
+#' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
+#' @return An element from the sparse array
 setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -160,6 +186,14 @@ setMethod("[", "tiledb_sparse",
             return(out);
           })
 
+#' Sets a sparse array value
+#'
+#' @param x sparse array object
+#' @param i parameter key string
+#' @param j parameter key string, currently unused.
+#' @param ... Extra parameter for method signature, currently unused.
+#' @param value The value being assigned
+#' @return The modified object
 setMethod("[<-", "tiledb_sparse",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
@@ -269,6 +303,10 @@ setMethod("show", "tiledb_sparse",
             cat("tiledb_sparse(uri = \"", object@uri, "\")")
           })
 
+#' Check if object is sparse
+#'
+#' @param object TileDB object
+#' @return A logical value indicating whether the object is sparse
 #' @export
 setMethod("is.sparse", "tiledb_sparse", function(object) TRUE)
 
@@ -279,7 +317,7 @@ setMethod("is.sparse", "tiledb_sparse", function(object) TRUE)
 #'
 #' @param A tiledb_sparse or tiledb_dense
 #' @param subarray_vector subarray to query
-#' @param attributes list of attributes to query
+#' @param attrs list of attributes to query
 #' @return list of attributes being returned with query results
 #' @export
 tiledb_subarray <- function(A, subarray_vector, attrs=c()) {

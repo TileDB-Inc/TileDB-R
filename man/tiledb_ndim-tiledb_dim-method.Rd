@@ -7,7 +7,7 @@
 \S4method{tiledb_ndim}{tiledb_dim}(object)
 }
 \arguments{
-\item{`tiledb_ndim`}{object}
+\item{object}{tiledb_ndim object}
 }
 \value{
 1L

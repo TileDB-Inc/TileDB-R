@@ -1,3 +1,6 @@
+#' An S4 class for a TileDB attribute
+#'
+#' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_attr
 setClass("tiledb_attr",
          slots = list(ptr = "externalptr"))
@@ -16,6 +19,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' that this is a _required_ parameter.
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
 #' @param ncells (default 1) The number of cells, must be 1 for now
+#' @param ctx tiledb_ctx object
 #' @return `tiledb_dim` object
 #' @examples
 #' flt <- tiledb_filter_list(list(tiledb_filter("GZIP")))
@@ -56,12 +60,13 @@ setMethod("show", "tiledb_attr",
           })
 
 
+#' @rdname generics
 #' @export
 setGeneric("name", function(object) standardGeneric("name"))
 
 #' Return the `tiledb_attr` name
 #'
-#' @param `tiledb_attr` object
+#' @param object `tiledb_attr` object
 #' @return string name, empty string if the attribute is anonymous
 #' @examples
 #' a1 <- tiledb_attr("a1", type = "INT32")
@@ -76,13 +81,14 @@ setMethod("name", signature(object = "tiledb_attr"),
             libtiledb_attr_name(object@ptr)
           })
 
+#' @rdname generics
 #' @export
 setGeneric("datatype", function(object) standardGeneric("datatype"))
 
 #' Return the `tiledb_attr` datatype
 #'
-#' @param `tiledb_attr` object
-#' @param tiledb datatype string
+#' @param object `tiledb_attr` object
+#' @return tiledb datatype string
 #' @examples
 #' a1 <- tiledb_attr("a1", type = "INT32")
 #' datatype(a1)
@@ -111,12 +117,13 @@ setMethod("filter_list", "tiledb_attr",
             return(tiledb_filter_list.from_ptr(ptr))
           })
 
+#' @rdname generics
 #' @export
 setGeneric("ncells", function(object) standardGeneric("ncells"))
 
 #' Return the number of scalar values per attribute cell
 #'
-#' @param `tiledb_attr` object
+#' @param object `tiledb_attr` object
 #' @return integer number of cells
 #' @examples
 #' a1 <- tiledb_attr("a1", type = "FLOAT64", ncells = 1)
@@ -128,14 +135,11 @@ setMethod("ncells", signature(object = "tiledb_attr"),
             libtiledb_attr_ncells(object@ptr)
           })
 
-#' @export
-is.anonymous <- function(object) UseMethod("is.anonymous", object)
-
 #' Returns TRUE if the tiledb_dim is anonymous
 #'
 #' A TileDB attribute is anonymous if no name/label is defined
 #'
-#' @param `tiledb_attr` object
+#' @param object `tiledb_attr` object
 #' @return TRUE or FALSE
 #' @examples
 #' a1 <- tiledb_attr("a1", type = "FLOAT64")
@@ -144,6 +148,10 @@ is.anonymous <- function(object) UseMethod("is.anonymous", object)
 #' a2 <- tiledb_attr("", type = "FLOAT64")
 #' is.anonymous(a2)
 #'
+#' @export
+is.anonymous <- function(object) UseMethod("is.anonymous", object)
+
+#' @rdname is.anonymous
 #' @export
 is.anonymous.tiledb_attr <- function(object) {
   name <- libtiledb_attr_name(object@ptr)

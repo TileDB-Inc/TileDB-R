@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{tiledb_dense array object}
+
+\item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
 tiledb_schema

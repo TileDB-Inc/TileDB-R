@@ -6,6 +6,9 @@
 \usage{
 \S4method{cell_order}{tiledb_array_schema}(object)
 }
+\arguments{
+\item{object}{tiledb object}
+}
 \description{
 Returns the cell layout string associated with the \code{tiledb_array_schema}
 }

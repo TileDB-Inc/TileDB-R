@@ -7,7 +7,7 @@
 \S4method{config}{tiledb_ctx}(object = tiledb:::ctx)
 }
 \arguments{
-\item{`tiledb_ctx`}{object}
+\item{object}{tiledb_ctx object}
 }
 \value{
 \code{tiledb_config} object associated with the \code{tiledb_ctx} instance

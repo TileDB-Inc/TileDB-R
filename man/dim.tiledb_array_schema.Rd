@@ -7,7 +7,7 @@
 \method{dim}{tiledb_array_schema}(x)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{x}{tiledb_array_schema}
 }
 \value{
 a dimension vector

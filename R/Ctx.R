@@ -1,3 +1,6 @@
+#' An S4 class for a TileDB context
+#'
+#' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_ctx
 setClass("tiledb_ctx",
          slots = list(ptr = "externalptr"))
@@ -29,11 +32,12 @@ tiledb_ctx <- function(config = NULL) {
   }
   ctx = new("tiledb_ctx", ptr = ptr)
 
-  tiledb_context_set_default_tags(ctx)
+  tiledb_ctx_set_default_tags(ctx)
 
   return(ctx)
 }
 
+#' @rdname generics
 #' @export
 setGeneric("config", function(object, ...) {
   standardGeneric("config")
@@ -41,7 +45,7 @@ setGeneric("config", function(object, ...) {
 
 #' Retrieve the `tiledb_config` object from the `tiledb_ctx`
 #'
-#' @param `tiledb_ctx` object
+#' @param object tiledb_ctx object
 #' @return `tiledb_config` object associated with the `tiledb_ctx` instance
 #' @examples
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
@@ -65,7 +69,7 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #'  * `{s3}://hostname:port/path/to/file`
 #'
 #' @param object `tiledb_ctx` object
-#' @param schema URI string scheme ("file", "hdfs", "s3")
+#' @param scheme URI string scheme ("file", "hdfs", "s3")
 #' @return TRUE if tiledb backend is supported, FALSE otherwise
 #' @examples
 #' tiledb_is_supported_fs("file")
@@ -78,9 +82,9 @@ tiledb_is_supported_fs <- function(scheme, object = tiledb:::ctx) {
 
 #' Sets a string:string "tag" on the Ctx
 #'
-#' @param `tiledb_ctx` object
-#' @param `key` string
-#' @param `value` string
+#' @param object `tiledb_ctx` object
+#' @param key string
+#' @param value string
 #' @examples
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 #' cfg <- tiledb_ctx_set_tag(ctx, "tag", "value")
@@ -93,9 +97,9 @@ tiledb_ctx_set_tag <- function(object, key, value) {
 
 #' Sets default context tags
 #'
-#' @param `tiledb_ctx` object
+#' @param object `tiledb_ctx` object
 #'
-tiledb_context_set_default_tags <- function(object) {
+tiledb_ctx_set_default_tags <- function(object) {
   stopifnot(is(object, "tiledb_ctx"))
 
   tiledb_ctx_set_tag(object, "x-tiledb-api-language", "r")

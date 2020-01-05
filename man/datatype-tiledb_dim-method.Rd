@@ -7,9 +7,10 @@
 \S4method{datatype}{tiledb_dim}(object)
 }
 \arguments{
-\item{`tiledb_dim`}{object}
-
-\item{tiledb}{datatype string}
+\item{object}{tiledb_dim object}
+}
+\value{
+tiledb datatype string
 }
 \description{
 Return the \code{tiledb_dim} datatype

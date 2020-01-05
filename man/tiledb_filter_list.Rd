@@ -7,9 +7,9 @@
 tiledb_filter_list(filters = c(), ctx = tiledb:::ctx)
 }
 \arguments{
-\item{ctx}{tiledb_ctx object}
+\item{filters}{an optional list of one or more tiledb_filter_list objects}
 
-\item{filter}{an optional list of one or more tiledb_filter_list objects}
+\item{ctx}{tiledb_ctx object}
 }
 \value{
 tiledb_filter_list object

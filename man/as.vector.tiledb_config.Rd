@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{\code{tiledb_config} object}
+
+\item{mode}{Character value \code{"any"}, currently unused}
 }
 \value{
 a character vector of config parameter names, values

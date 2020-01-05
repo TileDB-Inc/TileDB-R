@@ -16,6 +16,8 @@ tiledb_dense(
 
 \item{query_type}{optionally loads the array in "READ" or "WRITE" only modes.}
 
+\item{as.data.frame}{optional logical switch, defaults to "FALSE"}
+
 \item{ctx}{tiledb_ctx}
 }
 \value{
