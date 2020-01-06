@@ -1,27 +1,29 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-language: R
-sudo: true
-cache: packages
+os: linux
+dist: trusty
+sudo: required
+services: docker
+
+env:
+  global:
+    - DOCKER_CNTR="eddelbuettel/tiledb_r-base-plus"
+      DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
+      R_BLD_OPTS="--no-build-vignettes --no-manual"
+      R_CHK_OPTS="--no-vignettes --no-manual"
+
+before_install:
+  - docker pull ${DOCKER_CNTR}
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} r -p -e 'sessionInfo()'
 
 install:
-    # Install TileDB
-    - git clone https://github.com/TileDB-Inc/TileDB /tmp/TileDB
-    - pushd /tmp/TileDB
-    - git checkout dev
-    - mkdir build
-    - pushd build
-    - ../bootstrap --enable-verbose --prefix=/usr/local
-    - make -j 4
-    - sudo make -C tiledb install
-    - sudo ldconfig
-    - popd
-    - popd
-
-    # Install R package deps 
-    - Rscript -e 'install.packages(c("devtools", "testthat", "roxygen2"), Ncpus=4); devtools::install_deps(dependencies=TRUE)'
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD build ${R_BLD_OPTS} .
 
 script:
-    # Build and Test R package
-    - R CMD build .
-    - R CMD check $(ls -1tr tiledb_*tar.gz | tail -1)
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD check ${R_CHK_OPTS} tiledb_*.tar.gz
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
