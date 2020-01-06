@@ -1,3 +1,6 @@
+#' An S4 class for a TileDB domain
+#'
+#' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_domain
 setClass("tiledb_domain",
          slots = list(ptr = "externalptr"))
@@ -92,6 +95,7 @@ setMethod("tiledb_ndim", "tiledb_domain",
             return(libtiledb_domain_ndim(object@ptr))
           })
 
+#' @rdname generics
 #' @export
 setGeneric("is.integral", function(object) standardGeneric("is.integral"))
 

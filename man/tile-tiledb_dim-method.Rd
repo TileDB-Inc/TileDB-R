@@ -7,9 +7,10 @@
 \S4method{tile}{tiledb_dim}(object)
 }
 \arguments{
-\item{`tiledb_dim`}{object}
-
-\item{a}{scalar tile extent}
+\item{object}{\code{tiledb_dim} object}
+}
+\value{
+a scalar tile extent
 }
 \description{
 Return the \code{tiledb_dim} tile extent

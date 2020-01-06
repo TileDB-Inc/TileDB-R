@@ -7,11 +7,11 @@
 tiledb_ctx_set_tag(object, key, value)
 }
 \arguments{
-\item{`tiledb_ctx`}{object}
+\item{object}{\code{tiledb_ctx} object}
 
-\item{`key`}{string}
+\item{key}{string}
 
-\item{`value`}{string}
+\item{value}{string}
 }
 \description{
 Sets a string:string "tag" on the Ctx

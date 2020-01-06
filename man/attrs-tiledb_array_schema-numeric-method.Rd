@@ -10,6 +10,8 @@
 \item{object}{tiledb_array_schema}
 
 \item{idx}{attribute index}
+
+\item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
 a \code{tiledb_attr} object

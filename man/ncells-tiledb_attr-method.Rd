@@ -7,7 +7,7 @@
 \S4method{ncells}{tiledb_attr}(object)
 }
 \arguments{
-\item{`tiledb_attr`}{object}
+\item{object}{\code{tiledb_attr} object}
 }
 \value{
 integer number of cells

@@ -7,7 +7,7 @@
 \S4method{name}{tiledb_attr}(object)
 }
 \arguments{
-\item{`tiledb_attr`}{object}
+\item{object}{\code{tiledb_attr} object}
 }
 \value{
 string name, empty string if the attribute is anonymous

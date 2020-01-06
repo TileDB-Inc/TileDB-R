@@ -7,9 +7,9 @@
 tiledb_is_supported_fs(scheme, object = tiledb:::ctx)
 }
 \arguments{
-\item{object}{\code{tiledb_ctx} object}
+\item{scheme}{URI string scheme ("file", "hdfs", "s3")}
 
-\item{schema}{URI string scheme ("file", "hdfs", "s3")}
+\item{object}{\code{tiledb_ctx} object}
 }
 \value{
 TRUE if tiledb backend is supported, FALSE otherwise

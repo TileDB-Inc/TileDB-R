@@ -7,9 +7,10 @@
 \S4method{datatype}{tiledb_attr}(object)
 }
 \arguments{
-\item{`tiledb_attr`}{object}
-
-\item{tiledb}{datatype string}
+\item{object}{\code{tiledb_attr} object}
+}
+\value{
+tiledb datatype string
 }
 \description{
 Return the \code{tiledb_attr} datatype

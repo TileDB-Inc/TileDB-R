@@ -8,6 +8,10 @@
 }
 \arguments{
 \item{object}{tiledb_array_schema}
+
+\item{idx}{index argument, currently unused.}
+
+\item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
 a list of tiledb_attr objects

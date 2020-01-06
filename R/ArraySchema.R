@@ -1,3 +1,6 @@
+#' An S4 class for the TileDB array schema
+#'
+#' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_array_schema
 setClass("tiledb_array_schema",
          slots = list(ptr = "externalptr"))
@@ -108,13 +111,13 @@ setMethod("show", signature(object = "tiledb_array_schema"),
             libtiledb_array_schema_dump(object@ptr)
           })
 
+#' @rdname generics
 #' @export
 setGeneric("domain", function(object, ...) standardGeneric("domain"))
 
 #' Returns the `tiledb_domain` object associated with a given `tiledb_array_schema`
-
+#'
 #' @param object tiledb_array_schema
-#' @param a tiledb_domain object
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
@@ -127,12 +130,14 @@ setMethod("domain", "tiledb_array_schema",
             tiledb_domain.from_ptr(ptr)
           })
 
+#' @rdname generics
 #' @export
 setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 
 #' Returns a list of `tiledb_dim` objects associated with the `tiledb_array_schema`
 #'
 #' @param object tiledb_array_schema
+#' @param ... Extra parameter for method signature, currently unused.
 #' @return a list of tiledb_dim objects
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
@@ -146,12 +151,15 @@ setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 setMethod("dimensions", "tiledb_array_schema",
           function(object) dimensions(domain(object)))
 
+#' @rdname generics
 #' @export
 setGeneric("attrs", function(object, idx, ...) standardGeneric("attrs"))
 
 #' Returns a list of all `tiledb_attr` objects associated with the `tiledb_array_schema`
 #'
 #' @param object tiledb_array_schema
+#' @param idx index argument, currently unused.
+#' @param ... Extra parameter for method signature, currently unused.
 #' @return a list of tiledb_attr objects
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
@@ -177,6 +185,7 @@ setMethod("attrs", signature("tiledb_array_schema"),
 #'
 #' @param object tiledb_array_schema
 #' @param idx attribute name string
+#' @param ... Extra parameter for method signature, currently unused.
 #' @return a `tiledb_attr` object
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
@@ -197,6 +206,7 @@ setMethod("attrs", signature("tiledb_array_schema", "character"),
 #'
 #' @param object tiledb_array_schema
 #' @param idx attribute index
+#' @param ... Extra parameter for method signature, currently unused.
 #' @return a `tiledb_attr` object
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
@@ -211,34 +221,39 @@ setMethod("attrs", signature("tiledb_array_schema", "numeric"),
             return(attrs[[idx]])
           })
 
+#' @rdname generics
 #' @export
 setGeneric("cell_order", function(object, ...) standardGeneric("cell_order"))
 
 #' Returns the cell layout string associated with the `tiledb_array_schema`
+#' @param object tiledb object
 #' @export
 setMethod("cell_order", "tiledb_array_schema",
           function(object) {
             libtiledb_array_schema_cell_order(object@ptr)
           })
 
+#' @rdname generics
 #' @export
 setGeneric("tile_order", function(object, ...) standardGeneric("tile_order"))
 
 #' Returns the tile layout string associated with the `tiledb_array_schema`
+#' @param object tiledb object
 #' @export
 setMethod("tile_order", "tiledb_array_schema",
           function(object) {
             libtiledb_array_schema_tile_order(object@ptr)
           })
 
-#' @export
-tiledb_filter_list.tiledb_array_schema <- function(object) {
-            coords_ptr <- libtiledb_array_schema_coords_filter_list(object@ptr)
-            offsets_ptr <- libtiledb_array_schema_offsets_filter_list(object@ptr)
-            return(c(coords = tiledb_filter_list.from_ptr(coords_ptr),
-                     offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
-}
+# ' @ export
+#tiledb_filter_list.tiledb_array_schema <- function(object) {
+#            coords_ptr <- libtiledb_array_schema_coords_filter_list(object@ptr)
+#            offsets_ptr <- libtiledb_array_schema_offsets_filter_list(object@ptr)
+#            return(c(coords = tiledb_filter_list.from_ptr(coords_ptr),
+#                     offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
+#}
 
+#' @rdname generics
 #' @export
 setGeneric("filter_list", function(object, ...) standardGeneric("filter_list"))
 
@@ -255,6 +270,7 @@ setMethod("filter_list", "tiledb_array_schema",
                      offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
           })
 
+#' @rdname generics
 #' @export
 setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
 
@@ -268,6 +284,7 @@ setMethod("is.sparse", "tiledb_array_schema",
             libtiledb_array_schema_sparse(object@ptr)
           })
 
+#' @rdname generics
 #' @export
 setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 
@@ -292,7 +309,7 @@ setMethod("tiledb_ndim", "tiledb_array_schema",
 #'
 #' Only valid for integral (integer) domains
 #'
-#' @param object tiledb_array_schema
+#' @param x tiledb_array_schema
 #' @return a dimension vector
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))

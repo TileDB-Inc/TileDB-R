@@ -1,3 +1,6 @@
+#' An S4 class for a TileDB filter list
+#'
+#' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_filter_list
 setClass("tiledb_filter_list",
          slots = list(ptr = "externalptr"))
@@ -11,7 +14,7 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #'
 #'
 #' @param ctx tiledb_ctx object
-#' @param filter an optional list of one or more tiledb_filter_list objects
+#' @param filters an optional list of one or more tiledb_filter_list objects
 #' @return tiledb_filter_list object
 #' @examples
 #' flt <- tiledb_filter("ZSTD")
@@ -36,14 +39,14 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb:::ctx) {
   return(new("tiledb_filter_list", ptr = ptr))
 }
 
+#' @rdname generics
 #' @export
 setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_max_chunk_size"))
 
 #' Set the filter_list's max_chunk_size
 #'
 #' @param object tiledb_filter_list
-#' @param string option
-#' @param int value
+#' @param value string
 #' @examples
 #' flt <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
@@ -55,6 +58,7 @@ setMethod("set_max_chunk_size", signature(object = "tiledb_filter_list", value =
             libtiledb_filter_list_set_max_chunk_size(object@ptr, value)
           })
 
+#' @rdname generics
 #' @export
 setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
 
@@ -74,6 +78,7 @@ setMethod("max_chunk_size", signature(object = "tiledb_filter_list"),
             libtiledb_filter_list_max_chunk_size(object@ptr)
           })
 
+#' @rdname generics
 #' @export
 setGeneric("nfilters", function(object) standardGeneric("nfilters"))
 
@@ -94,7 +99,13 @@ setMethod("nfilters", signature(object = "tiledb_filter_list"),
           })
 
 #' Returns the filter at given index
-#'
+
+
+#' @param x `tiledb_config` object
+#' @param i parameter key string
+#' @param j parameter key string, currently unused.
+#' @param ... Extra parameter for method signature, currently unused.
+#' @param drop Optional logical switch to drop dimensions, default false.
 #' @return object tiledb_filter
 #' @examples
 #' flt <- tiledb_filter("ZSTD")
@@ -104,6 +115,6 @@ setMethod("nfilters", signature(object = "tiledb_filter_list"),
 #'
 #' @export
 setMethod("[", "tiledb_filter_list",
-          function(x, i, ..., drop = FALSE) {
+          function(x, i, j, ..., drop = FALSE) {
             tiledb_filter.from_ptr(libtiledb_filter_list_filter(x@ptr, i))
           })

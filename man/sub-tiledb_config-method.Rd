@@ -4,12 +4,18 @@
 \alias{[,tiledb_config-method}
 \title{Gets a config parameter value}
 \usage{
-\S4method{[}{tiledb_config}(x, i, j, ..., drop = TRUE)
+\S4method{[}{tiledb_config}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
-\item{x}{\code{tiledb_config}object}
+\item{x}{\code{tiledb_config} object}
 
 \item{i}{parameter key string}
+
+\item{j}{parameter key string, currently unused.}
+
+\item{...}{Extra parameter for method signature, currently unused.}
+
+\item{drop}{Optional logical switch to drop dimensions, default FALSE, currently unused.}
 }
 \value{
 a config string value if parameter exists, else NA

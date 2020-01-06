@@ -46,6 +46,7 @@ tiledb_object_type <- function(uri, ctx = tiledb:::ctx) {
 #' Raises an error if the uri is invalid, or the uri resource is not a tiledb object
 #'
 #' @param uri path which to create group
+#' @param ctx tiledb_ctx object
 #' @return uri of removed TileDB resource
 #' @export
 tiledb_object_rm <- function(uri, ctx = tiledb:::ctx) {
@@ -79,6 +80,7 @@ tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb:::ctx) {
 #'
 #' @param ctx tiledb_ctx
 #' @param uri uri path to walk
+#' @param filter optional filtering argument, default is "NULL", currently unused
 #' @return a dataframe with object type, object uri string columns
 #' @export
 tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb:::ctx) {

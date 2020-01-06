@@ -7,9 +7,11 @@
 \S4method{[}{tiledb_config}(x, i, j) <- value
 }
 \arguments{
-\item{x}{\code{tiledb_config}object}
+\item{x}{\code{tiledb_config} object}
 
 \item{i}{parameter key string}
+
+\item{j}{parameter key string}
 
 \item{value}{value to set, will be converted into a stringa}
 }

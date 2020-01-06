@@ -8,9 +8,11 @@ tiledb_filter_get_option(object, option)
 }
 \arguments{
 \item{object}{tiledb_filter}
+
+\item{option}{string}
 }
 \value{
-integer option
+Integer value
 }
 \description{
 Returns the filter's option

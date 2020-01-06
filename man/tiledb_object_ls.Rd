@@ -9,6 +9,8 @@ tiledb_object_ls(uri, filter = NULL, ctx = tiledb:::ctx)
 \arguments{
 \item{uri}{uri path to walk}
 
+\item{filter}{optional filtering argument, default is "NULL", currently unused}
+
 \item{ctx}{tiledb_ctx}
 }
 \value{

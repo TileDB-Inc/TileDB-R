@@ -14,6 +14,8 @@ tiledb_dim(name = "", domain, tile, type, ctx = tiledb:::ctx)
 \item{tile}{The tile dimension tile extent}
 
 \item{type}{The dimension TileDB datatype string}
+
+\item{ctx}{tiledb_ctx object}
 }
 \value{
 \code{tiledb_dim} object

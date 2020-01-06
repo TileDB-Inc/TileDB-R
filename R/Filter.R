@@ -1,3 +1,6 @@
+#' An S4 class for a TileDB filter
+#'
+#' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_filter
 setClass("tiledb_filter",
          slots = list(ptr = "externalptr"))
@@ -59,8 +62,8 @@ tiledb_filter_type <- function(object) {
 #' Set the filter's option
 #'
 #' @param object tiledb_filter
-#' @param string option
-#' @param int value
+#' @param option string
+#' @param value int
 #' @examples
 #' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
@@ -74,7 +77,8 @@ tiledb_filter_set_option <- function(object, option, value) {
 #' Returns the filter's option
 #'
 #' @param object tiledb_filter
-#' @return integer option
+#' @param option string
+#' @return Integer value
 #' @examples
 #' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)

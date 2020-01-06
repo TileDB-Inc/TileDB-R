@@ -11,7 +11,7 @@ tiledb_subarray(A, subarray_vector, attrs = c())
 
 \item{subarray_vector}{subarray to query}
 
-\item{attributes}{list of attributes to query}
+\item{attrs}{list of attributes to query}
 }
 \value{
 list of attributes being returned with query results

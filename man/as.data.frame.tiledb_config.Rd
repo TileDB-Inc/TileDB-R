@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{\code{tiledb_config} object}
+
+\item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
 a data.frame wth parameter, value columns

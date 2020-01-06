@@ -7,7 +7,7 @@
 \method{is.anonymous}{tiledb_dim}(object)
 }
 \arguments{
-\item{`tiledb_dim`}{object}
+\item{object}{\code{tiledb_dim} object}
 }
 \value{
 TRUE or FALSE
