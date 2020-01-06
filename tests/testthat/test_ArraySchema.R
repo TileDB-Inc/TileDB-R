@@ -6,7 +6,7 @@ context("tiledb_array_schema")
 test_that("tiledb_array_schema default constructor works", {
   d1  <- tiledb_dim(domain=c(1L, 100L))
   dom <- tiledb_domain(c(d1))
-  a1  <- tiledb_attr()
+  a1  <- tiledb_attr(type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(a1))
   expect_is(sch, "tiledb_array_schema")
 })
@@ -15,7 +15,7 @@ test_that("tiledb_array_schema default constructor arugment values are correct",
   d1  <- tiledb_dim(domain = c(1L, 100L))
   d2  <- tiledb_dim(domain = c(1L, 100L))
   dom <- tiledb_domain(c(d1, d2))
-  a1  <- tiledb_attr()
+  a1  <- tiledb_attr(type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(a1))
 
   # test domain

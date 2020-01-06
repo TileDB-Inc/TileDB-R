@@ -54,7 +54,7 @@ test_that("Can read / write a simple 1D vector", {
 
   dim <- tiledb_dim(domain = c(1L, 10L))
   dom <- tiledb_domain(c(dim))
-  val <- tiledb_attr("val")
+  val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
   tiledb_array_create(tmp, sch)
 
@@ -98,7 +98,7 @@ test_that("Can read / write a simple 2D matrix", {
   d1  <- tiledb_dim(domain = c(1L, 5L))
   d2  <- tiledb_dim(domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
-  val <- tiledb_attr("val")
+  val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
   tiledb_array_create(tmp, sch)
 
@@ -136,7 +136,7 @@ test_that("Can read / write a simple 3D matrix", {
   d2  <- tiledb_dim(domain = c(1L, 5L))
   d3  <- tiledb_dim(domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2, d3))
-  val <- tiledb_attr(name="val")
+  val <- tiledb_attr(name="val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
   tiledb_array_create(tmp, sch)
 
@@ -292,7 +292,7 @@ test_that("test tiledb_subarray read for dense array", {
   d1  <- tiledb_dim(domain = c(1L, 5L))
   d2  <- tiledb_dim(domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
-  val <- tiledb_attr(name="val")
+  val <- tiledb_attr(name="val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
   tiledb_array_create(tmp, sch)
 
@@ -323,8 +323,8 @@ test_that("test tiledb_subarray read for dense array with select attributes", {
   d1  <- tiledb_dim(domain = c(1L, 5L))
   d2  <- tiledb_dim(domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
-  val1 <- tiledb_attr("val1")
-  val2 <- tiledb_attr("val2")
+  val1 <- tiledb_attr("val1", type = "FLOAT64")
+  val2 <- tiledb_attr("val2", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val1, val2))
   tiledb_array_create(tmp, sch)
 
@@ -358,8 +358,8 @@ test_that("test tiledb_subarray read for dense array as dataframe", {
   d1  <- tiledb_dim(domain = c(1L, 5L))
   d2  <- tiledb_dim(domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
-  val1 <- tiledb_attr("val1")
-  val2 <- tiledb_attr("val2")
+  val1 <- tiledb_attr("val1", type = "FLOAT64")
+  val2 <- tiledb_attr("val2", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val1, val2))
   tiledb_array_create(tmp, sch)
 
@@ -392,7 +392,7 @@ test_that("Can read / write a simple 2D matrix with list of coordinates", {
   d1  <- tiledb_dim(domain = c(1L, 5L))
   d2  <- tiledb_dim(domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
-  val <- tiledb_attr("val")
+  val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
   tiledb_array_create(tmp, sch)
 

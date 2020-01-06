@@ -11,8 +11,9 @@ tiledb_attr.from_ptr <- function(ptr) {
 
 #' Contructs a `tiledb_attr` object
 #'
-#' @param name (default "") The dimension name / label string.
-#' @param type (default "FLOAT64") The tiledb_attr TileDB datatype string
+#' @param name The dimension name / label string; if missing default `""` is used.
+#' @param type The tiledb_attr TileDB datatype string; if missing the user is alerted
+#' that this is a _required_ parameter.
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
 #' @param ncells (default 1) The number of cells, must be 1 for now
 #' @return `tiledb_dim` object
@@ -24,23 +25,29 @@ tiledb_attr.from_ptr <- function(ptr) {
 #'
 #' @importFrom methods new
 #' @export
-tiledb_attr <- function(name="",
-                        type="FLOAT64",
+tiledb_attr <- function(name,
+                        type,
                         filter_list=tiledb_filter_list(),
                         ncells=1,
                         ctx = tiledb:::ctx
                         ) {
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("ctx argument must be a tiledb_ctx")
-  } else if (!is.scalar(name, "character")) {
-    stop("name argument must be a scalar string")
-  } else if(!is(filter_list, "tiledb_filter_list")) {
-    stop("filter_list argument must be a tiledb_filter_list instance")
-  } else if (ncells != 1) {
-    stop("only single cell attributes are supported")
-  }
-  ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
-  new("tiledb_attr", ptr = ptr)
+    if (missing(name)) {
+        name <- ""
+    }
+    if (missing(type)) {
+        stop("The 'type' argument for tiledb_attr() is mandatory")
+    }
+    if (!is(ctx, "tiledb_ctx")) {
+        stop("ctx argument must be a tiledb_ctx")
+    } else if (!is.scalar(name, "character")) {
+        stop("name argument must be a scalar string")
+    } else if(!is(filter_list, "tiledb_filter_list")) {
+        stop("filter_list argument must be a tiledb_filter_list instance")
+    } else if (ncells != 1) {
+        stop("only single cell attributes are supported")
+    }
+    ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
+    new("tiledb_attr", ptr = ptr)
 }
 
 setMethod("show", "tiledb_attr",
@@ -57,10 +64,10 @@ setGeneric("name", function(object) standardGeneric("name"))
 #' @param `tiledb_attr` object
 #' @return string name, empty string if the attribute is anonymous
 #' @examples
-#' a1 <- tiledb_attr("a1")
+#' a1 <- tiledb_attr("a1", type = "INT32")
 #' name(a1)
 #'
-#' a2 <- tiledb_attr()
+#' a2 <- tiledb_attr(type = "INT32")
 #' name(a2)
 #'
 #' @export
@@ -94,7 +101,7 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #' @param object tiledb_attr
 #' @return a tiledb_filter_list object
 #' @examples
-#' attr <- tiledb_attr(filter_list=tiledb_filter_list(list(tiledb_filter("ZSTD"))))
+#' attr <- tiledb_attr(type = "INT32", filter_list=tiledb_filter_list(list(tiledb_filter("ZSTD"))))
 #' filter_list(attr)
 #'
 #' @export

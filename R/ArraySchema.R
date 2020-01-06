@@ -117,7 +117,7 @@ setGeneric("domain", function(object, ...) standardGeneric("domain"))
 #' @param a tiledb_domain object
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
-#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
 #' domain(sch)
 #'
 #' @export
@@ -137,7 +137,7 @@ setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
 #'                                    tiledb_dim("d2", c(1L, 50L), type = "INT32")))
-#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1")))
+#' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
 #' dimensions(dom)
 #'
 #' lapply(dimensions(dom), name)

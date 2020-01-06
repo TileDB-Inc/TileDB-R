@@ -4,10 +4,16 @@
 \alias{tiledb_array_schema}
 \title{Constructs a \code{tiledb_array_schema} object}
 \usage{
-tiledb_array_schema(domain, attrs, cell_order = "COL_MAJOR",
-  tile_order = "COL_MAJOR", sparse = FALSE,
-  coords_filter_list = NULL, offsets_filter_list = NULL,
-  ctx = tiledb:::ctx)
+tiledb_array_schema(
+  domain,
+  attrs,
+  cell_order = "COL_MAJOR",
+  tile_order = "COL_MAJOR",
+  sparse = FALSE,
+  coords_filter_list = NULL,
+  offsets_filter_list = NULL,
+  ctx = tiledb:::ctx
+)
 }
 \arguments{
 \item{domain}{tiledb_domain object}
