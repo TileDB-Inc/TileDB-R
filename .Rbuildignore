@@ -4,3 +4,6 @@
 ^\docs
 ^_pgkdown.yml
 ^.*\.tar\.gz$
+^docs
+^_pkgdown.yml$
+^examples
