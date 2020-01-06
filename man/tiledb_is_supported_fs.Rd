@@ -20,9 +20,9 @@ The scheme corresponds to the URI scheme for TileDB resouces.
 \details{
 Ex:
 \itemize{
-\item \code{{file}:///path/to/file}
-\item \code{{hdfs}:///path/to/file}
-\item \code{{s3}://hostname:port/path/to/file}
+\item \verb{\{file\}:///path/to/file}
+\item \verb{\{hdfs\}:///path/to/file}
+\item \verb{\{s3\}://hostname:port/path/to/file}
 }
 }
 \examples{

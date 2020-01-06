@@ -4,8 +4,12 @@
 \alias{tiledb_sparse}
 \title{Constructs a tiledb_sparse object backed by a persisted tiledb array uri}
 \usage{
-tiledb_sparse(uri, query_type = c("READ", "WRITE"),
-  as.data.frame = FALSE, ctx = tiledb:::ctx)
+tiledb_sparse(
+  uri,
+  query_type = c("READ", "WRITE"),
+  as.data.frame = FALSE,
+  ctx = tiledb:::ctx
+)
 }
 \arguments{
 \item{uri}{uri path to the tiledb dense array}

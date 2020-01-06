@@ -4,13 +4,19 @@
 \alias{tiledb_attr}
 \title{Contructs a \code{tiledb_attr} object}
 \usage{
-tiledb_attr(name = "", type, filter_list = tiledb_filter_list(),
-  ncells = 1, ctx = tiledb:::ctx)
+tiledb_attr(
+  name,
+  type,
+  filter_list = tiledb_filter_list(),
+  ncells = 1,
+  ctx = tiledb:::ctx
+)
 }
 \arguments{
-\item{name}{(default "") The dimension name / label string.}
+\item{name}{The dimension name / label string; if missing default \code{""} is used.}
 
-\item{type}{(default "FLOAT64") The tiledb_attr TileDB datatype string}
+\item{type}{The tiledb_attr TileDB datatype string; if missing the user is alerted
+that this is a \emph{required} parameter.}
 
 \item{filter_list}{(default filter_list("NONE")) The tiledb_attr filter_list}
 

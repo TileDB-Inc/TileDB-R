@@ -3,42 +3,42 @@ library(tiledb)
 
 context("tiledb_array_schema")
 
-## test_that("tiledb_array_schema default constructor works", {
-##   d1  <- tiledb_dim(domain=c(1L, 100L))
-##   dom <- tiledb_domain(c(d1))
-##   a1  <- tiledb_attr()
-##   sch <- tiledb_array_schema(dom, c(a1))
-##   expect_is(sch, "tiledb_array_schema")
-## })
+test_that("tiledb_array_schema default constructor works", {
+  d1  <- tiledb_dim(domain=c(1L, 100L))
+  dom <- tiledb_domain(c(d1))
+  a1  <- tiledb_attr(type = "FLOAT64")
+  sch <- tiledb_array_schema(dom, c(a1))
+  expect_is(sch, "tiledb_array_schema")
+})
 
-## test_that("tiledb_array_schema default constructor arugment values are correct",  {
-##   d1  <- tiledb_dim(domain = c(1L, 100L))
-##   d2  <- tiledb_dim(domain = c(1L, 100L))
-##   dom <- tiledb_domain(c(d1, d2))
-##   a1  <- tiledb_attr()
-##   sch <- tiledb_array_schema(dom, c(a1))
+test_that("tiledb_array_schema default constructor arugment values are correct",  {
+  d1  <- tiledb_dim(domain = c(1L, 100L))
+  d2  <- tiledb_dim(domain = c(1L, 100L))
+  dom <- tiledb_domain(c(d1, d2))
+  a1  <- tiledb_attr(type = "FLOAT64")
+  sch <- tiledb_array_schema(dom, c(a1))
 
-##   # test domain
-##   expect_is(domain(sch), "tiledb_domain")
+  # test domain
+  expect_is(domain(sch), "tiledb_domain")
 
-##   # test dimensions
-##   ds <- tiledb::dimensions(sch)
-##   expect_equal(length(ds), 2)
-##   expect_is(ds[[1]], "tiledb_dim")
-##   expect_is(ds[[2]], "tiledb_dim")
+  # test dimensions
+  ds <- tiledb::dimensions(sch)
+  expect_equal(length(ds), 2)
+  expect_is(ds[[1]], "tiledb_dim")
+  expect_is(ds[[2]], "tiledb_dim")
 
-##   # test attrs
-##   as <- tiledb::attrs(sch)
-##   expect_equal(length(as), 1)
-##   expect_is(as[[1]], "tiledb_attr")
+  # test attrs
+  as <- tiledb::attrs(sch)
+  expect_equal(length(as), 1)
+  expect_is(as[[1]], "tiledb_attr")
 
-##   # test that default R schema is COL_MAJOR
-##   expect_equal(tiledb::cell_order(sch), "COL_MAJOR")
-##   expect_equal(tiledb::tile_order(sch), "COL_MAJOR")
+  # test that default R schema is COL_MAJOR
+  expect_equal(tiledb::cell_order(sch), "COL_MAJOR")
+  expect_equal(tiledb::tile_order(sch), "COL_MAJOR")
 
-##   # test that the default R schema is dense
-##   expect_false(is.sparse(sch))
-## })
+  # test that the default R schema is dense
+  expect_false(is.sparse(sch))
+})
 
 test_that("tiledb_array_schema full constructor argument values are correct",  {
   d1  <- tiledb_dim(domain = c(1L, 100L))

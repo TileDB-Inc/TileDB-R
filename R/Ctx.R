@@ -28,9 +28,9 @@ tiledb_ctx <- function(config = NULL) {
     stop("invalid tiledb_ctx config argument type")
   }
   ctx = new("tiledb_ctx", ptr = ptr)
-  
+
   tiledb_context_set_default_tags(ctx)
-  
+
   return(ctx)
 }
 
@@ -83,7 +83,7 @@ tiledb_is_supported_fs <- function(scheme, object = tiledb:::ctx) {
 #' @param `value` string
 #' @examples
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
-#' cfg <- tiledb_context_set_tag(ctx, "tag", "value")
+#' cfg <- tiledb_ctx_set_tag(ctx, "tag", "value")
 #'
 #' @export
 tiledb_ctx_set_tag <- function(object, key, value) {

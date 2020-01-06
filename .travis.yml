@@ -19,11 +19,9 @@ install:
     - popd
 
     # Install R package deps 
-    - Rscript -e 'install.packages(c("devtools", "testthat", "roxygen2")); devtools::install_deps(dependencies=T)'
+    - Rscript -e 'install.packages(c("devtools", "testthat", "roxygen2"), Ncpus=4); devtools::install_deps(dependencies=TRUE)'
 
 script:
     # Build and Test R package
-    #- R CMD INSTALL --no-multiarch --with-keep.source --configure-args='--with-tiledb=/tmp/TileDB/dist' .
-    #- R -e 'library(tiledb); library(devtools); devtools::test()'
     - R CMD build .
-    - R CMD check --no-examples $(ls -1tr tiledb_*tar.gz | tail -1)
+    - R CMD check $(ls -1tr tiledb_*tar.gz | tail -1)
