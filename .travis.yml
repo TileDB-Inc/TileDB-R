@@ -1,13 +1,13 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 os: linux
-dist: trusty
+dist: bonic
 sudo: required
 services: docker
 
 env:
   global:
-    - DOCKER_CNTR="eddelbuettel/tiledb_r-base-plus"
+    - DOCKER_CNTR="tiledb/ci-r"
       DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
       R_BLD_OPTS="--no-build-vignettes --no-manual"
       R_CHK_OPTS="--no-vignettes --no-manual"
