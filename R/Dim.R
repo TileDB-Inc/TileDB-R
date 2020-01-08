@@ -26,7 +26,7 @@ tiledb_dim.from_ptr <- function(ptr) {
 #'
 #' @importFrom methods new
 #' @export tiledb_dim
-tiledb_dim <- function(name="", domain, tile, type, ctx = tiledb:::ctx) {
+tiledb_dim <- function(name="", domain, tile, type, ctx = tiledb:::getContext()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {

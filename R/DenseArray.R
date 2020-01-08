@@ -16,7 +16,7 @@ setClass("tiledb_dense",
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_dense array object
 #' @export
-tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::ctx) {
+tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::getContext()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")

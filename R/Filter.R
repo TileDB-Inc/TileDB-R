@@ -35,7 +35,7 @@ tiledb_filter.from_ptr <- function(ptr) {
 #' tiledb_filter("ZSTD")
 #'
 #' @export tiledb_filter
-tiledb_filter <- function(name = "NONE", ctx = tiledb:::ctx) {
+tiledb_filter <- function(name = "NONE", ctx = tiledb:::getContext()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   } else if (!is.scalar(name, "character")) {

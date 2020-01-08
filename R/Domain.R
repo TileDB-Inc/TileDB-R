@@ -25,7 +25,7 @@ tiledb_domain.from_ptr <- function(ptr) {
 #' @importFrom methods slot
 #' @importFrom methods new
 #' @export tiledb_domain
-tiledb_domain <- function(dims, ctx = tiledb:::ctx) {
+tiledb_domain <- function(dims, ctx = tiledb:::getContext()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   }

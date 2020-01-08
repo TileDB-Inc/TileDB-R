@@ -4,7 +4,7 @@
 \alias{tiledb_dim}
 \title{Contructs a \code{tiledb_dim} object}
 \usage{
-tiledb_dim(name = "", domain, tile, type, ctx = tiledb:::ctx)
+tiledb_dim(name = "", domain, tile, type, ctx = tiledb:::getContext())
 }
 \arguments{
 \item{name}{The dimension name / label string.  If emtpy, the domain is anonymous and will be assigned a positional label.}

@@ -4,7 +4,7 @@
 \alias{tiledb_object_ls}
 \title{List TileDB resources at a given root URI path}
 \usage{
-tiledb_object_ls(uri, filter = NULL, ctx = tiledb:::ctx)
+tiledb_object_ls(uri, filter = NULL, ctx = tiledb:::getContext())
 }
 \arguments{
 \item{uri}{uri path to walk}

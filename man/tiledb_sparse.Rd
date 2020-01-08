@@ -8,7 +8,7 @@ tiledb_sparse(
   uri,
   query_type = c("READ", "WRITE"),
   as.data.frame = FALSE,
-  ctx = tiledb:::ctx
+  ctx = tiledb:::getContext()
 )
 }
 \arguments{

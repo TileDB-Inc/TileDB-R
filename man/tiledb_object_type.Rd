@@ -4,7 +4,7 @@
 \alias{tiledb_object_type}
 \title{Return the TileDB object type string of a TileDB resource}
 \usage{
-tiledb_object_type(uri, ctx = tiledb:::ctx)
+tiledb_object_type(uri, ctx = tiledb:::getContext())
 }
 \arguments{
 \item{uri}{path to TileDB resource}

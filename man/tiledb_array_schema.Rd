@@ -12,7 +12,7 @@ tiledb_array_schema(
   sparse = FALSE,
   coords_filter_list = NULL,
   offsets_filter_list = NULL,
-  ctx = tiledb:::ctx
+  ctx = tiledb:::getContext()
 )
 }
 \arguments{

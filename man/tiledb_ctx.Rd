@@ -4,10 +4,12 @@
 \alias{tiledb_ctx}
 \title{Creates a \code{tiledb_ctx} object}
 \usage{
-tiledb_ctx(config = NULL)
+tiledb_ctx(config = NULL, cached = TRUE)
 }
 \arguments{
 \item{config}{(optonal) character vector of config parameter names, values}
+
+\item{cached}{(optional) logical switch to force new creation}
 }
 \value{
 \code{tiledb_ctx} object
