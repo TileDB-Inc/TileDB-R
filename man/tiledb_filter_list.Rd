@@ -4,7 +4,7 @@
 \alias{tiledb_filter_list}
 \title{Constructs a \code{tiledb_filter_list} object}
 \usage{
-tiledb_filter_list(filters = c(), ctx = tiledb:::ctx)
+tiledb_filter_list(filters = c(), ctx = tiledb:::getContext())
 }
 \arguments{
 \item{filters}{an optional list of one or more tiledb_filter_list objects}

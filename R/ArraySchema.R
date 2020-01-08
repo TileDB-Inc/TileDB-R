@@ -42,7 +42,7 @@ tiledb_array_schema <- function(
                         sparse = FALSE,
                         coords_filter_list = NULL,
                         offsets_filter_list = NULL,
-                        ctx = tiledb:::ctx
+                        ctx = tiledb:::getContext()
                         ) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
@@ -83,7 +83,7 @@ tiledb_array_schema <- function(
   return(new("tiledb_array_schema", ptr = ptr))
 }
 
-tiledb_array_schema.from_array <- function(x, ctx = tiledb:::ctx) {
+tiledb_array_schema.from_array <- function(x, ctx = tiledb:::getContext()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   } else if (missing(x) || !is.array(x)) {

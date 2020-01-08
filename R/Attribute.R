@@ -33,7 +33,7 @@ tiledb_attr <- function(name,
                         type,
                         filter_list=tiledb_filter_list(),
                         ncells=1,
-                        ctx = tiledb:::ctx
+                        ctx = tiledb:::getContext()
                         ) {
     if (missing(name)) {
         name <- ""

@@ -1,8 +1,8 @@
+
+.pkgenv <- new.env(parent = emptyenv())
+
 .onLoad <- function(libname, pkgName) {
-  ns <- asNamespace(pkgName)
-  delayedAssign(
-      "ctx", tiledb_ctx(),
-      eval.env = ns, assign.env = ns
-  )
-  #namespaceExport(ns, "ctx") # uncomment to export and access via tiledb::ctx rather than tiledb:::ctx
+  ## create a slot for ctx in the per-package enviroment but do no fill it yet to allow 'lazy load'
+  ## this entry is generally accessed with a (non-exported) getter and setter in R/Ctx.R
+  .pkgenv[["ctx"]] <- NULL
 }

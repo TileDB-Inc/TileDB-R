@@ -4,7 +4,7 @@
 \alias{tiledb_domain}
 \title{Constructs a \code{tiledb_domain} object}
 \usage{
-tiledb_domain(dims, ctx = tiledb:::ctx)
+tiledb_domain(dims, ctx = tiledb:::getContext())
 }
 \arguments{
 \item{dims}{list() of tiledb_dim objects}

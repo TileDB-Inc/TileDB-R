@@ -5,9 +5,27 @@
 setClass("tiledb_ctx",
          slots = list(ptr = "externalptr"))
 
+getContext <- function() {
+  ## return the ctx entry from the package environment (a lightweight hash)
+  ctx <- .pkgenv[["ctx"]]
+
+  ## if null, create a new context (which caches it too) and return it
+  if (is.null(ctx)) {
+    ctx <- tiledb_ctx(cached=FALSE)
+  }
+
+  ctx
+}
+
+setContext <- function(ctx) {
+  ## set the ctx entry from the package environment (a lightweight hash)
+  .pkgenv[["ctx"]] <- ctx
+}
+
 #' Creates a `tiledb_ctx` object
 #'
 #' @param config (optonal) character vector of config parameter names, values
+#' @param cached (optional) logical switch to force new creation
 #' @return `tiledb_ctx` object
 #' @examples
 #' # default configuration
@@ -19,7 +37,16 @@ setClass("tiledb_ctx",
 #' @importFrom methods new
 #' @importFrom methods is
 #' @export tiledb_ctx
-tiledb_ctx <- function(config = NULL) {
+tiledb_ctx <- function(config = NULL, cached = TRUE) {
+
+  ctx <- .pkgenv[["ctx"]]
+
+  ## if not-NULL and no (new) config and cache use is requested, return it
+  if (!is.null(ctx) && is.null(config) && cached) {
+    return(ctx)
+  }
+
+  ## otherwise create a new ctx and cache it
   if (is.null(config)) {
     ptr <- libtiledb_ctx()
   } else if (typeof(config) == "character") {
@@ -30,9 +57,11 @@ tiledb_ctx <- function(config = NULL) {
   } else {
     stop("invalid tiledb_ctx config argument type")
   }
-  ctx = new("tiledb_ctx", ptr = ptr)
+  ctx <- new("tiledb_ctx", ptr = ptr)
 
   tiledb_ctx_set_default_tags(ctx)
+
+  setContext(ctx)
 
   return(ctx)
 }
@@ -54,7 +83,7 @@ setGeneric("config", function(object, ...) {
 #'
 #' @export
 setMethod("config", signature(object = "tiledb_ctx"),
-          function(object = tiledb:::ctx) {
+          function(object = tiledb:::getContext()) {
             ptr <- libtiledb_ctx_config(object@ptr)
             tiledb_config.from_ptr(ptr)
           })
@@ -76,7 +105,7 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #' tiledb_is_supported_fs("s3")
 #'
 #' @export
-tiledb_is_supported_fs <- function(scheme, object = tiledb:::ctx) {
+tiledb_is_supported_fs <- function(scheme, object = tiledb:::getContext()) {
             libtiledb_ctx_is_supported_fs(object@ptr, scheme)
 }
 

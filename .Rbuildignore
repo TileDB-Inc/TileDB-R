@@ -6,4 +6,6 @@
 ^.*\.tar\.gz$
 ^docs
 ^_pkgdown.yml$
-^examples
+^inst/examples/quickstart_dense$
+^inst/examples/quickstart_sparse$
+^\.editorconfig$

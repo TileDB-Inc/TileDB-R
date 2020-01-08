@@ -23,7 +23,7 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #' filter_list
 #'
 #' @export tiledb_filter_list
-tiledb_filter_list <- function(filters = c(), ctx = tiledb:::ctx) {
+tiledb_filter_list <- function(filters = c(), ctx = tiledb:::getContext()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   }
