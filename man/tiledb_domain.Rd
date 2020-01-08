@@ -9,7 +9,7 @@ tiledb_domain(dims, ctx = tiledb:::ctx)
 \arguments{
 \item{dims}{list() of tiledb_dim objects}
 
-\item{ctx}{tiledb_ctx}
+\item{ctx}{tiledb_ctx (optional)}
 }
 \value{
 tiledb_domain

@@ -10,8 +10,8 @@ check_object_arguments <- function(uri, ctx = tiledb:::ctx) {
 
 #' Creates a TileDB group object at given uri path
 #'
-#' @param ctx tiledb_ctx
 #' @param uri path which to create group
+#' @param ctx tiledb_ctx object (optional)
 #' @return uri of created group
 #' @examples
 #' pth <- tempdir()
@@ -31,8 +31,8 @@ tiledb_group_create <- function(uri, ctx = tiledb:::ctx) {
 #'  - `"GROUP"`, TileDB group
 #'  - `"INVALID"``, not a TileDB resource
 #'
-#' @param ctx tiledb_ctx
 #' @param uri path to TileDB resource
+#' @param ctx tiledb_ctx object (optional)
 #' @return TileDB object type string
 #'
 #' @export
@@ -46,7 +46,7 @@ tiledb_object_type <- function(uri, ctx = tiledb:::ctx) {
 #' Raises an error if the uri is invalid, or the uri resource is not a tiledb object
 #'
 #' @param uri path which to create group
-#' @param ctx tiledb_ctx object
+#' @param ctx tiledb_ctx object (optional)
 #' @return uri of removed TileDB resource
 #' @export
 tiledb_object_rm <- function(uri, ctx = tiledb:::ctx) {
@@ -58,9 +58,9 @@ tiledb_object_rm <- function(uri, ctx = tiledb:::ctx) {
 #'
 #' Raises an error if either uri is invalid, or the old uri resource is not a tiledb object
 #'
-#' @param ctx tiledb_ctx
 #' @param old_uri old uri of existing tiledb resource
 #' @param new_uri new uri to move tiledb resource
+#' @param ctx tiledb_ctx object (optional)
 #' @return new uri of moved tiledb resource
 #' @export
 tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb:::ctx) {
@@ -78,9 +78,9 @@ tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb:::ctx) {
 
 #' List TileDB resources at a given root URI path
 #'
-#' @param ctx tiledb_ctx
 #' @param uri uri path to walk
 #' @param filter optional filtering argument, default is "NULL", currently unused
+#' @param ctx tiledb_ctx object (optional)
 #' @return a dataframe with object type, object uri string columns
 #' @export
 tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb:::ctx) {
@@ -90,9 +90,9 @@ tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb:::ctx) {
 
 #' Recursively discover TileDB resources at a given root URI path
 #'
-#' @param ctx tiledb_ctx
 #' @param uri root uri path to walk
 #' @param order (default "PREORDER") specify "POSTORDER" for "POSTORDER" traversal
+#' @param ctx tiledb_ctx object (optional)
 #' @return a dataframe with object type, object uri string columns
 #' @export
 tiledb_object_walk <- function(uri, order = "PREORDER", ctx = tiledb:::ctx) {

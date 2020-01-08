@@ -9,7 +9,7 @@ tiledb_filter(name = "NONE", ctx = tiledb:::ctx)
 \arguments{
 \item{name}{(default "NONE") TileDB filter name string}
 
-\item{ctx}{tiledb_ctx object}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 tiledb_filter object

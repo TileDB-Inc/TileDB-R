@@ -21,7 +21,7 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param sparse (default FALSE)
 #' @param coords_filter_list (optional)
 #' @param offsets_filter_list (optional)
-#' @param ctx tiledb_ctx object
+#' @param ctx tiledb_ctx object (optional)
 #' @examples
 #' schema <- tiledb_array_schema(
 #'               dom = tiledb_domain(

@@ -16,7 +16,7 @@ tiledb_domain.from_ptr <- function(ptr) {
 #'
 #' All `tiledb_dim` must be of the same TileDB type.
 #'
-#' @param ctx tiledb_ctx
+#' @param ctx tiledb_ctx (optional)
 #' @param dims list() of tiledb_dim objects
 #' @return tiledb_domain
 #' @examples

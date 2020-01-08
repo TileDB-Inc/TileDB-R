@@ -9,7 +9,7 @@ tiledb_object_rm(uri, ctx = tiledb:::ctx)
 \arguments{
 \item{uri}{path which to create group}
 
-\item{ctx}{tiledb_ctx object}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 uri of removed TileDB resource

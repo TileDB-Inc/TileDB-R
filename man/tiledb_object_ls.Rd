@@ -11,7 +11,7 @@ tiledb_object_ls(uri, filter = NULL, ctx = tiledb:::ctx)
 
 \item{filter}{optional filtering argument, default is "NULL", currently unused}
 
-\item{ctx}{tiledb_ctx}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 a dataframe with object type, object uri string columns

@@ -10,10 +10,10 @@ setClass("tiledb_dense",
 
 #' Constructs a tiledb_dense object backed by a persisted tiledb array uri
 #'
-#' @param ctx tiledb_ctx
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
+#' @param ctx tiledb_ctx (optional)
 #' @return tiledb_dense array object
 #' @export
 tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::ctx) {

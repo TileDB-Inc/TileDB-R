@@ -30,7 +30,7 @@ tiledb_array_schema(
 
 \item{offsets_filter_list}{(optional)}
 
-\item{ctx}{tiledb_ctx object}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \description{
 Constructs a \code{tiledb_array_schema} object

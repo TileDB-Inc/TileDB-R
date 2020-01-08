@@ -28,8 +28,8 @@ tiledb_filter.from_ptr <- function(ptr) {
 #' Valid compression options vary depending on the filter used,
 #' consult the TileDB docs for more information.
 #'
-#' @param ctx tiledb_ctx object
 #' @param name (default "NONE") TileDB filter name string
+#' @param ctx tiledb_ctx object (optional)
 #' @return tiledb_filter object
 #' @examples
 #' tiledb_filter("ZSTD")
