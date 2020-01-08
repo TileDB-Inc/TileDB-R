@@ -18,7 +18,7 @@ tiledb_sparse(
 
 \item{as.data.frame}{optional logical switch, defaults to "FALSE"}
 
-\item{ctx}{tiledb_ctx}
+\item{ctx}{tiledb_ctx (optional)}
 }
 \value{
 tiledb_sparse array object

@@ -12,10 +12,10 @@ setClass("tiledb_sparse",
 #'
 #' tiledb_sparse returns a list of coordinates and attributes vectors for reads
 #'
-#' @param ctx tiledb_ctx
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
+#' @param ctx tiledb_ctx (optional)
 #' @return tiledb_sparse array object
 #' @export
 tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::ctx) {

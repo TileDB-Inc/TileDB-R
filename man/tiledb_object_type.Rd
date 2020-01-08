@@ -9,7 +9,7 @@ tiledb_object_type(uri, ctx = tiledb:::ctx)
 \arguments{
 \item{uri}{path to TileDB resource}
 
-\item{ctx}{tiledb_ctx}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 TileDB object type string

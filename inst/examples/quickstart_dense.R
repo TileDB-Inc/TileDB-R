@@ -39,21 +39,18 @@ library(tiledb)
 array_name <- "quickstart_dense"
 
 create_array <- function() {
-    # Create a TileDB context
-    ctx <- tiledb_ctx()
-
     # Check if the array already exists.
-    if (tiledb_object_type(array_name, ctx=ctx) == "ARRAY") {
+    if (tiledb_object_type(array_name) == "ARRAY") {
         message("Array already exists.")
         return(invisible(NULL))
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
-    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32", ctx=ctx),
-                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32", ctx=ctx)), ctx=ctx)
+    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
 
     # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32", ctx=ctx)), ctx=ctx)
+    schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
 
     # Create the (empty) array on disk.
     tiledb_array_create(array_name, schema)
@@ -65,15 +62,13 @@ write_array <- function() {
                     c(3L, 7L, 11L, 15L),
                     c(4L, 8L, 12L, 16L)), dim = c(4,4))
     # Open the array and write to it.
-    ctx <- tiledb_ctx()
-    A <- tiledb_dense(uri = array_name, ctx=ctx)
+    A <- tiledb_dense(uri = array_name)
     A[] <- data
 }
 
 read_array <- function() {
-    ctx = tiledb_ctx()
     # Open the array and read from it.
-    A <- tiledb_dense(uri = array_name, ctx=ctx)
+    A <- tiledb_dense(uri = array_name)
     data <- A[1:2, 2:4]
     show(data)
 }

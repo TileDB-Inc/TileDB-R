@@ -19,7 +19,7 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' @param domain The dimension (inclusive) domain. The dimension’s domain is defined by a (lower bound, upper bound) vector
 #' @param tile The tile dimension tile extent
 #' @param type The dimension TileDB datatype string
-#' @param ctx tiledb_ctx object
+#' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
 #' tiledb_dim(name = "d1", domain = c(1L, 10L), tile = 5L, type = "INT32")

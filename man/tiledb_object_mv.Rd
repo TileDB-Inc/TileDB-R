@@ -11,7 +11,7 @@ tiledb_object_mv(old_uri, new_uri, ctx = tiledb:::ctx)
 
 \item{new_uri}{new uri to move tiledb resource}
 
-\item{ctx}{tiledb_ctx}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 new uri of moved tiledb resource

@@ -9,7 +9,7 @@ tiledb_group_create(uri, ctx = tiledb:::ctx)
 \arguments{
 \item{uri}{path which to create group}
 
-\item{ctx}{tiledb_ctx}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 uri of created group

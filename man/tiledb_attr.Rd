@@ -22,7 +22,7 @@ that this is a \emph{required} parameter.}
 
 \item{ncells}{(default 1) The number of cells, must be 1 for now}
 
-\item{ctx}{tiledb_ctx object}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 \code{tiledb_dim} object

@@ -19,7 +19,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' that this is a _required_ parameter.
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
 #' @param ncells (default 1) The number of cells, must be 1 for now
-#' @param ctx tiledb_ctx object
+#' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
 #' flt <- tiledb_filter_list(list(tiledb_filter("GZIP")))

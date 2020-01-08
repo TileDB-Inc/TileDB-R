@@ -13,8 +13,8 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #' Constructs a `tiledb_filter_list` object
 #'
 #'
-#' @param ctx tiledb_ctx object
 #' @param filters an optional list of one or more tiledb_filter_list objects
+#' @param ctx tiledb_ctx object (optional)
 #' @return tiledb_filter_list object
 #' @examples
 #' flt <- tiledb_filter("ZSTD")

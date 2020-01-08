@@ -11,7 +11,7 @@ tiledb_object_walk(uri, order = "PREORDER", ctx = tiledb:::ctx)
 
 \item{order}{(default "PREORDER") specify "POSTORDER" for "POSTORDER" traversal}
 
-\item{ctx}{tiledb_ctx}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 a dataframe with object type, object uri string columns
