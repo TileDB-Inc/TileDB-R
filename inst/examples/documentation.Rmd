@@ -6,10 +6,84 @@ output: html_notebook
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.   Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).  The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
-# Examples
+# Prelinaries
 
-- quickstart_dense
-- quickstart_sparse
+We will the two basic examples for a dense and sparse array simply to create
+array data on disk to refer to later in examples that follow.
+
+```{r runexamples}
+library(tiledb)
+
+tdir <- tempdir()
+uridense <- file.path(tdir, "dense")
+
+create_array <- function(array_name) {
+    # Check if the array already exists.
+    if (tiledb_object_type(array_name) == "ARRAY") {
+        message("Array already exists.")
+        return(invisible(NULL))
+    }
+
+    # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+
+    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
+    schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
+
+    # Create the (empty) array on disk.
+    tiledb_array_create(array_name, schema)
+}
+
+write_array <- function(array_name) {
+    data <- array(c(c(1L, 5L, 9L, 13L),
+                    c(2L, 6L, 10L, 14L),
+                    c(3L, 7L, 11L, 15L),
+                    c(4L, 8L, 12L, 16L)), dim = c(4,4))
+    # Open the array and write to it.
+    A <- tiledb_dense(uri = array_name)
+    A[] <- data
+}
+
+create_array(uridense)
+write_array(uridense)
+
+
+urisparse <- file.path(tdir, "sparse")
+
+create_array <- function(array_name) {
+    # Check if the array already exists.
+    if (tiledb_object_type(array_name) == "ARRAY") {
+        message("Array already exists.")
+        return(invisible(NULL))
+    }
+
+    # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+
+   # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
+    schema = tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
+
+    # Create the (empty) array on disk.
+    tiledb_array_create(array_name, schema)
+}
+
+write_array <- function(array_name) {
+    I <- c(1, 2, 2)
+    J <- c(1, 4, 3)
+    data <- c(1L, 2L, 3L)
+    # Open the array and write to it.
+    A <- tiledb_sparse(uri = array_name)
+    A[I, J] <- data
+}
+
+create_array(urisparse)
+write_array(urisparse)
+
+```
+
+
 
 # API Usage
 
@@ -111,7 +185,7 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 
 #### Setting the Data Tile Capacity
 
-TODO: R support 
+TODO: R support
 
 #### Setting Coordinate and Offset Filters
 
@@ -124,7 +198,7 @@ f2 <- tiledb_filter("ZSTD")
 fl1 <- tiledb_filter_list(c(f1))
 fl2 <- tiledb_filter_list(c(f2))
 
-# Create the schema setting the coordinates and offsets filter lists 
+# Create the schema setting the coordinates and offsets filter lists
 schema <- tiledb_array_schema(dom, c(attr1, attr2),
                               coords_filter_list = fl1,
                               offsets_filter_list = fl2)
@@ -137,7 +211,7 @@ TODO: R support
 
 ### Creating the Array
 
-```{r createarray}
+```{r createarray, eval=FALSE}
 # ... create array schema
 
 # Create the array
@@ -187,7 +261,8 @@ unlink(tmp, recursive=TRUE)
 ### Writing Sparse Cells
 
 ```{r writesparsecells}
-tmp <- tempdir()
+tmp <- urisparse
+unlink(tmp, recursive=TRUE)
 
 d1  <- tiledb_dim(domain = c(1L, 5L))
 d2  <- tiledb_dim(domain = c(1L, 5L))
@@ -207,7 +282,6 @@ J <- c(3, 4, 2, 1)
 A <- tiledb_sparse(uri = tmp)
 A[I, J] <- data
 
-unlink(tmp, recursive=TRUE)
 ```
 
 
@@ -277,12 +351,13 @@ show(schema)
 ```{r inspectdomain}
 # ... get array schema
 # ... get domain from schema
+dom <- domain(schema)
 
 # Get the domain datatype (i.e., the datatype of all dimensions)
 type <- datatype(dom)
 
 # Get number of dimensions
-dim_num <- ndim(dom)
+dim_num <- dim(dom)
 
 # Get all dimension
 dims <- dimensions(dom)
@@ -291,3 +366,62 @@ dims <- dimensions(dom)
 show(dom)
 ```
 
+#### Inspecting Dimensions
+
+```{r inspectdimensions, eval=FALSE}
+# ... get array schema
+# ... get domain
+# ... get dimension by index or name
+
+#FIXME
+
+# Get dimension name
+dim_name <- name(dim)
+
+# Get dimension datatype
+dim_type <- datatype(dim)
+
+# Get dimension domain
+domain <- domain(dim)
+
+# Get tile extent
+tile_extent <- tile(dim)
+
+# Dump the dimension in ASCII format in the selected output
+show(dim)
+
+```
+
+
+#### Inspecting Attributes
+
+```{r inspectattr, eval=FALSE}
+# ... get array schema
+# ... get attribute by index or name
+
+# Get attribute name
+attr_name <- name(attr)
+
+# Get attribute datatype
+attr_type <- datatype(attr)
+
+# Get filter list
+filter_list <- filter_list(attr)
+
+# Check if attribute is variable-length
+# variable length attribtues are not supported in R currently
+
+# Get number of values per cell
+num <- ncells(attr)
+
+# Get cell size for this attribute
+# TODO: not supportded yet
+
+# Dump the attribute in ASCII format in the selected output
+show(attr)
+```
+
+
+#### Inspecting Filters
+
+TODO R support
