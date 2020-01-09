@@ -1,0 +1,293 @@
+---
+title: "TileDB R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.   Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).  The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+# Examples
+
+- quickstart_dense
+- quickstart_sparse
+
+# API Usage
+
+## Creating Arrays
+
+### Create Dimension
+
+```{r createdim}
+library(tiledb)
+
+# Create dimension
+dim <- tiledb_dim("dim", c(1L, 4L), 2L, "INT32")
+```
+
+
+### Create Array Domain
+
+```{r creatarrdom}
+library(tiledb)
+
+#  .. create dimensions `dim1`, `dim2`
+dim1 <- tiledb_dim("dim1", c(1L, 4L), 2L, "INT32")
+dim2 <- tiledb_dim("dim2", c(1L, 2L), 2L, "INT32")
+
+# Create domain with two dimensions
+dom <- tiledb_domain(dims = c(dim1, dim2))
+```
+
+### Creating Attributes
+
+```{r createattr}
+# Create attribute
+attr <- tiledb_attr("attr", "INT32")
+```
+
+TODO: R support beyond single-value attributes
+
+#### Setting a Compressor
+
+```{r setcompr}
+comp <- tiledb_filter("GZIP")
+tiledb_filter_set_option(comp,"COMPRESSION_LEVEL", 10)
+
+# Create a filter list with the compressor
+filter_list <- tiledb_filter_list(c(comp))
+
+# Create attribute with the filter list
+attr <- tiledb_attr("attr", "INT32", filter_list = filter_list)
+```
+
+
+#### Setting Other Filters
+
+```{r setfilr}
+# Create filters
+f1 <- tiledb_filter("BIT_WIDTH_REDUCTION")
+f2 <- tiledb_filter("ZSTD")
+
+# Create a filter list with the two filters
+filter_list <- tiledb_filter_list(c(f1,f2))
+
+# Create attribute with the filter list
+attr <- tiledb_attr("attr", "INT32", filter_list = filter_list)
+```
+
+
+#### Setting the Tile Chunk Size
+
+```{r settilechunksize}
+# ... create filter list
+set_max_chunk_size(filter_list, 10000)
+```
+
+
+### Creating the Array Schema
+
+```{r createarrschema}
+# ... create domain dom
+attr1 <- tiledb_attr("attr1", "INT32", filter_list = filter_list)
+attr2 <- tiledb_attr("attr2", "FLOAT64", filter_list = filter_list)
+
+# Create a dense array
+schema <- tiledb_array_schema(dom, c(attr1, attr2), sparse = FALSE)
+# Or, create a spaese array
+# schema <- tiledb_array_schema(dom, c(attr1, attr2), sparse = TRUE)
+```
+
+#### Setting the Tile and Cell Order
+
+```{r settilecellorder}
+# ... create domain dom
+# ... create attributes attr1, attr2
+
+# The tile and order can be "ROW_MAJOR" or "COL_MAJOR"
+schema <- tiledb_array_schema(dom, c(attr1, attr2),
+                              cell_order = "COL_MAJOR",
+                              tile_order = "ROW_MAJOR")
+```
+
+#### Setting the Data Tile Capacity
+
+TODO: R support 
+
+#### Setting Coordinate and Offset Filters
+
+```{r setcoordoffsetfilt}
+# ... create domain dom
+# ... create attributes attr1, attr2
+# ... create filter lists fl1, fl2, similar to attributes
+f1 <- tiledb_filter("BIT_WIDTH_REDUCTION")
+f2 <- tiledb_filter("ZSTD")
+fl1 <- tiledb_filter_list(c(f1))
+fl2 <- tiledb_filter_list(c(f2))
+
+# Create the schema setting the coordinates and offsets filter lists 
+schema <- tiledb_array_schema(dom, c(attr1, attr2),
+                              coords_filter_list = fl1,
+                              offsets_filter_list = fl2)
+```
+
+
+#### Checking Correctness
+
+TODO: R support
+
+### Creating the Array
+
+```{r createarray}
+# ... create array schema
+
+# Create the array
+tiledb_array_create("<array_uri>", schema)
+```
+
+### Creating Encrypted Arrays
+
+TODO: R support
+
+
+
+## Writing Arrays
+
+### Writing in Dense Subarrays
+
+```{r writedensesubarr, eval=FALSE}
+## prepare a larger 5 x 5 to embed into
+tmp <- tempfile()
+d1  <- tiledb_dim(domain = c(1L, 5L))
+d2  <- tiledb_dim(domain = c(1L, 5L))
+dom <- tiledb_domain(c(d1, d2))
+val <- tiledb_attr(name="val", type = "INT32")
+sch <- tiledb_array_schema(dom, c(val))
+tiledb_array_create(tmp, sch)
+
+dat <- matrix(as.integer(rnorm(25)*100), 5, 5)
+arr <- tiledb_dense(tmp, as.data.frame=FALSE)
+arr[] <- dat
+
+
+# Prepare a 2x3 dense array
+# Contrary to Python, R by default stores arrays in col-major order
+data <-  array(c(1L, 4L, 2L, 5L, 3L, 6L), dim=c(2,3))
+
+# Prepare the [1,2] x [2,4] subarray to write to
+I <- c(1:2)
+J <- c(2:4)
+
+# Open the array and write the data to it
+A <- tiledb_dense(uri = tmp)
+A[I, J] <- data
+
+unlink(tmp, recursive=TRUE)
+```
+
+### Writing Sparse Cells
+
+```{r writesparsecells}
+tmp <- tempdir()
+
+d1  <- tiledb_dim(domain = c(1L, 5L))
+d2  <- tiledb_dim(domain = c(1L, 5L))
+dom <- tiledb_domain(c(d1, d2))
+val <- tiledb_attr("val", type = "INT32")
+sch <- tiledb_array_schema(dom, c(val), sparse=TRUE)
+tiledb_array_create(tmp, sch)
+
+
+# Prepare some data
+data <- c(3L, 4L, 1L, 2L)
+
+I <- c(3, 4, 1, 2)
+J <- c(3, 4, 2, 1)
+
+# Open the array and write the data to it
+A <- tiledb_sparse(uri = tmp)
+A[I, J] <- data
+
+unlink(tmp, recursive=TRUE)
+```
+
+
+### Writing Encrypted Arrays
+
+TODO R support
+
+### Fixed-length Attributes
+
+TODO R support
+
+### Fixed-length Attributes
+
+TODO R support
+
+### Getting the Fragment Info
+
+TODO R support
+
+
+## Reading Arrays
+
+### Reading the Array Schema
+
+#### Inspecting the array schema
+
+TODO R support for direct schema load
+
+```{r schemainspect}
+array_name <- "/tmp/quickstart_sparse"
+
+# Get array schema
+A <- tiledb_sparse(uri = array_name) # Similar for tiledb_dense()
+schema <- schema(A)
+
+# Get array type
+sparse <- is.sparse(schema)
+
+# Get tile capacity
+# TODO: tile capacity is not supported in R currently
+
+# Get tile order
+t_order <- tile_order(schema)
+
+# Get cell order
+c_order <- cell_order(schema)
+
+# Get coordinates and offset filter list
+reslist <- filter_list(schema)
+
+# Get the array domain
+dom <- domain(schema)
+
+# Get all attributes as list
+attrs <- attrs(schema)
+
+# Get attribute from name
+attr <- attrs(schema, "attr")
+
+# Dump the array schema in ASCII format in the selected output
+show(schema)
+```
+
+
+#### Inspecting Domain
+
+```{r inspectdomain}
+# ... get array schema
+# ... get domain from schema
+
+# Get the domain datatype (i.e., the datatype of all dimensions)
+type <- datatype(dom)
+
+# Get number of dimensions
+dim_num <- ndim(dom)
+
+# Get all dimension
+dims <- dimensions(dom)
+
+# Dump the domain in ASCII format in the selected output
+show(dom)
+```
+
