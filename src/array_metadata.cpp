@@ -36,20 +36,72 @@ SEXP read_array_metadata(const std::string array_name, const std::string key) {
 
   // TODO more cases
   if (v_type == TILEDB_INT32) {
-    IntegerVector vec(v_num);
-    memcpy(vec.begin(), v, v_num*sizeof(int32_t));
+    Rcpp::IntegerVector vec(v_num);
+    std::memcpy(vec.begin(), v, v_num*sizeof(int32_t));
     return(vec);
   } else if (v_type == TILEDB_FLOAT64) {
-    NumericVector vec(v_num);
-    memcpy(vec.begin(), v, v_num*sizeof(double));
+    Rcpp::NumericVector vec(v_num);
+    std::memcpy(vec.begin(), v, v_num*sizeof(double));
     return(vec);
   } else if (v_type == TILEDB_FLOAT32) {
-    NumericVector vec(v_num);
+    Rcpp::NumericVector vec(v_num);
     const float *fvec = static_cast<const float*>(v);
     size_t n = static_cast<size_t>(v_num);
     for (size_t i=0; i<n; i++) vec(i) = static_cast<double>(fvec[i]);
     return(vec);
+  } else if (v_type == TILEDB_STRING_ASCII) {
+    // from reading the code I think I am inferring that we do not have vectors of strings but just one
+    Rcpp::CharacterVector vec(1);
+    std::string s(static_cast<const char*>(v));
+    s.resize(v_num);            // incoming char* is not null terminated, so ensure we only consume v_num bytes and terminate
+    return(Rcpp::wrap(s));
   } else {
     Rcpp::stop("No support yet for %s", _tiledb_datatype_to_string(v_type));
   }
+}
+
+// [[Rcpp::export]]
+bool write_array_metadata(const std::string array_name, const std::string key, const SEXP obj) {
+  // Create TileDB context
+  Context ctx;
+
+  // Open array for writing
+  // TODO error check
+  Array array(ctx, array_name, TILEDB_WRITE);
+
+  // TODO probably want to add a mapper from SEXP type to tiledb type in libtiledb.cpp
+  switch(TYPEOF(obj)) {
+    case VECSXP: {
+      Rcpp::stop("List objects are not supported.");
+      array.close();
+      return false;
+      break;// not reached
+    }
+    case REALSXP: {
+      Rcpp::NumericVector v(obj);
+      array.put_metadata(key.c_str(), TILEDB_FLOAT64, v.size(), v.begin());
+     break;
+    }
+    case INTSXP: {
+      Rcpp::IntegerVector v(obj);
+      array.put_metadata(key.c_str(), TILEDB_INT32, v.size(), v.begin());
+      break;
+    }
+    case STRSXP: {
+      Rcpp::CharacterVector v(obj);
+      std::string s(v[0]);
+      // TODO: best string type? And what about the other vector elements?
+      array.put_metadata(key.c_str(), TILEDB_STRING_ASCII, s.length(), s.c_str());
+      break;
+    }
+    default: {
+      Rcpp::stop("No support (yet) for type '%d'.", TYPEOF(obj));
+      array.close();
+      return false;
+      break;// not reached
+    }
+  }
+  // Close array - Important so that the metadata get flushed
+  array.close();
+  return true;
 }

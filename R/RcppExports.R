@@ -5,6 +5,10 @@ read_array_metadata <- function(array_name, key) {
     .Call(`_tiledb_read_array_metadata`, array_name, key)
 }
 
+write_array_metadata <- function(array_name, key, obj) {
+    .Call(`_tiledb_write_array_metadata`, array_name, key, obj)
+}
+
 tiledb_datatype_R_type <- function(datatype) {
     .Call(`_tiledb_tiledb_datatype_R_type`, datatype)
 }

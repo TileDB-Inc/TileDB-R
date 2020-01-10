@@ -18,6 +18,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// write_array_metadata
+bool write_array_metadata(const std::string array_name, const std::string key, const SEXP obj);
+RcppExport SEXP _tiledb_write_array_metadata(SEXP array_nameSEXP, SEXP keySEXP, SEXP objSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
+    Rcpp::traits::input_parameter< const SEXP >::type obj(objSEXP);
+    rcpp_result_gen = Rcpp::wrap(write_array_metadata(array_name, key, obj));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -1146,6 +1159,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_read_array_metadata", (DL_FUNC) &_tiledb_read_array_metadata, 2},
+    {"_tiledb_write_array_metadata", (DL_FUNC) &_tiledb_write_array_metadata, 3},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
