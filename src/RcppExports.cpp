@@ -6,6 +6,18 @@
 
 using namespace Rcpp;
 
+// read_array_metadata
+SEXP read_array_metadata(const std::string array_name, const std::string key);
+RcppExport SEXP _tiledb_read_array_metadata(SEXP array_nameSEXP, SEXP keySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
+    rcpp_result_gen = Rcpp::wrap(read_array_metadata(array_name, key));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -1133,6 +1145,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_tiledb_read_array_metadata", (DL_FUNC) &_tiledb_read_array_metadata, 2},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
