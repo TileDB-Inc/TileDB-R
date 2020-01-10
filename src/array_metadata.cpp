@@ -1,7 +1,9 @@
 
 // open questions:
 //  - simple accessor functions or s4 instances?
+//      -> s4 instance could cache more easily
 //  - base layer here and refined interface in R function?
+//      -> add s4 instance on R side
 
 #include <tiledb.h>
 
@@ -12,6 +14,34 @@ using namespace tiledb;
 
 // forward declaration
 const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype);
+
+// [[Rcpp::export]]
+bool has_array_metadata(const std::string array_name, const std::string key) {
+  // Create TileDB context
+  Context ctx;
+
+  // Open array for reading
+  // TODO error check
+  Array array(ctx, array_name, TILEDB_READ);
+
+  tiledb_datatype_t v_type;
+  bool res = array.has_metadata(key.c_str(), &v_type);
+  return res;
+}
+
+// [[Rcpp::export]]
+int num_array_metadata(const std::string array_name) {
+  // Create TileDB context
+  Context ctx;
+
+  // Open array for reading
+  // TODO error check
+  Array array(ctx, array_name, TILEDB_READ);
+
+  tiledb_datatype_t v_type;
+  uint64_t nm = array.metadata_num();
+  return static_cast<int>(nm);
+}
 
 // [[Rcpp::export]]
 SEXP read_array_metadata(const std::string array_name, const std::string key) {
