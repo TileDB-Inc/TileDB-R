@@ -257,59 +257,38 @@ std::string _tiledb_query_type_to_string(tiledb_query_type_t qtype) {
 
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
-  try {
-    auto ver = tiledb::version();
-    return NumericVector::create(_["major"]=std::get<0>(ver),
-                                 _["minor"]=std::get<1>(ver),
-                                 _["patch"]=std::get<2>(ver));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  auto ver = tiledb::version();
+  return NumericVector::create(_["major"]=std::get<0>(ver),
+                               _["minor"]=std::get<1>(ver),
+                               _["patch"]=std::get<2>(ver));
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
-  try {
-    if (config.isNull()) {
-      return XPtr<tiledb::Context>(new tiledb::Context(), true);
-    } else {
-      XPtr<tiledb::Config> config_xptr(config);
-      return XPtr<tiledb::Context>(new tiledb::Context(*config_xptr.get()), true);
-    }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  if (config.isNull()) {
+    return XPtr<tiledb::Context>(new tiledb::Context(), true);
+  } else {
+    XPtr<tiledb::Config> config_xptr(config);
+    return XPtr<tiledb::Context>(new tiledb::Context(*config_xptr.get()), true);
   }
 }
 
 
 // [[Rcpp::export]]
 void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value) {
-  try {
-    ctx->set_tag(key, value);
-    return;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  ctx->set_tag(key, value);
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename) {
-  try {
-    config->save_to_file(filename);
-    return filename;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  config->save_to_file(filename);
+  return filename;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename) {
-  try {
-    tiledb::Config* config = new tiledb::Config(filename);
-    return XPtr<tiledb::Config>(config);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Config* config = new tiledb::Config(filename);
+  return XPtr<tiledb::Config>(config);
 }
 
 // [[Rcpp::export]]
@@ -334,21 +313,17 @@ bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme
 
 // [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config=R_NilValue) {
-  try {
-      XPtr<tiledb::Config> _config(new tiledb::Config(), true);
-    if (config.isNotNull()) {
-      auto config_vec = config.as();
-      auto config_names = as<CharacterVector>(config_vec.names());
-      for (auto &name : config_names) {
-        auto param = as<std::string>(name);
-        auto value = as<std::string>(config_vec[param]);
-        _config->set(param, value);
-      }
+  XPtr<tiledb::Config> _config(new tiledb::Config(), true);
+  if (config.isNotNull()) {
+    auto config_vec = config.as();
+    auto config_names = as<CharacterVector>(config_vec.names());
+    for (auto &name : config_names) {
+      auto param = as<std::string>(name);
+      auto value = as<std::string>(config_vec[param]);
+      _config->set(param, value);
     }
-    return _config;
-  } catch (tiledb::TileDBError& err) {
-    throw  Rcpp::exception(err.what());
   }
+  return _config;
 }
 
 // [[Rcpp::export]]
@@ -364,42 +339,30 @@ CharacterVector libtiledb_config_vector(XPtr<tiledb::Config> config) {
 XPtr<tiledb::Config> libtiledb_config_set(XPtr<tiledb::Config> config,
                                           std::string param,
                                           std::string value) {
-  try {
-    (*config)[param] = value;
-    return config;
-  } catch (tiledb::TileDBError& err)  {
-    throw Rcpp::exception(err.what());
-  }
+  (*config)[param] = value;
+  return config;
 }
 
 // [[Rcpp::export]]
 CharacterVector libtiledb_config_get(XPtr<tiledb::Config> config,
                                      CharacterVector params) {
-  try {
-    CharacterVector result;
-    for (auto const& p : params) {
-      auto param = as<std::string>(p);
-      try {
-        result.push_back(config->get(param), param);
-      } catch (std::exception& err) {
-        result.push_back(NA_STRING, as<std::string>(NA_STRING));
-      }
+  CharacterVector result;
+  for (auto const& p : params) {
+    auto param = as<std::string>(p);
+    try {
+      result.push_back(config->get(param), param);
+    } catch (std::exception& err) {
+      result.push_back(NA_STRING, as<std::string>(NA_STRING));
     }
-    return result;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
   }
+  return result;
 }
 
 // [[Rcpp::export]]
 void libtiledb_config_dump(XPtr<tiledb::Config> config) {
-  try {
-    Rcout << "Config settings:\n";
-    for (auto& p : *config) {
-      Rcout << "\"" << p.first << "\" : \"" << p.second << "\"\n";
-    }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  Rcout << "Config settings:\n";
+  for (auto& p : *config) {
+    Rcout << "\"" << p.first << "\" : \"" << p.second << "\"\n";
   }
 }
 
@@ -464,182 +427,166 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
 
 // [[Rcpp::export]]
 std::string libtiledb_dim_name(XPtr<tiledb::Dimension> dim) {
-  try {
-    return dim->name();
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return dim->name();
 }
 
 // [[Rcpp::export]]
 SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
-  try {
-    auto dim_type = dim->type();
-    switch (dim_type) {
-      case TILEDB_FLOAT32: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
-        return NumericVector({dim->domain<DataType>().first,
-                              dim->domain<DataType>().second});
-      }
-      case TILEDB_FLOAT64: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-        auto d1 = dim->domain<DataType>().first;
-        auto d2 = dim->domain<DataType>().second;
-        if (d1 == R_NaReal || d2 == R_NaReal) {
-          throw Rcpp::exception("tiledb_dim domain FLOAT64 value not representable as an R double");
-        }
-        return NumericVector({d1, d2});
-      }
-      case TILEDB_INT8: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT8>::type;
-        return IntegerVector({dim->domain<DataType>().first,
-                              dim->domain<DataType>().second});
-      }
-      case TILEDB_UINT8: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT8>::type;
-        return IntegerVector({dim->domain<DataType>().first,
-                              dim->domain<DataType>().second});
-      }
-      case TILEDB_INT16: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
-        return IntegerVector({dim->domain<DataType>().first,
-                              dim->domain<DataType>().second});
-      }
-      case TILEDB_UINT16: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
-        return IntegerVector({dim->domain<DataType>().first,
-                              dim->domain<DataType>().second});
-      }
-      case TILEDB_INT32: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-        auto d1 = dim->domain<DataType>().first;
-        auto d2 = dim->domain<DataType>().second;
-        if (d1 == R_NaInt || d2 == R_NaInt) {
-          throw Rcpp::exception("tiledb_dim domain INT32 value not representable as an R integer");
-        }
-        return IntegerVector({d1, d2});
-      }
-      case TILEDB_UINT32: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
-        auto d1 = dim->domain<DataType>().first;
-        auto d2 = dim->domain<DataType>().second;
-        if (d1 > std::numeric_limits<int32_t>::max() ||
-            d2 > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb_dim domain UINT32 value not representable as an R integer");
-        }
-        return IntegerVector({static_cast<int32_t>(d1),
-                              static_cast<int32_t>(d2)});
-      }
-      case TILEDB_INT64: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT64>::type;
-        auto d1 = dim->domain<DataType>().first;
-        auto d2 = dim->domain<DataType>().second;
-        if (d1 <= R_NaInt || d1 > std::numeric_limits<int32_t>::max() ||
-            d2 <= R_NaInt || d2 > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb_dim domain INT64 value not representable as an R integer");
-        }
-        return IntegerVector({static_cast<int32_t>(d1),
-                              static_cast<int32_t>(d2)});
-      }
-      case TILEDB_UINT64: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
-        auto d1 = dim->domain<DataType>().first;
-        auto d2 = dim->domain<DataType>().second;
-        if (d1 > std::numeric_limits<int32_t>::max() ||
-            d2 > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb_dim domain UINT64 value not representable as an R integer");
-        }
-        return IntegerVector({static_cast<int32_t>(d1),
-                              static_cast<int32_t>(d2)});
-      }
-      default:
-        throw Rcpp::exception("invalid tiledb_dim domain type");
+  auto dim_type = dim->type();
+  switch (dim_type) {
+    case TILEDB_FLOAT32: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
+      return NumericVector({dim->domain<DataType>().first,
+                            dim->domain<DataType>().second});
     }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+    case TILEDB_FLOAT64: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+      auto d1 = dim->domain<DataType>().first;
+      auto d2 = dim->domain<DataType>().second;
+      if (d1 == R_NaReal || d2 == R_NaReal) {
+        throw Rcpp::exception("tiledb_dim domain FLOAT64 value not representable as an R double");
+      }
+      return NumericVector({d1, d2});
+    }
+    case TILEDB_INT8: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT8>::type;
+      return IntegerVector({dim->domain<DataType>().first,
+                            dim->domain<DataType>().second});
+    }
+    case TILEDB_UINT8: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT8>::type;
+      return IntegerVector({dim->domain<DataType>().first,
+                            dim->domain<DataType>().second});
+    }
+    case TILEDB_INT16: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
+      return IntegerVector({dim->domain<DataType>().first,
+                            dim->domain<DataType>().second});
+    }
+    case TILEDB_UINT16: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
+      return IntegerVector({dim->domain<DataType>().first,
+                            dim->domain<DataType>().second});
+    }
+    case TILEDB_INT32: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+      auto d1 = dim->domain<DataType>().first;
+      auto d2 = dim->domain<DataType>().second;
+      if (d1 == R_NaInt || d2 == R_NaInt) {
+        throw Rcpp::exception("tiledb_dim domain INT32 value not representable as an R integer");
+      }
+      return IntegerVector({d1, d2});
+    }
+    case TILEDB_UINT32: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
+      auto d1 = dim->domain<DataType>().first;
+      auto d2 = dim->domain<DataType>().second;
+      if (d1 > std::numeric_limits<int32_t>::max() ||
+          d2 > std::numeric_limits<int32_t>::max()) {
+        throw Rcpp::exception("tiledb_dim domain UINT32 value not representable as an R integer");
+      }
+      return IntegerVector({static_cast<int32_t>(d1),
+                            static_cast<int32_t>(d2)});
+    }
+    case TILEDB_INT64: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT64>::type;
+      auto d1 = dim->domain<DataType>().first;
+      auto d2 = dim->domain<DataType>().second;
+      if (d1 <= R_NaInt || d1 > std::numeric_limits<int32_t>::max() ||
+          d2 <= R_NaInt || d2 > std::numeric_limits<int32_t>::max()) {
+        throw Rcpp::exception("tiledb_dim domain INT64 value not representable as an R integer");
+      }
+      return IntegerVector({static_cast<int32_t>(d1),
+                            static_cast<int32_t>(d2)});
+    }
+    case TILEDB_UINT64: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
+      auto d1 = dim->domain<DataType>().first;
+      auto d2 = dim->domain<DataType>().second;
+      if (d1 > std::numeric_limits<int32_t>::max() ||
+          d2 > std::numeric_limits<int32_t>::max()) {
+        throw Rcpp::exception("tiledb_dim domain UINT64 value not representable as an R integer");
+      }
+      return IntegerVector({static_cast<int32_t>(d1),
+                            static_cast<int32_t>(d2)});
+    }
+    default:
+      throw Rcpp::exception("invalid tiledb_dim domain type");
   }
 }
 
 // [[Rcpp::export]]
 SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
-  try {
-    auto dim_type = dim->type();
-    switch (dim_type) {
-      case TILEDB_FLOAT32: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
-        return NumericVector({dim->tile_extent<DataType>(),});
-      }
-      case TILEDB_FLOAT64: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-        auto t = dim->tile_extent<DataType>();
-        if (t == R_NaReal) {
-          throw Rcpp::exception("tiledb_dim tile FLOAT64 value not representable as an R double");
-        }
-        return NumericVector({t});
-      }
-      case TILEDB_INT8: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT8>::type;
-        return IntegerVector({dim->tile_extent<DataType>()});
-      }
-      case TILEDB_UINT8: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT8>::type;
-        return IntegerVector({dim->tile_extent<DataType>()});
-      }
-      case TILEDB_INT16: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
-        return IntegerVector({dim->tile_extent<DataType>()});
-      }
-      case TILEDB_UINT16: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
-        return IntegerVector({dim->tile_extent<DataType>()});
-      }
-      case TILEDB_INT32: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-        auto t = dim->tile_extent<DataType>();
-        if (t == R_NaInt) {
-          throw Rcpp::exception("tiledb_dim tile INT32 value not representable as an R integer");
-        }
-        return IntegerVector({t,});
-      }
-      case TILEDB_UINT32: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
-        auto t = dim->tile_extent<DataType>();
-        if (t > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb_dim tile UINT32 value not representable as an R integer");
-        }
-        return IntegerVector({static_cast<int32_t>(t),});
-      }
-      case TILEDB_INT64: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT64>::type;
-        auto t = dim->tile_extent<DataType>();
-        if (t <= R_NaInt || t > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb_dim tile INT64 value not representable as an R integer");
-        }
-        return IntegerVector({static_cast<int32_t>(t),});
-      }
-      case TILEDB_UINT64: {
-        using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
-        auto t = dim->tile_extent<DataType>();
-        if (t > std::numeric_limits<int32_t>::max()) {
-          throw Rcpp::exception("tiledb_dim tile UINT64 value not representable as an R integer");
-        }
-        return IntegerVector({static_cast<int32_t>(t),});
-      }
-      default:
-        throw Rcpp::exception("invalid tiledb_dim domain type");
+  auto dim_type = dim->type();
+  switch (dim_type) {
+    case TILEDB_FLOAT32: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
+      return NumericVector({dim->tile_extent<DataType>(),});
     }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+    case TILEDB_FLOAT64: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+      auto t = dim->tile_extent<DataType>();
+      if (t == R_NaReal) {
+        throw Rcpp::exception("tiledb_dim tile FLOAT64 value not representable as an R double");
+      }
+      return NumericVector({t});
+    }
+    case TILEDB_INT8: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT8>::type;
+      return IntegerVector({dim->tile_extent<DataType>()});
+    }
+    case TILEDB_UINT8: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT8>::type;
+      return IntegerVector({dim->tile_extent<DataType>()});
+    }
+    case TILEDB_INT16: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
+      return IntegerVector({dim->tile_extent<DataType>()});
+    }
+    case TILEDB_UINT16: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
+      return IntegerVector({dim->tile_extent<DataType>()});
+    }
+    case TILEDB_INT32: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+      auto t = dim->tile_extent<DataType>();
+      if (t == R_NaInt) {
+        throw Rcpp::exception("tiledb_dim tile INT32 value not representable as an R integer");
+      }
+      return IntegerVector({t,});
+    }
+    case TILEDB_UINT32: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
+      auto t = dim->tile_extent<DataType>();
+      if (t > std::numeric_limits<int32_t>::max()) {
+        throw Rcpp::exception("tiledb_dim tile UINT32 value not representable as an R integer");
+      }
+      return IntegerVector({static_cast<int32_t>(t),});
+    }
+    case TILEDB_INT64: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT64>::type;
+      auto t = dim->tile_extent<DataType>();
+      if (t <= R_NaInt || t > std::numeric_limits<int32_t>::max()) {
+        throw Rcpp::exception("tiledb_dim tile INT64 value not representable as an R integer");
+      }
+      return IntegerVector({static_cast<int32_t>(t),});
+    }
+    case TILEDB_UINT64: {
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
+      auto t = dim->tile_extent<DataType>();
+      if (t > std::numeric_limits<int32_t>::max()) {
+        throw Rcpp::exception("tiledb_dim tile UINT64 value not representable as an R integer");
+      }
+      return IntegerVector({static_cast<int32_t>(t),});
+    }
+    default:
+      throw Rcpp::exception("invalid tiledb_dim domain type");
   }
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
-  try {
-    return _tiledb_datatype_to_string(dim->type());
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return _tiledb_datatype_to_string(dim->type());
 }
 
 // Computes the TileDB subarray for a given dimension domain
@@ -722,48 +669,31 @@ XPtr<tiledb::Domain> libtiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
 
 // [[Rcpp::export]]
 IntegerVector libtiledb_domain_ndim(XPtr<tiledb::Domain> domain) {
-  try {
-    unsigned int rank = domain->ndim();
-    if (rank > std::numeric_limits<int32_t>::max()) {
-      throw Rcpp::exception("tiledb::Domain rank is not representable by an R integer");
-    }
-    return IntegerVector({static_cast<int32_t>(rank),});
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  unsigned int rank = domain->ndim();
+  if (rank > std::numeric_limits<int32_t>::max()) {
+    throw Rcpp::exception("tiledb::Domain rank is not representable by an R integer");
   }
+  return IntegerVector({static_cast<int32_t>(rank),});
 }
 
 // [[Rcpp::export]]
 List libtiledb_domain_dimensions(XPtr<tiledb::Domain> domain) {
-  try {
-    List dimensions;
-    for (auto& dim : domain->dimensions()) {
-      dimensions.push_back(XPtr<tiledb::Dimension>(new tiledb::Dimension(dim)));
-    }
-    return dimensions;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  List dimensions;
+  for (auto& dim : domain->dimensions()) {
+    dimensions.push_back(XPtr<tiledb::Dimension>(new tiledb::Dimension(dim)));
   }
+  return dimensions;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_domain_datatype(XPtr<tiledb::Domain> domain) {
-  try {
-    auto dtype = domain->type();
-    return _tiledb_datatype_to_string(dtype);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  auto dtype = domain->type();
+  return _tiledb_datatype_to_string(dtype);
 }
 
 // [[Rcpp::export]]
 void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
-  try {
-    domain->dump();
-    return;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  domain->dump();
 }
 
 /**
@@ -771,49 +701,33 @@ void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
  */
 //[[Rcpp::export]]
 XPtr<tiledb::Filter> libtiledb_filter(XPtr<tiledb::Context> ctx, std::string filter) {
-  try {
-    tiledb_filter_type_t fltr = _string_to_tiledb_filter(filter);
-    return XPtr<tiledb::Filter>(new tiledb::Filter(*ctx.get(), fltr));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb_filter_type_t fltr = _string_to_tiledb_filter(filter);
+  return XPtr<tiledb::Filter>(new tiledb::Filter(*ctx.get(), fltr));
 }
 
 //[[Rcpp::export]]
 std::string libtiledb_filter_type(XPtr<tiledb::Filter> filter) {
-  try {
-    return _tiledb_filter_to_string(filter->filter_type());
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return _tiledb_filter_to_string(filter->filter_type());
 }
 
 //[[Rcpp::export]]
 R_xlen_t libtiledb_filter_get_option(XPtr<tiledb::Filter> filter, std::string filter_option_str) {
-  try {
-    tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
-    if (filter_option == TILEDB_BIT_WIDTH_MAX_WINDOW || filter_option == TILEDB_POSITIVE_DELTA_MAX_WINDOW) {
-      uint32_t value;
-      filter->get_option(filter_option, &value);
-      return static_cast<R_xlen_t>(value);
-    }
-    int value;
+  tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
+  if (filter_option == TILEDB_BIT_WIDTH_MAX_WINDOW || filter_option == TILEDB_POSITIVE_DELTA_MAX_WINDOW) {
+    uint32_t value;
     filter->get_option(filter_option, &value);
     return static_cast<R_xlen_t>(value);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
   }
+  int value;
+  filter->get_option(filter_option, &value);
+  return static_cast<R_xlen_t>(value);
 }
 
 //[[Rcpp::export]]
 void libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value) {
-  try {
-    tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
-    filter->set_option(filter_option, &value);
-    return;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
+  filter->set_option(filter_option, &value);
+  return;
 }
 
 /**
@@ -821,65 +735,44 @@ void libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter
  */
 //[[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_filter_list(XPtr<tiledb::Context> ctx, List filters) {
-  try {
-    XPtr<tiledb::FilterList> filter_list(new tiledb::FilterList(*ctx.get()));
-    // check that external pointers are supported
-    R_xlen_t nfilters = filters.length();
-    if (nfilters > 0) {
-      for (R_xlen_t i=0; i < nfilters; i++)  {
-        SEXP filter = filters[i];
-        if (TYPEOF(filter) != EXTPTRSXP) {
-          std::stringstream errmsg;
-          errmsg << "Invalid filter object at index " <<  i << " (type " << Rcpp::type2name(filter) << ")";
-          throw Rcpp::exception(errmsg.str().c_str());
-        }
-      }
-      for (SEXP f : filters) {
-        auto filter = as<XPtr<tiledb::Filter>>(f);
-        filter_list->add_filter(*filter.get());
+  XPtr<tiledb::FilterList> filter_list(new tiledb::FilterList(*ctx.get()));
+  // check that external pointers are supported
+  R_xlen_t nfilters = filters.length();
+  if (nfilters > 0) {
+    for (R_xlen_t i=0; i < nfilters; i++)  {
+      SEXP filter = filters[i];
+      if (TYPEOF(filter) != EXTPTRSXP) {
+        std::stringstream errmsg;
+        errmsg << "Invalid filter object at index " <<  i << " (type " << Rcpp::type2name(filter) << ")";
+        throw Rcpp::exception(errmsg.str().c_str());
       }
     }
-    return filter_list;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+    for (SEXP f : filters) {
+      auto filter = as<XPtr<tiledb::Filter>>(f);
+      filter_list->add_filter(*filter.get());
+    }
   }
+  return filter_list;
 }
 
 //[[Rcpp::export]]
 void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_sie) {
-  try {
-    filterList->set_max_chunk_size(max_chunk_sie);
-    return;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  filterList->set_max_chunk_size(max_chunk_sie);
 }
 
 //[[Rcpp::export]]
 int libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList) {
-  try {
-    return filterList->max_chunk_size();
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return filterList->max_chunk_size();
 }
 
 //[[Rcpp::export]]
 int libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList) {
-  try {
-    return filterList->nfilters();
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return filterList->nfilters();
 }
 
 //[[Rcpp::export]]
 XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index) {
-  try {
-    return XPtr<tiledb::Filter>(new tiledb::Filter(filterList->filter(filter_index)));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return XPtr<tiledb::Filter>(new tiledb::Filter(filterList->filter(filter_index)));
 }
 
 /**
@@ -887,82 +780,58 @@ XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filte
  */
 //[[Rcpp::export]]
 XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
-                                    std::string name,
-                                    std::string type,
-                                    XPtr<tiledb::FilterList> filter_list,
-                                    int ncells) {
- try {
-   tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
-   if (ncells < 1) {
-     throw Rcpp::exception("ncells must be >= 1");
-   }
-   if (attr_dtype == TILEDB_INT32) {
+                                       std::string name,
+                                       std::string type,
+                                       XPtr<tiledb::FilterList> filter_list,
+                                       int ncells) {
+  tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
+  if (ncells < 1) {
+    throw Rcpp::exception("ncells must be >= 1");
+  }
+  if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
-   } else if (attr_dtype == TILEDB_FLOAT64) {
+  } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
-   } else {
+  } else {
     throw Rcpp::exception("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
-   }
- } catch (tiledb::TileDBError& err) {
-   throw Rcpp::exception(err.what());
- }
+  }
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_attr_name(XPtr<tiledb::Attribute> attr) {
-  try {
-    return attr->name();
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return attr->name();
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
-  try {
-    return _tiledb_datatype_to_string(attr->type());
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return _tiledb_datatype_to_string(attr->type());
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr) {
-  try {
-    return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
 }
+
 // [[Rcpp::export]]
 int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
-  try {
-    unsigned int ncells = attr->cell_val_num();
-    if (ncells > std::numeric_limits<int32_t>::max()) {
-      throw Rcpp::exception("tiledb_attr ncells value not representable as an R integer");
-    }
-    return static_cast<int32_t>(ncells);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  unsigned int ncells = attr->cell_val_num();
+  if (ncells > std::numeric_limits<int32_t>::max()) {
+    throw Rcpp::exception("tiledb_attr ncells value not representable as an R integer");
   }
+  return static_cast<int32_t>(ncells);
 }
 
 //[[Rcpp::export]]
 void libtiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
-  try {
-    attr->dump();
-    return;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  attr->dump();
 }
 
 /**
@@ -993,130 +862,85 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
   }
   auto _cell_order = _string_to_tiledb_layout(cell_order);
   auto _tile_order = _string_to_tiledb_layout(tile_order);
-  try {
-    auto schema = XPtr<tiledb::ArraySchema>(
-      new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), sparse ? TILEDB_SPARSE : TILEDB_DENSE)));
-    schema->set_domain(*domain.get());
-    for (SEXP a : attributes) {
-      auto attr = as<XPtr<tiledb::Attribute>>(a);
-      schema->add_attribute(*attr.get());
-    }
-    schema->set_cell_order(_cell_order);
-    schema->set_tile_order(_tile_order);
-    if (coords_filter_list.isNotNull()) {
-      XPtr<tiledb::FilterList> xptr_coords(coords_filter_list);
-      schema->set_coords_filter_list(*xptr_coords);
-    }
-    if (offsets_filter_list.isNotNull()) {
-      XPtr<tiledb::FilterList> xptr_offsets(offsets_filter_list);
-      schema->set_offsets_filter_list(*xptr_offsets);
-    }
-    schema->check();
-    return schema;
- } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
- }
+  auto schema = XPtr<tiledb::ArraySchema>(
+    new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), sparse ? TILEDB_SPARSE : TILEDB_DENSE)));
+  schema->set_domain(*domain.get());
+  for (SEXP a : attributes) {
+    auto attr = as<XPtr<tiledb::Attribute>>(a);
+    schema->add_attribute(*attr.get());
+  }
+  schema->set_cell_order(_cell_order);
+  schema->set_tile_order(_tile_order);
+  if (coords_filter_list.isNotNull()) {
+    XPtr<tiledb::FilterList> xptr_coords(coords_filter_list);
+    schema->set_coords_filter_list(*xptr_coords);
+  }
+  if (offsets_filter_list.isNotNull()) {
+    XPtr<tiledb::FilterList> xptr_offsets(offsets_filter_list);
+    schema->set_offsets_filter_list(*xptr_offsets);
+  }
+  schema->check();
+  return schema;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Domain> libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
 }
 
 // [[Rcpp::export]]
 List libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    List result;
-    int nattr = schema->attribute_num();
-    for (auto i=0; i < nattr; i++) {
-      auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(i)));
-      result[attr->name()] = attr;
-    }
-    return result;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  List result;
+  int nattr = schema->attribute_num();
+  for (auto i=0; i < nattr; i++) {
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(i)));
+    result[attr->name()] = attr;
   }
+  return result;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    auto order = schema->cell_order();
-    return _tiledb_layout_to_string(order);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  auto order = schema->cell_order();
+  return _tiledb_layout_to_string(order);
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    auto order = schema->tile_order();
-    return _tiledb_layout_to_string(order);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  auto order = schema->tile_order();
+  return _tiledb_layout_to_string(order);
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->coords_filter_list()));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->coords_filter_list()));
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->offsets_filter_list()));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->offsets_filter_list()));
 }
 
 // [[Rcpp::export]]
 bool libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    return (schema->array_type() == TILEDB_SPARSE);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return (schema->array_type() == TILEDB_SPARSE);
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(
     XPtr<tiledb::Context> ctx,std::string uri) {
-  try {
-    return XPtr<tiledb::ArraySchema>(
-      new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
 }
 
 // [[Rcpp::export]]
 void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
-  try {
-    schema->dump();
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  schema->dump();
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema) {
-  try {
-    tiledb::Array::create(uri, *schema.get());
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Array::create(uri, *schema.get());
+  return uri;
 }
 
 // [[Rcpp::export]]
@@ -1124,124 +948,84 @@ XPtr<tiledb::Array> libtiledb_array(XPtr<tiledb::Context> ctx,
                                     std::string uri,
                                     std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
-  try {
-     auto array = XPtr<tiledb::Array>(
+  auto array = XPtr<tiledb::Array>(
       new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
-    return array;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return array;
 }
 
 // [[Rcpp::export]]
 bool libtiledb_array_is_open(XPtr<tiledb::Array> array) {
-  try {
-    return array->is_open();
-  } catch(tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return array->is_open();
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_array_get_uri(XPtr<tiledb::Array> array) {
-  try {
-      return array->uri();
-   } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return array->uri();
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) {
-  try {
-    return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Array> array, std::string query_type) {
   tiledb_query_type_t qtype = _string_to_tiledb_query_type(query_type);
-  try {
-    array->open(qtype);
-    return array;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  array->open(qtype);
+  return array;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_reopen(XPtr<tiledb::Array> array) {
-  try {
-    array->reopen();
-    return array;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  array->reopen();
+  return array;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_close(XPtr<tiledb::Array> array) {
-  try {
-    array->close();
-    return array;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  array->close();
+  return array;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_array_query_type(XPtr<tiledb::Array> array) {
-  try {
-    tiledb_query_type_t qtype = array->query_type();
-    return _tiledb_query_type_to_string(qtype);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb_query_type_t qtype = array->query_type();
+  return _tiledb_query_type_to_string(qtype);
 }
 
 // [[Rcpp::export]]
 List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
   List nonempty_domain;
-  try {
-    auto domain = array->schema().domain();
-    if (domain.type() == TILEDB_INT32) {
-      using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-      auto res = array->non_empty_domain<DType>();
-      for (auto& d: res) {
-        auto dim_name = d.first;
-        auto dim_domain = d.second;
-        nonempty_domain[dim_name] = IntegerVector::create(dim_domain.first,
-                                                          dim_domain.second);
-      }
-    } else if (domain.type() == TILEDB_FLOAT64) {
-      using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-      auto res = array->non_empty_domain<DType>();
-      for (auto& d: res) {
-        auto dim_name = d.first;
-        auto dim_domain = d.second;
-        nonempty_domain[dim_name] = NumericVector::create(dim_domain.first,
-                                                          dim_domain.second);
-      }
-    } else {
-      throw Rcpp::exception("Invalid tiledb_schema domain type");
+  auto domain = array->schema().domain();
+  if (domain.type() == TILEDB_INT32) {
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+    auto res = array->non_empty_domain<DType>();
+    for (auto& d: res) {
+      auto dim_name = d.first;
+      auto dim_domain = d.second;
+      nonempty_domain[dim_name] = IntegerVector::create(dim_domain.first,
+                                                        dim_domain.second);
     }
-    return nonempty_domain;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  } else if (domain.type() == TILEDB_FLOAT64) {
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+    auto res = array->non_empty_domain<DType>();
+    for (auto& d: res) {
+      auto dim_name = d.first;
+      auto dim_domain = d.second;
+      nonempty_domain[dim_name] = NumericVector::create(dim_domain.first,
+                                                        dim_domain.second);
+    }
+  } else {
+    throw Rcpp::exception("Invalid tiledb_schema domain type");
   }
+  return nonempty_domain;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
                                      std::string uri) {
-  try {
-    tiledb::Array::consolidate(*ctx.get(), uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Array::consolidate(*ctx.get(), uri);
+  return uri;
 }
 
 /**
@@ -1252,64 +1036,48 @@ XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
                                  XPtr<tiledb::Array> array,
                                  std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
-  try {
-    auto query = XPtr<tiledb::Query>(
-      new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type)));
-    return query;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  auto query = XPtr<tiledb::Query>(
+    new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type)));
+  return query;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_layout(XPtr<tiledb::Query> query,
                                             std::string layout) {
   auto _layout = _string_to_tiledb_layout(layout);
-  try {
-    query->set_layout(_layout);
-    return query;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  query->set_layout(_layout);
+  return query;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                                  SEXP subarray) {
-  try {
-    if (TYPEOF(subarray) == INTSXP) {
-      IntegerVector sub(subarray);
-      query->set_subarray(sub.begin(), sub.length());
-      return query;
-    } else if (TYPEOF(subarray) == REALSXP) {
-      NumericVector sub(subarray);
-      query->set_subarray(sub.begin(), sub.length());
-      return query;
-    } else {
-      throw Rcpp::exception("invalid subarray datatype");
-    }
-  } catch (tiledb::TileDBError& err){
-    throw Rcpp::exception(err.what());
+  if (TYPEOF(subarray) == INTSXP) {
+    IntegerVector sub(subarray);
+    query->set_subarray(sub.begin(), sub.length());
+    return query;
+  } else if (TYPEOF(subarray) == REALSXP) {
+    NumericVector sub(subarray);
+    query->set_subarray(sub.begin(), sub.length());
+    return query;
+  } else {
+    throw Rcpp::exception("invalid subarray datatype");
   }
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
                                                     SEXP coords) {
-  try {
-    if (TYPEOF(coords) == INTSXP) {
-      IntegerVector sub(coords);
-      query->set_coordinates(sub.begin(), sub.length());
-      return query;
-    } else if (TYPEOF(coords) == REALSXP) {
-      NumericVector sub(coords);
-      query->set_coordinates(sub.begin(), sub.length());
-      return query;
-    } else {
-      throw Rcpp::exception("invalid subarray datatype");
-    }
-  } catch (tiledb::TileDBError& err){
-    throw Rcpp::exception(err.what());
+  if (TYPEOF(coords) == INTSXP) {
+    IntegerVector sub(coords);
+    query->set_coordinates(sub.begin(), sub.length());
+    return query;
+  } else if (TYPEOF(coords) == REALSXP) {
+    NumericVector sub(coords);
+    query->set_coordinates(sub.begin(), sub.length());
+    return query;
+  } else {
+    throw Rcpp::exception("invalid subarray datatype");
   }
 }
 
@@ -1317,48 +1085,36 @@ XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
 XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
                                             std::string attr,
                                             SEXP buffer) {
-  try {
-    if (TYPEOF(buffer) == INTSXP) {
-      IntegerVector vec(buffer);
-      query->set_buffer(attr, vec.begin(), vec.length());
-      return query;
-    } else if (TYPEOF(buffer) == REALSXP) {
-      NumericVector vec(buffer);
-      query->set_buffer(attr, vec.begin(), vec.length());
-      return query;
-    } else if (TYPEOF(buffer) == LGLSXP) {
-      LogicalVector vec(buffer);
-      query->set_buffer(attr, vec.begin(), vec.length());
-      return query;
-    } else {
-      std::stringstream errmsg;
-      errmsg << "Invalid attribute buffer type for attribute "
-             << "\""<< attr << "\": " << Rcpp::type2name(buffer);
-      throw Rcpp::exception(errmsg.str().c_str());
-    }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  if (TYPEOF(buffer) == INTSXP) {
+    IntegerVector vec(buffer);
+    query->set_buffer(attr, vec.begin(), vec.length());
+    return query;
+  } else if (TYPEOF(buffer) == REALSXP) {
+    NumericVector vec(buffer);
+    query->set_buffer(attr, vec.begin(), vec.length());
+    return query;
+  } else if (TYPEOF(buffer) == LGLSXP) {
+    LogicalVector vec(buffer);
+    query->set_buffer(attr, vec.begin(), vec.length());
+    return query;
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Invalid attribute buffer type for attribute "
+           << "\""<< attr << "\": " << Rcpp::type2name(buffer);
+    throw Rcpp::exception(errmsg.str().c_str());
   }
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {
-  try {
-    query->submit();
-    return query;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  query->submit();
+  return query;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_finalize(XPtr<tiledb::Query> query) {
-  try {
-    query->finalize();
-    return query;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  query->finalize();
+  return query;
 }
 
 std::string _query_status_to_string(tiledb::Query::Status status) {
@@ -1379,23 +1135,15 @@ std::string _query_status_to_string(tiledb::Query::Status status) {
 
 // [[Rcpp::export]]
 std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
-  try {
-    tiledb::Query::Status status = query->query_status();
-    return _query_status_to_string(status);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Query::Status status = query->query_status();
+  return _query_status_to_string(status);
 }
 
 // [[Rcpp::export]]
 R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
                                                 std::string attribute) {
-  try {
-    R_xlen_t nelem = query->result_buffer_elements()[attribute].second;
-    return nelem;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  R_xlen_t nelem = query->result_buffer_elements()[attribute].second;
+  return nelem;
 }
 
 /**
@@ -1446,23 +1194,19 @@ std::string libtiledb_coords() {
 R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array,
                                              SEXP subarray,
                                              std::string attribute) {
-  try {
-    if (TYPEOF(subarray) == INTSXP) {
-      auto sub = as<std::vector<int32_t>>(subarray);
-      auto max_elements = array->max_buffer_elements(sub);
-      return max_elements[attribute].second;
-    } else if (TYPEOF(subarray) == REALSXP) {
-      auto sub = as<std::vector<double>>(subarray);
-      auto max_elements = array->max_buffer_elements(sub);
-      return max_elements[attribute].second;
-    } else {
-      std::stringstream errmsg;
-      errmsg << "Invalid subarray buffer type for domain :"
-             << Rcpp::type2name(subarray);
-      throw Rcpp::exception(errmsg.str().c_str());
-    }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  if (TYPEOF(subarray) == INTSXP) {
+    auto sub = as<std::vector<int32_t>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    return max_elements[attribute].second;
+  } else if (TYPEOF(subarray) == REALSXP) {
+    auto sub = as<std::vector<double>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    return max_elements[attribute].second;
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Invalid subarray buffer type for domain :"
+           << Rcpp::type2name(subarray);
+    throw Rcpp::exception(errmsg.str().c_str());
   }
 }
 
@@ -1471,12 +1215,8 @@ R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array,
  */
 // [[Rcpp::export]]
 std::string libtiledb_group_create(XPtr<tiledb::Context> ctx, std::string uri) {
-  try {
-    tiledb::create_group(*ctx.get(), uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::create_group(*ctx.get(), uri);
+  return uri;
 }
 
 std::string _object_type_to_string(tiledb::Object::Type otype) {
@@ -1493,32 +1233,20 @@ std::string _object_type_to_string(tiledb::Object::Type otype) {
 
 // [[Rcpp::export]]
 std::string libtiledb_object_type(XPtr<tiledb::Context> ctx, std::string uri) {
-  try {
-    auto obj = tiledb::Object::object(*ctx.get(), uri);
-    return _object_type_to_string(obj.type());
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  auto obj = tiledb::Object::object(*ctx.get(), uri);
+  return _object_type_to_string(obj.type());
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_object_remove(XPtr<tiledb::Context> ctx, std::string uri) {
-  try {
-    tiledb::Object::remove(*ctx.get(), uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Object::remove(*ctx.get(), uri);
+  return uri;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_object_move(XPtr<tiledb::Context> ctx, std::string old_uri, std::string new_uri) {
-  try {
-    tiledb::Object::move(*ctx.get(), old_uri, new_uri);
-    return new_uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Object::move(*ctx.get(), old_uri, new_uri);
+  return new_uri;
 }
 
 tiledb::Object::Type _string_to_object_type(std::string otype) {
@@ -1536,37 +1264,33 @@ DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx,
                               std::string uri,
                               std::string order,
                               bool recursive = false) {
-  try {
-    tiledb_walk_order_t walk_order;
-    if (recursive) {
-      if (order == "PREORDER") {
-        walk_order = TILEDB_PREORDER;
-      } else if (order == "POSTORDER") {
-        walk_order = TILEDB_POSTORDER;
-      } else {
-        throw Rcpp::exception("invalid recursive walk order, must be \"PREORDER\" or \"POSTORDER\"");
-      }
-    }
-    std::vector<std::string> uris;
-    std::vector<std::string> types;
-    tiledb::ObjectIter obj_iter(*ctx.get(), uri);
-    if (recursive) {
-      obj_iter.set_recursive(walk_order);
+  tiledb_walk_order_t walk_order;
+  if (recursive) {
+    if (order == "PREORDER") {
+      walk_order = TILEDB_PREORDER;
+    } else if (order == "POSTORDER") {
+      walk_order = TILEDB_POSTORDER;
     } else {
-      obj_iter.set_non_recursive();
+      throw Rcpp::exception("invalid recursive walk order, must be \"PREORDER\" or \"POSTORDER\"");
     }
-    for (const auto& object : obj_iter) {
-      uris.push_back(object.uri());
-      types.push_back(_object_type_to_string(object.type()));
-    }
-    Rcpp::StringVector r_uris(uris.size());
-    r_uris = uris;
-    Rcpp::StringVector r_types(types.size());
-    r_types = types;
-    return Rcpp::DataFrame::create(_["TYPE"] = r_types, _["URI"] = r_uris);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
   }
+  std::vector<std::string> uris;
+  std::vector<std::string> types;
+  tiledb::ObjectIter obj_iter(*ctx.get(), uri);
+  if (recursive) {
+    obj_iter.set_recursive(walk_order);
+  } else {
+    obj_iter.set_non_recursive();
+  }
+  for (const auto& object : obj_iter) {
+    uris.push_back(object.uri());
+    types.push_back(_object_type_to_string(object.type()));
+  }
+  Rcpp::StringVector r_uris(uris.size());
+  r_uris = uris;
+  Rcpp::StringVector r_types(types.size());
+  r_types = types;
+  return Rcpp::DataFrame::create(_["TYPE"] = r_types, _["URI"] = r_uris);
 }
 
 /**
@@ -1575,159 +1299,99 @@ DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx,
 // [[Rcpp::export]]
 XPtr<tiledb::VFS> tiledb_vfs(XPtr<tiledb::Context> ctx,
                              Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
-  try {
-    if (config.isNull()) {
-      return XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get()));
-    } else {
-      XPtr<tiledb::Config> config_xptr(config);
-      return XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get(), *config_xptr.get()));
-    }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+  if (config.isNull()) {
+    return XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get()));
+  } else {
+    XPtr<tiledb::Config> config_xptr(config);
+    return XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get(), *config_xptr.get()));
   }
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_create_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    vfs->create_bucket(uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->create_bucket(uri);
+  return uri;
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_remove_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    vfs->remove_bucket(uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->remove_bucket(uri);
+  return uri;
 }
 
 // [[Rcpp::export]]
 bool tiledb_vfs_is_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    return vfs->is_bucket(uri);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return vfs->is_bucket(uri);
 }
 
 // [[Rcpp::export]]
 bool tiledb_vfs_is_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    return vfs->is_empty_bucket(uri);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return vfs->is_empty_bucket(uri);
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    vfs->empty_bucket(uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->empty_bucket(uri);
+  return uri;
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_create_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    vfs->create_dir(uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->create_dir(uri);
+  return uri;
 }
 
 // [[Rcpp::export]]
 bool tiledb_vfs_is_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    return vfs->is_dir(uri);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return vfs->is_dir(uri);
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_remove_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    vfs->remove_dir(uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->remove_dir(uri);
+  return uri;
 }
 
 // [[Rcpp::export]]
 bool tiledb_vfs_is_file(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    return vfs->is_file(uri);
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  return vfs->is_file(uri);
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_remove_file(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    vfs->remove_file(uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->remove_file(uri);
+  return uri;
 }
 
 // [[Rcpp::export]]
 R_xlen_t tiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::string uri) {
- try {
-    uint64_t size = vfs->file_size(uri);
-    if (size > std::numeric_limits<R_xlen_t>::max()) {
-      throw Rcpp::exception("file size is greater than maximum R integer");
-    }
-    return static_cast<R_xlen_t>(size);
- } catch (tiledb::TileDBError& err) {
-   throw Rcpp::exception(err.what());
- }
+  uint64_t size = vfs->file_size(uri);
+  if (size > std::numeric_limits<R_xlen_t>::max()) {
+    throw Rcpp::exception("file size is greater than maximum R integer");
+  }
+  return static_cast<R_xlen_t>(size);
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_move_file(XPtr<tiledb::VFS> vfs,
                                  std::string old_uri,
                                  std::string new_uri) {
-  try {
-    vfs->move_file(old_uri, new_uri);
-    return new_uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->move_file(old_uri, new_uri);
+  return new_uri;
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_move_dir(XPtr<tiledb::VFS> vfs,
                                 std::string old_uri,
                                 std::string new_uri) {
-  try {
-    vfs->move_dir(old_uri, new_uri);
-    return new_uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->move_dir(old_uri, new_uri);
+  return new_uri;
 }
 
 // [[Rcpp::export]]
 std::string tiledb_vfs_touch(XPtr<tiledb::VFS> vfs, std::string uri) {
-  try {
-    vfs->touch(uri);
-    return uri;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  vfs->touch(uri);
+  return uri;
 }
 
 /**
@@ -1736,69 +1400,46 @@ std::string tiledb_vfs_touch(XPtr<tiledb::VFS> vfs, std::string uri) {
 
 // [[Rcpp::export]]
 void libtiledb_stats_enable() {
-  try {
-    tiledb::Stats::enable();
-    return;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Stats::enable();
 }
 
 // [[Rcpp::export]]
 void libtiledb_stats_disable() {
-  try {
-    tiledb::Stats::disable();
-    return;
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
-  }
+  tiledb::Stats::disable();
 }
 
 // [[Rcpp::export]]
 void libtiledb_stats_dump(std::string path) {
   FILE* fptr = nullptr;
-  try {
-    fptr = fopen(path.c_str(), "w");
-    if (fptr == nullptr) {
-      throw Rcpp::exception("error opening stats dump file for writing");
-    }
-    tiledb::Stats::dump(fptr);
-  } catch (std::exception& err) {
-    if (fptr != nullptr) {
-      fclose(fptr);
-    }
-    throw Rcpp::exception(err.what());
+  fptr = fopen(path.c_str(), "w");
+  if (fptr == nullptr) {
+    throw Rcpp::exception("error opening stats dump file for writing");
   }
+  tiledb::Stats::dump(fptr);
   fclose(fptr);
-  return;
 }
 
 // [[Rcpp::export]]
 void libtiledb_stats_print() {
   // TODO: look up the proper way to do this in R
   // Done -- at least in a first pass
-  try {
-    // get a temporary filename from the per-session directory R uses
-    Rcpp::Function rfunc("tempfile");
-    std::string filename = Rcpp::as<std::string>(rfunc());
-    // dump to the file
-    libtiledb_stats_dump(filename);
+  // get a temporary filename from the per-session directory R uses
+  Rcpp::Function rfunc("tempfile");
+  std::string filename = Rcpp::as<std::string>(rfunc());
+  // dump to the file
+  libtiledb_stats_dump(filename);
 
-    // and read and print from the file
-    std::ifstream f(filename);
-    std::string line;
-    if (f.is_open()) {
-      while (getline(f, line)) {
-        Rprintf("%s\n", line.c_str());
-      }
-      f.close();
+  // and read and print from the file
+  std::ifstream f(filename);
+  std::string line;
+  if (f.is_open()) {
+    while (getline(f, line)) {
+      Rprintf("%s\n", line.c_str());
     }
-    // remove tempfile (though R would too at end of session)
-    if (unlink(filename.c_str()) == -1) {
-      Rcpp::stop("Error removing temporary file ", filename);
-    }
-
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+    f.close();
+  }
+  // remove tempfile (though R would too at end of session)
+  if (unlink(filename.c_str()) == -1) {
+    Rcpp::stop("Error removing temporary file ", filename);
   }
 }
