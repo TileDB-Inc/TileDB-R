@@ -8,10 +8,12 @@
 
 <title>Creates a TileDB group object at given uri path — tiledb_group_create • tiledb</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -32,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Creates a TileDB group object at given uri path — tiledb_group_create" />
 
+<meta property="og:title" content="Creates a TileDB group object at given uri path — tiledb_group_create" />
 <meta property="og:description" content="Creates a TileDB group object at given uri path" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -82,7 +85,6 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R">
@@ -109,13 +111,11 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Creates a TileDB group object at given uri path</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_group_create</span>(<span class='no'>uri</span>, <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='kw pkg'>tiledb</span><span class='kw ns'>:::</span><span class='no'>ctx</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>tiledb_group_create</span>(<span class='no'>uri</span>, <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='kw pkg'>tiledb</span><span class='kw ns'>:::</span><span class='fu'>getContext</span>())</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -125,27 +125,24 @@
     </tr>
     <tr>
       <th>ctx</th>
-      <td><p>tiledb_ctx</p></td>
+      <td><p>tiledb_ctx object (optional)</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>uri of created group</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>pth</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>()
-<span class='fu'>tiledb_group_create</span>(<span class='no'>pth</span>)</div><div class='output co'>#&gt; [1] "/tmp/RtmpAIBhQV"</div><div class='input'><span class='fu'><a href='tiledb_object_type.html'>tiledb_object_type</a></span>(<span class='no'>pth</span>)</div><div class='output co'>#&gt; [1] "GROUP"</div><div class='input'>
+<span class='fu'>tiledb_group_create</span>(<span class='no'>pth</span>)</div><div class='output co'>#&gt; [1] "/tmp/RtmpHnmnds"</div><div class='input'><span class='fu'><a href='tiledb_object_type.html'>tiledb_object_type</a></span>(<span class='no'>pth</span>)</div><div class='output co'>#&gt; [1] "ARRAY"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

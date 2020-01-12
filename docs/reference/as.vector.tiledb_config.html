@@ -8,10 +8,12 @@
 
 <title>Convert a <code>tiledb_config</code> object to a R vector — as.vector.tiledb_config • tiledb</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -32,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Convert a <code>tiledb_config</code> object to a R vector — as.vector.tiledb_config" />
 
+<meta property="og:title" content="Convert a <code>tiledb_config</code> object to a R vector — as.vector.tiledb_config" />
 <meta property="og:description" content="Convert a tiledb_config object to a R vector" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -82,7 +85,6 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R">
@@ -109,14 +111,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Convert a <code>tiledb_config</code> object to a R vector</p>
-    
     </div>
 
     <pre class="usage"><span class='co'># S3 method for tiledb_config</span>
 <span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span>(<span class='no'>x</span>, <span class='kw'>mode</span> <span class='kw'>=</span> <span class='st'>"any"</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -124,12 +124,15 @@
       <th>x</th>
       <td><p><code>tiledb_config</code> object</p></td>
     </tr>
+    <tr>
+      <th>mode</th>
+      <td><p>Character value <code>"any"</code>, currently unused</p></td>
+    </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a character vector of config parameter names, values</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span>()
@@ -154,7 +157,7 @@
 #&gt;            sm.num_writer_threads               sm.tile_cache_size 
 #&gt;                              "1"                       "10000000" 
 #&gt;        vfs.file.enable_filelocks        vfs.file.max_parallel_ops 
-#&gt;                           "true"                              "8" 
+#&gt;                           "true"                             "12" 
 #&gt;  vfs.hdfs.kerb_ticket_cache_path           vfs.hdfs.name_node_uri 
 #&gt;                               ""                               "" 
 #&gt;                vfs.hdfs.username                vfs.min_batch_gap 
@@ -162,7 +165,7 @@
 #&gt;               vfs.min_batch_size            vfs.min_parallel_size 
 #&gt;                       "20971520"                       "10485760" 
 #&gt;                  vfs.num_threads         vfs.s3.aws_access_key_id 
-#&gt;                              "8"                               "" 
+#&gt;                             "12"                               "" 
 #&gt;     vfs.s3.aws_secret_access_key                   vfs.s3.ca_file 
 #&gt;                               ""                               "" 
 #&gt;                   vfs.s3.ca_path         vfs.s3.connect_max_tries 
@@ -172,7 +175,7 @@
 #&gt;         vfs.s3.endpoint_override             vfs.s3.logging_level 
 #&gt;                               ""                            "Off" 
 #&gt;          vfs.s3.max_parallel_ops       vfs.s3.multipart_part_size 
-#&gt;                              "8"                        "5242880" 
+#&gt;                             "12"                        "5242880" 
 #&gt;                vfs.s3.proxy_host            vfs.s3.proxy_password 
 #&gt;                               ""                               "" 
 #&gt;                vfs.s3.proxy_port              vfs.s3.proxy_scheme 
@@ -191,9 +194,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
