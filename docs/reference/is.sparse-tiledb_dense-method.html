@@ -19,10 +19,12 @@
 #' @export
 setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.sparse,tiledb_dense-method • tiledb</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -43,6 +45,7 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.spa
 
 
 
+
 <meta property="og:title" content="#' Reopens a TileDB array an opened tiledb array
 #'
 #' Reopening an array is useful when the array got updated after it got opened
@@ -55,13 +58,13 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.spa
 #' @return the reopened array object
 #' @export
 setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.sparse,tiledb_dense-method" />
-
 <meta property="og:description" content="#' @export
 setMethod(&quot;reopen&quot;, &quot;tiledb_dense&quot;, function(object) 
 libtiledb_array_reopen(object@ptr)
 return(object)
 )" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -108,7 +111,6 @@ return(object)
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R">
@@ -146,18 +148,16 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</h1>
     </div>
 
     <div class="ref-description">
-    
     <p>#' @export
 setMethod("reopen", "tiledb_dense", function(object) 
 libtiledb_array_reopen(object@ptr)
 return(object)
 )</p>
-    
     </div>
 
     <pre class="usage"><span class='co'># S4 method for tiledb_dense</span>
-<span class='fu'>is.sparse</span>(<span class='no'>object</span>)</pre>
-    
+<span class='fu'><a href='generics.html'>is.sparse</a></span>(<span class='no'>object</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -165,12 +165,15 @@ return(object)
       <th>object</th>
       <td><p>tiledb_dense</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Extra parameter for method signature, currently unused.</p></td>
+    </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>FALSE</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>#' Closes a tiledb array object
@@ -183,18 +186,15 @@ libtiledb_array_close(conn@ptr)
 return(conn);
 
 Returns true is if the array or array_schema is sparse</p>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-          </ul>
+    </ul>
 
   </div>
 </div>

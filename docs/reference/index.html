@@ -8,10 +8,12 @@
 
 <title>Function reference • tiledb</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -32,7 +34,9 @@
 
 
 
+
 <meta property="og:title" content="Function reference" />
+
 
 
 
@@ -79,7 +83,6 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R">
@@ -121,9 +124,27 @@
       <tr>
         
         <td>
+          <p><code><a href="tiledb_ctx-class.html">tiledb_ctx-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB context</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_ctx.html">tiledb_ctx()</a></code> </p>
         </td>
         <td><p>Creates a <code>tiledb_ctx</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_ctx_set_default_tags.html">tiledb_ctx_set_default_tags()</a></code> </p>
+        </td>
+        <td><p>Sets default context tags</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_ctx_set_tag.html">tiledb_ctx_set_tag()</a></code> </p>
+        </td>
+        <td><p>Sets a string:string "tag" on the Ctx</p></td>
       </tr><tr>
         
         <td>
@@ -139,6 +160,12 @@
         </th>
       </tr>
       <tr>
+        
+        <td>
+          <p><code><a href="tiledb_config-class.html">tiledb_config-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB configuration</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="tiledb_config.html">tiledb_config()</a></code> </p>
@@ -185,9 +212,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_dense-class.html">tiledb_dense-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB dense array</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_dense.html">tiledb_dense()</a></code> </p>
         </td>
         <td><p>Constructs a tiledb_dense object backed by a persisted tiledb array uri</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_sparse-class.html">tiledb_sparse-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB sparse array</p></td>
       </tr><tr>
         
         <td>
@@ -205,6 +244,12 @@
       <tr>
         
         <td>
+          <p><code><a href="tiledb_array_schema-class.html">tiledb_array_schema-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for the TileDB array schema</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_array_schema.html">tiledb_array_schema()</a></code> </p>
         </td>
         <td><p>Constructs a <code>tiledb_array_schema</code> object</p></td>
@@ -217,6 +262,12 @@
         </th>
       </tr>
       <tr>
+        
+        <td>
+          <p><code><a href="tiledb_attr-class.html">tiledb_attr-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB attribute</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="tiledb_attr.html">tiledb_attr()</a></code> </p>
@@ -240,6 +291,12 @@
           <p><code><a href="attrs-tiledb_array_schema-numeric-method.html">attrs(<i>&lt;tiledb_array_schema&gt;</i>,<i>&lt;numeric&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns a <code>tiledb_attr</code> object associated with the <code>tiledb_array_schema</code> with a given index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+        </td>
+        <td><p>Generic Methods</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -251,6 +308,12 @@
       <tr>
         
         <td>
+          <p><code><a href="tiledb_filter-class.html">tiledb_filter-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB filter</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_filter.html">tiledb_filter()</a></code> </p>
         </td>
         <td><p>Constructs a <code>tiledb_filter</code> object</p></td>
@@ -260,6 +323,12 @@
           <p><code><a href="tiledb_filter_get_option.html">tiledb_filter_get_option()</a></code> </p>
         </td>
         <td><p>Returns the filter's option</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_filter_list-class.html">tiledb_filter_list-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB filter list</p></td>
       </tr><tr>
         
         <td>
@@ -290,6 +359,12 @@
           <p><code><a href="filter_list-tiledb_attr-method.html">filter_list(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+        </td>
+        <td><p>Generic Methods</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -421,7 +496,13 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="is.anonymous.tiledb_attr.html">is.anonymous(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+        </td>
+        <td><p>Generic Methods</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="is.anonymous.html">is.anonymous()</a></code> </p>
         </td>
         <td><p>Returns TRUE if the tiledb_dim is anonymous</p></td>
       </tr><tr>
@@ -459,6 +540,12 @@
 #' @return the reopened array object
 #' @export
 setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="is.sparse-tiledb_sparse-method.html">is.sparse(<i>&lt;tiledb_sparse&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Check if object is sparse</p></td>
       </tr><tr>
         
         <td>
@@ -504,6 +591,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="schema-tiledb_sparse-method.html">schema(<i>&lt;tiledb_sparse&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Return a schema from a sparse array</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="set_max_chunk_size-tiledb_filter_list-numeric-method.html">set_max_chunk_size(<i>&lt;tiledb_filter_list&gt;</i>,<i>&lt;numeric&gt;</i>)</a></code> </p>
         </td>
         <td><p>Set the filter_list's max_chunk_size</p></td>
@@ -522,15 +615,39 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="sub-tiledb_dense-method.html">`[`(<i>&lt;tiledb_dense&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Gets a dense array value</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="sub-tiledb_filter_list-method.html">`[`(<i>&lt;tiledb_filter_list&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the filter at given index</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="sub-tiledb_sparse-method.html">`[`(<i>&lt;tiledb_sparse&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Gets a sparse array value</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="subset-tiledb_config-method.html">`[<-`(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
         </td>
         <td><p>Sets a config parameter value</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="subset-tiledb_dense-method.html">`[<-`(<i>&lt;tiledb_dense&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets a dense array value</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="subset-tiledb_sparse-method.html">`[<-`(<i>&lt;tiledb_sparse&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets a sparse array value</p></td>
       </tr><tr>
         
         <td>
@@ -558,15 +675,33 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_array_schema-class.html">tiledb_array_schema-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for the TileDB array schema</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_array_schema.html">tiledb_array_schema()</a></code> </p>
         </td>
         <td><p>Constructs a <code>tiledb_array_schema</code> object</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_attr-class.html">tiledb_attr-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB attribute</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_attr.html">tiledb_attr()</a></code> </p>
         </td>
         <td><p>Contructs a <code>tiledb_attr</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_config-class.html">tiledb_config-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB configuration</p></td>
       </tr><tr>
         
         <td>
@@ -588,9 +723,33 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_ctx-class.html">tiledb_ctx-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB context</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_ctx.html">tiledb_ctx()</a></code> </p>
         </td>
         <td><p>Creates a <code>tiledb_ctx</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_ctx_set_default_tags.html">tiledb_ctx_set_default_tags()</a></code> </p>
+        </td>
+        <td><p>Sets default context tags</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_ctx_set_tag.html">tiledb_ctx_set_tag()</a></code> </p>
+        </td>
+        <td><p>Sets a string:string "tag" on the Ctx</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_dense-class.html">tiledb_dense-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB dense array</p></td>
       </tr><tr>
         
         <td>
@@ -600,15 +759,33 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_dim-class.html">tiledb_dim-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB dimension object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_dim.html">tiledb_dim()</a></code> </p>
         </td>
         <td><p>Contructs a <code>tiledb_dim</code> object</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_domain-class.html">tiledb_domain-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB domain</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_domain.html">tiledb_domain()</a></code> </p>
         </td>
         <td><p>Constructs a <code>tiledb_domain</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_filter-class.html">tiledb_filter-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB filter</p></td>
       </tr><tr>
         
         <td>
@@ -621,6 +798,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
           <p><code><a href="tiledb_filter_get_option.html">tiledb_filter_get_option()</a></code> </p>
         </td>
         <td><p>Returns the filter's option</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_filter_list-class.html">tiledb_filter_list-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB filter list</p></td>
       </tr><tr>
         
         <td>
@@ -702,6 +885,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_sparse-class.html">tiledb_sparse-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB sparse array</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_sparse.html">tiledb_sparse()</a></code> </p>
         </td>
         <td><p>Constructs a tiledb_sparse object backed by a persisted tiledb array uri</p></td>
@@ -741,6 +930,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
           <p><code><a href="tiledb_version.html">tiledb_version()</a></code> </p>
         </td>
         <td><p>The version of the libtiledb library</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="version.html">version()</a></code> </p>
+        </td>
+        <td><p>The version of the R library</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -752,9 +947,21 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       <tr>
         
         <td>
+          <p><code><a href="tiledb_domain-class.html">tiledb_domain-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB domain</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_domain.html">tiledb_domain()</a></code> </p>
         </td>
         <td><p>Constructs a <code>tiledb_domain</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+        </td>
+        <td><p>Generic Methods</p></td>
       </tr><tr>
         
         <td>
@@ -782,6 +989,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
         </th>
       </tr>
       <tr>
+        
+        <td>
+          <p><code><a href="tiledb_dim-class.html">tiledb_dim-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB dimension object</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="tiledb_dim.html">tiledb_dim()</a></code> </p>
@@ -817,6 +1030,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
           <p><code><a href="dimensions-tiledb_domain-method.html">dimensions(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns a list of the tiledb_domain dimension objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+        </td>
+        <td><p>Generic Methods</p></td>
       </tr>
     </tbody><tbody>
       <tr>

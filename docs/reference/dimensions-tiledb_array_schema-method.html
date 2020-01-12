@@ -8,10 +8,12 @@
 
 <title>Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code> — dimensions,tiledb_array_schema-method • tiledb</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -32,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code> — dimensions,tiledb_array_schema-method" />
 
+<meta property="og:title" content="Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code> — dimensions,tiledb_array_schema-method" />
 <meta property="og:description" content="Returns a list of tiledb_dim objects associated with the tiledb_array_schema" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -82,7 +85,6 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R">
@@ -109,14 +111,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Returns a list of <code>tiledb_dim</code> objects associated with the <code>tiledb_array_schema</code></p>
-    
     </div>
 
     <pre class="usage"><span class='co'># S4 method for tiledb_array_schema</span>
-<span class='fu'>dimensions</span>(<span class='no'>object</span>)</pre>
-    
+<span class='fu'><a href='generics.html'>dimensions</a></span>(<span class='no'>object</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -124,29 +124,33 @@
       <th>object</th>
       <td><p>tiledb_array_schema</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Extra parameter for method signature, currently unused.</p></td>
+    </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a list of tiledb_dim objects</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>dom</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_domain.html'>tiledb_domain</a></span>(<span class='kw'>dims</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span>(<span class='st'>"d1"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1L</span>, <span class='fl'>100L</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>),
                                    <span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span>(<span class='st'>"d2"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1L</span>, <span class='fl'>50L</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>)))
-<span class='no'>sch</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_array_schema.html'>tiledb_array_schema</a></span>(<span class='no'>dom</span>, <span class='kw'>attrs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span>(<span class='st'>"a1"</span>)))</div><div class='output co'>#&gt; <span class='error'>Error in libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells): Unknown TileDB type ""</span></div><div class='input'><span class='fu'>dimensions</span>(<span class='no'>dom</span>)</div><div class='output co'>#&gt; [[1]]
+<span class='no'>sch</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_array_schema.html'>tiledb_array_schema</a></span>(<span class='no'>dom</span>, <span class='kw'>attrs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span>(<span class='st'>"a1"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>)))
+<span class='fu'><a href='generics.html'>dimensions</a></span>(<span class='no'>dom</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; An object of class "tiledb_dim"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x55c002e08e30&gt;
+#&gt; &lt;pointer: 0x5605222f1300&gt;
 #&gt; 
 #&gt; 
 #&gt; [[2]]
 #&gt; An object of class "tiledb_dim"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x55c00337ad80&gt;
+#&gt; &lt;pointer: 0x56051fe53e00&gt;
 #&gt; 
 #&gt; </div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'>dimensions</span>(<span class='no'>dom</span>), <span class='no'>name</span>)</div><div class='output co'>#&gt; [[1]]
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='fu'><a href='generics.html'>dimensions</a></span>(<span class='no'>dom</span>), <span class='no'>name</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; [1] "d1"
 #&gt; 
 #&gt; [[2]]
@@ -158,9 +162,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

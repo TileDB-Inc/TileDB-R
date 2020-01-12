@@ -8,10 +8,12 @@
 
 <title>Constructs a <code>tiledb_filter</code> object — tiledb_filter • tiledb</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -32,8 +34,8 @@
 
 
 
-<meta property="og:title" content="Constructs a <code>tiledb_filter</code> object — tiledb_filter" />
 
+<meta property="og:title" content="Constructs a <code>tiledb_filter</code> object — tiledb_filter" />
 <meta property="og:description" content="Available filters:
 &quot;NONE&quot;
 &quot;GZIP&quot;
@@ -49,6 +51,7 @@
 
 " />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -95,7 +98,6 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R">
@@ -122,7 +124,6 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Available filters:</p><ul>
 <li><p>"NONE"</p></li>
 <li><p>"GZIP"</p></li>
@@ -137,11 +138,10 @@
 <li><p>"POSITIVE_DELTA"</p></li>
 </ul>
 
-    
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_filter</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"NONE"</span>, <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='kw pkg'>tiledb</span><span class='kw ns'>:::</span><span class='no'>ctx</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>tiledb_filter</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"NONE"</span>, <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='kw pkg'>tiledb</span><span class='kw ns'>:::</span><span class='fu'>getContext</span>())</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -151,24 +151,22 @@
     </tr>
     <tr>
       <th>ctx</th>
-      <td><p>tiledb_ctx object</p></td>
+      <td><p>tiledb_ctx object (optional)</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>tiledb_filter object</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Valid compression options vary depending on the filter used,
 consult the TileDB docs for more information.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>tiledb_filter</span>(<span class='st'>"ZSTD"</span>)</div><div class='output co'>#&gt; An object of class "tiledb_filter"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x55c0029fa270&gt;
+#&gt; &lt;pointer: 0x560520733810&gt;
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
@@ -176,11 +174,8 @@ consult the TileDB docs for more information.</p>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

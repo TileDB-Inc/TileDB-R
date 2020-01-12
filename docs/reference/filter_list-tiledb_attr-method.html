@@ -8,10 +8,12 @@
 
 <title>Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code> — filter_list,tiledb_attr-method • tiledb</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
@@ -32,10 +34,11 @@
 
 
 
-<meta property="og:title" content="Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code> — filter_list,tiledb_attr-method" />
 
+<meta property="og:title" content="Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code> — filter_list,tiledb_attr-method" />
 <meta property="og:description" content="Returns the tiledb_filter_list object associated with the given tiledb_attr" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -82,7 +85,6 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R">
@@ -109,14 +111,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code></p>
-    
     </div>
 
     <pre class="usage"><span class='co'># S4 method for tiledb_attr</span>
-<span class='fu'>filter_list</span>(<span class='no'>object</span>)</pre>
-    
+<span class='fu'><a href='generics.html'>filter_list</a></span>(<span class='no'>object</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -125,23 +125,24 @@
       <td><p>tiledb_attr</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a tiledb_filter_list object</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>attr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span>(<span class='kw'>filter_list</span><span class='kw'>=</span><span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>))))</div><div class='output co'>#&gt; <span class='error'>Error in libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells): Unknown TileDB type ""</span></div><div class='input'><span class='fu'>filter_list</span>(<span class='no'>attr</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list("function"), new("standardGeneric", .Data = function (object,     ...) standardGeneric("filter_list"), generic = structure("filter_list", package = "tiledb"),     package = "tiledb", group = list(), valueClass = character(0),     signature = "object", default = NULL, skeleton = (function (object,         ...)     stop("invalid call in method dispatch to 'filter_list' (no default method)",         domain = NA))(object, ...)), &lt;environment&gt;): unable to find an inherited method for function ‘filter_list’ for signature ‘"function"’</span></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>attr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>, <span class='kw'>filter_list</span><span class='kw'>=</span><span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>))))
+<span class='fu'><a href='generics.html'>filter_list</a></span>(<span class='no'>attr</span>)</div><div class='output co'>#&gt; An object of class "tiledb_filter_list"
+#&gt; Slot "ptr":
+#&gt; &lt;pointer: 0x560520894400&gt;
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
