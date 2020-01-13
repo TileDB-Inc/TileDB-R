@@ -6,51 +6,51 @@
 
 using namespace Rcpp;
 
-// has_array_metadata
-bool has_array_metadata(const std::string array_name, const std::string key);
-RcppExport SEXP _tiledb_has_array_metadata(SEXP array_nameSEXP, SEXP keySEXP) {
+// has_metadata
+bool has_metadata(const std::string array_name, const std::string key);
+RcppExport SEXP _tiledb_has_metadata(SEXP array_nameSEXP, SEXP keySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
     Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
-    rcpp_result_gen = Rcpp::wrap(has_array_metadata(array_name, key));
+    rcpp_result_gen = Rcpp::wrap(has_metadata(array_name, key));
     return rcpp_result_gen;
 END_RCPP
 }
-// num_array_metadata
-int num_array_metadata(const std::string array_name);
-RcppExport SEXP _tiledb_num_array_metadata(SEXP array_nameSEXP) {
+// num_metadata
+int num_metadata(const std::string array_name);
+RcppExport SEXP _tiledb_num_metadata(SEXP array_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(num_array_metadata(array_name));
+    rcpp_result_gen = Rcpp::wrap(num_metadata(array_name));
     return rcpp_result_gen;
 END_RCPP
 }
-// read_array_metadata
-SEXP read_array_metadata(const std::string array_name, const std::string key);
-RcppExport SEXP _tiledb_read_array_metadata(SEXP array_nameSEXP, SEXP keySEXP) {
+// read_metadata
+SEXP read_metadata(const std::string array_name, const std::string key);
+RcppExport SEXP _tiledb_read_metadata(SEXP array_nameSEXP, SEXP keySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
     Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
-    rcpp_result_gen = Rcpp::wrap(read_array_metadata(array_name, key));
+    rcpp_result_gen = Rcpp::wrap(read_metadata(array_name, key));
     return rcpp_result_gen;
 END_RCPP
 }
-// write_array_metadata
-bool write_array_metadata(const std::string array_name, const std::string key, const SEXP obj);
-RcppExport SEXP _tiledb_write_array_metadata(SEXP array_nameSEXP, SEXP keySEXP, SEXP objSEXP) {
+// write_metadata
+bool write_metadata(const std::string array_name, const std::string key, const SEXP obj);
+RcppExport SEXP _tiledb_write_metadata(SEXP array_nameSEXP, SEXP keySEXP, SEXP objSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
     Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
     Rcpp::traits::input_parameter< const SEXP >::type obj(objSEXP);
-    rcpp_result_gen = Rcpp::wrap(write_array_metadata(array_name, key, obj));
+    rcpp_result_gen = Rcpp::wrap(write_metadata(array_name, key, obj));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1181,10 +1181,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tiledb_has_array_metadata", (DL_FUNC) &_tiledb_has_array_metadata, 2},
-    {"_tiledb_num_array_metadata", (DL_FUNC) &_tiledb_num_array_metadata, 1},
-    {"_tiledb_read_array_metadata", (DL_FUNC) &_tiledb_read_array_metadata, 2},
-    {"_tiledb_write_array_metadata", (DL_FUNC) &_tiledb_write_array_metadata, 3},
+    {"_tiledb_has_metadata", (DL_FUNC) &_tiledb_has_metadata, 2},
+    {"_tiledb_num_metadata", (DL_FUNC) &_tiledb_num_metadata, 1},
+    {"_tiledb_read_metadata", (DL_FUNC) &_tiledb_read_metadata, 2},
+    {"_tiledb_write_metadata", (DL_FUNC) &_tiledb_write_metadata, 3},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},

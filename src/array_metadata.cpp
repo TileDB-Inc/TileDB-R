@@ -1,9 +1,14 @@
 
 // open questions:
-//  - simple accessor functions or s4 instances?
+//  - simple accessor functions or s4 instances or XPtr?
 //      -> s4 instance could cache more easily
+//      -> XPtr easiest
 //  - base layer here and refined interface in R function?
 //      -> add s4 instance on R side
+//      -> XPtr easier
+//  - other functionality:
+//      consolidate_metadata ?
+//      delete_metadata
 
 #include <tiledb.h>
 
@@ -16,7 +21,7 @@ using namespace tiledb;
 const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype);
 
 // [[Rcpp::export]]
-bool has_array_metadata(const std::string array_name, const std::string key) {
+bool has_metadata(const std::string array_name, const std::string key) {
   // Create TileDB context
   Context ctx;
 
@@ -30,7 +35,7 @@ bool has_array_metadata(const std::string array_name, const std::string key) {
 }
 
 // [[Rcpp::export]]
-int num_array_metadata(const std::string array_name) {
+int num_metadata(const std::string array_name) {
   // Create TileDB context
   Context ctx;
 
@@ -44,7 +49,7 @@ int num_array_metadata(const std::string array_name) {
 }
 
 // [[Rcpp::export]]
-SEXP read_array_metadata(const std::string array_name, const std::string key) {
+SEXP read_metadata(const std::string array_name, const std::string key) {
   // Create TileDB context
   Context ctx;
 
@@ -91,7 +96,7 @@ SEXP read_array_metadata(const std::string array_name, const std::string key) {
 }
 
 // [[Rcpp::export]]
-bool write_array_metadata(const std::string array_name, const std::string key, const SEXP obj) {
+bool write_metadata(const std::string array_name, const std::string key, const SEXP obj) {
   // Create TileDB context
   Context ctx;
 
