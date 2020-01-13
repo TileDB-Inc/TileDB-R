@@ -20,36 +20,38 @@ using namespace tiledb;
 // forward declaration
 const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype);
 
-// [[Rcpp::export]]
-bool has_metadata(const std::string array_name, const std::string key) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for reading
-  // TODO error check
-  Array array(ctx, array_name, TILEDB_READ);
-
+// ---- has_metadata
+bool has_metadata_impl(tiledb::Array& array, const std::string key) {
   tiledb_datatype_t v_type;
   bool res = array.has_metadata(key.c_str(), &v_type);
   return res;
 }
 
 // [[Rcpp::export]]
-int num_metadata(const std::string array_name) {
+bool has_metadata_simple(const std::string array_name, const std::string key) {
   // Create TileDB context
   Context ctx;
 
   // Open array for reading
-  // TODO error check
   Array array(ctx, array_name, TILEDB_READ);
 
-  tiledb_datatype_t v_type;
+  return has_metadata_impl(array, key);
+}
+
+// [[Rcpp::export]]
+bool has_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key) {
+  return has_metadata_impl(*array, key);
+}
+
+
+// ---- metadata_num
+int num_metadata_impl(tiledb::Array& array) {
   uint64_t nm = array.metadata_num();
   return static_cast<int>(nm);
 }
 
 // [[Rcpp::export]]
-SEXP read_metadata(const std::string array_name, const std::string key) {
+int num_metadata_simple(const std::string array_name) {
   // Create TileDB context
   Context ctx;
 
@@ -57,7 +59,18 @@ SEXP read_metadata(const std::string array_name, const std::string key) {
   // TODO error check
   Array array(ctx, array_name, TILEDB_READ);
 
-  // Read with key
+  return num_metadata_impl(array);
+}
+
+// [[Rcpp::export]]
+int num_metadata(Rcpp::XPtr<tiledb::Array> array) {
+  return num_metadata_impl(*array);
+}
+
+
+// ---- get_metadata
+SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
+ // Read with key
   tiledb_datatype_t v_type;
   uint32_t v_num;
   const void* v;
@@ -96,14 +109,25 @@ SEXP read_metadata(const std::string array_name, const std::string key) {
 }
 
 // [[Rcpp::export]]
-bool write_metadata(const std::string array_name, const std::string key, const SEXP obj) {
+SEXP get_metadata_simple(const std::string array_name, const std::string key) {
   // Create TileDB context
   Context ctx;
 
-  // Open array for writing
+  // Open array for reading
   // TODO error check
-  Array array(ctx, array_name, TILEDB_WRITE);
+  Array array(ctx, array_name, TILEDB_READ);
 
+  return get_metadata_impl(array, key);
+}
+
+// [[Rcpp::export]]
+SEXP get_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key) {
+  return get_metadata_impl(*array, key);
+}
+
+
+// ---- put_metadata
+bool put_metadata_impl(tiledb::Array array, const std::string key, const SEXP obj) {
   // TODO probably want to add a mapper from SEXP type to tiledb type in libtiledb.cpp
   switch(TYPEOF(obj)) {
     case VECSXP: {
@@ -139,4 +163,21 @@ bool write_metadata(const std::string array_name, const std::string key, const S
   // Close array - Important so that the metadata get flushed
   array.close();
   return true;
+}
+
+// [[Rcpp::export]]
+bool put_metadata_simple(const std::string array_name, const std::string key, const SEXP obj) {
+  // Create TileDB context
+  Context ctx;
+
+  // Open array for writing
+  // TODO error check
+  Array array(ctx, array_name, TILEDB_WRITE);
+
+  return put_metadata_impl(array, key, obj);
+}
+
+// [[Rcpp::export]]
+bool write_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj) {
+  return put_metadata_impl(*array, key, obj);
 }
