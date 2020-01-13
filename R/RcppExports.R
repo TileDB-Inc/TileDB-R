@@ -29,8 +29,8 @@ put_metadata_simple <- function(array_name, key, obj) {
     .Call(`_tiledb_put_metadata_simple`, array_name, key, obj)
 }
 
-write_metadata <- function(array, key, obj) {
-    .Call(`_tiledb_write_metadata`, array, key, obj)
+put_metadata <- function(array, key, obj) {
+    .Call(`_tiledb_put_metadata`, array, key, obj)
 }
 
 tiledb_datatype_R_type <- function(datatype) {

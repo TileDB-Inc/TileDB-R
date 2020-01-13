@@ -178,6 +178,6 @@ bool put_metadata_simple(const std::string array_name, const std::string key, co
 }
 
 // [[Rcpp::export]]
-bool write_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj) {
+bool put_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj) {
   return put_metadata_impl(*array, key, obj);
 }
