@@ -4,7 +4,7 @@ context("tiledb_metadata")
 
 unlink_and_create <- function(tmp) {
   if (dir.exists(tmp)) unlink(tmp, recursive = TRUE, force = TRUE)
-  dir.create(tmp)
+  dir.create(tmp, recursive = TRUE)
 
   dim <- tiledb_dim(domain = c(1L, 4L))
   dom <- tiledb_domain(c(dim))
