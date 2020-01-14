@@ -2,7 +2,9 @@ library(testthat)
 library(tiledb)
 context("tiledb_metadata")
 
-unlink_and_create <- function(tmp) {
+tmp <- tempfile()
+
+unlink_and_create_simple <- function(tmp) {
   if (dir.exists(tmp)) unlink(tmp, recursive = TRUE, force = TRUE)
   dir.create(tmp, recursive = TRUE)
 
@@ -14,6 +16,12 @@ unlink_and_create <- function(tmp) {
   tiledb_array_create(tmp, sch)
   arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
 
+  arr
+}
+
+unlink_and_create_ptr <- function(tmp) {
+  arr <- unlink_and_create_simple(tmp)
+
   arrW <- tiledb:::libtiledb_array_open(arr@ptr, "WRITE")
   tiledb:::put_metadata(arrW, "vec", c(1.1, 2.2, 3.3))
   tiledb:::libtiledb_array_close(arrW)
@@ -22,15 +30,74 @@ unlink_and_create <- function(tmp) {
   return(arrR)
 }
 
-test_that("Can check presence", {
-  tmp <- tempfile()
-  #setup({
-  arr <- unlink_and_create(tmp)
-  #})
+## infrastructure
+setup({
+  # empty
+})
+
+teardown({
+  if (dir.exists(tmp)) unlink(tmp, recursive = TRUE, force = TRUE)
+})
+
+
+
+test_that("Can check presence of metadata", {
+  arr <- unlink_and_create_ptr(tmp)
 
   expect_error(tiledb:::has_metadata(NULL, ""))
   expect_false(tiledb:::has_metadata(arr, ""))
   expect_true(tiledb:::has_metadata(arr, "vec"))
 
+  unlink(tmp, recursive = TRUE, force = TRUE)
+})
+
+test_that("Can retrieve count of metadata", {
+  arr <- unlink_and_create_ptr(tmp)
+
+  expect_error(tiledb:::num_metadata(NULL))
+  expect_equal(tiledb:::num_metadata(arr), 1L)
+
+  unlink(tmp, recursive = TRUE, force = TRUE)
+})
+
+test_that("Can get metadata", {
+  arr <- unlink_and_create_ptr(tmp)
+
+  expect_error(tiledb:::get_metadata(NULL, ""))
+  expect_equal(tiledb:::get_metadata(arr, ""), NULL)
+  expect_equal(tiledb:::get_metadata(arr, "vec"), c(1.1, 2.2, 3.3))
+
+  unlink(tmp, recursive = TRUE, force = TRUE)
+})
+
+test_that("Can put metadata", {
+  arr <- unlink_and_create_ptr(tmp)
+
+  tiledb:::libtiledb_array_close(arr)
+  arrW <- tiledb:::libtiledb_array_open(arr, "WRITE")
+
+  expect_true(tiledb:::put_metadata(arrW, "foo", "the quick brown fox"))
+  expect_error(tiledb:::put_metadata(arrW, "foo", list(a=c(1,2,3), b=c("a", "b"))))
+
+  tiledb:::libtiledb_array_close(arrW)
+
+  unlink(tmp, recursive = TRUE, force = TRUE)
+})
+
+test_that("Can round trip", {
+  ## will use 'simpler' accessors to not have to flip between read and write
+  arr <- unlink_and_create_simple(tmp)
+
+  vec <- c(1.1, 2.2, 3.3)
+  tiledb:::put_metadata_simple(tmp, "dvec", vec)
+  expect_equal(tiledb:::get_metadata_simple(tmp, "dvec"), vec)
+
+  vec <- c(1L, 2L, 3L)
+  tiledb:::put_metadata_simple(tmp, "ivec", vec)
+  expect_equal(tiledb:::get_metadata_simple(tmp, "ivec"), vec)
+
+  vec <- "the quick brown fox"
+  tiledb:::put_metadata_simple(tmp, "char", vec)
+  expect_equal(tiledb:::get_metadata_simple(tmp, "char"), vec)
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
