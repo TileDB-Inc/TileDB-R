@@ -1,4 +1,3 @@
-library(testthat)
 library(tiledb)
 context("tiledb_metadata")
 
@@ -84,20 +83,21 @@ test_that("Can put metadata", {
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
 
-test_that("Can round trip", {
+test_that("Can do round trip", {
   ## will use 'simpler' accessors to not have to flip between read and write
   arr <- unlink_and_create_simple(tmp)
 
   vec <- c(1.1, 2.2, 3.3)
-  tiledb:::put_metadata_simple(tmp, "dvec", vec)
+  expect_true(tiledb:::put_metadata_simple(tmp, "dvec", vec))
   expect_equal(tiledb:::get_metadata_simple(tmp, "dvec"), vec)
 
   vec <- c(1L, 2L, 3L)
-  tiledb:::put_metadata_simple(tmp, "ivec", vec)
+  expect_true(tiledb:::put_metadata_simple(tmp, "ivec", vec))
   expect_equal(tiledb:::get_metadata_simple(tmp, "ivec"), vec)
 
   vec <- "the quick brown fox"
-  tiledb:::put_metadata_simple(tmp, "char", vec)
+  expect_true(tiledb:::put_metadata_simple(tmp, "char", vec))
   expect_equal(tiledb:::get_metadata_simple(tmp, "char"), vec)
+
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
