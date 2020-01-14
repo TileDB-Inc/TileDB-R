@@ -24,12 +24,13 @@ unlink_and_create <- function(tmp) {
 
 test_that("Can check presence", {
   tmp <- tempfile()
-  setup({
-    arr <<- unlink_and_create(tmp)
-  })
+  #setup({
+  arr <- unlink_and_create(tmp)
+  #})
 
   expect_error(tiledb:::has_metadata(NULL, ""))
   expect_false(tiledb:::has_metadata(arr, ""))
   expect_true(tiledb:::has_metadata(arr, "vec"))
-  expect_true(TRUE)
+
+  unlink(tmp, recursive = TRUE, force = TRUE)
 })

@@ -7,5 +7,7 @@
 ^docs
 ^_pkgdown.yml$
 ^inst/examples/quickstart_dense$
+^inst/examples/quickstart_dense_array$
 ^inst/examples/quickstart_sparse$
+^inst/examples/array_metadata_array$
 ^\.editorconfig$
