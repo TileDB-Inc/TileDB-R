@@ -33,6 +33,14 @@ put_metadata <- function(array, key, obj) {
     .Call(`_tiledb_put_metadata`, array, key, obj)
 }
 
+get_metadata_from_index <- function(array, idx) {
+    .Call(`_tiledb_get_metadata_from_index`, array, idx)
+}
+
+get_metadata_from_index_simple <- function(array_name, idx) {
+    .Call(`_tiledb_get_metadata_from_index_simple`, array_name, idx)
+}
+
 tiledb_datatype_R_type <- function(datatype) {
     .Call(`_tiledb_tiledb_datatype_R_type`, datatype)
 }
