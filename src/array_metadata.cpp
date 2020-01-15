@@ -39,7 +39,7 @@ bool has_metadata_simple(const std::string array_name, const std::string key) {
 }
 
 // [[Rcpp::export]]
-bool has_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key) {
+bool has_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key) {
   return has_metadata_impl(*array, key);
 }
 
@@ -63,7 +63,7 @@ int num_metadata_simple(const std::string array_name) {
 }
 
 // [[Rcpp::export]]
-int num_metadata(Rcpp::XPtr<tiledb::Array> array) {
+int num_metadata_ptr(Rcpp::XPtr<tiledb::Array> array) {
   return num_metadata_impl(*array);
 }
 
@@ -121,7 +121,7 @@ SEXP get_metadata_simple(const std::string array_name, const std::string key) {
 }
 
 // [[Rcpp::export]]
-SEXP get_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key) {
+SEXP get_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key) {
   return get_metadata_impl(*array, key);
 }
 
@@ -178,7 +178,7 @@ bool put_metadata_simple(const std::string array_name, const std::string key, co
 }
 
 // [[Rcpp::export]]
-bool put_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj) {
+bool put_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj) {
   return put_metadata_impl(*array, key, obj);
 }
 
@@ -222,7 +222,7 @@ SEXP get_metadata_from_index_impl(tiledb::Array& array, const int idx) {
 }
 
 // [[Rcpp::export]]
-SEXP get_metadata_from_index(Rcpp::XPtr<tiledb::Array> array, const int idx) {
+SEXP get_metadata_from_index_ptr(Rcpp::XPtr<tiledb::Array> array, const int idx) {
   return get_metadata_from_index_impl(*array, idx);
 }
 

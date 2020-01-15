@@ -18,15 +18,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// has_metadata
-bool has_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key);
-RcppExport SEXP _tiledb_has_metadata(SEXP arraySEXP, SEXP keySEXP) {
+// has_metadata_ptr
+bool has_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key);
+RcppExport SEXP _tiledb_has_metadata_ptr(SEXP arraySEXP, SEXP keySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
-    rcpp_result_gen = Rcpp::wrap(has_metadata(array, key));
+    rcpp_result_gen = Rcpp::wrap(has_metadata_ptr(array, key));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -41,14 +41,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// num_metadata
-int num_metadata(Rcpp::XPtr<tiledb::Array> array);
-RcppExport SEXP _tiledb_num_metadata(SEXP arraySEXP) {
+// num_metadata_ptr
+int num_metadata_ptr(Rcpp::XPtr<tiledb::Array> array);
+RcppExport SEXP _tiledb_num_metadata_ptr(SEXP arraySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
-    rcpp_result_gen = Rcpp::wrap(num_metadata(array));
+    rcpp_result_gen = Rcpp::wrap(num_metadata_ptr(array));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -64,15 +64,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// get_metadata
-SEXP get_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key);
-RcppExport SEXP _tiledb_get_metadata(SEXP arraySEXP, SEXP keySEXP) {
+// get_metadata_ptr
+SEXP get_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key);
+RcppExport SEXP _tiledb_get_metadata_ptr(SEXP arraySEXP, SEXP keySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
-    rcpp_result_gen = Rcpp::wrap(get_metadata(array, key));
+    rcpp_result_gen = Rcpp::wrap(get_metadata_ptr(array, key));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -89,28 +89,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// put_metadata
-bool put_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj);
-RcppExport SEXP _tiledb_put_metadata(SEXP arraySEXP, SEXP keySEXP, SEXP objSEXP) {
+// put_metadata_ptr
+bool put_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj);
+RcppExport SEXP _tiledb_put_metadata_ptr(SEXP arraySEXP, SEXP keySEXP, SEXP objSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
     Rcpp::traits::input_parameter< const SEXP >::type obj(objSEXP);
-    rcpp_result_gen = Rcpp::wrap(put_metadata(array, key, obj));
+    rcpp_result_gen = Rcpp::wrap(put_metadata_ptr(array, key, obj));
     return rcpp_result_gen;
 END_RCPP
 }
-// get_metadata_from_index
-SEXP get_metadata_from_index(Rcpp::XPtr<tiledb::Array> array, const int idx);
-RcppExport SEXP _tiledb_get_metadata_from_index(SEXP arraySEXP, SEXP idxSEXP) {
+// get_metadata_from_index_ptr
+SEXP get_metadata_from_index_ptr(Rcpp::XPtr<tiledb::Array> array, const int idx);
+RcppExport SEXP _tiledb_get_metadata_from_index_ptr(SEXP arraySEXP, SEXP idxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< const int >::type idx(idxSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_metadata_from_index(array, idx));
+    rcpp_result_gen = Rcpp::wrap(get_metadata_from_index_ptr(array, idx));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1254,14 +1254,14 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_has_metadata_simple", (DL_FUNC) &_tiledb_has_metadata_simple, 2},
-    {"_tiledb_has_metadata", (DL_FUNC) &_tiledb_has_metadata, 2},
+    {"_tiledb_has_metadata_ptr", (DL_FUNC) &_tiledb_has_metadata_ptr, 2},
     {"_tiledb_num_metadata_simple", (DL_FUNC) &_tiledb_num_metadata_simple, 1},
-    {"_tiledb_num_metadata", (DL_FUNC) &_tiledb_num_metadata, 1},
+    {"_tiledb_num_metadata_ptr", (DL_FUNC) &_tiledb_num_metadata_ptr, 1},
     {"_tiledb_get_metadata_simple", (DL_FUNC) &_tiledb_get_metadata_simple, 2},
-    {"_tiledb_get_metadata", (DL_FUNC) &_tiledb_get_metadata, 2},
+    {"_tiledb_get_metadata_ptr", (DL_FUNC) &_tiledb_get_metadata_ptr, 2},
     {"_tiledb_put_metadata_simple", (DL_FUNC) &_tiledb_put_metadata_simple, 3},
-    {"_tiledb_put_metadata", (DL_FUNC) &_tiledb_put_metadata, 3},
-    {"_tiledb_get_metadata_from_index", (DL_FUNC) &_tiledb_get_metadata_from_index, 2},
+    {"_tiledb_put_metadata_ptr", (DL_FUNC) &_tiledb_put_metadata_ptr, 3},
+    {"_tiledb_get_metadata_from_index_ptr", (DL_FUNC) &_tiledb_get_metadata_from_index_ptr, 2},
     {"_tiledb_get_metadata_from_index_simple", (DL_FUNC) &_tiledb_get_metadata_from_index_simple, 2},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},

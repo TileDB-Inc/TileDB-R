@@ -5,36 +5,36 @@ has_metadata_simple <- function(array_name, key) {
     .Call(`_tiledb_has_metadata_simple`, array_name, key)
 }
 
-has_metadata <- function(array, key) {
-    .Call(`_tiledb_has_metadata`, array, key)
+has_metadata_ptr <- function(array, key) {
+    .Call(`_tiledb_has_metadata_ptr`, array, key)
 }
 
 num_metadata_simple <- function(array_name) {
     .Call(`_tiledb_num_metadata_simple`, array_name)
 }
 
-num_metadata <- function(array) {
-    .Call(`_tiledb_num_metadata`, array)
+num_metadata_ptr <- function(array) {
+    .Call(`_tiledb_num_metadata_ptr`, array)
 }
 
 get_metadata_simple <- function(array_name, key) {
     .Call(`_tiledb_get_metadata_simple`, array_name, key)
 }
 
-get_metadata <- function(array, key) {
-    .Call(`_tiledb_get_metadata`, array, key)
+get_metadata_ptr <- function(array, key) {
+    .Call(`_tiledb_get_metadata_ptr`, array, key)
 }
 
 put_metadata_simple <- function(array_name, key, obj) {
     .Call(`_tiledb_put_metadata_simple`, array_name, key, obj)
 }
 
-put_metadata <- function(array, key, obj) {
-    .Call(`_tiledb_put_metadata`, array, key, obj)
+put_metadata_ptr <- function(array, key, obj) {
+    .Call(`_tiledb_put_metadata_ptr`, array, key, obj)
 }
 
-get_metadata_from_index <- function(array, idx) {
-    .Call(`_tiledb_get_metadata_from_index`, array, idx)
+get_metadata_from_index_ptr <- function(array, idx) {
+    .Call(`_tiledb_get_metadata_from_index_ptr`, array, idx)
 }
 
 get_metadata_from_index_simple <- function(array_name, idx) {

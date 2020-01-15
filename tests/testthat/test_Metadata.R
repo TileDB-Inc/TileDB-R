@@ -22,9 +22,9 @@ unlink_and_create_ptr <- function(tmp) {
   arr <- unlink_and_create_simple(tmp)
 
   arrW <- tiledb:::libtiledb_array_open(arr@ptr, "WRITE")
-  tiledb:::put_metadata(arrW, "vec", c(1.1, 2.2, 3.3))
+  tiledb:::put_metadata_ptr(arrW, "vec", c(1.1, 2.2, 3.3))
   arrW <- tiledb:::libtiledb_array_open(arr@ptr, "WRITE")
-  tiledb:::put_metadata(arrW, "txt", "the quick brown fox")
+  tiledb:::put_metadata_ptr(arrW, "txt", "the quick brown fox")
   tiledb:::libtiledb_array_close(arrW)
 
   arrR <- tiledb:::libtiledb_array_open(arr@ptr, "READ")
@@ -45,10 +45,10 @@ teardown({
 test_that("Can check presence of metadata", {
   arr <- unlink_and_create_ptr(tmp)
 
-  expect_error(tiledb:::has_metadata(NULL, ""))
-  expect_false(tiledb:::has_metadata(arr, ""))
-  expect_true(tiledb:::has_metadata(arr, "vec"))
-  expect_true(tiledb:::has_metadata(arr, "txt"))
+  expect_error(tiledb:::has_metadata_ptr(NULL, ""))
+  expect_false(tiledb:::has_metadata_ptr(arr, ""))
+  expect_true(tiledb:::has_metadata_ptr(arr, "vec"))
+  expect_true(tiledb:::has_metadata_ptr(arr, "txt"))
 
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
@@ -56,8 +56,8 @@ test_that("Can check presence of metadata", {
 test_that("Can retrieve count of metadata", {
   arr <- unlink_and_create_ptr(tmp)
 
-  expect_error(tiledb:::num_metadata(NULL))
-  expect_equal(tiledb:::num_metadata(arr), 2L)
+  expect_error(tiledb:::num_metadata_ptr(NULL))
+  expect_equal(tiledb:::num_metadata_ptr(arr), 2L)
 
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
@@ -65,9 +65,9 @@ test_that("Can retrieve count of metadata", {
 test_that("Can get metadata", {
   arr <- unlink_and_create_ptr(tmp)
 
-  expect_error(tiledb:::get_metadata(NULL, ""))
-  expect_equal(tiledb:::get_metadata(arr, ""), NULL)
-  expect_equal(tiledb:::get_metadata(arr, "vec"), c(1.1, 2.2, 3.3))
+  expect_error(tiledb:::get_metadata_ptr(NULL, ""))
+  expect_equal(tiledb:::get_metadata_ptr(arr, ""), NULL)
+  expect_equal(tiledb:::get_metadata_ptr(arr, "vec"), c(1.1, 2.2, 3.3))
 
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
@@ -78,8 +78,8 @@ test_that("Can put metadata", {
   tiledb:::libtiledb_array_close(arr)
   arrW <- tiledb:::libtiledb_array_open(arr, "WRITE")
 
-  expect_true(tiledb:::put_metadata(arrW, "foo", "the quick brown fox"))
-  expect_error(tiledb:::put_metadata(arrW, "foo", list(a=c(1,2,3), b=c("a", "b"))))
+  expect_true(tiledb:::put_metadata_ptr(arrW, "foo", "the quick brown fox"))
+  expect_error(tiledb:::put_metadata_ptr(arrW, "foo", list(a=c(1,2,3), b=c("a", "b"))))
 
   tiledb:::libtiledb_array_close(arrW)
 
@@ -108,10 +108,10 @@ test_that("Can do round trip", {
 test_that("Can get by index", {
   arr <- unlink_and_create_ptr(tmp)
 
-  expect_error(tiledb:::get_metadata_from_index(NULL, ""))
-  expect_error(tiledb:::get_metadata_from_index(arr, -1))
-  expect_equal(tiledb:::get_metadata_from_index(arr, 0), "the quick brown fox")
-  expect_equal(tiledb:::get_metadata_from_index(arr, 1), c(1.1, 2.2, 3.3))
+  expect_error(tiledb:::get_metadata_from_index_ptr(NULL, ""))
+  expect_error(tiledb:::get_metadata_from_index_ptr(arr, -1))
+  expect_equal(tiledb:::get_metadata_from_index_ptr(arr, 0), "the quick brown fox")
+  expect_equal(tiledb:::get_metadata_from_index_ptr(arr, 1), c(1.1, 2.2, 3.3))
 
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
