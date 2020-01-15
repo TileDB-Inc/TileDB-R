@@ -59,7 +59,7 @@ r_to_tiledb_type <- function(x) {
 tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
   type <- match.arg(type)
 
-  arr@ptr <- tiledb:::libtiledb_array_open(arr@ptr, type)
+  arr@ptr <- libtiledb_array_open(arr@ptr, type)
   arr
 }
 
@@ -69,6 +69,6 @@ tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
 ##' @return The TileDB Array object but closed
 ##' @export
 tiledb_array_close <- function(arr) {
-  tiledb:::libtiledb_array_close(arr@ptr)
+  libtiledb_array_close(arr@ptr)
   arr
 }
