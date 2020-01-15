@@ -102,6 +102,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_metadata_from_index
+SEXP get_metadata_from_index(Rcpp::XPtr<tiledb::Array> array, const int idx);
+RcppExport SEXP _tiledb_get_metadata_from_index(SEXP arraySEXP, SEXP idxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< const int >::type idx(idxSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_metadata_from_index(array, idx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_metadata_from_index_simple
+SEXP get_metadata_from_index_simple(const std::string array_name, const int idx);
+RcppExport SEXP _tiledb_get_metadata_from_index_simple(SEXP array_nameSEXP, SEXP idxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
+    Rcpp::traits::input_parameter< const int >::type idx(idxSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_metadata_from_index_simple(array_name, idx));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -1237,6 +1261,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_get_metadata", (DL_FUNC) &_tiledb_get_metadata, 2},
     {"_tiledb_put_metadata_simple", (DL_FUNC) &_tiledb_put_metadata_simple, 3},
     {"_tiledb_put_metadata", (DL_FUNC) &_tiledb_put_metadata, 3},
+    {"_tiledb_get_metadata_from_index", (DL_FUNC) &_tiledb_get_metadata_from_index, 2},
+    {"_tiledb_get_metadata_from_index_simple", (DL_FUNC) &_tiledb_get_metadata_from_index_simple, 2},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},

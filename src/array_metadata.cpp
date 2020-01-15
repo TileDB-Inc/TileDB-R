@@ -181,3 +181,59 @@ bool put_metadata_simple(const std::string array_name, const std::string key, co
 bool put_metadata(Rcpp::XPtr<tiledb::Array> array, const std::string key, const SEXP obj) {
   return put_metadata_impl(*array, key, obj);
 }
+
+
+// ---- get by index
+SEXP get_metadata_from_index_impl(tiledb::Array& array, const int idx) {
+  std::string key;
+  tiledb_datatype_t v_type;
+  uint32_t v_num;
+  const void* v;
+  array.get_metadata_from_index(static_cast<uint64_t>(idx), &key, &v_type, &v_num, &v);
+  if (v == NULL) {
+    return R_NilValue;
+  }
+
+  // TODO more cases
+  if (v_type == TILEDB_INT32) {
+    Rcpp::IntegerVector vec(v_num);
+    std::memcpy(vec.begin(), v, v_num*sizeof(int32_t));
+    return(vec);
+  } else if (v_type == TILEDB_FLOAT64) {
+    Rcpp::NumericVector vec(v_num);
+    std::memcpy(vec.begin(), v, v_num*sizeof(double));
+    return(vec);
+  } else if (v_type == TILEDB_FLOAT32) {
+    Rcpp::NumericVector vec(v_num);
+    const float *fvec = static_cast<const float*>(v);
+    size_t n = static_cast<size_t>(v_num);
+    for (size_t i=0; i<n; i++) vec(i) = static_cast<double>(fvec[i]);
+    return(vec);
+  } else if (v_type == TILEDB_STRING_ASCII) {
+    // from reading the code I think I am inferring that we do not have vectors of strings but just one
+    Rcpp::CharacterVector vec(1);
+    std::string s(static_cast<const char*>(v));
+    s.resize(v_num);            // incoming char* is not null terminated, so ensure we only consume v_num bytes and terminate
+    return(Rcpp::wrap(s));
+  } else {
+    Rcpp::stop("No support yet for %s", _tiledb_datatype_to_string(v_type));
+  }
+
+}
+
+// [[Rcpp::export]]
+SEXP get_metadata_from_index(Rcpp::XPtr<tiledb::Array> array, const int idx) {
+  return get_metadata_from_index_impl(*array, idx);
+}
+
+// [[Rcpp::export]]
+SEXP get_metadata_from_index_simple(const std::string array_name, const int idx) {
+  // Create TileDB context
+  Context ctx;
+
+  // Open array for reading
+  // TODO error check
+  Array array(ctx, array_name, TILEDB_READ);
+
+  return get_metadata_from_index_impl(array, idx);
+}
