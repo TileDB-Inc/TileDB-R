@@ -8,6 +8,6 @@ cfg <- tiledb_config()
 cfg["vfs.s3.region"] <- "us-west-1"
 
 ctx <- tiledb_ctx(cfg)
-tiledb:::setContext(ctx)                # maybe export/expose that function?
+tiledb_set_context(ctx)
 
 tiledb_object_type(array_name)

@@ -24,10 +24,14 @@ getContext <- function() {
 #'
 #' @param ctx A TileDB context object
 #' @return A TileDB context object
-setContext <- function(ctx) {
+#' @export
+tiledb_set_context <- function(ctx) {
   ## set the ctx entry from the package environment (a lightweight hash)
   .pkgenv[["ctx"]] <- ctx
 }
+
+# provided old renamed context for continuity/compatibility
+setContext <- function(ctx) tiledb_set_contect(ctx)
 
 #' Creates a `tiledb_ctx` object
 #'
@@ -68,7 +72,7 @@ tiledb_ctx <- function(config = NULL, cached = TRUE) {
 
   tiledb_ctx_set_default_tags(ctx)
 
-  setContext(ctx)
+  tiledb_set_context(ctx)
 
   return(ctx)
 }
