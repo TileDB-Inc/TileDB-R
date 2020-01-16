@@ -110,9 +110,47 @@ test_that("Can get by index", {
 
   expect_error(tiledb:::get_metadata_from_index_ptr(NULL, ""))
   expect_error(tiledb:::get_metadata_from_index_ptr(arr, -1))
-  ## cannot guarantee order :-/
-  #expect_equal(tiledb:::get_metadata_from_index_ptr(arr, 0), "the quick brown fox")
-  #expect_equal(tiledb:::get_metadata_from_index_ptr(arr, 1), c(1.1, 2.2, 3.3))
+  expect_equal(tiledb:::get_metadata_from_index_ptr(arr, 0), c(txt="the quick brown fox"))
+  expect_equal(unname(tiledb:::get_metadata_from_index_ptr(arr, 1)), c(1.1, 2.2, 3.3))
 
   unlink(tmp, recursive = TRUE, force = TRUE)
+})
+
+test_that("Can get all", {
+  arr <- unlink_and_create_ptr(tmp)
+
+  res <- tiledb:::get_all_metadata_ptr(arr)
+  #--needs call from R  expect_true(inherits(res, "tiledb_metadata"))
+  expect_equal(length(res), 2L)
+  expect_true("vec" %in% names(res))
+  expect_true("txt" %in% names(res))
+})
+
+test_that("Can deleye by key", {
+  arr <- unlink_and_create_ptr(tmp)
+
+  ## should be two before we add
+  expect_equal(tiledb:::num_metadata_ptr(arr), 2L)
+
+  tiledb:::libtiledb_array_close(arr)
+  arrW <- tiledb:::libtiledb_array_open(arr, "WRITE")
+
+  expect_true(tiledb:::put_metadata_ptr(arrW, "foo", "the quick brown fox"))
+
+  tiledb:::libtiledb_array_close(arrW)
+  arr <- tiledb:::libtiledb_array_open(arrW, "READ")
+
+  ## should be three after we add
+  expect_equal(tiledb:::num_metadata_ptr(arr), 3L)
+
+  tiledb:::libtiledb_array_close(arr)
+  arrW <- tiledb:::libtiledb_array_open(arr, "WRITE")
+
+  expect_true(tiledb:::delete_metadata_ptr(arr, "foo"))
+
+  tiledb:::libtiledb_array_close(arrW)
+  arr <- tiledb:::libtiledb_array_open(arrW, "READ")
+
+  ## should be two after we delete
+  expect_equal(tiledb:::num_metadata_ptr(arr), 2L)
 })
