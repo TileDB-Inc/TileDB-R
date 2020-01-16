@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructs a tiledb_dense object backed by a persisted tiledb array uri — tiledb_dense • tiledb</title>
+<title>Close a TileDB Array — tiledb_array_close • tiledb</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Constructs a tiledb_dense object backed by a persisted tiledb array uri — tiledb_dense" />
-<meta property="og:description" content="Constructs a tiledb_dense object backed by a persisted tiledb array uri" />
+<meta property="og:title" content="Close a TileDB Array — tiledb_array_close" />
+<meta property="og:description" content="Close a TileDB Array" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -105,46 +105,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Constructs a tiledb_dense object backed by a persisted tiledb array uri</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/DenseArray.R'><code>R/DenseArray.R</code></a></small>
-    <div class="hidden name"><code>tiledb_dense.Rd</code></div>
+    <h1>Close a TileDB Array</h1>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>tiledb_array_close.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Constructs a tiledb_dense object backed by a persisted tiledb array uri</p>
+    <p>Close a TileDB Array</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_dense</span>(
-  <span class='no'>uri</span>,
-  <span class='kw'>query_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"READ"</span>, <span class='st'>"WRITE"</span>),
-  <span class='kw'>as.data.frame</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>tiledb_array_close</span>(<span class='no'>arr</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>uri</th>
-      <td><p>uri path to the tiledb dense array</p></td>
-    </tr>
-    <tr>
-      <th>query_type</th>
-      <td><p>optionally loads the array in "READ" or "WRITE" only modes.</p></td>
-    </tr>
-    <tr>
-      <th>as.data.frame</th>
-      <td><p>optional logical switch, defaults to "FALSE"</p></td>
-    </tr>
-    <tr>
-      <th>ctx</th>
-      <td><p>tiledb_ctx (optional)</p></td>
+      <th>arr</th>
+      <td><p>A TileDB Array object as for example returned by <code><a href='tiledb_dense.html'>tiledb_dense()</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tiledb_dense array object</p>
+    <p>The TileDB Array object but closed</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
