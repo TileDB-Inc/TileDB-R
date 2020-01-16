@@ -9,7 +9,7 @@ tiledb_attr(
   type,
   filter_list = tiledb_filter_list(),
   ncells = 1,
-  ctx = tiledb:::getContext()
+  ctx = tiledb_get_context()
 )
 }
 \arguments{

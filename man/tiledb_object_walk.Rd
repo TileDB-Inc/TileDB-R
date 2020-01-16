@@ -4,7 +4,7 @@
 \alias{tiledb_object_walk}
 \title{Recursively discover TileDB resources at a given root URI path}
 \usage{
-tiledb_object_walk(uri, order = "PREORDER", ctx = tiledb:::getContext())
+tiledb_object_walk(uri, order = "PREORDER", ctx = tiledb_get_context())
 }
 \arguments{
 \item{uri}{root uri path to walk}

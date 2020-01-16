@@ -1,4 +1,4 @@
-check_object_arguments <- function(uri, ctx = tiledb:::getContext()) {
+check_object_arguments <- function(uri, ctx = tiledb_get_context()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must a a tiledb_ctx")
   }
@@ -19,7 +19,7 @@ check_object_arguments <- function(uri, ctx = tiledb:::getContext()) {
 #' tiledb_object_type(pth)
 #'
 #'@export
-tiledb_group_create <- function(uri, ctx = tiledb:::getContext()) {
+tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
   check_object_arguments(uri, ctx)
   return(libtiledb_group_create(ctx@ptr, uri))
 }
@@ -36,7 +36,7 @@ tiledb_group_create <- function(uri, ctx = tiledb:::getContext()) {
 #' @return TileDB object type string
 #'
 #' @export
-tiledb_object_type <- function(uri, ctx = tiledb:::getContext()) {
+tiledb_object_type <- function(uri, ctx = tiledb_get_context()) {
   check_object_arguments(uri, ctx)
   return(libtiledb_object_type(ctx@ptr, uri))
 }
@@ -49,7 +49,7 @@ tiledb_object_type <- function(uri, ctx = tiledb:::getContext()) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return uri of removed TileDB resource
 #' @export
-tiledb_object_rm <- function(uri, ctx = tiledb:::getContext()) {
+tiledb_object_rm <- function(uri, ctx = tiledb_get_context()) {
   check_object_arguments(uri, ctx)
   return(libtiledb_object_remove(ctx@ptr, uri))
 }
@@ -63,7 +63,7 @@ tiledb_object_rm <- function(uri, ctx = tiledb:::getContext()) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return new uri of moved tiledb resource
 #' @export
-tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb:::getContext()) {
+tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb_get_context()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must a a tiledb_ctx")
   }
@@ -83,7 +83,7 @@ tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb:::getContext()) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return a dataframe with object type, object uri string columns
 #' @export
-tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb:::getContext()) {
+tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb_get_context()) {
   check_object_arguments(uri, ctx)
   return(libtiledb_object_walk(ctx@ptr, uri, order = "PREORDER"))
 }
@@ -95,7 +95,7 @@ tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb:::getContext()) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return a dataframe with object type, object uri string columns
 #' @export
-tiledb_object_walk <- function(uri, order = "PREORDER", ctx = tiledb:::getContext()) {
+tiledb_object_walk <- function(uri, order = "PREORDER", ctx = tiledb_get_context()) {
   check_object_arguments(uri, ctx)
   return(libtiledb_object_walk(ctx@ptr, uri, order = order, recursive = TRUE))
 }

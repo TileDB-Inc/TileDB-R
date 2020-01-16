@@ -4,7 +4,7 @@
 \alias{tiledb_object_rm}
 \title{Removes a TileDB resource}
 \usage{
-tiledb_object_rm(uri, ctx = tiledb:::getContext())
+tiledb_object_rm(uri, ctx = tiledb_get_context())
 }
 \arguments{
 \item{uri}{path which to create group}

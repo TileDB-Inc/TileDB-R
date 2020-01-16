@@ -4,7 +4,7 @@
 \alias{tiledb_filter}
 \title{Constructs a \code{tiledb_filter} object}
 \usage{
-tiledb_filter(name = "NONE", ctx = tiledb:::getContext())
+tiledb_filter(name = "NONE", ctx = tiledb_get_context())
 }
 \arguments{
 \item{name}{(default "NONE") TileDB filter name string}

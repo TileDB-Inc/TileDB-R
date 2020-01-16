@@ -8,7 +8,7 @@ tiledb_dense(
   uri,
   query_type = c("READ", "WRITE"),
   as.data.frame = FALSE,
-  ctx = tiledb:::getContext()
+  ctx = tiledb_get_context()
 )
 }
 \arguments{

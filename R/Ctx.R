@@ -8,7 +8,7 @@ setClass("tiledb_ctx",
 #' Retrieve a TileDB context object from the package cache
 #'
 #' @return A TileDB context object
-getContext <- function() {
+tiledb_get_context <- function() {
   ## return the ctx entry from the package environment (a lightweight hash)
   ctx <- .pkgenv[["ctx"]]
 
@@ -19,6 +19,9 @@ getContext <- function() {
 
   ctx
 }
+
+# provided old renamed context for continuity/compatibility
+getContext <- function() tiledb_get_context()
 
 #' Store a TileDB context object in the package cache
 #'
@@ -31,7 +34,7 @@ tiledb_set_context <- function(ctx) {
 }
 
 # provided old renamed context for continuity/compatibility
-setContext <- function(ctx) tiledb_set_contect(ctx)
+setContext <- function(ctx) tiledb_set_context(ctx)
 
 #' Creates a `tiledb_ctx` object
 #'
@@ -94,7 +97,7 @@ setGeneric("config", function(object, ...) {
 #'
 #' @export
 setMethod("config", signature(object = "tiledb_ctx"),
-          function(object = tiledb:::getContext()) {
+          function(object = tiledb_get_context()) {
             ptr <- libtiledb_ctx_config(object@ptr)
             tiledb_config.from_ptr(ptr)
           })
@@ -116,7 +119,7 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #' tiledb_is_supported_fs("s3")
 #'
 #' @export
-tiledb_is_supported_fs <- function(scheme, object = tiledb:::getContext()) {
+tiledb_is_supported_fs <- function(scheme, object = tiledb_get_context()) {
             libtiledb_ctx_is_supported_fs(object@ptr, scheme)
 }
 

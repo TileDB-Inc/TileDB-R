@@ -4,7 +4,7 @@
 \alias{tiledb_group_create}
 \title{Creates a TileDB group object at given uri path}
 \usage{
-tiledb_group_create(uri, ctx = tiledb:::getContext())
+tiledb_group_create(uri, ctx = tiledb_get_context())
 }
 \arguments{
 \item{uri}{path which to create group}

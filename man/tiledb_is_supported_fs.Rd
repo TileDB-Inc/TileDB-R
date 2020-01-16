@@ -4,7 +4,7 @@
 \alias{tiledb_is_supported_fs}
 \title{Query if a TileDB backend is supported}
 \usage{
-tiledb_is_supported_fs(scheme, object = tiledb:::getContext())
+tiledb_is_supported_fs(scheme, object = tiledb_get_context())
 }
 \arguments{
 \item{scheme}{URI string scheme ("file", "hdfs", "s3")}
