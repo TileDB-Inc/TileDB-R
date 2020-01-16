@@ -148,6 +148,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// delete_metadata_simple
+bool delete_metadata_simple(const std::string array_name, const std::string key);
+RcppExport SEXP _tiledb_delete_metadata_simple(SEXP array_nameSEXP, SEXP keySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
+    rcpp_result_gen = Rcpp::wrap(delete_metadata_simple(array_name, key));
+    return rcpp_result_gen;
+END_RCPP
+}
+// delete_metadata_ptr
+bool delete_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key);
+RcppExport SEXP _tiledb_delete_metadata_ptr(SEXP arraySEXP, SEXP keySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
+    rcpp_result_gen = Rcpp::wrap(delete_metadata_ptr(array, key));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -1287,6 +1311,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_get_metadata_from_index_simple", (DL_FUNC) &_tiledb_get_metadata_from_index_simple, 2},
     {"_tiledb_get_all_metadata_simple", (DL_FUNC) &_tiledb_get_all_metadata_simple, 1},
     {"_tiledb_get_all_metadata_ptr", (DL_FUNC) &_tiledb_get_all_metadata_ptr, 1},
+    {"_tiledb_delete_metadata_simple", (DL_FUNC) &_tiledb_delete_metadata_simple, 2},
+    {"_tiledb_delete_metadata_ptr", (DL_FUNC) &_tiledb_delete_metadata_ptr, 2},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},

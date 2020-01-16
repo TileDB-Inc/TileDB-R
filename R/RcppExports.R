@@ -49,6 +49,14 @@ get_all_metadata_ptr <- function(array) {
     .Call(`_tiledb_get_all_metadata_ptr`, array)
 }
 
+delete_metadata_simple <- function(array_name, key) {
+    .Call(`_tiledb_delete_metadata_simple`, array_name, key)
+}
+
+delete_metadata_ptr <- function(array, key) {
+    .Call(`_tiledb_delete_metadata_ptr`, array, key)
+}
+
 tiledb_datatype_R_type <- function(datatype) {
     .Call(`_tiledb_tiledb_datatype_R_type`, datatype)
 }

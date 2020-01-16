@@ -135,3 +135,27 @@ print.tiledb_metadata <- function(x, width=NULL, ...) {
   }
   invisible(x)
 }
+
+##' Delete a TileDB Array Metadata object given by key
+##'
+##' @param arr A TileDB Array object, or a character URI describing one
+##' @param key A character value describing a metadata key
+##' @return A boolean indicating success
+##' @export
+tiledb_delete_metadata <- function(arr, key) {
+  if (is.character(arr)) {
+    return(delete_metadata_simple(arr, key))
+  } else if (!.isArray(arr)) {
+    message("Neither (text) URI nor Array.")
+    return(NULL)
+  }
+
+  ## Now deal with (default) case of an array object
+  ## Check for 'is it open' ?
+  if (!libtiledb_array_is_open(arr@ptr)) {
+    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  }
+
+  ## Run query
+  return(delete_metadata_ptr(arr@ptr, key))
+}
