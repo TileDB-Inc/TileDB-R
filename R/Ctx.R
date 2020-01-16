@@ -5,6 +5,9 @@
 setClass("tiledb_ctx",
          slots = list(ptr = "externalptr"))
 
+#' Retrieve a TileDB context object from the package cache
+#'
+#' @return A TileDB context object
 getContext <- function() {
   ## return the ctx entry from the package environment (a lightweight hash)
   ctx <- .pkgenv[["ctx"]]
@@ -17,6 +20,10 @@ getContext <- function() {
   ctx
 }
 
+#' Store a TileDB context object in the package cache
+#'
+#' @param ctx A TileDB context object
+#' @return A TileDB context object
 setContext <- function(ctx) {
   ## set the ctx entry from the package environment (a lightweight hash)
   .pkgenv[["ctx"]] <- ctx
