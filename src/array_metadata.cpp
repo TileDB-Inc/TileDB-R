@@ -8,7 +8,7 @@
 //      -> XPtr easier
 //  - other functionality:
 //      consolidate_metadata ?
-//      delete_metadata
+//      [DONE] delete_metadata
 
 #include <tiledb.h>
 
