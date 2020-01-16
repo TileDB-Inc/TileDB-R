@@ -126,6 +126,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_all_metadata_simple
+SEXP get_all_metadata_simple(const std::string array_name);
+RcppExport SEXP _tiledb_get_all_metadata_simple(SEXP array_nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_all_metadata_simple(array_name));
+    return rcpp_result_gen;
+END_RCPP
+}
+// get_all_metadata_ptr
+SEXP get_all_metadata_ptr(Rcpp::XPtr<tiledb::Array> array);
+RcppExport SEXP _tiledb_get_all_metadata_ptr(SEXP arraySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Array> >::type array(arraySEXP);
+    rcpp_result_gen = Rcpp::wrap(get_all_metadata_ptr(array));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -1263,6 +1285,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_put_metadata_ptr", (DL_FUNC) &_tiledb_put_metadata_ptr, 3},
     {"_tiledb_get_metadata_from_index_ptr", (DL_FUNC) &_tiledb_get_metadata_from_index_ptr, 2},
     {"_tiledb_get_metadata_from_index_simple", (DL_FUNC) &_tiledb_get_metadata_from_index_simple, 2},
+    {"_tiledb_get_all_metadata_simple", (DL_FUNC) &_tiledb_get_all_metadata_simple, 1},
+    {"_tiledb_get_all_metadata_ptr", (DL_FUNC) &_tiledb_get_all_metadata_ptr, 1},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},

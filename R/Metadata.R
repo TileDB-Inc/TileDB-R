@@ -98,3 +98,40 @@ tiledb_put_metadata <- function(arr, key, val) {
   ## Run query
   return(put_metadata_ptr(arr@ptr, key, val))
 }
+
+
+##' Return a TileDB Array Metadata object given by key
+##'
+##' @param arr A TileDB Array object, or a character URI describing one
+##' @return A object stored in the Metadata under the given key
+##' @export
+tiledb_get_all_metadata <- function(arr) {
+  if (is.character(arr)) {
+    res <- get_all_metadata_simple(arr)
+    class(res) <- "tiledb_metadata"
+    return(res)
+  } else if (!.isArray(arr)) {
+    message("Neither (text) URI nor Array.")
+    return(NULL)
+  }
+
+  ## Now deal with (default) case of an array object
+  ## Check for 'is it open' ?
+  if (!libtiledb_array_is_open(arr@ptr)) {
+    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  }
+
+  ## Run query
+  res <- get_all_metadata_ptr(arr@ptr)
+  class(res) <- "tiledb_metadata"
+  return(res)
+}
+
+##' @export
+print.tiledb_metadata <- function(x, width=NULL, ...) {
+  nm <- names(x)
+  for (i in 1:length(nm)) {
+    cat(nm[i], ":\t", format(x[i]), "\n", sep="")
+  }
+  invisible(x)
+}

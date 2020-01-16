@@ -41,6 +41,14 @@ get_metadata_from_index_simple <- function(array_name, idx) {
     .Call(`_tiledb_get_metadata_from_index_simple`, array_name, idx)
 }
 
+get_all_metadata_simple <- function(array_name) {
+    .Call(`_tiledb_get_all_metadata_simple`, array_name)
+}
+
+get_all_metadata_ptr <- function(array) {
+    .Call(`_tiledb_get_all_metadata_ptr`, array)
+}
+
 tiledb_datatype_R_type <- function(datatype) {
     .Call(`_tiledb_tiledb_datatype_R_type`, datatype)
 }
