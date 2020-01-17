@@ -23,18 +23,13 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype);
 // ---- has_metadata
 bool has_metadata_impl(tiledb::Array& array, const std::string key) {
   tiledb_datatype_t v_type;
-  bool res = array.has_metadata(key.c_str(), &v_type);
-  return res;
+  return array.has_metadata(key.c_str(), &v_type);
 }
 
 // [[Rcpp::export]]
 bool has_metadata_simple(const std::string array_name, const std::string key) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for reading
-  Array array(ctx, array_name, TILEDB_READ);
-
+  Context ctx;										  						// Create TileDB context
+  Array array(ctx, array_name, TILEDB_READ);	  // Open array for reading
   return has_metadata_impl(array, key);
 }
 
@@ -52,12 +47,8 @@ int num_metadata_impl(tiledb::Array& array) {
 
 // [[Rcpp::export]]
 int num_metadata_simple(const std::string array_name) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for reading
-  Array array(ctx, array_name, TILEDB_READ);
-
+  Context ctx;										  						// Create TileDB context
+  Array array(ctx, array_name, TILEDB_READ);	  // Open array for reading
   return num_metadata_impl(array);
 }
 
@@ -77,9 +68,6 @@ SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
   if (v == NULL) {
     return R_NilValue;
   }
-
-  //Rcpp::Rcout << v_type << std::endl;
-  //Rcpp::Rcout << v_num << std::endl;
 
   // TODO more cases
   if (v_type == TILEDB_INT32) {
@@ -109,12 +97,8 @@ SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
 
 // [[Rcpp::export]]
 SEXP get_metadata_simple(const std::string array_name, const std::string key) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for reading
-  Array array(ctx, array_name, TILEDB_READ);
-
+  Context ctx;										  						// Create TileDB context
+  Array array(ctx, array_name, TILEDB_READ);	  // Open array for reading
   return get_metadata_impl(array, key);
 }
 
@@ -165,12 +149,8 @@ bool put_metadata_impl(tiledb::Array array, const std::string key, const SEXP ob
 
 // [[Rcpp::export]]
 bool put_metadata_simple(const std::string array_name, const std::string key, const SEXP obj) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for writing
-  Array array(ctx, array_name, TILEDB_WRITE);
-
+  Context ctx;										  						// Create TileDB context
+  Array array(ctx, array_name, TILEDB_WRITE);	  // Open array for writing
   return put_metadata_impl(array, key, obj);
 }
 
@@ -229,12 +209,8 @@ SEXP get_metadata_from_index_ptr(Rcpp::XPtr<tiledb::Array> array, const int idx)
 
 // [[Rcpp::export]]
 SEXP get_metadata_from_index_simple(const std::string array_name, const int idx) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for reading
-  Array array(ctx, array_name, TILEDB_READ);
-
+  Context ctx;										  						// Create TileDB context
+  Array array(ctx, array_name, TILEDB_READ);	  // Open array for reading
   return get_metadata_from_index_impl(array, idx);
 }
 
@@ -283,12 +259,8 @@ void delete_metadata_impl(tiledb::Array& array, const std::string key) {
 
 // [[Rcpp::export]]
 bool delete_metadata_simple(const std::string array_name, const std::string key) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for reading
-  Array array(ctx, array_name, TILEDB_WRITE);
-
+  Context ctx;										  						// Create TileDB context
+  Array array(ctx, array_name, TILEDB_WRITE);	  // Open array for reading
   delete_metadata_impl(array, key);
   return true;
 }
