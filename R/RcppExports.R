@@ -265,6 +265,14 @@ libtiledb_array_is_open <- function(array) {
     .Call(`_tiledb_libtiledb_array_is_open`, array)
 }
 
+libtiledb_array_is_open_for_reading <- function(array) {
+    .Call(`_tiledb_libtiledb_array_is_open_for_reading`, array)
+}
+
+libtiledb_array_is_open_for_writing <- function(array) {
+    .Call(`_tiledb_libtiledb_array_is_open_for_writing`, array)
+}
+
 libtiledb_array_get_uri <- function(array) {
     .Call(`_tiledb_libtiledb_array_get_uri`, array)
 }

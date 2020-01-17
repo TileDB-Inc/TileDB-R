@@ -19,8 +19,8 @@ tiledb_has_metadata <- function(arr, key) {
 
   ## Now deal with (default) case of an array object
   ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open(arr@ptr)) {
-    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
+    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
   }
 
   ## Run query
@@ -42,8 +42,8 @@ tiledb_num_metadata <- function(arr) {
 
   ## Now deal with (default) case of an array object
   ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open(arr@ptr)) {
-    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
+    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
   }
 
   ## Run query
@@ -66,8 +66,8 @@ tiledb_get_metadata <- function(arr, key) {
 
   ## Now deal with (default) case of an array object
   ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open(arr@ptr)) {
-    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
+    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
   }
 
   ## Run query
@@ -91,8 +91,8 @@ tiledb_put_metadata <- function(arr, key, val) {
 
   ## Now deal with (default) case of an array object
   ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open(arr@ptr)) {
-    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  if (!libtiledb_array_is_open_for_writing(arr@ptr)) {
+    stop("Array is not open for writing, cannot access metadata.", call.=FALSE)
   }
 
   ## Run query
@@ -117,8 +117,8 @@ tiledb_get_all_metadata <- function(arr) {
 
   ## Now deal with (default) case of an array object
   ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open(arr@ptr)) {
-    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
+    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
   }
 
   ## Run query
@@ -152,8 +152,8 @@ tiledb_delete_metadata <- function(arr, key) {
 
   ## Now deal with (default) case of an array object
   ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open(arr@ptr)) {
-    stop("Array is not open, cannot access metadata.", call.=FALSE)
+  if (!libtiledb_array_is_open_for_writing(arr@ptr)) {
+    stop("Array is not open for writing, cannot access metadata.", call.=FALSE)
   }
 
   ## Run query
