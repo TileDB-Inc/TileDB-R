@@ -104,6 +104,10 @@ test_that("Can do round trip", {
   expect_true(tiledb:::put_metadata_simple(tmp, "char", vec))
   expect_equal(tiledb:::get_metadata_simple(tmp, "char"), vec)
 
+  vec <- c(TRUE, FALSE, TRUE)
+  expect_true(tiledb:::put_metadata_simple(tmp, "lvec", vec))
+  expect_equal(tiledb:::get_metadata_simple(tmp, "lvec"), vec)
+
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
 

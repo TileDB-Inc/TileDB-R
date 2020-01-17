@@ -1,5 +1,5 @@
 
-// open questions:
+// questions:
 //  - simple accessor functions or s4 instances or XPtr?
 //      -> s4 instance could cache more easily
 //      -> XPtr easiest
@@ -69,7 +69,8 @@ SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
     return R_NilValue;
   }
 
-  // TODO more cases
+  // This supports a limited set of basic types as the metadata
+  // annotation is not meant to support complete serialization
   if (v_type == TILEDB_INT32) {
     Rcpp::IntegerVector vec(v_num);
     std::memcpy(vec.begin(), v, v_num*sizeof(int32_t));
@@ -82,7 +83,7 @@ SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
     Rcpp::NumericVector vec(v_num);
     const float *fvec = static_cast<const float*>(v);
     size_t n = static_cast<size_t>(v_num);
-    for (size_t i=0; i<n; i++) vec(i) = static_cast<double>(fvec[i]);
+    for (size_t i=0; i<n; i++) vec[i] = static_cast<double>(fvec[i]);
     return(vec);
   } else if (v_type == TILEDB_STRING_ASCII) {
     // from reading the code I think I am inferring that we do not have vectors of strings but just one
@@ -90,6 +91,12 @@ SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
     std::string s(static_cast<const char*>(v));
     s.resize(v_num);            // incoming char* is not null terminated, so ensure we only consume v_num bytes and terminate
     return(Rcpp::wrap(s));
+  } else if (v_type == TILEDB_INT8) {
+    Rcpp::LogicalVector vec(v_num);
+    const int8_t *ivec = static_cast<const int8_t*>(v);
+    size_t n = static_cast<size_t>(v_num);
+    for (size_t i=0; i<n; i++) vec[i] = static_cast<bool>(ivec[i]);
+    return(vec);
   } else {
     Rcpp::stop("No support yet for %s", _tiledb_datatype_to_string(v_type));
   }
@@ -110,7 +117,7 @@ SEXP get_metadata_ptr(Rcpp::XPtr<tiledb::Array> array, const std::string key) {
 
 // ---- put_metadata
 bool put_metadata_impl(tiledb::Array array, const std::string key, const SEXP obj) {
-  // TODO probably want to add a mapper from SEXP type to tiledb type in libtiledb.cpp
+  // May want to add a mapper from SEXP type to tiledb type in libtiledb.cpp
   switch(TYPEOF(obj)) {
     case VECSXP: {
       Rcpp::stop("List objects are not supported.");
@@ -131,15 +138,23 @@ bool put_metadata_impl(tiledb::Array array, const std::string key, const SEXP ob
     case STRSXP: {
       Rcpp::CharacterVector v(obj);
       std::string s(v[0]);
-      // TODO: best string type? And what about the other vector elements?
+      // TODO: is this best string type?
       array.put_metadata(key.c_str(), TILEDB_STRING_ASCII, s.length(), s.c_str());
+      break;
+    }
+    case LGLSXP: {              // experimental: map R logical (ie TRUE, FALSE, NA) to int8
+      Rcpp::LogicalVector v(obj);
+      size_t n = static_cast<size_t>(v.size());
+      std::vector<int8_t> ints(n);
+      for (size_t i=0; i<n; i++) ints[i] = static_cast<int8_t>(v[i]);
+      array.put_metadata(key.c_str(), TILEDB_INT8, ints.size(), ints.data());
       break;
     }
     default: {
       Rcpp::stop("No support (yet) for type '%d'.", TYPEOF(obj));
       array.close();
       return false;
-      break;// not reached
+      break; // not reached
     }
   }
   // Close array - Important so that the metadata get flushed
@@ -171,7 +186,6 @@ SEXP get_metadata_from_index_impl(tiledb::Array& array, const int idx) {
     return R_NilValue;
   }
 
-  // TODO more cases
   if (v_type == TILEDB_INT32) {
     Rcpp::IntegerVector vec(v_num);
     std::memcpy(vec.begin(), v, v_num*sizeof(int32_t));
@@ -190,9 +204,8 @@ SEXP get_metadata_from_index_impl(tiledb::Array& array, const int idx) {
     vec.attr("names") = Rcpp::CharacterVector::create(key);
     return(vec);
   } else if (v_type == TILEDB_STRING_ASCII) {
-    // from reading the code I think I am inferring that we do not have vectors of strings but just one
     std::string s(static_cast<const char*>(v));
-    s.resize(v_num);            // incoming char* is not null terminated, so ensure we only consume v_num bytes and terminate
+    s.resize(v_num);        // incoming char* not null terminated, ensures v_num bytes and terminate
     Rcpp::CharacterVector vec = Rcpp::CharacterVector::create(s);
     vec.attr("names") = Rcpp::CharacterVector::create(key);
     return(vec);
@@ -221,8 +234,8 @@ SEXP get_all_metadata_impl(tiledb::Array& array) {
   Rcpp::List lst(n);
   Rcpp::CharacterVector names(n);
   for (auto i=0; i<n; i++) {
-    // we cheat a little here by having the returned object also carry an attribute
-    // a cleaner way (in a C++ pure sense) would be to return a pair of string and SEXP
+    // we trick this a little by having the returned object also carry an attribute
+    // cleaner way (in a C++ pure sense) would be to return a pair of string and SEXP
     SEXP v = get_metadata_from_index_impl(array, i);
     Rcpp::RObject obj(v);
     Rcpp::CharacterVector objnms = obj.attr("names");
@@ -237,12 +250,8 @@ SEXP get_all_metadata_impl(tiledb::Array& array) {
 
 // [[Rcpp::export]]
 SEXP get_all_metadata_simple(const std::string array_name) {
-  // Create TileDB context
-  Context ctx;
-
-  // Open array for reading
-  Array array(ctx, array_name, TILEDB_READ);
-
+  Context ctx;										  						// Create TileDB context
+  Array array(ctx, array_name, TILEDB_READ);	  // Open array for reading
   return get_all_metadata_impl(array);
 }
 
