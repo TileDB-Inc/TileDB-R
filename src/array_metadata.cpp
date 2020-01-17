@@ -59,16 +59,7 @@ int num_metadata_ptr(Rcpp::XPtr<tiledb::Array> array) {
 
 
 // ---- get_metadata
-SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
- // Read with key
-  tiledb_datatype_t v_type;
-  uint32_t v_num;
-  const void* v;
-  array.get_metadata(key.c_str(), &v_type, &v_num, &v);
-  if (v == NULL) {
-    return R_NilValue;
-  }
-
+SEXP convert_vector_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num, const void* v) {
   // This supports a limited set of basic types as the metadata
   // annotation is not meant to support complete serialization
   if (v_type == TILEDB_INT32) {
@@ -86,10 +77,9 @@ SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
     for (size_t i=0; i<n; i++) vec[i] = static_cast<double>(fvec[i]);
     return(vec);
   } else if (v_type == TILEDB_STRING_ASCII) {
-    // from reading the code I think I am inferring that we do not have vectors of strings but just one
     Rcpp::CharacterVector vec(1);
     std::string s(static_cast<const char*>(v));
-    s.resize(v_num);            // incoming char* is not null terminated, so ensure we only consume v_num bytes and terminate
+    s.resize(v_num);        // incoming char* not null terminated, ensures v_num bytes and terminate
     return(Rcpp::wrap(s));
   } else if (v_type == TILEDB_INT8) {
     Rcpp::LogicalVector vec(v_num);
@@ -100,6 +90,19 @@ SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
   } else {
     Rcpp::stop("No support yet for %s", _tiledb_datatype_to_string(v_type));
   }
+}
+
+SEXP get_metadata_impl(tiledb::Array& array, const std::string key) {
+ // Read with key
+  tiledb_datatype_t v_type;
+  uint32_t v_num;
+  const void* v;
+  array.get_metadata(key.c_str(), &v_type, &v_num, &v);
+  if (v == NULL) {
+    return R_NilValue;
+  }
+
+  return convert_vector_to_sexp(v_type, v_num, v);
 }
 
 // [[Rcpp::export]]
@@ -186,33 +189,9 @@ SEXP get_metadata_from_index_impl(tiledb::Array& array, const int idx) {
     return R_NilValue;
   }
 
-  if (v_type == TILEDB_INT32) {
-    Rcpp::IntegerVector vec(v_num);
-    std::memcpy(vec.begin(), v, v_num*sizeof(int32_t));
-    vec.attr("names") = Rcpp::CharacterVector::create(key);
-    return(vec);
-  } else if (v_type == TILEDB_FLOAT64) {
-    Rcpp::NumericVector vec(v_num);
-    std::memcpy(vec.begin(), v, v_num*sizeof(double));
-    vec.attr("names") = Rcpp::CharacterVector::create(key);
-    return(vec);
-  } else if (v_type == TILEDB_FLOAT32) {
-    Rcpp::NumericVector vec(v_num);
-    const float *fvec = static_cast<const float*>(v);
-    size_t n = static_cast<size_t>(v_num);
-    for (size_t i=0; i<n; i++) vec(i) = static_cast<double>(fvec[i]);
-    vec.attr("names") = Rcpp::CharacterVector::create(key);
-    return(vec);
-  } else if (v_type == TILEDB_STRING_ASCII) {
-    std::string s(static_cast<const char*>(v));
-    s.resize(v_num);        // incoming char* not null terminated, ensures v_num bytes and terminate
-    Rcpp::CharacterVector vec = Rcpp::CharacterVector::create(s);
-    vec.attr("names") = Rcpp::CharacterVector::create(key);
-    return(vec);
-  } else {
-    Rcpp::stop("No support yet for %s", _tiledb_datatype_to_string(v_type));
-  }
-
+  RObject vec = convert_vector_to_sexp(v_type, v_num, v);
+  vec.attr("names") = Rcpp::CharacterVector::create(key);
+  return vec;
 }
 
 // [[Rcpp::export]]
