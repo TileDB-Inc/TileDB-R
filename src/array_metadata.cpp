@@ -57,6 +57,16 @@ int num_metadata_ptr(Rcpp::XPtr<tiledb::Array> array) {
   return num_metadata_impl(*array);
 }
 
+template <typename T>
+Rcpp::IntegerVector copy_int_vector(const uint32_t v_num, const void* v) {
+  // Strictly speaking a check for under/overflow would be needed here yet this for
+  // metadata annotation (and not data payload) so extreme ranges are less likely
+  Rcpp::IntegerVector vec(v_num);
+  const T *ivec = static_cast<const T*>(v);
+  size_t n = static_cast<size_t>(v_num);
+  for (size_t i=0; i<n; i++) vec[i] = static_cast<int32_t>(ivec[i]);
+  return(vec);
+}
 
 // ---- get_metadata
 SEXP convert_vector_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num, const void* v) {
@@ -87,6 +97,20 @@ SEXP convert_vector_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num
     size_t n = static_cast<size_t>(v_num);
     for (size_t i=0; i<n; i++) vec[i] = static_cast<bool>(ivec[i]);
     return(vec);
+  } else if (v_type == TILEDB_UINT8) {
+    // Strictly speaking a check for under/overflow would be needed here (and below) yet this
+    // is for metadata annotation (and not data payload) so extreme ranges are less likely
+    return copy_int_vector<uint8_t>(v_num, v);
+  } else if (v_type == TILEDB_INT16) {
+    return copy_int_vector<int16_t>(v_num, v);
+  } else if (v_type == TILEDB_UINT16) {
+    return copy_int_vector<uint16_t>(v_num, v);
+  } else if (v_type == TILEDB_UINT32) {
+    return copy_int_vector<uint32_t>(v_num, v);
+  } else if (v_type == TILEDB_INT64) {
+    return copy_int_vector<int64_t>(v_num, v);
+  } else if (v_type == TILEDB_UINT64) {
+    return copy_int_vector<uint64_t>(v_num, v);
   } else {
     Rcpp::stop("No support yet for %s", _tiledb_datatype_to_string(v_type));
   }
