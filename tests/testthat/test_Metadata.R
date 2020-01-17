@@ -13,16 +13,18 @@ unlink_and_create_simple <- function(tmp) {
   a2  <- tiledb_attr("a2", type = "INT32")
   sch <- tiledb_array_schema(dom, c(a1, a2), sparse=TRUE)
   tiledb_array_create(tmp, sch)
-  arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
 
+  ## write one record directly to (text) URI
+  tiledb_put_metadata(tmp, "vec", c(1.1, 2.2, 3.3))
+
+  arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
   arr
 }
 
 unlink_and_create_ptr <- function(tmp) {
   arr <- unlink_and_create_simple(tmp)
 
-  arrW <- tiledb:::libtiledb_array_open(arr@ptr, "WRITE")
-  tiledb:::put_metadata_ptr(arrW, "vec", c(1.1, 2.2, 3.3))
+  ## write one record via ptr
   arrW <- tiledb:::libtiledb_array_open(arr@ptr, "WRITE")
   tiledb:::put_metadata_ptr(arrW, "txt", "the quick brown fox")
   tiledb:::libtiledb_array_close(arrW)
@@ -120,7 +122,6 @@ test_that("Can get all", {
   arr <- unlink_and_create_ptr(tmp)
 
   res <- tiledb:::get_all_metadata_ptr(arr)
-  #--needs call from R  expect_true(inherits(res, "tiledb_metadata"))
   expect_equal(length(res), 2L)
   expect_true("vec" %in% names(res))
   expect_true("txt" %in% names(res))
