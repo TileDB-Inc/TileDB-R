@@ -76,7 +76,7 @@ SEXP convert_vector_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num
     size_t n = static_cast<size_t>(v_num);
     for (size_t i=0; i<n; i++) vec[i] = static_cast<double>(fvec[i]);
     return(vec);
-  } else if (v_type == TILEDB_STRING_ASCII) {
+  } else if (v_type == TILEDB_CHAR || v_type == TILEDB_STRING_ASCII) {
     Rcpp::CharacterVector vec(1);
     std::string s(static_cast<const char*>(v));
     s.resize(v_num);        // incoming char* not null terminated, ensures v_num bytes and terminate
@@ -141,8 +141,8 @@ bool put_metadata_impl(tiledb::Array array, const std::string key, const SEXP ob
     case STRSXP: {
       Rcpp::CharacterVector v(obj);
       std::string s(v[0]);
-      // TODO: is this best string type?
-      array.put_metadata(key.c_str(), TILEDB_STRING_ASCII, s.length(), s.c_str());
+      // We use TILEDB_CHAR interchangeably with TILEDB_STRING_ASCII is this best string type?
+      array.put_metadata(key.c_str(), TILEDB_CHAR, s.length(), s.c_str());
       break;
     }
     case LGLSXP: {              // experimental: map R logical (ie TRUE, FALSE, NA) to int8
