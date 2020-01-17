@@ -302,7 +302,7 @@ setMethod("[<-", "tiledb_sparse",
 
 setMethod("show", "tiledb_sparse",
           function (object) {
-            cat("tiledb_sparse(uri = \"", object@uri, "\")")
+            cat("tiledb_sparse(uri = \"", object@uri, "\")\n", sep="")
           })
 
 #' Check if object is sparse

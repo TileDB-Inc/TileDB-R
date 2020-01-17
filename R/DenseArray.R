@@ -38,7 +38,7 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
 
 setMethod("show", "tiledb_dense",
           function (object) {
-            cat("tiledb_dense(uri = \"", object@uri, "\")")
+            cat("tiledb_dense(uri = \"", object@uri, "\")\n", sep="")
           })
 
 #' #' Reopens a TileDB array an opened tiledb array
