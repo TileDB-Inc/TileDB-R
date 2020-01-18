@@ -6,7 +6,8 @@
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass "tiledb_sparse"
 setClass("tiledb_sparse",
-         slots = list(ctx = "tiledb_ctx", uri = "character", as.data.frame = "logical", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx", uri = "character",
+                      as.data.frame = "logical", ptr = "externalptr"))
 
 #' Constructs a tiledb_sparse object backed by a persisted tiledb array uri
 #'
@@ -18,7 +19,8 @@ setClass("tiledb_sparse",
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_sparse array object
 #' @export
-tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::getContext()) {
+tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"),
+                          as.data.frame=FALSE, ctx = tiledb_get_context()) {
     query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -300,7 +302,7 @@ setMethod("[<-", "tiledb_sparse",
 
 setMethod("show", "tiledb_sparse",
           function (object) {
-            cat("tiledb_sparse(uri = \"", object@uri, "\")")
+            cat("tiledb_sparse(uri = \"", object@uri, "\")\n", sep="")
           })
 
 #' Check if object is sparse

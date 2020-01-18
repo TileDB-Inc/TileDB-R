@@ -6,7 +6,8 @@
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_dense
 setClass("tiledb_dense",
-         slots = list(ctx = "tiledb_ctx", uri = "character", as.data.frame = "logical", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx", uri = "character",
+                      as.data.frame = "logical", ptr = "externalptr"))
 
 #' Constructs a tiledb_dense object backed by a persisted tiledb array uri
 #'
@@ -16,7 +17,8 @@ setClass("tiledb_dense",
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_dense array object
 #' @export
-tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FALSE, ctx = tiledb:::getContext()) {
+tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
+                         as.data.frame=FALSE, ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -36,7 +38,7 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"), as.data.frame=FAL
 
 setMethod("show", "tiledb_dense",
           function (object) {
-            cat("tiledb_dense(uri = \"", object@uri, "\")")
+            cat("tiledb_dense(uri = \"", object@uri, "\")\n", sep="")
           })
 
 #' #' Reopens a TileDB array an opened tiledb array

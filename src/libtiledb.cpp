@@ -959,6 +959,18 @@ bool libtiledb_array_is_open(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
+bool libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array) {
+  return array->is_open() && array->query_type() != TILEDB_READ;
+}
+
+// [[Rcpp::export]]
+bool libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array) {
+  return array->is_open() && array->query_type() != TILEDB_WRITE;
+}
+
+
+
+// [[Rcpp::export]]
 std::string libtiledb_array_get_uri(XPtr<tiledb::Array> array) {
   return array->uri();
 }

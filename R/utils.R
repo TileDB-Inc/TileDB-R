@@ -49,3 +49,26 @@ r_to_tiledb_type <- function(x) {
     }
     type
 }
+
+##' Open a TileDB Array
+##'
+##' @param arr A TileDB Array object as for example returned by `tiledb_dense()`
+##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
+##' @return The TileDB Array object but opened for reading or writing
+##' @export
+tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
+  type <- match.arg(type)
+
+  arr@ptr <- libtiledb_array_open(arr@ptr, type)
+  arr
+}
+
+##' Close a TileDB Array
+##'
+##' @param arr A TileDB Array object as for example returned by `tiledb_dense()`
+##' @return The TileDB Array object but closed
+##' @export
+tiledb_array_close <- function(arr) {
+  libtiledb_array_close(arr@ptr)
+  arr
+}

@@ -5,7 +5,10 @@
 setClass("tiledb_ctx",
          slots = list(ptr = "externalptr"))
 
-getContext <- function() {
+#' Retrieve a TileDB context object from the package cache
+#'
+#' @return A TileDB context object
+tiledb_get_context <- function() {
   ## return the ctx entry from the package environment (a lightweight hash)
   ctx <- .pkgenv[["ctx"]]
 
@@ -17,10 +20,21 @@ getContext <- function() {
   ctx
 }
 
-setContext <- function(ctx) {
+# provided old renamed context for continuity/compatibility
+getContext <- function() tiledb_get_context()
+
+#' Store a TileDB context object in the package cache
+#'
+#' @param ctx A TileDB context object
+#' @return A TileDB context object
+#' @export
+tiledb_set_context <- function(ctx) {
   ## set the ctx entry from the package environment (a lightweight hash)
   .pkgenv[["ctx"]] <- ctx
 }
+
+# provided old renamed context for continuity/compatibility
+setContext <- function(ctx) tiledb_set_context(ctx)
 
 #' Creates a `tiledb_ctx` object
 #'
@@ -61,7 +75,7 @@ tiledb_ctx <- function(config = NULL, cached = TRUE) {
 
   tiledb_ctx_set_default_tags(ctx)
 
-  setContext(ctx)
+  tiledb_set_context(ctx)
 
   return(ctx)
 }
@@ -83,7 +97,7 @@ setGeneric("config", function(object, ...) {
 #'
 #' @export
 setMethod("config", signature(object = "tiledb_ctx"),
-          function(object = tiledb:::getContext()) {
+          function(object = tiledb_get_context()) {
             ptr <- libtiledb_ctx_config(object@ptr)
             tiledb_config.from_ptr(ptr)
           })
@@ -105,7 +119,7 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #' tiledb_is_supported_fs("s3")
 #'
 #' @export
-tiledb_is_supported_fs <- function(scheme, object = tiledb:::getContext()) {
+tiledb_is_supported_fs <- function(scheme, object = tiledb_get_context()) {
             libtiledb_ctx_is_supported_fs(object@ptr, scheme)
 }
 
