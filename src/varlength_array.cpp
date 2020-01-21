@@ -6,6 +6,16 @@
 
 using namespace tiledb;
 
+const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
+  switch (atype) {
+    case TILEDB_DENSE:
+      return "dense";
+    case TILEDB_SPARSE:
+      return "sparse";
+    default:
+      Rcpp::stop("unknow tiledb_array_type_t");
+  }
+}
 
 // [[Rcpp::export]]
 bool firstTest(const std::string array_name,
@@ -18,6 +28,19 @@ bool firstTest(const std::string array_name,
     Rcpp::stop("Expecting four elements in subarray vector.");
   if (keys.size() != 2)
     Rcpp::stop("Expecting two elements in keys vector.");
+
+  ArraySchema schema = array.schema();
+  tiledb_array_type_t array_type = schema.array_type();
+  std::cout << "Array is " << _tiledb_arraytype_to_string(array_type) << std::endl;
+
+  Domain dom = schema.domain();
+
+  uint32_t attr_num = schema.attribute_num();
+  std::cout << "Number of Attributes is " << attr_num << std::endl;
+  for (uint32_t idx=0; idx<attr_num; idx++) {
+    Attribute attr = schema.attribute(idx);
+  }
+
 
   // Prepare the vectors that will hold the result
   auto max_el_map = array.max_buffer_elements(subarray);
