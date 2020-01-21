@@ -1319,6 +1319,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// firstTest
+bool firstTest(const std::string array_name, const std::vector<int> subarray, const std::vector<std::string> keys);
+RcppExport SEXP _tiledb_firstTest(SEXP array_nameSEXP, SEXP subarraySEXP, SEXP keysSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
+    Rcpp::traits::input_parameter< const std::vector<int> >::type subarray(subarraySEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string> >::type keys(keysSEXP);
+    rcpp_result_gen = Rcpp::wrap(firstTest(array_name, subarray, keys));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_has_metadata_simple", (DL_FUNC) &_tiledb_has_metadata_simple, 2},
@@ -1434,6 +1447,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
     {"_tiledb_libtiledb_stats_dump", (DL_FUNC) &_tiledb_libtiledb_stats_dump, 1},
     {"_tiledb_libtiledb_stats_print", (DL_FUNC) &_tiledb_libtiledb_stats_print, 0},
+    {"_tiledb_firstTest", (DL_FUNC) &_tiledb_firstTest, 3},
     {NULL, NULL, 0}
 };
 
