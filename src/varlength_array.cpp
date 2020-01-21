@@ -6,6 +6,8 @@
 
 using namespace tiledb;
 
+const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype);
+
 const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
   switch (atype) {
     case TILEDB_DENSE:
@@ -39,6 +41,8 @@ bool firstTest(const std::string array_name,
   std::cout << "Number of Attributes is " << attr_num << std::endl;
   for (uint32_t idx=0; idx<attr_num; idx++) {
     Attribute attr = schema.attribute(idx);
+    std::cout << "Name: " << attr.name()
+              << " " << _tiledb_datatype_to_string(attr.type()) << std::endl;
   }
 
 
