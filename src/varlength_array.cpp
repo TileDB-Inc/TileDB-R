@@ -22,7 +22,8 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
 // [[Rcpp::export]]
 Rcpp::List firstTest(const std::string array_name,
                      const std::vector<int> subarray,
-                     const std::vector<std::string> keys) {
+                     const std::vector<std::string> keys,
+                     bool debug) {
   Context ctx;                                // context object
   Array array(ctx, array_name, TILEDB_READ);	// Prepare the array for reading
 
@@ -33,16 +34,16 @@ Rcpp::List firstTest(const std::string array_name,
 
   ArraySchema schema = array.schema();
   tiledb_array_type_t array_type = schema.array_type();
-  std::cout << "Array is " << _tiledb_arraytype_to_string(array_type) << std::endl;
+  if (debug) std::cout << "Array is " << _tiledb_arraytype_to_string(array_type) << std::endl;
 
   Domain dom = schema.domain();
 
   uint32_t attr_num = schema.attribute_num();
-  std::cout << "Number of Attributes is " << attr_num << std::endl;
+  if (debug) std::cout << "Number of Attributes is " << attr_num << std::endl;
   for (uint32_t idx=0; idx<attr_num; idx++) {
     Attribute attr = schema.attribute(idx);
-    std::cout << "Name: " << attr.name()
-              << " " << _tiledb_datatype_to_string(attr.type()) << std::endl;
+    if (debug) std::cout << "Name: " << attr.name()
+                         << " " << _tiledb_datatype_to_string(attr.type()) << std::endl;
   }
 
 
@@ -111,14 +112,16 @@ Rcpp::List firstTest(const std::string array_name,
 
   // Print the results
   for (size_t i = 0; i < result_el_a1_off; ++i) {
-    Rcpp::Rcout << "i: " << i << " ";
-    Rcpp::Rcout << "a1: " << a1_str[i] << ", a2: ";
+    if (debug) {
+      Rcpp::Rcout << "i: " << i << " ";
+      Rcpp::Rcout << "a1: " << a1_str[i] << ", a2: ";
+    }
     std::vector<int> v;
     for (size_t j = 0; j < a2_cell_el[i]; ++j) {
-      Rcpp::Rcout << a2_data[a2_el_off[i] + j] << " ";
+      if (debug) Rcpp::Rcout << a2_data[a2_el_off[i] + j] << " ";
       v.push_back(a2_data[a2_el_off[i] + j] );
     }
-    Rcpp::Rcout << "\n";
+    if (debug) Rcpp::Rcout << "\n";
     A1[i] = a1_str[i];
     A2l[i] = v;
   }
