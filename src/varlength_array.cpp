@@ -112,10 +112,7 @@ Rcpp::List firstTest(const std::string array_name,
 
   // Print the results
   for (size_t i = 0; i < result_el_a1_off; ++i) {
-    if (debug) {
-      Rcpp::Rcout << "i: " << i << " ";
-      Rcpp::Rcout << "a1: " << a1_str[i] << ", a2: ";
-    }
+    if (debug) Rcpp::Rcout << "i: " << i << " " << "a1: " << a1_str[i] << ", a2: ";
     std::vector<int> v;
     for (size_t j = 0; j < a2_cell_el[i]; ++j) {
       if (debug) Rcpp::Rcout << a2_data[a2_el_off[i] + j] << " ";
@@ -125,7 +122,6 @@ Rcpp::List firstTest(const std::string array_name,
     A1[i] = a1_str[i];
     A2l[i] = v;
   }
-
   return Rcpp::List::create(Rcpp::Named(nm1) = transpose(A1),
                             Rcpp::Named(nm2) = A2l);
 
