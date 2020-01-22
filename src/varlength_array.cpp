@@ -20,10 +20,10 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
 }
 
 // [[Rcpp::export]]
-Rcpp::List firstTest(const std::string array_name,
-                     const std::vector<int> subarray,
-                     const std::vector<std::string> keys,
-                     bool debug) {
+Rcpp::List read_varlength_array(const std::string array_name,
+                                const std::vector<int> subarray,
+                                const std::vector<std::string> keys,
+                                bool debug) {
   Context ctx;                                // context object
   Array array(ctx, array_name, TILEDB_READ);	// Prepare the array for reading
 
@@ -137,3 +137,37 @@ Rcpp::List firstTest(const std::string array_name,
 //  [array([9, 9]) array([10]) array([11]) array([12, 12])]
 //  [array([13]) array([14, 14, 14]) array([15]
 // edd@rob:~/git/tiledb-adhoc/python(master)$
+
+// and now from R:
+
+// edd@rob:~/git/tiledb-r(de/varlength-array)$ r -ltiledb  -e'print(variable_length("../tiledb-data/examples/variable_length_array", c(1,4,1,4), c("a1", "a2"))); '
+// $a1
+//     V1  V1  V1  V1
+// 1:   a  bb ccc  dd
+// 2: eee   f   g hhh
+// 3:   i jjj  kk   l
+// 4:   m   n  oo   p
+//
+// $a2
+//     V1       V1  V1    V1
+// 1: 1,1      2,2   3     4
+// 2:   5      6,6 7,7 8,8,8
+// 3: 9,9       10  11 12,12
+// 4:  13 14,14,14  15    16
+//
+// edd@rob:~/git/tiledb-r(de/varlength-array)$
+
+
+// [[Rcpp::export]]
+bool write_varlength_array(Rcpp::List listobject, const std::vector<std::string> names) {
+  int n = names.size();
+
+  // simplest possible processing: assign to data frame
+  for (int i=0; i<n; i++) {
+    Rcpp::DataFrame df(listobject[i]);
+    Rcpp::List s = df[1];
+    Rcpp::print(s[0]);
+    //Rcpp::Rcout << df[0][0] << std::endl;
+  }
+  return true;
+}

@@ -453,7 +453,11 @@ libtiledb_stats_print <- function() {
     invisible(.Call(`_tiledb_libtiledb_stats_print`))
 }
 
-firstTest <- function(array_name, subarray, keys, debug) {
-    .Call(`_tiledb_firstTest`, array_name, subarray, keys, debug)
+read_varlength_array <- function(array_name, subarray, keys, debug) {
+    .Call(`_tiledb_read_varlength_array`, array_name, subarray, keys, debug)
+}
+
+write_varlength_array <- function(listobject, names) {
+    .Call(`_tiledb_write_varlength_array`, listobject, names)
 }
 

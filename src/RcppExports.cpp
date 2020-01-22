@@ -1319,9 +1319,9 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// firstTest
-Rcpp::List firstTest(const std::string array_name, const std::vector<int> subarray, const std::vector<std::string> keys, bool debug);
-RcppExport SEXP _tiledb_firstTest(SEXP array_nameSEXP, SEXP subarraySEXP, SEXP keysSEXP, SEXP debugSEXP) {
+// read_varlength_array
+Rcpp::List read_varlength_array(const std::string array_name, const std::vector<int> subarray, const std::vector<std::string> keys, bool debug);
+RcppExport SEXP _tiledb_read_varlength_array(SEXP array_nameSEXP, SEXP subarraySEXP, SEXP keysSEXP, SEXP debugSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1329,7 +1329,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const std::vector<int> >::type subarray(subarraySEXP);
     Rcpp::traits::input_parameter< const std::vector<std::string> >::type keys(keysSEXP);
     Rcpp::traits::input_parameter< bool >::type debug(debugSEXP);
-    rcpp_result_gen = Rcpp::wrap(firstTest(array_name, subarray, keys, debug));
+    rcpp_result_gen = Rcpp::wrap(read_varlength_array(array_name, subarray, keys, debug));
+    return rcpp_result_gen;
+END_RCPP
+}
+// write_varlength_array
+bool write_varlength_array(Rcpp::List listobject, const std::vector<std::string> names);
+RcppExport SEXP _tiledb_write_varlength_array(SEXP listobjectSEXP, SEXP namesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type listobject(listobjectSEXP);
+    Rcpp::traits::input_parameter< const std::vector<std::string> >::type names(namesSEXP);
+    rcpp_result_gen = Rcpp::wrap(write_varlength_array(listobject, names));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1448,7 +1460,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
     {"_tiledb_libtiledb_stats_dump", (DL_FUNC) &_tiledb_libtiledb_stats_dump, 1},
     {"_tiledb_libtiledb_stats_print", (DL_FUNC) &_tiledb_libtiledb_stats_print, 0},
-    {"_tiledb_firstTest", (DL_FUNC) &_tiledb_firstTest, 4},
+    {"_tiledb_read_varlength_array", (DL_FUNC) &_tiledb_read_varlength_array, 4},
+    {"_tiledb_write_varlength_array", (DL_FUNC) &_tiledb_write_varlength_array, 2},
     {NULL, NULL, 0}
 };
 

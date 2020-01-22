@@ -1,8 +1,8 @@
 
 ##' @export
-variable_length <- function(array, subarray, keys, debug=FALSE) {
+read_variable_length <- function(array, subarray, keys, debug=FALSE) {
 
-  res <- firstTest(array, subarray, keys, debug)
+  res <- read_varlength_array(array, subarray, keys, debug)
 
   if (requireNamespace("data.table", quietly=TRUE)) {
     nr <- subarray[2] - subarray[1] + 1
@@ -15,6 +15,7 @@ variable_length <- function(array, subarray, keys, debug=FALSE) {
       for (i in seq_along(2:nc)) {
         dt <- data.table:::cbind.data.table(dt, data.table::data.table(res[[j]][s + i]))
       }
+      colnames(dt) <- paste("V", 1:nc, sep="")
       ll[[j]] <- dt
     }
     names(ll) <- keys
@@ -22,5 +23,16 @@ variable_length <- function(array, subarray, keys, debug=FALSE) {
   } else {
     return(res)
   }
+
+}
+
+##' @export
+write_variable_length <- function(listobject, debug=FALSE) {
+  ## we extract names simply because it is easier
+  names <- names(listobject)
+  n <- length(listobject)
+
+  ## pass list of objects (and their names) down
+  res <- write_varlength_array(listobject, names)
 
 }
