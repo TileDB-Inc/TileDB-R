@@ -107,7 +107,6 @@ Rcpp::List firstTest(const std::string array_name,
 
   int nr = subarray[1] - subarray[0] + 1;
   int nc = subarray[3] - subarray[2] + 1;
-  Rcpp::CharacterMatrix A1(nr, nc);
   Rcpp::List A1l(nr * nc);
   Rcpp::List A2l(nr * nc);
 
@@ -120,13 +119,11 @@ Rcpp::List firstTest(const std::string array_name,
       v.push_back(a2_data[a2_el_off[i] + j] );
     }
     if (debug) Rcpp::Rcout << "\n";
-    A1[i] = a1_str[i];
     A1l[i] = a1_str[i];
     A2l[i] = v;
   }
-  return Rcpp::List::create(Rcpp::Named(nm1) = transpose(A1),
-                            Rcpp::Named(nm2) = A2l,
-                            Rcpp::Named("a1l") = A1l);
+  return Rcpp::List::create(Rcpp::Named(nm1) = A1l,
+                            Rcpp::Named(nm2) = A2l);
 
 }
 
