@@ -1320,7 +1320,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // firstTest
-bool firstTest(const std::string array_name, const std::vector<int> subarray, const std::vector<std::string> keys);
+Rcpp::List firstTest(const std::string array_name, const std::vector<int> subarray, const std::vector<std::string> keys);
 RcppExport SEXP _tiledb_firstTest(SEXP array_nameSEXP, SEXP subarraySEXP, SEXP keysSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

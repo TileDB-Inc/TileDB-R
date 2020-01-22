@@ -20,9 +20,9 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
 }
 
 // [[Rcpp::export]]
-bool firstTest(const std::string array_name,
-               const std::vector<int> subarray,
-               const std::vector<std::string> keys) {
+Rcpp::List firstTest(const std::string array_name,
+                     const std::vector<int> subarray,
+                     const std::vector<std::string> keys) {
   Context ctx;                                // context object
   Array array(ctx, array_name, TILEDB_READ);	// Prepare the array for reading
 
@@ -61,11 +61,11 @@ bool firstTest(const std::string array_name,
     Rcpp::stop("Key '%s' not present.", nm2);
 
   std::vector<uint64_t> a1_off(max_el_map[nm1].first);
-  std::string a1_data;          						// FIXME: how can we generalize the data type?
+  std::string a1_data;          						// TODO: generalize to data type from attr
   a1_data.resize(max_el_map[nm1].second);
 
   std::vector<uint64_t> a2_off(max_el_map[nm2].first);
-  std::vector<int> a2_data(max_el_map[nm2].second); // FIXME: ditto
+  std::vector<int> a2_data(max_el_map[nm2].second); // TODO: ditto
 
   // Prepare and submit the query, and close the array
   Query query(ctx, array);
@@ -104,12 +104,37 @@ bool firstTest(const std::string array_name,
   auto result_el_a2_data = result_el_map["a2"].second;
   a2_cell_el.push_back(result_el_a2_data - a2_el_off.back());
 
+  int nr = subarray[1] - subarray[0] + 1;
+  int nc = subarray[3] - subarray[2] + 1;
+  Rcpp::CharacterMatrix A1(nr, nc);
+  Rcpp::List A2l(nr * nc);
+
   // Print the results
   for (size_t i = 0; i < result_el_a1_off; ++i) {
+    Rcpp::Rcout << "i: " << i << " ";
     Rcpp::Rcout << "a1: " << a1_str[i] << ", a2: ";
-    for (size_t j = 0; j < a2_cell_el[i]; ++j)
+    std::vector<int> v;
+    for (size_t j = 0; j < a2_cell_el[i]; ++j) {
       Rcpp::Rcout << a2_data[a2_el_off[i] + j] << " ";
+      v.push_back(a2_data[a2_el_off[i] + j] );
+    }
     Rcpp::Rcout << "\n";
+    A1[i] = a1_str[i];
+    A2l[i] = v;
   }
-  return true;
+
+  return Rcpp::List::create(Rcpp::Named(nm1) = transpose(A1),
+                            Rcpp::Named(nm2) = A2l);
+
 }
+
+// edd@rob:~/git/tiledb-adhoc/python(master)$ python3 variable_length.py
+// [['a' 'bb' 'ccc' 'dd']
+//  ['eee' 'f' 'g' 'hhh']
+//  ['i' 'jjj' 'kk' 'l']
+//  ['m' 'n' 'oo' 'p']]
+// [[array([1]) array([2, 2]) array([3]) array([4])]
+//  [array([5]) array([6, 6]) array([7, 7]) array([8, 8, 8])]
+//  [array([9, 9]) array([10]) array([11]) array([12, 12])]
+//  [array([13]) array([14, 14, 14]) array([15]
+// edd@rob:~/git/tiledb-adhoc/python(master)$
