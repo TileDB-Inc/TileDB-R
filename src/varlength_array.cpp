@@ -244,6 +244,7 @@ bool write_varlength_array(const std::string uri, Rcpp::List listobject,
   Context ctx;                                // context object
   Array array(ctx, uri, TILEDB_WRITE);	      // Prepare the array for writing
   Query query(ctx, array);
+  query.set_layout(TILEDB_ROW_MAJOR);
 
   // simplest possible processing: assign to data frame
   for (int i=0; i<n; i++) {
