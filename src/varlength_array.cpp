@@ -182,6 +182,31 @@ std::pair<std::string, std::vector<uint64_t>> getStringVectorAndOffset(Rcpp::Dat
   return std::make_pair(data, offsets);
 }
 
+template <typename T>
+std::pair<std::vector<T>, std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFrame df) {
+  // here we know we have a data.frame with T elements (int or real)
+  int k = df.length();
+  Rcpp::List fst = df[0];
+  int n = fst.length();
+  Rcpp::Rcout << "  with " << k << " columns and " << n << " elements yielding ";
+
+  std::vector<T> data;
+  std::vector<uint64_t> offsets;
+  uint64_t curroff = 0;
+  offsets.push_back(curroff);          // offsets start with 0
+
+  for (int i=0; i<n; i++) {
+    for (int j=0; j<k; j++) {
+      Rcpp::List cvec = df[j];
+      std::vector<T> curvec = Rcpp::as<std::vector<T> >(cvec[i]);
+      for (size_t vi=0; vi<curvec.size(); vi++) { data.push_back(curvec[vi]); Rcpp::Rcout << " " << curvec[vi]; }
+      curroff += curvec.size();
+      offsets.push_back(curroff);
+    }
+  }
+  offsets.pop_back(); // last one is 'one too far'
+  return std::make_pair(data, offsets);
+}
 
 
 // [[Rcpp::export]]
@@ -204,11 +229,13 @@ bool write_varlength_array(Rcpp::List listobject, const std::vector<std::string>
       case REALSXP: {
         Rcpp::NumericVector v(obj);
         Rcpp::Rcout << "double\n";
+        std::pair<std::vector<double>, std::vector<uint64_t>> vv = getVectorAndOffset<double>(df);
         break;
       }
       case INTSXP: {
         Rcpp::IntegerVector v(obj);
         Rcpp::Rcout << "integer\n";
+        std::pair<std::vector<int32_t>, std::vector<uint64_t>> vv = getVectorAndOffset<int32_t>(df);
         break;
       }
       case STRSXP: {
