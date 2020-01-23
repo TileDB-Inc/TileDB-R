@@ -185,64 +185,99 @@ std::pair<std::string, std::vector<uint64_t>> getStringVectorAndOffset(Rcpp::Dat
 template <typename T>
 std::pair<std::vector<T>, std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFrame df) {
   // here we know we have a data.frame with T elements (int or real)
-  int k = df.length();
+  int ncolumns = df.length();
   Rcpp::List fst = df[0];
-  int n = fst.length();
-  Rcpp::Rcout << "  with " << k << " columns and " << n << " elements yielding ";
+  int nrows = fst.length();
+  Rcpp::Rcout << "  with " << ncolumns << " columns and " << nrows << " elements yielding ";
 
   std::vector<T> data;
   std::vector<uint64_t> offsets;
   uint64_t curroff = 0;
   offsets.push_back(curroff);          // offsets start with 0
 
-  for (int i=0; i<n; i++) {
-    for (int j=0; j<k; j++) {
+  for (int i=0; i<nrows; i++) {
+    for (int j=0; j<ncolumns; j++) {
       Rcpp::List cvec = df[j];
       std::vector<T> curvec = Rcpp::as<std::vector<T> >(cvec[i]);
-      for (size_t vi=0; vi<curvec.size(); vi++) { data.push_back(curvec[vi]); Rcpp::Rcout << " " << curvec[vi]; }
+      for (size_t vi=0; vi<curvec.size(); vi++) {
+        data.push_back(curvec[vi]);
+        Rcpp::Rcout << " " << curvec[vi];
+      }
       curroff += curvec.size();
       offsets.push_back(curroff);
     }
   }
+  Rcpp::Rcout << std::endl;
   offsets.pop_back(); // last one is 'one too far'
   return std::make_pair(data, offsets);
 }
 
+// [[Rcpp::export]]
+void create_varlength_array(const std::string array_name) {
+  // Create a TileDB context
+  Context ctx;
+
+  // The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
+  Domain domain(ctx);
+  domain.add_dimension(tiledb::Dimension::create<int>(ctx, "rows", {{1, 4}}, 4))
+      .add_dimension(tiledb::Dimension::create<int>(ctx, "cols", {{1, 4}}, 4));
+
+  // The array will be dense
+  ArraySchema schema(ctx, TILEDB_DENSE);
+  schema.set_domain(domain).set_order({{TILEDB_ROW_MAJOR, TILEDB_ROW_MAJOR}});
+
+  // Add two variable-length attributes "a1" and "a2", the first storing
+  // strings and the second storing a variable number of integers.
+  schema.add_attribute(Attribute::create<std::string>(ctx, "a1"));
+  schema.add_attribute(Attribute::create<std::vector<int>>(ctx, "a2"));
+
+  // Create the (empty) array on disk.
+  Array::create(array_name, schema);
+}
+
 
 // [[Rcpp::export]]
-bool write_varlength_array(Rcpp::List listobject, const std::vector<std::string> names) {
+bool write_varlength_array(const std::string uri, Rcpp::List listobject,
+                           const std::vector<std::string> names, bool debug = false) {
   int n = names.size();
+
+  Context ctx;                                // context object
+  Array array(ctx, uri, TILEDB_WRITE);	      // Prepare the array for writing
+  Query query(ctx, array);
 
   // simplest possible processing: assign to data frame
   for (int i=0; i<n; i++) {
-    Rcpp::Rcout << "Object " << i << std::endl;
+    Rcpp::Rcout << "Object " << i << " with name " << names[i] << std::endl;
     Rcpp::DataFrame df(listobject[i]);
     int k = df.length();
-    Rcpp::Rcout << "  with " << k << " columns of type ";
     Rcpp::List fst = df[0];
     RObject obj = fst[0];
+
     switch(TYPEOF(obj)) {
       case VECSXP: {
         Rcpp::stop("List objects are not supported.");
         break;// not reached
       }
       case REALSXP: {
-        Rcpp::NumericVector v(obj);
-        Rcpp::Rcout << "double\n";
+        //Rcpp::NumericVector v(obj);
+        if (debug) Rcpp::Rcout << "double\n";
         std::pair<std::vector<double>, std::vector<uint64_t>> vv = getVectorAndOffset<double>(df);
+        query.set_layout(TILEDB_ROW_MAJOR).set_buffer(names[i], vv.second, vv.first);
         break;
       }
       case INTSXP: {
-        Rcpp::IntegerVector v(obj);
-        Rcpp::Rcout << "integer\n";
+        //Rcpp::IntegerVector v(obj);
+        if (debug) Rcpp::Rcout << "integer\n";
         std::pair<std::vector<int32_t>, std::vector<uint64_t>> vv = getVectorAndOffset<int32_t>(df);
+        query.set_layout(TILEDB_ROW_MAJOR).set_buffer(names[i], vv.second, vv.first);
         break;
       }
       case STRSXP: {
-        Rcpp::CharacterVector v(obj);
-        Rcpp::Rcout << "character\n";
+        //Rcpp::CharacterVector v(obj);
+        if (debug) Rcpp::Rcout << "character\n";
         std::pair<std::string, std::vector<uint64_t>> vv = getStringVectorAndOffset(df);
         Rcpp::Rcout << vv.first << std::endl;
+        query.set_layout(TILEDB_ROW_MAJOR).set_buffer(names[i], vv.second, vv.first);
         break;
       }
     }
@@ -251,6 +286,12 @@ bool write_varlength_array(Rcpp::List listobject, const std::vector<std::string>
       Rcpp::print(s[0]);
     }
     //Rcpp::Rcout << df[0][0] << std::endl;
+
+    Rcpp::Rcout << "DONE one pass on " << names[i] << std::endl;
   }
+  // Perform the write and close the array.
+  query.submit();
+  array.close();
+
   return true;
 }

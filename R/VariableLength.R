@@ -27,12 +27,19 @@ read_variable_length <- function(array, subarray, keys, debug=FALSE) {
 }
 
 ##' @export
-write_variable_length <- function(listobject, debug=FALSE) {
+write_variable_length <- function(uri, listobject, debug=FALSE) {
   ## we extract names simply because it is easier
   names <- names(listobject)
   n <- length(listobject)
 
+  ## this is very adhoc while we test
+  if (dir.exists(uri)) {
+    unlink(uri, recursive=TRUE, force=TRUE)
+  }
+  dir.create(uri)
+  create_varlength_array(uri)
+
   ## pass list of objects (and their names) down
-  res <- write_varlength_array(listobject, names)
+  res <- write_varlength_array(uri, listobject, names, debug)
 
 }
