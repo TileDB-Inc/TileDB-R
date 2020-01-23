@@ -157,12 +157,32 @@ Rcpp::List read_varlength_array(const std::string array_name,
 //
 // edd@rob:~/git/tiledb-r(de/varlength-array)$
 
-std::pair<std::string, std::vector<uint64_t>> getStringVectorAndOffset(Rcpp::DataFrame df) {
+
+// We need to 'cache' the variable length data and offset vectors as
+// these get passed to the storage manager layer all at once.  But we
+// can only process them one by one, and only know respective types
+// when we process. Which is generally in some dynamic scope so we
+// would 'forgot' the information. Hence we fill a simple structure
+// and use it to set the query.
+
+struct vararrelem {
+  std::string attr;             // attribute name
+  uint64_t *offsets;            // pointer to offset values
+  uint64_t noffsets;            // number of offset values
+  void *data;                   // poiner to data values
+  uint64_t ndata;               // number of data values
+  int8_t elsize;                // sizeof(T) for the attribute
+};
+
+
+
+std::pair<std::string, std::vector<uint64_t>> getStringVectorAndOffset(Rcpp::DataFrame df,
+                                                                       bool debug = FALSE) {
   // here we know we have a data.frame with character columns
   int k = df.length();
   Rcpp::List fst = df[0];
   int n = fst.length();
-  Rcpp::Rcout << "  with " << k << " columns and " << n << " elements yielding ";
+  if (debug) Rcpp::Rcout << "  with " << k << " columns and " << n << " elements yielding ";
 
   std::string data("");
   std::vector<uint64_t> offsets;
@@ -183,17 +203,18 @@ std::pair<std::string, std::vector<uint64_t>> getStringVectorAndOffset(Rcpp::Dat
 }
 
 template <typename T>
-std::pair<std::vector<T>, std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFrame df) {
+std::pair<std::vector<T>, std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFrame df,
+                                                                    bool debug = FALSE) {
   // here we know we have a data.frame with T elements (int or real)
   int ncolumns = df.length();
   Rcpp::List fst = df[0];
   int nrows = fst.length();
-  Rcpp::Rcout << "  with " << ncolumns << " columns and " << nrows << " elements yielding ";
+  if (debug) Rcpp::Rcout << "  with " << ncolumns << " columns and " << nrows << " elements yielding ";
 
   std::vector<T> data;
-  std::vector<uint64_t> offsets;
+  std::vector<uint64_t> offset_els;
   uint64_t curroff = 0;
-  offsets.push_back(curroff);          // offsets start with 0
+  offset_els.push_back(curroff);          // offsets start with 0
 
   for (int i=0; i<nrows; i++) {
     for (int j=0; j<ncolumns; j++) {
@@ -201,14 +222,19 @@ std::pair<std::vector<T>, std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFr
       std::vector<T> curvec = Rcpp::as<std::vector<T> >(cvec[i]);
       for (size_t vi=0; vi<curvec.size(); vi++) {
         data.push_back(curvec[vi]);
-        Rcpp::Rcout << " " << curvec[vi];
+        if (debug) Rcpp::Rcout << " " << curvec[vi];
       }
       curroff += curvec.size();
-      offsets.push_back(curroff);
+      offset_els.push_back(curroff);
     }
   }
-  Rcpp::Rcout << std::endl;
-  offsets.pop_back(); // last one is 'one too far'
+  if (debug) Rcpp::Rcout << std::endl;
+  offset_els.pop_back(); // last one is 'one too far'
+
+  std::vector<uint64_t> offsets;
+  for (auto e : offset_els) {
+    offsets.push_back(e * sizeof(T));
+  }
   return std::make_pair(data, offsets);
 }
 
@@ -235,20 +261,22 @@ void create_varlength_array(const std::string array_name) {
   Array::create(array_name, schema);
 }
 
-
 // [[Rcpp::export]]
 bool write_varlength_array(const std::string uri, Rcpp::List listobject,
                            const std::vector<std::string> names, bool debug = false) {
   int n = names.size();
+  if (debug) Rcpp::Rcout << "n is " << n << std::endl;
 
   Context ctx;                                // context object
   Array array(ctx, uri, TILEDB_WRITE);	      // Prepare the array for writing
   Query query(ctx, array);
   query.set_layout(TILEDB_ROW_MAJOR);
 
+  std::vector<struct vararrelem> vec;
+
   // simplest possible processing: assign to data frame
   for (int i=0; i<n; i++) {
-    Rcpp::Rcout << "Object " << i << " with name " << names[i] << std::endl;
+    if (debug) Rcpp::Rcout << "Object " << i << " with name " << names[i] << std::endl;
     Rcpp::DataFrame df(listobject[i]);
     int k = df.length();
     Rcpp::List fst = df[0];
@@ -260,39 +288,151 @@ bool write_varlength_array(const std::string uri, Rcpp::List listobject,
         break;// not reached
       }
       case REALSXP: {
-        //Rcpp::NumericVector v(obj);
         if (debug) Rcpp::Rcout << "double\n";
-        std::pair<std::vector<double>, std::vector<uint64_t>> vv = getVectorAndOffset<double>(df);
-        query.set_layout(TILEDB_ROW_MAJOR).set_buffer(names[i], vv.second, vv.first);
+        std::pair<std::vector<double>, std::vector<uint64_t>> vv = getVectorAndOffset<double>(df, debug);
+
+        struct vararrelem s;
+        s.attr = names[i];
+        s.noffsets = vv.second.size();
+        s.offsets = new uint64_t[s.noffsets];
+        memcpy(s.offsets, vv.second.data(), s.noffsets*sizeof(uint64_t));
+        s.ndata = vv.first.size();
+        s.elsize = sizeof(double);
+        s.data = new char[s.ndata*s.elsize];
+        memcpy(s.data, vv.first.data(), s.ndata*s.elsize);
+        vec.push_back(s);
+
         break;
       }
       case INTSXP: {
-        //Rcpp::IntegerVector v(obj);
         if (debug) Rcpp::Rcout << "integer\n";
-        std::pair<std::vector<int32_t>, std::vector<uint64_t>> vv = getVectorAndOffset<int32_t>(df);
-        query.set_layout(TILEDB_ROW_MAJOR).set_buffer(names[i], vv.second, vv.first);
+        std::pair<std::vector<int32_t>, std::vector<uint64_t>> vv = getVectorAndOffset<int32_t>(df, debug);
+
+        struct vararrelem s;
+        s.attr = names[i];
+        s.noffsets = vv.second.size();
+        s.offsets = new uint64_t[s.noffsets];
+        memcpy(s.offsets, vv.second.data(), s.noffsets*sizeof(uint64_t));
+        s.ndata = vv.first.size();
+        s.elsize = sizeof(int32_t);
+        s.data = new char[s.ndata*s.elsize];
+        memcpy(s.data, vv.first.data(), s.ndata*s.elsize);
+        vec.push_back(s);
+
         break;
       }
       case STRSXP: {
-        //Rcpp::CharacterVector v(obj);
         if (debug) Rcpp::Rcout << "character\n";
-        std::pair<std::string, std::vector<uint64_t>> vv = getStringVectorAndOffset(df);
-        Rcpp::Rcout << vv.first << std::endl;
-        query.set_layout(TILEDB_ROW_MAJOR).set_buffer(names[i], vv.second, vv.first);
+        std::pair<std::string, std::vector<uint64_t>> vv = getStringVectorAndOffset(df, debug);
+        //if (debug) Rcpp::Rcout << vv.first << std::endl;
+
+        struct vararrelem s;
+        s.attr = names[i];
+        s.noffsets = vv.second.size();
+        s.offsets = new uint64_t[s.noffsets];
+        memcpy(s.offsets, vv.second.data(), s.noffsets*sizeof(uint64_t));
+        s.ndata = vv.first.size();
+        s.elsize = sizeof(char);
+        s.data = new char[s.ndata];
+        memcpy(s.data, &vv.first[0], s.ndata*s.elsize);
+        vec.push_back(s);
+
         break;
       }
     }
     for (int j=0; j<k; j++) {
       Rcpp::List s = df[j];
-      Rcpp::print(s[0]);
+      if (debug) Rcpp::print(s[0]);
     }
     //Rcpp::Rcout << df[0][0] << std::endl;
 
-    Rcpp::Rcout << "DONE one pass on " << names[i] << std::endl;
+    if (debug) Rcpp::Rcout << "DONE one pass on " << names[i] << std::endl;
   }
+
+  // Now use the 'cached' data to set the buffer
+  for (size_t i=0; i<vec.size(); i++) {
+    struct vararrelem s = vec[i];
+    query.set_buffer(s.attr, s.offsets, s.noffsets, s.data, s.ndata);
+  }
+
   // Perform the write and close the array.
   query.submit();
   array.close();
+
+  // Release temp 'cache' memory
+  for (size_t i=0; i<vec.size(); i++) {
+    struct vararrelem s = vec[i];
+    delete[] s.offsets;
+    delete[] static_cast<char*>(s.data);
+  }
+
+  return true;
+}
+
+
+// [[Rcpp::export]]
+bool write_varlength_array_NEW(std::string uri,
+                               // subsequent argument ignored here but used in 'other' signature
+                               Rcpp::List listobject, const std::vector<std::string> names, bool debug = false) {
+
+  Context ctx;                                // context object
+  Array array(ctx, uri, TILEDB_WRITE);	      // Prepare the array for writing
+  Query query(ctx, array);
+  query.set_layout(TILEDB_ROW_MAJOR);
+
+  std::vector<struct vararrelem> vec;
+
+  {
+    std::string a1_data = "abbcccddeeefghhhijjjkklmnoop";
+    std::vector<uint64_t> a1_off = {0, 1, 3, 6, 8, 11, 12, 13, 16, 17, 20, 22, 23, 24, 25, 27};
+
+    struct vararrelem s;
+    s.attr = "a1";
+    s.noffsets = a1_off.size();
+    s.offsets = new uint64_t[s.noffsets];
+    memcpy(s.offsets, a1_off.data(), s.noffsets*sizeof(uint64_t));
+    s.ndata = a1_data.size();
+    s.elsize = sizeof(char);
+    s.data = new char[s.ndata];
+    memcpy(s.data, &a1_data[0], s.ndata*s.elsize);
+    vec.push_back(s);
+  }
+
+  {
+    std::vector<int> a2_data = {1, 1, 2, 2,  3,  4,  5,  6,  6,  7,  7,  8,  8, 8, 9, 9, 10, 11, 12, 12, 13, 14, 14, 14, 15, 16};
+    std::vector<uint64_t> a2_el_off = {0, 2, 4, 5, 6, 7, 9, 11, 14, 16, 17, 18, 20, 21, 24, 25};
+    std::vector<uint64_t> a2_off;
+    for (auto e : a2_el_off)
+      a2_off.push_back(e * sizeof(int));
+
+    struct vararrelem s;
+    s.attr = "a2";
+    s.noffsets = a2_off.size();
+    s.offsets = new uint64_t[s.noffsets];
+    memcpy(s.offsets, a2_off.data(), s.noffsets*sizeof(uint64_t));
+    s.ndata = a2_data.size();
+    s.elsize = sizeof(int);
+    s.data = new char[s.ndata*s.elsize];
+    memcpy(s.data, a2_data.data(), s.ndata*s.elsize);
+    vec.push_back(s);
+  }
+
+  // Now use the 'cached' data to set the buffer
+  for (size_t i=0; i<vec.size(); i++) {
+    struct vararrelem s = vec[i];
+    query.set_buffer(s.attr, s.offsets, s.noffsets, s.data, s.ndata);
+  }
+
+  // Perform the write and close the array.
+  query.submit();
+  array.close();
+
+  // Release temp 'cache' memory
+  for (size_t i=0; i<vec.size(); i++) {
+    struct vararrelem s = vec[i];
+    delete[] s.offsets;
+    delete[] static_cast<char*>(s.data);
+  }
 
   return true;
 }

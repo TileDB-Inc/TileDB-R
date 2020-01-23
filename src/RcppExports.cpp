@@ -1344,12 +1344,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // write_varlength_array
-bool write_varlength_array(const std::string uri, Rcpp::List listobject, const std::vector<std::string> names, bool debug);
+bool write_varlength_array(std::string uri, Rcpp::List listobject, const std::vector<std::string> names, bool debug);
 RcppExport SEXP _tiledb_write_varlength_array(SEXP uriSEXP, SEXP listobjectSEXP, SEXP namesSEXP, SEXP debugSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type listobject(listobjectSEXP);
     Rcpp::traits::input_parameter< const std::vector<std::string> >::type names(namesSEXP);
     Rcpp::traits::input_parameter< bool >::type debug(debugSEXP);
