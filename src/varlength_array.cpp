@@ -113,7 +113,7 @@ Rcpp::List read_varlength_array(const std::string array_name,
   // Print the results
   for (size_t i = 0; i < result_el_a1_off; ++i) {
     if (debug) Rcpp::Rcout << "i: " << i << " " << "a1: " << a1_str[i] << ", a2: ";
-    std::vector<int> v;
+    std::vector<int32_t> v;
     for (size_t j = 0; j < a2_cell_el[i]; ++j) {
       if (debug) Rcpp::Rcout << a2_data[a2_el_off[i] + j] << " ";
       v.push_back(a2_data[a2_el_off[i] + j] );
@@ -157,6 +157,32 @@ Rcpp::List read_varlength_array(const std::string array_name,
 //
 // edd@rob:~/git/tiledb-r(de/varlength-array)$
 
+std::pair<std::string, std::vector<uint64_t>> getStringVectorAndOffset(Rcpp::DataFrame df) {
+  // here we know we have a data.frame with character columns
+  int k = df.length();
+  Rcpp::List fst = df[0];
+  int n = fst.length();
+  Rcpp::Rcout << "  with " << k << " columns and " << n << " elements yielding ";
+
+  std::string data("");
+  std::vector<uint64_t> offsets;
+  uint64_t curroff = 0;
+  offsets.push_back(curroff);          // offsets start with 0
+
+  for (int i=0; i<n; i++) {
+    for (int j=0; j<k; j++) {
+      Rcpp::List cvec = df[j];
+      std::string curstr = Rcpp::as<std::string>(cvec[i]);
+      data += curstr;
+      curroff += curstr.size();
+      offsets.push_back(curroff);
+    }
+  }
+  offsets.pop_back(); // last one is 'one too far'
+  return std::make_pair(data, offsets);
+}
+
+
 
 // [[Rcpp::export]]
 bool write_varlength_array(Rcpp::List listobject, const std::vector<std::string> names) {
@@ -164,9 +190,39 @@ bool write_varlength_array(Rcpp::List listobject, const std::vector<std::string>
 
   // simplest possible processing: assign to data frame
   for (int i=0; i<n; i++) {
+    Rcpp::Rcout << "Object " << i << std::endl;
     Rcpp::DataFrame df(listobject[i]);
-    Rcpp::List s = df[1];
-    Rcpp::print(s[0]);
+    int k = df.length();
+    Rcpp::Rcout << "  with " << k << " columns of type ";
+    Rcpp::List fst = df[0];
+    RObject obj = fst[0];
+    switch(TYPEOF(obj)) {
+      case VECSXP: {
+        Rcpp::stop("List objects are not supported.");
+        break;// not reached
+      }
+      case REALSXP: {
+        Rcpp::NumericVector v(obj);
+        Rcpp::Rcout << "double\n";
+        break;
+      }
+      case INTSXP: {
+        Rcpp::IntegerVector v(obj);
+        Rcpp::Rcout << "integer\n";
+        break;
+      }
+      case STRSXP: {
+        Rcpp::CharacterVector v(obj);
+        Rcpp::Rcout << "character\n";
+        std::pair<std::string, std::vector<uint64_t>> vv = getStringVectorAndOffset(df);
+        Rcpp::Rcout << vv.first << std::endl;
+        break;
+      }
+    }
+    for (int j=0; j<k; j++) {
+      Rcpp::List s = df[j];
+      Rcpp::print(s[0]);
+    }
     //Rcpp::Rcout << df[0][0] << std::endl;
   }
   return true;
