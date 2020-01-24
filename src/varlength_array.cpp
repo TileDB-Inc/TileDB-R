@@ -22,7 +22,7 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
 // [[Rcpp::export]]
 Rcpp::List read_varlength_array(const std::string array_name,
                                 const std::vector<int> subarray,
-                                const std::vector<std::string> keys,
+                                const std::vector<std::string> keys, // or read from schema?
                                 bool debug) {
   Context ctx;                                // context object
   Array array(ctx, array_name, TILEDB_READ);	// Prepare the array for reading
