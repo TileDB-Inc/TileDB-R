@@ -18,7 +18,7 @@ tiledb_has_metadata <- function(arr, key) {
   }
 
   ## Now deal with (default) case of an array object
-  ## Check for 'is it open' ?
+  ## Check for 'is it open' and 'readable ?
   if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
     stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
   }
