@@ -77,6 +77,7 @@ tiledb_array_close <- function(arr) {
 ##'
 ##' Prints the schema of the given array to standard output.
 ##' @param uri A TileDB Array URI
+##' @param ctx An optional tiledb_ctx object
 ##' @return Nothing is returned as the function is invoked for its site effect.
 ##' @export
 tiledb_array_schema_dump <- function(uri, ctx = tiledb_get_context()) {

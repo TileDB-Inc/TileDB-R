@@ -8,6 +8,8 @@ tiledb_array_schema_dump(uri, ctx = tiledb_get_context())
 }
 \arguments{
 \item{uri}{A TileDB Array URI}
+
+\item{ctx}{An optional tiledb_ctx object}
 }
 \value{
 Nothing is returned as the function is invoked for its site effect.
