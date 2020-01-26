@@ -72,3 +72,15 @@ tiledb_array_close <- function(arr) {
   libtiledb_array_close(arr@ptr)
   arr
 }
+
+##' Print an Array Schema
+##'
+##' Prints the schema of the given array to standard output.
+##' @param uri A TileDB Array URI
+##' @return Nothing is returned as the function is invoked for its site effect.
+##' @export
+tiledb_array_schema_dump <- function(uri, ctx = tiledb_get_context()) {
+  schema <- tiledb:::libtiledb_array_schema_load(ctx@ptr, uri)
+  tiledb:::libtiledb_array_schema_dump(schema)
+  invisible(NULL)
+}

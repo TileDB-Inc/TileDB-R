@@ -21,6 +21,7 @@ Requires:
 Suggests:
  testthat (>= 2.0.0),
  roxygen2 (>= 5.0.0),
+ data.table
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
 Encoding: UTF-8
