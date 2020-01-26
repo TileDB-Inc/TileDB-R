@@ -9,6 +9,7 @@ tiledb_attr(
   type,
   filter_list = tiledb_filter_list(),
   ncells = 1,
+  is_var = FALSE,
   ctx = tiledb_get_context()
 )
 }
@@ -20,7 +21,9 @@ that this is a \emph{required} parameter.}
 
 \item{filter_list}{(default filter_list("NONE")) The tiledb_attr filter_list}
 
-\item{ncells}{(default 1) The number of cells, must be 1 for now}
+\item{ncells}{(default 1) The number of cells, use \code{NA_integer_} for variable size}
+
+\item{is_var}{(default FALSE) A logical toggle to signal variable size, implies \code{ncells=1}}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }

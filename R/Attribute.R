@@ -19,6 +19,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' that this is a _required_ parameter.
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
 #' @param ncells (default 1) The number of cells, use \code{NA_integer_} for variable size
+#' @param is_var (default FALSE) A logical toggle to signal variable size, implies \code{ncells=1}
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
@@ -33,6 +34,7 @@ tiledb_attr <- function(name,
                         type,
                         filter_list = tiledb_filter_list(),
                         ncells = 1,
+                        is_var = FALSE,
                         ctx = tiledb_get_context()
                         ) {
     if (missing(name)) {
@@ -43,10 +45,18 @@ tiledb_attr <- function(name,
     }
     if (!is(ctx, "tiledb_ctx")) {
         stop("ctx argument must be a tiledb_ctx")
-    } else if (!is.scalar(name, "character")) {
+    }
+    if (!is.scalar(name, "character")) {
         stop("name argument must be a scalar string")
-    } else if(!is(filter_list, "tiledb_filter_list")) {
+    }
+    if (!is(filter_list, "tiledb_filter_list")) {
         stop("filter_list argument must be a tiledb_filter_list instance")
+    }
+    if (is_var) {
+        if (ncells != 1) {
+            stop("if 'is_var' is set, the 'ncells' value must be one")
+        }
+        ncells <- NA_integer_           # signalling variable size
     }
     ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
     new("tiledb_attr", ptr = ptr)
