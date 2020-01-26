@@ -1,42 +1,35 @@
-#uri <- tempfile()
-uri <- "array_metadata_array"
+
+library(tiledb)
+
+uri <- tempfile()
+#uri <- "array_metadata_array"
 
 if (!dir.exists(uri)) {                 # if that example does not exist, create new one
   dim <- tiledb_dim(domain = c(1L, 10L))
   dom <- tiledb_domain(c(dim))
   a1  <- tiledb_attr("a1", type = "FLOAT64")
   a2  <- tiledb_attr("a2", type = "FLOAT64")
-  sch <- tiledb_array_schema(dom, c(a1, a2))
+  sch <- tiledb_array_schema(dom, c(a1, a2), sparse=TRUE)
   tiledb_array_create(uri, sch)
 
-  arr <- tiledb_dense(uri, as.data.frame=FALSE)
+  arr <- tiledb_sparse(uri, as.data.frame=FALSE)
 }
 
-## old initial accessors
-#tiledb:::get_metadata(uri, "aaa")
-#tiledb:::get_metadata(uri, "bb")
-#tiledb:::get_metadata(uri, "ccc")
-#tiledb:::has_metadata_simple(uri, "aaa")
-
-#uri <- "quickstart_dense_array"
-cat("Assigning uri\n")
-arrR <- tiledb::tiledb_sparse(uri)
-arrW <- tiledb::tiledb_sparse(uri)
-
-#arr <- tiledb:::libtiledb_array_reopen(arr@ptr)
-cat("Reopening arr\n")
-arrR <- tiledb:::libtiledb_array_open(arrR@ptr, "READ")
-#print(str(arr))
+arr <- tiledb_array_open(arr, "READ")
 
 cat("Testing for metadata\n")
-tiledb:::has_metadata(arrR, "aaa")
+print(tiledb_has_metadata(arr, "aa"))
 
 cat("Number of metadata objects\n")
-tiledb:::num_metadata(arrR)
+tiledb_num_metadata(arr)
 
 cat("Write current time\n")
-arrW <- tiledb:::libtiledb_array_open(arrW@ptr, "WRITE")
-tiledb:::put_metadata(arrW, "time_now", format(Sys.time()))
+arr <- tiledb_array_close(arr)
+arr <- tiledb_array_open(arr, "WRITE")
+tiledb_put_metadata(arr, "time_now", format(Sys.time()))
 
 cat("Get time\n")
-tiledb:::get_metadata(arrR, "time_now")
+arr <- tiledb_array_open(arr, "READ")
+tiledb_get_metadata(arr, "time_now")
+
+unlink(uri, recursive=TRUE)
