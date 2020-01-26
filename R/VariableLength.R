@@ -13,7 +13,7 @@ read_variable_length <- function(array, subarray, keys, debug=FALSE) {
     for (j in 1:n) {
       dt <- data.table::data.table(res[[j]][s])
       for (i in seq_along(2:nc)) {
-        dt <- data.table:::cbind.data.table(dt, data.table::data.table(res[[j]][s + i]))
+        dt <- cbind(dt, data.table::data.table(res[[j]][s + i]))
       }
       colnames(dt) <- paste("V", 1:nc, sep="")
       ll[[j]] <- dt
