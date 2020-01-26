@@ -785,23 +785,26 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
                                        XPtr<tiledb::FilterList> filter_list,
                                        int ncells) {
   tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
-  if (ncells < 1) {
-    throw Rcpp::exception("ncells must be >= 1");
+  if (ncells < 1 && !IntegerVector::is_na(ncells)) {
+    Rcpp::stop("ncells must be >= 1, or NA to signal variable size.");
   }
+  uint32_t nc = IntegerVector::is_na(ncells) ? TILEDB_VAR_NUM : static_cast<uint32_t>(ncells);
   if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
+    attr->set_cell_val_num(nc);
     return attr;
   } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(
       new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
+    attr->set_cell_val_num(nc);
     return attr;
   } else {
-    throw Rcpp::exception("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
+    Rcpp::stop("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
   }
 }
 
@@ -823,8 +826,10 @@ XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr
 // [[Rcpp::export]]
 int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
   unsigned int ncells = attr->cell_val_num();
-  if (ncells > std::numeric_limits<int32_t>::max()) {
-    throw Rcpp::exception("tiledb_attr ncells value not representable as an R integer");
+  if (ncells == TILEDB_VAR_NUM) {
+    return R_NaInt;          // set to R's NA for integer
+  } else if (ncells > std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("tiledb_attr ncells value not representable as an R integer");
   }
   return static_cast<int32_t>(ncells);
 }
