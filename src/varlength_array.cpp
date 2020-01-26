@@ -34,16 +34,16 @@ Rcpp::List read_varlength_array(const std::string array_name,
 
   ArraySchema schema = array.schema();
   tiledb_array_type_t array_type = schema.array_type();
-  if (debug) std::cout << "Array is " << _tiledb_arraytype_to_string(array_type) << std::endl;
+  if (debug) Rcpp::Rcout << "Array is " << _tiledb_arraytype_to_string(array_type) << std::endl;
 
   Domain dom = schema.domain();
 
   uint32_t attr_num = schema.attribute_num();
-  if (debug) std::cout << "Number of Attributes is " << attr_num << std::endl;
+  if (debug) Rcpp::Rcout << "Number of Attributes is " << attr_num << std::endl;
   for (uint32_t idx=0; idx<attr_num; idx++) {
     Attribute attr = schema.attribute(idx);
-    if (debug) std::cout << "Name: " << attr.name()
-                         << " " << _tiledb_datatype_to_string(attr.type()) << std::endl;
+    if (debug) Rcpp::Rcout << "Name: " << attr.name()
+                           << " " << _tiledb_datatype_to_string(attr.type()) << std::endl;
   }
 
 
@@ -266,6 +266,7 @@ bool write_varlength_array(const std::string uri, Rcpp::List listobject,
                            const std::vector<std::string> names, bool debug = false) {
   int n = names.size();
   if (debug) Rcpp::Rcout << "n is " << n << std::endl;
+  if (debug) Rcpp::print(listobject);
 
   Context ctx;                                // context object
   Array array(ctx, uri, TILEDB_WRITE);	      // Prepare the array for writing
@@ -342,7 +343,7 @@ bool write_varlength_array(const std::string uri, Rcpp::List listobject,
     }
     for (int j=0; j<k; j++) {
       Rcpp::List s = df[j];
-      if (debug) Rcpp::print(s[0]);
+      if (debug) Rcpp::print(s);
     }
     //Rcpp::Rcout << df[0][0] << std::endl;
 
