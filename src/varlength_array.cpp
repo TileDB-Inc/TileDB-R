@@ -28,9 +28,10 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
 
 struct vararrelem {
   std::string attr;             // attribute name
+  tiledb_datatype_t dtype;      // attribute type
   uint64_t *offsets;            // pointer to offset values
   uint64_t noffsets;            // number of offset values
-  void *data;                   // poiner to data values
+  void *data;                   // pointer to data values
   uint64_t ndata;               // number of data values
   int32_t elsize;               // sizeof(T) for the attribute
 };
@@ -56,34 +57,84 @@ Rcpp::List read_varlength_array(const std::string array_name,
 
   Domain dom = schema.domain();
 
+  std::map<std::string, struct vararrelem> smap;   	// vector of array element structs
+  //std::vector<std::string> arrkeyes;   	// vector of array element names
+
   uint32_t attr_num = schema.attribute_num();
-  if (debug) Rcpp::Rcout << "Number of Attributes is " << attr_num << std::endl;
+  if (debug) Rcpp::Rcout << "Number of Attributes in Schema is " << attr_num << std::endl;
   for (uint32_t idx=0; idx<attr_num; idx++) {
     Attribute attr = schema.attribute(idx);
-    if (debug) Rcpp::Rcout << "Name: " << attr.name()
-                           << " " << _tiledb_datatype_to_string(attr.type()) << std::endl;
+    //attr.dump(stdout);
+    struct vararrelem s;
+    s.attr = attr.name();
+    if (std::find(std::begin(keys), std::end(keys), s.attr) == std::end(keys)) {
+       Rcpp::Rcout << "Not seeing key '" << s.attr << "' in requested keys, skipping" << std::endl;
+       continue;
+    }
+    if (!attr.variable_sized()) {
+      Rcpp::stop("Attribute '%s' is not variabled sized.", s.attr);
+    }
+    s.dtype = attr.type();
+    if (debug) Rcpp::Rcout << "Name: " << s.attr << " "
+                           << "Type: " << _tiledb_datatype_to_string(s.dtype) << " "
+                           << "VarSize: " << (attr.variable_sized() ? "yes" : "no")
+                           << std::endl;
+    smap[s.attr] = s;
+    //arrkeyes.push_back(s.attr);
   }
-
 
   // Prepare the vectors that will hold the result
   auto max_el_map = array.max_buffer_elements(subarray);
 
-  std::vector<std::string> elkeys;
-  for (auto it = std::begin(max_el_map); it != std::end(max_el_map); it++) {
-    std::string key = (*it).first;
-    if (key == "__coords") continue;
-    elkeys.push_back(key);
-    if (std::find(std::begin(keys), std::end(keys), key) == std::end(keys)) {
-      Rcpp::Rcout << "Not seeing key '" << key << "' in requested keys" << std::endl;
-    }
-    Rcpp::Rcout << key << std::endl;
-  }
+  // std::vector<std::string> elkeys;
+  // for (auto it = std::begin(max_el_map); it != std::end(max_el_map); it++) {
+  //   std::string key = (*it).first;
+  //   if (key == "__coords") continue;
+  //   elkeys.push_back(key);
+  //   if (std::find(std::begin(keys), std::end(keys), key) == std::end(keys)) {
+  //     Rcpp::Rcout << "Not seeing key '" << key << "' in requested keys" << std::endl;
+  //   }
+  //   if (debug) Rcpp::Rcout << "Noticed key '" << key << "'" << std::endl;
+  // }
 
   // FIXME--this can likely go away
   std::string nm1(keys[0]), nm2(keys[1]);
   if (max_el_map.count(nm1) == 0) Rcpp::stop("Key '%s' not present.", nm1);
   if (max_el_map.count(nm2) == 0) Rcpp::stop("Key '%s' not present.", nm2);
 
+
+
+  // Prepare and submit the query, and close the array
+  Query query(ctx, array);
+  query.set_subarray(subarray)
+    .set_layout(TILEDB_ROW_MAJOR); 								// FIXME: does layout need to be a parameter?
+
+
+  for (int i=0; i<nkeys; i++) {
+    std::string key = keys[i];
+    if (max_el_map.count(key) == 0) {
+      Rcpp::stop("Requested key '%s' not present.", key);
+    }
+    if (debug) Rcpp::Rcout << "Checked " << key << std::endl;
+
+    struct vararrelem s = smap[key];
+    if (s.dtype == TILEDB_CHAR) {
+      Rcpp::Rcout << "Found char\n";
+      s.offsets = new uint64_t[max_el_map[key].first];          // pointer to offset values
+      s.noffsets = max_el_map[key].first;                       // number of offset values
+      s.data = new char[ max_el_map[key].second ];
+      s.ndata = max_el_map[key].second;                         // resize data vector as needed
+
+      //query.set_buffer(key,
+    } else {
+      Rcpp::Rcout << "Found " << _tiledb_datatype_to_string(s.dtype)
+                  << " with type " << s.dtype << std::endl;
+      s.offsets = new uint64_t[max_el_map[key].first];          // pointer to offset values
+      s.noffsets = max_el_map[key].first;                       // number of offset values
+      s.data = new char[ max_el_map[key].second ];//FIXME: dtype
+      s.ndata = max_el_map[key].second;                         // resize data vector as needed
+    }
+  }
 
   std::vector<uint64_t> a1_off(max_el_map[nm1].first);
   std::string a1_data;          									// TODO: generalize to data type from attr
@@ -92,12 +143,8 @@ Rcpp::List read_varlength_array(const std::string array_name,
   std::vector<uint64_t> a2_off(max_el_map[nm2].first);
   std::vector<int> a2_data(max_el_map[nm2].second); // TODO: ditto
 
-  // Prepare and submit the query, and close the array
-  Query query(ctx, array);
-  query.set_subarray(subarray)
-      .set_layout(TILEDB_ROW_MAJOR) 								// FIXME: does layout need to be a parameter?
-      .set_buffer(nm1, a1_off, a1_data)
-      .set_buffer(nm2, a2_off, a2_data);
+  query.set_buffer(nm1, a1_off, a1_data)
+    .set_buffer(nm2, a2_off, a2_data);
   query.submit();
   array.close();
 
