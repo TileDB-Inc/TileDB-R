@@ -803,8 +803,15 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
     attr->set_filter_list(*filter_list);
     attr->set_cell_val_num(nc);
     return attr;
+  } else if (attr_dtype == TILEDB_CHAR) {
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
+    auto attr = XPtr<tiledb::Attribute>(
+      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    attr->set_filter_list(*filter_list);
+    attr->set_cell_val_num(nc);
+    return attr;
   } else {
-    Rcpp::stop("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
+    Rcpp::stop("only integer (INT32), logical (INT32), real (FLOAT64) and character (CHAR) attributes are supported");
   }
 }
 
