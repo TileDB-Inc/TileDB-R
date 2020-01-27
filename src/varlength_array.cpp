@@ -171,7 +171,7 @@ struct vararrelem {
   uint64_t noffsets;            // number of offset values
   void *data;                   // poiner to data values
   uint64_t ndata;               // number of data values
-  int8_t elsize;                // sizeof(T) for the attribute
+  int32_t elsize;               // sizeof(T) for the attribute
 };
 
 
@@ -343,7 +343,7 @@ bool write_varlength_array(const std::string uri, Rcpp::List listobject,
     }
     for (int j=0; j<k; j++) {
       Rcpp::List s = df[j];
-      if (debug) Rcpp::print(s);
+      if (debug) Rcpp::print(s[0]);
     }
     //Rcpp::Rcout << df[0][0] << std::endl;
 
@@ -353,6 +353,9 @@ bool write_varlength_array(const std::string uri, Rcpp::List listobject,
   // Now use the 'cached' data to set the buffer
   for (size_t i=0; i<vec.size(); i++) {
     struct vararrelem s = vec[i];
+    if (debug) Rcpp::Rcout << "Data i " << i << "  noff "
+                           << s.noffsets << "  nd " << s.ndata << "  sz "
+                           << s.elsize << std::endl;
     query.set_buffer(s.attr, s.offsets, s.noffsets, s.data, s.ndata);
   }
 
