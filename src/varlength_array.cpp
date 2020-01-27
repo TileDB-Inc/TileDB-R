@@ -19,6 +19,23 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
   }
 }
 
+// We need to 'cache' the variable length data and offset vectors as
+// these get passed to the storage manager layer all at once.  But we
+// can only process them one by one, and only know respective types
+// when we process. Which is generally in some dynamic scope so we
+// would 'forgot' the information. Hence we fill a simple structure
+// and use it to set the query.
+
+struct vararrelem {
+  std::string attr;             // attribute name
+  uint64_t *offsets;            // pointer to offset values
+  uint64_t noffsets;            // number of offset values
+  void *data;                   // poiner to data values
+  uint64_t ndata;               // number of data values
+  int32_t elsize;               // sizeof(T) for the attribute
+};
+
+
 // [[Rcpp::export]]
 Rcpp::List read_varlength_array(const std::string array_name,
                                 const std::vector<int> subarray,
@@ -29,8 +46,9 @@ Rcpp::List read_varlength_array(const std::string array_name,
 
   if (subarray.size() != 4)
     Rcpp::stop("Expecting four elements in subarray vector.");
-  if (keys.size() != 2)
-    Rcpp::stop("Expecting two elements in keys vector.");
+
+  int nkeys = keys.size();
+  //if (keys.size() != 2) Rcpp::stop("Expecting two elements in keys vector.");
 
   ArraySchema schema = array.schema();
   tiledb_array_type_t array_type = schema.array_type();
@@ -50,19 +68,25 @@ Rcpp::List read_varlength_array(const std::string array_name,
   // Prepare the vectors that will hold the result
   auto max_el_map = array.max_buffer_elements(subarray);
 
-  // std::vector<std::string> keys;
-  // std::transform(std::begin(max_el_map), std::end(max_el_map), std::back_inserter(keys),
-  //                [](std::decltype(max_el_map)::value_type const& pair) {
-  //                  return pair.first;
-  //                });
+  std::vector<std::string> elkeys;
+  for (auto it = std::begin(max_el_map); it != std::end(max_el_map); it++) {
+    std::string key = (*it).first;
+    if (key == "__coords") continue;
+    elkeys.push_back(key);
+    if (std::find(std::begin(keys), std::end(keys), key) == std::end(keys)) {
+      Rcpp::Rcout << "Not seeing key '" << key << "' in requested keys" << std::endl;
+    }
+    Rcpp::Rcout << key << std::endl;
+  }
+
+  // FIXME--this can likely go away
   std::string nm1(keys[0]), nm2(keys[1]);
-  if (max_el_map.count(nm1) == 0)
-    Rcpp::stop("Key '%s' not present.", nm1);
-  if (max_el_map.count(nm2) == 0)
-    Rcpp::stop("Key '%s' not present.", nm2);
+  if (max_el_map.count(nm1) == 0) Rcpp::stop("Key '%s' not present.", nm1);
+  if (max_el_map.count(nm2) == 0) Rcpp::stop("Key '%s' not present.", nm2);
+
 
   std::vector<uint64_t> a1_off(max_el_map[nm1].first);
-  std::string a1_data;          						// TODO: generalize to data type from attr
+  std::string a1_data;          									// TODO: generalize to data type from attr
   a1_data.resize(max_el_map[nm1].second);
 
   std::vector<uint64_t> a2_off(max_el_map[nm2].first);
@@ -156,23 +180,6 @@ Rcpp::List read_varlength_array(const std::string array_name,
 // 4:  13 14,14,14  15    16
 //
 // edd@rob:~/git/tiledb-r(de/varlength-array)$
-
-
-// We need to 'cache' the variable length data and offset vectors as
-// these get passed to the storage manager layer all at once.  But we
-// can only process them one by one, and only know respective types
-// when we process. Which is generally in some dynamic scope so we
-// would 'forgot' the information. Hence we fill a simple structure
-// and use it to set the query.
-
-struct vararrelem {
-  std::string attr;             // attribute name
-  uint64_t *offsets;            // pointer to offset values
-  uint64_t noffsets;            // number of offset values
-  void *data;                   // poiner to data values
-  uint64_t ndata;               // number of data values
-  int32_t elsize;               // sizeof(T) for the attribute
-};
 
 
 
