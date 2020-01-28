@@ -1320,16 +1320,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // read_varlength_array
-Rcpp::List read_varlength_array(const std::string array_name, const std::vector<int> subarray, const std::vector<std::string> keys, bool debug);
-RcppExport SEXP _tiledb_read_varlength_array(SEXP array_nameSEXP, SEXP subarraySEXP, SEXP keysSEXP, SEXP debugSEXP) {
+Rcpp::List read_varlength_array(const std::string array_name, const std::string key, const std::vector<int> subarray, bool debug);
+RcppExport SEXP _tiledb_read_varlength_array(SEXP array_nameSEXP, SEXP keySEXP, SEXP subarraySEXP, SEXP debugSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type key(keySEXP);
     Rcpp::traits::input_parameter< const std::vector<int> >::type subarray(subarraySEXP);
-    Rcpp::traits::input_parameter< const std::vector<std::string> >::type keys(keysSEXP);
     Rcpp::traits::input_parameter< bool >::type debug(debugSEXP);
-    rcpp_result_gen = Rcpp::wrap(read_varlength_array(array_name, subarray, keys, debug));
+    rcpp_result_gen = Rcpp::wrap(read_varlength_array(array_name, key, subarray, debug));
     return rcpp_result_gen;
 END_RCPP
 }

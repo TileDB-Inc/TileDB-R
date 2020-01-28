@@ -39,8 +39,8 @@ struct vararrelem {
 
 // [[Rcpp::export]]
 Rcpp::List read_varlength_array(const std::string array_name,
+                                const std::string key,
                                 const std::vector<int> subarray,
-                                const std::vector<std::string> keys, // or read from schema?
                                 bool debug) {
   Context ctx;                                // context object
   Array array(ctx, array_name, TILEDB_READ);	// Prepare the array for reading
@@ -48,154 +48,108 @@ Rcpp::List read_varlength_array(const std::string array_name,
   if (subarray.size() != 4)
     Rcpp::stop("Expecting four elements in subarray vector.");
 
-  int nkeys = keys.size();
+  //int nkeys = keys.size();
   //if (keys.size() != 2) Rcpp::stop("Expecting two elements in keys vector.");
 
   ArraySchema schema = array.schema();
   tiledb_array_type_t array_type = schema.array_type();
-  if (debug) Rcpp::Rcout << "Array is " << _tiledb_arraytype_to_string(array_type) << std::endl;
+  if (debug) Rcpp::Rcout << "Array is " << _tiledb_arraytype_to_string(array_type) << " " << array_type << std::endl;
 
   Domain dom = schema.domain();
 
-  std::map<std::string, struct vararrelem> smap;   	// vector of array element structs
-  //std::vector<std::string> arrkeyes;   	// vector of array element names
-
-  uint32_t attr_num = schema.attribute_num();
-  if (debug) Rcpp::Rcout << "Number of Attributes in Schema is " << attr_num << std::endl;
-  for (uint32_t idx=0; idx<attr_num; idx++) {
-    Attribute attr = schema.attribute(idx);
-    //attr.dump(stdout);
-    struct vararrelem s;
-    s.attr = attr.name();
-    if (std::find(std::begin(keys), std::end(keys), s.attr) == std::end(keys)) {
-       Rcpp::Rcout << "Not seeing key '" << s.attr << "' in requested keys, skipping" << std::endl;
-       continue;
-    }
-    if (!attr.variable_sized()) {
-      Rcpp::stop("Attribute '%s' is not variabled sized.", s.attr);
-    }
-    s.dtype = attr.type();
-    if (debug) Rcpp::Rcout << "Name: " << s.attr << " "
-                           << "Type: " << _tiledb_datatype_to_string(s.dtype) << " "
-                           << "VarSize: " << (attr.variable_sized() ? "yes" : "no")
-                           << std::endl;
-    smap[s.attr] = s;
-    //arrkeyes.push_back(s.attr);
-  }
+  // attribute by key, errors appropriately if key not present
+  Attribute attr = schema.attribute(key);
+  tiledb_datatype_t dtype = attr.type();
 
   // Prepare the vectors that will hold the result
   auto max_el_map = array.max_buffer_elements(subarray);
 
-  // std::vector<std::string> elkeys;
-  // for (auto it = std::begin(max_el_map); it != std::end(max_el_map); it++) {
-  //   std::string key = (*it).first;
-  //   if (key == "__coords") continue;
-  //   elkeys.push_back(key);
-  //   if (std::find(std::begin(keys), std::end(keys), key) == std::end(keys)) {
-  //     Rcpp::Rcout << "Not seeing key '" << key << "' in requested keys" << std::endl;
-  //   }
-  //   if (debug) Rcpp::Rcout << "Noticed key '" << key << "'" << std::endl;
-  // }
-
-  // FIXME--this can likely go away
-  std::string nm1(keys[0]), nm2(keys[1]);
-  if (max_el_map.count(nm1) == 0) Rcpp::stop("Key '%s' not present.", nm1);
-  if (max_el_map.count(nm2) == 0) Rcpp::stop("Key '%s' not present.", nm2);
-
-
+  std::vector<uint64_t> offsets(max_el_map[key].first);
+  char* data = new char[max_el_map[key].second];
 
   // Prepare and submit the query, and close the array
   Query query(ctx, array);
-  query.set_subarray(subarray)
-    .set_layout(TILEDB_ROW_MAJOR); 								// FIXME: does layout need to be a parameter?
+  query.set_subarray(subarray);
+  query.set_layout(TILEDB_ROW_MAJOR); 								// FIXME: does layout need to be a parameter?
+  query.set_buffer(key, offsets.data(), offsets.size(),
+                   static_cast<void*>(data), max_el_map[key].second);
 
-
-  for (int i=0; i<nkeys; i++) {
-    std::string key = keys[i];
-    if (max_el_map.count(key) == 0) {
-      Rcpp::stop("Requested key '%s' not present.", key);
-    }
-    if (debug) Rcpp::Rcout << "Checked " << key << std::endl;
-
-    struct vararrelem s = smap[key];
-    if (s.dtype == TILEDB_CHAR) {
-      Rcpp::Rcout << "Found char\n";
-      s.offsets = new uint64_t[max_el_map[key].first];          // pointer to offset values
-      s.noffsets = max_el_map[key].first;                       // number of offset values
-      s.data = new char[ max_el_map[key].second ];
-      s.ndata = max_el_map[key].second;                         // resize data vector as needed
-
-      //query.set_buffer(key,
-    } else {
-      Rcpp::Rcout << "Found " << _tiledb_datatype_to_string(s.dtype)
-                  << " with type " << s.dtype << std::endl;
-      s.offsets = new uint64_t[max_el_map[key].first];          // pointer to offset values
-      s.noffsets = max_el_map[key].first;                       // number of offset values
-      s.data = new char[ max_el_map[key].second ];//FIXME: dtype
-      s.ndata = max_el_map[key].second;                         // resize data vector as needed
-    }
-  }
-
-  std::vector<uint64_t> a1_off(max_el_map[nm1].first);
-  std::string a1_data;          									// TODO: generalize to data type from attr
-  a1_data.resize(max_el_map[nm1].second);
-
-  std::vector<uint64_t> a2_off(max_el_map[nm2].first);
-  std::vector<int> a2_data(max_el_map[nm2].second); // TODO: ditto
-
-  query.set_buffer(nm1, a1_off, a1_data)
-    .set_buffer(nm2, a2_off, a2_data);
   query.submit();
   array.close();
 
-
-  // Get the string sizes
   auto result_el_map = query.result_buffer_elements();
-  auto result_el_a1_off = result_el_map[nm1].first;
-  std::vector<uint64_t> a1_str_sizes;
-  for (size_t i = 0; i < result_el_a1_off - 1; ++i)
-    a1_str_sizes.push_back(a1_off[i + 1] - a1_off[i]);
-  auto result_a1_data_size = result_el_map[nm1].second * sizeof(char);
-  a1_str_sizes.push_back(result_a1_data_size - a1_off[result_el_a1_off - 1]);
-
-  // Get the strings
-  std::vector<std::string> a1_str;
-  for (size_t i = 0; i < result_el_a1_off; ++i)
-    a1_str.push_back(std::string(&a1_data[a1_off[i]], a1_str_sizes[i]));
-
-  // Get the element offsets
-  std::vector<uint64_t> a2_el_off;
-  auto result_el_a2_off = result_el_map[nm2].first;
-  for (size_t i = 0; i < result_el_a2_off; ++i)
-    a2_el_off.push_back(a2_off[i] / sizeof(int));
-
-  // Get the number of elements per cell value
-  std::vector<uint64_t> a2_cell_el;
-  for (size_t i = 0; i < result_el_a2_off - 1; ++i)
-    a2_cell_el.push_back(a2_el_off[i + 1] - a2_el_off[i]);
-  auto result_el_a2_data = result_el_map["a2"].second;
-  a2_cell_el.push_back(result_el_a2_data - a2_el_off.back());
+  if (debug) Rcpp::Rcout << "result_el_map after "
+                         << result_el_map[key].first << " "
+                         << result_el_map[key].second
+                         << std::endl;
 
   int nr = subarray[1] - subarray[0] + 1;
   int nc = subarray[3] - subarray[2] + 1;
-  Rcpp::List A1l(nr * nc);
-  Rcpp::List A2l(nr * nc);
+  Rcpp::List reslist(nr * nc);
 
-  // Print the results
-  for (size_t i = 0; i < result_el_a1_off; ++i) {
-    if (debug) Rcpp::Rcout << "i: " << i << " " << "a1: " << a1_str[i] << ", a2: ";
-    std::vector<int32_t> v;
-    for (size_t j = 0; j < a2_cell_el[i]; ++j) {
-      if (debug) Rcpp::Rcout << a2_data[a2_el_off[i] + j] << " ";
-      v.push_back(a2_data[a2_el_off[i] + j] );
+  if (dtype == TILEDB_CHAR) {
+
+    auto result_el_off = result_el_map[key].first;
+    std::vector<uint64_t> str_sizes;
+    for (size_t i = 0; i < result_el_off - 1; ++i)
+      str_sizes.push_back(offsets[i + 1] - offsets[i]);
+    auto result_data_size = result_el_map[key].second * sizeof(char);
+    str_sizes.push_back(result_data_size - offsets[result_el_off - 1]);
+
+    // Get the strings
+    std::vector<std::string> str;
+    for (size_t i = 0; i < result_el_off; ++i) {
+      std::string txt = std::string(&data[offsets[i]], str_sizes[i]);
+      str.push_back(txt);
+      reslist[i] = txt;
     }
-    if (debug) Rcpp::Rcout << "\n";
-    A1l[i] = a1_str[i];
-    A2l[i] = v;
-  }
-  return Rcpp::List::create(Rcpp::Named(nm1) = A1l,
-                            Rcpp::Named(nm2) = A2l);
 
+    if (debug) for (size_t i=0; i<str.size(); i++) std::cout << "  " << str[i] << std::endl;
+
+  } else if (dtype == TILEDB_INT32) {
+
+    // Allocate and fill vector of dtype
+    size_t ndata = result_el_map[key].second;
+    std::vector<int32_t> vdata(ndata);
+    memcpy(vdata.data(), data, ndata*sizeof(int32_t));
+    // GOOD! for (int i=0; i<vdata.size(); i++) std::cout << vdata[i] << "\n";
+
+    // Get the element offsets
+    std::vector<uint64_t> el_off;
+    auto result_el_off = result_el_map[key].first;
+    for (size_t i = 0; i < result_el_off; ++i) {
+      el_off.push_back(offsets[i] / sizeof(int32_t));
+      //std::cout << "Pushing back " << offsets[i] << " " << offsets[i]/sizeof(int) << std::endl;
+    }
+
+    // Get the number of elements per cell value
+    std::vector<uint64_t> cell_el;
+    for (size_t i = 0; i < result_el_off - 1; ++i) {
+      cell_el.push_back(el_off[i + 1] - el_off[i]);
+      //std::cout << "Counts per cell " << el_off[i + 1] - el_off[i] << std::endl;
+    }
+    auto result_el_data = result_el_map[key].second;
+    cell_el.push_back(result_el_data - el_off.back());
+
+    // Print the results
+    if (debug) {
+      for (size_t i = 0; i < result_el_off; ++i) {
+        std::cout << "  ";
+        for (size_t j = 0; j < cell_el[i]; ++j)
+          std::cout << vdata[el_off[i] + j] << " ";
+        std::cout << "\n";
+      }
+    }
+    for (size_t i = 0; i < result_el_off; ++i) {
+      // for each cell, fill a vector 'v'
+      std::vector<int32_t> v;
+      for (size_t j = 0; j < cell_el[i]; ++j)
+        v.push_back(vdata[el_off[i] + j]);
+      reslist[i] = v;
+    }
+  }
+  delete[] data;
+  return reslist;
 }
 
 // edd@rob:~/git/tiledb-adhoc/python(master)$ python3 variable_length.py
