@@ -23,7 +23,7 @@ create_array <- function(uri) {
   tiledb_array_create(uri, schema)
 }
 
-write_variable_array <- function(uri) {
+write_variable_array <- function(uri, debug=FALSE) {
   a1 <- data.table::data.table(v1=list("a", "eee", "i", "m"),
                                v2=list("bb", "f", "jjj", "n"),
                                v3=list("ccc", "g", "kk", "oo"),
@@ -32,16 +32,19 @@ write_variable_array <- function(uri) {
                                v2=list(c(2L,2L), c(6L,6L), 10L, c(14L,14L,14L)),
                                v3=list(3L, c(7L,7L), 11L, 15L),
                                v4=list(4L, c(8L,8L,8L), c(12L,12L), 16L))
-  write_variable_length(uri, list(a1=a1, a2=a2), debug=FALSE)
+  write_variable_length(uri, list(a1=a1, a2=a2), debug=debug)
 }
 
-read_variable_array <- function(uri) {
-  rl <- read_variable_length(uri, c(1,4,1,4), c("a1", "a2"))
+read_variable_array <- function(uri, debug=FALSE) {
+  rl <- read_variable_length(uri, c(1,4,1,4), c("a1", "a2"), debug=debug)
   print(rl)
 }
 
-arr <- create_array(uri)
-tiledb_array_schema_dump(uri)
-write_variable_array(uri)
-read_variable_array(uri)
+debug <- FALSE
+if (!dir.exists(uri)) {
+  arr <- create_array(uri)
+  if (debug) tiledb_array_schema_dump(uri)
+  write_variable_array(uri)
+}
+read_variable_array(uri, TRUE)
 cat("Done\n")
