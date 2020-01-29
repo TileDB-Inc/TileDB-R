@@ -117,7 +117,7 @@ Rcpp::List read_varlength_array(const std::string array_name,
       reslist[i] = txt;
     }
 
-    if (debug) for (size_t i=0; i<str.size(); i++) std::cout << "  " << str[i] << std::endl;
+    if (debug) for (size_t i=0; i<str.size(); i++) Rcpp::Rcout << "  " << str[i] << std::endl;
 
   } else if (dtype == TILEDB_INT32) {
 
@@ -147,10 +147,10 @@ Rcpp::List read_varlength_array(const std::string array_name,
     // Print the results
     if (debug) {
       for (size_t i = 0; i < result_el_off; ++i) {
-        std::cout << "  ";
+        Rcpp::Rcout << "  ";
         for (size_t j = 0; j < cell_el[i]; ++j)
-          std::cout << vdata[el_off[i] + j] << " ";
-        std::cout << "\n";
+          Rcpp::Rcout << vdata[el_off[i] + j] << " ";
+        Rcpp::Rcout << "\n";
       }
     }
     for (size_t i = 0; i < result_el_off; ++i) {
