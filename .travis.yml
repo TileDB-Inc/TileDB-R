@@ -20,7 +20,7 @@ install:
   - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD build ${R_BLD_OPTS} .
 
 script:
-  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD check ${R_CHK_OPTS} tiledb_*.tar.gz
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} bash -c 'install.r data.table && R CMD check ${R_CHK_OPTS} tiledb_*.tar.gz'
 
 notifications:
   email:
