@@ -21,6 +21,8 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
 
 const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
   switch(dtype) {
+    case TILEDB_FLOAT64:
+      return sizeof(double);
     case TILEDB_INT32:
       return sizeof(int32_t);
     case TILEDB_CHAR:
@@ -101,7 +103,6 @@ Rcpp::List read_varlength_array(const std::string array_name,
   Rcpp::List reslist(nr * nc);
 
   if (dtype == TILEDB_CHAR) {
-
     auto result_el_off = result_el_map[key].first;
     std::vector<uint64_t> str_sizes;
     for (size_t i = 0; i < result_el_off - 1; ++i)
@@ -120,47 +121,65 @@ Rcpp::List read_varlength_array(const std::string array_name,
     if (debug) for (size_t i=0; i<str.size(); i++) Rcpp::Rcout << "  " << str[i] << std::endl;
 
   } else if (dtype == TILEDB_INT32) {
-
-    // Allocate and fill vector of dtype
-    size_t ndata = result_el_map[key].second;
+    size_t ndata = result_el_map[key].second;       // Allocate and fill vector of dtype
     std::vector<int32_t> vdata(ndata);
     memcpy(vdata.data(), data, ndata*sizeof(int32_t));
-    // GOOD! for (int i=0; i<vdata.size(); i++) std::cout << vdata[i] << "\n";
 
-    // Get the element offsets
-    std::vector<uint64_t> el_off;
+    std::vector<uint64_t> el_off;                   // Get the element offsets
     auto result_el_off = result_el_map[key].first;
-    for (size_t i = 0; i < result_el_off; ++i) {
-      el_off.push_back(offsets[i] / sizeof(int32_t));
-      //std::cout << "Pushing back " << offsets[i] << " " << offsets[i]/sizeof(int) << std::endl;
-    }
+    for (size_t i = 0; i < result_el_off; ++i) el_off.push_back(offsets[i] / sizeof(int32_t));
 
-    // Get the number of elements per cell value
-    std::vector<uint64_t> cell_el;
-    for (size_t i = 0; i < result_el_off - 1; ++i) {
-      cell_el.push_back(el_off[i + 1] - el_off[i]);
-      //std::cout << "Counts per cell " << el_off[i + 1] - el_off[i] << std::endl;
-    }
+    std::vector<uint64_t> cell_el;                  // Get the number of elements per cell value
+    for (size_t i = 0; i < result_el_off - 1; ++i) cell_el.push_back(el_off[i + 1] - el_off[i]);
     auto result_el_data = result_el_map[key].second;
     cell_el.push_back(result_el_data - el_off.back());
 
-    // Print the results
-    if (debug) {
+    if (debug) {                                    // Print the results
       for (size_t i = 0; i < result_el_off; ++i) {
         Rcpp::Rcout << "  ";
-        for (size_t j = 0; j < cell_el[i]; ++j)
-          Rcpp::Rcout << vdata[el_off[i] + j] << " ";
+        for (size_t j = 0; j < cell_el[i]; ++j) Rcpp::Rcout << vdata[el_off[i] + j] << " ";
         Rcpp::Rcout << "\n";
       }
     }
     for (size_t i = 0; i < result_el_off; ++i) {
-      // for each cell, fill a vector 'v'
-      std::vector<int32_t> v;
+      std::vector<int32_t> v;                       // for each cell, fill a vector 'v'
       for (size_t j = 0; j < cell_el[i]; ++j)
         v.push_back(vdata[el_off[i] + j]);
       reslist[i] = v;
     }
+
+  } else if (dtype == TILEDB_FLOAT64) {
+    size_t ndata = result_el_map[key].second;       // Allocate and fill vector of dtype
+    std::vector<double> vdata(ndata);
+    memcpy(vdata.data(), data, ndata*sizeof(double));
+
+    std::vector<uint64_t> el_off;                   // Get the element offsets
+    auto result_el_off = result_el_map[key].first;
+    for (size_t i = 0; i < result_el_off; ++i) el_off.push_back(offsets[i] / sizeof(double));
+
+    std::vector<uint64_t> cell_el;                  // Get the number of elements per cell value
+    for (size_t i = 0; i < result_el_off - 1; ++i) cell_el.push_back(el_off[i + 1] - el_off[i]);
+    auto result_el_data = result_el_map[key].second;
+    cell_el.push_back(result_el_data - el_off.back());
+
+    if (debug) {                                    // Print the results
+      for (size_t i = 0; i < result_el_off; ++i) {
+        Rcpp::Rcout << "  ";
+        for (size_t j = 0; j < cell_el[i]; ++j) Rcpp::Rcout << vdata[el_off[i] + j] << " ";
+        Rcpp::Rcout << "\n";
+      }
+    }
+    for (size_t i = 0; i < result_el_off; ++i) {
+      std::vector<double> v;                        // for each cell, fill a vector 'v'
+      for (size_t j = 0; j < cell_el[i]; ++j)
+        v.push_back(vdata[el_off[i] + j]);
+      reslist[i] = v;
+    }
+
+  } else {
+    Rcpp::stop("Type '%s' currently unsupported.", _tiledb_datatype_to_string(dtype));
   }
+
   delete[] data;
   return reslist;
 }
