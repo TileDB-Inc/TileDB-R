@@ -19,6 +19,17 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
   }
 }
 
+const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
+  switch(dtype) {
+    case TILEDB_INT32:
+      return sizeof(int32_t);
+    case TILEDB_CHAR:
+      return sizeof(char);
+    default:
+      Rcpp::stop("Unsupported tiledb_datatype_t '%s'", _tiledb_datatype_to_string(dtype));
+  }
+}
+
 // We need to 'cache' the variable length data and offset vectors as
 // these get passed to the storage manager layer all at once.  But we
 // can only process them one by one, and only know respective types
@@ -65,14 +76,14 @@ Rcpp::List read_varlength_array(const std::string array_name,
   auto max_el_map = array.max_buffer_elements(subarray);
 
   std::vector<uint64_t> offsets(max_el_map[key].first);
-  char* data = new char[max_el_map[key].second];
+  char* data = new char[max_el_map[key].second * _tiledb_datatype_sizeof(dtype)];
 
   // Prepare and submit the query, and close the array
   Query query(ctx, array);
   query.set_subarray(subarray);
   query.set_layout(TILEDB_ROW_MAJOR); 								// FIXME: does layout need to be a parameter?
   query.set_buffer(key, offsets.data(), offsets.size(),
-                   static_cast<void*>(data), max_el_map[key].second);
+                   static_cast<void*>(data), max_el_map[key].second * _tiledb_datatype_sizeof(dtype));
 
   query.submit();
   array.close();
