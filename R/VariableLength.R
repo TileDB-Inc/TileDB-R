@@ -1,8 +1,20 @@
 
+##' Read an variable-length array
+##'
+##' Using a given key and sub-array vector, a variable length array is read.
+##' Currently defaults to dense arrays.
+##' @param uri A character variable with a URI for a (dense) array
+##' @param key A character variable with the array key
+##' @param subarray An integer vector of length four with the row start and
+##' and end, and the column start and and end (using one as start).
+##' @param debug An optional logical switch for increased verbosity, defaults
+##' to FALSE.
+##' @return A data.table object is returned if the data.table package is available,
+##' otherwise a list object is returned.
 ##' @export
-read_variable_length <- function(array, key, subarray, debug=FALSE) {
+read_variable_length <- function(uri, key, subarray, debug=FALSE) {
 
-  res <- read_varlength_array(array, key, subarray, debug)
+  res <- read_varlength_array(uri, key, subarray, debug)
 
   ## An earlier version returneda list per keys, and the code below still
   ## works that way and is worth keeping.  So we just wrap the per-key
@@ -35,6 +47,15 @@ read_variable_length <- function(array, key, subarray, debug=FALSE) {
 
 }
 
+##' Write a variable-length array
+##'
+##' Using a given (named) list with variable-length arrays, write them out
+##' to the given URI. Currently defaults to dense arrays.
+##' @param uri A character variable with a URI for a (dense) array
+##' @param listobject A named list with variable-length arrays.
+##' @param debug An optional logical switch for increased verbosity, defaults
+##' to FALSE.
+##' @return The result of the underlying write call is returned.
 ##' @export
 write_variable_length <- function(uri, listobject, debug=FALSE) {
   ## we extract names simply because it is easier
