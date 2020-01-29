@@ -36,6 +36,8 @@ const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
 // when we process. Which is generally in some dynamic scope so we
 // would 'forgot' the information. Hence we fill a simple structure
 // and use it to set the query.
+//
+// This is currently used only on the writing side
 
 struct vararrelem {
   std::string attr;             // attribute name
