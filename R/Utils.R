@@ -81,7 +81,7 @@ tiledb_array_close <- function(arr) {
 ##' @return Nothing is returned as the function is invoked for its site effect.
 ##' @export
 tiledb_array_schema_dump <- function(uri, ctx = tiledb_get_context()) {
-  schema <- tiledb:::libtiledb_array_schema_load(ctx@ptr, uri)
-  tiledb:::libtiledb_array_schema_dump(schema)
+  schema <- libtiledb_array_schema_load(ctx@ptr, uri)
+  libtiledb_array_schema_dump(schema)
   invisible(NULL)
 }
