@@ -36,8 +36,10 @@ write_variable_array <- function(uri, debug=FALSE) {
 }
 
 read_variable_array <- function(uri, debug=FALSE) {
-  rl <- read_variable_length(uri, c(1,4,1,4), c("a1", "a2"), debug=debug)
-  print(rl)
+  res <- read_variable_length(uri, "a1", c(1,4,1,4), debug=debug)
+  print(res)
+  res <- read_variable_length(uri, "a2", c(1,4,1,4), debug=debug)
+  print(res)
 }
 
 debug <- FALSE
