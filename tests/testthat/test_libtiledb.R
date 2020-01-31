@@ -56,7 +56,6 @@ test_that("default libtiledb_ctx config is the default config", {
   ctx <- tiledb:::libtiledb_ctx()
   ctx_config <- tiledb:::libtiledb_ctx_config(ctx)
   default_config <- tiledb:::libtiledb_config()
-  ## get different length when testing as package
   expect_equal(tiledb:::libtiledb_config_vector(ctx_config),
                tiledb:::libtiledb_config_vector(default_config))
 })
