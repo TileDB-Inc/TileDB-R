@@ -1107,8 +1107,8 @@ XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
-                                            std::string attr,
-                                            SEXP buffer) {
+                                               std::string attr,
+                                               SEXP buffer) {
   if (TYPEOF(buffer) == INTSXP) {
     IntegerVector vec(buffer);
     query->set_buffer(attr, vec.begin(), vec.length());
