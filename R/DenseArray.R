@@ -188,8 +188,8 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
 #' Gets a dense array value
 #'
 #' @param x dense array object
-#' @param i parameter key string
-#' @param j parameter key string, currently unused.
+#' @param i parameter key string, currently unused
+#' @param j parameter key string, currently unused
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return An element from a dense array
@@ -205,10 +205,13 @@ setMethod("[", "tiledb_dense",
             uri <- x@uri
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
-            if (!tiledb::is.integral(dom)) {
+            if (!tiledb::is.integral(dom)) { # test is in Domain.R and checks for INT domain
               stop("subscript indexing only valid for integral Domain's")
             }
             libtiledb_array_open(x@ptr, "READ")
+
+            ## query number of cell values for schema, NA indicates variable length
+            ncellval <- sapply(attrs(schema), ncells)
 
             out <- tryCatch(
               {
@@ -216,22 +219,27 @@ setMethod("[", "tiledb_dense",
                 buffers <- attribute_buffers(x, schema, dom, subarray)
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
                 qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                if (is.integral(dom)) {
+                #if (is.integral(dom)) {  ## -- already tested above
                   qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
-                } else {
-                  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
-                }
+                #} else {
+                #  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
+                #}
+
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                   aname <- attr_names[[idx]]
-                  val = buffers[[idx]]
+                  val <- buffers[[idx]]
                   if (aname == "coords") {
-                      qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+                    qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+                  } else if (is.na(ncellval[[aname]])) {  ## NA == variable lnegth
+                    stop("do something here", call.=FALSE)
                   } else {
-                      if (is.character(val) || is.list(val))
-                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                      else
-                          qry <- libtiledb_query_set_buffer(qry, aname, val)
+                    #if (is.character(val) || is.list(val)) {
+                      ## missing
+                    #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                    #} else {
+                      qry <- libtiledb_query_set_buffer(qry, aname, val)
+                    #}
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
