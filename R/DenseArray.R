@@ -153,7 +153,7 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   is_scalar <- all(sub_dim == 1L)
 
   attributes <- list()
-  offsets <- list()
+  #offsets <- list()
 
   # first alloc coordinate buffer if we are returning a data.frame
   if (array@as.data.frame) {
@@ -166,7 +166,6 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   }
 
   attrs <- tiledb::attrs(sch)
-
   if (length(filter_attributes) > 0) {
     attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
   }
@@ -184,17 +183,18 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
     }
     attributes[[aname]] <- buff
 
-    if (is.na(ncells(attr))) {
-      ## NB offsets are always uint64 'which we do not have' so proxy with double
-      cat("Ncells in attribute buffers is ", ncells, "\n")
-      offsetbuf <- vector(mode = "double", length = ncells)
-      offsets[[aname]] <- offsetbuf
-    } else {
-      offsets[[aname]] <- NULL
-    }
+    #if (is.na(ncells(attr))) {
+    #  ## NB offsets are always uint64 'which we do not have' so proxy with double
+    #  cat("Ncells in attribute buffers is ", ncells, "\n")
+    #  offsetbuf <- vector(mode = "double", length = ncells)
+    #  offsets[[aname]] <- offsetbuf
+    #} else {
+    #  offsets[[aname]] <- NULL
+    #}
 
   }
-  return(list(attributes=attributes, offsets=offsets))
+  #return(list(attributes=attributes, offsets=offsets))
+  return(attributes)
 }
 
 #' Gets a dense array value
@@ -223,45 +223,44 @@ setMethod("[", "tiledb_dense",
             libtiledb_array_open(x@ptr, "READ")
 
             ## query number of cell values for schema, NA indicates variable length
-            ncellval <- sapply(attrs(schema), ncells)
-            storagemode <- NULL
+            #ncellval <- sapply(attrs(schema), ncells)
+            #storagemode <- NULL
 
             out <- tryCatch(
               {
                 subarray <- domain_subarray(dom, index = index)
 
                 ## generalized to return two lists
-                bufferlist <- attribute_buffers(x, schema, dom, subarray)
-                #print(str(bufferlist))
-                buffers <- bufferlist[["attributes"]]
-                offsets <- bufferlist[["offsets"]]
+                #bufferlist <- attribute_buffers(x, schema, dom, subarray)
+                #buffers <- bufferlist[["attributes"]]
+                #offsets <- bufferlist[["offsets"]]
+                buffers <- attribute_buffers(x, schema, dom, subarray)
 
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
                 qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                #if (is.integral(dom)) {  ## -- already tested above
+                if (is.integral(dom)) {  ## -- already tested above
                   qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
-                #} else {
-                #  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
-                #}
-
+                } else {
+                  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
+                }
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                   aname <- attr_names[[idx]]
-                  isvarlen <- is.na(ncellval[[aname]])  ## NA == variable lnegth
+                  #isvarlen <- is.na(ncellval[[aname]])  ## NA == variable lnegth
                   val <- buffers[[idx]]  ## could be/should be aname
-                  storagemode <- c(storagemode, storage.mode(val))
+                  #storagemode <- c(storagemode, storage.mode(val))
                   if (aname == "coords") {
                     qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
-                  } else if (isvarlen) {
-                    noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
-                    qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
+                  #} else if (isvarlen) {
+                  #  noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
+                  #  qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
                   } else {
-                    #if (is.character(val) || is.list(val)) {
-                      ## missing function, never written
-                    #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                    #} else {
+                    if (is.character(val) || is.list(val)) {
+                    # missing function, never written
+                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                    } else {
                       qry <- libtiledb_query_set_buffer(qry, aname, val)
-                    #}
+                    }
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
@@ -287,15 +286,15 @@ setMethod("[", "tiledb_dense",
                       buffers[[idx]] <- old_buffer[1:ncells]
                     }
 
-                  } else if (isvarlen) {  ## NA == variable lnegth
-                    noffs <- libtiledb_query_result_buffer_elements_offsets(qry, aname)
-                    ncells <- libtiledb_query_result_buffer_elements(qry, aname)
-                    print(c(noffs, ncells))
-                    cat("In R mode post query now is ", storagemode[idx], "\n")
-                    buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
-                                                                         aname, val,
-                                                                         offsets[[aname]])
-
+                  #} else if (isvarlen) {  ## NA == variable lnegth
+                  #  noffs <- libtiledb_query_result_buffer_elements_offsets(qry, aname)
+                  #  ncells <- libtiledb_query_result_buffer_elements(qry, aname)
+                  #  print(c(noffs, ncells))
+                  #  cat("In R mode post query now is ", storagemode[idx], "\n")
+                  #  buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
+                  #                                                       aname, val,
+                  #                                                       offsets[[aname]])
+                  #
                   } else {
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
                     if (ncells < length(old_buffer)) {

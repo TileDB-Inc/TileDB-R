@@ -1107,8 +1107,8 @@ XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
-                                               std::string attr,
-                                               SEXP buffer) {
+                                            std::string attr,
+                                            SEXP buffer) {
   if (TYPEOF(buffer) == INTSXP) {
     IntegerVector vec(buffer);
     query->set_buffer(attr, vec.begin(), vec.length());
@@ -1127,107 +1127,6 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
            << "\""<< attr << "\": " << Rcpp::type2name(buffer);
     throw Rcpp::exception(errmsg.str().c_str());
   }
-}
-
-// [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> query,
-                                                        std::string attr,
-                                                        SEXP buffer,
-                                                        NumericVector doffsets) {
-
-  // while we get a vector of doubles, we need a vector of uint64 for the offsets
-  std::vector<uint64_t> offsets(doffsets.size());
-  void *vptr;
-  vptr = &(doffsets[0]);
-  if (TYPEOF(buffer) == INTSXP) {
-    IntegerVector vec(buffer);
-    query->set_buffer(attr, offsets.data(), doffsets.size(), vec.begin(), vec.length());
-    //query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
-  } else if (TYPEOF(buffer) == REALSXP) {
-    NumericVector vec(buffer);
-    query->set_buffer(attr, offsets.data(), doffsets.size(), vec.begin(), vec.length());
-    //query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
-  } else if (TYPEOF(buffer) == LGLSXP) {
-    LogicalVector vec(buffer);
-    query->set_buffer(attr, offsets.data(), doffsets.size(), vec.begin(), vec.length());
-    //query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
-  } else {
-    Rcpp::stop("Invalid attribute buffer type for attribute %s : %s", attr, Rcpp::type2name(buffer));
-  }
-
-  // we will 'store' the uint64_t vector for now in the double vector
-  // because doffsets is in the signature as numeric vector from rcpp, it returns changed value
-  // std::memcpy(doffsets.begin(), offsets.data(), doffsets.size()*sizeof(double));
-  return query;
-}
-
-// [[Rcpp::export]]
-Rcpp::List libtiledb_query_result_list_column(XPtr<tiledb::Query> query,
-                                              std::string storagemode,
-                                              std::string attr,
-                                              SEXP buffer,
-                                              NumericVector doffsets) {
-  Rcpp::Rcout << "Storage mode in C++ is " << storagemode << std::endl;
-  std::vector<uint64_t> offsets( static_cast<uint64_t>(doffsets.size()) );
-  std::memcpy(offsets.data(), doffsets.begin(), doffsets.size()*sizeof(double));
-  Rcpp::Rcout << "offsets: "; for (int i=0; i<doffsets.size(); i++) { Rcpp::Rcout << offsets[i] << " "; } Rcpp::Rcout << std::endl;
-
-  auto szpair = query->result_buffer_elements()[attr];
-  size_t noff = szpair.first;
-  size_t ndata = szpair.second;
-  Rcpp::Rcout << "Attribute name: " << attr << " and dims " << noff << " x " << ndata;
-  std::vector<uint64_t> el_off, cell_el;
-  Rcpp::List ll(1);
-  ll[0] = R_NilValue;
-  if (attr == "a3") { Rcpp::Rcout << std::endl; return(ll); }
-
-  //if (dtype == TILEDB_INT32) { // TYPEOF(buffer) == INTSXP) {
-  if (storagemode == "integer") {
-    Rcpp::Rcout << " and type int\n";
-    IntegerVector vec(buffer);
-    Rcpp::Rcout << "buffer content: "; for (size_t i=0; i<ndata; i++) { Rcpp::Rcout << vec[i] << " "; } Rcpp::Rcout << std::endl;
-    for (size_t i=0; i<noff; i++) {
-      el_off.push_back(offsets[i] / sizeof(int32_t));
-      Rcpp::Rcout << offsets[i] / sizeof(int32_t) << " ";
-    }
-    for (size_t i=0; i<noff; i++)
-      cell_el.push_back(el_off[i+1] - el_off[i]);
-    cell_el.push_back(ndata - el_off.back());
-    std::vector<int32_t> newdata;
-    for (size_t i=0; i<noff; i++) {
-      Rcpp::Rcout << "noff=" << i << " ";
-      for (size_t j=0; j<cell_el[i]; j++) {
-        Rcpp::Rcout << vec[ el_off[i] + j] << " ";
-      }
-      Rcpp::Rcout << "\n";
-    }
-
-    //} else if (dtype == TILEDB_FLOAT64) { //TYPEOF(buffer) == REALSXP) {
-  } else if (storagemode == "double") {
-    Rcpp::Rcout << "real\n";
-    NumericVector vec(buffer);
-    for (size_t i=0; i<noff; i++)
-      el_off.push_back(offsets[i] / sizeof(double));
-    for (size_t i=0; i<noff; i++)
-      cell_el.push_back(el_off[i+1] - el_off[i]);
-    cell_el.push_back(ndata - el_off.back());
-    std::vector<double> newdata;
-    for (size_t i=0; i<noff; i++) {
-      for (size_t j=0; j<cell_el[i]; j++) {
-        Rcpp::Rcout << vec[ el_off[i] + j] << " ";
-      }
-      Rcpp::Rcout << "\n";
-    }
-
-
-  } else if (TYPEOF(buffer) == LGLSXP) {
-    Rcpp::Rcout << "logical\n";
-    LogicalVector vec(buffer);
-  } else {
-    Rcpp::stop("Invalid attribute buffer type for attribute %s : %s", attr, Rcpp::type2name(buffer));
-  }
-
-  return ll;
 }
 
 // [[Rcpp::export]]
@@ -1268,13 +1167,6 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
 R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
                                                 std::string attribute) {
   R_xlen_t nelem = query->result_buffer_elements()[attribute].second;
-  return nelem;
-}
-
-// [[Rcpp::export]]
-R_xlen_t libtiledb_query_result_buffer_elements_offsets(XPtr<tiledb::Query> query,
-                                                        std::string attribute) {
-  R_xlen_t nelem = query->result_buffer_elements()[attribute].first;
   return nelem;
 }
 
@@ -1341,24 +1233,6 @@ R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array,
     throw Rcpp::exception(errmsg.str().c_str());
   }
 }
-
-// [[Rcpp::export]]
-R_xlen_t libtiledb_array_max_buffer_elements_offsets(XPtr<tiledb::Array> array,
-                                                     SEXP subarray,
-                                                     std::string attribute) {
-  if (TYPEOF(subarray) == INTSXP) {
-    auto sub = as<std::vector<int32_t>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return max_elements[attribute].first;
-  } else if (TYPEOF(subarray) == REALSXP) {
-    auto sub = as<std::vector<double>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return max_elements[attribute].first;
-  } else {
-    Rcpp::stop("Invalid subarray buffer type for domain: %s", Rcpp::type2name(subarray));
-  }
-}
-
 
 /**
  * Object functionality
