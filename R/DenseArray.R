@@ -250,7 +250,6 @@ setMethod("[", "tiledb_dense",
                   isvarlen <- is.na(ncellval[[aname]])  ## NA == variable lnegth
                   val <- buffers[[idx]]  ## could be/should be aname
                   storagemode <- c(storagemode, storage.mode(val))
-                  cat("In R more pre query mode is ", storage.mode(val), "\n")
                   if (aname == "coords") {
                     qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
                   } else if (isvarlen) {
