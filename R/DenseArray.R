@@ -255,9 +255,10 @@ setMethod("[", "tiledb_dense",
                   if (aname == "coords") {
                     qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
                   } else if (isvarlen) {
-                    #noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
-                    #qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
-                    stop("how did we get here? isvarlen:", isvarlen)
+                    noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
+                    #cat("noff: ", noff, "  aname: ", aname, "  names(offsets):", names(offsets), "\n")
+                    qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
+                    #stop("how did we get here? isvarlen:", isvarlen)
                   } else {
                     if (is.character(val) || is.list(val)) {
                     # missing function, never written
@@ -290,15 +291,15 @@ setMethod("[", "tiledb_dense",
                       buffers[[idx]] <- old_buffer[1:ncells]
                     }
 
-                  #} else if (isvarlen) {  ## NA == variable lnegth
-                  #  noffs <- libtiledb_query_result_buffer_elements_offsets(qry, aname)
-                  #  ncells <- libtiledb_query_result_buffer_elements(qry, aname)
-                  #  print(c(noffs, ncells))
-                  #  cat("In R mode post query now is ", storagemode[idx], "\n")
-                  #  buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
-                  #                                                       aname, val,
-                  #                                                       offsets[[aname]])
-                  #
+                  } else if (isvarlen) {  ## NA == variable lnegth
+                    noffs <- libtiledb_query_result_buffer_elements_offsets(qry, aname)
+                    ncells <- libtiledb_query_result_buffer_elements(qry, aname)
+                    print(c(noffs, ncells))
+                    cat("In R mode post query now is", storagemode[idx], "\n")
+                    buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
+                                                                         aname, val,
+                                                                         offsets[[aname]])
+                    print(matrix(buffers[[idx]],4,4))
                   } else {
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
                     if (ncells < length(old_buffer)) {
