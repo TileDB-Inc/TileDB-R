@@ -344,7 +344,9 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
       if (is.sparse(A)) {
         buffers <- sparse_attribute_buffers(A, schema, dom, subarray_vector, attrs)
       } else {
-        buffers <- attribute_buffers(A, schema, dom, subarray_vector, attrs)
+        bufferlist <- attribute_buffers(A, schema, dom, subarray_vector, attrs)
+        buffers <- bufferlist[["attributes"]]
+        offsets <- bufferlist[["offsets"]] 			# currently ignored, used for varlength
       }
       qry <- libtiledb_query(ctx@ptr, A@ptr, "READ")
       qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
