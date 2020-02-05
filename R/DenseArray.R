@@ -185,7 +185,7 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
 
     if (is.na(ncells(attr))) {
       ## NB offsets are always uint64 'which we do not have' so proxy with double
-      cat("Ncells in attribute buffers is ", ncells, "\n")
+      #cat("Ncells in attribute buffers is ", ncells, "\n")
       offsetbuf <- vector(mode = "double", length = ncells)
       offsets[[aname]] <- offsetbuf
     } else {
@@ -224,8 +224,10 @@ setMethod("[", "tiledb_dense",
 
             ## query number of cell values for schema, NA indicates variable length
             ncellval <- sapply(attrs(schema), ncells)
+            if (x@as.data.frame)        # in the data.frame case first buffer is 'coords' so fill
+              ncellval <- c(coords=-1, ncellval)
 
-            #storagemode <- NULL
+            storagemode <- vector(mode="character", length=length(ncellval))
 
             out <- tryCatch(
               {
@@ -248,15 +250,14 @@ setMethod("[", "tiledb_dense",
                 for (idx in seq_along(buffers)) {
                   aname <- attr_names[[idx]]
                   isvarlen <- is.na(unname(ncellval[idx]))  ## NA == variable lnegth
-                  if (isvarlen) message("Variable Length")
-
                   val <- buffers[[idx]]  ## could be/should be aname
-                  #storagemode <- c(storagemode, storage.mode(val))
+                  storagemode[idx] <- storage.mode(val)
                   if (aname == "coords") {
                     qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
-                  #} else if (isvarlen) {
-                  #  noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
-                  #  qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
+                  } else if (isvarlen) {
+                    #noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
+                    #qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
+                    stop("how did we get here? isvarlen:", isvarlen)
                   } else {
                     if (is.character(val) || is.list(val)) {
                     # missing function, never written
