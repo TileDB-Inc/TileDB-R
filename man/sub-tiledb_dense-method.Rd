@@ -9,9 +9,9 @@
 \arguments{
 \item{x}{dense array object}
 
-\item{i}{parameter key string}
+\item{i}{parameter key string, currently unused}
 
-\item{j}{parameter key string, currently unused.}
+\item{j}{parameter key string, currently unused}
 
 \item{...}{Extra parameter for method signature, currently unused.}
 
