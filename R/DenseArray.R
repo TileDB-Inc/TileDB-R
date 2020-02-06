@@ -314,8 +314,7 @@ setMethod("[", "tiledb_dense",
                 if (x@as.data.frame) {
                   ## need extra test for variable length arrays which do not fit
                   if (anyvarlen) {
-                    #print(str(buffers[-1]))
-                    return(buffers[-1])
+                    return(as_data_table(dom, buffers))
                   } else {
                     return(as_data_frame(dom, buffers))
                   }

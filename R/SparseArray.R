@@ -104,6 +104,42 @@ as_data_frame <- function(dom, data) {
   return(as.data.frame(data))
 }
 
+#' Construct a data.table from variable-length array query results
+#'
+#' Converts a tiledb object to a data.table object suitable for handling
+#' variable-length arrays
+#'
+#' @param dom tiledb_domain object
+#' @param data tiledb object to be converted
+#' @return data.frame object constructed from `data`
+#' @export
+as_data_table <- function(dom, data) {
+  if (!is(dom, "tiledb_domain")) {
+    stop("as_data_table must be called with a tiledb_domain object")
+  }
+  if (!requireNamespace("data.table", quietly=TRUE)) {
+    stop("as_data_table requires the 'data.table' package")
+  }
+  # If coordinates are present convert to columns in the data.frame
+  if (is.null(data[["coords"]])) {
+    stop("as_data_table requires a 'coords' component in the 'data' object")
+  }
+  ndim <- tiledb_ndim(dom)
+  dimensions <- dimensions(dom)
+  res <- data.table::data.table(NULL)   # init an empty data.table
+  bufnames <- names(data)[-1]        # omit 'coords'
+  for (nm in bufnames) {
+    res <- cbind(res, data.table::data.table(data[[nm]]))
+  }
+  data.table::setnames(res, bufnames)
+  for (i in seq(1, ndim, 1)) {
+    dim_name <- name(dimensions[[i]])
+    res <- cbind(res, data.table::data.table(data$coords[seq(i, length(data$coords), ndim)]))
+    data.table::setnames(res, ncol(res), dim_name)
+  }
+  return(res)
+}
+
 #' Gets a sparse array value
 #'
 #' @param x sparse array object
