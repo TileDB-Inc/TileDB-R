@@ -589,6 +589,7 @@ std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
   return _tiledb_datatype_to_string(dim->type());
 }
 
+// FIXME: Possible bug that this uses NumericVector, should it be IntegerVector?
 // Computes the TileDB subarray for a given dimension domain
 // [[Rcpp::export]]
 NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript) {
