@@ -48,11 +48,24 @@ if (!dir.exists(uri)) {
   if (debug) tiledb_array_schema_dump(uri)
   write_variable_array(uri)
 }
-read_variable_array(uri, debug)
-cat("Done\n")
+#read_variable_array(uri, debug)
+#cat("Done\n")
 
-arr <- tiledb_dense(uri, as.data.frame=FALSE)
-arr[2:3,]
+arr1 <- tiledb_dense(uri, as.data.frame=FALSE)
+#arr1[2:3,]
+arr1[2,2]
 
-arr <- tiledb_dense(uri, as.data.frame=TRUE)
-arr[2:3,3:4]
+arr2 <- tiledb_dense(uri, as.data.frame=TRUE)
+#arr2[2:3,3:4]
+arr2[2,2]
+
+#arr1[2,2] <- list(array(c(6L,7L), c(1,1)), array(c(6,7), c(1,1)))
+#arr1[2,2] <- list(data.table::data.table(list(c(21L,22L))),
+#                  data.table::data.table(list(c(21,22))))
+
+## works
+arr1[2,2] <- list(array(c(6L,7L)), array(c(6,7)))
+## also works
+#arr1[2,2] <- list(c(6L,7L), c(6,7))
+
+arr1[]
