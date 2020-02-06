@@ -299,12 +299,16 @@ setMethod("[", "tiledb_dense",
                   } else if (isvarlen) {  ## NA == variable lnegth
                     noffs <- libtiledb_query_result_buffer_elements_offsets(qry, aname)
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
-                    #print(c(noffs, ncells))
-                    #cat("In R mode post query now is", storagemode[idx], "\n")
                     buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
                                                                          aname, val,
                                                                          offsets[[aname]])
-                    #print(data.table::data.table(matrix(buffers[[idx]],4,4)))
+                    if (!x@as.data.frame) {
+                      subdims <- subarray_dim(subarray)
+                      buffers[[idx]] <- matrix(buffers[[idx]], subdims[1], subdims[2])
+                      if (requireNamespace("data.table", quietly=TRUE)) {
+                        buffers[[idx]] <- data.table::data.table(buffers[[idx]])
+                      }
+                    }
                   } else {
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
                     if (ncells < length(old_buffer)) {
