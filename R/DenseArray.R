@@ -259,7 +259,7 @@ setMethod("[", "tiledb_dense",
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                   aname <- attr_names[[idx]]
-                  isvarlen <- is.na(unname(ncellval[idx]))  ## NA == variable lnegth
+                  isvarlen <- is.na(unname(ncellval[idx]))  ## NA == variable length
                   val <- buffers[[idx]]  ## could be/should be aname
                   storagemode[idx] <- storage.mode(val)
                   if (aname == "coords") {
@@ -354,7 +354,7 @@ setMethod("[", "tiledb_dense",
 #' @return The modified object
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
-             if (!is.list(value)) {
+            if (!is.list(value)) {
               if (is.array(value) || is.vector(value)) {
                 value <- list(value)
               } else {
@@ -374,6 +374,7 @@ setMethod("[<-", "tiledb_dense",
             if (!tiledb::is.integral(dom)) {
               stop("subscript indexing only valid for integral Domain's")
             }
+            anyvarlen <- any(sapply(attrs(schema), function(s) is.na(ncells(s))))
             subarray <- domain_subarray(dom, index = index)
             attrs <- tiledb::attrs(schema)
             nvalue <- length(value)
@@ -405,41 +406,61 @@ setMethod("[<-", "tiledb_dense",
               val <- value[[i]]
               if (is.vector(val)) {
                 if (length(sub_dim) != 1 || sub_dim[1L] != length(val)) {
-                  stop("value dim does not match array subscript")
+                  if (!anyvarlen)
+                    stop("vector value dim does not match array subscript")
                 }
               } else if (is.array(val)) {
                 if (!all(sub_dim == dim(val))) {
-                  stop("value dim does not match array subscript")
+                  if (!anyvarlen)
+                    stop("array value dim does not match array subscript")
                 }
               } else {
                 stop(paste("cannot assign value of type \"", typeof(value), "\""))
               }
             }
             libtiledb_array_open(x@ptr, "WRITE")
+
+            ## query number of cell values for schema, NA indicates variable length
+            ncellval <- sapply(attrs(schema), ncells)
+            if (x@as.data.frame)        # in the data.frame case first buffer is 'coords' so fill
+              ncellval <- c(coords=-1, ncellval)
+
+            offsets <- double(prod(sub_dim)) # may need to check if this is sufficient space?
+
             out <- tryCatch(
               {
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
                 qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                if (is.integral(dom)) {
+                #if (is.integral(dom)) { ## -- already tested above
                   qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
-                } else {
-                  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
-                }
+                #} else {
+                #  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
+                #}
                 attr_names <- names(value)
                 for (idx in seq_along(value)) {
                   aname <- attr_names[[idx]]
-                  val = value[[idx]]
-                  if (is.list(val) || is.character(val))
-                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                  else
-                      qry <- libtiledb_query_set_buffer(qry, aname, val)
+                  val <- value[[idx]]
+                  isvarlen <- is.na(unname(ncellval[idx]))  ## NA == variable length
+
+                  if (isvarlen) {
+                    #noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
+                    #cat("noff: ", noff, "  aname: ", aname, "  names(offsets):", names(offsets), "\n")
+                    qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets)
+                  } else {
+                    #if (is.list(val) || is.character(val))
+                    ## missing function, never written
+                    #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                    #else
+                    qry <- libtiledb_query_set_buffer(qry, aname, val)
+                  }
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in write query")
+                  cat("Status:", libtiledb_query_status(qry), "\n")
+                  stop("error in write query (not 'COMPLETE')")
                 }
                 qry <- libtiledb_query_finalize(qry)
-                return(x);
+                return(x)
               },
               finally = {
                 libtiledb_array_close(x@ptr)
