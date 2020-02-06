@@ -1165,47 +1165,47 @@ Rcpp::List libtiledb_query_result_list_column(XPtr<tiledb::Query> query,
                                               std::string attr,
                                               SEXP buffer,
                                               NumericVector doffsets) {
-  Rcpp::Rcout << "Storage mode in C++ is " << storagemode << std::endl;
+  //Rcpp::Rcout << "Storage mode in C++ is " << storagemode << std::endl;
   std::vector<uint64_t> offsets( static_cast<uint64_t>(doffsets.size()) );
   std::memcpy(offsets.data(), doffsets.begin(), doffsets.size()*sizeof(double));
-  Rcpp::Rcout << "offsets: "; for (int i=0; i<doffsets.size(); i++) { Rcpp::Rcout << offsets[i] << " "; } Rcpp::Rcout << std::endl;
+  //Rcpp::Rcout << "offsets: "; for (int i=0; i<doffsets.size(); i++) { Rcpp::Rcout << offsets[i] << " "; } Rcpp::Rcout << std::endl;
 
   auto szpair = query->result_buffer_elements()[attr];
   size_t noff = szpair.first;
   size_t ndata = szpair.second;
-  Rcpp::Rcout << "Attribute name: " << attr << " and dims " << noff << " x " << ndata;
+  //Rcpp::Rcout << "Attribute name: " << attr << " and dims " << noff << " x " << ndata;
   std::vector<uint64_t> el_off, cell_el;
   Rcpp::List ll(noff);
 
-  //if (dtype == TILEDB_INT32) { // TYPEOF(buffer) == INTSXP) {
+  //if (dtype == TILEDB_INT32) { //  if (TYPEOF(buffer) == INTSXP) {
   if (storagemode == "integer") {
-    Rcpp::Rcout << " and type int\n";
+    //Rcpp::Rcout << " and type int\n";
     IntegerVector vec(buffer);
-    Rcpp::Rcout << "buffer content: ";
-    for (size_t i=0; i<ndata; i++) { Rcpp::Rcout << vec[i] << " "; } Rcpp::Rcout << std::endl;
-    Rcpp::Rcout << "el_off: ";
+    //Rcpp::Rcout << "buffer content: ";
+    //for (size_t i=0; i<ndata; i++) { Rcpp::Rcout << vec[i] << " "; } Rcpp::Rcout << std::endl;
+    //Rcpp::Rcout << "el_off: ";
     for (size_t i=0; i<noff; i++) {
       el_off.push_back(offsets[i] / sizeof(int32_t));
-      Rcpp::Rcout << offsets[i] / sizeof(int32_t) << " ";
+      //Rcpp::Rcout << offsets[i] / sizeof(int32_t) << " ";
     }
-    Rcpp::Rcout << std::endl;
+    //Rcpp::Rcout << std::endl;
     for (size_t i=0; i<noff-1; i++)
       cell_el.push_back(el_off[i+1] - el_off[i]);
     cell_el.push_back(ndata - el_off.back());
-    Rcpp::Rcout << "ndata: " << ndata << " el_off.back() " << el_off.back() << std::endl;
+    //Rcpp::Rcout << "ndata: " << ndata << " el_off.back() " << el_off.back() << std::endl;
     for (size_t i=0; i<noff; i++) {
       std::vector<int32_t> newdata;
-      Rcpp::Rcout << "i(noff)=" << i << " cell_el[i]=" << cell_el[i] << " -- ";
+      //Rcpp::Rcout << "i(noff)=" << i << " cell_el[i]=" << cell_el[i] << " -- ";
       for (size_t j=0; j<cell_el[i]; j++) {
-        Rcpp::Rcout << vec[ el_off[i] + j] << " ";
+        //Rcpp::Rcout << vec[ el_off[i] + j] << " ";
         newdata.push_back(vec[ el_off[i] + j]);
       }
-      Rcpp::Rcout << "\n";
+      //Rcpp::Rcout << "\n";
       ll[i] = newdata;
     }
   //} else if (dtype == TILEDB_FLOAT64) { //TYPEOF(buffer) == REALSXP) {
   } else if (storagemode == "double") {
-    Rcpp::Rcout << "real\n";
+    //Rcpp::Rcout << "real\n";
     NumericVector vec(buffer);
     for (size_t i=0; i<noff; i++)
       el_off.push_back(offsets[i] / sizeof(double));
@@ -1215,10 +1215,10 @@ Rcpp::List libtiledb_query_result_list_column(XPtr<tiledb::Query> query,
     for (size_t i=0; i<noff; i++) {
       std::vector<double> newdata;
       for (size_t j=0; j<cell_el[i]; j++) {
-        Rcpp::Rcout << vec[ el_off[i] + j] << " ";
+        //Rcpp::Rcout << vec[ el_off[i] + j] << " ";
         newdata.push_back(vec[ el_off[i] + j]);
       }
-      Rcpp::Rcout << "\n";
+      //Rcpp::Rcout << "\n";
       ll[i] = newdata;
     }
 

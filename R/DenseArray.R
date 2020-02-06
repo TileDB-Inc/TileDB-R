@@ -216,6 +216,9 @@ setMethod("[", "tiledb_dense",
             ctx <- x@ctx
             uri <- x@uri
             schema <- tiledb::schema(x)
+
+            anyvarlen <- any(sapply(attrs(schema), function(s) is.na(ncells(s))))
+
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) { # test is in Domain.R and checks for INT domain
               stop("subscript indexing only valid for integral Domain's")
@@ -294,12 +297,12 @@ setMethod("[", "tiledb_dense",
                   } else if (isvarlen) {  ## NA == variable lnegth
                     noffs <- libtiledb_query_result_buffer_elements_offsets(qry, aname)
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
-                    print(c(noffs, ncells))
-                    cat("In R mode post query now is", storagemode[idx], "\n")
+                    #print(c(noffs, ncells))
+                    #cat("In R mode post query now is", storagemode[idx], "\n")
                     buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
                                                                          aname, val,
                                                                          offsets[[aname]])
-                    print(matrix(buffers[[idx]],4,4))
+                    #print(data.table::data.table(matrix(buffers[[idx]],4,4)))
                   } else {
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
                     if (ncells < length(old_buffer)) {
@@ -309,7 +312,13 @@ setMethod("[", "tiledb_dense",
                 }
 
                 if (x@as.data.frame) {
-                  return(as_data_frame(dom, buffers))
+                  ## need extra test for variable length arrays which do not fit
+                  if (anyvarlen) {
+                    #print(str(buffers[-1]))
+                    return(buffers[-1])
+                  } else {
+                    return(as_data_frame(dom, buffers))
+                  }
                 } else {
                   # if there is only one buffer, don't return a list of attribute buffers
                   if (length(buffers) == 1L) {
