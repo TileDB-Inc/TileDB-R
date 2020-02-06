@@ -50,3 +50,9 @@ if (!dir.exists(uri)) {
 }
 read_variable_array(uri, debug)
 cat("Done\n")
+
+arr <- tiledb_dense(uri, as.data.frame=FALSE)
+arr[]
+
+arr <- tiledb_dense(uri, as.data.frame=TRUE)
+arr[]
