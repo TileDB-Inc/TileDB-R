@@ -239,6 +239,10 @@ setMethod("[", "tiledb_dense",
               {
                 subarray <- domain_subarray(dom, index = index)
 
+                if (storage.mode(subarray) == "double") {
+                  subarray <- as.integer(subarray)
+                }
+
                 ## generalized to return two lists
                 bufferlist <- attribute_buffers(x, schema, dom, subarray)
                 buffers <- bufferlist[["attributes"]]
