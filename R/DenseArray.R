@@ -152,6 +152,8 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   ncells <- prod(sub_dim)
   is_scalar <- all(sub_dim == 1L)
 
+  anyvarlen <- any(sapply(attrs(sch), function(s) is.na(ncells(s))))
+
   attributes <- list()
   offsets <- list()
 
@@ -173,12 +175,13 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
     aname <- tiledb::name(attr)
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
     # If we get it as a dataframe we need to use max buffer elements to get proper buffer size
-    if (array@as.data.frame) {
+    # or if we have variable length arrays
+    if (array@as.data.frame || anyvarlen) {
       ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
     }
     buff <- vector(mode = type, length = ncells)
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
-    if (!is_scalar && !array@as.data.frame) {
+    if (!is_scalar && !array@as.data.frame && !anyvarlen) {
       attr(buff, "dim") <- sub_dim
     }
     attributes[[aname]] <- buff
@@ -258,17 +261,16 @@ setMethod("[", "tiledb_dense",
                   if (aname == "coords") {
                     qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
                   } else if (isvarlen) {
-                    noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
+                    #noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
                     #cat("noff: ", noff, "  aname: ", aname, "  names(offsets):", names(offsets), "\n")
                     qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
-                    #stop("how did we get here? isvarlen:", isvarlen)
                   } else {
-                    if (is.character(val) || is.list(val)) {
+                    #if (is.character(val) || is.list(val)) {
                     # missing function, never written
-                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                    } else {
+                    #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                    #} else {
                       qry <- libtiledb_query_set_buffer(qry, aname, val)
-                    }
+                    #}
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
