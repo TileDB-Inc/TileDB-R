@@ -52,7 +52,7 @@ read_variable_array(uri, debug)
 cat("Done\n")
 
 arr <- tiledb_dense(uri, as.data.frame=FALSE)
-arr[]
+arr[2:3,]
 
 arr <- tiledb_dense(uri, as.data.frame=TRUE)
-arr[]
+arr[2:3,3:4]
