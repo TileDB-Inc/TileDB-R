@@ -304,7 +304,7 @@ setMethod("[", "tiledb_dense",
                     noffs <- libtiledb_query_result_buffer_elements_offsets(qry, aname)
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
                     buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
-                                                                         aname, val,
+                                                                         aname, old_buffer,
                                                                          offsets[[aname]])
                     if (!x@as.data.frame) {
                       subdims <- subarray_dim(subarray)
