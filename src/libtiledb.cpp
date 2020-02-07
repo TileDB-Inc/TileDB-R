@@ -97,7 +97,7 @@ std::string tiledb_datatype_R_type(std::string datatype) {
     case TILEDB_FLOAT64:
       return "double";
     case TILEDB_CHAR:
-      return "raw";
+      //      return "raw";   // corrected: TILEDB_CHAR needs to "character"
     case TILEDB_STRING_ASCII:
     case TILEDB_STRING_UTF8:
     case TILEDB_STRING_UTF16:
@@ -1123,10 +1123,8 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
     query->set_buffer(attr, vec.begin(), vec.length());
     return query;
   } else {
-    std::stringstream errmsg;
-    errmsg << "Invalid attribute buffer type for attribute "
-           << "\""<< attr << "\": " << Rcpp::type2name(buffer);
-    throw Rcpp::exception(errmsg.str().c_str());
+    Rcpp::stop("Invalid attribute buffer type for attribute '%s' : %s (%d)",
+               attr, Rcpp::type2name(buffer), TYPEOF(buffer));
   }
 }
 
@@ -1144,11 +1142,9 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> quer
     query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
   } else if (TYPEOF(buffer) == REALSXP) {
     NumericVector vec(buffer);
-    //query->set_buffer(attr, offsets.data(), doffsets.size(), vec.begin(), vec.length());
     query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
   } else if (TYPEOF(buffer) == LGLSXP) {
     LogicalVector vec(buffer);
-    //query->set_buffer(attr, offsets.data(), doffsets.size(), vec.begin(), vec.length());
     query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
   } else {
     Rcpp::stop("Invalid attribute buffer type for attribute %s : %s", attr, Rcpp::type2name(buffer));
