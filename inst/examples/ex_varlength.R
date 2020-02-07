@@ -1,7 +1,7 @@
 
 library(tiledb)
 
-uri <- "/tmp/tiledb/test3"
+uri <- "/tmp/tiledb/test6"
 
 create_array <- function(uri) {
   ## Check if the array already exists.
@@ -31,8 +31,8 @@ write_variable_array <- function(uri, debug=FALSE) {
                                v4=list("dd", "hhh", "l", "qqqq"))
   a2 <- data.table::data.table(v1=list(c(1L, 1L), 5L, c(9L, 9L), 13L),
                                v2=list(c(2L,2L), c(6L,6L), 10L, c(14L,14L,14L)),
-                               v3=list(3L, c(7L,7L), 11L, 15L),
-                               v4=list(4L, c(8L,8L,8L), c(12L,12L), 16L))
+                               v3=list(3L, c(7L,7L), 11L, 51L),
+                               v4=list(4L, c(8L,8L,8L), c(12L,12L), 61L))
   a3 <- data.table::data.table(v1=list(c(1.0, 1.1), 5,        c(9, 9),  13),
                                v2=list(c(2,2),      c(6,6),   10,       c(14.1,14.2,14.3)),
                                v3=list(3,           c(7,7),   11,       15),
@@ -57,3 +57,6 @@ if (!dir.exists(uri)) {
 }
 read_variable_array(uri, debug)
 cat("Done\n")
+
+arr <- tiledb_dense(uri)
+arr[]
