@@ -325,14 +325,6 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
-libtiledb_query_get_buffer_var_character <- function(len) {
-    .Call(`_tiledb_libtiledb_query_get_buffer_var_character`, len)
-}
-
-libtiledb_query_free_buffer_var_character <- function(ptr) {
-    .Call(`_tiledb_libtiledb_query_free_buffer_var_character`, ptr)
-}
-
 libtiledb_query_set_buffer_var_test <- function(query, attr, buffer, doffsets) {
     .Call(`_tiledb_libtiledb_query_set_buffer_var_test`, query, attr, buffer, doffsets)
 }

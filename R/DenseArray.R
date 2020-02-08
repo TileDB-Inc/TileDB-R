@@ -174,20 +174,19 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   for (attr in attrs) {
     aname <- tiledb::name(attr)
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
+
     # If we get it as a dataframe we need to use max buffer elements to get proper buffer size
     # or if we have variable length arrays
     if (array@as.data.frame || anyvarlen) {
       ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
     }
-    #cat("** type is ", tiledb::datatype(attr), " with text ", type, " and length ", ncells, "\n")
+
     if (type == "character") {
-      #buff <- paste(vector(mode = "character", length = ncells+1), collapse=".")
-      buff <- libtiledb_query_get_buffer_var_character(ncells+1)
-      print(str(buff)) ## FIXME_EDD
+      buff <- paste(rep(".", ncells), collapse="") # does not matter what character we repeat
     } else {
       buff <- vector(mode = type, length = ncells)
     }
-    #print(str(buff))
+
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
     if (!is_scalar && !array@as.data.frame && !anyvarlen) {
       attr(buff, "dim") <- sub_dim

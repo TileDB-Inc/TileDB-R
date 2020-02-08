@@ -1129,17 +1129,6 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-XPtr<char> libtiledb_query_get_buffer_var_character(int len) {
-  char *ptr = new char[len];
-  return XPtr<char>(ptr);
-}
-// [[Rcpp::export]]
-bool libtiledb_query_free_buffer_var_character(XPtr<char> ptr) {
-  delete[] static_cast<char*>(ptr);
-  return true;
-}
-
-// [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> query,
                                                         std::string attr,
                                                         SEXP buffer,
@@ -1157,24 +1146,9 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> quer
   } else if (TYPEOF(buffer) == LGLSXP) {
     LogicalVector vec(buffer);
     query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
-  } else if (TYPEOF(buffer) == STRSXP || TYPEOF(buffer) == RAWSXP) {
-    const int n = 47;
-    static char charbuf[n];
-    //Rcpp::Rcout << "We are " << Rcpp::type2name(buffer) << " with length " << LENGTH(buffer) << std::endl;
-    //print(buffer);
-    //std::string buf = Rcpp::as<std::string>(buffer); // could probably call Rf_nchar
-    //Rcpp::Rcout << "Converted : " << buf << " length " << buf.size() << std::endl;
-    query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(),
-                      //DATAPTR(buffer), buf.size());
-                      charbuf, n);
-    //buf.c_str(), n);
-  } else if (TYPEOF(buffer) == EXTPTRSXP) {
-    char *ptr = reinterpret_cast<char*>(buffer);
-    int n = 47;
-    Rcpp::Rcout << "Converted : " << ptr << " length " << n << std::endl;
-    query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(),
-                      ptr, n);
-
+  } else if (TYPEOF(buffer) == STRSXP) {
+    char *c = const_cast<char*>(CHAR(STRING_ELT(buffer, 0)));
+    query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), c, strlen(c));
   } else {
     Rcpp::stop("Invalid attribute buffer type for attribute '%s' : %s (%d)",
                attr, Rcpp::type2name(buffer), TYPEOF(buffer));
@@ -1250,21 +1224,11 @@ Rcpp::List libtiledb_query_result_list_column(XPtr<tiledb::Query> query,
     }
 
   } else if (storagemode == "character") {
+    char *c = const_cast<char*>(CHAR(STRING_ELT(buffer, 0)));
+    std::string txt(c);
     Rcpp::Rcout << "Deal with char payload here\n";
-    //std::string buf = Rcpp::as<std::string>(buffer);
-    //print(buffer);
-    std::vector<std::string> newdata;
-    newdata.push_back("empty");
-    ll[0] = newdata;
-  } else if (TYPEOF(buffer) == SYMSXP) {
-    Rcpp::Rcout << "expptr\n";
-    int n = 47;
-    char *ptr = reinterpret_cast<char*>(buffer);
-    Rcpp::Rcout << "Converted : " << ptr << " length " << n << std::endl;
-    std::vector<std::string> newdata;
-    newdata.push_back(ptr);
-    ll[0] = newdata;
-    //libtiledb_query_free_buffer_var_character(reinterpret_cast<XPtr<char> >(buffer));
+    ll[0] = txt;
+    ll[1] = std::string("need to unpack using offets");
   } else if (TYPEOF(buffer) == LGLSXP) {
     Rcpp::Rcout << "logical\n";
     LogicalVector vec(buffer);
