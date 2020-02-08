@@ -1166,43 +1166,29 @@ Rcpp::List libtiledb_query_result_list_column(XPtr<tiledb::Query> query,
                                               std::string attr,
                                               SEXP buffer,
                                               NumericVector doffsets) {
-  //Rcpp::Rcout << "Storage mode in C++ is " << storagemode << std::endl;
   std::vector<uint64_t> offsets( static_cast<uint64_t>(doffsets.size()) );
   std::memcpy(offsets.data(), doffsets.begin(), doffsets.size()*sizeof(double));
-  //Rcpp::Rcout << "offsets: "; for (int i=0; i<doffsets.size(); i++) { Rcpp::Rcout << offsets[i] << " "; } Rcpp::Rcout << std::endl;
 
   auto szpair = query->result_buffer_elements()[attr];
   size_t noff = szpair.first;
   size_t ndata = szpair.second;
-  //Rcpp::Rcout << "Attribute name: " << attr << " and dims " << noff << " x " << ndata;
   std::vector<uint64_t> el_off, cell_el;
-  Rcpp::List ll(noff);
+  Rcpp::List reslist(noff);
 
-  //if (dtype == TILEDB_INT32) { //  if (TYPEOF(buffer) == INTSXP) {
   if (storagemode == "integer") {
-    //Rcpp::Rcout << " and type int\n"; print(buffer);
     IntegerVector vec(buffer);
-    //Rcpp::Rcout << "buffer content: ";
-    //for (size_t i=0; i<ndata; i++) { Rcpp::Rcout << vec[i] << " "; } Rcpp::Rcout << std::endl;
-    //Rcpp::Rcout << "el_off: ";
     for (size_t i=0; i<noff; i++) {
       el_off.push_back(offsets[i] / sizeof(int32_t));
-      //Rcpp::Rcout << offsets[i] / sizeof(int32_t) << " ";
     }
-    //Rcpp::Rcout << std::endl;
     for (size_t i=0; i<noff-1; i++)
       cell_el.push_back(el_off[i+1] - el_off[i]);
     cell_el.push_back(ndata - el_off.back());
-    //Rcpp::Rcout << "ndata: " << ndata << " el_off.back() " << el_off.back() << std::endl;
     for (size_t i=0; i<noff; i++) {
       std::vector<int32_t> newdata;
-      //Rcpp::Rcout << "i(noff)=" << i << " cell_el[i]=" << cell_el[i] << " -- ";
       for (size_t j=0; j<cell_el[i]; j++) {
-        //Rcpp::Rcout << vec[ el_off[i] + j] << " ";
         newdata.push_back(vec[ el_off[i] + j]);
       }
-      //Rcpp::Rcout << "\n";
-      ll[i] = newdata;
+      reslist[i] = newdata;
     }
   //} else if (dtype == TILEDB_FLOAT64) { //TYPEOF(buffer) == REALSXP) {
   } else if (storagemode == "double") {
@@ -1216,28 +1202,31 @@ Rcpp::List libtiledb_query_result_list_column(XPtr<tiledb::Query> query,
     for (size_t i=0; i<noff; i++) {
       std::vector<double> newdata;
       for (size_t j=0; j<cell_el[i]; j++) {
-        //Rcpp::Rcout << vec[ el_off[i] + j] << " ";
         newdata.push_back(vec[ el_off[i] + j]);
       }
-      //Rcpp::Rcout << "\n";
-      ll[i] = newdata;
+      reslist[i] = newdata;
     }
 
   } else if (storagemode == "character") {
-    char *c = const_cast<char*>(CHAR(STRING_ELT(buffer, 0)));
-    std::string txt(c);
-    Rcpp::Rcout << "Deal with char payload here\n";
-    ll[0] = txt;
-    ll[1] = std::string("need to unpack using offets");
-  } else if (TYPEOF(buffer) == LGLSXP) {
-    Rcpp::Rcout << "logical\n";
-    LogicalVector vec(buffer);
+    char *data = const_cast<char*>(CHAR(STRING_ELT(buffer, 0)));
+
+    std::vector<uint64_t> str_sizes;             			// string offsets
+    for (size_t i = 0; i < noff - 1; ++i)
+      str_sizes.push_back(offsets[i + 1] - offsets[i]);
+    str_sizes.push_back(ndata - offsets[noff - 1]);
+
+    // simpler than int or double as each var.length cells contains just one string
+    for (size_t i = 0; i < noff; ++i) {
+      std::string txt = std::string(&data[offsets[i]], str_sizes[i]);
+      reslist[i] = txt;
+    }
+
   } else {
     Rcpp::stop("Invalid attribute buffer type for attribute %s : %s (%s)",
                attr, Rcpp::type2name(buffer), storagemode);
   }
 
-  return ll;
+  return reslist;
 }
 
 
