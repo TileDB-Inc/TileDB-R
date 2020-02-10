@@ -33,7 +33,7 @@ teardown({
 
 
 
-test_that("Can write and read variable length array", {
+test_that("Can write and read variable length array via helpers", {
   skip_if_not_installed("data.table")
   arr <- unlink_and_create_simple(tmp)
 
@@ -71,5 +71,49 @@ test_that("Can write and read variable length array", {
 
   expect_error(read_variable_length(tmp, "a1_not_a_key", c(1,4,1,4)))
   expect_error(read_variable_length(tmp, "a1", c(1,5,1,5)))
+
+})
+
+test_that("Can write and read variable length array via [ and [<-", {
+  skip_if_not_installed("data.table")
+  unlink_and_create_simple(tmp)
+  arr <- tiledb_dense(tmp)
+  a1 <- data.table::data.table(V1=list("a", "eee", "i", "m"),
+                               V2=list("bb", "f", "jjj", "n"),
+                               V3=list("ccc", "g", "kk", "oo"),
+                               V4=list("dd", "hhh", "l", "qqqq"))
+  a2 <- data.table::data.table(V1=list(c(1L, 1L), 5L, c(9L, 9L), 13L),
+                               V2=list(c(2L,2L), c(6L,6L), 10L, c(14L,14L,14L)),
+                               V3=list(3L, c(7L,7L), 11L, 15L),
+                               V4=list(4L, c(8L,8L,8L), c(12L,12L), 16L))
+  a3 <- data.table::data.table(V1=list(c(1.0, 1.1), 5,        c(9, 9),  13),
+                               V2=list(c(2,2),      c(6,6),   10,       c(14.1,14.2,14.3)),
+                               V3=list(3,           c(7,7),   11,       15),
+                               V4=list(4,           c(8,8,8), c(12,12), 16.75))
+  expect_true(write_variable_length(tmp, list(a1=a1, a2=a2, a3=a3)))
+
+  expect_equal(arr[][["a1"]], a1)
+  expect_equal(arr[][["a2"]], a2)
+  expect_equal(arr[][["a3"]], a3)
+
+  expect_equal(arr[1,][["a1"]], a1[1,])
+  expect_equal(arr[1,][["a2"]], a2[1,])
+  expect_equal(arr[1,][["a3"]], a3[1,])
+
+  expect_equal(arr[,1][["a1"]], a1[,1])
+  expect_equal(arr[,1][["a2"]], a2[,1])
+  expect_equal(arr[,1][["a3"]], a3[,1])
+
+  expect_equal(arr[1:3,][["a1"]], a1[1:3,])
+  expect_equal(arr[1:3,][["a2"]], a2[1:3,])
+  expect_equal(arr[1:3,][["a3"]], a3[1:3,])
+
+  expect_equal(arr[,1:3][["a1"]], a1[,1:3])
+  expect_equal(arr[,1:3][["a2"]], a2[,1:3])
+  expect_equal(arr[,1:3][["a3"]], a3[,1:3])
+
+  expect_equal(arr[2:3,1:2][["a1"]], a1[2:3,1:2])
+  expect_equal(arr[2:3,1:2][["a2"]], a2[2:3,1:2])
+  expect_equal(arr[2:3,1:2][["a3"]], a3[2:3,1:2])
 
 })
