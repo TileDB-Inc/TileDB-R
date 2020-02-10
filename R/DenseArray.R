@@ -280,7 +280,7 @@ setMethod("[", "tiledb_dense",
                     # missing function, never written
                     #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
                     #} else {
-                      qry <- libtiledb_query_set_buffer(qry, aname, val)
+                       qry <- libtiledb_query_set_buffer(qry, aname, val)
                     #}
                   }
                 }
@@ -365,7 +365,7 @@ setMethod("[<-", "tiledb_dense",
               if (is.array(value) || is.vector(value)) {
                 value <- list(value)
               } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
+                stop(paste0("cannot assign value of type \"", typeof(value), "\""))
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -416,13 +416,13 @@ setMethod("[<-", "tiledb_dense",
                   if (!anyvarlen)
                     stop("vector value dim does not match array subscript")
                 }
-              } else if (is.array(val)) {
+              } else if (is.array(val) || is.list(val)) {
                 if (!all(sub_dim == dim(val))) {
                   if (!anyvarlen)
                     stop("array value dim does not match array subscript")
                 }
               } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
+                stop(paste0("Cannot assign value of type \"", typeof(value), "\""))
               }
             }
             libtiledb_array_open(x@ptr, "WRITE")
