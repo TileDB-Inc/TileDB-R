@@ -1,3 +1,4 @@
+#!/usr/bin/Rscript
 
 library(tiledb)
 
@@ -55,8 +56,10 @@ if (!dir.exists(uri)) {
   if (debug) tiledb_array_schema_dump(uri)
   write_variable_array(uri)
 }
-read_variable_array(uri, debug)
-cat("Done\n")
+#read_variable_array(uri, debug)
+#cat("Done\n")
 
 arr <- tiledb_dense(uri)
-arr[]
+arr[]                                               # show everything
+arr[2,2] <- list("shazam", c(6L,7L), c(6.66,7.77))  # assign to one cell
+arr[2:3,2:3]                                        # show range

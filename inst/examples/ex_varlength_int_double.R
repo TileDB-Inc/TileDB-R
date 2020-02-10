@@ -1,3 +1,4 @@
+#!/usr/bin/Rscript
 
 library(tiledb)
 
@@ -26,8 +27,8 @@ create_array <- function(uri) {
 write_variable_array <- function(uri, debug=FALSE) {
   a2 <- data.table::data.table(v1=list(c(1L, 1L), 5L, c(9L, 9L), 13L),
                                v2=list(c(2L,2L), c(6L,6L), 10L, c(14L,14L,14L)),
-                               v3=list(3L, c(7L,7L), 11L, 15L),
-                               v4=list(4L, c(8L,8L,8L), c(12L,12L), 16L))
+                               v3=list(3L, c(7L,7L), 11L, 51L),
+                               v4=list(4L, c(8L,8L,8L), c(12L,12L), 61L))
   a3 <- data.table::data.table(v1=list(c(1.0, 1.1), 5,        c(9, 9),  13),
                                v2=list(c(2,2),      c(6,6),   10,       c(14.1,14.2,14.3)),
                                v3=list(3,           c(7,7),   11,       15),
@@ -52,22 +53,22 @@ if (!dir.exists(uri)) {
 #cat("Done\n")
 
 arr1 <- tiledb_dense(uri, as.data.frame=FALSE)
-#arr1[2:3,]
+arr1[2:3,]
+#arr1[]
+arr1[2,2] <- list(array(c(6L,7L), c(1,2)), array(c(6.66,7.77), c(1,2)))
 arr1[2,2]
-arr1[2,2] <- list(array(c(6L,7L), c(1,1)), array(c(6.66,7.77), c(1,1)))
-arr1[2,2]
-q()
+
 arr2 <- tiledb_dense(uri, as.data.frame=TRUE)
-#arr2[2:3,3:4]
-arr2[2,2] <-
+arr2[2:3,3:4]
+arr2[]
 
 #arr1[2,2] <- list(array(c(6L,7L), c(1,1)), array(c(6,7), c(1,1)))
 #arr1[2,2] <- list(data.table::data.table(list(c(21L,22L))),
 #                  data.table::data.table(list(c(21,22))))
 
 ## works
-arr1[2,2] <- list(array(c(6L,7L)), array(c(6,7)))
+#arr1[2,2] <- list(array(c(6L,7L)), array(c(6,7)))
 ## also works
-arr1[2,2] <- list(c(6L,7L), c(6,7))
+#arr1[2,2] <- list(c(6L,7L), c(6,7))
 
-arr1[]
+#arr1[]
