@@ -956,6 +956,18 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_query_set_buffer_var_char_helper
+std::string libtiledb_query_set_buffer_var_char_helper(SEXP val, NumericVector origoffset);
+RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_char_helper(SEXP valSEXP, SEXP origoffsetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type val(valSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type origoffset(origoffsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_var_char_helper(val, origoffset));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_set_buffer_var_test
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> query, std::string attr, SEXP buffer, NumericVector doffsets);
 RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_test(SEXP querySEXP, SEXP attrSEXP, SEXP bufferSEXP, SEXP doffsetsSEXP) {
@@ -1506,6 +1518,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 2},
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
     {"_tiledb_libtiledb_query_set_buffer_inject_offsets", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_inject_offsets, 2},
+    {"_tiledb_libtiledb_query_set_buffer_var_char_helper", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char_helper, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_test", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_test, 4},
     {"_tiledb_libtiledb_query_result_list_column", (DL_FUNC) &_tiledb_libtiledb_query_result_list_column, 5},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
