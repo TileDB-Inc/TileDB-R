@@ -325,6 +325,10 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
+libtiledb_query_set_buffer_inject_offsets <- function(vec, doffsets) {
+    invisible(.Call(`_tiledb_libtiledb_query_set_buffer_inject_offsets`, vec, doffsets))
+}
+
 libtiledb_query_set_buffer_var_test <- function(query, attr, buffer, doffsets) {
     .Call(`_tiledb_libtiledb_query_set_buffer_var_test`, query, attr, buffer, doffsets)
 }

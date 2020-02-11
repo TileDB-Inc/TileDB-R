@@ -1129,6 +1129,47 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
+void libtiledb_query_set_buffer_inject_offsets(IntegerVector vec,
+                                               NumericVector doffsets) {
+  int n = doffsets.size();
+  // while we get a vector of doubles, we need a vector of uint64 for the offsets
+  std::vector<uint64_t> offsets(n);
+  for (int i=0; i<n; i++) {
+    offsets[i] = static_cast<uint64_t>(vec[i]);
+    Rcpp::Rcout << "vec " << vec[i] << " offsets " << offsets[i] << std::endl;
+  }
+  std::memcpy(&(doffsets[0]), offsets.data(), n*sizeof(double));
+}
+
+std::pair<std::string, std::vector<uint64_t>>
+getStringVectorAndOffset(Rcpp::DataFrame df, bool debug = FALSE);
+
+std::pair<std::string, std::vector<uint64_t>> _getStringVectorAndOffset(Rcpp::DataFrame df) {
+  // here we know we have a data.frame with character columns
+  int k = df.length();
+  Rcpp::List fst = df[0];
+  int n = fst.length();
+
+  std::string data("");
+  std::vector<uint64_t> offsets;
+  uint64_t curroff = 0;
+  offsets.push_back(curroff);          // offsets start with 0
+
+  for (int j=0; j<k; j++) {
+    Rcpp::List cvec = df[j];
+    for (int i=0; i<n; i++) {
+      std::string curstr = Rcpp::as<std::string>(cvec[i]);
+      data += curstr;
+      curroff += curstr.size();
+      offsets.push_back(curroff);
+    }
+  }
+  offsets.pop_back(); // last one is 'one too far'
+  return std::make_pair(data, offsets);
+}
+
+
+// [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> query,
                                                         std::string attr,
                                                         SEXP buffer,
@@ -1146,8 +1187,16 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> quer
   } else if (TYPEOF(buffer) == LGLSXP) {
     LogicalVector vec(buffer);
     query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), vec.begin(), vec.length());
-  } else if (TYPEOF(buffer) == STRSXP) {
+  } else if (TYPEOF(buffer) == STRSXP || TYPEOF(buffer) == VECSXP) {
+    std::pair<std::string, std::vector<uint64_t>> pairres;
+    Rcpp::DataFrame df = Rcpp::DataFrame::create(Rcpp::Named("data") = buffer,
+                                                 Rcpp::Named("stringsAsFactors")=false);
+    pairres = _getStringVectorAndOffset(df);
+    memcpy(vptr, pairres.second.data(), pairres.second.size()*sizeof(uint64_t));
+    buffer = Rcpp::wrap(pairres.first);
     char *c = const_cast<char*>(CHAR(STRING_ELT(buffer, 0)));
+    //print(buffer);
+    //print(doffsets);
     query->set_buffer(attr, (uint64_t*)vptr, doffsets.size(), c, strlen(c));
   } else {
     Rcpp::stop("Invalid attribute buffer type for attribute '%s' : %s (%d)",
