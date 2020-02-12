@@ -2,8 +2,8 @@
 
 library(tiledb)
 
-uri <- "/tmp/tiledb/test4"
-
+#uri <- "/tmp/tiledb/test4"
+uri <- tempfile()
 create_array <- function(uri) {
   ## Check if the array already exists.
   if (tiledb_object_type(uri) == "ARRAY") {
@@ -53,9 +53,16 @@ if (!dir.exists(uri)) {
 #cat("Done\n")
 
 arr1 <- tiledb_dense(uri, as.data.frame=FALSE)
+
+
+arr1[3,3:4] <- list(matrix(list(c(6L,7L),     c(8L,9L)),     1, 2),
+                    matrix(list(c(6.66,7.77), c(8.88,9.99)), 1, 2) )
+arr1[]
+q()
+
 arr1[2:3,]
 #arr1[]
-arr1[2,2] <- list(array(c(6L,7L), c(1,2)), array(c(6.66,7.77), c(1,2)))
+#arr1[2,2] <- list(array(c(6L,7L), c(1,2)), array(c(6.66,7.77), c(1,2)))
 arr1[2,2]
 
 arr2 <- tiledb_dense(uri, as.data.frame=TRUE)
@@ -72,3 +79,7 @@ arr2[]
 #arr1[2,2] <- list(c(6L,7L), c(6,7))
 
 #arr1[]
+
+
+#arr1[2:3,2] <- list(list(array(c(6L,7L), c(1,2)),     array(c(8L,9L), c(1,2))),
+#                    list(array(c(6.66,7.77), c(1,2)), array(c(8.88,9.99), c(1,2))))

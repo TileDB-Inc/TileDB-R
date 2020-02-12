@@ -1147,7 +1147,7 @@ std::string libtiledb_query_set_buffer_var_char_helper(SEXP val, NumericVector o
 
   Rcpp::DataFrame df = Rcpp::DataFrame::create(Rcpp::Named("data") = val,
                                                Rcpp::Named("stringsAsFactors") = false);
-
+  //print(df);
   std::vector<uint64_t> offsets;
   uint64_t curroff = 0;
   offsets.push_back(curroff);          // offsets start with 0
@@ -1170,6 +1170,89 @@ std::string libtiledb_query_set_buffer_var_char_helper(SEXP val, NumericVector o
   std::memcpy(&origoffset[0], offsets.data(), offsets.size()*sizeof(uint64_t));
 
   return data;
+}
+
+// [[Rcpp::export]]
+bool libtiledb_query_set_buffer_print_offsets(NumericVector vec) {
+  std::vector<uint64_t> ui(vec.size());
+  std::memcpy(ui.data(), &vec[0], vec.size()*sizeof(uint64_t));
+  Rcpp::Rcout << "Offsets: ";
+  for (size_t i=0; i<ui.size(); i++)
+    Rcpp::Rcout << ui[i] << " ";
+  Rcpp::Rcout << std::endl;
+  return true;
+}
+
+template <typename T>
+std::pair<std::vector<T>,
+          std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFrame df, bool debug = FALSE);
+
+
+// template <typename T>
+// std::pair<std::vector<T>, std::vector<uint64_t>>
+// mygetVectorAndOffset(Rcpp::List df, bool debug = FALSE) {
+
+//   // here we know we have a data.frame with T elements (int or real)
+//   int ncolumns = df.length();
+//   Rcpp::List fst = df[0];
+//   int nrows = fst.length();
+//   if (debug) Rcpp::Rcout << "  with " << ncolumns << " columns and " << nrows << " elements yielding ";
+
+//   std::vector<T> data;
+//   std::vector<uint64_t> offset_els;
+//   uint64_t curroff = 0;
+//   offset_els.push_back(curroff);          // offsets start with 0
+
+//     for (int j=0; j<ncolumns; j++) {
+//       std::vector<T> curvec = Rcpp::as<std::vector<T> >(df[j]);
+//       Rcpp::List cvec = df[j];
+//   for (int i=0; i<nrows; i++) {
+//       for (size_t vi=0; vi<curvec.size(); vi++) {
+//         data.push_back(curvec[vi]);
+//         if (debug) Rcpp::Rcout << " " << curvec[vi];
+//       }
+//       curroff += curvec.size();
+//       offset_els.push_back(curroff);
+//     }
+//   }
+//   if (debug) Rcpp::Rcout << std::endl;
+//   offset_els.pop_back(); // last one is 'one too far'
+
+//   std::vector<uint64_t> offsets;
+//   for (auto e : offset_els) {
+//     offsets.push_back(e * sizeof(T));
+//   }
+//   return std::make_pair(data, offsets);
+// }
+
+
+// analyse val, concatenate it into return value, also update offsets _in place_
+// [[Rcpp::export]]
+SEXP libtiledb_query_set_buffer_var_vec_helper(SEXP val, NumericVector origoffset) {
+
+  if ( ! ((TYPEOF(val) == INTSXP) || (TYPEOF(val) == REALSXP))) {
+    Rcpp::stop("Unsuitable data: %s (%d)", Rcpp::type2name(val), TYPEOF(val));
+  }
+
+  // we know this either an int or a double
+  Rcpp::DataFrame df = Rcpp::DataFrame::create(Rcpp::Named("data") = val);
+  //#print(df);
+  SEXP res;
+
+  if (TYPEOF(val) == REALSXP) {
+    std::pair<std::vector<double>, std::vector<uint64_t>> pairres = getVectorAndOffset<double>(df);
+    res = Rcpp::wrap(pairres.first);
+    std::memcpy(&origoffset[0], pairres.second.data(), pairres.second.size()*sizeof(uint64_t));
+  } else if (TYPEOF(val) == INTSXP) {
+    std::pair<std::vector<int>, std::vector<uint64_t>> pairres = getVectorAndOffset<int>(df);
+    res = Rcpp::wrap(pairres.first);
+    std::memcpy(&origoffset[0], pairres.second.data(), pairres.second.size()*sizeof(int));
+  } else {
+    // should not be reached
+    Rcpp::stop("Bad type: %d\n", TYPEOF(val));
+  }
+
+  return res;
 }
 
 // [[Rcpp::export]]
@@ -1269,7 +1352,6 @@ Rcpp::List libtiledb_query_result_list_column(XPtr<tiledb::Query> query,
     Rcpp::stop("Invalid attribute buffer type for attribute %s : %s (%s)",
                attr, Rcpp::type2name(buffer), storagemode);
   }
-
   return reslist;
 }
 

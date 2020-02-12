@@ -319,6 +319,13 @@ setMethod("[", "tiledb_dense",
                       if (requireNamespace("data.table", quietly=TRUE)) {
                         buffers[[idx]] <- data.table::data.table(buffers[[idx]])
                       }
+                      ##buffers[[idx]] <- matrix(buffers[[idx]], subdims[1], subdims[2])
+                      ## 'unlist' the elements as a test
+                      #B <- buffers[[idx]]
+                      #M <- vector(mode=typeof(B[[1]]), length=length(B))
+                      #for (i in 1:length(B)) M[i] <- unlist(B[[i]])
+                      #buffers[[idx]] <- M
+                      #cat("***\n"); print(M)
                     }
                   } else {
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
@@ -369,6 +376,7 @@ setMethod("[<-", "tiledb_dense",
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
+
             # If we have a list of lists of lists we need to remove one layer
             # This happens when a user uses a list of coordinates
             if (isNestedList(index[1])) {
@@ -383,6 +391,7 @@ setMethod("[<-", "tiledb_dense",
             }
             anyvarlen <- any(sapply(attrs(schema), function(s) is.na(ncells(s))))
             subarray <- domain_subarray(dom, index = index)
+            #cat("SUBARRAY\n"); print(subarray)
             attrs <- tiledb::attrs(schema)
             nvalue <- length(value)
             nattrs <- length(attrs)
@@ -408,6 +417,7 @@ setMethod("[<-", "tiledb_dense",
             # check that value shapes match the subarray shape
             # TODO: R doesn't check this and just assigns values that overlap the domain
             sub_dim <- subarray_dim(subarray)
+            #cat("SUBDIM\n"); print(sub_dim)
 
             for (i in seq_along(value)) {
               val <- value[[i]]
@@ -450,8 +460,28 @@ setMethod("[<-", "tiledb_dense",
                   isvarlen <- is.na(unname(ncellval[idx]))  ## NA == variable length
 
                   if (isvarlen) {
-                    #noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
-                    #cat("noff: ", noff, "  aname: ", aname, "  names(offsets):", names(offsets), "\n")
+                    if (typeof(val) == "character") { # characters are special in R and TileDB
+                      ## traverse the R data structure in val, return compacted string newval
+                      ## also compute offsets (as uint64_t) and use offsets (dbl) vec as container
+                      newval <- libtiledb_query_set_buffer_var_char_helper(val, offsets)
+                      val <- value[[idx]] <- newval
+                      #cat("Concatenated string: ", val, "\n")
+                      #libtiledb_query_set_buffer_print_offsets(offsets)
+                    } else {
+                      ## traverse vector in val, return concatenated vector, update offsets
+                      #if (!is.list(val)) {
+                      #  message("making a list")
+                      #  print(str(val))
+                      #  val <- as.list(val)
+                      #  print(val)
+                      #}
+                      #print(val)
+                      newval <- libtiledb_query_set_buffer_var_vec_helper(val, offsets)
+                      #print(newval)
+                      val <- newval
+                      #cat("New vector: ", val, "\n")
+                      #libtiledb_query_set_buffer_print_offsets(offsets)
+                    }
                     qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets)
                   } else {
                     #if (is.list(val) || is.character(val))

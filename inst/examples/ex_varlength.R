@@ -62,4 +62,24 @@ if (!dir.exists(uri)) {
 arr <- tiledb_dense(uri)
 arr[]                                               # show everything
 arr[2,2] <- list("shazam", c(6L,7L), c(6.66,7.77))  # assign to one cell
-arr[2:3,2:3]                                        # show range
+                                        #arr[2,2] <-
+#dt <- data.table::data.table(v1=list("foxy"),
+#                             v2=list(c(42L, 43L)),
+#                             v3=list(c(42.5, 43.5)))
+#print(dt)
+#arr[2,2] <- dt
+#arr[2:3,2:3]                                        # show range
+#dt <- data.table::data.table(list("brown","fox"),
+#                             list(c(5L, 6L,7L), c(8L,9L)),
+#                             list(c(5.55, 6.66,7.77), c(8.88,9.99)))  # assign to one cel
+#print(dt)
+#arr[3:4,3] <- dt
+#arr[3,4:4]                                        # show range
+#print(arr[3,3:4][["a1"]])
+arr[][["a1"]]
+
+arr[2,2]
+arr[3,3] <- list("bingo", seq(10,12), rnorm(3))  # assign to one cell
+arr[3,4] <- list("zappo", 42L, sqrt(2:3))
+
+#arr[]

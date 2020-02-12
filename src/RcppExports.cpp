@@ -968,6 +968,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_set_buffer_print_offsets
+bool libtiledb_query_set_buffer_print_offsets(NumericVector vec);
+RcppExport SEXP _tiledb_libtiledb_query_set_buffer_print_offsets(SEXP vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type vec(vecSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_print_offsets(vec));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_set_buffer_var_vec_helper
+SEXP libtiledb_query_set_buffer_var_vec_helper(SEXP val, NumericVector origoffset);
+RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_vec_helper(SEXP valSEXP, SEXP origoffsetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type val(valSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type origoffset(origoffsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_var_vec_helper(val, origoffset));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_set_buffer_var_test
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> query, std::string attr, SEXP buffer, NumericVector doffsets);
 RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_test(SEXP querySEXP, SEXP attrSEXP, SEXP bufferSEXP, SEXP doffsetsSEXP) {
@@ -1519,6 +1542,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
     {"_tiledb_libtiledb_query_set_buffer_inject_offsets", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_inject_offsets, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_char_helper", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char_helper, 2},
+    {"_tiledb_libtiledb_query_set_buffer_print_offsets", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_print_offsets, 1},
+    {"_tiledb_libtiledb_query_set_buffer_var_vec_helper", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec_helper, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_test", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_test, 4},
     {"_tiledb_libtiledb_query_result_list_column", (DL_FUNC) &_tiledb_libtiledb_query_result_list_column, 5},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
