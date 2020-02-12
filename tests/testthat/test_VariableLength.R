@@ -140,7 +140,7 @@ test_that("Can read variable length array via [", {
 
 test_that("Can read and write variable length string array", {
   skip_if_not_installed("data.table")
-  tmp <- "/tmp/tiledb/keepthis"
+  library(data.table)
   unlink_and_create_single_attribute(tmp, "CHAR")
   arr <- tiledb_dense(tmp)
   a1 <- data.table::data.table(V1=list("a", "eee", "i", "m"),
@@ -165,13 +165,13 @@ test_that("Can read and write variable length string array", {
 
   val <- "tictoc"
   arr[1,2] <- val
-  expect_equal( arr[1,2][,V1][[1]], val )
+  expect_equal( arr[1,2][["V1"]][[1]], val )
 
   ## for strings we can use a matrix
   val <- matrix(c("the", "quick", "brown", "fox"), 2,2)
   arr[2:3, 2:3] <- val
-  expect_equal(unlist(arr[2:3,2][,V1]), val[,1])
-  expect_equal(unlist(arr[2:3,3][,V1]), val[,2])
+  expect_equal(unlist(arr[2:3,2][["V1"]]), val[,1])
+  expect_equal(unlist(arr[2:3,3][["V1"]]), val[,2])
 
 })
 
@@ -187,11 +187,11 @@ test_that("Can read and write variable length int array", {
 
   val <- 55L
   arr[1,2] <- val
-  expect_equal( arr[1,2][,V1][[1]], val )
+  expect_equal( arr[1,2][["V1"]][[1]], val )
 
   val <- array(c(111L,112L),c(1,2))
   arr[3,3] <- val
-  expect_equal(arr[3,3][,V1][[1]], val[1,])
+  expect_equal(arr[3,3][["V1"]][[1]], val[1,])
 
 })
 
@@ -207,10 +207,10 @@ test_that("Can read and write variable length double array", {
 
   val <- 5.1
   arr[1,2] <- val
-  expect_equal( arr[1,2][,V1][[1]], val )
+  expect_equal( arr[1,2][["V1"]][[1]], val )
 
   val <- array(c(11.1,11.2),c(1,2))
   arr[3,3] <- val
-  expect_equal(arr[3,3][,V1][[1]], val[1,])
+  expect_equal(arr[3,3][["V1"]][[1]], val[1,])
 
 })
