@@ -337,6 +337,10 @@ libtiledb_query_set_buffer_print_offsets <- function(vec) {
     .Call(`_tiledb_libtiledb_query_set_buffer_print_offsets`, vec)
 }
 
+libtiledb_query_set_buffer_var_df_helper <- function(val, origoffset) {
+    .Call(`_tiledb_libtiledb_query_set_buffer_var_df_helper`, val, origoffset)
+}
+
 libtiledb_query_set_buffer_var_vec_helper <- function(val, origoffset) {
     .Call(`_tiledb_libtiledb_query_set_buffer_var_vec_helper`, val, origoffset)
 }

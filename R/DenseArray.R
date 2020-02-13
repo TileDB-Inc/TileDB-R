@@ -375,6 +375,7 @@ setMethod("[<-", "tiledb_dense",
                 stop(paste0("cannot assign value of type \"", typeof(value), "\""))
               }
             }
+            isDF <- inherits(value, "data.frame")
             index <- nd_index_from_syscall(sys.call(), parent.frame())
 
             # If we have a list of lists of lists we need to remove one layer
@@ -395,22 +396,22 @@ setMethod("[<-", "tiledb_dense",
             attrs <- tiledb::attrs(schema)
             nvalue <- length(value)
             nattrs <- length(attrs)
-            if (nvalue > nattrs) {
-               stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
+            if (nvalue > nattrs && !isDF) {
+               stop(paste0("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
             }
-            attr_names <- names(attrs)
+            attr_names <- saved_attr_names <- names(attrs)
             value_names <- names(value)
             if (is.null(value_names)) {
               # check the list shape / types against attributes
               if (nvalue != nattrs) {
-                stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
+                stop(paste0("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
               }
               names(value) <- ifelse(attr_names == "", "__attr", attr_names)
             } else {
               # check associative assignment
               for (name in value_names)  {
-                if (!(name %in%  attr_names)) {
-                  stop(paste("invalid array attribute value name: \"", name, "\""))
+                if (!(name %in%  attr_names) && !isDF) {
+                  stop(paste0("invalid array attribute value name: \"", name, "\""))
                 }
               }
             }
@@ -448,12 +449,21 @@ setMethod("[<-", "tiledb_dense",
               {
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
                 qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                #if (is.integral(dom)) { ## -- already tested above
+                #if (is.integral(dom)) { ## -- redundant, this case already tested above
                   qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
                 #} else {
                 #  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
                 #}
+
                 attr_names <- names(value)
+
+                ## we need a special for whole data.table (as proxy for varlength chunks)
+                ## assignment should be to a single attribute schema with variable length
+                if (inherits(value, "data.frame") && anyvarlen && nattrs == 1) {
+                  newval <- libtiledb_query_set_buffer_var_df_helper(value, offsets)
+                  qry <- libtiledb_query_set_buffer_var_test(qry, saved_attr_names, newval, offsets)
+                } else {
+
                 for (idx in seq_along(value)) {
                   aname <- attr_names[[idx]]
                   val <- value[[idx]]
@@ -475,7 +485,11 @@ setMethod("[<-", "tiledb_dense",
                       #  val <- as.list(val)
                       #  print(val)
                       #}
-                      #print(val)
+                      #if (is.list(val)) {
+                        #val <- as.data.frame(val[[1]])
+                        #print(val)
+                        #print(class(val))
+                      #}
                       newval <- libtiledb_query_set_buffer_var_vec_helper(val, offsets)
                       #print(newval)
                       val <- newval
@@ -491,6 +505,7 @@ setMethod("[<-", "tiledb_dense",
                     qry <- libtiledb_query_set_buffer(qry, aname, val)
                   }
                 }
+                } # new else branch
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
                   cat("Status:", libtiledb_query_status(qry), "\n")
