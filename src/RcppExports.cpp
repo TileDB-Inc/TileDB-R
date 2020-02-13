@@ -1003,9 +1003,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_set_buffer_var_test
-XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> query, std::string attr, SEXP buffer, NumericVector doffsets);
-RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_test(SEXP querySEXP, SEXP attrSEXP, SEXP bufferSEXP, SEXP doffsetsSEXP) {
+// libtiledb_query_set_buffer_varlength
+XPtr<tiledb::Query> libtiledb_query_set_buffer_varlength(XPtr<tiledb::Query> query, std::string attr, SEXP buffer, NumericVector doffsets);
+RcppExport SEXP _tiledb_libtiledb_query_set_buffer_varlength(SEXP querySEXP, SEXP attrSEXP, SEXP bufferSEXP, SEXP doffsetsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1013,7 +1013,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type attr(attrSEXP);
     Rcpp::traits::input_parameter< SEXP >::type buffer(bufferSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type doffsets(doffsetsSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_var_test(query, attr, buffer, doffsets));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_varlength(query, attr, buffer, doffsets));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1557,7 +1557,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_buffer_print_offsets", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_print_offsets, 1},
     {"_tiledb_libtiledb_query_set_buffer_var_df_helper", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_df_helper, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_vec_helper", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec_helper, 2},
-    {"_tiledb_libtiledb_query_set_buffer_var_test", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_test, 4},
+    {"_tiledb_libtiledb_query_set_buffer_varlength", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_varlength, 4},
     {"_tiledb_libtiledb_query_result_list_column", (DL_FUNC) &_tiledb_libtiledb_query_result_list_column, 5},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},

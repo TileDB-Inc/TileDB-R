@@ -1147,7 +1147,6 @@ std::string libtiledb_query_set_buffer_var_char_helper(SEXP val, NumericVector o
 
   Rcpp::DataFrame df = Rcpp::DataFrame::create(Rcpp::Named("data") = val,
                                                Rcpp::Named("stringsAsFactors") = false);
-  //print(df);
   std::vector<uint64_t> offsets;
   uint64_t curroff = 0;
   offsets.push_back(curroff);          // offsets start with 0
@@ -1280,10 +1279,10 @@ SEXP libtiledb_query_set_buffer_var_vec_helper(SEXP val, NumericVector origoffse
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_set_buffer_var_test(XPtr<tiledb::Query> query,
-                                                        std::string attr,
-                                                        SEXP buffer,
-                                                        NumericVector doffsets) {
+XPtr<tiledb::Query> libtiledb_query_set_buffer_varlength(XPtr<tiledb::Query> query,
+                                                         std::string attr,
+                                                         SEXP buffer,
+                                                         NumericVector doffsets) {
   // while we get a vector of doubles, we need a vector of uint64 for the offsets
   std::vector<uint64_t> offsets(doffsets.size());
   void *vptr;

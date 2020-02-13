@@ -345,8 +345,8 @@ libtiledb_query_set_buffer_var_vec_helper <- function(val, origoffset) {
     .Call(`_tiledb_libtiledb_query_set_buffer_var_vec_helper`, val, origoffset)
 }
 
-libtiledb_query_set_buffer_var_test <- function(query, attr, buffer, doffsets) {
-    .Call(`_tiledb_libtiledb_query_set_buffer_var_test`, query, attr, buffer, doffsets)
+libtiledb_query_set_buffer_varlength <- function(query, attr, buffer, doffsets) {
+    .Call(`_tiledb_libtiledb_query_set_buffer_varlength`, query, attr, buffer, doffsets)
 }
 
 libtiledb_query_result_list_column <- function(query, storagemode, attr, buffer, doffsets) {

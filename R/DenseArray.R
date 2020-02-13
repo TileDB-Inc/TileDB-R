@@ -274,7 +274,7 @@ setMethod("[", "tiledb_dense",
                   } else if (isvarlen) {
                     #noff <- libtiledb_array_max_buffer_elements_offsets(x@ptr, subarray, aname)
                     #cat("noff: ", noff, "  aname: ", aname, "  names(offsets):", names(offsets), "\n")
-                    qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets[[aname]])
+                    qry <- libtiledb_query_set_buffer_varlength(qry, aname, val, offsets[[aname]])
                   } else {
                     #if (is.character(val) || is.list(val)) {
                     # missing function, never written
@@ -457,7 +457,7 @@ setMethod("[<-", "tiledb_dense",
               ## assignment should be to a single attribute schema with variable length
               if (inherits(value, "data.frame") && anyvarlen && nattrs == 1) {
                 newval <- libtiledb_query_set_buffer_var_df_helper(value, offsets)
-                qry <- libtiledb_query_set_buffer_var_test(qry, saved_attr_names, newval, offsets)
+                qry <- libtiledb_query_set_buffer_varlength(qry, saved_attr_names, newval, offsets)
               } else {
 
                 for (idx in seq_along(value)) {
@@ -475,7 +475,7 @@ setMethod("[<-", "tiledb_dense",
                       newval <- libtiledb_query_set_buffer_var_vec_helper(val, offsets)
                       val <- newval
                     }
-                    qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets)
+                    qry <- libtiledb_query_set_buffer_varlength(qry, aname, val, offsets)
                   } else {
                     #if (is.list(val) || is.character(val))
                     ## this is missing function, never written in the old package
