@@ -1184,46 +1184,40 @@ bool libtiledb_query_set_buffer_print_offsets(NumericVector vec) {
 }
 
 template <typename T>
-std::pair<std::vector<T>,
-          std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFrame df, bool debug = FALSE);
+std::pair<std::vector<T>, std::vector<uint64_t>>
+libtiledb_query_set_buffer_var_df_helper(Rcpp::DataFrame df, bool debug = FALSE) {
+  // here we know we have a data.frame with T elements (int or real)
+  int ncolumns = df.length();
+  Rcpp::List fst = df[0];
+  int nrows = fst.length();
+  if (debug) Rcpp::Rcout << "  with " << ncolumns << " columns and " << nrows << " elements yielding ";
 
+  std::vector<T> data;
+  std::vector<uint64_t> offset_els;
+  uint64_t curroff = 0;
+  offset_els.push_back(curroff);          // offsets start with 0
 
-// template <typename T>
-// std::pair<std::vector<T>, std::vector<uint64_t>>
-// mygetVectorAndOffset(Rcpp::List df, bool debug = FALSE) {
+  for (int j=0; j<ncolumns; j++) {
+    Rcpp::List cvec = df[j];
+    for (int i=0; i<nrows; i++) {
+      std::vector<T> curvec = Rcpp::as<std::vector<T> >(cvec[i]);
+      for (size_t vi=0; vi<curvec.size(); vi++) {
+        data.push_back(curvec[vi]);
+        if (debug) Rcpp::Rcout << " " << curvec[vi];
+      }
+      curroff += curvec.size();
+      offset_els.push_back(curroff);
+    }
+  }
+  if (debug) Rcpp::Rcout << std::endl;
+  offset_els.pop_back(); // last one is 'one too far'
 
-//   // here we know we have a data.frame with T elements (int or real)
-//   int ncolumns = df.length();
-//   Rcpp::List fst = df[0];
-//   int nrows = fst.length();
-//   if (debug) Rcpp::Rcout << "  with " << ncolumns << " columns and " << nrows << " elements yielding ";
-
-//   std::vector<T> data;
-//   std::vector<uint64_t> offset_els;
-//   uint64_t curroff = 0;
-//   offset_els.push_back(curroff);          // offsets start with 0
-
-//     for (int j=0; j<ncolumns; j++) {
-//       std::vector<T> curvec = Rcpp::as<std::vector<T> >(df[j]);
-//       Rcpp::List cvec = df[j];
-//   for (int i=0; i<nrows; i++) {
-//       for (size_t vi=0; vi<curvec.size(); vi++) {
-//         data.push_back(curvec[vi]);
-//         if (debug) Rcpp::Rcout << " " << curvec[vi];
-//       }
-//       curroff += curvec.size();
-//       offset_els.push_back(curroff);
-//     }
-//   }
-//   if (debug) Rcpp::Rcout << std::endl;
-//   offset_els.pop_back(); // last one is 'one too far'
-
-//   std::vector<uint64_t> offsets;
-//   for (auto e : offset_els) {
-//     offsets.push_back(e * sizeof(T));
-//   }
-//   return std::make_pair(data, offsets);
-// }
+  std::vector<uint64_t> offsets;
+  for (auto e : offset_els) {
+    offsets.push_back(e * sizeof(T));
+  }
+  return std::make_pair(data, offsets);
+}
 
 
 // analyse val, concatenate it into return value, also update offsets _in place_
@@ -1237,11 +1231,11 @@ SEXP libtiledb_query_set_buffer_var_df_helper(SEXP val, NumericVector origoffset
     if (TYPEOF(nval) == VECSXP) {
       SEXP nnval = VECTOR_ELT(nval,0);
       if (TYPEOF(nnval) == INTSXP) {
-        std::pair<std::vector<int>, std::vector<uint64_t>> pairres = getVectorAndOffset<int>(val);
+        std::pair<std::vector<int>, std::vector<uint64_t>> pairres = libtiledb_query_set_buffer_var_df_helper<int>(val);
         res = Rcpp::wrap(pairres.first);
         std::memcpy(&origoffset[0], pairres.second.data(), pairres.second.size()*sizeof(uint64_t));
       } else if (TYPEOF(nnval) == REALSXP) {
-        std::pair<std::vector<double>, std::vector<uint64_t>> pairres = getVectorAndOffset<double>(val);
+        std::pair<std::vector<double>, std::vector<uint64_t>> pairres = libtiledb_query_set_buffer_var_df_helper<double>(val);
         res = Rcpp::wrap(pairres.first);
         std::memcpy(&origoffset[0], pairres.second.data(), pairres.second.size()*sizeof(uint64_t));
       } else {
@@ -1268,11 +1262,11 @@ SEXP libtiledb_query_set_buffer_var_vec_helper(SEXP val, NumericVector origoffse
   SEXP res;
 
   if (TYPEOF(val) == REALSXP) {
-    std::pair<std::vector<double>, std::vector<uint64_t>> pairres = getVectorAndOffset<double>(df);
+    std::pair<std::vector<double>, std::vector<uint64_t>> pairres = libtiledb_query_set_buffer_var_df_helper<double>(df);
     res = Rcpp::wrap(pairres.first);
     std::memcpy(&origoffset[0], pairres.second.data(), pairres.second.size()*sizeof(uint64_t));
   } else if (TYPEOF(val) == INTSXP) {
-    std::pair<std::vector<int>, std::vector<uint64_t>> pairres = getVectorAndOffset<int>(df);
+    std::pair<std::vector<int>, std::vector<uint64_t>> pairres = libtiledb_query_set_buffer_var_df_helper<int>(df);
     res = Rcpp::wrap(pairres.first);
     std::memcpy(&origoffset[0], pairres.second.data(), pairres.second.size()*sizeof(int));
   } else {

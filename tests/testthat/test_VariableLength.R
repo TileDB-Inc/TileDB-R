@@ -147,6 +147,7 @@ test_that("Can read and write variable length string array", {
                                V2=list("bb", "f", "jjj", "n"),
                                V3=list("ccc", "g", "kk", "oo"),
                                V4=list("dd", "hhh", "l", "qqqq"))
+  #arr[] <- a1
   expect_true(write_variable_length(tmp, list(a=a1)))
   dat <- matrix(c("a",   "eee",   "i",    "m",
                   "bb",    "f", "jjj",    "n",
@@ -183,7 +184,8 @@ test_that("Can read and write variable length int array", {
                                 V2=list(c(2L,2L), c(6L,6L), 10L, c(14L,14L,14L)),
                                 V3=list(3L, c(7L,7L), 11L, 15L),
                                 V4=list(4L, c(8L,8L,8L), c(12L,12L), 16L))
-  expect_true(write_variable_length(tmp, list(a=dat)))
+  arr[] <- dat
+  expect_equal(arr[], dat)
 
   val <- 55L
   arr[1,2] <- val
@@ -203,7 +205,8 @@ test_that("Can read and write variable length double array", {
                                 V2=list(c(2,2),      c(6,6),   10,       c(14.1,14.2,14.3)),
                                 V3=list(3,           c(7,7),   11,       15),
                                 V4=list(4,           c(8,8,8), c(12,12), 16.75))
-  expect_true(write_variable_length(tmp, list(a=dat)))
+  arr[] <- dat
+  expect_equal(arr[], dat)
 
   val <- 5.1
   arr[1,2] <- val
