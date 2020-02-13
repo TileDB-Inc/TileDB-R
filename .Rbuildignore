@@ -12,3 +12,4 @@
 ^inst/examples/array_metadata_array$
 ^\.editorconfig$
 ^local
+^unused
