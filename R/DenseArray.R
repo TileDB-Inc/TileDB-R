@@ -463,8 +463,7 @@ setMethod("[<-", "tiledb_dense",
                 for (idx in seq_along(value)) {
                   aname <- attr_names[[idx]]
                   val <- value[[idx]]
-                  isvarlen <- is.na(unname(ncellval[idx]))  ## NA == variable length
-
+                  isvarlen <- is.na(unname(ncellval[aname]))  ## NA == variable length
                   if (isvarlen) {
                     if (typeof(val) == "character") { # characters are special in R and TileDB
                       ## traverse the R data structure in val, return compacted string newval
