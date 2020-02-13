@@ -392,7 +392,6 @@ setMethod("[<-", "tiledb_dense",
             }
             anyvarlen <- any(sapply(attrs(schema), function(s) is.na(ncells(s))))
             subarray <- domain_subarray(dom, index = index)
-            #cat("SUBARRAY\n"); print(subarray)
             attrs <- tiledb::attrs(schema)
             nvalue <- length(value)
             nattrs <- length(attrs)
@@ -418,7 +417,6 @@ setMethod("[<-", "tiledb_dense",
             # check that value shapes match the subarray shape
             # TODO: R doesn't check this and just assigns values that overlap the domain
             sub_dim <- subarray_dim(subarray)
-            #cat("SUBDIM\n"); print(sub_dim)
 
             for (i in seq_along(value)) {
               val <- value[[i]]
@@ -445,24 +443,22 @@ setMethod("[<-", "tiledb_dense",
 
             offsets <- double(prod(sub_dim)) # may need to check if this is sufficient space?
 
-            out <- tryCatch(
-              {
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
-                qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                #if (is.integral(dom)) { ## -- redundant, this case already tested above
-                  qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
-                #} else {
-                #  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
-                #}
+            out <- tryCatch({
+              qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
+              qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
+              #if (is.integral(dom)) { ## -- redundant, this case already tested above
+              qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
+              #} else {
+              #  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
+              #}
+              attr_names <- names(value)
 
-                attr_names <- names(value)
-
-                ## we need a special for whole data.table (as proxy for varlength chunks)
-                ## assignment should be to a single attribute schema with variable length
-                if (inherits(value, "data.frame") && anyvarlen && nattrs == 1) {
-                  newval <- libtiledb_query_set_buffer_var_df_helper(value, offsets)
-                  qry <- libtiledb_query_set_buffer_var_test(qry, saved_attr_names, newval, offsets)
-                } else {
+              ## we need a special for whole data.table (as proxy for varlength chunks)
+              ## assignment should be to a single attribute schema with variable length
+              if (inherits(value, "data.frame") && anyvarlen && nattrs == 1) {
+                newval <- libtiledb_query_set_buffer_var_df_helper(value, offsets)
+                qry <- libtiledb_query_set_buffer_var_test(qry, saved_attr_names, newval, offsets)
+              } else {
 
                 for (idx in seq_along(value)) {
                   aname <- attr_names[[idx]]
@@ -475,50 +471,31 @@ setMethod("[<-", "tiledb_dense",
                       ## also compute offsets (as uint64_t) and use offsets (dbl) vec as container
                       newval <- libtiledb_query_set_buffer_var_char_helper(val, offsets)
                       val <- value[[idx]] <- newval
-                      #cat("Concatenated string: ", val, "\n")
-                      #libtiledb_query_set_buffer_print_offsets(offsets)
                     } else {
-                      ## traverse vector in val, return concatenated vector, update offsets
-                      #if (!is.list(val)) {
-                      #  message("making a list")
-                      #  print(str(val))
-                      #  val <- as.list(val)
-                      #  print(val)
-                      #}
-                      #if (is.list(val)) {
-                        #val <- as.data.frame(val[[1]])
-                        #print(val)
-                        #print(class(val))
-                      #}
                       newval <- libtiledb_query_set_buffer_var_vec_helper(val, offsets)
-                      #print(newval)
                       val <- newval
-                      #cat("New vector: ", val, "\n")
-                      #libtiledb_query_set_buffer_print_offsets(offsets)
                     }
                     qry <- libtiledb_query_set_buffer_var_test(qry, aname, val, offsets)
                   } else {
                     #if (is.list(val) || is.character(val))
-                    ## missing function, never written
+                    ## this is missing function, never written in the old package
                     #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
                     #else
                     qry <- libtiledb_query_set_buffer(qry, aname, val)
                   }
                 }
-                } # new else branch
-                qry <- libtiledb_query_submit(qry)
-                if (libtiledb_query_status(qry) != "COMPLETE") {
-                  cat("Status:", libtiledb_query_status(qry), "\n")
-                  stop("error in write query (not 'COMPLETE')")
-                }
-                qry <- libtiledb_query_finalize(qry)
-                return(x)
-              },
-              finally = {
-                libtiledb_array_close(x@ptr)
-              })
+              }
+              qry <- libtiledb_query_submit(qry)
+              if (libtiledb_query_status(qry) != "COMPLETE") {
+                cat("Status:", libtiledb_query_status(qry), "\n")
+                stop("error in write query (not 'COMPLETE')")
+              }
+              qry <- libtiledb_query_finalize(qry)
+              return(x)
+
+            }, finally = libtiledb_array_close(x@ptr))  # end of tryCatch()
             return(out)
-          })
+          }) # end of method
 
 #' @export
 as.array.tiledb_dense <- function(x, ...) {
