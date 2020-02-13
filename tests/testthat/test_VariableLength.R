@@ -206,6 +206,7 @@ test_that("Can read and write variable length double array", {
 
 test_that("Can read and write variable length string array as data.frame", {
   skip_if_not_installed("data.table")
+  skip_if(TRUE)
   library(data.table)
   unlink_and_create_single_attribute(tmp, "CHAR")
   arr <- tiledb_dense(tmp, as.data.frame=TRUE)
