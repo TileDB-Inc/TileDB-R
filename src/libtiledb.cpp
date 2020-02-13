@@ -1225,7 +1225,6 @@ libtiledb_query_set_buffer_var_df_helper(Rcpp::DataFrame df, bool debug = FALSE)
 SEXP libtiledb_query_set_buffer_var_df_helper(SEXP val, NumericVector origoffset) {
 
   SEXP res = R_NilValue;
-
   if (TYPEOF(val) == VECSXP) {
     SEXP nval = VECTOR_ELT(val,0);
     if (TYPEOF(nval) == VECSXP) {
@@ -1238,6 +1237,9 @@ SEXP libtiledb_query_set_buffer_var_df_helper(SEXP val, NumericVector origoffset
         std::pair<std::vector<double>, std::vector<uint64_t>> pairres = libtiledb_query_set_buffer_var_df_helper<double>(val);
         res = Rcpp::wrap(pairres.first);
         std::memcpy(&origoffset[0], pairres.second.data(), pairres.second.size()*sizeof(uint64_t));
+      } else if (TYPEOF(nnval) == STRSXP) {
+        std::string str = libtiledb_query_set_buffer_var_char_helper(val, origoffset);
+        res = Rcpp::wrap(str);
       } else {
         Rcpp::stop("Invalid type for variable length data: %s (%d)", Rcpp::type2name(val), TYPEOF(val));
       }
