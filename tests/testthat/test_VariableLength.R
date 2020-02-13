@@ -206,7 +206,6 @@ test_that("Can read and write variable length double array", {
 
 test_that("Can read and write variable length string array as data.frame", {
   skip_if_not_installed("data.table")
-  skip_if(TRUE)
   library(data.table)
   unlink_and_create_single_attribute(tmp, "CHAR")
   arr <- tiledb_dense(tmp, as.data.frame=TRUE)
@@ -219,14 +218,16 @@ test_that("Can read and write variable length string array as data.frame", {
 
   val <- "tictoc"
   arr[1,2] <- val
-  expect_equal(arr[][rows==1 & cols==2,.(a)][[1]][[1]], val)
+  df <- as.data.frame(arr[])
+  expect_equal(df[df$rows==1 & df$cols==2,"a"][[1]], val)
 
   ## for strings we can use a matrix
   val <- matrix(c("the", "quick", "brown", "fox"), 2,2)
   arr[2:3, 2:3] <- val
-  expect_equal(arr[][rows==2 & cols==2,.(a)][[1]][[1]], val[1,1])
-  expect_equal(arr[][rows==3 & cols==2,.(a)][[1]][[1]], val[2,1])
-  expect_equal(arr[][rows==2 & cols==3,.(a)][[1]][[1]], val[1,2])
-  expect_equal(arr[][rows==3 & cols==3,.(a)][[1]][[1]], val[2,2])
+  df <- as.data.frame(arr[])
+  expect_equal(df[df$rows==2 & df$cols==2,"a"][[1]], val[1,1])
+  expect_equal(df[df$rows==3 & df$cols==2,"a"][[1]], val[2,1])
+  expect_equal(df[df$rows==2 & df$cols==3,"a"][[1]], val[1,2])
+  expect_equal(df[df$rows==3 & df$cols==3,"a"][[1]], val[2,2])
 
 })
