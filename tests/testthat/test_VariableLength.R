@@ -143,26 +143,12 @@ test_that("Can read and write variable length string array", {
   library(data.table)
   unlink_and_create_single_attribute(tmp, "CHAR")
   arr <- tiledb_dense(tmp)
-  a1 <- data.table::data.table(V1=list("a", "eee", "i", "m"),
-                               V2=list("bb", "f", "jjj", "n"),
-                               V3=list("ccc", "g", "kk", "oo"),
-                               V4=list("dd", "hhh", "l", "qqqq"))
-  #arr[] <- a1
-  expect_true(write_variable_length(tmp, list(a=a1)))
-  dat <- matrix(c("a",   "eee",   "i",    "m",
-                  "bb",    "f", "jjj",    "n",
-                  "ccc",   "g",  "kk",   "oo",
-                  "dd",  "hhh",   "l", "qqqq"), 4, 4)
-  #skip_if(TRUE)
-  #arr[] <- dat     # writing works with simple matrix
-  #chk <- arr[]
-  #library(data.table)
-  #dat <- data.table::data.table(dat)
-  #print(str(dat))
-  #print(str(chk))
-  #expect_equivalent(chk, dat)
-  # -- in goes a simple matrix, out comes a data.table with lists (for convenience)
-  # -- need to generalize input to let data.table in
+  dat <- data.table::data.table(V1=list("a", "eee", "i", "m"),
+                                V2=list("bb", "f", "jjj", "n"),
+                                V3=list("ccc", "g", "kk", "oo"),
+                                V4=list("dd", "hhh", "l", "qqqq"))
+  arr[] <- dat
+  expect_equal(arr[], dat)
 
   val <- "tictoc"
   arr[1,2] <- val
