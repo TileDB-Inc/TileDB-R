@@ -8,8 +8,6 @@
 }
 \arguments{
 \item{object}{tiledb_array_schema}
-
-\item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
 a list of tiledb_dim objects

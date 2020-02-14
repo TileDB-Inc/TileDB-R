@@ -19,8 +19,6 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))}
 }
 \arguments{
 \item{object}{tiledb_dense}
-
-\item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
 FALSE

@@ -13,3 +13,6 @@
 ^\.editorconfig$
 ^local
 ^unused
+^GPATH
+^GRTAGS
+^GTAGS
