@@ -11,7 +11,7 @@ BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
 Imports: methods, Rcpp
 LinkingTo: Rcpp
 SystemRequirements: C++11
-Suggests: testthat, data.table
+Suggests: testthat
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.2
 Encoding: UTF-8
