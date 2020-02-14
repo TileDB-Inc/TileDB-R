@@ -1219,7 +1219,7 @@ libtiledb_query_set_buffer_var_df_helper(Rcpp::DataFrame df, bool debug = FALSE)
 }
 
 
-// analyse val, concatenate it into return value, also update offsets _in place_
+// construct and return vector from incoming data.frame while updating offsets in origoffset
 // [[Rcpp::export]]
 SEXP libtiledb_query_set_buffer_var_df_helper(SEXP val, NumericVector origoffset) {
 
