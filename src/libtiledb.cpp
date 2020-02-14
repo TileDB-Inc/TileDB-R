@@ -1193,23 +1193,21 @@ libtiledb_query_set_buffer_var_df_helper(Rcpp::DataFrame df, bool debug = FALSE)
 
   std::vector<T> data;
   std::vector<uint64_t> offset_els;
-  uint64_t curroff = 0;
-  offset_els.push_back(curroff);          // offsets start with 0
+  uint64_t curroff = 0;                  // offsets start with 0
 
   for (int j=0; j<ncolumns; j++) {
     Rcpp::List cvec = df[j];
     for (int i=0; i<nrows; i++) {
+      offset_els.push_back(curroff);
       std::vector<T> curvec = Rcpp::as<std::vector<T> >(cvec[i]);
       for (size_t vi=0; vi<curvec.size(); vi++) {
         data.push_back(curvec[vi]);
         if (debug) Rcpp::Rcout << " " << curvec[vi];
       }
       curroff += curvec.size();
-      offset_els.push_back(curroff);
     }
   }
   if (debug) Rcpp::Rcout << std::endl;
-  offset_els.pop_back(); // last one is 'one too far'
 
   std::vector<uint64_t> offsets;
   for (auto e : offset_els) {
