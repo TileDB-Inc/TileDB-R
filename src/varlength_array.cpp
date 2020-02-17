@@ -15,7 +15,7 @@ const char* _tiledb_arraytype_to_string(tiledb_array_type_t atype) {
     case TILEDB_SPARSE:
       return "sparse";
     default:
-      Rcpp::stop("unknow tiledb_array_type_t");
+      Rcpp::stop("Unknown tiledb_array_type_t");
   }
 }
 
