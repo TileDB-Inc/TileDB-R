@@ -1173,10 +1173,9 @@ std::string libtiledb_query_set_buffer_var_char_helper(SEXP val, NumericVector o
 
 // [[Rcpp::export]]
 bool libtiledb_query_set_buffer_print_offsets(NumericVector vec) {
-  std::vector<uint64_t> ui(vec.size());
-  std::memcpy(ui.data(), &vec[0], vec.size()*sizeof(uint64_t));
+  uint64_t *ui = reinterpret_cast<uint64_t*>(&vec[0]);
   Rcpp::Rcout << "Offsets: ";
-  for (size_t i=0; i<ui.size(); i++)
+  for (int64_t i=0; i<vec.size(); i++)
     Rcpp::Rcout << ui[i] << " ";
   Rcpp::Rcout << std::endl;
   return true;

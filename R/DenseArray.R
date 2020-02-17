@@ -312,6 +312,8 @@ setMethod("[", "tiledb_dense",
                     buffers[[idx]] <- libtiledb_query_result_list_column(qry, storagemode[idx],
                                                                          aname, old_buffer,
                                                                          offsets[[aname]])
+                    ## if one wants to 'see' offsets:
+                    ##   libtiledb_query_set_buffer_print_offsets(offsets[[aname]]);
                     if (!x@as.data.frame) {
                       subdims <- subarray_dim(subarray)
                       buffers[[idx]] <- matrix(buffers[[idx]], subdims[1], subdims[2])
