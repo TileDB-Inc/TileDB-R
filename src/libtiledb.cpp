@@ -831,6 +831,15 @@ int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
   return static_cast<int32_t>(ncells);
 }
 
+// [[Rcpp::export]]
+void libtiledb_attr_ncells_set(XPtr<tiledb::Attribute> attr, int num) {
+  uint64_t ncells = static_cast<uint64_t>(num);
+  if (num == R_NaInt) {
+    ncells = TILEDB_VAR_NUM;             // R's NA is different from TileDB's NA
+  }
+  attr->set_cell_val_num(ncells);        // returns reference to self so nothing for us to return
+}
+
 //[[Rcpp::export]]
 void libtiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
   attr->dump();

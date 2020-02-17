@@ -36,3 +36,14 @@ test_that("tiledb_attr throws an error with invalid ncells argument", {
   expect_equal(tiledb::ncells(a1), 1)
   expect_error(tiledb_attr("foo", ncells = 0))
 })
+
+test_that("tiledb_attr set ncells", {
+  attrs <- tiledb_attr("a", type = "INT32", ncells = 1)
+  expect_equal(tiledb::ncells(attrs), 1) # as created
+
+  tiledb:::libtiledb_attr_ncells_set(attrs@ptr, 2)
+  expect_equal(tiledb::ncells(attrs), 2) # as created
+
+  tiledb:::libtiledb_attr_ncells_set(attrs@ptr, NA_integer_)
+  expect_true(is.na(tiledb::ncells(attrs)))
+})

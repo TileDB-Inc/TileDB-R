@@ -608,6 +608,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_attr_ncells_set
+void libtiledb_attr_ncells_set(XPtr<tiledb::Attribute> attr, int num);
+RcppExport SEXP _tiledb_libtiledb_attr_ncells_set(SEXP attrSEXP, SEXP numSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< int >::type num(numSEXP);
+    libtiledb_attr_ncells_set(attr, num);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_attr_dump
 void libtiledb_attr_dump(XPtr<tiledb::Attribute> attr);
 RcppExport SEXP _tiledb_libtiledb_attr_dump(SEXP attrSEXP) {
@@ -1373,6 +1384,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_attr_datatype", (DL_FUNC) &_tiledb_libtiledb_attr_datatype, 1},
     {"_tiledb_libtiledb_attr_filter_list", (DL_FUNC) &_tiledb_libtiledb_attr_filter_list, 1},
     {"_tiledb_libtiledb_attr_ncells", (DL_FUNC) &_tiledb_libtiledb_attr_ncells, 1},
+    {"_tiledb_libtiledb_attr_ncells_set", (DL_FUNC) &_tiledb_libtiledb_attr_ncells_set, 2},
     {"_tiledb_libtiledb_attr_dump", (DL_FUNC) &_tiledb_libtiledb_attr_dump, 1},
     {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 8},
     {"_tiledb_libtiledb_array_schema_domain", (DL_FUNC) &_tiledb_libtiledb_array_schema_domain, 1},

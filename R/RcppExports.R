@@ -209,6 +209,10 @@ libtiledb_attr_ncells <- function(attr) {
     .Call(`_tiledb_libtiledb_attr_ncells`, attr)
 }
 
+libtiledb_attr_ncells_set <- function(attr, num) {
+    invisible(.Call(`_tiledb_libtiledb_attr_ncells_set`, attr, num))
+}
+
 libtiledb_attr_dump <- function(attr) {
     invisible(.Call(`_tiledb_libtiledb_attr_dump`, attr))
 }
