@@ -85,4 +85,9 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
   expect_equal(tiledb_filter_get_option(filter_list[["offsets"]][0], "COMPRESSION_LEVEL"), -1)
 
   expect_true(is.sparse(sch))
+
+  tiledb:::libtiledb_array_schema_tile_set_capacity(sch@ptr, 100000)
+  expect_equal(tiledb:::libtiledb_array_schema_tile_get_capacity(sch@ptr), 100000)
+  expect_error(tiledb:::libtiledb_array_schema_tile_set_capacity(sch@ptr, -10))
+
 })

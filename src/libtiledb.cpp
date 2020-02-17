@@ -836,6 +836,8 @@ void libtiledb_attr_ncells_set(XPtr<tiledb::Attribute> attr, int num) {
   uint64_t ncells = static_cast<uint64_t>(num);
   if (num == R_NaInt) {
     ncells = TILEDB_VAR_NUM;             // R's NA is different from TileDB's NA
+  } else if (num <= 0) {
+    Rcpp::stop("Variable cell number of '%d' not sensible", num);
   }
   attr->set_cell_val_num(ncells);        // returns reference to self so nothing for us to return
 }
@@ -920,6 +922,25 @@ std::string libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema) 
 std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
   auto order = schema->tile_order();
   return _tiledb_layout_to_string(order);
+}
+
+// [[Rcpp::export]]
+void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap) {
+  if (cap <= 0) {
+    Rcpp::stop("Tile capacity of '%d' not sensible", cap);
+  }
+  uint64_t tilecap = static_cast<uint64_t>(cap);
+  schema->set_capacity(tilecap);
+}
+
+// [[Rcpp::export]]
+int libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema) {
+  // FIXME: we try to return a uint64_t as an int. Overflow possible
+  uint64_t cap = schema->capacity();
+  if (cap > std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("Overflow on schema capcity at '%ld'", cap);
+  }
+  return static_cast<int>(cap);
 }
 
 // [[Rcpp::export]]

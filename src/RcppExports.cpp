@@ -691,6 +691,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_schema_tile_set_capacity
+void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
+RcppExport SEXP _tiledb_libtiledb_array_schema_tile_set_capacity(SEXP schemaSEXP, SEXP capSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    Rcpp::traits::input_parameter< int >::type cap(capSEXP);
+    libtiledb_array_schema_tile_set_capacity(schema, cap);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_array_schema_tile_get_capacity
+int libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_tile_get_capacity(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_tile_get_capacity(schema));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_schema_coords_filter_list
 XPtr<tiledb::FilterList> libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_libtiledb_array_schema_coords_filter_list(SEXP schemaSEXP) {
@@ -1391,6 +1413,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_schema_attributes", (DL_FUNC) &_tiledb_libtiledb_array_schema_attributes, 1},
     {"_tiledb_libtiledb_array_schema_cell_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_cell_order, 1},
     {"_tiledb_libtiledb_array_schema_tile_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_tile_order, 1},
+    {"_tiledb_libtiledb_array_schema_tile_set_capacity", (DL_FUNC) &_tiledb_libtiledb_array_schema_tile_set_capacity, 2},
+    {"_tiledb_libtiledb_array_schema_tile_get_capacity", (DL_FUNC) &_tiledb_libtiledb_array_schema_tile_get_capacity, 1},
     {"_tiledb_libtiledb_array_schema_coords_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_coords_filter_list, 1},
     {"_tiledb_libtiledb_array_schema_offsets_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_offsets_filter_list, 1},
     {"_tiledb_libtiledb_array_schema_sparse", (DL_FUNC) &_tiledb_libtiledb_array_schema_sparse, 1},

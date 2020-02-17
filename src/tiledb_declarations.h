@@ -72,6 +72,7 @@ std::string               libtiledb_attr_name(XPtr<tiledb::Attribute> attr);
 std::string               libtiledb_attr_datatype(XPtr<tiledb::Attribute> attr);
 XPtr<tiledb::FilterList>  libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr);
 int                       libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr);
+void                      libtiledb_attr_ncells_set(XPtr<tiledb::Attribute> attr, int num);
 void                      libtiledb_attr_dump(XPtr<tiledb::Attribute> attr);
 
 
@@ -81,6 +82,8 @@ XPtr<tiledb::Domain>      libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema
 List                      libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema);
+void                      libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
+int                       libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::FilterList>  libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::FilterList>  libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema);
 bool                      libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
