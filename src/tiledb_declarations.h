@@ -91,6 +91,7 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,
 void                      libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema);
 void                      libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
+std::string               libtiledb_array_create_encryptd(std::string uri, XPtr<tiledb::ArraySchema> schema, std::string encryption_key);
 
 
 ## Array

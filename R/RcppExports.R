@@ -273,6 +273,10 @@ libtiledb_array_create <- function(uri, schema) {
     .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }
 
+libtiledb_array_create_encrypted <- function(uri, schema, encryption_key) {
+    .Call(`_tiledb_libtiledb_array_create_encrypted`, uri, schema, encryption_key)
+}
+
 libtiledb_array <- function(ctx, uri, type) {
     .Call(`_tiledb_libtiledb_array`, ctx, uri, type)
 }
