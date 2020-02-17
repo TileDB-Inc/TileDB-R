@@ -89,6 +89,7 @@ XPtr<tiledb::FilterList>  libtiledb_array_schema_offsets_filter_list(XPtr<tiledb
 bool                      libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,std::string uri);
 void                      libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema);
+void                      libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
 
 

@@ -970,6 +970,11 @@ void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
+void libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
+  schema->check();   // throws, rather than returning bool
+}
+
+// [[Rcpp::export]]
 std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema) {
   tiledb::Array::create(uri, *schema.get());
   return uri;
