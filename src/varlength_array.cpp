@@ -278,28 +278,28 @@ std::pair<std::vector<T>, std::vector<uint64_t>> getVectorAndOffset(Rcpp::DataFr
   return std::make_pair(data, offsets);
 }
 
-// [[Rcpp::export]]
-void create_varlength_array(const std::string array_name) {
-  // Create a TileDB context
-  Context ctx;
+// // [[Rcpp::export]]
+// void create_varlength_array(const std::string array_name) {
+//   // Create a TileDB context
+//   Context ctx;
 
-  // The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
-  Domain domain(ctx);
-  domain.add_dimension(tiledb::Dimension::create<int>(ctx, "rows", {{1, 4}}, 4))
-      .add_dimension(tiledb::Dimension::create<int>(ctx, "cols", {{1, 4}}, 4));
+//   // The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
+//   Domain domain(ctx);
+//   domain.add_dimension(tiledb::Dimension::create<int>(ctx, "rows", {{1, 4}}, 4))
+//       .add_dimension(tiledb::Dimension::create<int>(ctx, "cols", {{1, 4}}, 4));
 
-  // The array will be dense
-  ArraySchema schema(ctx, TILEDB_DENSE);
-  schema.set_domain(domain).set_order({{TILEDB_ROW_MAJOR, TILEDB_ROW_MAJOR}});
+//   // The array will be dense
+//   ArraySchema schema(ctx, TILEDB_DENSE);
+//   schema.set_domain(domain).set_order({{TILEDB_ROW_MAJOR, TILEDB_ROW_MAJOR}});
 
-  // Add two variable-length attributes "a1" and "a2", the first storing
-  // strings and the second storing a variable number of integers.
-  schema.add_attribute(Attribute::create<std::string>(ctx, "a1"));
-  schema.add_attribute(Attribute::create<std::vector<int>>(ctx, "a2"));
+//   // Add two variable-length attributes "a1" and "a2", the first storing
+//   // strings and the second storing a variable number of integers.
+//   schema.add_attribute(Attribute::create<std::string>(ctx, "a1"));
+//   schema.add_attribute(Attribute::create<std::vector<int>>(ctx, "a2"));
 
-  // Create the (empty) array on disk.
-  Array::create(array_name, schema);
-}
+//   // Create the (empty) array on disk.
+//   Array::create(array_name, schema);
+// }
 
 // [[Rcpp::export]]
 bool write_varlength_array(const std::string uri, Rcpp::List listobject,

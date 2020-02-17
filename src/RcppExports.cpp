@@ -1445,16 +1445,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// create_varlength_array
-void create_varlength_array(const std::string array_name);
-RcppExport SEXP _tiledb_create_varlength_array(SEXP array_nameSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::string >::type array_name(array_nameSEXP);
-    create_varlength_array(array_name);
-    return R_NilValue;
-END_RCPP
-}
 // write_varlength_array
 bool write_varlength_array(const std::string uri, Rcpp::List listobject, const std::vector<std::string> names, bool debug);
 RcppExport SEXP _tiledb_write_varlength_array(SEXP uriSEXP, SEXP listobjectSEXP, SEXP namesSEXP, SEXP debugSEXP) {
@@ -1594,7 +1584,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_stats_dump", (DL_FUNC) &_tiledb_libtiledb_stats_dump, 1},
     {"_tiledb_libtiledb_stats_print", (DL_FUNC) &_tiledb_libtiledb_stats_print, 0},
     {"_tiledb_read_varlength_array", (DL_FUNC) &_tiledb_read_varlength_array, 4},
-    {"_tiledb_create_varlength_array", (DL_FUNC) &_tiledb_create_varlength_array, 1},
     {"_tiledb_write_varlength_array", (DL_FUNC) &_tiledb_write_varlength_array, 4},
     {NULL, NULL, 0}
 };

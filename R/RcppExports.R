@@ -493,10 +493,6 @@ read_varlength_array <- function(array_name, key, subarray, debug) {
     .Call(`_tiledb_read_varlength_array`, array_name, key, subarray, debug)
 }
 
-create_varlength_array <- function(array_name) {
-    invisible(.Call(`_tiledb_create_varlength_array`, array_name))
-}
-
 write_varlength_array <- function(uri, listobject, names, debug = FALSE) {
     .Call(`_tiledb_write_varlength_array`, uri, listobject, names, debug)
 }
