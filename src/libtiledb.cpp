@@ -823,8 +823,10 @@ XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr
 // [[Rcpp::export]]
 int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
   unsigned int ncells = attr->cell_val_num();
-  if (ncells > std::numeric_limits<int32_t>::max()) {
-    throw Rcpp::exception("tiledb_attr ncells value not representable as an R integer");
+  if (ncells == TILEDB_VAR_NUM) {
+    return R_NaInt;          // set to R's NA for integer
+  } else if (ncells > std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("tiledb_attr ncells value not representable as an R integer");
   }
   return static_cast<int32_t>(ncells);
 }
