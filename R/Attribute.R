@@ -132,7 +132,7 @@ setGeneric("ncells", function(object) standardGeneric("ncells"))
 #' @export
 setMethod("ncells", signature(object = "tiledb_attr"),
           function(object) {
-            libtiledb_attr_ncells(object@ptr)
+            libtiledb_attr_get_cell_val_num(object@ptr)
           })
 
 #' Returns TRUE if the tiledb_dim is anonymous

@@ -821,12 +821,25 @@ XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr
 }
 
 // [[Rcpp::export]]
-int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
+int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
   unsigned int ncells = attr->cell_val_num();
-  if (ncells > std::numeric_limits<int32_t>::max()) {
-    throw Rcpp::exception("tiledb_attr ncells value not representable as an R integer");
+  if (ncells == TILEDB_VAR_NUM) {
+    return R_NaInt;          // set to R's NA for integer
+  } else if (ncells > std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("tiledb_attr ncells value not representable as an R integer");
   }
   return static_cast<int32_t>(ncells);
+}
+
+// [[Rcpp::export]]
+void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
+  uint64_t ncells = static_cast<uint64_t>(num);
+  if (num == R_NaInt) {
+    ncells = TILEDB_VAR_NUM;             // R's NA is different from TileDB's NA
+  } else if (num <= 0) {
+    Rcpp::stop("Variable cell number of '%d' not sensible", num);
+  }
+  attr->set_cell_val_num(ncells);        // returns reference to self so nothing for us to return
 }
 
 //[[Rcpp::export]]
@@ -912,6 +925,25 @@ std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) 
 }
 
 // [[Rcpp::export]]
+void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap) {
+  if (cap <= 0) {
+    Rcpp::stop("Tile capacity of '%d' not sensible", cap);
+  }
+  uint64_t tilecap = static_cast<uint64_t>(cap);
+  schema->set_capacity(tilecap);
+}
+
+// [[Rcpp::export]]
+int libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema) {
+  // FIXME: we try to return a uint64_t as an int. Overflow possible
+  uint64_t cap = schema->capacity();
+  if (cap > std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("Overflow on schema capcity at '%ld'", cap);
+  }
+  return static_cast<int>(cap);
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->coords_filter_list()));
 }
@@ -938,8 +970,21 @@ void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
+void libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
+  schema->check();   // throws, rather than returning bool
+}
+
+// [[Rcpp::export]]
 std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema) {
   tiledb::Array::create(uri, *schema.get());
+  return uri;
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_array_create_encrypted(std::string uri, XPtr<tiledb::ArraySchema> schema,
+                                             std::string encryption_key) {
+  tiledb::Array::create(uri, *schema.get(), TILEDB_AES_256_GCM,
+                        encryption_key.c_str(), encryption_key.size());
   return uri;
 }
 
@@ -948,8 +993,19 @@ XPtr<tiledb::Array> libtiledb_array(XPtr<tiledb::Context> ctx,
                                     std::string uri,
                                     std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
-  auto array = XPtr<tiledb::Array>(
-      new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
+  return array;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_encrypted(XPtr<tiledb::Context> ctx,
+                                              std::string uri, std::string type,
+                                              std::string enc_key) {
+  auto query_type = _string_to_tiledb_query_type(type);
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
+                                                                   TILEDB_AES_256_GCM,
+                                                                   enc_key.data(),
+                                                                   (uint32_t)enc_key.size())));
   return array;
 }
 

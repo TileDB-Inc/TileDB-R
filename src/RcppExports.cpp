@@ -597,15 +597,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attr_ncells
-int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attr_ncells(SEXP attrSEXP) {
+// libtiledb_attr_get_cell_val_num
+int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attr_get_cell_val_num(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attr_ncells(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attr_get_cell_val_num(attr));
     return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_attr_set_cell_val_num
+void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num);
+RcppExport SEXP _tiledb_libtiledb_attr_set_cell_val_num(SEXP attrSEXP, SEXP numSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< int >::type num(numSEXP);
+    libtiledb_attr_set_cell_val_num(attr, num);
+    return R_NilValue;
 END_RCPP
 }
 // libtiledb_attr_dump
@@ -680,6 +691,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_schema_tile_set_capacity
+void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
+RcppExport SEXP _tiledb_libtiledb_array_schema_tile_set_capacity(SEXP schemaSEXP, SEXP capSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    Rcpp::traits::input_parameter< int >::type cap(capSEXP);
+    libtiledb_array_schema_tile_set_capacity(schema, cap);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_array_schema_tile_get_capacity
+int libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_tile_get_capacity(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_tile_get_capacity(schema));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_schema_coords_filter_list
 XPtr<tiledb::FilterList> libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_libtiledb_array_schema_coords_filter_list(SEXP schemaSEXP) {
@@ -735,6 +768,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_array_schema_check
+void libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_check(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    libtiledb_array_schema_check(schema);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_array_create
 std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_libtiledb_array_create(SEXP uriSEXP, SEXP schemaSEXP) {
@@ -744,6 +787,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_array_create(uri, schema));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_create_encrypted
+std::string libtiledb_array_create_encrypted(std::string uri, XPtr<tiledb::ArraySchema> schema, std::string encryption_key);
+RcppExport SEXP _tiledb_libtiledb_array_create_encrypted(SEXP uriSEXP, SEXP schemaSEXP, SEXP encryption_keySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    Rcpp::traits::input_parameter< std::string >::type encryption_key(encryption_keySEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_create_encrypted(uri, schema, encryption_key));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -757,6 +813,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_array(ctx, uri, type));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_encrypted
+XPtr<tiledb::Array> libtiledb_array_encrypted(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
+RcppExport SEXP _tiledb_libtiledb_array_encrypted(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP, SEXP enc_keySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type enc_key(enc_keySEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_encrypted(ctx, uri, type, enc_key));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1372,20 +1442,26 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_attr_name", (DL_FUNC) &_tiledb_libtiledb_attr_name, 1},
     {"_tiledb_libtiledb_attr_datatype", (DL_FUNC) &_tiledb_libtiledb_attr_datatype, 1},
     {"_tiledb_libtiledb_attr_filter_list", (DL_FUNC) &_tiledb_libtiledb_attr_filter_list, 1},
-    {"_tiledb_libtiledb_attr_ncells", (DL_FUNC) &_tiledb_libtiledb_attr_ncells, 1},
+    {"_tiledb_libtiledb_attr_get_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attr_get_cell_val_num, 1},
+    {"_tiledb_libtiledb_attr_set_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attr_set_cell_val_num, 2},
     {"_tiledb_libtiledb_attr_dump", (DL_FUNC) &_tiledb_libtiledb_attr_dump, 1},
     {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 8},
     {"_tiledb_libtiledb_array_schema_domain", (DL_FUNC) &_tiledb_libtiledb_array_schema_domain, 1},
     {"_tiledb_libtiledb_array_schema_attributes", (DL_FUNC) &_tiledb_libtiledb_array_schema_attributes, 1},
     {"_tiledb_libtiledb_array_schema_cell_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_cell_order, 1},
     {"_tiledb_libtiledb_array_schema_tile_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_tile_order, 1},
+    {"_tiledb_libtiledb_array_schema_tile_set_capacity", (DL_FUNC) &_tiledb_libtiledb_array_schema_tile_set_capacity, 2},
+    {"_tiledb_libtiledb_array_schema_tile_get_capacity", (DL_FUNC) &_tiledb_libtiledb_array_schema_tile_get_capacity, 1},
     {"_tiledb_libtiledb_array_schema_coords_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_coords_filter_list, 1},
     {"_tiledb_libtiledb_array_schema_offsets_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_offsets_filter_list, 1},
     {"_tiledb_libtiledb_array_schema_sparse", (DL_FUNC) &_tiledb_libtiledb_array_schema_sparse, 1},
     {"_tiledb_libtiledb_array_schema_load", (DL_FUNC) &_tiledb_libtiledb_array_schema_load, 2},
     {"_tiledb_libtiledb_array_schema_dump", (DL_FUNC) &_tiledb_libtiledb_array_schema_dump, 1},
+    {"_tiledb_libtiledb_array_schema_check", (DL_FUNC) &_tiledb_libtiledb_array_schema_check, 1},
     {"_tiledb_libtiledb_array_create", (DL_FUNC) &_tiledb_libtiledb_array_create, 2},
+    {"_tiledb_libtiledb_array_create_encrypted", (DL_FUNC) &_tiledb_libtiledb_array_create_encrypted, 3},
     {"_tiledb_libtiledb_array", (DL_FUNC) &_tiledb_libtiledb_array, 3},
+    {"_tiledb_libtiledb_array_encrypted", (DL_FUNC) &_tiledb_libtiledb_array_encrypted, 4},
     {"_tiledb_libtiledb_array_is_open", (DL_FUNC) &_tiledb_libtiledb_array_is_open, 1},
     {"_tiledb_libtiledb_array_is_open_for_reading", (DL_FUNC) &_tiledb_libtiledb_array_is_open_for_reading, 1},
     {"_tiledb_libtiledb_array_is_open_for_writing", (DL_FUNC) &_tiledb_libtiledb_array_is_open_for_writing, 1},

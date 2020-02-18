@@ -85,4 +85,31 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
   expect_equal(tiledb_filter_get_option(filter_list[["offsets"]][0], "COMPRESSION_LEVEL"), -1)
 
   expect_true(is.sparse(sch))
+
+  tiledb:::libtiledb_array_schema_tile_set_capacity(sch@ptr, 100000)
+  expect_equal(tiledb:::libtiledb_array_schema_tile_get_capacity(sch@ptr), 100000)
+  expect_error(tiledb:::libtiledb_array_schema_tile_set_capacity(sch@ptr, -10))
+
+})
+
+
+test_that("tiledb_array_schema created with encryption",  {
+  uri <- tempfile()
+  key <- "0123456789abcdeF0123456789abcdeF"
+
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
+
+  ##tiledb_array_create_encrypted(uri, schema, key)
+  ## for now calling into function
+  tiledb:::libtiledb_array_create_encrypted(uri, schema@ptr, key)
+
+  ctx <- tiledb_ctx()
+  arrptr <- tiledb:::libtiledb_array_encrypted(ctx@ptr, uri, "WRITE", key)
+  A <- new("tiledb_dense", ctx=ctx, uri=uri, as.data.frame=FALSE, ptr=arrptr)
+
+  expect_true(is(A, "tiledb_dense"))
+  ##expect_true(is(schema(A), "tiledb_dense"))
+  ## can't yet read / write as scheme getter not generalized for encryption
 })
