@@ -101,9 +101,9 @@ test_that("tiledb_array_schema created with encryption",  {
                                 tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
 
-  ##tiledb_array_create_encrypted(uri, schema, key)
+  ##tiledb_array_create_with_key(uri, schema, key)
   ## for now calling into function
-  tiledb:::libtiledb_array_create_encrypted(uri, schema@ptr, key)
+  tiledb:::libtiledb_array_create_with_key(uri, schema@ptr, key)
 
   ctx <- tiledb_ctx()
   arrptr <- tiledb:::libtiledb_array_encrypted(ctx@ptr, uri, "WRITE", key)

@@ -981,8 +981,8 @@ std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> sc
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_array_create_encrypted(std::string uri, XPtr<tiledb::ArraySchema> schema,
-                                             std::string encryption_key) {
+std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema,
+                                            std::string encryption_key) {
   tiledb::Array::create(uri, *schema.get(), TILEDB_AES_256_GCM,
                         encryption_key.c_str(), encryption_key.size());
   return uri;
