@@ -59,7 +59,7 @@ r_to_tiledb_type <- function(x) {
 tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
   type <- match.arg(type)
 
-  arr@ptr <- libtiledb_array_open(arr@ptr, type)
+  arr@ptr <- libtiledb_array_open_with_ptr(arr@ptr, type)
   arr
 }
 

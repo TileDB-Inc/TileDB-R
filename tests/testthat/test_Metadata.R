@@ -25,11 +25,11 @@ unlink_and_create_ptr <- function(tmp) {
   arr <- unlink_and_create_simple(tmp)
 
   ## write one record via ptr
-  arrW <- tiledb:::libtiledb_array_open(arr@ptr, "WRITE")
+  arrW <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "WRITE")
   tiledb:::put_metadata_ptr(arrW, "txt", "the quick brown fox")
   tiledb:::libtiledb_array_close(arrW)
 
-  arrR <- tiledb:::libtiledb_array_open(arr@ptr, "READ")
+  arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
   return(arrR)
 }
 
@@ -78,7 +78,7 @@ test_that("Can put metadata", {
   arr <- unlink_and_create_ptr(tmp)
 
   tiledb:::libtiledb_array_close(arr)
-  arrW <- tiledb:::libtiledb_array_open(arr, "WRITE")
+  arrW <- tiledb:::libtiledb_array_open_with_ptr(arr, "WRITE")
 
   expect_true(tiledb:::put_metadata_ptr(arrW, "foo", "the quick brown fox"))
   expect_error(tiledb:::put_metadata_ptr(arrW, "foo", list(a=c(1,2,3), b=c("a", "b"))))
@@ -138,23 +138,23 @@ test_that("Can deleye by key", {
   expect_equal(tiledb:::num_metadata_ptr(arr), 2L)
 
   tiledb:::libtiledb_array_close(arr)
-  arrW <- tiledb:::libtiledb_array_open(arr, "WRITE")
+  arrW <- tiledb:::libtiledb_array_open_with_ptr(arr, "WRITE")
 
   expect_true(tiledb:::put_metadata_ptr(arrW, "foo", "the quick brown fox"))
 
   tiledb:::libtiledb_array_close(arrW)
-  arr <- tiledb:::libtiledb_array_open(arrW, "READ")
+  arr <- tiledb:::libtiledb_array_open_with_ptr(arrW, "READ")
 
   ## should be three after we add
   expect_equal(tiledb:::num_metadata_ptr(arr), 3L)
 
   tiledb:::libtiledb_array_close(arr)
-  arrW <- tiledb:::libtiledb_array_open(arr, "WRITE")
+  arrW <- tiledb:::libtiledb_array_open_with_ptr(arr, "WRITE")
 
   expect_true(tiledb:::delete_metadata_ptr(arr, "foo"))
 
   tiledb:::libtiledb_array_close(arrW)
-  arr <- tiledb:::libtiledb_array_open(arrW, "READ")
+  arr <- tiledb:::libtiledb_array_open_with_ptr(arrW, "READ")
 
   ## should be two after we delete
   expect_equal(tiledb:::num_metadata_ptr(arr), 2L)

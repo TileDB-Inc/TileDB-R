@@ -305,8 +305,8 @@ libtiledb_array_get_schema <- function(array) {
     .Call(`_tiledb_libtiledb_array_get_schema`, array)
 }
 
-libtiledb_array_open <- function(array, query_type) {
-    .Call(`_tiledb_libtiledb_array_open`, array, query_type)
+libtiledb_array_open_with_ptr <- function(array, query_type) {
+    .Call(`_tiledb_libtiledb_array_open_with_ptr`, array, query_type)
 }
 
 libtiledb_array_reopen <- function(array) {

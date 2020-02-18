@@ -1037,7 +1037,7 @@ XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) 
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Array> array, std::string query_type) {
+XPtr<tiledb::Array> libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type) {
   tiledb_query_type_t qtype = _string_to_tiledb_query_type(query_type);
   array->open(qtype);
   return array;

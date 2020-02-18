@@ -127,7 +127,7 @@ setMethod("[", "tiledb_sparse",
             if (!tiledb::is.integral(dom)) {
               stop("subscript indexing only valid for integral Domain's")
             }
-            libtiledb_array_open(x@ptr, "READ")
+            libtiledb_array_open_with_ptr(x@ptr, "READ")
             out <- tryCatch(
               {
                 subarray <- domain_subarray(dom, index = index)
@@ -276,7 +276,7 @@ setMethod("[<-", "tiledb_sparse",
             } else {
               zip_coords <- libtiledb_zip_coords_numeric(coords, coord_length)
             }
-            libtiledb_array_open(x@ptr, "WRITE")
+            libtiledb_array_open_with_ptr(x@ptr, "WRITE")
             out <- tryCatch(
               {
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
@@ -333,7 +333,7 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
   if (!tiledb::is.integral(dom)) {
     stop("subscript indexing only valid for integral Domain's")
   }
-  libtiledb_array_open(A@ptr, "READ")
+  libtiledb_array_open_with_ptr(A@ptr, "READ")
   out <- tryCatch(
     {
       if (is.integral(dom)) {

@@ -131,7 +131,7 @@ bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array
 bool                      libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_get_uri(XPtr<tiledb::Array> array);
 XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
-XPtr<tiledb::Array>       libtiledb_array_open(XPtr<tiledb::Array> array, std::string query_type);
+XPtr<tiledb::Array>       libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type);
 XPtr<tiledb::Array>       libtiledb_array_reopen(XPtr<tiledb::Array> array);
 XPtr<tiledb::Array>       libtiledb_array_close(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_query_type(XPtr<tiledb::Array> array);

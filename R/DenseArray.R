@@ -208,7 +208,7 @@ setMethod("[", "tiledb_dense",
             if (!tiledb::is.integral(dom)) {
               stop("subscript indexing only valid for integral Domain's")
             }
-            libtiledb_array_open(x@ptr, "READ")
+            libtiledb_array_open_with_ptr(x@ptr, "READ")
 
             out <- tryCatch(
               {
@@ -349,7 +349,7 @@ setMethod("[<-", "tiledb_dense",
                 stop(paste("cannot assign value of type \"", typeof(value), "\""))
               }
             }
-            libtiledb_array_open(x@ptr, "WRITE")
+            libtiledb_array_open_with_ptr(x@ptr, "WRITE")
             out <- tryCatch(
               {
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
