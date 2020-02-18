@@ -98,7 +98,8 @@ write_array(urisparse)
 ```{r createdim}
 library(tiledb)
 
-# Create dimension
+# Create dimension 
+# In C++: Dimension::create<T>(...)
 dim <- tiledb_dim("dim", c(1L, 4L), 2L, "INT32")
 ```
 
@@ -113,6 +114,7 @@ dim1 <- tiledb_dim("dim1", c(1L, 4L), 2L, "INT32")
 dim2 <- tiledb_dim("dim2", c(1L, 2L), 2L, "INT32")
 
 # Create domain with two dimensions
+# In C++: domain.add_dimensions(dim1).add_dimension(dim2)
 dom <- tiledb_domain(dims = c(dim1, dim2))
 ```
 
@@ -120,10 +122,13 @@ dom <- tiledb_domain(dims = c(dim1, dim2))
 
 ```{r createattr}
 # Create attribute
+# In C++: Attribute::create<T>(ctx, "attr")
 attr <- tiledb_attr("attr", "INT32")
 ```
 
 TODO: R support beyond single-value attributes
+
+DONE (PR pending)
 
 #### Setting a Compressor
 
@@ -191,6 +196,8 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 
 TODO: R support
 
+DONE (PR pending)
+
 #### Setting Coordinate and Offset Filters
 
 ```{r setcoordoffsetfilt}
@@ -212,6 +219,8 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 #### Checking Correctness
 
 TODO: R support
+
+DONE (PR pending)
 
 ### Creating the Array
 
