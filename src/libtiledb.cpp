@@ -925,7 +925,7 @@ std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) 
 }
 
 // [[Rcpp::export]]
-void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap) {
+void libtiledb_array_schema_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap) {
   if (cap <= 0) {
     Rcpp::stop("Tile capacity of '%d' not sensible", cap);
   }
@@ -934,7 +934,7 @@ void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, 
 }
 
 // [[Rcpp::export]]
-int libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema) {
+int libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema) {
   // FIXME: we try to return a uint64_t as an int. Overflow possible
   uint64_t cap = schema->capacity();
   if (cap > std::numeric_limits<int32_t>::max()) {

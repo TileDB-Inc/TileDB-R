@@ -21,6 +21,34 @@ NumericVector             libtiledb_version();
 
 
 ## Context and Config
+##
+## C++ API for Context
+##   Context()
+##   Context(const Config& config)
+##   void handle_error(int rc)
+##   std::shared_ptr<tiledb_ctx_t> ptr()
+##   Context& set_error_handler(const std::function<void(const std::string&)>& fn)
+##   Config config()
+##   bool is_supported_fs(tiledb_filesystem_t fs)
+##   void cancel_tasks()
+##   static void default_error_handler(const std::string& msg)
+##
+## C++ API for Config
+##   (ConfigIter and ConfigProxy classes)
+##   Config()
+##   Config(const std::string filename)
+##   Config(tiledb_config_t** config)
+##   void save_to_file(const std::string filename)
+##   std::shared_ptr<tiledb_config_t> ptr()
+##   Config& set(const std::string& param, const std::string& value)
+##   std::string get(const std::string& param) const
+##   impl::ConfigProxy operator[](const std::string& param)
+##   Config& unset(const std::string& param)
+##   iterator begin(const std::string& prefix)
+##   iterator begin()
+##   iterator end()
+##   static void free(tiledb_config_t* config)
+##
 XPtr<tiledb::Context>     libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue);
 void                      libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value);
 std::string               libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename);
@@ -83,8 +111,8 @@ XPtr<tiledb::Domain>      libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema
 List                      libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema);
-void                      libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
-int                       libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema);
+void                      libtiledb_array_schema_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
+int                       libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::FilterList>  libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::FilterList>  libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema);
 bool                      libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);

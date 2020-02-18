@@ -237,12 +237,12 @@ libtiledb_array_schema_tile_order <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_tile_order`, schema)
 }
 
-libtiledb_array_schema_tile_set_capacity <- function(schema, cap) {
-    invisible(.Call(`_tiledb_libtiledb_array_schema_tile_set_capacity`, schema, cap))
+libtiledb_array_schema_set_capacity <- function(schema, cap) {
+    invisible(.Call(`_tiledb_libtiledb_array_schema_set_capacity`, schema, cap))
 }
 
-libtiledb_array_schema_tile_get_capacity <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_tile_get_capacity`, schema)
+libtiledb_array_schema_get_capacity <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_capacity`, schema)
 }
 
 libtiledb_array_schema_coords_filter_list <- function(schema) {
