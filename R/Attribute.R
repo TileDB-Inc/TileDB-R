@@ -119,7 +119,7 @@ setMethod("filter_list", "tiledb_attr",
 
 #' @rdname generics
 #' @export
-setGeneric("ncells", function(object) standardGeneric("ncells"))
+setGeneric("cell_val_num", function(object) standardGeneric("cell_val_num"))
 
 #' Return the number of scalar values per attribute cell
 #'
@@ -127,10 +127,10 @@ setGeneric("ncells", function(object) standardGeneric("ncells"))
 #' @return integer number of cells
 #' @examples
 #' a1 <- tiledb_attr("a1", type = "FLOAT64", ncells = 1)
-#' ncells(a1)
+#' cell_val_num(a1)
 #'
 #' @export
-setMethod("ncells", signature(object = "tiledb_attr"),
+setMethod("cell_val_num", signature(object = "tiledb_attr"),
           function(object) {
             libtiledb_attribute_get_cell_val_num(object@ptr)
           })
