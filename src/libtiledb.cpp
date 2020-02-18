@@ -779,11 +779,11 @@ XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filte
  * TileDB Attribute
  */
 //[[Rcpp::export]]
-XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
-                                       std::string name,
-                                       std::string type,
-                                       XPtr<tiledb::FilterList> filter_list,
-                                       int ncells) {
+XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
+                                            std::string name,
+                                            std::string type,
+                                            XPtr<tiledb::FilterList> filter_list,
+                                            int ncells) {
   tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
   if (ncells < 1) {
     throw Rcpp::exception("ncells must be >= 1");
@@ -806,22 +806,22 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attr_name(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_name(XPtr<tiledb::Attribute> attr) {
   return attr->name();
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr) {
   return _tiledb_datatype_to_string(attr->type());
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr) {
+XPtr<tiledb::FilterList> libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
 }
 
 // [[Rcpp::export]]
-int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
+int libtiledb_attribute_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
   unsigned int ncells = attr->cell_val_num();
   if (ncells == TILEDB_VAR_NUM) {
     return R_NaInt;          // set to R's NA for integer
@@ -832,7 +832,7 @@ int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
-void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
+void libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
   uint64_t ncells = static_cast<uint64_t>(num);
   if (num == R_NaInt) {
     ncells = TILEDB_VAR_NUM;             // R's NA is different from TileDB's NA
@@ -843,7 +843,7 @@ void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
 }
 
 //[[Rcpp::export]]
-void libtiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
+void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
   attr->dump();
 }
 

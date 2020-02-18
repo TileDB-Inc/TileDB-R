@@ -189,32 +189,32 @@ libtiledb_filter_list_filter <- function(filterList, filter_index) {
     .Call(`_tiledb_libtiledb_filter_list_filter`, filterList, filter_index)
 }
 
-libtiledb_attr <- function(ctx, name, type, filter_list, ncells) {
-    .Call(`_tiledb_libtiledb_attr`, ctx, name, type, filter_list, ncells)
+libtiledb_attribute <- function(ctx, name, type, filter_list, ncells) {
+    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells)
 }
 
-libtiledb_attr_name <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_name`, attr)
+libtiledb_attribute_name <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_name`, attr)
 }
 
-libtiledb_attr_datatype <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_datatype`, attr)
+libtiledb_attribute_datatype <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_datatype`, attr)
 }
 
-libtiledb_attr_filter_list <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_filter_list`, attr)
+libtiledb_attribute_filter_list <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_filter_list`, attr)
 }
 
-libtiledb_attr_get_cell_val_num <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_get_cell_val_num`, attr)
+libtiledb_attribute_get_cell_val_num <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_cell_val_num`, attr)
 }
 
-libtiledb_attr_set_cell_val_num <- function(attr, num) {
-    invisible(.Call(`_tiledb_libtiledb_attr_set_cell_val_num`, attr, num))
+libtiledb_attribute_set_cell_val_num <- function(attr, num) {
+    invisible(.Call(`_tiledb_libtiledb_attribute_set_cell_val_num`, attr, num))
 }
 
-libtiledb_attr_dump <- function(attr) {
-    invisible(.Call(`_tiledb_libtiledb_attr_dump`, attr))
+libtiledb_attribute_dump <- function(attr) {
+    invisible(.Call(`_tiledb_libtiledb_attribute_dump`, attr))
 }
 
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, sparse = FALSE) {

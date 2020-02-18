@@ -41,9 +41,9 @@ test_that("tiledb_attr set ncells", {
   attrs <- tiledb_attr("a", type = "INT32", ncells = 1)
   expect_equal(tiledb::ncells(attrs), 1) # as created
 
-  tiledb:::libtiledb_attr_set_cell_val_num(attrs@ptr, 2)
+  tiledb:::libtiledb_attribute_set_cell_val_num(attrs@ptr, 2)
   expect_equal(tiledb::ncells(attrs), 2) # as created
 
-  tiledb:::libtiledb_attr_set_cell_val_num(attrs@ptr, NA_integer_)
+  tiledb:::libtiledb_attribute_set_cell_val_num(attrs@ptr, NA_integer_)
   expect_true(is.na(tiledb::ncells(attrs)))
 })

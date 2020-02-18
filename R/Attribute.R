@@ -50,13 +50,13 @@ tiledb_attr <- function(name,
     } else if (ncells != 1) {
         stop("only single cell attributes are supported")
     }
-    ptr <- libtiledb_attr(ctx@ptr, name, type, filter_list@ptr, ncells)
+    ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells)
     new("tiledb_attr", ptr = ptr)
 }
 
 setMethod("show", "tiledb_attr",
           function(object) {
-            libtiledb_attr_dump(object@ptr)
+            libtiledb_attribute_dump(object@ptr)
           })
 
 
@@ -78,7 +78,7 @@ setGeneric("name", function(object) standardGeneric("name"))
 #' @export
 setMethod("name", signature(object = "tiledb_attr"),
           function(object) {
-            libtiledb_attr_name(object@ptr)
+            libtiledb_attribute_name(object@ptr)
           })
 
 #' @rdname generics
@@ -99,7 +99,7 @@ setGeneric("datatype", function(object) standardGeneric("datatype"))
 #' @export
 setMethod("datatype", signature(object = "tiledb_attr"),
           function(object) {
-            libtiledb_attr_datatype(object@ptr)
+            libtiledb_attribute_datatype(object@ptr)
           })
 
 #' Returns the `tiledb_filter_list` object associated with the given `tiledb_attr`
@@ -113,7 +113,7 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #' @export
 setMethod("filter_list", "tiledb_attr",
           function(object) {
-            ptr <- libtiledb_attr_filter_list(object@ptr)
+            ptr <- libtiledb_attribute_filter_list(object@ptr)
             return(tiledb_filter_list.from_ptr(ptr))
           })
 
@@ -132,7 +132,7 @@ setGeneric("ncells", function(object) standardGeneric("ncells"))
 #' @export
 setMethod("ncells", signature(object = "tiledb_attr"),
           function(object) {
-            libtiledb_attr_get_cell_val_num(object@ptr)
+            libtiledb_attribute_get_cell_val_num(object@ptr)
           })
 
 #' Returns TRUE if the tiledb_dim is anonymous
@@ -154,6 +154,6 @@ is.anonymous <- function(object) UseMethod("is.anonymous", object)
 #' @rdname is.anonymous
 #' @export
 is.anonymous.tiledb_attr <- function(object) {
-  name <- libtiledb_attr_name(object@ptr)
+  name <- libtiledb_attribute_name(object@ptr)
   nchar(name) == 0
 }
