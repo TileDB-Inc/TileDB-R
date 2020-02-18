@@ -69,18 +69,6 @@ libtiledb_ctx <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_ctx`, config)
 }
 
-libtiledb_ctx_set_tag <- function(ctx, key, value) {
-    invisible(.Call(`_tiledb_libtiledb_ctx_set_tag`, ctx, key, value))
-}
-
-libtiledb_config_save_to_file <- function(config, filename) {
-    .Call(`_tiledb_libtiledb_config_save_to_file`, config, filename)
-}
-
-libtiledb_config_load_from_file <- function(filename) {
-    .Call(`_tiledb_libtiledb_config_load_from_file`, filename)
-}
-
 libtiledb_ctx_config <- function(ctx) {
     .Call(`_tiledb_libtiledb_ctx_config`, ctx)
 }
@@ -89,8 +77,20 @@ libtiledb_ctx_is_supported_fs <- function(ctx, scheme) {
     .Call(`_tiledb_libtiledb_ctx_is_supported_fs`, ctx, scheme)
 }
 
+libtiledb_ctx_set_tag <- function(ctx, key, value) {
+    invisible(.Call(`_tiledb_libtiledb_ctx_set_tag`, ctx, key, value))
+}
+
 libtiledb_config <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_config`, config)
+}
+
+libtiledb_config_save_to_file <- function(config, filename) {
+    .Call(`_tiledb_libtiledb_config_save_to_file`, config, filename)
+}
+
+libtiledb_config_load_from_file <- function(filename) {
+    .Call(`_tiledb_libtiledb_config_load_from_file`, filename)
 }
 
 libtiledb_config_vector <- function(config) {
@@ -103,6 +103,10 @@ libtiledb_config_set <- function(config, param, value) {
 
 libtiledb_config_get <- function(config, params) {
     .Call(`_tiledb_libtiledb_config_get`, config, params)
+}
+
+libtiledb_config_unset <- function(config, param) {
+    .Call(`_tiledb_libtiledb_config_unset`, config, param)
 }
 
 libtiledb_config_dump <- function(config) {

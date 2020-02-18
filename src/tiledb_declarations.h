@@ -23,32 +23,32 @@ NumericVector             libtiledb_version();
 ## Context and Config
 ##
 ## C++ API for Context
-##   Context()
-##   Context(const Config& config)
+## y Context()
+## y Context(const Config& config)
 ##   void handle_error(int rc)
 ##   std::shared_ptr<tiledb_ctx_t> ptr()
 ##   Context& set_error_handler(const std::function<void(const std::string&)>& fn)
 ##   Config config()
-##   bool is_supported_fs(tiledb_filesystem_t fs)
+## y bool is_supported_fs(tiledb_filesystem_t fs)
 ##   void cancel_tasks()
+## y void set_tag(const std::string& key, const std::string& value)
 ##   static void default_error_handler(const std::string& msg)
 ##
 ## C++ API for Config
 ##   (ConfigIter and ConfigProxy classes)
-##   Config()
-##   Config(const std::string filename)
+## y Config()
+## y Config(const std::string filename)
 ##   Config(tiledb_config_t** config)
-##   void save_to_file(const std::string filename)
+## y void save_to_file(const std::string filename)
 ##   std::shared_ptr<tiledb_config_t> ptr()
-##   Config& set(const std::string& param, const std::string& value)
-##   std::string get(const std::string& param) const
+## y Config& set(const std::string& param, const std::string& value)
+## y std::string get(const std::string& param) const
 ##   impl::ConfigProxy operator[](const std::string& param)
 ##   Config& unset(const std::string& param)
 ##   iterator begin(const std::string& prefix)
 ##   iterator begin()
 ##   iterator end()
 ##   static void free(tiledb_config_t* config)
-##
 XPtr<tiledb::Context>     libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue);
 void                      libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value);
 std::string               libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename);
@@ -63,6 +63,19 @@ void                      libtiledb_config_dump(XPtr<tiledb::Config> config);
 
 
 ## Dimension
+##
+## C++ API
+##   Dimension(const Context& ctx, tiledb_dimension_t* dim)
+##   const std::string name()
+##   tiledb_datatype_t type()
+##   template <typename T> std::pair<T, T> domain()
+##   std::string domain_to_str()
+##   template <typename T> T tile_extent()
+##   std::shared_ptr<tiledb_dimension_t> ptr()
+##   template <typename T> static Dimension create(const Context& ctx, const std::string& name,
+##                                                 const std::array<T, 2>& domain, T extent)
+##   static Dimension create(const Context& ctx, const std::string& name, tiledb_datatype_t datatype,
+##                           const void* domain, const void* extent)
 XPtr<tiledb::Dimension>   libtiledb_dim(XPtr<tiledb::Context> ctx, std::string name, std::string type, SEXP domain, SEXP tile_extent);
 std::string               libtiledb_dim_name(XPtr<tiledb::Dimension> dim);
 SEXP                      libtiledb_dim_domain(XPtr<tiledb::Dimension> dim);
@@ -72,6 +85,20 @@ NumericVector             dim_domain_subarray(NumericVector domain, NumericVecto
 
 
 ## Domain
+##
+## C++ API
+##
+##  Domain(const Context& ctx)
+##  Domain(const Context& ctx, tiledb_domain_t* domain)
+##  uint64_t cell_num()
+##  void dump(FILE* out = nullptr)
+##  tiledb_datatype_t type()
+##  unsigned ndim()
+##  std::vector<Dimension> dimensions()
+##  Domain& add_dimension(const Dimension& d)
+##  template <typename... Args> Domain& add_dimensions(Args... dims)
+##  bool has_dimension(const std::string& name)
+##  std::shared_ptr<tiledb_domain_t> ptr()
 XPtr<tiledb::Domain>      libtiledb_domain(XPtr<tiledb::Context> ctx, List dims);
 IntegerVector             libtiledb_domain_ndim(XPtr<tiledb::Domain> domain);
 List                      libtiledb_domain_dimensions(XPtr<tiledb::Domain> domain);

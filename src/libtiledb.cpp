@@ -263,6 +263,9 @@ NumericVector libtiledb_version() {
                                _["patch"]=std::get<2>(ver));
 }
 
+
+// --- Context
+
 // [[Rcpp::export]]
 XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
   if (config.isNull()) {
@@ -273,23 +276,6 @@ XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilV
   }
 }
 
-
-// [[Rcpp::export]]
-void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value) {
-  ctx->set_tag(key, value);
-}
-
-// [[Rcpp::export]]
-std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename) {
-  config->save_to_file(filename);
-  return filename;
-}
-
-// [[Rcpp::export]]
-XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename) {
-  tiledb::Config* config = new tiledb::Config(filename);
-  return XPtr<tiledb::Config>(config);
-}
 
 // [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_ctx_config(XPtr<tiledb::Context> ctx) {
@@ -312,6 +298,13 @@ bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme
 }
 
 // [[Rcpp::export]]
+void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value) {
+  ctx->set_tag(key, value);
+}
+
+// ---- Config
+
+// [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config=R_NilValue) {
   XPtr<tiledb::Config> _config(new tiledb::Config(), true);
   if (config.isNotNull()) {
@@ -324,6 +317,18 @@ XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config=R_NilValu
     }
   }
   return _config;
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename) {
+  config->save_to_file(filename);
+  return filename;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename) {
+  tiledb::Config* config = new tiledb::Config(filename);
+  return XPtr<tiledb::Config>(config);
 }
 
 // [[Rcpp::export]]
@@ -356,6 +361,13 @@ CharacterVector libtiledb_config_get(XPtr<tiledb::Config> config,
     }
   }
   return result;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Config> libtiledb_config_unset(XPtr<tiledb::Config> config,
+                                            std::string param) {
+  config->unset(param);
+  return config;
 }
 
 // [[Rcpp::export]]

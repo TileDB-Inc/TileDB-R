@@ -204,41 +204,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_ctx_set_tag
-void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value);
-RcppExport SEXP _tiledb_libtiledb_ctx_set_tag(SEXP ctxSEXP, SEXP keySEXP, SEXP valueSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
-    Rcpp::traits::input_parameter< std::string >::type key(keySEXP);
-    Rcpp::traits::input_parameter< std::string >::type value(valueSEXP);
-    libtiledb_ctx_set_tag(ctx, key, value);
-    return R_NilValue;
-END_RCPP
-}
-// libtiledb_config_save_to_file
-std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename);
-RcppExport SEXP _tiledb_libtiledb_config_save_to_file(SEXP configSEXP, SEXP filenameSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
-    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_config_save_to_file(config, filename));
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_config_load_from_file
-XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename);
-RcppExport SEXP _tiledb_libtiledb_config_load_from_file(SEXP filenameSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_config_load_from_file(filename));
-    return rcpp_result_gen;
-END_RCPP
-}
 // libtiledb_ctx_config
 XPtr<tiledb::Config> libtiledb_ctx_config(XPtr<tiledb::Context> ctx);
 RcppExport SEXP _tiledb_libtiledb_ctx_config(SEXP ctxSEXP) {
@@ -262,6 +227,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_ctx_set_tag
+void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value);
+RcppExport SEXP _tiledb_libtiledb_ctx_set_tag(SEXP ctxSEXP, SEXP keySEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type key(keySEXP);
+    Rcpp::traits::input_parameter< std::string >::type value(valueSEXP);
+    libtiledb_ctx_set_tag(ctx, key, value);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_config
 XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config);
 RcppExport SEXP _tiledb_libtiledb_config(SEXP configSEXP) {
@@ -270,6 +247,29 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type config(configSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_config(config));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_config_save_to_file
+std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename);
+RcppExport SEXP _tiledb_libtiledb_config_save_to_file(SEXP configSEXP, SEXP filenameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_config_save_to_file(config, filename));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_config_load_from_file
+XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename);
+RcppExport SEXP _tiledb_libtiledb_config_load_from_file(SEXP filenameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_config_load_from_file(filename));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -306,6 +306,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type params(paramsSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_config_get(config, params));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_config_unset
+XPtr<tiledb::Config> libtiledb_config_unset(XPtr<tiledb::Config> config, std::string param);
+RcppExport SEXP _tiledb_libtiledb_config_unset(SEXP configSEXP, SEXP paramSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type config(configSEXP);
+    Rcpp::traits::input_parameter< std::string >::type param(paramSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_config_unset(config, param));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1408,15 +1420,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
-    {"_tiledb_libtiledb_ctx_set_tag", (DL_FUNC) &_tiledb_libtiledb_ctx_set_tag, 3},
-    {"_tiledb_libtiledb_config_save_to_file", (DL_FUNC) &_tiledb_libtiledb_config_save_to_file, 2},
-    {"_tiledb_libtiledb_config_load_from_file", (DL_FUNC) &_tiledb_libtiledb_config_load_from_file, 1},
     {"_tiledb_libtiledb_ctx_config", (DL_FUNC) &_tiledb_libtiledb_ctx_config, 1},
     {"_tiledb_libtiledb_ctx_is_supported_fs", (DL_FUNC) &_tiledb_libtiledb_ctx_is_supported_fs, 2},
+    {"_tiledb_libtiledb_ctx_set_tag", (DL_FUNC) &_tiledb_libtiledb_ctx_set_tag, 3},
     {"_tiledb_libtiledb_config", (DL_FUNC) &_tiledb_libtiledb_config, 1},
+    {"_tiledb_libtiledb_config_save_to_file", (DL_FUNC) &_tiledb_libtiledb_config_save_to_file, 2},
+    {"_tiledb_libtiledb_config_load_from_file", (DL_FUNC) &_tiledb_libtiledb_config_load_from_file, 1},
     {"_tiledb_libtiledb_config_vector", (DL_FUNC) &_tiledb_libtiledb_config_vector, 1},
     {"_tiledb_libtiledb_config_set", (DL_FUNC) &_tiledb_libtiledb_config_set, 3},
     {"_tiledb_libtiledb_config_get", (DL_FUNC) &_tiledb_libtiledb_config_get, 2},
+    {"_tiledb_libtiledb_config_unset", (DL_FUNC) &_tiledb_libtiledb_config_unset, 2},
     {"_tiledb_libtiledb_config_dump", (DL_FUNC) &_tiledb_libtiledb_config_dump, 1},
     {"_tiledb_libtiledb_dim", (DL_FUNC) &_tiledb_libtiledb_dim, 5},
     {"_tiledb_libtiledb_dim_name", (DL_FUNC) &_tiledb_libtiledb_dim_name, 1},
