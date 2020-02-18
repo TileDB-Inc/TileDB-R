@@ -125,7 +125,7 @@ std::string               libtiledb_array_create_encryptd(std::string uri, XPtr<
 
 ## Array
 XPtr<tiledb::Array>       libtiledb_array(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
-XPtr<tiledb::Array>       libtiledb_array_encrypted(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
+XPtr<tiledb::Array>       libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
 bool                      libtiledb_array_is_open(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array);
