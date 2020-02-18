@@ -77,7 +77,8 @@ void                      libtiledb_attr_dump(XPtr<tiledb::Attribute> attr);
 
 
 ## Array Schema
-XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order, Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue, bool sparse = false);
+XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order,
+                                                 Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue, bool sparse = false);
 XPtr<tiledb::Domain>      libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema);
 List                      libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
@@ -96,6 +97,7 @@ std::string               libtiledb_array_create_encryptd(std::string uri, XPtr<
 
 ## Array
 XPtr<tiledb::Array>       libtiledb_array(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
+XPtr<tiledb::Array>       libtiledb_array_encrypted(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
 bool                      libtiledb_array_is_open(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array);

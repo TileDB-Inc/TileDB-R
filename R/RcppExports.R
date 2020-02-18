@@ -281,6 +281,10 @@ libtiledb_array <- function(ctx, uri, type) {
     .Call(`_tiledb_libtiledb_array`, ctx, uri, type)
 }
 
+libtiledb_array_encrypted <- function(ctx, uri, type, encryption_key) {
+    .Call(`_tiledb_libtiledb_array_encrypted`, ctx, uri, type, encryption_key)
+}
+
 libtiledb_array_is_open <- function(array) {
     .Call(`_tiledb_libtiledb_array_is_open`, array)
 }

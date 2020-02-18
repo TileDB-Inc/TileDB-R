@@ -993,8 +993,19 @@ XPtr<tiledb::Array> libtiledb_array(XPtr<tiledb::Context> ctx,
                                     std::string uri,
                                     std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
-  auto array = XPtr<tiledb::Array>(
-      new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
+  return array;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_encrypted(XPtr<tiledb::Context> ctx,
+                                              std::string uri, std::string type,
+                                              std::string enc_key) {
+  auto query_type = _string_to_tiledb_query_type(type);
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
+                                                                   TILEDB_AES_256_GCM,
+                                                                   enc_key.data(),
+                                                                   (uint32_t)enc_key.size())));
   return array;
 }
 

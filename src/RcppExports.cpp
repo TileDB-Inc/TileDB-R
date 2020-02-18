@@ -816,6 +816,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_encrypted
+XPtr<tiledb::Array> libtiledb_array_encrypted(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string encryption_key);
+RcppExport SEXP _tiledb_libtiledb_array_encrypted(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP, SEXP encryption_keySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type encryption_key(encryption_keySEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_encrypted(ctx, uri, type, encryption_key));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_is_open
 bool libtiledb_array_is_open(XPtr<tiledb::Array> array);
 RcppExport SEXP _tiledb_libtiledb_array_is_open(SEXP arraySEXP) {
@@ -1447,6 +1461,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_create", (DL_FUNC) &_tiledb_libtiledb_array_create, 2},
     {"_tiledb_libtiledb_array_create_encrypted", (DL_FUNC) &_tiledb_libtiledb_array_create_encrypted, 3},
     {"_tiledb_libtiledb_array", (DL_FUNC) &_tiledb_libtiledb_array, 3},
+    {"_tiledb_libtiledb_array_encrypted", (DL_FUNC) &_tiledb_libtiledb_array_encrypted, 4},
     {"_tiledb_libtiledb_array_is_open", (DL_FUNC) &_tiledb_libtiledb_array_is_open, 1},
     {"_tiledb_libtiledb_array_is_open_for_reading", (DL_FUNC) &_tiledb_libtiledb_array_is_open_for_reading, 1},
     {"_tiledb_libtiledb_array_is_open_for_writing", (DL_FUNC) &_tiledb_libtiledb_array_is_open_for_writing, 1},
