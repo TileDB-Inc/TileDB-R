@@ -174,7 +174,7 @@ test_that("basic dense vector writes / reads works", {
   uri <- tiledb:::libtiledb_array_create(pth, sch)
 
   dat <- c(3, 2, 1)
-  arr <- tiledb:::libtiledb_array(ctx, uri, "WRITE")
+  arr <- tiledb:::libtiledb_array_open(ctx, uri, "WRITE")
   qry <- tiledb:::libtiledb_query(ctx, arr, "WRITE")
   qry <- tiledb:::libtiledb_query_set_buffer(qry, "a1", dat)
   qry <- tiledb:::libtiledb_query_submit(qry)
@@ -182,7 +182,7 @@ test_that("basic dense vector writes / reads works", {
   expect_is(qry, "externalptr")
 
   res <- c(0, 0, 0)
-  arr <- tiledb:::libtiledb_array(ctx, uri, "READ")
+  arr <- tiledb:::libtiledb_array_open(ctx, uri, "READ")
   qry2 <- tiledb:::libtiledb_query(ctx, arr, "READ")
   qry2 <- tiledb:::libtiledb_query_set_buffer(qry2, "a1", res)
 ##  qry2 <- libtiledb_query_submit(qry2)
@@ -212,7 +212,7 @@ test_that("basic dense vector read subarray works", {
   uri <- tiledb:::libtiledb_array_create(pth, sch)
 
   dat <- c(3, 2, 1)
-  arr <- tiledb:::libtiledb_array(ctx, uri, "WRITE")
+  arr <- tiledb:::libtiledb_array_open(ctx, uri, "WRITE")
   qry <- tiledb:::libtiledb_query(ctx, arr, "WRITE")
   qry <- tiledb:::libtiledb_query_set_buffer(qry, "a1", dat)
   qry <- tiledb:::libtiledb_query_submit(qry)
@@ -221,7 +221,7 @@ test_that("basic dense vector read subarray works", {
 
   res <- c(0, 0)
   sub <- c(1L, 2L)
-  arr <- tiledb:::libtiledb_array(ctx, uri, "READ")
+  arr <- tiledb:::libtiledb_array_open(ctx, uri, "READ")
   qry2 <- tiledb:::libtiledb_query(ctx, arr, "READ")
   qry2 <- tiledb:::libtiledb_query_set_subarray(qry2, sub)
   qry2 <- tiledb:::libtiledb_query_set_buffer(qry2, "a1", res)

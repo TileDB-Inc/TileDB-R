@@ -26,7 +26,7 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
     stop("argument uri must be a string scalar")
   }
 
-  array_xptr <- libtiledb_array(ctx@ptr, uri, query_type)
+  array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
   if (libtiledb_array_schema_sparse(schema_xptr)) {
     libtiledb_array_close(array_xptr)

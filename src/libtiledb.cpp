@@ -989,9 +989,9 @@ std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArrayS
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array(XPtr<tiledb::Context> ctx,
-                                    std::string uri,
-                                    std::string type) {
+XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx,
+                                         std::string uri,
+                                         std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
   return array;

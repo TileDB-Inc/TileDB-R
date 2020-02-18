@@ -277,8 +277,8 @@ libtiledb_array_create_with_key <- function(uri, schema, encryption_key) {
     .Call(`_tiledb_libtiledb_array_create_with_key`, uri, schema, encryption_key)
 }
 
-libtiledb_array <- function(ctx, uri, type) {
-    .Call(`_tiledb_libtiledb_array`, ctx, uri, type)
+libtiledb_array_open <- function(ctx, uri, type) {
+    .Call(`_tiledb_libtiledb_array_open`, ctx, uri, type)
 }
 
 libtiledb_array_open_with_key <- function(ctx, uri, type, enc_key) {

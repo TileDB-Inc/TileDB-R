@@ -803,16 +803,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_array
-XPtr<tiledb::Array> libtiledb_array(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
-RcppExport SEXP _tiledb_libtiledb_array(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP) {
+// libtiledb_array_open
+XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
+RcppExport SEXP _tiledb_libtiledb_array_open(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array(ctx, uri, type));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_open(ctx, uri, type));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1460,7 +1460,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_schema_check", (DL_FUNC) &_tiledb_libtiledb_array_schema_check, 1},
     {"_tiledb_libtiledb_array_create", (DL_FUNC) &_tiledb_libtiledb_array_create, 2},
     {"_tiledb_libtiledb_array_create_with_key", (DL_FUNC) &_tiledb_libtiledb_array_create_with_key, 3},
-    {"_tiledb_libtiledb_array", (DL_FUNC) &_tiledb_libtiledb_array, 3},
+    {"_tiledb_libtiledb_array_open", (DL_FUNC) &_tiledb_libtiledb_array_open, 3},
     {"_tiledb_libtiledb_array_open_with_key", (DL_FUNC) &_tiledb_libtiledb_array_open_with_key, 4},
     {"_tiledb_libtiledb_array_is_open", (DL_FUNC) &_tiledb_libtiledb_array_is_open, 1},
     {"_tiledb_libtiledb_array_is_open_for_reading", (DL_FUNC) &_tiledb_libtiledb_array_is_open_for_reading, 1},
