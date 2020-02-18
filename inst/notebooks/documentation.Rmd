@@ -1,7 +1,7 @@
 ---
 title: "TileDB R Notebook"
 output:
-  html_notebook: 
+  html_notebook:
     toc: yes
     highlight: pygments
     theme: lumen
@@ -98,7 +98,7 @@ write_array(urisparse)
 ```{r createdim}
 library(tiledb)
 
-# Create dimension 
+# Create dimension
 # In C++: Dimension::create<T>(...)
 dim <- tiledb_dim("dim", c(1L, 4L), 2L, "INT32")
 ```
@@ -126,9 +126,14 @@ dom <- tiledb_domain(dims = c(dim1, dim2))
 attr <- tiledb_attr("attr", "INT32")
 ```
 
-TODO: R support beyond single-value attributes
+```{r createattrvarnum}
+# We can also set the nunber of attributes to a value other than one
+tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, 3)
 
-DONE (PR pending)
+# And we can set the a variable nunber of attributes (using NA to select variable size)
+tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
+## TODO: R level setter
+```
 
 #### Setting a Compressor
 
@@ -194,9 +199,11 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 
 #### Setting the Data Tile Capacity
 
-TODO: R support
-
-DONE (PR pending)
+```{r settilecapacity}
+tiledb:::libtiledb_array_schema_set_capacity(schema@ptr, 100000)
+tiledb:::libtiledb_array_schema_get_capacity(schema@ptr)
+## TODO R accessor
+```
 
 #### Setting Coordinate and Offset Filters
 
@@ -218,9 +225,10 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 
 #### Checking Correctness
 
-TODO: R support
-
-DONE (PR pending)
+```{r arrayschemacheck
+tiledb:::libtiledb_array_schema_check(schema@ptr)
+## TODO: R access
+```
 
 ### Creating the Array
 
@@ -228,13 +236,18 @@ DONE (PR pending)
 # ... create array schema
 
 # Create the array
-tiledb_array_create("<array_uri>", schema)
+tiledb_array_create(uridense, schema)
 ```
 
 ### Creating Encrypted Arrays
 
-TODO: R support
-
+```{r createwithkey}
+if (FALSE) { # commented out as read support for encryption is not there yet
+  encryption_key <- "0123456789abcdeF0123456789abcdeF"
+  tiledb:::libtiledb_array_create_with_key(uridense, schema@ptr, encryption_key)
+}
+##TODO: R support
+```
 
 
 ## Writing Arrays
@@ -324,7 +337,7 @@ TODO R support
 TODO R support for direct schema load
 
 ```{r schemainspect}
-array_name <- "/tmp/quickstart_sparse"
+array_name <- "/tmp/tiledb/quickstart_sparse"
 
 # Get array schema
 A <- tiledb_sparse(uri = array_name) # Similar for tiledb_dense()
@@ -412,6 +425,7 @@ show(dim)
 # ... get array schema
 # ... get attribute by index or name
 
+stopifnot(is.null(attr))
 # Get attribute name
 attr_name <- name(attr)
 
@@ -483,4 +497,3 @@ print(md)
 ```{r deletemetadata}
 res <- tiledb_delete_metadata(uridense, "aaa")
 ```
-
