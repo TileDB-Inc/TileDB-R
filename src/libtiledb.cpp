@@ -779,11 +779,11 @@ XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filte
  * TileDB Attribute
  */
 //[[Rcpp::export]]
-XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
-                                       std::string name,
-                                       std::string type,
-                                       XPtr<tiledb::FilterList> filter_list,
-                                       int ncells) {
+XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
+                                            std::string name,
+                                            std::string type,
+                                            XPtr<tiledb::FilterList> filter_list,
+                                            int ncells) {
   tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
   if (ncells < 1) {
     throw Rcpp::exception("ncells must be >= 1");
@@ -806,22 +806,22 @@ XPtr<tiledb::Attribute> libtiledb_attr(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attr_name(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_name(XPtr<tiledb::Attribute> attr) {
   return attr->name();
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attr_datatype(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr) {
   return _tiledb_datatype_to_string(attr->type());
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr) {
+XPtr<tiledb::FilterList> libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
 }
 
 // [[Rcpp::export]]
-int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
+int libtiledb_attribute_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
   unsigned int ncells = attr->cell_val_num();
   if (ncells == TILEDB_VAR_NUM) {
     return R_NaInt;          // set to R's NA for integer
@@ -832,7 +832,7 @@ int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
-void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
+void libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
   uint64_t ncells = static_cast<uint64_t>(num);
   if (num == R_NaInt) {
     ncells = TILEDB_VAR_NUM;             // R's NA is different from TileDB's NA
@@ -843,7 +843,7 @@ void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
 }
 
 //[[Rcpp::export]]
-void libtiledb_attr_dump(XPtr<tiledb::Attribute> attr) {
+void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
   attr->dump();
 }
 
@@ -925,7 +925,7 @@ std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) 
 }
 
 // [[Rcpp::export]]
-void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap) {
+void libtiledb_array_schema_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap) {
   if (cap <= 0) {
     Rcpp::stop("Tile capacity of '%d' not sensible", cap);
   }
@@ -934,7 +934,7 @@ void libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, 
 }
 
 // [[Rcpp::export]]
-int libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema) {
+int libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema) {
   // FIXME: we try to return a uint64_t as an int. Overflow possible
   uint64_t cap = schema->capacity();
   if (cap > std::numeric_limits<int32_t>::max()) {
@@ -981,26 +981,26 @@ std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> sc
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_array_create_encrypted(std::string uri, XPtr<tiledb::ArraySchema> schema,
-                                             std::string encryption_key) {
+std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema,
+                                            std::string encryption_key) {
   tiledb::Array::create(uri, *schema.get(), TILEDB_AES_256_GCM,
                         encryption_key.c_str(), encryption_key.size());
   return uri;
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array(XPtr<tiledb::Context> ctx,
-                                    std::string uri,
-                                    std::string type) {
+XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx,
+                                         std::string uri,
+                                         std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
   return array;
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_encrypted(XPtr<tiledb::Context> ctx,
-                                              std::string uri, std::string type,
-                                              std::string enc_key) {
+XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx,
+                                                  std::string uri, std::string type,
+                                                  std::string enc_key) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
                                                                    TILEDB_AES_256_GCM,
@@ -1037,7 +1037,7 @@ XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) 
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Array> array, std::string query_type) {
+XPtr<tiledb::Array> libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type) {
   tiledb_query_type_t qtype = _string_to_tiledb_query_type(query_type);
   array->open(qtype);
   return array;

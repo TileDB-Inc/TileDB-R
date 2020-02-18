@@ -86,9 +86,9 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
 
   expect_true(is.sparse(sch))
 
-  tiledb:::libtiledb_array_schema_tile_set_capacity(sch@ptr, 100000)
-  expect_equal(tiledb:::libtiledb_array_schema_tile_get_capacity(sch@ptr), 100000)
-  expect_error(tiledb:::libtiledb_array_schema_tile_set_capacity(sch@ptr, -10))
+  tiledb:::libtiledb_array_schema_set_capacity(sch@ptr, 100000)
+  expect_equal(tiledb:::libtiledb_array_schema_get_capacity(sch@ptr), 100000)
+  expect_error(tiledb:::libtiledb_array_schema_set_capacity(sch@ptr, -10))
 
 })
 
@@ -101,12 +101,12 @@ test_that("tiledb_array_schema created with encryption",  {
                                 tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
 
-  ##tiledb_array_create_encrypted(uri, schema, key)
+  ##tiledb_array_create_with_key(uri, schema, key)
   ## for now calling into function
-  tiledb:::libtiledb_array_create_encrypted(uri, schema@ptr, key)
+  tiledb:::libtiledb_array_create_with_key(uri, schema@ptr, key)
 
   ctx <- tiledb_ctx()
-  arrptr <- tiledb:::libtiledb_array_encrypted(ctx@ptr, uri, "WRITE", key)
+  arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", key)
   A <- new("tiledb_dense", ctx=ctx, uri=uri, as.data.frame=FALSE, ptr=arrptr)
 
   expect_true(is(A, "tiledb_dense"))

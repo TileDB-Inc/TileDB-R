@@ -25,7 +25,7 @@ arrW <- tiledb::tiledb_sparse(uri)
 
 #arr <- tiledb:::libtiledb_array_reopen(arr@ptr)
 cat("Reopening arr\n")
-arrR <- tiledb:::libtiledb_array_open(arrR@ptr, "READ")
+arrR <- tiledb:::libtiledb_array_open_with_ptr(arrR@ptr, "READ")
 #print(str(arr))
 
 cat("Testing for metadata\n")
@@ -35,7 +35,7 @@ cat("Number of metadata objects\n")
 tiledb:::num_metadata(arrR)
 
 cat("Write current time\n")
-arrW <- tiledb:::libtiledb_array_open(arrW@ptr, "WRITE")
+arrW <- tiledb:::libtiledb_array_open_with_ptr(arrW@ptr, "WRITE")
 tiledb:::put_metadata(arrW, "time_now", format(Sys.time()))
 
 cat("Get time\n")

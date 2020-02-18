@@ -21,6 +21,34 @@ NumericVector             libtiledb_version();
 
 
 ## Context and Config
+##
+## C++ API for Context
+##   Context()
+##   Context(const Config& config)
+##   void handle_error(int rc)
+##   std::shared_ptr<tiledb_ctx_t> ptr()
+##   Context& set_error_handler(const std::function<void(const std::string&)>& fn)
+##   Config config()
+##   bool is_supported_fs(tiledb_filesystem_t fs)
+##   void cancel_tasks()
+##   static void default_error_handler(const std::string& msg)
+##
+## C++ API for Config
+##   (ConfigIter and ConfigProxy classes)
+##   Config()
+##   Config(const std::string filename)
+##   Config(tiledb_config_t** config)
+##   void save_to_file(const std::string filename)
+##   std::shared_ptr<tiledb_config_t> ptr()
+##   Config& set(const std::string& param, const std::string& value)
+##   std::string get(const std::string& param) const
+##   impl::ConfigProxy operator[](const std::string& param)
+##   Config& unset(const std::string& param)
+##   iterator begin(const std::string& prefix)
+##   iterator begin()
+##   iterator end()
+##   static void free(tiledb_config_t* config)
+##
 XPtr<tiledb::Context>     libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue);
 void                      libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value);
 std::string               libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::string filename);
@@ -67,13 +95,13 @@ XPtr<tiledb::Filter>      libtiledb_filter_list_filter(XPtr<tiledb::FilterList> 
 
 
 ## Attribute
-XPtr<tiledb::Attribute>   libtiledb_attr(XPtr<tiledb::Context> ctx, std::string name, std::string type, XPtr<tiledb::FilterList> filter_list, int ncells);
-std::string               libtiledb_attr_name(XPtr<tiledb::Attribute> attr);
-std::string               libtiledb_attr_datatype(XPtr<tiledb::Attribute> attr);
-XPtr<tiledb::FilterList>  libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr);
-int                       libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr);
-void                      libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num);
-void                      libtiledb_attr_dump(XPtr<tiledb::Attribute> attr);
+XPtr<tiledb::Attribute>   libtiledb_attribute(XPtr<tiledb::Context> ctx, std::string name, std::string type, XPtr<tiledb::FilterList> filter_list, int ncells);
+std::string               libtiledb_attribute_name(XPtr<tiledb::Attribute> attr);
+std::string               libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr);
+XPtr<tiledb::FilterList>  libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr);
+int                       libtiledb_attribute_get_cell_val_num(XPtr<tiledb::Attribute> attr);
+void                      libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num);
+void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr);
 
 
 ## Array Schema
@@ -83,8 +111,8 @@ XPtr<tiledb::Domain>      libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema
 List                      libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema);
-void                      libtiledb_array_schema_tile_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
-int                       libtiledb_array_schema_tile_get_capacity(XPtr<tiledb::ArraySchema> schema);
+void                      libtiledb_array_schema_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
+int                       libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::FilterList>  libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::FilterList>  libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema);
 bool                      libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
@@ -96,14 +124,14 @@ std::string               libtiledb_array_create_encryptd(std::string uri, XPtr<
 
 
 ## Array
-XPtr<tiledb::Array>       libtiledb_array(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
-XPtr<tiledb::Array>       libtiledb_array_encrypted(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
+XPtr<tiledb::Array>       libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
+XPtr<tiledb::Array>       libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
 bool                      libtiledb_array_is_open(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_get_uri(XPtr<tiledb::Array> array);
 XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
-XPtr<tiledb::Array>       libtiledb_array_open(XPtr<tiledb::Array> array, std::string query_type);
+XPtr<tiledb::Array>       libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type);
 XPtr<tiledb::Array>       libtiledb_array_reopen(XPtr<tiledb::Array> array);
 XPtr<tiledb::Array>       libtiledb_array_close(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_query_type(XPtr<tiledb::Array> array);

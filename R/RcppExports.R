@@ -189,32 +189,32 @@ libtiledb_filter_list_filter <- function(filterList, filter_index) {
     .Call(`_tiledb_libtiledb_filter_list_filter`, filterList, filter_index)
 }
 
-libtiledb_attr <- function(ctx, name, type, filter_list, ncells) {
-    .Call(`_tiledb_libtiledb_attr`, ctx, name, type, filter_list, ncells)
+libtiledb_attribute <- function(ctx, name, type, filter_list, ncells) {
+    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells)
 }
 
-libtiledb_attr_name <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_name`, attr)
+libtiledb_attribute_name <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_name`, attr)
 }
 
-libtiledb_attr_datatype <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_datatype`, attr)
+libtiledb_attribute_datatype <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_datatype`, attr)
 }
 
-libtiledb_attr_filter_list <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_filter_list`, attr)
+libtiledb_attribute_filter_list <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_filter_list`, attr)
 }
 
-libtiledb_attr_get_cell_val_num <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_get_cell_val_num`, attr)
+libtiledb_attribute_get_cell_val_num <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_cell_val_num`, attr)
 }
 
-libtiledb_attr_set_cell_val_num <- function(attr, num) {
-    invisible(.Call(`_tiledb_libtiledb_attr_set_cell_val_num`, attr, num))
+libtiledb_attribute_set_cell_val_num <- function(attr, num) {
+    invisible(.Call(`_tiledb_libtiledb_attribute_set_cell_val_num`, attr, num))
 }
 
-libtiledb_attr_dump <- function(attr) {
-    invisible(.Call(`_tiledb_libtiledb_attr_dump`, attr))
+libtiledb_attribute_dump <- function(attr) {
+    invisible(.Call(`_tiledb_libtiledb_attribute_dump`, attr))
 }
 
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, sparse = FALSE) {
@@ -237,12 +237,12 @@ libtiledb_array_schema_tile_order <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_tile_order`, schema)
 }
 
-libtiledb_array_schema_tile_set_capacity <- function(schema, cap) {
-    invisible(.Call(`_tiledb_libtiledb_array_schema_tile_set_capacity`, schema, cap))
+libtiledb_array_schema_set_capacity <- function(schema, cap) {
+    invisible(.Call(`_tiledb_libtiledb_array_schema_set_capacity`, schema, cap))
 }
 
-libtiledb_array_schema_tile_get_capacity <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_tile_get_capacity`, schema)
+libtiledb_array_schema_get_capacity <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_capacity`, schema)
 }
 
 libtiledb_array_schema_coords_filter_list <- function(schema) {
@@ -273,16 +273,16 @@ libtiledb_array_create <- function(uri, schema) {
     .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }
 
-libtiledb_array_create_encrypted <- function(uri, schema, encryption_key) {
-    .Call(`_tiledb_libtiledb_array_create_encrypted`, uri, schema, encryption_key)
+libtiledb_array_create_with_key <- function(uri, schema, encryption_key) {
+    .Call(`_tiledb_libtiledb_array_create_with_key`, uri, schema, encryption_key)
 }
 
-libtiledb_array <- function(ctx, uri, type) {
-    .Call(`_tiledb_libtiledb_array`, ctx, uri, type)
+libtiledb_array_open <- function(ctx, uri, type) {
+    .Call(`_tiledb_libtiledb_array_open`, ctx, uri, type)
 }
 
-libtiledb_array_encrypted <- function(ctx, uri, type, enc_key) {
-    .Call(`_tiledb_libtiledb_array_encrypted`, ctx, uri, type, enc_key)
+libtiledb_array_open_with_key <- function(ctx, uri, type, enc_key) {
+    .Call(`_tiledb_libtiledb_array_open_with_key`, ctx, uri, type, enc_key)
 }
 
 libtiledb_array_is_open <- function(array) {
@@ -305,8 +305,8 @@ libtiledb_array_get_schema <- function(array) {
     .Call(`_tiledb_libtiledb_array_get_schema`, array)
 }
 
-libtiledb_array_open <- function(array, query_type) {
-    .Call(`_tiledb_libtiledb_array_open`, array, query_type)
+libtiledb_array_open_with_ptr <- function(array, query_type) {
+    .Call(`_tiledb_libtiledb_array_open_with_ptr`, array, query_type)
 }
 
 libtiledb_array_reopen <- function(array) {

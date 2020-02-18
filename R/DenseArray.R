@@ -26,7 +26,7 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
     stop("argument uri must be a string scalar")
   }
 
-  array_xptr <- libtiledb_array(ctx@ptr, uri, query_type)
+  array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
   if (libtiledb_array_schema_sparse(schema_xptr)) {
     libtiledb_array_close(array_xptr)
@@ -208,7 +208,7 @@ setMethod("[", "tiledb_dense",
             if (!tiledb::is.integral(dom)) {
               stop("subscript indexing only valid for integral Domain's")
             }
-            libtiledb_array_open(x@ptr, "READ")
+            libtiledb_array_open_with_ptr(x@ptr, "READ")
 
             out <- tryCatch(
               {
@@ -349,7 +349,7 @@ setMethod("[<-", "tiledb_dense",
                 stop(paste("cannot assign value of type \"", typeof(value), "\""))
               }
             }
-            libtiledb_array_open(x@ptr, "WRITE")
+            libtiledb_array_open_with_ptr(x@ptr, "WRITE")
             out <- tryCatch(
               {
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
