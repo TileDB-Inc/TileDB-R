@@ -597,25 +597,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attr_ncells
-int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attr_ncells(SEXP attrSEXP) {
+// libtiledb_attr_get_cell_val_num
+int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attr_get_cell_val_num(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attr_ncells(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attr_get_cell_val_num(attr));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attr_ncells_set
-void libtiledb_attr_ncells_set(XPtr<tiledb::Attribute> attr, int num);
-RcppExport SEXP _tiledb_libtiledb_attr_ncells_set(SEXP attrSEXP, SEXP numSEXP) {
+// libtiledb_attr_set_cell_val_num
+void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num);
+RcppExport SEXP _tiledb_libtiledb_attr_set_cell_val_num(SEXP attrSEXP, SEXP numSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
     Rcpp::traits::input_parameter< int >::type num(numSEXP);
-    libtiledb_attr_ncells_set(attr, num);
+    libtiledb_attr_set_cell_val_num(attr, num);
     return R_NilValue;
 END_RCPP
 }
@@ -817,16 +817,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_encrypted
-XPtr<tiledb::Array> libtiledb_array_encrypted(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string encryption_key);
-RcppExport SEXP _tiledb_libtiledb_array_encrypted(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP, SEXP encryption_keySEXP) {
+XPtr<tiledb::Array> libtiledb_array_encrypted(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
+RcppExport SEXP _tiledb_libtiledb_array_encrypted(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP, SEXP enc_keySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< std::string >::type encryption_key(encryption_keySEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_encrypted(ctx, uri, type, encryption_key));
+    Rcpp::traits::input_parameter< std::string >::type enc_key(enc_keySEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_encrypted(ctx, uri, type, enc_key));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1442,8 +1442,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_attr_name", (DL_FUNC) &_tiledb_libtiledb_attr_name, 1},
     {"_tiledb_libtiledb_attr_datatype", (DL_FUNC) &_tiledb_libtiledb_attr_datatype, 1},
     {"_tiledb_libtiledb_attr_filter_list", (DL_FUNC) &_tiledb_libtiledb_attr_filter_list, 1},
-    {"_tiledb_libtiledb_attr_ncells", (DL_FUNC) &_tiledb_libtiledb_attr_ncells, 1},
-    {"_tiledb_libtiledb_attr_ncells_set", (DL_FUNC) &_tiledb_libtiledb_attr_ncells_set, 2},
+    {"_tiledb_libtiledb_attr_get_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attr_get_cell_val_num, 1},
+    {"_tiledb_libtiledb_attr_set_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attr_set_cell_val_num, 2},
     {"_tiledb_libtiledb_attr_dump", (DL_FUNC) &_tiledb_libtiledb_attr_dump, 1},
     {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 8},
     {"_tiledb_libtiledb_array_schema_domain", (DL_FUNC) &_tiledb_libtiledb_array_schema_domain, 1},

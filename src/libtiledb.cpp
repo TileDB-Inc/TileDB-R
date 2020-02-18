@@ -821,7 +821,7 @@ XPtr<tiledb::FilterList> libtiledb_attr_filter_list(XPtr<tiledb::Attribute> attr
 }
 
 // [[Rcpp::export]]
-int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
+int libtiledb_attr_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
   unsigned int ncells = attr->cell_val_num();
   if (ncells == TILEDB_VAR_NUM) {
     return R_NaInt;          // set to R's NA for integer
@@ -832,7 +832,7 @@ int libtiledb_attr_ncells(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
-void libtiledb_attr_ncells_set(XPtr<tiledb::Attribute> attr, int num) {
+void libtiledb_attr_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num) {
   uint64_t ncells = static_cast<uint64_t>(num);
   if (num == R_NaInt) {
     ncells = TILEDB_VAR_NUM;             // R's NA is different from TileDB's NA

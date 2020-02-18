@@ -205,12 +205,12 @@ libtiledb_attr_filter_list <- function(attr) {
     .Call(`_tiledb_libtiledb_attr_filter_list`, attr)
 }
 
-libtiledb_attr_ncells <- function(attr) {
-    .Call(`_tiledb_libtiledb_attr_ncells`, attr)
+libtiledb_attr_get_cell_val_num <- function(attr) {
+    .Call(`_tiledb_libtiledb_attr_get_cell_val_num`, attr)
 }
 
-libtiledb_attr_ncells_set <- function(attr, num) {
-    invisible(.Call(`_tiledb_libtiledb_attr_ncells_set`, attr, num))
+libtiledb_attr_set_cell_val_num <- function(attr, num) {
+    invisible(.Call(`_tiledb_libtiledb_attr_set_cell_val_num`, attr, num))
 }
 
 libtiledb_attr_dump <- function(attr) {
@@ -281,8 +281,8 @@ libtiledb_array <- function(ctx, uri, type) {
     .Call(`_tiledb_libtiledb_array`, ctx, uri, type)
 }
 
-libtiledb_array_encrypted <- function(ctx, uri, type, encryption_key) {
-    .Call(`_tiledb_libtiledb_array_encrypted`, ctx, uri, type, encryption_key)
+libtiledb_array_encrypted <- function(ctx, uri, type, enc_key) {
+    .Call(`_tiledb_libtiledb_array_encrypted`, ctx, uri, type, enc_key)
 }
 
 libtiledb_array_is_open <- function(array) {
