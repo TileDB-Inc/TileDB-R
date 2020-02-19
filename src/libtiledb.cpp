@@ -266,6 +266,8 @@ const char* _tiledb_array_type_to_string(tiledb_array_type_t atype) {
   }
 }
 
+// NB Limited type coverage here as aimed to sizing R allocations of either int, double or char
+// Also note that there is 'inline size_t type_size(tiledb_datatype_t type)' in core_interface.h
 const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
   switch(dtype) {
     case TILEDB_FLOAT64:
