@@ -264,7 +264,9 @@ NumericVector libtiledb_version() {
 }
 
 
-// --- Context
+/**
+ * TileDB Context
+ */
 
 // [[Rcpp::export]]
 XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
@@ -302,7 +304,9 @@ void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::stri
   ctx->set_tag(key, value);
 }
 
-// ---- Config
+/**
+ * TileDB Config
+ */
 
 // [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config=R_NilValue) {
@@ -378,15 +382,16 @@ void libtiledb_config_dump(XPtr<tiledb::Config> config) {
   }
 }
 
+
 /**
  * TileDB Dimension
  */
 // [[Rcpp::export]]
 XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
-                                   std::string name,
-                                   std::string type,
-                                   SEXP domain,
-                                   SEXP tile_extent) {
+                                      std::string name,
+                                      std::string type,
+                                      SEXP domain,
+                                      SEXP tile_extent) {
   // check that the dimension type is supported
   const tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
   if (_type != TILEDB_INT32 && _type != TILEDB_FLOAT64) {

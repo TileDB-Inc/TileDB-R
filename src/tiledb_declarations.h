@@ -44,7 +44,7 @@ NumericVector             libtiledb_version();
 ## y Config& set(const std::string& param, const std::string& value)
 ## y std::string get(const std::string& param) const
 ##   impl::ConfigProxy operator[](const std::string& param)
-##   Config& unset(const std::string& param)
+## y Config& unset(const std::string& param)
 ##   iterator begin(const std::string& prefix)
 ##   iterator begin()
 ##   iterator end()
@@ -65,12 +65,12 @@ void                      libtiledb_config_dump(XPtr<tiledb::Config> config);
 ## Dimension
 ##
 ## C++ API
-##   Dimension(const Context& ctx, tiledb_dimension_t* dim)
-##   const std::string name()
-##   tiledb_datatype_t type()
-##   template <typename T> std::pair<T, T> domain()
+## y Dimension(const Context& ctx, tiledb_dimension_t* dim)
+## y const std::string name()
+## y tiledb_datatype_t type()
+## y template <typename T> std::pair<T, T> domain()
 ##   std::string domain_to_str()
-##   template <typename T> T tile_extent()
+## y template <typename T> T tile_extent()
 ##   std::shared_ptr<tiledb_dimension_t> ptr()
 ##   template <typename T> static Dimension create(const Context& ctx, const std::string& name,
 ##                                                 const std::array<T, 2>& domain, T extent)
@@ -88,17 +88,17 @@ NumericVector             dim_domain_subarray(NumericVector domain, NumericVecto
 ##
 ## C++ API
 ##
-##  Domain(const Context& ctx)
-##  Domain(const Context& ctx, tiledb_domain_t* domain)
-##  uint64_t cell_num()
-##  void dump(FILE* out = nullptr)
-##  tiledb_datatype_t type()
-##  unsigned ndim()
-##  std::vector<Dimension> dimensions()
-##  Domain& add_dimension(const Dimension& d)
-##  template <typename... Args> Domain& add_dimensions(Args... dims)
-##  bool has_dimension(const std::string& name)
-##  std::shared_ptr<tiledb_domain_t> ptr()
+## y Domain(const Context& ctx)
+##   Domain(const Context& ctx, tiledb_domain_t* domain)
+##   uint64_t cell_num()
+## y void dump(FILE* out = nullptr)
+## y tiledb_datatype_t type()
+## y unsigned ndim()
+## y std::vector<Dimension> dimensions()
+##   Domain& add_dimension(const Dimension& d)
+##   template <typename... Args> Domain& add_dimensions(Args... dims)
+##   bool has_dimension(const std::string& name)
+##   std::shared_ptr<tiledb_domain_t> ptr()
 XPtr<tiledb::Domain>      libtiledb_domain(XPtr<tiledb::Context> ctx, List dims);
 IntegerVector             libtiledb_domain_ndim(XPtr<tiledb::Domain> domain);
 List                      libtiledb_domain_dimensions(XPtr<tiledb::Domain> domain);
@@ -132,6 +132,41 @@ void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr)
 
 
 ## Array Schema
+##
+## C++ API
+##
+##   ArraySchema(const Context& ctx, tiledb_array_type_t type)
+##   ArraySchema(const Context& ctx, const std::string& uri)
+##   ArraySchema(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type,
+##               const void* encryption_key, uint32_t key_length)
+##   ArraySchema(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type,
+##               const std::string& encryption_key)
+##   ArraySchema(const Context& ctx, tiledb_array_schema_t* schema)
+##   void dump(FILE* out = nullptr)
+##   tiledb_array_type_t array_type()
+##   uint64_t capacity()
+##   ArraySchema& set_capacity(uint64_t capacity)
+##   tiledb_layout_t tile_order()
+##   ArraySchema& set_tile_order(tiledb_layout_t layout)
+##   ArraySchema& set_order(const std::array<tiledb_layout_t, 2>& p)
+##   tiledb_layout_t cell_order()
+##   ArraySchema& set_cell_order(tiledb_layout_t layout)
+##   FilterList coords_filter_list()
+##   ArraySchema& set_coords_filter_list(const FilterList& filter_list)
+##   FilterList offsets_filter_list()
+##   ArraySchema& set_offsets_filter_list(const FilterList& filter_list)
+##   Domain domain()
+##   ArraySchema& set_domain(const Domain& domain)
+##   ArraySchema& add_attribute(const Attribute& attr)
+##   std::shared_ptr<tiledb_array_schema_t> ptr()
+##   void check()
+##   std::unordered_map<std::string, Attribute> attributes()
+##   Attribute attribute(const std::string& name)
+##   unsigned attribute_num()
+##   Attribute attribute(unsigned int i)
+##   bool has_attribute(const std::string& name)
+##   static std::string to_str(tiledb_array_type_t type)
+##   static std::string to_str(tiledb_layout_t layout)
 XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order,
                                                  Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue, bool sparse = false);
 XPtr<tiledb::Domain>      libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema);
