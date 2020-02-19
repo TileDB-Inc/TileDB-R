@@ -69,18 +69,6 @@ libtiledb_ctx <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_ctx`, config)
 }
 
-libtiledb_ctx_set_tag <- function(ctx, key, value) {
-    invisible(.Call(`_tiledb_libtiledb_ctx_set_tag`, ctx, key, value))
-}
-
-libtiledb_config_save_to_file <- function(config, filename) {
-    .Call(`_tiledb_libtiledb_config_save_to_file`, config, filename)
-}
-
-libtiledb_config_load_from_file <- function(filename) {
-    .Call(`_tiledb_libtiledb_config_load_from_file`, filename)
-}
-
 libtiledb_ctx_config <- function(ctx) {
     .Call(`_tiledb_libtiledb_ctx_config`, ctx)
 }
@@ -89,8 +77,20 @@ libtiledb_ctx_is_supported_fs <- function(ctx, scheme) {
     .Call(`_tiledb_libtiledb_ctx_is_supported_fs`, ctx, scheme)
 }
 
+libtiledb_ctx_set_tag <- function(ctx, key, value) {
+    invisible(.Call(`_tiledb_libtiledb_ctx_set_tag`, ctx, key, value))
+}
+
 libtiledb_config <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_config`, config)
+}
+
+libtiledb_config_save_to_file <- function(config, filename) {
+    .Call(`_tiledb_libtiledb_config_save_to_file`, config, filename)
+}
+
+libtiledb_config_load_from_file <- function(filename) {
+    .Call(`_tiledb_libtiledb_config_load_from_file`, filename)
 }
 
 libtiledb_config_vector <- function(config) {
@@ -103,6 +103,10 @@ libtiledb_config_set <- function(config, param, value) {
 
 libtiledb_config_get <- function(config, params) {
     .Call(`_tiledb_libtiledb_config_get`, config, params)
+}
+
+libtiledb_config_unset <- function(config, param) {
+    .Call(`_tiledb_libtiledb_config_unset`, config, param)
 }
 
 libtiledb_config_dump <- function(config) {
@@ -137,16 +141,16 @@ libtiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_libtiledb_domain`, ctx, dims)
 }
 
-libtiledb_domain_ndim <- function(domain) {
-    .Call(`_tiledb_libtiledb_domain_ndim`, domain)
+libtiledb_domain_get_type <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_get_type`, domain)
 }
 
-libtiledb_domain_dimensions <- function(domain) {
-    .Call(`_tiledb_libtiledb_domain_dimensions`, domain)
+libtiledb_domain_get_ndim <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_get_ndim`, domain)
 }
 
-libtiledb_domain_datatype <- function(domain) {
-    .Call(`_tiledb_libtiledb_domain_datatype`, domain)
+libtiledb_domain_get_dimensions <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_get_dimensions`, domain)
 }
 
 libtiledb_domain_dump <- function(domain) {
@@ -221,20 +225,36 @@ libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_ord
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, sparse)
 }
 
-libtiledb_array_schema_domain <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_domain`, schema)
+libtiledb_array_schema_load <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_array_schema_load`, ctx, uri)
+}
+
+libtiledb_array_schema_load_with_key <- function(ctx, uri, key) {
+    .Call(`_tiledb_libtiledb_array_schema_load_with_key`, ctx, uri, key)
+}
+
+libtiledb_array_get_schema <- function(array) {
+    .Call(`_tiledb_libtiledb_array_get_schema`, array)
+}
+
+libtiledb_array_schema_get_domain <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_domain`, schema)
 }
 
 libtiledb_array_schema_attributes <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_attributes`, schema)
 }
 
-libtiledb_array_schema_cell_order <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_cell_order`, schema)
+libtiledb_array_schema_get_array_type <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_array_type`, schema)
 }
 
-libtiledb_array_schema_tile_order <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_tile_order`, schema)
+libtiledb_array_schema_get_cell_order <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_cell_order`, schema)
+}
+
+libtiledb_array_schema_get_tile_order <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_tile_order`, schema)
 }
 
 libtiledb_array_schema_set_capacity <- function(schema, cap) {
@@ -245,20 +265,32 @@ libtiledb_array_schema_get_capacity <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_capacity`, schema)
 }
 
-libtiledb_array_schema_coords_filter_list <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_coords_filter_list`, schema)
+libtiledb_array_schema_get_coords_filter_list <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_coords_filter_list`, schema)
 }
 
 libtiledb_array_schema_offsets_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_offsets_filter_list`, schema)
 }
 
-libtiledb_array_schema_sparse <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_sparse`, schema)
+libtiledb_array_schema_get_attribute_num <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_attribute_num`, schema)
 }
 
-libtiledb_array_schema_load <- function(ctx, uri) {
-    .Call(`_tiledb_libtiledb_array_schema_load`, ctx, uri)
+libtiledb_array_schema_get_attribute_from_index <- function(schema, ind) {
+    .Call(`_tiledb_libtiledb_array_schema_get_attribute_from_index`, schema, ind)
+}
+
+libtiledb_array_schema_get_attribute_from_name <- function(schema, name) {
+    .Call(`_tiledb_libtiledb_array_schema_get_attribute_from_name`, schema, name)
+}
+
+libtiledb_array_schema_has_attribute <- function(schema, name) {
+    .Call(`_tiledb_libtiledb_array_schema_has_attribute`, schema, name)
+}
+
+libtiledb_array_schema_sparse <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_sparse`, schema)
 }
 
 libtiledb_array_schema_dump <- function(schema) {
@@ -299,10 +331,6 @@ libtiledb_array_is_open_for_writing <- function(array) {
 
 libtiledb_array_get_uri <- function(array) {
     .Call(`_tiledb_libtiledb_array_get_uri`, array)
-}
-
-libtiledb_array_get_schema <- function(array) {
-    .Call(`_tiledb_libtiledb_array_get_schema`, array)
 }
 
 libtiledb_array_open_with_ptr <- function(array, query_type) {
