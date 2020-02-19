@@ -126,7 +126,7 @@ setGeneric("domain", function(object, ...) standardGeneric("domain"))
 #' @export
 setMethod("domain", "tiledb_array_schema",
           function(object) {
-            ptr <- libtiledb_array_schema_domain(object@ptr)
+            ptr <- libtiledb_array_schema_get_domain(object@ptr)
             tiledb_domain.from_ptr(ptr)
           })
 

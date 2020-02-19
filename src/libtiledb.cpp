@@ -959,7 +959,7 @@ XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) 
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Domain> libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::Domain> libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
 }
 
@@ -1019,6 +1019,36 @@ XPtr<tiledb::FilterList> libtiledb_array_schema_get_coords_filter_list(XPtr<tile
 // [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->offsets_filter_list()));
+}
+
+// [[Rcpp::export]]
+int libtiledb_array_schema_get_attribute_num(XPtr<tiledb::ArraySchema> schema) {
+  uint32_t attr_num = schema->attribute_num();
+  if (attr_num >= std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("Overflow retrieving attribute number.");
+  }
+  return static_cast<int32_t>(attr_num);
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Attribute> libtiledb_array_schema_get_attribute_from_index(XPtr<tiledb::ArraySchema> schema,
+                                                                      int ind) {
+  if (ind < 0) {
+    Rcpp::stop("Index must be non-negative.");
+  }
+  uint32_t idx = static_cast<uint32_t>(ind);
+  return XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(idx)));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Attribute> libtiledb_array_schema_get_attribute_from_name(XPtr<tiledb::ArraySchema> schema,
+                                                                       std::string name) {
+  return XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(name)));
+}
+
+// [[Rcpp::export]]
+bool libtiledb_array_schema_has_attribute(XPtr<tiledb::ArraySchema> schema, std::string name) {
+  return schema->has_attribute(name);
 }
 
 // [[Rcpp::export]]

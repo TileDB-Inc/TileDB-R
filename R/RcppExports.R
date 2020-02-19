@@ -237,8 +237,8 @@ libtiledb_array_get_schema <- function(array) {
     .Call(`_tiledb_libtiledb_array_get_schema`, array)
 }
 
-libtiledb_array_schema_domain <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_domain`, schema)
+libtiledb_array_schema_get_domain <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_domain`, schema)
 }
 
 libtiledb_array_schema_attributes <- function(schema) {
@@ -271,6 +271,22 @@ libtiledb_array_schema_get_coords_filter_list <- function(schema) {
 
 libtiledb_array_schema_offsets_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_offsets_filter_list`, schema)
+}
+
+libtiledb_array_schema_get_attribute_num <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_attribute_num`, schema)
+}
+
+libtiledb_array_schema_get_attribute_from_index <- function(schema, ind) {
+    .Call(`_tiledb_libtiledb_array_schema_get_attribute_from_index`, schema, ind)
+}
+
+libtiledb_array_schema_get_attribute_from_name <- function(schema, name) {
+    .Call(`_tiledb_libtiledb_array_schema_get_attribute_from_name`, schema, name)
+}
+
+libtiledb_array_schema_has_attribute <- function(schema, name) {
+    .Call(`_tiledb_libtiledb_array_schema_has_attribute`, schema, name)
 }
 
 libtiledb_array_schema_sparse <- function(schema) {
