@@ -58,7 +58,7 @@ setMethod("show", "tiledb_domain",
 #' @export
 setMethod("dimensions", "tiledb_domain",
           function(object) {
-            dim_ptrs <- libtiledb_domain_dimensions(object@ptr)
+            dim_ptrs <- libtiledb_domain_get_dimensions(object@ptr)
             return(lapply(dim_ptrs, tiledb_dim.from_ptr))
           })
 
@@ -75,7 +75,7 @@ setMethod("dimensions", "tiledb_domain",
 #' @export
 setMethod("datatype", "tiledb_domain",
           function(object) {
-            return(libtiledb_domain_datatype(object@ptr))
+            return(libtiledb_domain_get_type(object@ptr))
           })
 
 #' Returns the number of dimensions of the `tiledb_domain`
@@ -92,7 +92,7 @@ setMethod("datatype", "tiledb_domain",
 #' @export
 setMethod("tiledb_ndim", "tiledb_domain",
           function(object) {
-            return(libtiledb_domain_ndim(object@ptr))
+            return(libtiledb_domain_get_ndim(object@ptr))
           })
 
 #' @rdname generics

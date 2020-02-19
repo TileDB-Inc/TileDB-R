@@ -100,9 +100,9 @@ NumericVector             dim_domain_subarray(NumericVector domain, NumericVecto
 ##   bool has_dimension(const std::string& name)
 ##   std::shared_ptr<tiledb_domain_t> ptr()
 XPtr<tiledb::Domain>      libtiledb_domain(XPtr<tiledb::Context> ctx, List dims);
-IntegerVector             libtiledb_domain_ndim(XPtr<tiledb::Domain> domain);
-List                      libtiledb_domain_dimensions(XPtr<tiledb::Domain> domain);
-std::string               libtiledb_domain_datatype(XPtr<tiledb::Domain> domain);
+std::string               libtiledb_domain_get_type(XPtr<tiledb::Domain> domain);
+int                       libtiledb_domain_get_ndim(XPtr<tiledb::Domain> domain);
+List                      libtiledb_domain_get_dimensions(XPtr<tiledb::Domain> domain);
 void                      libtiledb_domain_dump(XPtr<tiledb::Domain> domain);
 
 

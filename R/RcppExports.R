@@ -141,16 +141,16 @@ libtiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_libtiledb_domain`, ctx, dims)
 }
 
-libtiledb_domain_ndim <- function(domain) {
-    .Call(`_tiledb_libtiledb_domain_ndim`, domain)
+libtiledb_domain_get_type <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_get_type`, domain)
 }
 
-libtiledb_domain_dimensions <- function(domain) {
-    .Call(`_tiledb_libtiledb_domain_dimensions`, domain)
+libtiledb_domain_get_ndim <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_get_ndim`, domain)
 }
 
-libtiledb_domain_datatype <- function(domain) {
-    .Call(`_tiledb_libtiledb_domain_datatype`, domain)
+libtiledb_domain_get_dimensions <- function(domain) {
+    .Call(`_tiledb_libtiledb_domain_get_dimensions`, domain)
 }
 
 libtiledb_domain_dump <- function(domain) {
