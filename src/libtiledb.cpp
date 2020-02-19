@@ -255,6 +255,31 @@ std::string _tiledb_query_type_to_string(tiledb_query_type_t qtype) {
   }
 }
 
+const char* _tiledb_array_type_to_string(tiledb_array_type_t atype) {
+  switch (atype) {
+    case TILEDB_DENSE:
+      return "dense";
+    case TILEDB_SPARSE:
+      return "sparse";
+    default:
+      Rcpp::stop("Unknown tiledb_array_type_t");
+  }
+}
+
+const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
+  switch(dtype) {
+    case TILEDB_FLOAT64:
+      return sizeof(double);
+    case TILEDB_INT32:
+      return sizeof(int32_t);
+    case TILEDB_CHAR:
+      return sizeof(char);
+    default:
+      Rcpp::stop("Unsupported tiledb_datatype_t '%s'", _tiledb_datatype_to_string(dtype));
+  }
+}
+
+
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
   auto ver = tiledb::version();
@@ -864,6 +889,7 @@ void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
   attr->dump();
 }
 
+
 /**
  * TileDB Array Schema
  */
@@ -914,6 +940,25 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx, std::string uri) {
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Context> ctx,
+                                                               std::string uri,
+                                                               std::string key) {
+  return XPtr<tiledb::ArraySchema>(
+      new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri,
+                              TILEDB_AES_256_GCM, key.data(), (uint32_t) key.size())));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) {
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::Domain> libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
 }
@@ -930,13 +975,19 @@ List libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema) {
+std::string libtiledb_array_schema_get_array_type(XPtr<tiledb::ArraySchema> schema) {
+  auto type = schema->array_type();
+  return _tiledb_array_type_to_string(type);
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_array_schema_get_cell_order(XPtr<tiledb::ArraySchema> schema) {
   auto order = schema->cell_order();
   return _tiledb_layout_to_string(order);
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema) {
+std::string libtiledb_array_schema_get_tile_order(XPtr<tiledb::ArraySchema> schema) {
   auto order = schema->tile_order();
   return _tiledb_layout_to_string(order);
 }
@@ -961,7 +1012,7 @@ int libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::FilterList> libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::FilterList> libtiledb_array_schema_get_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->coords_filter_list()));
 }
 
@@ -973,12 +1024,6 @@ XPtr<tiledb::FilterList> libtiledb_array_schema_offsets_filter_list(XPtr<tiledb:
 // [[Rcpp::export]]
 bool libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
   return (schema->array_type() == TILEDB_SPARSE);
-}
-
-// [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(
-    XPtr<tiledb::Context> ctx,std::string uri) {
-  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
 }
 
 // [[Rcpp::export]]
@@ -1046,11 +1091,6 @@ bool libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array) {
 // [[Rcpp::export]]
 std::string libtiledb_array_get_uri(XPtr<tiledb::Array> array) {
   return array->uri();
-}
-
-// [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) {
-  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
 }
 
 // [[Rcpp::export]]

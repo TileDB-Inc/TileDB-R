@@ -135,32 +135,32 @@ void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr)
 ##
 ## C++ API
 ##
-##   ArraySchema(const Context& ctx, tiledb_array_type_t type)
-##   ArraySchema(const Context& ctx, const std::string& uri)
+## y ArraySchema(const Context& ctx, tiledb_array_type_t type)
+## y ArraySchema(const Context& ctx, const std::string& uri)
 ##   ArraySchema(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type,
 ##               const void* encryption_key, uint32_t key_length)
-##   ArraySchema(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type,
+## y ArraySchema(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type,
 ##               const std::string& encryption_key)
-##   ArraySchema(const Context& ctx, tiledb_array_schema_t* schema)
-##   void dump(FILE* out = nullptr)
-##   tiledb_array_type_t array_type()
-##   uint64_t capacity()
-##   ArraySchema& set_capacity(uint64_t capacity)
-##   tiledb_layout_t tile_order()
+## y ArraySchema(const Context& ctx, tiledb_array_schema_t* schema)
+## y void dump(FILE* out = nullptr)
+## y tiledb_array_type_t array_type()
+## y uint64_t capacity()
+## y ArraySchema& set_capacity(uint64_t capacity)
+## y tiledb_layout_t tile_order()
 ##   ArraySchema& set_tile_order(tiledb_layout_t layout)
 ##   ArraySchema& set_order(const std::array<tiledb_layout_t, 2>& p)
-##   tiledb_layout_t cell_order()
+## y tiledb_layout_t cell_order()
 ##   ArraySchema& set_cell_order(tiledb_layout_t layout)
 ##   FilterList coords_filter_list()
-##   ArraySchema& set_coords_filter_list(const FilterList& filter_list)
-##   FilterList offsets_filter_list()
+## y ArraySchema& set_coords_filter_list(const FilterList& filter_list)
+## y FilterList offsets_filter_list()
 ##   ArraySchema& set_offsets_filter_list(const FilterList& filter_list)
-##   Domain domain()
+## y Domain domain()
 ##   ArraySchema& set_domain(const Domain& domain)
 ##   ArraySchema& add_attribute(const Attribute& attr)
 ##   std::shared_ptr<tiledb_array_schema_t> ptr()
-##   void check()
-##   std::unordered_map<std::string, Attribute> attributes()
+## y void check()
+## y std::unordered_map<std::string, Attribute> attributes()
 ##   Attribute attribute(const std::string& name)
 ##   unsigned attribute_num()
 ##   Attribute attribute(unsigned int i)
@@ -169,20 +169,22 @@ void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr)
 ##   static std::string to_str(tiledb_layout_t layout)
 XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order,
                                                  Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue, bool sparse = false);
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,std::string uri);
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string key);
+XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
 XPtr<tiledb::Domain>      libtiledb_array_schema_domain(XPtr<tiledb::ArraySchema> schema);
 List                      libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
-std::string               libtiledb_array_schema_cell_order(XPtr<tiledb::ArraySchema> schema);
-std::string               libtiledb_array_schema_tile_order(XPtr<tiledb::ArraySchema> schema);
+std::string               libtiledb_array_schema_get_cell_order(XPtr<tiledb::ArraySchema> schema);
+std::string               libtiledb_array_schema_get_tile_order(XPtr<tiledb::ArraySchema> schema);
 void                      libtiledb_array_schema_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
 int                       libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema);
-XPtr<tiledb::FilterList>  libtiledb_array_schema_coords_filter_list(XPtr<tiledb::ArraySchema> schema);
-XPtr<tiledb::FilterList>  libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema);
+XPtr<tiledb::FilterList>  libtiledb_array_schema_get_coords_filter_list(XPtr<tiledb::ArraySchema> schema);
+XPtr<tiledb::FilterList>  libtiledb_array_schema_get_offsets_filter_list(XPtr<tiledb::ArraySchema> schema);
 bool                      libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,std::string uri);
 void                      libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema);
 void                      libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
-std::string               libtiledb_array_create_encryptd(std::string uri, XPtr<tiledb::ArraySchema> schema, std::string encryption_key);
+std::string               libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema, std::string encryption_key);
 
 
 ## Array
@@ -192,7 +194,6 @@ bool                      libtiledb_array_is_open(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_get_uri(XPtr<tiledb::Array> array);
-XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
 XPtr<tiledb::Array>       libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type);
 XPtr<tiledb::Array>       libtiledb_array_reopen(XPtr<tiledb::Array> array);
 XPtr<tiledb::Array>       libtiledb_array_close(XPtr<tiledb::Array> array);

@@ -230,7 +230,7 @@ setGeneric("cell_order", function(object, ...) standardGeneric("cell_order"))
 #' @export
 setMethod("cell_order", "tiledb_array_schema",
           function(object) {
-            libtiledb_array_schema_cell_order(object@ptr)
+            libtiledb_array_schema_get_cell_order(object@ptr)
           })
 
 #' @rdname generics
@@ -242,12 +242,12 @@ setGeneric("tile_order", function(object, ...) standardGeneric("tile_order"))
 #' @export
 setMethod("tile_order", "tiledb_array_schema",
           function(object) {
-            libtiledb_array_schema_tile_order(object@ptr)
+            libtiledb_array_schema_get_tile_order(object@ptr)
           })
 
 # ' @ export
 #tiledb_filter_list.tiledb_array_schema <- function(object) {
-#            coords_ptr <- libtiledb_array_schema_coords_filter_list(object@ptr)
+#            coords_ptr <- libtiledb_array_schema_get_coords_filter_list(object@ptr)
 #            offsets_ptr <- libtiledb_array_schema_offsets_filter_list(object@ptr)
 #            return(c(coords = tiledb_filter_list.from_ptr(coords_ptr),
 #                     offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
@@ -264,7 +264,7 @@ setGeneric("filter_list", function(object, ...) standardGeneric("filter_list"))
 #' @export
 setMethod("filter_list", "tiledb_array_schema",
           function(object) {
-            coords_ptr <- libtiledb_array_schema_coords_filter_list(object@ptr)
+            coords_ptr <- libtiledb_array_schema_get_coords_filter_list(object@ptr)
             offsets_ptr <- libtiledb_array_schema_offsets_filter_list(object@ptr)
             return(c(coords = tiledb_filter_list.from_ptr(coords_ptr),
                      offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
