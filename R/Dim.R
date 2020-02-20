@@ -66,7 +66,7 @@ tiledb_dim <- function(name="", domain, tile, type, ctx = tiledb_get_context()) 
 #' @export
 setMethod("name", signature(object = "tiledb_dim"),
           function(object) {
-            return(libtiledb_dim_name(object@ptr))
+            return(libtiledb_dim_get_name(object@ptr))
           })
 
 #' Return the `tiledb_dim` domain
@@ -80,7 +80,7 @@ setMethod("name", signature(object = "tiledb_dim"),
 #' @export
 setMethod("domain", signature(object = "tiledb_dim"),
           function(object) {
-            return(libtiledb_dim_domain(object@ptr))
+            return(libtiledb_dim_get_domain(object@ptr))
           })
 
 #' @rdname generics
@@ -98,7 +98,7 @@ setGeneric("tile", function(object) standardGeneric("tile"))
 #' @export
 setMethod("tile", signature(object = "tiledb_dim"),
           function(object) {
-            return(libtiledb_dim_tile_extent(object@ptr))
+            return(libtiledb_dim_get_tile_extent(object@ptr))
           })
 
 #' Return the `tiledb_dim` datatype
@@ -112,7 +112,7 @@ setMethod("tile", signature(object = "tiledb_dim"),
 #' @export
 setMethod("datatype", signature(object = "tiledb_dim"),
           function(object) {
-            return(libtiledb_dim_datatype(object@ptr))
+            return(libtiledb_dim_get_datatype(object@ptr))
           })
 
 #' Returns the number of dimensions for a tiledb domain object
@@ -144,7 +144,7 @@ setMethod("tiledb_ndim", "tiledb_dim",
 #'
 #' @export
 is.anonymous.tiledb_dim <- function(object) {
-  name <- libtiledb_dim_name(object@ptr)
+  name <- libtiledb_dim_get_name(object@ptr)
   return(nchar(name) == 0)
 }
 

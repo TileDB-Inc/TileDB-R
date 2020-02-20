@@ -77,10 +77,10 @@ void                      libtiledb_config_dump(XPtr<tiledb::Config> config);
 ##   static Dimension create(const Context& ctx, const std::string& name, tiledb_datatype_t datatype,
 ##                           const void* domain, const void* extent)
 XPtr<tiledb::Dimension>   libtiledb_dim(XPtr<tiledb::Context> ctx, std::string name, std::string type, SEXP domain, SEXP tile_extent);
-std::string               libtiledb_dim_name(XPtr<tiledb::Dimension> dim);
-SEXP                      libtiledb_dim_domain(XPtr<tiledb::Dimension> dim);
-SEXP                      libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim);
-std::string               libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim);
+std::string               libtiledb_dim_get_name(XPtr<tiledb::Dimension> dim);
+SEXP                      libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim);
+SEXP                      libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim);
+std::string               libtiledb_dim_get_datatype(XPtr<tiledb::Dimension> dim);
 NumericVector             dim_domain_subarray(NumericVector domain, NumericVector subscript);
 
 
@@ -107,27 +107,70 @@ void                      libtiledb_domain_dump(XPtr<tiledb::Domain> domain);
 
 
 ## Filter
+##
+## C++ API
+##
+## y Filter(const Context& ctx, tiledb_filter_type_t filter_type)
+##   Filter(const Context& ctx, tiledb_filter_t* filter)
+##   std::shared_ptr<tiledb_filter_t> ptr()
+##   template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr> Filter& set_option(tiledb_filter_option_t option, T value)
+## y Filter& set_option(tiledb_filter_option_t option, const void* value)
+##   template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr> void get_option(tiledb_filter_option_t option, T* value)
+## y void get_option(tiledb_filter_option_t option, void* value)
+## y tiledb_filter_type_t filter_type()
 XPtr<tiledb::Filter>      libtiledb_filter(XPtr<tiledb::Context> ctx, std::string filter);
-std::string               libtiledb_filter_type(XPtr<tiledb::Filter> filter);
+std::string               libtiledb_filter_get_type(XPtr<tiledb::Filter> filter);
 R_xlen_t                  libtiledb_filter_get_option(XPtr<tiledb::Filter> filter, std::string filter_option_str);
 void                      libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value);
 
 
 ## Filter List
+##
+## C++ API
+##
+##   FilterList(const Context& ctx)
+## y FilterList(const Context& ctx, tiledb_filter_list_t* filter_list)
+##   std::shared_ptr<tiledb_filter_list_t> ptr()
+##   FilterList& add_filter(const Filter& filter)
+## y Filter filter(uint32_t filter_index)
+## y uint32_t max_chunk_size()
+## y uint32_t nfilters()
+## y FilterList& set_max_chunk_size(uint32_t max_chunk_size)
 XPtr<tiledb::FilterList>  libtiledb_filter_list(XPtr<tiledb::Context> ctx, List filters);
 void                      libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_sie);
-int                       libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList);
-int                       libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList);
-XPtr<tiledb::Filter>      libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
+int                       libtiledb_filter_list_get_max_chunk_size(XPtr<tiledb::FilterList> filterList);
+int                       libtiledb_filter_list_get_nfilters(XPtr<tiledb::FilterList> filterList);
+XPtr<tiledb::Filter>      libtiledb_filter_list_get_filter_from_index(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
 
 
 ## Attribute
+##
+## C++ API
+##
+##   Attribute(const Context& ctx, tiledb_attribute_t* attr)
+##   Attribute(const Context& ctx, const std::string& name, tiledb_datatype_t type)
+## y Attribute(const Context& ctx, const std::string& name, tiledb_datatype_t type, const FilterList& filter_list)
+## y std::string name()
+## y tiledb_datatype_t type()
+## y uint64_t cell_size()
+## y unsigned cell_val_num()
+## y Attribute& set_cell_val_num(unsigned num)
+## y bool variable_sized()
+## y FilterList filter_list() const {
+##   Attribute& set_filter_list(const FilterList& filter_list)
+##   std::shared_ptr<tiledb_attribute_t> ptr()
+## y void dump(FILE* out = nullptr)
+##   static Attribute create(const Context& ctx, const std::string& name)
+##   template <typename T> static Attribute create(const Context& ctx, const std::string& name,
+##                                                 const FilterList& filter_list)
 XPtr<tiledb::Attribute>   libtiledb_attribute(XPtr<tiledb::Context> ctx, std::string name, std::string type, XPtr<tiledb::FilterList> filter_list, int ncells);
-std::string               libtiledb_attribute_name(XPtr<tiledb::Attribute> attr);
-std::string               libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr);
-XPtr<tiledb::FilterList>  libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr);
+std::string               libtiledb_attribute_get_name(XPtr<tiledb::Attribute> attr);
+std::string               libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr);
+double                    libtiledb_attribute_get_cell_size(XPtr<tiledb::Attribute> attr);
+XPtr<tiledb::FilterList>  libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr);
 int                       libtiledb_attribute_get_cell_val_num(XPtr<tiledb::Attribute> attr);
 void                      libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num);
+bool                      libtiledb_attribute_is_variable_sized(XPtr<tiledb::Attribute> attr)
 void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr);
 
 

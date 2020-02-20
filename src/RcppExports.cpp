@@ -346,47 +346,47 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_name
-std::string libtiledb_dim_name(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_name(SEXP dimSEXP) {
+// libtiledb_dim_get_name
+std::string libtiledb_dim_get_name(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_dim_get_name(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_name(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_get_name(dim));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_domain
-SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_domain(SEXP dimSEXP) {
+// libtiledb_dim_get_domain
+SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_dim_get_domain(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_domain(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_get_domain(dim));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_tile_extent
-SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_tile_extent(SEXP dimSEXP) {
+// libtiledb_dim_get_tile_extent
+SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_dim_get_tile_extent(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_tile_extent(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_get_tile_extent(dim));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_datatype
-std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_datatype(SEXP dimSEXP) {
+// libtiledb_dim_get_datatype
+std::string libtiledb_dim_get_datatype(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_dim_get_datatype(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_datatype(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_get_datatype(dim));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -469,14 +469,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_filter_type
-std::string libtiledb_filter_type(XPtr<tiledb::Filter> filter);
-RcppExport SEXP _tiledb_libtiledb_filter_type(SEXP filterSEXP) {
+// libtiledb_filter_get_type
+std::string libtiledb_filter_get_type(XPtr<tiledb::Filter> filter);
+RcppExport SEXP _tiledb_libtiledb_filter_get_type(SEXP filterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Filter> >::type filter(filterSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_type(filter));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_get_type(filter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -527,37 +527,37 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// libtiledb_filter_list_max_chunk_size
-int libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList);
-RcppExport SEXP _tiledb_libtiledb_filter_list_max_chunk_size(SEXP filterListSEXP) {
+// libtiledb_filter_list_get_max_chunk_size
+int libtiledb_filter_list_get_max_chunk_size(XPtr<tiledb::FilterList> filterList);
+RcppExport SEXP _tiledb_libtiledb_filter_list_get_max_chunk_size(SEXP filterListSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filterList(filterListSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_max_chunk_size(filterList));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_get_max_chunk_size(filterList));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_filter_list_nfilters
-int libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList);
-RcppExport SEXP _tiledb_libtiledb_filter_list_nfilters(SEXP filterListSEXP) {
+// libtiledb_filter_list_get_nfilters
+int libtiledb_filter_list_get_nfilters(XPtr<tiledb::FilterList> filterList);
+RcppExport SEXP _tiledb_libtiledb_filter_list_get_nfilters(SEXP filterListSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filterList(filterListSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_nfilters(filterList));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_get_nfilters(filterList));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_filter_list_filter
-XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
-RcppExport SEXP _tiledb_libtiledb_filter_list_filter(SEXP filterListSEXP, SEXP filter_indexSEXP) {
+// libtiledb_filter_list_get_filter_from_index
+XPtr<tiledb::Filter> libtiledb_filter_list_get_filter_from_index(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
+RcppExport SEXP _tiledb_libtiledb_filter_list_get_filter_from_index(SEXP filterListSEXP, SEXP filter_indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filterList(filterListSEXP);
     Rcpp::traits::input_parameter< uint32_t >::type filter_index(filter_indexSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_filter(filterList, filter_index));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_get_filter_from_index(filterList, filter_index));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -576,36 +576,47 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attribute_name
-std::string libtiledb_attribute_name(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attribute_name(SEXP attrSEXP) {
+// libtiledb_attribute_get_name
+std::string libtiledb_attribute_get_name(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_name(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_name(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_name(attr));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attribute_datatype
-std::string libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attribute_datatype(SEXP attrSEXP) {
+// libtiledb_attribute_get_type
+std::string libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_type(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_datatype(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_type(attr));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attribute_filter_list
-XPtr<tiledb::FilterList> libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attribute_filter_list(SEXP attrSEXP) {
+// libtiledb_attribute_get_cell_size
+double libtiledb_attribute_get_cell_size(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_cell_size(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_filter_list(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_cell_size(attr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_attribute_get_filter_list
+XPtr<tiledb::FilterList> libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_filter_list(SEXP attrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_filter_list(attr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -629,6 +640,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type num(numSEXP);
     libtiledb_attribute_set_cell_val_num(attr, num);
     return R_NilValue;
+END_RCPP
+}
+// libtiledb_attribute_is_variable_sized
+bool libtiledb_attribute_is_variable_sized(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_is_variable_sized(SEXP attrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_is_variable_sized(attr));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_attribute_dump
@@ -1503,10 +1525,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_config_unset", (DL_FUNC) &_tiledb_libtiledb_config_unset, 2},
     {"_tiledb_libtiledb_config_dump", (DL_FUNC) &_tiledb_libtiledb_config_dump, 1},
     {"_tiledb_libtiledb_dim", (DL_FUNC) &_tiledb_libtiledb_dim, 5},
-    {"_tiledb_libtiledb_dim_name", (DL_FUNC) &_tiledb_libtiledb_dim_name, 1},
-    {"_tiledb_libtiledb_dim_domain", (DL_FUNC) &_tiledb_libtiledb_dim_domain, 1},
-    {"_tiledb_libtiledb_dim_tile_extent", (DL_FUNC) &_tiledb_libtiledb_dim_tile_extent, 1},
-    {"_tiledb_libtiledb_dim_datatype", (DL_FUNC) &_tiledb_libtiledb_dim_datatype, 1},
+    {"_tiledb_libtiledb_dim_get_name", (DL_FUNC) &_tiledb_libtiledb_dim_get_name, 1},
+    {"_tiledb_libtiledb_dim_get_domain", (DL_FUNC) &_tiledb_libtiledb_dim_get_domain, 1},
+    {"_tiledb_libtiledb_dim_get_tile_extent", (DL_FUNC) &_tiledb_libtiledb_dim_get_tile_extent, 1},
+    {"_tiledb_libtiledb_dim_get_datatype", (DL_FUNC) &_tiledb_libtiledb_dim_get_datatype, 1},
     {"_tiledb_dim_domain_subarray", (DL_FUNC) &_tiledb_dim_domain_subarray, 2},
     {"_tiledb_libtiledb_domain", (DL_FUNC) &_tiledb_libtiledb_domain, 2},
     {"_tiledb_libtiledb_domain_get_type", (DL_FUNC) &_tiledb_libtiledb_domain_get_type, 1},
@@ -1514,20 +1536,22 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_domain_get_dimensions", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimensions, 1},
     {"_tiledb_libtiledb_domain_dump", (DL_FUNC) &_tiledb_libtiledb_domain_dump, 1},
     {"_tiledb_libtiledb_filter", (DL_FUNC) &_tiledb_libtiledb_filter, 2},
-    {"_tiledb_libtiledb_filter_type", (DL_FUNC) &_tiledb_libtiledb_filter_type, 1},
+    {"_tiledb_libtiledb_filter_get_type", (DL_FUNC) &_tiledb_libtiledb_filter_get_type, 1},
     {"_tiledb_libtiledb_filter_get_option", (DL_FUNC) &_tiledb_libtiledb_filter_get_option, 2},
     {"_tiledb_libtiledb_filter_set_option", (DL_FUNC) &_tiledb_libtiledb_filter_set_option, 3},
     {"_tiledb_libtiledb_filter_list", (DL_FUNC) &_tiledb_libtiledb_filter_list, 2},
     {"_tiledb_libtiledb_filter_list_set_max_chunk_size", (DL_FUNC) &_tiledb_libtiledb_filter_list_set_max_chunk_size, 2},
-    {"_tiledb_libtiledb_filter_list_max_chunk_size", (DL_FUNC) &_tiledb_libtiledb_filter_list_max_chunk_size, 1},
-    {"_tiledb_libtiledb_filter_list_nfilters", (DL_FUNC) &_tiledb_libtiledb_filter_list_nfilters, 1},
-    {"_tiledb_libtiledb_filter_list_filter", (DL_FUNC) &_tiledb_libtiledb_filter_list_filter, 2},
+    {"_tiledb_libtiledb_filter_list_get_max_chunk_size", (DL_FUNC) &_tiledb_libtiledb_filter_list_get_max_chunk_size, 1},
+    {"_tiledb_libtiledb_filter_list_get_nfilters", (DL_FUNC) &_tiledb_libtiledb_filter_list_get_nfilters, 1},
+    {"_tiledb_libtiledb_filter_list_get_filter_from_index", (DL_FUNC) &_tiledb_libtiledb_filter_list_get_filter_from_index, 2},
     {"_tiledb_libtiledb_attribute", (DL_FUNC) &_tiledb_libtiledb_attribute, 5},
-    {"_tiledb_libtiledb_attribute_name", (DL_FUNC) &_tiledb_libtiledb_attribute_name, 1},
-    {"_tiledb_libtiledb_attribute_datatype", (DL_FUNC) &_tiledb_libtiledb_attribute_datatype, 1},
-    {"_tiledb_libtiledb_attribute_filter_list", (DL_FUNC) &_tiledb_libtiledb_attribute_filter_list, 1},
+    {"_tiledb_libtiledb_attribute_get_name", (DL_FUNC) &_tiledb_libtiledb_attribute_get_name, 1},
+    {"_tiledb_libtiledb_attribute_get_type", (DL_FUNC) &_tiledb_libtiledb_attribute_get_type, 1},
+    {"_tiledb_libtiledb_attribute_get_cell_size", (DL_FUNC) &_tiledb_libtiledb_attribute_get_cell_size, 1},
+    {"_tiledb_libtiledb_attribute_get_filter_list", (DL_FUNC) &_tiledb_libtiledb_attribute_get_filter_list, 1},
     {"_tiledb_libtiledb_attribute_get_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attribute_get_cell_val_num, 1},
     {"_tiledb_libtiledb_attribute_set_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attribute_set_cell_val_num, 2},
+    {"_tiledb_libtiledb_attribute_is_variable_sized", (DL_FUNC) &_tiledb_libtiledb_attribute_is_variable_sized, 1},
     {"_tiledb_libtiledb_attribute_dump", (DL_FUNC) &_tiledb_libtiledb_attribute_dump, 1},
     {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 8},
     {"_tiledb_libtiledb_array_schema_load", (DL_FUNC) &_tiledb_libtiledb_array_schema_load, 2},

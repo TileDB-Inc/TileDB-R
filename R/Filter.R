@@ -56,7 +56,7 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
 #' @export
 tiledb_filter_type <- function(object) {
   stopifnot(is(object, "tiledb_filter"))
-  return(libtiledb_filter_type(object@ptr))
+  return(libtiledb_filter_get_type(object@ptr))
 }
 
 #' Set the filter's option

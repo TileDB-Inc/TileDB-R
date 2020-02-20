@@ -470,12 +470,12 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_dim_name(XPtr<tiledb::Dimension> dim) {
+std::string libtiledb_dim_get_name(XPtr<tiledb::Dimension> dim) {
   return dim->name();
 }
 
 // [[Rcpp::export]]
-SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
+SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
   auto dim_type = dim->type();
   switch (dim_type) {
     case TILEDB_FLOAT32: {
@@ -560,7 +560,7 @@ SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
+SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
   auto dim_type = dim->type();
   switch (dim_type) {
     case TILEDB_FLOAT32: {
@@ -629,7 +629,7 @@ SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
+std::string libtiledb_dim_get_datatype(XPtr<tiledb::Dimension> dim) {
   return _tiledb_datatype_to_string(dim->type());
 }
 
@@ -751,7 +751,7 @@ XPtr<tiledb::Filter> libtiledb_filter(XPtr<tiledb::Context> ctx, std::string fil
 }
 
 //[[Rcpp::export]]
-std::string libtiledb_filter_type(XPtr<tiledb::Filter> filter) {
+std::string libtiledb_filter_get_type(XPtr<tiledb::Filter> filter) {
   return _tiledb_filter_to_string(filter->filter_type());
 }
 
@@ -806,17 +806,17 @@ void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterLis
 }
 
 //[[Rcpp::export]]
-int libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList) {
+int libtiledb_filter_list_get_max_chunk_size(XPtr<tiledb::FilterList> filterList) {
   return filterList->max_chunk_size();
 }
 
 //[[Rcpp::export]]
-int libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList) {
+int libtiledb_filter_list_get_nfilters(XPtr<tiledb::FilterList> filterList) {
   return filterList->nfilters();
 }
 
 //[[Rcpp::export]]
-XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index) {
+XPtr<tiledb::Filter> libtiledb_filter_list_get_filter_from_index(XPtr<tiledb::FilterList> filterList, uint32_t filter_index) {
   return XPtr<tiledb::Filter>(new tiledb::Filter(filterList->filter(filter_index)));
 }
 
@@ -851,17 +851,23 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attribute_name(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_get_name(XPtr<tiledb::Attribute> attr) {
   return attr->name();
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr) {
   return _tiledb_datatype_to_string(attr->type());
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::FilterList> libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr) {
+double libtiledb_attribute_get_cell_size(XPtr<tiledb::Attribute> attr) {
+  uint64_t size = attr->cell_size();
+  return static_cast<double>(size);
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::FilterList> libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
 }
 
@@ -885,6 +891,11 @@ void libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num)
     Rcpp::stop("Variable cell number of '%d' not sensible", num);
   }
   attr->set_cell_val_num(ncells);        // returns reference to self so nothing for us to return
+}
+
+//[[Rcpp::export]]
+bool libtiledb_attribute_is_variable_sized(XPtr<tiledb::Attribute> attr) {
+  return attr->variable_sized();
 }
 
 //[[Rcpp::export]]
