@@ -181,16 +181,16 @@ libtiledb_filter_list_set_max_chunk_size <- function(filterList, max_chunk_sie) 
     invisible(.Call(`_tiledb_libtiledb_filter_list_set_max_chunk_size`, filterList, max_chunk_sie))
 }
 
-libtiledb_filter_list_max_chunk_size <- function(filterList) {
-    .Call(`_tiledb_libtiledb_filter_list_max_chunk_size`, filterList)
+libtiledb_filter_list_get_max_chunk_size <- function(filterList) {
+    .Call(`_tiledb_libtiledb_filter_list_get_max_chunk_size`, filterList)
 }
 
-libtiledb_filter_list_nfilters <- function(filterList) {
-    .Call(`_tiledb_libtiledb_filter_list_nfilters`, filterList)
+libtiledb_filter_list_get_nfilters <- function(filterList) {
+    .Call(`_tiledb_libtiledb_filter_list_get_nfilters`, filterList)
 }
 
-libtiledb_filter_list_filter <- function(filterList, filter_index) {
-    .Call(`_tiledb_libtiledb_filter_list_filter`, filterList, filter_index)
+libtiledb_filter_list_get_filter_from_index <- function(filterList, filter_index) {
+    .Call(`_tiledb_libtiledb_filter_list_get_filter_from_index`, filterList, filter_index)
 }
 
 libtiledb_attribute <- function(ctx, name, type, filter_list, ncells) {

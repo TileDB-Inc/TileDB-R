@@ -527,37 +527,37 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// libtiledb_filter_list_max_chunk_size
-int libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList);
-RcppExport SEXP _tiledb_libtiledb_filter_list_max_chunk_size(SEXP filterListSEXP) {
+// libtiledb_filter_list_get_max_chunk_size
+int libtiledb_filter_list_get_max_chunk_size(XPtr<tiledb::FilterList> filterList);
+RcppExport SEXP _tiledb_libtiledb_filter_list_get_max_chunk_size(SEXP filterListSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filterList(filterListSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_max_chunk_size(filterList));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_get_max_chunk_size(filterList));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_filter_list_nfilters
-int libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList);
-RcppExport SEXP _tiledb_libtiledb_filter_list_nfilters(SEXP filterListSEXP) {
+// libtiledb_filter_list_get_nfilters
+int libtiledb_filter_list_get_nfilters(XPtr<tiledb::FilterList> filterList);
+RcppExport SEXP _tiledb_libtiledb_filter_list_get_nfilters(SEXP filterListSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filterList(filterListSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_nfilters(filterList));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_get_nfilters(filterList));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_filter_list_filter
-XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
-RcppExport SEXP _tiledb_libtiledb_filter_list_filter(SEXP filterListSEXP, SEXP filter_indexSEXP) {
+// libtiledb_filter_list_get_filter_from_index
+XPtr<tiledb::Filter> libtiledb_filter_list_get_filter_from_index(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
+RcppExport SEXP _tiledb_libtiledb_filter_list_get_filter_from_index(SEXP filterListSEXP, SEXP filter_indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filterList(filterListSEXP);
     Rcpp::traits::input_parameter< uint32_t >::type filter_index(filter_indexSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_filter(filterList, filter_index));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_list_get_filter_from_index(filterList, filter_index));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1541,9 +1541,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_filter_set_option", (DL_FUNC) &_tiledb_libtiledb_filter_set_option, 3},
     {"_tiledb_libtiledb_filter_list", (DL_FUNC) &_tiledb_libtiledb_filter_list, 2},
     {"_tiledb_libtiledb_filter_list_set_max_chunk_size", (DL_FUNC) &_tiledb_libtiledb_filter_list_set_max_chunk_size, 2},
-    {"_tiledb_libtiledb_filter_list_max_chunk_size", (DL_FUNC) &_tiledb_libtiledb_filter_list_max_chunk_size, 1},
-    {"_tiledb_libtiledb_filter_list_nfilters", (DL_FUNC) &_tiledb_libtiledb_filter_list_nfilters, 1},
-    {"_tiledb_libtiledb_filter_list_filter", (DL_FUNC) &_tiledb_libtiledb_filter_list_filter, 2},
+    {"_tiledb_libtiledb_filter_list_get_max_chunk_size", (DL_FUNC) &_tiledb_libtiledb_filter_list_get_max_chunk_size, 1},
+    {"_tiledb_libtiledb_filter_list_get_nfilters", (DL_FUNC) &_tiledb_libtiledb_filter_list_get_nfilters, 1},
+    {"_tiledb_libtiledb_filter_list_get_filter_from_index", (DL_FUNC) &_tiledb_libtiledb_filter_list_get_filter_from_index, 2},
     {"_tiledb_libtiledb_attribute", (DL_FUNC) &_tiledb_libtiledb_attribute, 5},
     {"_tiledb_libtiledb_attribute_get_name", (DL_FUNC) &_tiledb_libtiledb_attribute_get_name, 1},
     {"_tiledb_libtiledb_attribute_get_type", (DL_FUNC) &_tiledb_libtiledb_attribute_get_type, 1},

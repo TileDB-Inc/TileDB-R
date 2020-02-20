@@ -125,11 +125,22 @@ void                      libtiledb_filter_set_option(XPtr<tiledb::Filter> filte
 
 
 ## Filter List
+##
+## C++ API
+##
+##   FilterList(const Context& ctx)
+## y FilterList(const Context& ctx, tiledb_filter_list_t* filter_list)
+##   std::shared_ptr<tiledb_filter_list_t> ptr()
+##   FilterList& add_filter(const Filter& filter)
+## y Filter filter(uint32_t filter_index)
+## y uint32_t max_chunk_size()
+## y uint32_t nfilters()
+## y FilterList& set_max_chunk_size(uint32_t max_chunk_size)
 XPtr<tiledb::FilterList>  libtiledb_filter_list(XPtr<tiledb::Context> ctx, List filters);
 void                      libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_sie);
-int                       libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList);
-int                       libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList);
-XPtr<tiledb::Filter>      libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
+int                       libtiledb_filter_list_get_max_chunk_size(XPtr<tiledb::FilterList> filterList);
+int                       libtiledb_filter_list_get_nfilters(XPtr<tiledb::FilterList> filterList);
+XPtr<tiledb::Filter>      libtiledb_filter_list_get_filter_from_index(XPtr<tiledb::FilterList> filterList, uint32_t filter_index);
 
 
 ## Attribute

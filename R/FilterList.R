@@ -75,7 +75,7 @@ setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
 #' @export
 setMethod("max_chunk_size", signature(object = "tiledb_filter_list"),
           function(object) {
-            libtiledb_filter_list_max_chunk_size(object@ptr)
+            libtiledb_filter_list_get_max_chunk_size(object@ptr)
           })
 
 #' @rdname generics
@@ -95,7 +95,7 @@ setGeneric("nfilters", function(object) standardGeneric("nfilters"))
 #' @export
 setMethod("nfilters", signature(object = "tiledb_filter_list"),
           function(object) {
-            libtiledb_filter_list_nfilters(object@ptr)
+            libtiledb_filter_list_get_nfilters(object@ptr)
           })
 
 #' Returns the filter at given index
@@ -116,5 +116,5 @@ setMethod("nfilters", signature(object = "tiledb_filter_list"),
 #' @export
 setMethod("[", "tiledb_filter_list",
           function(x, i, j, ..., drop = FALSE) {
-            tiledb_filter.from_ptr(libtiledb_filter_list_filter(x@ptr, i))
+            tiledb_filter.from_ptr(libtiledb_filter_list_get_filter_from_index(x@ptr, i))
           })

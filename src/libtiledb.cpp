@@ -806,17 +806,17 @@ void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterLis
 }
 
 //[[Rcpp::export]]
-int libtiledb_filter_list_max_chunk_size(XPtr<tiledb::FilterList> filterList) {
+int libtiledb_filter_list_get_max_chunk_size(XPtr<tiledb::FilterList> filterList) {
   return filterList->max_chunk_size();
 }
 
 //[[Rcpp::export]]
-int libtiledb_filter_list_nfilters(XPtr<tiledb::FilterList> filterList) {
+int libtiledb_filter_list_get_nfilters(XPtr<tiledb::FilterList> filterList) {
   return filterList->nfilters();
 }
 
 //[[Rcpp::export]]
-XPtr<tiledb::Filter> libtiledb_filter_list_filter(XPtr<tiledb::FilterList> filterList, uint32_t filter_index) {
+XPtr<tiledb::Filter> libtiledb_filter_list_get_filter_from_index(XPtr<tiledb::FilterList> filterList, uint32_t filter_index) {
   return XPtr<tiledb::Filter>(new tiledb::Filter(filterList->filter(filter_index)));
 }
 
