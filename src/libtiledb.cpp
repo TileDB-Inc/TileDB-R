@@ -470,12 +470,12 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_dim_name(XPtr<tiledb::Dimension> dim) {
+std::string libtiledb_dim_get_name(XPtr<tiledb::Dimension> dim) {
   return dim->name();
 }
 
 // [[Rcpp::export]]
-SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
+SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
   auto dim_type = dim->type();
   switch (dim_type) {
     case TILEDB_FLOAT32: {
@@ -560,7 +560,7 @@ SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
+SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
   auto dim_type = dim->type();
   switch (dim_type) {
     case TILEDB_FLOAT32: {
@@ -629,7 +629,7 @@ SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim) {
+std::string libtiledb_get_dim_datatype(XPtr<tiledb::Dimension> dim) {
   return _tiledb_datatype_to_string(dim->type());
 }
 

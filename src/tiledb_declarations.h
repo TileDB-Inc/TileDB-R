@@ -77,10 +77,10 @@ void                      libtiledb_config_dump(XPtr<tiledb::Config> config);
 ##   static Dimension create(const Context& ctx, const std::string& name, tiledb_datatype_t datatype,
 ##                           const void* domain, const void* extent)
 XPtr<tiledb::Dimension>   libtiledb_dim(XPtr<tiledb::Context> ctx, std::string name, std::string type, SEXP domain, SEXP tile_extent);
-std::string               libtiledb_dim_name(XPtr<tiledb::Dimension> dim);
-SEXP                      libtiledb_dim_domain(XPtr<tiledb::Dimension> dim);
-SEXP                      libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim);
-std::string               libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim);
+std::string               libtiledb_dim_get_name(XPtr<tiledb::Dimension> dim);
+SEXP                      libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim);
+SEXP                      libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim);
+std::string               libtiledb_dim_get_datatype(XPtr<tiledb::Dimension> dim);
 NumericVector             dim_domain_subarray(NumericVector domain, NumericVector subscript);
 
 

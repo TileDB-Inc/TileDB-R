@@ -117,20 +117,20 @@ libtiledb_dim <- function(ctx, name, type, domain, tile_extent) {
     .Call(`_tiledb_libtiledb_dim`, ctx, name, type, domain, tile_extent)
 }
 
-libtiledb_dim_name <- function(dim) {
-    .Call(`_tiledb_libtiledb_dim_name`, dim)
+libtiledb_dim_get_name <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_get_name`, dim)
 }
 
-libtiledb_dim_domain <- function(dim) {
-    .Call(`_tiledb_libtiledb_dim_domain`, dim)
+libtiledb_dim_get_domain <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_get_domain`, dim)
 }
 
-libtiledb_dim_tile_extent <- function(dim) {
-    .Call(`_tiledb_libtiledb_dim_tile_extent`, dim)
+libtiledb_dim_get_tile_extent <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_get_tile_extent`, dim)
 }
 
-libtiledb_dim_datatype <- function(dim) {
-    .Call(`_tiledb_libtiledb_dim_datatype`, dim)
+libtiledb_get_dim_datatype <- function(dim) {
+    .Call(`_tiledb_libtiledb_get_dim_datatype`, dim)
 }
 
 dim_domain_subarray <- function(domain, subscript) {

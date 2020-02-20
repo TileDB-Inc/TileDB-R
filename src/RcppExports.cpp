@@ -346,47 +346,47 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_name
-std::string libtiledb_dim_name(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_name(SEXP dimSEXP) {
+// libtiledb_dim_get_name
+std::string libtiledb_dim_get_name(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_dim_get_name(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_name(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_get_name(dim));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_domain
-SEXP libtiledb_dim_domain(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_domain(SEXP dimSEXP) {
+// libtiledb_dim_get_domain
+SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_dim_get_domain(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_domain(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_get_domain(dim));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_tile_extent
-SEXP libtiledb_dim_tile_extent(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_tile_extent(SEXP dimSEXP) {
+// libtiledb_dim_get_tile_extent
+SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_dim_get_tile_extent(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_tile_extent(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_get_tile_extent(dim));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_dim_datatype
-std::string libtiledb_dim_datatype(XPtr<tiledb::Dimension> dim);
-RcppExport SEXP _tiledb_libtiledb_dim_datatype(SEXP dimSEXP) {
+// libtiledb_get_dim_datatype
+std::string libtiledb_get_dim_datatype(XPtr<tiledb::Dimension> dim);
+RcppExport SEXP _tiledb_libtiledb_get_dim_datatype(SEXP dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Dimension> >::type dim(dimSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_dim_datatype(dim));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_get_dim_datatype(dim));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1503,10 +1503,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_config_unset", (DL_FUNC) &_tiledb_libtiledb_config_unset, 2},
     {"_tiledb_libtiledb_config_dump", (DL_FUNC) &_tiledb_libtiledb_config_dump, 1},
     {"_tiledb_libtiledb_dim", (DL_FUNC) &_tiledb_libtiledb_dim, 5},
-    {"_tiledb_libtiledb_dim_name", (DL_FUNC) &_tiledb_libtiledb_dim_name, 1},
-    {"_tiledb_libtiledb_dim_domain", (DL_FUNC) &_tiledb_libtiledb_dim_domain, 1},
-    {"_tiledb_libtiledb_dim_tile_extent", (DL_FUNC) &_tiledb_libtiledb_dim_tile_extent, 1},
-    {"_tiledb_libtiledb_dim_datatype", (DL_FUNC) &_tiledb_libtiledb_dim_datatype, 1},
+    {"_tiledb_libtiledb_dim_get_name", (DL_FUNC) &_tiledb_libtiledb_dim_get_name, 1},
+    {"_tiledb_libtiledb_dim_get_domain", (DL_FUNC) &_tiledb_libtiledb_dim_get_domain, 1},
+    {"_tiledb_libtiledb_dim_get_tile_extent", (DL_FUNC) &_tiledb_libtiledb_dim_get_tile_extent, 1},
+    {"_tiledb_libtiledb_get_dim_datatype", (DL_FUNC) &_tiledb_libtiledb_get_dim_datatype, 1},
     {"_tiledb_dim_domain_subarray", (DL_FUNC) &_tiledb_dim_domain_subarray, 2},
     {"_tiledb_libtiledb_domain", (DL_FUNC) &_tiledb_libtiledb_domain, 2},
     {"_tiledb_libtiledb_domain_get_type", (DL_FUNC) &_tiledb_libtiledb_domain_get_type, 1},
