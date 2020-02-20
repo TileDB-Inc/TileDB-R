@@ -161,8 +161,8 @@ libtiledb_filter <- function(ctx, filter) {
     .Call(`_tiledb_libtiledb_filter`, ctx, filter)
 }
 
-libtiledb_filter_type <- function(filter) {
-    .Call(`_tiledb_libtiledb_filter_type`, filter)
+libtiledb_filter_get_type <- function(filter) {
+    .Call(`_tiledb_libtiledb_filter_get_type`, filter)
 }
 
 libtiledb_filter_get_option <- function(filter, filter_option_str) {

@@ -751,7 +751,7 @@ XPtr<tiledb::Filter> libtiledb_filter(XPtr<tiledb::Context> ctx, std::string fil
 }
 
 //[[Rcpp::export]]
-std::string libtiledb_filter_type(XPtr<tiledb::Filter> filter) {
+std::string libtiledb_filter_get_type(XPtr<tiledb::Filter> filter) {
   return _tiledb_filter_to_string(filter->filter_type());
 }
 

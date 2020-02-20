@@ -469,14 +469,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_filter_type
-std::string libtiledb_filter_type(XPtr<tiledb::Filter> filter);
-RcppExport SEXP _tiledb_libtiledb_filter_type(SEXP filterSEXP) {
+// libtiledb_filter_get_type
+std::string libtiledb_filter_get_type(XPtr<tiledb::Filter> filter);
+RcppExport SEXP _tiledb_libtiledb_filter_get_type(SEXP filterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Filter> >::type filter(filterSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_type(filter));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_get_type(filter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1536,7 +1536,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_domain_get_dimensions", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimensions, 1},
     {"_tiledb_libtiledb_domain_dump", (DL_FUNC) &_tiledb_libtiledb_domain_dump, 1},
     {"_tiledb_libtiledb_filter", (DL_FUNC) &_tiledb_libtiledb_filter, 2},
-    {"_tiledb_libtiledb_filter_type", (DL_FUNC) &_tiledb_libtiledb_filter_type, 1},
+    {"_tiledb_libtiledb_filter_get_type", (DL_FUNC) &_tiledb_libtiledb_filter_get_type, 1},
     {"_tiledb_libtiledb_filter_get_option", (DL_FUNC) &_tiledb_libtiledb_filter_get_option, 2},
     {"_tiledb_libtiledb_filter_set_option", (DL_FUNC) &_tiledb_libtiledb_filter_set_option, 3},
     {"_tiledb_libtiledb_filter_list", (DL_FUNC) &_tiledb_libtiledb_filter_list, 2},

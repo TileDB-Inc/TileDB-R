@@ -107,8 +107,19 @@ void                      libtiledb_domain_dump(XPtr<tiledb::Domain> domain);
 
 
 ## Filter
+##
+## C++ API
+##
+## y Filter(const Context& ctx, tiledb_filter_type_t filter_type)
+##   Filter(const Context& ctx, tiledb_filter_t* filter)
+##   std::shared_ptr<tiledb_filter_t> ptr()
+##   template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr> Filter& set_option(tiledb_filter_option_t option, T value)
+## y Filter& set_option(tiledb_filter_option_t option, const void* value)
+##   template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr> void get_option(tiledb_filter_option_t option, T* value)
+## y void get_option(tiledb_filter_option_t option, void* value)
+## y tiledb_filter_type_t filter_type()
 XPtr<tiledb::Filter>      libtiledb_filter(XPtr<tiledb::Context> ctx, std::string filter);
-std::string               libtiledb_filter_type(XPtr<tiledb::Filter> filter);
+std::string               libtiledb_filter_get_type(XPtr<tiledb::Filter> filter);
 R_xlen_t                  libtiledb_filter_get_option(XPtr<tiledb::Filter> filter, std::string filter_option_str);
 void                      libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value);
 
@@ -137,7 +148,7 @@ XPtr<tiledb::Filter>      libtiledb_filter_list_filter(XPtr<tiledb::FilterList> 
 ## y FilterList filter_list() const {
 ##   Attribute& set_filter_list(const FilterList& filter_list)
 ##   std::shared_ptr<tiledb_attribute_t> ptr()
-##   void dump(FILE* out = nullptr)
+## y void dump(FILE* out = nullptr)
 ##   static Attribute create(const Context& ctx, const std::string& name)
 ##   template <typename T> static Attribute create(const Context& ctx, const std::string& name,
 ##                                                 const FilterList& filter_list)
