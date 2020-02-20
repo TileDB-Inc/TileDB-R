@@ -205,6 +205,10 @@ libtiledb_attribute_get_type <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_type`, attr)
 }
 
+libtiledb_attribute_get_cell_size <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_cell_size`, attr)
+}
+
 libtiledb_attribute_get_filter_list <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_filter_list`, attr)
 }
@@ -215,6 +219,10 @@ libtiledb_attribute_get_cell_val_num <- function(attr) {
 
 libtiledb_attribute_set_cell_val_num <- function(attr, num) {
     invisible(.Call(`_tiledb_libtiledb_attribute_set_cell_val_num`, attr, num))
+}
+
+libtiledb_attribute_is_variable_sized <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_is_variable_sized`, attr)
 }
 
 libtiledb_attribute_dump <- function(attr) {

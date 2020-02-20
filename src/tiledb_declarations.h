@@ -122,12 +122,33 @@ XPtr<tiledb::Filter>      libtiledb_filter_list_filter(XPtr<tiledb::FilterList> 
 
 
 ## Attribute
+##
+## C++ API
+##
+##   Attribute(const Context& ctx, tiledb_attribute_t* attr)
+##   Attribute(const Context& ctx, const std::string& name, tiledb_datatype_t type)
+## y Attribute(const Context& ctx, const std::string& name, tiledb_datatype_t type, const FilterList& filter_list)
+## y std::string name()
+## y tiledb_datatype_t type()
+## y uint64_t cell_size()
+## y unsigned cell_val_num()
+## y Attribute& set_cell_val_num(unsigned num)
+## y bool variable_sized()
+## y FilterList filter_list() const {
+##   Attribute& set_filter_list(const FilterList& filter_list)
+##   std::shared_ptr<tiledb_attribute_t> ptr()
+##   void dump(FILE* out = nullptr)
+##   static Attribute create(const Context& ctx, const std::string& name)
+##   template <typename T> static Attribute create(const Context& ctx, const std::string& name,
+##                                                 const FilterList& filter_list)
 XPtr<tiledb::Attribute>   libtiledb_attribute(XPtr<tiledb::Context> ctx, std::string name, std::string type, XPtr<tiledb::FilterList> filter_list, int ncells);
 std::string               libtiledb_attribute_get_name(XPtr<tiledb::Attribute> attr);
 std::string               libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr);
+double                    libtiledb_attribute_get_cell_size(XPtr<tiledb::Attribute> attr);
 XPtr<tiledb::FilterList>  libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr);
 int                       libtiledb_attribute_get_cell_val_num(XPtr<tiledb::Attribute> attr);
 void                      libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num);
+bool                      libtiledb_attribute_is_variable_sized(XPtr<tiledb::Attribute> attr)
 void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr);
 
 

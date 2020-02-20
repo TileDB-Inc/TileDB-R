@@ -861,6 +861,12 @@ std::string libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr) {
 }
 
 // [[Rcpp::export]]
+double libtiledb_attribute_get_cell_size(XPtr<tiledb::Attribute> attr) {
+  uint64_t size = attr->cell_size();
+  return static_cast<double>(size);
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
 }
@@ -885,6 +891,11 @@ void libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num)
     Rcpp::stop("Variable cell number of '%d' not sensible", num);
   }
   attr->set_cell_val_num(ncells);        // returns reference to self so nothing for us to return
+}
+
+//[[Rcpp::export]]
+bool libtiledb_attribute_is_variable_sized(XPtr<tiledb::Attribute> attr) {
+  return attr->variable_sized();
 }
 
 //[[Rcpp::export]]
