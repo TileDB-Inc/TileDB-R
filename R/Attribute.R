@@ -78,7 +78,7 @@ setGeneric("name", function(object) standardGeneric("name"))
 #' @export
 setMethod("name", signature(object = "tiledb_attr"),
           function(object) {
-            libtiledb_attribute_name(object@ptr)
+            libtiledb_attribute_get_name(object@ptr)
           })
 
 #' @rdname generics
@@ -99,7 +99,7 @@ setGeneric("datatype", function(object) standardGeneric("datatype"))
 #' @export
 setMethod("datatype", signature(object = "tiledb_attr"),
           function(object) {
-            libtiledb_attribute_datatype(object@ptr)
+            libtiledb_attribute_get_type(object@ptr)
           })
 
 #' Returns the `tiledb_filter_list` object associated with the given `tiledb_attr`
@@ -113,7 +113,7 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #' @export
 setMethod("filter_list", "tiledb_attr",
           function(object) {
-            ptr <- libtiledb_attribute_filter_list(object@ptr)
+            ptr <- libtiledb_attribute_get_filter_list(object@ptr)
             return(tiledb_filter_list.from_ptr(ptr))
           })
 
@@ -154,6 +154,6 @@ is.anonymous <- function(object) UseMethod("is.anonymous", object)
 #' @rdname is.anonymous
 #' @export
 is.anonymous.tiledb_attr <- function(object) {
-  name <- libtiledb_attribute_name(object@ptr)
+  name <- libtiledb_attribute_get_name(object@ptr)
   nchar(name) == 0
 }

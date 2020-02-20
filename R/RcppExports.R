@@ -197,16 +197,16 @@ libtiledb_attribute <- function(ctx, name, type, filter_list, ncells) {
     .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells)
 }
 
-libtiledb_attribute_name <- function(attr) {
-    .Call(`_tiledb_libtiledb_attribute_name`, attr)
+libtiledb_attribute_get_name <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_name`, attr)
 }
 
-libtiledb_attribute_datatype <- function(attr) {
-    .Call(`_tiledb_libtiledb_attribute_datatype`, attr)
+libtiledb_attribute_get_type <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_type`, attr)
 }
 
-libtiledb_attribute_filter_list <- function(attr) {
-    .Call(`_tiledb_libtiledb_attribute_filter_list`, attr)
+libtiledb_attribute_get_filter_list <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_filter_list`, attr)
 }
 
 libtiledb_attribute_get_cell_val_num <- function(attr) {

@@ -123,9 +123,9 @@ XPtr<tiledb::Filter>      libtiledb_filter_list_filter(XPtr<tiledb::FilterList> 
 
 ## Attribute
 XPtr<tiledb::Attribute>   libtiledb_attribute(XPtr<tiledb::Context> ctx, std::string name, std::string type, XPtr<tiledb::FilterList> filter_list, int ncells);
-std::string               libtiledb_attribute_name(XPtr<tiledb::Attribute> attr);
-std::string               libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr);
-XPtr<tiledb::FilterList>  libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr);
+std::string               libtiledb_attribute_get_name(XPtr<tiledb::Attribute> attr);
+std::string               libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr);
+XPtr<tiledb::FilterList>  libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr);
 int                       libtiledb_attribute_get_cell_val_num(XPtr<tiledb::Attribute> attr);
 void                      libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num);
 void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr);

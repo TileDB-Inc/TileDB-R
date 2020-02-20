@@ -851,17 +851,17 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attribute_name(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_get_name(XPtr<tiledb::Attribute> attr) {
   return attr->name();
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr) {
+std::string libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr) {
   return _tiledb_datatype_to_string(attr->type());
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::FilterList> libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr) {
+XPtr<tiledb::FilterList> libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
 }
 

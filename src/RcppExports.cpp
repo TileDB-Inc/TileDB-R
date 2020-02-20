@@ -576,36 +576,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attribute_name
-std::string libtiledb_attribute_name(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attribute_name(SEXP attrSEXP) {
+// libtiledb_attribute_get_name
+std::string libtiledb_attribute_get_name(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_name(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_name(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_name(attr));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attribute_datatype
-std::string libtiledb_attribute_datatype(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attribute_datatype(SEXP attrSEXP) {
+// libtiledb_attribute_get_type
+std::string libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_type(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_datatype(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_type(attr));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_attribute_filter_list
-XPtr<tiledb::FilterList> libtiledb_attribute_filter_list(XPtr<tiledb::Attribute> attr);
-RcppExport SEXP _tiledb_libtiledb_attribute_filter_list(SEXP attrSEXP) {
+// libtiledb_attribute_get_filter_list
+XPtr<tiledb::FilterList> libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_filter_list(SEXP attrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_filter_list(attr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_filter_list(attr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1523,9 +1523,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_filter_list_nfilters", (DL_FUNC) &_tiledb_libtiledb_filter_list_nfilters, 1},
     {"_tiledb_libtiledb_filter_list_filter", (DL_FUNC) &_tiledb_libtiledb_filter_list_filter, 2},
     {"_tiledb_libtiledb_attribute", (DL_FUNC) &_tiledb_libtiledb_attribute, 5},
-    {"_tiledb_libtiledb_attribute_name", (DL_FUNC) &_tiledb_libtiledb_attribute_name, 1},
-    {"_tiledb_libtiledb_attribute_datatype", (DL_FUNC) &_tiledb_libtiledb_attribute_datatype, 1},
-    {"_tiledb_libtiledb_attribute_filter_list", (DL_FUNC) &_tiledb_libtiledb_attribute_filter_list, 1},
+    {"_tiledb_libtiledb_attribute_get_name", (DL_FUNC) &_tiledb_libtiledb_attribute_get_name, 1},
+    {"_tiledb_libtiledb_attribute_get_type", (DL_FUNC) &_tiledb_libtiledb_attribute_get_type, 1},
+    {"_tiledb_libtiledb_attribute_get_filter_list", (DL_FUNC) &_tiledb_libtiledb_attribute_get_filter_list, 1},
     {"_tiledb_libtiledb_attribute_get_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attribute_get_cell_val_num, 1},
     {"_tiledb_libtiledb_attribute_set_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attribute_set_cell_val_num, 2},
     {"_tiledb_libtiledb_attribute_dump", (DL_FUNC) &_tiledb_libtiledb_attribute_dump, 1},
