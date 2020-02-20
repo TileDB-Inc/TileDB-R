@@ -1,6 +1,9 @@
 ---
 title: "TileDB R Notebook"
 output:
+  html_document:
+    toc: yes
+    df_print: paged
   html_notebook:
     toc: yes
     highlight: pygments
@@ -132,7 +135,7 @@ tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, 3)
 
 # And we can set the a variable nunber of attributes (using NA to select variable size)
 tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
-## TODO: R level setter
+## TODO: R function for level setter
 ```
 
 #### Setting a Compressor
@@ -202,7 +205,7 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 ```{r settilecapacity}
 tiledb:::libtiledb_array_schema_set_capacity(schema@ptr, 100000)
 tiledb:::libtiledb_array_schema_get_capacity(schema@ptr)
-## TODO R accessor
+## TODO R function for accessor
 ```
 
 #### Setting Coordinate and Offset Filters
@@ -225,10 +228,12 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 
 #### Checking Correctness
 
-```{r arrayschemacheck
+```{r arrayschemacheck}
 tiledb:::libtiledb_array_schema_check(schema@ptr)
-## TODO: R access
+## TODO: R function for access
 ```
+
+
 
 ### Creating the Array
 
@@ -332,22 +337,30 @@ TODO R support
 
 ### Reading the Array Schema
 
-#### Inspecting the array schema
+```{r schemaload}
+array_name <- "/tmp/tiledb/quickstart_sparse"
+A <- tiledb_sparse(uri = array_name)
+# can also load dense
+sch <- schema(A)
+# can also open encrypted arrays with key
+```
 
-TODO R support for direct schema load
+#### Inspecting the array schema
 
 ```{r schemainspect}
 array_name <- "/tmp/tiledb/quickstart_sparse"
 
 # Get array schema
-A <- tiledb_sparse(uri = array_name) # Similar for tiledb_dense()
+A <- tiledb_sparse(uri = array_name)
+# or use tiledb_dense(uri = array_name) for dense
 schema <- schema(A)
 
 # Get array type
 sparse <- is.sparse(schema)
 
 # Get tile capacity
-# TODO: tile capacity is not supported in R currently
+tiledb:::libtiledb_array_schema_get_capacity(sch@ptr)
+# TODO: R accessor for tile
 
 # Get tile order
 t_order <- tile_order(schema)
@@ -367,7 +380,7 @@ attrs <- attrs(schema)
 # Get attribute from name
 attr <- attrs(schema, "attr")
 
-# Dump the array schema in ASCII format in the selected output
+# Dump the array schema in ASCII format to stdout
 show(schema)
 ```
 
@@ -452,8 +465,19 @@ show(attr)
 
 #### Inspecting Filters
 
-TODO R support
+```{r inspectfilters, eval=FALSE}
+fl <- tiledb_filter_list()
 
+# get number of filter
+tiledb:::libtiledb_filter_list_get_nfilters(fl@ptr)
+
+# get max chunk size
+tiledb:::libtiledb_filter_list_get_max_chunk_size(fl@ptr)
+
+# get filter from index
+ind <- i
+tiledb:::libtiledb_filter_list_get_filter_from_index(fl@ptr, ind)
+```
 
 ### Basic Reading
 ### Reading Encrypted Arrays
