@@ -129,8 +129,8 @@ libtiledb_dim_get_tile_extent <- function(dim) {
     .Call(`_tiledb_libtiledb_dim_get_tile_extent`, dim)
 }
 
-libtiledb_get_dim_datatype <- function(dim) {
-    .Call(`_tiledb_libtiledb_get_dim_datatype`, dim)
+libtiledb_dim_get_datatype <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_get_datatype`, dim)
 }
 
 dim_domain_subarray <- function(domain, subscript) {

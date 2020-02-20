@@ -629,7 +629,7 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_get_dim_datatype(XPtr<tiledb::Dimension> dim) {
+std::string libtiledb_dim_get_datatype(XPtr<tiledb::Dimension> dim) {
   return _tiledb_datatype_to_string(dim->type());
 }
 
