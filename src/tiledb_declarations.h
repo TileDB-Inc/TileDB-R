@@ -214,7 +214,6 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr
                                                  Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue, bool sparse = false);
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,std::string uri);
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string key);
-XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
 XPtr<tiledb::Domain>      libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema);
 List                      libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_get_array_type(XPtr<tiledb::ArraySchema> schema);
@@ -231,18 +230,61 @@ bool                      libtiledb_array_schema_has_attribute(XPtr<tiledb::Arra
 bool                      libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema);
 void                      libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema);
 void                      libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema);
-std::string               libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
-std::string               libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema, std::string encryption_key);
 
 
 ## Array
+##
+## C++ API
+## y Array(const Context& ctx, const std::string& array_uri, tiledb_query_type_t query_type)
+## y Array(const Context& ctx, const std::string& array_uri, tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length)
+## y Array(const Context& ctx, const std::string& array_uri, tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const std::string& encryption_key)
+##   Array(const Context& ctx, const std::string& array_uri, tiledb_query_type_t query_type, uint64_t timestamp)
+##   Array(const Context& ctx, const std::string& array_uri, tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length, uint64_t timestamp)
+##   Array(const Context& ctx, const std::string& array_uri, tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const std::string& encryption_key, uint64_t timestamp)
+##   ~Array()
+## y bool is_open()
+## y std::string uri()
+## y ArraySchema schema()   /* returning XPtr */
+##   std::shared_ptr<tiledb_array_t> ptr()
+##   void open(tiledb_query_type_t query_type)
+##   void open(tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length)
+##   void open(tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const std::string& encryption_key)
+##   void open(tiledb_query_type_t query_type, uint64_t timestamp)
+##   void open(tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length, uint64_t timestamp)
+##   void open(tiledb_query_type_t query_type, tiledb_encryption_type_t encryption_type, const std::string& encryption_key, uint64_t timestamp)
+## y void reopen()
+##   void reopen_at(uint64_t timestamp)
+##   uint64_t timestamp()
+## y void close()
+##   static void consolidate(const Context& ctx, const std::string& uri, Config* const config = nullptr)
+##   static void consolidate(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length, Config* const config = nullptr)
+##   static void consolidate(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const std::string& encryption_key, Config* const config = nullptr)
+##   static void create(const std::string& uri, const ArraySchema& schema)
+##   static void create(const std::string& uri, const ArraySchema& schema, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length)
+##   static void create(const std::string& uri, const ArraySchema& schema, tiledb_encryption_type_t encryption_type, const std::string& encryption_key)
+##   static tiledb_encryption_type_t encryption_type(const Context& ctx, const std::string& array_uri)
+## y template <typename T> std::vector<std::pair<std::string, std::pair<T, T>>> non_empty_domain()
+##   template <typename T> std::unordered_map<std::string, std::pair<uint64_t, uint64_t>> max_buffer_elements(const std::vector<T>& subarray)
+## y tiledb_query_type_t query_type()
+##   static void consolidate_metadata(const Context& ctx, const std::string& uri, Config* const config = nullptr)
+##   static void consolidate_metadata(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length, Config* const config = nullptr)
+##   static void consolidate_metadata(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const std::string& encryption_key, Config* const config = nullptr)
+##   void put_metadata(const std::string& key, tiledb_datatype_t value_type, uint32_t value_num, const void* value)
+##   void delete_metadata(const std::string& key)
+##   void get_metadata(const std::string& key, tiledb_datatype_t* value_type, uint32_t* value_num, const void** value)
+##   bool has_metadata(const std::string& key, tiledb_datatype_t* value_type)
+##   uint64_t metadata_num()
+##   void get_metadata_from_index(uint64_t index, std::string* key, tiledb_datatype_t* value_type, uint32_t* value_num, const void** value)
+std::string               libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
+std::string               libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema, std::string encryption_key);
 XPtr<tiledb::Array>       libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
 XPtr<tiledb::Array>       libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
-bool                      libtiledb_array_is_open(XPtr<tiledb::Array> array);
-bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array);
-bool                      libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array);
-std::string               libtiledb_array_get_uri(XPtr<tiledb::Array> array);
 XPtr<tiledb::Array>       libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type);
+bool                      libtiledb_array_is_open(XPtr<tiledb::Array> array);
+bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array);   /* simple extension */
+bool                      libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array);   /* simple extension */
+std::string               libtiledb_array_get_uri(XPtr<tiledb::Array> array);
+XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
 XPtr<tiledb::Array>       libtiledb_array_reopen(XPtr<tiledb::Array> array);
 XPtr<tiledb::Array>       libtiledb_array_close(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_query_type(XPtr<tiledb::Array> array);
