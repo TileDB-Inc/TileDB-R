@@ -335,7 +335,7 @@ TODO R support
 ### Reading the Array Schema
 
 ```{r schemaload}
-array_name <- "/tmp/tiledb/quickstart_sparse"
+array_name <- urisparse
 A <- tiledb_sparse(uri = array_name)
 # can also load dense
 sch <- schema(A)
@@ -345,7 +345,7 @@ sch <- schema(A)
 #### Inspecting the array schema
 
 ```{r schemainspect}
-array_name <- "/tmp/tiledb/quickstart_sparse"
+array_name <- urisparse
 
 # Get array schema
 A <- tiledb_sparse(uri = array_name)
