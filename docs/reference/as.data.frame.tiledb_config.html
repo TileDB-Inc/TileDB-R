@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -137,58 +137,59 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span>()
 <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>cfg</span>)</div><div class='output co'>#&gt;                           parameter                  value
-#&gt; 1               rest.server_address https://api.tiledb.com
-#&gt; 2  rest.server_serialization_format                  CAPNP
-#&gt; 3               sm.check_coord_dups                   true
-#&gt; 4                sm.check_coord_oob                   true
-#&gt; 5             sm.check_global_order                   true
-#&gt; 6    sm.consolidation.amplification                    1.0
-#&gt; 7      sm.consolidation.buffer_size               50000000
-#&gt; 8   sm.consolidation.step_max_frags             4294967295
-#&gt; 9   sm.consolidation.step_min_frags             4294967295
-#&gt; 10 sm.consolidation.step_size_ratio                    0.0
-#&gt; 11           sm.consolidation.steps             4294967295
-#&gt; 12                  sm.dedup_coords                  false
-#&gt; 13        sm.enable_signal_handlers                   true
-#&gt; 14                 sm.memory_budget             5368709120
-#&gt; 15             sm.memory_budget_var            10737418240
-#&gt; 16             sm.num_async_threads                      1
-#&gt; 17            sm.num_reader_threads                      1
-#&gt; 18               sm.num_tbb_threads                     -1
-#&gt; 19            sm.num_writer_threads                      1
-#&gt; 20               sm.tile_cache_size               10000000
-#&gt; 21        vfs.file.enable_filelocks                   true
-#&gt; 22        vfs.file.max_parallel_ops                     12
-#&gt; 23  vfs.hdfs.kerb_ticket_cache_path                       
-#&gt; 24           vfs.hdfs.name_node_uri                       
-#&gt; 25                vfs.hdfs.username                       
-#&gt; 26                vfs.min_batch_gap                 512000
-#&gt; 27               vfs.min_batch_size               20971520
-#&gt; 28            vfs.min_parallel_size               10485760
-#&gt; 29                  vfs.num_threads                     12
-#&gt; 30         vfs.s3.aws_access_key_id                       
-#&gt; 31     vfs.s3.aws_secret_access_key                       
-#&gt; 32         vfs.s3.aws_session_token                       
-#&gt; 33                   vfs.s3.ca_file                       
-#&gt; 34                   vfs.s3.ca_path                       
-#&gt; 35         vfs.s3.connect_max_tries                      5
-#&gt; 36      vfs.s3.connect_scale_factor                     25
-#&gt; 37        vfs.s3.connect_timeout_ms                   3000
-#&gt; 38         vfs.s3.endpoint_override                       
-#&gt; 39             vfs.s3.logging_level                    Off
-#&gt; 40          vfs.s3.max_parallel_ops                     12
-#&gt; 41       vfs.s3.multipart_part_size                5242880
-#&gt; 42                vfs.s3.proxy_host                       
-#&gt; 43            vfs.s3.proxy_password                       
-#&gt; 44                vfs.s3.proxy_port                      0
-#&gt; 45              vfs.s3.proxy_scheme                  https
-#&gt; 46            vfs.s3.proxy_username                       
-#&gt; 47                    vfs.s3.region              us-east-1
-#&gt; 48        vfs.s3.request_timeout_ms                   3000
-#&gt; 49                    vfs.s3.scheme                  https
-#&gt; 50      vfs.s3.use_multipart_upload                   true
-#&gt; 51    vfs.s3.use_virtual_addressing                   true
-#&gt; 52                vfs.s3.verify_ssl                   true</div><div class='input'>
+#&gt; 1              rest.http_compressor                    any
+#&gt; 2               rest.server_address https://api.tiledb.com
+#&gt; 3  rest.server_serialization_format                  CAPNP
+#&gt; 4               sm.check_coord_dups                   true
+#&gt; 5                sm.check_coord_oob                   true
+#&gt; 6             sm.check_global_order                   true
+#&gt; 7    sm.consolidation.amplification                    1.0
+#&gt; 8      sm.consolidation.buffer_size               50000000
+#&gt; 9   sm.consolidation.step_max_frags             4294967295
+#&gt; 10  sm.consolidation.step_min_frags             4294967295
+#&gt; 11 sm.consolidation.step_size_ratio                    0.0
+#&gt; 12           sm.consolidation.steps             4294967295
+#&gt; 13                  sm.dedup_coords                  false
+#&gt; 14        sm.enable_signal_handlers                   true
+#&gt; 15                 sm.memory_budget             5368709120
+#&gt; 16             sm.memory_budget_var            10737418240
+#&gt; 17             sm.num_async_threads                      1
+#&gt; 18            sm.num_reader_threads                      1
+#&gt; 19               sm.num_tbb_threads                     -1
+#&gt; 20            sm.num_writer_threads                      1
+#&gt; 21               sm.tile_cache_size               10000000
+#&gt; 22        vfs.file.enable_filelocks                   true
+#&gt; 23        vfs.file.max_parallel_ops                     12
+#&gt; 24  vfs.hdfs.kerb_ticket_cache_path                       
+#&gt; 25           vfs.hdfs.name_node_uri                       
+#&gt; 26                vfs.hdfs.username                       
+#&gt; 27                vfs.min_batch_gap                 512000
+#&gt; 28               vfs.min_batch_size               20971520
+#&gt; 29            vfs.min_parallel_size               10485760
+#&gt; 30                  vfs.num_threads                     12
+#&gt; 31         vfs.s3.aws_access_key_id                       
+#&gt; 32     vfs.s3.aws_secret_access_key                       
+#&gt; 33         vfs.s3.aws_session_token                       
+#&gt; 34                   vfs.s3.ca_file                       
+#&gt; 35                   vfs.s3.ca_path                       
+#&gt; 36         vfs.s3.connect_max_tries                      5
+#&gt; 37      vfs.s3.connect_scale_factor                     25
+#&gt; 38        vfs.s3.connect_timeout_ms                   3000
+#&gt; 39         vfs.s3.endpoint_override                       
+#&gt; 40             vfs.s3.logging_level                    Off
+#&gt; 41          vfs.s3.max_parallel_ops                     12
+#&gt; 42       vfs.s3.multipart_part_size                5242880
+#&gt; 43                vfs.s3.proxy_host                       
+#&gt; 44            vfs.s3.proxy_password                       
+#&gt; 45                vfs.s3.proxy_port                      0
+#&gt; 46              vfs.s3.proxy_scheme                  https
+#&gt; 47            vfs.s3.proxy_username                       
+#&gt; 48                    vfs.s3.region              us-east-1
+#&gt; 49        vfs.s3.request_timeout_ms                   3000
+#&gt; 50                    vfs.s3.scheme                  https
+#&gt; 51      vfs.s3.use_multipart_upload                   true
+#&gt; 52    vfs.s3.use_virtual_addressing                   true
+#&gt; 53                vfs.s3.verify_ssl                   true</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -205,7 +206,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by TileDB-Inc..</p>
+  <p>Developed by  TileDB.</p>
 </div>
 
 <div class="pkgdown">

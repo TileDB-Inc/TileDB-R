@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -294,7 +294,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr>
@@ -362,7 +362,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr>
@@ -415,6 +415,12 @@
           <p><code><a href="cell_order-tiledb_array_schema-method.html">cell_order(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the cell layout string associated with the <code>tiledb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cell_val_num-tiledb_attr-method.html">cell_val_num(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Return the number of scalar values per attribute cell</p></td>
       </tr><tr>
         
         <td>
@@ -496,7 +502,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr><tr>
@@ -564,12 +570,6 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
           <p><code><a href="name-tiledb_dim-method.html">name(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Return the <code>tiledb_dim</code> name</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ncells-tiledb_attr-method.html">ncells(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the number of scalar values per attribute cell</p></td>
       </tr><tr>
         
         <td>
@@ -759,6 +759,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_delete_metadata.html">tiledb_delete_metadata()</a></code> </p>
+        </td>
+        <td><p>Delete a TileDB Array Metadata object given by key</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_dense-class.html">tiledb_dense-class</a></code> </p>
         </td>
         <td><p>An S4 class for a TileDB dense array</p></td>
@@ -834,6 +840,12 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
           <p><code><a href="tiledb_filter_type.html">tiledb_filter_type()</a></code> </p>
         </td>
         <td><p>Returns the type of the filter used</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_get_all_metadata.html">tiledb_get_all_metadata()</a></code> </p>
+        </td>
+        <td><p>Return a TileDB Array Metadata object given by key</p></td>
       </tr><tr>
         
         <td>
@@ -1007,7 +1019,7 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr><tr>
@@ -1081,7 +1093,7 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">ncells()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr>
@@ -1210,7 +1222,7 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by TileDB-Inc..</p>
+  <p>Developed by  TileDB.</p>
 </div>
 
 <div class="pkgdown">
