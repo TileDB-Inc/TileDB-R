@@ -1,9 +1,6 @@
 ---
 title: "TileDB R Notebook"
 output:
-  html_document:
-    toc: yes
-    df_print: paged
   html_notebook:
     toc: yes
     highlight: pygments
