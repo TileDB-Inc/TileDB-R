@@ -1,7 +1,10 @@
 ---
 title: "TileDB R Notebook"
 output:
-  html_notebook:
+  html_document:
+    toc: yes
+    df_print: paged
+  html_notebook: 
     toc: yes
     highlight: pygments
     theme: lumen
@@ -477,6 +480,40 @@ tiledb:::libtiledb_filter_list_get_filter_from_index(fl@ptr, ind)
 ```
 
 ### Basic Reading
+
+```{r basiscreading}
+# Create a TileDB context
+ctx <- tiledb_ctx()
+
+# Open a dense array
+A <- tiledb_dense(uri = uridense, ctx=ctx)
+
+# Or, open a sparse array
+# A <- tiledb_sparse(uri = "<array-uri>", ctx=ctx)
+
+# Slice only rows 1, 2 and cols 2, 3, 4
+data <- A[1:2, 2:4]
+show(data)
+```
+
+#### Basic Reading using Low-Level Code
+
+```{r basiscreadinglowlevel}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+## subarray of rows 1,2 and cols 2,3,4
+subarr <- c(1L,2L, 2L,4L)
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+v <- integer(6)  # reserve space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates
+res <- tiledb:::libtiledb_array_close(arrptr)
+```
+
 ### Reading Encrypted Arrays
 ### Multi-range Subarrays
 ### Incomplete Queries
