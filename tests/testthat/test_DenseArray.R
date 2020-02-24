@@ -448,10 +448,19 @@ test_that("low-level write and read works", {
     unlink_and_create(tmp)
   })
 
-  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "WRITE")
-
   ## data: simple (integer sequence) of 1:16 times 10
   vec <- 1:16 * 10L
+
+  d1  <- tiledb_dim(domain = c(1L, 4L))
+  d2  <- tiledb_dim(domain = c(1L, 4L))
+  dom <- tiledb_domain(c(d1, d2))
+  val <- tiledb_attr("a", type = r_to_tiledb_type(vec))
+  sch <- tiledb_array_schema(dom, c(val))
+  tiledb_array_create(tmp, sch)
+
+  ctx <- tiledb_ctx()
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, tmp, "WRITE")
+
   subarr <- c(1L,4L, 1L,4L)
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
@@ -462,7 +471,7 @@ test_that("low-level write and read works", {
   res <- tiledb:::libtiledb_array_close(arrptr)
 
 
-  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, tmp, "READ")
   ## subarray of rows 1,2 and cols 2,3,4
   subarr <- c(1L,2L, 2L,4L)
 
@@ -477,7 +486,7 @@ test_that("low-level write and read works", {
   res <- tiledb:::libtiledb_array_close(arrptr)
 
 
-  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, tmp, "READ")
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
