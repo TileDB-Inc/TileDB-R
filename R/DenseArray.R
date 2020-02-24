@@ -363,10 +363,12 @@ setMethod("[<-", "tiledb_dense",
                 for (idx in seq_along(value)) {
                   aname <- attr_names[[idx]]
                   val = value[[idx]]
-                  if (is.list(val) || is.character(val))
+                  if (is.list(val) || is.character(val)) {
+                      stop("Sorry, char support is not currently available.")
                       qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                  else
+                  } else {
                       qry <- libtiledb_query_set_buffer(qry, aname, val)
+                  }
                 }
                 qry <- libtiledb_query_submit(qry)
                 if (libtiledb_query_status(qry) != "COMPLETE") {
