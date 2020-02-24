@@ -365,7 +365,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 
 TODO R support
 
-### Fixed-length Attributes
+### Var-length Attributes
 
 TODO R support
 
