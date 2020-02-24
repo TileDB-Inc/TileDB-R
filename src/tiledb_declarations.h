@@ -210,6 +210,9 @@ void                      libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr)
 ##   bool has_attribute(const std::string& name)
 ##   static std::string to_str(tiledb_array_type_t type)
 ##   static std::string to_str(tiledb_layout_t layout)
+##
+##   also below for Array()
+## y ArraySchema schema()   /* returning XPtr */
 XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order,
                                                  Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue, bool sparse = false);
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,std::string uri);

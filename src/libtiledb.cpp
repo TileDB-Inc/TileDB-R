@@ -835,18 +835,21 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
   }
   if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-    auto attr = XPtr<tiledb::Attribute>(
-      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
   } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-    auto attr = XPtr<tiledb::Attribute>(
-      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    attr->set_filter_list(*filter_list);
+    return attr;
+  } else if (attr_dtype == TILEDB_CHAR) {
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
   } else {
-    throw Rcpp::exception("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
+    throw Rcpp::exception("only integer (INT32), logical (INT32), real (FLOAT64) and character (CHAR) attributes are supported");
   }
 }
 
@@ -1201,8 +1204,8 @@ std::string libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
  */
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
-                                 XPtr<tiledb::Array> array,
-                                 std::string type) {
+                                    XPtr<tiledb::Array> array,
+                                    std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto query = XPtr<tiledb::Query>(
     new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type)));
@@ -1251,8 +1254,8 @@ XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
-                                            std::string attr,
-                                            SEXP buffer) {
+                                               std::string attr,
+                                               SEXP buffer) {
   if (TYPEOF(buffer) == INTSXP) {
     IntegerVector vec(buffer);
     query->set_buffer(attr, vec.begin(), vec.length());
