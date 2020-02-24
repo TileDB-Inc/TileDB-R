@@ -297,19 +297,19 @@ std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
 ##
 ## C++ API
 ##
-##   Query(const Context& ctx, const Array& array, tiledb_query_type_t type)
+## y Query(const Context& ctx, const Array& array, tiledb_query_type_t type)
 ##   Query(const Context& ctx, const Array& array)
 ##   std::shared_ptr<tiledb_query_t> ptr()
 ##   tiledb_query_type_t query_type()
-##   Query& set_layout(tiledb_layout_t layout)
+## y Query& set_layout(tiledb_layout_t layout)
 ##   tiledb_layout_t query_layout()
 ##   Status query_status()
 ##   bool has_results()
-##   Status submit()
+## y Status submit()
 ##   template <typename Fn> void submit_async(const Fn& callback)
 ##   void submit_async()
-##   void finalize()
-##   std::unordered_map<std::string, std::pair<uint64_t, uint64_t>> result_buffer_elements()
+## y void finalize()
+## y std::unordered_map<std::string, std::pair<uint64_t, uint64_t>> result_buffer_elements()
 ##   template <class T> Query& add_range(uint32_t dim_idx, T start, T end, T stride = 0)
 ##   uint64_t range_num(unsigned dim_idx)
 ##   template <class T> std::array<T, 3> range(unsigned dim_idx, uint64_t range_idx)
@@ -318,11 +318,11 @@ std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
 ##   uint32_t fragment_num()
 ##   std::string fragment_uri(uint32_t idx)
 ##   std::pair<uint64_t, uint64_t> fragment_timestamp_range(uint32_t idx)
-##   template <typename T = uint64_t> Query& set_subarray(const T* pairs, uint64_t size)
+## y template <typename T = uint64_t> Query& set_subarray(const T* pairs, uint64_t size)
 ##   template <typename Vec> Query& set_subarray(const Vec& pairs)
 ##   template <typename T = uint64_t> Query& set_subarray(const std::initializer_list<T>& l)
 ##   template <typename T = uint64_t> Query& set_subarray(const std::vector<std::array<T, 2>>& pairs)
-##   template <typename T> Query& set_coordinates(T* buf, uint64_t size)
+## y template <typename T> Query& set_coordinates(T* buf, uint64_t size)
 ##   template <typename T> Query& set_buffer(const std::string& attr, T* buff, uint64_t nelements)
 ##   template <typename T> Query& set_buffer(const std::string& attr, std::vector<T>& buf)
 ##   Query& set_buffer(const std::string& attr, void* buff, uint64_t nelements)
@@ -331,7 +331,7 @@ std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
 ##   template <typename T> Query& set_buffer(const std::string& attr, std::vector<uint64_t>& offsets, std::vector<T>& data)
 ##   template <typename T> Query& set_buffer(const std::string& attr, std::pair<std::vector<uint64_t>, std::vector<T>>& buf)
 ##   Query& set_buffer(const std::string& attr, std::vector<uint64_t>& offsets, std::string& data)
-##   static Status to_status(const tiledb_query_status_t& status)
+## y static Status to_status(const tiledb_query_status_t& status)
 ##   static std::string to_str(tiledb_query_type_t type)
 XPtr<tiledb::Query>       libtiledb_query(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array, std::string type);
 XPtr<tiledb::Query>       libtiledb_query_set_layout(XPtr<tiledb::Query> query, std::string layout);
@@ -340,7 +340,6 @@ XPtr<tiledb::Query>       libtiledb_query_set_coordinates(XPtr<tiledb::Query> qu
 XPtr<tiledb::Query>       libtiledb_query_set_buffer(XPtr<tiledb::Query> query, std::string attr, SEXP buffer);
 XPtr<tiledb::Query>       libtiledb_query_submit(XPtr<tiledb::Query> query);
 XPtr<tiledb::Query>       libtiledb_query_finalize(XPtr<tiledb::Query> query);
-std::string               _query_status_to_string(tiledb::Query::Status status);
 std::string               libtiledb_query_status(XPtr<tiledb::Query> query);
 R_xlen_t                  libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute);
 
