@@ -417,7 +417,7 @@ test_that("Can read / write a simple 2D matrix with list of coordinates", {
   })
 })
 
-test_that( "treating logical as INT32 works", {
+test_that("treating logical as INT32 works", {
   tmp <- tempfile()
   setup({
     unlink_and_create(tmp)
@@ -438,5 +438,54 @@ test_that( "treating logical as INT32 works", {
   int_dat = dat
   storage.mode(int_dat) = "integer"
   expect_equal(arr[], int_dat)
+
+})
+
+
+test_that("low-level write and read works", {
+  tmp <- tempfile()
+  setup({
+    unlink_and_create(tmp)
+  })
+
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "WRITE")
+
+  ## data: simple (integer sequence) of 1:16 times 10
+  vec <- 1:16 * 10L
+  subarr <- c(1L,4L, 1L,4L)
+
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+  qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  res <- tiledb:::libtiledb_array_close(arrptr)
+
+
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+  ## subarray of rows 1,2 and cols 2,3,4
+  subarr <- c(1L,2L, 2L,4L)
+
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+  v <- integer(6)
+  qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  #print(v)         # unformed array, no coordinates
+  expect_equal(v, c(20L, 30L, 40L, 60L, 70L, 80L))
+  res <- tiledb:::libtiledb_array_close(arrptr)
+
+
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
+  v <- integer(6)
+  qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  #print(v)         # unformed array, no coordinates
+  expect_equal(v, c(20L, 60L, 30L, 70L, 40L, 80L))
+  res <- tiledb:::libtiledb_array_close(arrptr)
 
 })

@@ -1716,7 +1716,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(uridense)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpQNzyNs/dense&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmp79HaZB/dense&quot;</code></pre>
 <pre class="r"><code>write_array(uridense)
 
 
@@ -1750,7 +1750,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(urisparse)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpQNzyNs/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmp79HaZB/sparse&quot;</code></pre>
 <pre class="r"><code>write_array(urisparse)</code></pre>
 </div>
 <div id="api-usage" class="section level1">
@@ -1912,6 +1912,22 @@ A &lt;- tiledb_dense(uri = tmp)
 A[I, J] &lt;- data
 
 unlink(tmp, recursive=TRUE)</code></pre>
+<div id="basic-writing-using-low-level-code" class="section level4">
+<h4>Basic Writing using Low-Level Code</h4>
+<pre class="r"><code>ctx &lt;- tiledb_ctx()
+arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridense, &quot;WRITE&quot;)
+
+## data: simple (integer sequence) of 1:16 times 10
+vec &lt;- 1:16 * 10L
+subarr &lt;- c(1L,4L, 1L,4L)
+
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;WRITE&quot;)
+qryptr &lt;- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, &quot;ROW_MAJOR&quot;)
+qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, &quot;a&quot;, vec)
+qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
+res &lt;- tiledb:::libtiledb_array_close(arrptr)</code></pre>
+</div>
 </div>
 <div id="writing-sparse-cells" class="section level3">
 <h3>Writing Sparse Cells</h3>
@@ -1924,7 +1940,7 @@ dom &lt;- tiledb_domain(c(d1, d2))
 val &lt;- tiledb_attr(&quot;val&quot;, type = &quot;INT32&quot;)
 sch &lt;- tiledb_array_schema(dom, c(val), sparse=TRUE)
 tiledb_array_create(tmp, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpQNzyNs/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmp79HaZB/sparse&quot;</code></pre>
 <pre class="r"><code># Prepare some data
 data &lt;- c(3L, 4L, 1L, 2L)
 
@@ -2097,8 +2113,8 @@ A &lt;- tiledb_dense(uri = uridense, ctx=ctx)
 data &lt;- A[1:2, 2:4]
 show(data)</code></pre>
 <pre><code>##      [,1] [,2] [,3]
-## [1,]    2    3    4
-## [2,]    6    7    8</code></pre>
+## [1,]   20   30   40
+## [2,]   60   70   80</code></pre>
 <div id="basic-reading-using-low-level-code" class="section level4">
 <h4>Basic Reading using Low-Level Code</h4>
 <pre class="r"><code>ctx &lt;- tiledb_ctx()
@@ -2113,7 +2129,7 @@ v &lt;- integer(6)  # reserve space
 qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, &quot;a&quot;, v)
 qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
 print(v)         # unformed array, no coordinates</code></pre>
-<pre><code>## [1] 2 3 4 6 7 8</code></pre>
+<pre><code>## [1] 20 30 40 60 70 80</code></pre>
 <pre class="r"><code>res &lt;- tiledb:::libtiledb_array_close(arrptr)</code></pre>
 </div>
 </div>

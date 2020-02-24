@@ -4,7 +4,7 @@ output:
   html_document:
     toc: yes
     df_print: paged
-  html_notebook: 
+  html_notebook:
     toc: yes
     highlight: pygments
     theme: lumen
@@ -247,10 +247,12 @@ tiledb_array_create(uridense, schema)
 ### Creating Encrypted Arrays
 
 ```{r createwithkey}
-if (FALSE) { # commented out as read support for encryption is not there yet
-  encryption_key <- "0123456789abcdeF0123456789abcdeF"
-  tiledb:::libtiledb_array_create_with_key(uridense, schema@ptr, encryption_key)
-}
+encryption_key <- "0123456789abcdeF0123456789abcdeF"
+uridensewkey <- file.path(tdir, "densewkey")
+
+# shortcut: borrow schema from dense array; could create schema too
+schema <- schema(tiledb_dense(uridense))
+tiledb:::libtiledb_array_create_with_key(uridensewkey, schema@ptr, encryption_key)
 ##TODO: R support
 ```
 
@@ -289,6 +291,26 @@ A[I, J] <- data
 unlink(tmp, recursive=TRUE)
 ```
 
+
+#### Basic Writing using Low-Level Code
+
+```{r basiscwritinglowlevel}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "WRITE")
+
+## data: simple (integer sequence) of 1:16 times 10
+vec <- 1:16 * 10L
+subarr <- c(1L,4L, 1L,4L)
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+res <- tiledb:::libtiledb_array_close(arrptr)
+```
+
+
 ### Writing Sparse Cells
 
 ```{r writesparsecells}
@@ -318,7 +340,26 @@ A[I, J] <- data
 
 ### Writing Encrypted Arrays
 
-TODO R support
+```{r writingencryptedlowlevel}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uridensewkey, "WRITE", encryption_key)
+
+## data: simple (integer sequence) of 1:16 times 10
+vec <- 1:16 * 10L
+subarr <- c(1L,4L, 1L,4L)
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+res <- tiledb:::libtiledb_array_close(arrptr)
+# TODO Higher-level R support
+
+```
+
+
+
 
 ### Fixed-length Attributes
 
