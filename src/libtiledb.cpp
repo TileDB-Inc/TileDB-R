@@ -967,9 +967,9 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string tpstr) {
-  auto arrtp = _string_to_tiledb_array_type(tpstr);
-  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), arrtp)));
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string atstr) {
+  auto at = _string_to_tiledb_array_type(atstr);
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), at)));
 }
 
 // [[Rcpp::export]]
@@ -987,10 +987,9 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema,
-                                                            XPtr<tiledb::Domain> dom) {
+void libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema,
+                                       XPtr<tiledb::Domain> dom) {
   schema->set_domain(*dom);
-  return schema;
 }
 
 // [[Rcpp::export]]
@@ -999,10 +998,9 @@ XPtr<tiledb::Domain> libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema>
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema,
-                                                               XPtr<tiledb::Attribute> attr) {
+void libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema,
+                                          XPtr<tiledb::Attribute> attr) {
   schema->add_attribute(*attr.get());
-  return schema;
 }
 
 // [[Rcpp::export]]
@@ -1023,9 +1021,21 @@ std::string libtiledb_array_schema_get_array_type(XPtr<tiledb::ArraySchema> sche
 }
 
 // [[Rcpp::export]]
+void libtiledb_array_schema_set_cell_order(XPtr<tiledb::ArraySchema> schema, std::string ord) {
+  tiledb_layout_t cellorder = _string_to_tiledb_layout(ord);
+  schema->set_cell_order(cellorder);
+}
+
+// [[Rcpp::export]]
 std::string libtiledb_array_schema_get_cell_order(XPtr<tiledb::ArraySchema> schema) {
   auto order = schema->cell_order();
   return _tiledb_layout_to_string(order);
+}
+
+// [[Rcpp::export]]
+void libtiledb_array_schema_set_tile_order(XPtr<tiledb::ArraySchema> schema, std::string ord) {
+  tiledb_layout_t tileorder = _string_to_tiledb_layout(ord);
+  schema->set_cell_order(tileorder);
 }
 
 // [[Rcpp::export]]
@@ -1403,6 +1413,27 @@ R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array,
     auto sub = as<std::vector<double>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
     return max_elements[attribute].second;
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Invalid subarray buffer type for domain :"
+           << Rcpp::type2name(subarray);
+    throw Rcpp::exception(errmsg.str().c_str());
+  }
+}
+
+
+// [[Rcpp::export]]
+NumericVector libtiledb_array_max_buffer_elements_vec(XPtr<tiledb::Array> array,
+                                                      SEXP subarray,
+                                                      std::string attribute) {
+  if (TYPEOF(subarray) == INTSXP) {
+    auto sub = as<std::vector<int32_t>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    return NumericVector::create(max_elements[attribute].first, max_elements[attribute].second);
+  } else if (TYPEOF(subarray) == REALSXP) {
+    auto sub = as<std::vector<double>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    return NumericVector::create(max_elements[attribute].first, max_elements[attribute].second);
   } else {
     std::stringstream errmsg;
     errmsg << "Invalid subarray buffer type for domain :"

@@ -233,8 +233,8 @@ libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_ord
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, sparse)
 }
 
-libtiledb_array_schema_create <- function(ctx, tpstr) {
-    .Call(`_tiledb_libtiledb_array_schema_create`, ctx, tpstr)
+libtiledb_array_schema_create <- function(ctx, atstr) {
+    .Call(`_tiledb_libtiledb_array_schema_create`, ctx, atstr)
 }
 
 libtiledb_array_schema_load <- function(ctx, uri) {
@@ -246,7 +246,7 @@ libtiledb_array_schema_load_with_key <- function(ctx, uri, key) {
 }
 
 libtiledb_array_schema_set_domain <- function(schema, dom) {
-    .Call(`_tiledb_libtiledb_array_schema_set_domain`, schema, dom)
+    invisible(.Call(`_tiledb_libtiledb_array_schema_set_domain`, schema, dom))
 }
 
 libtiledb_array_schema_get_domain <- function(schema) {
@@ -254,7 +254,7 @@ libtiledb_array_schema_get_domain <- function(schema) {
 }
 
 libtiledb_array_schema_add_attribute <- function(schema, attr) {
-    .Call(`_tiledb_libtiledb_array_schema_add_attribute`, schema, attr)
+    invisible(.Call(`_tiledb_libtiledb_array_schema_add_attribute`, schema, attr))
 }
 
 libtiledb_array_schema_attributes <- function(schema) {
@@ -265,8 +265,16 @@ libtiledb_array_schema_get_array_type <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_array_type`, schema)
 }
 
+libtiledb_array_schema_set_cell_order <- function(schema, ord) {
+    invisible(.Call(`_tiledb_libtiledb_array_schema_set_cell_order`, schema, ord))
+}
+
 libtiledb_array_schema_get_cell_order <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_cell_order`, schema)
+}
+
+libtiledb_array_schema_set_tile_order <- function(schema, ord) {
+    invisible(.Call(`_tiledb_libtiledb_array_schema_set_tile_order`, schema, ord))
 }
 
 libtiledb_array_schema_get_tile_order <- function(schema) {
@@ -427,6 +435,10 @@ libtiledb_coords <- function() {
 
 libtiledb_array_max_buffer_elements <- function(array, subarray, attribute) {
     .Call(`_tiledb_libtiledb_array_max_buffer_elements`, array, subarray, attribute)
+}
+
+libtiledb_array_max_buffer_elements_vec <- function(array, subarray, attribute) {
+    .Call(`_tiledb_libtiledb_array_max_buffer_elements_vec`, array, subarray, attribute)
 }
 
 libtiledb_group_create <- function(ctx, uri) {
