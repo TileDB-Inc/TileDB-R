@@ -6,4 +6,10 @@
 
 using namespace Rcpp;
 
+struct var_length_string_buffer {
+  std::vector<uint64_t> offsets;  // vector for offset values
+  std::string str;              	// string for data values
+};
+typedef struct var_length_string_buffer vlsbuf_t;
+
 #endif // __tiledb_h__

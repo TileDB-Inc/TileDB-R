@@ -65,19 +65,25 @@ read_array <- function() {
   ctx <- tiledb_ctx()
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
   subarr <- c(1L,4L, 1L,4L)
-  elems <- tiledb:::libtiledb_array_max_buffer_elements_vec(arrptr, subarr, "a1")
+  #elems <- tiledb:::libtiledb_array_max_buffer_elements_vec(arrptr, subarr, "a1")
   #print(elems)
 
+  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+
   ## reserve memory
-  offsets <- double(elems[1])
-  string <- paste(rep(' ', elems[2]), collapse="")
+  #offsets <- double(elems[1])
+  #string <- paste(rep(' ', elems[2]), collapse="")
   #print(string)
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string(qryptr, "a1", offsets, string)
+  #qryptr <- tiledb:::libtiledb_query_set_buffer_var_string(qryptr, "a1", offsets, string)
+
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_query_show_bufptr(bufptr)
+
 }
 
 create_array()

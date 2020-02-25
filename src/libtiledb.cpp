@@ -1316,6 +1316,53 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
   }
 }
 
+struct var_length_string_buffer {
+  std::vector<uint64_t> offsets;  // vector for offset values
+  std::string str;              	// string for data values
+};
+typedef struct var_length_string_buffer vlsbuf_t;
+
+// [[Rcpp::export]]
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_allocate(XPtr<tiledb::Array> array,
+                                                          SEXP subarray,
+                                                          std::string attribute) {
+  XPtr<vlsbuf_t> buf = XPtr<vlsbuf_t>(new vlsbuf_t);
+  if (TYPEOF(subarray) == INTSXP) {
+    auto sub = as<std::vector<int32_t>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    buf->offsets.resize(max_elements[attribute].first);
+    buf->str.resize(max_elements[attribute].second);
+  } else if (TYPEOF(subarray) == REALSXP) {
+    auto sub = as<std::vector<double>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    buf->offsets.resize(max_elements[attribute].first);
+    buf->str.resize(max_elements[attribute].second);
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Invalid subarray buffer type for domain :"
+           << Rcpp::type2name(subarray);
+    throw Rcpp::exception(errmsg.str().c_str());
+  }
+  return buf;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_set_buffer_var_string_from_buffer(XPtr<tiledb::Query> query,
+                                                                      std::string attr,
+                                                                      XPtr<vlsbuf_t> bufptr) {
+  query->set_buffer(attr, bufptr->offsets, bufptr->str);
+  return query;
+}
+
+// [[Rcpp::export]]
+void libtiledb_query_show_bufptr(XPtr<vlsbuf_t> bufptr) {
+  for (int i=0; i<bufptr->offsets.size(); i++)
+    Rcpp::Rcout << bufptr->offsets[i] << " ";
+  Rcpp::Rcout << std::endl
+              << bufptr->str
+              << std::endl;
+}
+
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_string(XPtr<tiledb::Query> query,
                                                           std::string attr,
