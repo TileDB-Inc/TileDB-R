@@ -233,6 +233,10 @@ libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_ord
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, sparse)
 }
 
+libtiledb_array_schema_create <- function(ctx, tpstr) {
+    .Call(`_tiledb_libtiledb_array_schema_create`, ctx, tpstr)
+}
+
 libtiledb_array_schema_load <- function(ctx, uri) {
     .Call(`_tiledb_libtiledb_array_schema_load`, ctx, uri)
 }
@@ -241,12 +245,16 @@ libtiledb_array_schema_load_with_key <- function(ctx, uri, key) {
     .Call(`_tiledb_libtiledb_array_schema_load_with_key`, ctx, uri, key)
 }
 
-libtiledb_array_get_schema <- function(array) {
-    .Call(`_tiledb_libtiledb_array_get_schema`, array)
+libtiledb_array_schema_set_domain <- function(schema, dom) {
+    .Call(`_tiledb_libtiledb_array_schema_set_domain`, schema, dom)
 }
 
 libtiledb_array_schema_get_domain <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_domain`, schema)
+}
+
+libtiledb_array_schema_add_attribute <- function(schema, attr) {
+    .Call(`_tiledb_libtiledb_array_schema_add_attribute`, schema, attr)
 }
 
 libtiledb_array_schema_attributes <- function(schema) {
@@ -325,6 +333,10 @@ libtiledb_array_open_with_key <- function(ctx, uri, type, enc_key) {
     .Call(`_tiledb_libtiledb_array_open_with_key`, ctx, uri, type, enc_key)
 }
 
+libtiledb_array_open_with_ptr <- function(array, query_type) {
+    .Call(`_tiledb_libtiledb_array_open_with_ptr`, array, query_type)
+}
+
 libtiledb_array_is_open <- function(array) {
     .Call(`_tiledb_libtiledb_array_is_open`, array)
 }
@@ -341,8 +353,8 @@ libtiledb_array_get_uri <- function(array) {
     .Call(`_tiledb_libtiledb_array_get_uri`, array)
 }
 
-libtiledb_array_open_with_ptr <- function(array, query_type) {
-    .Call(`_tiledb_libtiledb_array_open_with_ptr`, array, query_type)
+libtiledb_array_get_schema <- function(array) {
+    .Call(`_tiledb_libtiledb_array_get_schema`, array)
 }
 
 libtiledb_array_reopen <- function(array) {

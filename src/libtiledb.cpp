@@ -266,6 +266,16 @@ const char* _tiledb_array_type_to_string(tiledb_array_type_t atype) {
   }
 }
 
+tiledb_array_type_t _string_to_tiledb_array_type(std::string tpstr) {
+  if (tpstr == "DENSE") {
+    return TILEDB_DENSE;
+  } else if (tpstr == "SPARSE") {
+    return TILEDB_SPARSE;
+  } else {
+    Rcpp::stop("Unknown tiledb_array_type_t");
+  }
+}
+
 // NB Limited type coverage here as aimed to sizing R allocations of either int, double or char
 // Also note that there is 'inline size_t type_size(tiledb_datatype_t type)' in core_interface.h
 const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
@@ -835,18 +845,21 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
   }
   if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-    auto attr = XPtr<tiledb::Attribute>(
-      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
   } else if (attr_dtype == TILEDB_FLOAT64) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-    auto attr = XPtr<tiledb::Attribute>(
-      new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    attr->set_filter_list(*filter_list);
+    return attr;
+  } else if (attr_dtype == TILEDB_CHAR) {
+    using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
     return attr;
   } else {
-    throw Rcpp::exception("only integer (INT32), logical (INT32) and real (FLOAT64) attributes are supported");
+    throw Rcpp::exception("only integer (INT32), logical (INT32), real (FLOAT64) and character (CHAR) attributes are supported");
   }
 }
 
@@ -954,6 +967,12 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string tpstr) {
+  auto arrtp = _string_to_tiledb_array_type(tpstr);
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), arrtp)));
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx, std::string uri) {
   return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
 }
@@ -968,13 +987,22 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) {
-  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema,
+                                                            XPtr<tiledb::Domain> dom) {
+  schema->set_domain(*dom);
+  return schema;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Domain> libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema,
+                                                               XPtr<tiledb::Attribute> attr) {
+  schema->add_attribute(*attr.get());
+  return schema;
 }
 
 // [[Rcpp::export]]
@@ -1046,7 +1074,7 @@ int libtiledb_array_schema_get_attribute_num(XPtr<tiledb::ArraySchema> schema) {
 
 // [[Rcpp::export]]
 XPtr<tiledb::Attribute> libtiledb_array_schema_get_attribute_from_index(XPtr<tiledb::ArraySchema> schema,
-                                                                      int ind) {
+                                                                        int ind) {
   if (ind < 0) {
     Rcpp::stop("Index must be non-negative.");
   }
@@ -1080,6 +1108,10 @@ void libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
   schema->check();   // throws, rather than returning bool
 }
 
+
+/**
+ * TileDB Array
+ */
 // [[Rcpp::export]]
 std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema) {
   tiledb::Array::create(uri, *schema.get());
@@ -1095,23 +1127,27 @@ std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArrayS
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx,
-                                         std::string uri,
-                                         std::string type) {
+XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri, std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
   return array;
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx,
-                                                  std::string uri, std::string type,
+XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type,
                                                   std::string enc_key) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
                                                                    TILEDB_AES_256_GCM,
                                                                    enc_key.data(),
                                                                    (uint32_t)enc_key.size())));
+  return array;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type) {
+  tiledb_query_type_t qtype = _string_to_tiledb_query_type(query_type);
+  array->open(qtype);
   return array;
 }
 
@@ -1130,18 +1166,14 @@ bool libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array) {
   return array->is_open() && array->query_type() != TILEDB_WRITE;
 }
 
-
-
 // [[Rcpp::export]]
 std::string libtiledb_array_get_uri(XPtr<tiledb::Array> array) {
   return array->uri();
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type) {
-  tiledb_query_type_t qtype = _string_to_tiledb_query_type(query_type);
-  array->open(qtype);
-  return array;
+XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array) {
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(array->schema()));
 }
 
 // [[Rcpp::export]]
@@ -1202,8 +1234,8 @@ std::string libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
  */
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
-                                 XPtr<tiledb::Array> array,
-                                 std::string type) {
+                                    XPtr<tiledb::Array> array,
+                                    std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto query = XPtr<tiledb::Query>(
     new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type)));
@@ -1252,8 +1284,8 @@ XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
-                                            std::string attr,
-                                            SEXP buffer) {
+                                               std::string attr,
+                                               SEXP buffer) {
   if (TYPEOF(buffer) == INTSXP) {
     IntegerVector vec(buffer);
     query->set_buffer(attr, vec.begin(), vec.length());
