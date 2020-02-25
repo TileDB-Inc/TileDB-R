@@ -266,6 +266,16 @@ const char* _tiledb_array_type_to_string(tiledb_array_type_t atype) {
   }
 }
 
+tiledb_array_type_t _string_to_tiledb_array_type(std::string tpstr) {
+  if (tpstr == "DENSE") {
+    return TILEDB_DENSE;
+  } else if (tpstr == "SPARSE") {
+    return TILEDB_SPARSE;
+  } else {
+    Rcpp::stop("Unknown tiledb_array_type_t");
+  }
+}
+
 // NB Limited type coverage here as aimed to sizing R allocations of either int, double or char
 // Also note that there is 'inline size_t type_size(tiledb_datatype_t type)' in core_interface.h
 const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
@@ -957,6 +967,12 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string tpstr) {
+  auto arrtp = _string_to_tiledb_array_type(tpstr);
+  return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), arrtp)));
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx, std::string uri) {
   return XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri)));
 }
@@ -971,8 +987,22 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema,
+                                                            XPtr<tiledb::Domain> dom) {
+  schema->set_domain(*dom);
+  return schema;
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::Domain> libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema,
+                                                               XPtr<tiledb::Attribute> attr) {
+  schema->add_attribute(*attr.get());
+  return schema;
 }
 
 // [[Rcpp::export]]

@@ -233,6 +233,10 @@ libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_ord
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, sparse)
 }
 
+libtiledb_array_schema_create <- function(ctx, tpstr) {
+    .Call(`_tiledb_libtiledb_array_schema_create`, ctx, tpstr)
+}
+
 libtiledb_array_schema_load <- function(ctx, uri) {
     .Call(`_tiledb_libtiledb_array_schema_load`, ctx, uri)
 }
@@ -241,8 +245,16 @@ libtiledb_array_schema_load_with_key <- function(ctx, uri, key) {
     .Call(`_tiledb_libtiledb_array_schema_load_with_key`, ctx, uri, key)
 }
 
+libtiledb_array_schema_set_domain <- function(schema, dom) {
+    .Call(`_tiledb_libtiledb_array_schema_set_domain`, schema, dom)
+}
+
 libtiledb_array_schema_get_domain <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_domain`, schema)
+}
+
+libtiledb_array_schema_add_attribute <- function(schema, attr) {
+    .Call(`_tiledb_libtiledb_array_schema_add_attribute`, schema, attr)
 }
 
 libtiledb_array_schema_attributes <- function(schema) {
