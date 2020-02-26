@@ -1353,7 +1353,7 @@ XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_assign(IntegerVector intoffsets
   XPtr<vlsbuf_t> bufptr = XPtr<vlsbuf_t>(new vlsbuf_t);
   int n = intoffsets.size();
   bufptr->offsets.resize(n);
-  for (int i=0; i<nv; i++) {
+  for (int i=0; i<n; i++) {
     bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
   }
   bufptr->str = data;

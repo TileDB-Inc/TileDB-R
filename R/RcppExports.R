@@ -421,10 +421,6 @@ libtiledb_query_show_bufptr <- function(bufptr) {
     invisible(.Call(`_tiledb_libtiledb_query_show_bufptr`, bufptr))
 }
 
-libtiledb_query_set_buffer_var_string_and_submit <- function(query, attr, intoffsets, data) {
-    .Call(`_tiledb_libtiledb_query_set_buffer_var_string_and_submit`, query, attr, intoffsets, data)
-}
-
 libtiledb_query_submit <- function(query) {
     .Call(`_tiledb_libtiledb_query_submit`, query)
 }
