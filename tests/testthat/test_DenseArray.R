@@ -609,3 +609,128 @@ test_that("low-level fixed-length write and read works", {
   expect_equal(v, c(30L, 40L, 50L, 60L, 70L, 80L, 110L, 120L, 130L, 140L, 150L, 160L))
   res <- tiledb:::libtiledb_array_close(arrptr)
 })
+
+
+test_that("low-level variable-length character array write and read works", {
+  array_name <- tempfile()
+  setup({
+    unlink_and_create(array_name)
+  })
+
+  ## Define array
+  ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+
+
+  attr <- tiledb_attr("a1", type = "CHAR")
+  ## set to variable length
+  tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
+
+  ## now set the schema
+  ctx <- tiledb_ctx()
+  schptr <- tiledb:::libtiledb_array_schema_create(ctx@ptr, "DENSE")
+  tiledb:::libtiledb_array_schema_set_domain(schptr, dom@ptr)
+  tiledb:::libtiledb_array_schema_set_cell_order(schptr, "ROW_MAJOR")
+  tiledb:::libtiledb_array_schema_set_tile_order(schptr, "ROW_MAJOR")
+  tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
+
+
+
+  ## Create the (empty) array on disk.
+  tiledb:::libtiledb_array_create(array_name, schptr)
+
+  data <- "abbcccddeeefghhhijjjkklmnoop";
+  offsets <- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)
+
+  ctx <- tiledb_ctx()
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_array_close(arrptr)
+
+
+  ## Read and test
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
+
+  subarr <- c(1L,4L, 1L,4L)
+  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_array_close(arrptr)
+
+  mat <- tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr)
+  expect_equal(mat,  matrix(c("a",   "eee",  "i",    "m",
+                              "bb",  "f",    "jjj",  "n",
+                              "ccc", "g",    "kk",   "oo",
+                              "dd",  "hhh",  "l",    "p"), 4, 4, byrow=TRUE))
+
+
+  ## overwrite subarray
+  data <- "KLLLMMN";
+  offsets <- c(0L, 1L, 4L, 6L)
+
+  subarr <- c(2L,3L, 2L,3L)
+
+  ctx <- tiledb_ctx()
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_array_close(arrptr)
+
+
+
+  ## Read and test
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
+
+  subarr <- c(1L,4L, 1L,4L)
+  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_array_close(arrptr)
+
+  mat <- tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr)
+  expect_equal(mat,  matrix(c("a",   "eee",  "i",    "m",
+                              "bb",  "K",    "MM",   "n",
+                              "ccc", "LLL",  "N",    "oo",
+                              "dd",  "hhh",  "l",    "p"), 4, 4, byrow=TRUE))
+
+
+  ## Read and test subarry
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
+
+  subarr <- c(2L,3L, 2L,3L)
+  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_array_close(arrptr)
+
+  mat <- tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr)
+  expect_equal(mat,  matrix(c("K",    "MM",
+                              "LLL",  "N"), 2, 2, byrow=TRUE))
+})
