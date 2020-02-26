@@ -409,16 +409,16 @@ libtiledb_query_buffer_var_string_allocate <- function(array, subarray, attribut
     .Call(`_tiledb_libtiledb_query_buffer_var_string_allocate`, array, subarray, attribute)
 }
 
-libtiledb_query_set_buffer_var_string_from_buffer <- function(query, attr, bufprt) {
-    .Call(`_tiledb_libtiledb_query_set_buffer_var_string_from_buffer`, query, attr, bufprt)
+libtiledb_query_buffer_var_string_assign <- function(intoffsets, data) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_string_assign`, intoffsets, data)
+}
+
+libtiledb_query_set_buffer_var_string_from_buffer <- function(query, attr, bufptr) {
+    .Call(`_tiledb_libtiledb_query_set_buffer_var_string_from_buffer`, query, attr, bufptr)
 }
 
 libtiledb_query_show_bufptr <- function(bufptr) {
     invisible(.Call(`_tiledb_libtiledb_query_show_bufptr`, bufptr))
-}
-
-libtiledb_query_set_buffer_var_string <- function(query, attr, dbloffsets, data) {
-    .Call(`_tiledb_libtiledb_query_set_buffer_var_string`, query, attr, dbloffsets, data)
 }
 
 libtiledb_query_set_buffer_var_string_and_submit <- function(query, attr, intoffsets, data) {

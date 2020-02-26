@@ -4,56 +4,61 @@ library(tiledb)
 array_name <- "/tmp/tiledb/variable_length_array2"
 
 create_array <- function() {
-    # Check if the array already exists.
-    if (tiledb_object_type(array_name) == "ARRAY") {
-        message("Array already exists.")
-        return(invisible(NULL))
-    }
+  ## Check if the array already exists.
+  if (tiledb_object_type(array_name) == "ARRAY") {
+    message("Array already exists.")
+    return(invisible(NULL))
+  }
 
-    # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
-    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
-                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+  ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
 
-    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    #schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "CHAR")))
+  ## The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
+  ##schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "CHAR")))
 
-    attr <- tiledb_attr("a1", type = "CHAR")
-    ## set to variable length
-    tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
+  attr <- tiledb_attr("a1", type = "CHAR")
+  ## set to variable length
+  tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
 
-    ctx <- tiledb_ctx()
-    schptr <- tiledb:::libtiledb_array_schema_create(ctx@ptr, "DENSE")
-    schptr <- tiledb:::libtiledb_array_schema_set_domain(schptr, dom@ptr)
-    tiledb:::libtiledb_array_schema_set_cell_order(schptr, "ROW_MAJOR")
-    tiledb:::libtiledb_array_schema_set_tile_order(schptr, "ROW_MAJOR")
-    tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
+  ## now set the schema
+  ctx <- tiledb_ctx()
+  schptr <- tiledb:::libtiledb_array_schema_create(ctx@ptr, "DENSE")
+  schptr <- tiledb:::libtiledb_array_schema_set_domain(schptr, dom@ptr)
+  tiledb:::libtiledb_array_schema_set_cell_order(schptr, "ROW_MAJOR")
+  tiledb:::libtiledb_array_schema_set_tile_order(schptr, "ROW_MAJOR")
+  tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
 
-    # Create the (empty) array on disk.
-    tiledb:::libtiledb_array_create(array_name, schptr)
+  ## Create the (empty) array on disk.
+  tiledb:::libtiledb_array_create(array_name, schptr)
 }
 
 write_array <- function() {
-    #data <- array(letters[1:16], dim = c(4,4))
-    # Open the array and write to it.
-    #A <- tiledb_dense(uri = array_name)
-    #A[] <- data
+  ##data <- array(letters[1:16], dim = c(4,4))
+  ## Open the array and write to it.
+  ##A <- tiledb_dense(uri = array_name)
+  ##A[] <- data
 
-    data <- "abbcccddeeefghhhijjjkklmnoop";
-    offsets <- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)
+  data <- "abbcccddeeefghhhijjjkklmnoop";
+  offsets <- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)
 
-    ## reserver a numeric vector of the same length
-    #dblvec <- double(length(offsets))
-    ## and cast each element to uint64_t which is needed internally
-    #tiledb:::libtiledb_query_set_buffer_inject_offsets(offsets, dblvec)
 
-    ctx <- tiledb_ctx()
+  ctx <- tiledb_ctx()
 
-    arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
-    qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
-    qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
-    ##qryptr <- tiledb:::libtiledb_query_set_buffer_var_string(qryptr, "a1", dblvec, data)
-    ##qryptr <- tiledb:::libtiledb_query_submit(qryptr)
-    qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_and_submit(qryptr, "a1", offsets, data)
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  ## this does not work (where dblvec is trying to hold the uint64_t'ed offsets
+  ##qryptr <- tiledb:::libtiledb_query_set_buffer_var_string(qryptr, "a1", dblvec, data)
+  ##qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+
+  ## this works
+  ##qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_and_submit(qryptr, "a1", offsets, data)
+
+  bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
 }
 
 read_array <- function() {
@@ -82,6 +87,7 @@ read_array <- function() {
 
   qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+
   tiledb:::libtiledb_query_show_bufptr(bufptr)
 
 }
