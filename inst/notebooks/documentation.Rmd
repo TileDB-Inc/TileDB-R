@@ -23,6 +23,8 @@ library(tiledb)
 
 tdir <- tempdir()
 uridense <- file.path(tdir, "dense")
+uridensefix <- file.path(tdir, "densefix")
+uridensevar <- file.path(tdir, "densevar")
 
 create_array <- function(array_name) {
     # Check if the array already exists.
@@ -363,11 +365,77 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 
 ### Fixed-length Attributes
 
-TODO R support
+```{r fixedlengthattributes}
+if (dir.exists(uridensefix)) unlink(uridensefix, recursive=TRUE)
+d1  <- tiledb_dim(domain = c(1L, 4L))
+d2  <- tiledb_dim(domain = c(1L, 4L))
+dom <- tiledb_domain(c(d1, d2))
+
+vec <- 1:32 * 10L
+attr <- tiledb_attr("a", type = r_to_tiledb_type(vec))
+
+## set to two values per cell
+tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, 2)
+sch <- tiledb_array_schema(dom, c(attr))
+tiledb_array_create(uridensefix, sch)
+
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensefix, "WRITE")
+subarr <- c(1L,4L, 1L,4L)
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+res <- tiledb:::libtiledb_array_close(arrptr)
+
+#TODO Higher-level R support
+```
 
 ### Var-length Attributes
 
-TODO R support
+```{r}
+if (dir.exists(uridensevar)) unlink(uridensevar, recursive=TRUE)
+## Define array
+## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                              tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+
+
+attr <- tiledb_attr("a1", type = "CHAR")
+## set to variable length
+tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
+
+## now set the schema
+ctx <- tiledb_ctx()
+schptr <- tiledb:::libtiledb_array_schema_create(ctx@ptr, "DENSE")
+tiledb:::libtiledb_array_schema_set_domain(schptr, dom@ptr)
+tiledb:::libtiledb_array_schema_set_cell_order(schptr, "ROW_MAJOR")
+tiledb:::libtiledb_array_schema_set_tile_order(schptr, "ROW_MAJOR")
+tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
+
+
+
+## Create the (empty) array on disk.
+tiledb:::libtiledb_array_create(uridensevar, schptr)
+
+data <- "abbcccddeeefghhhijjjkklmnoop";
+offsets <- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)
+
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "WRITE")
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
+qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+tiledb:::libtiledb_array_close(arrptr)
+
+#TODO Higher-level R support
+```
+
 
 ### Getting the Fragment Info
 

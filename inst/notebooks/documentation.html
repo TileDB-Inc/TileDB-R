@@ -1716,7 +1716,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(uridense)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpmcqRb5/dense&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpvUSiLj/dense&quot;</code></pre>
 <pre class="r"><code>write_array(uridense)
 
 
@@ -1750,7 +1750,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(urisparse)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpmcqRb5/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpvUSiLj/sparse&quot;</code></pre>
 <pre class="r"><code>write_array(urisparse)</code></pre>
 </div>
 <div id="api-usage" class="section level1">
@@ -1880,7 +1880,7 @@ uridensewkey &lt;- file.path(tdir, &quot;densewkey&quot;)
 # shortcut: borrow schema from dense array; could create schema too
 schema &lt;- schema(tiledb_dense(uridense))
 tiledb:::libtiledb_array_create_with_key(uridensewkey, schema@ptr, encryption_key)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpmcqRb5/densewkey&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpvUSiLj/densewkey&quot;</code></pre>
 <pre class="r"><code>##TODO: R support</code></pre>
 </div>
 </div>
@@ -1943,7 +1943,7 @@ dom &lt;- tiledb_domain(c(d1, d2))
 val &lt;- tiledb_attr(&quot;val&quot;, type = &quot;INT32&quot;)
 sch &lt;- tiledb_array_schema(dom, c(val), sparse=TRUE)
 tiledb_array_create(tmp, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpmcqRb5/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpvUSiLj/sparse&quot;</code></pre>
 <pre class="r"><code># Prepare some data
 data &lt;- c(3L, 4L, 1L, 2L)
 
