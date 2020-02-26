@@ -56,11 +56,10 @@ write_array <- function() {
   invisible(NULL)
 }
 
-read_array <- function(txt="") {
+read_array <- function(txt="", subarr=c(1L,4L,1L,4L)) {
   cat("\nReading", txt, "\n")
   ctx <- tiledb_ctx()
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
-  subarr <- c(1L,4L, 1L,4L)
 
   bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
 
@@ -72,8 +71,8 @@ read_array <- function(txt="") {
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
-  tiledb:::libtiledb_query_show_bufptr(bufptr)
-
+  #tiledb:::libtiledb_query_show_bufptr(bufptr)
+  print(tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr), quote=FALSE)
 }
 
 write_subarray <- function() {
@@ -101,3 +100,4 @@ write_array()
 read_array("original array")
 write_subarray()
 read_array("after subarray write")
+read_array("after subarray write, subset", c(2L,3L,2L,3L))

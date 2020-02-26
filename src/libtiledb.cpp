@@ -1316,12 +1316,6 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
   }
 }
 
-struct var_length_string_buffer {
-  std::vector<uint64_t> offsets;  // vector for offset values
-  std::string str;              	// string for data values
-};
-typedef struct var_length_string_buffer vlsbuf_t;
-
 // [[Rcpp::export]]
 XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_allocate(XPtr<tiledb::Array> array,
                                                           SEXP subarray,
@@ -1332,11 +1326,15 @@ XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_allocate(XPtr<tiledb::Array> ar
     auto max_elements = array->max_buffer_elements(sub);
     buf->offsets.resize(max_elements[attribute].first);
     buf->str.resize(max_elements[attribute].second);
+    buf->rows = sub[1] - sub[0] + 1;
+    buf->cols = sub[3] - sub[2] + 1;
   } else if (TYPEOF(subarray) == REALSXP) {
     auto sub = as<std::vector<double>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
     buf->offsets.resize(max_elements[attribute].first);
     buf->str.resize(max_elements[attribute].second);
+    buf->rows = sub[1] - sub[0] + 1;
+    buf->cols = sub[3] - sub[2] + 1;
   } else {
     std::stringstream errmsg;
     errmsg << "Invalid subarray buffer type for domain :"
@@ -1357,6 +1355,7 @@ XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_assign(IntegerVector intoffsets
     bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
   }
   bufptr->str = data;
+  bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
   return(bufptr);
 }
 
@@ -1377,47 +1376,22 @@ void libtiledb_query_show_bufptr(XPtr<vlsbuf_t> bufptr) {
               << std::endl;
 }
 
-// Maybe remove?
-// [ [ Rcpp::export ] ]
-// XPtr<tiledb::Query> libtiledb_query_set_buffer_var_string(XPtr<tiledb::Query> query,
-//                                                           std::string attr,
-//                                                           NumericVector dbloffsets,
-//                                                           std::string data) {
-//   int n = dbloffsets.size();
-//   // we are using the fact that double and (u)int64_t have the same size
-//   // the incoming NumericVector's memory will persist so that the query can be written
-//   // but we need to copy the payloadcast from double to uint64_t
-//   //std::vector<uint64_t> uioffsets(n);   // tried: no, luck dbloffsets.begin(), dbloffsets.end());
-//   uint64_t *uiptr = reinterpret_cast<uint64_t*>( &(dbloffsets[0]) );
-//   //query->set_buffer(attr, uioffsets, data);
-//   query->set_buffer(attr, uiptr, n, &(data[0]), data.size()*sizeof(char));
-// #if 0
-//   // clearly works when submitting directly
-//   query->submit();
-//   Rcpp::Rcout << "Data: " << data << std::endl;
-//   for (int i=0; i<16; i++)
-//     Rcpp::Rcout << uiptr[i] << std::endl;
-// #endif
-//   return query;
-// }
+// [[Rcpp::export]]
+CharacterMatrix libtiledb_query_get_var_string_vector_from_buffer(XPtr<vlsbuf_t> bufptr) {
+  size_t n = bufptr->offsets.size();
+  std::vector<uint64_t> str_sizes(n);
+  for (size_t i = 0; i < n - 1; i++) {                          // all but last
+    str_sizes[i] = bufptr->offsets[i + 1] - bufptr->offsets[i];
+  }                                                             // last is total size minus last start
+  str_sizes[n-1] = bufptr->str.size() * sizeof(char) - bufptr->offsets[n-1];
 
-// Maybe remove? 'Shortcut' version which assigns.
-// // [ [ Rcpp::export]]
-// XPtr<tiledb::Query> libtiledb_query_set_buffer_var_string_and_submit(XPtr<tiledb::Query> query,
-//                                                                      std::string attr,
-//                                                                      IntegerVector intoffsets,
-//                                                                      std::string data) {
-//   // problem: integer vector may go out of scope (in the calling env) before query is submitted
-//   // so here we do both: set buffer and submit
-//   int n = intoffsets.size();
-//   std::vector<uint64_t> uivec(n);
-//   for (int i=0; i<n; i++) {
-//     uivec[i] = static_cast<uint64_t>(intoffsets[i]);
-//   }
-//   query->set_buffer(attr, uivec, data);
-//   query->submit();
-//   return query;
-// }
+  // Get the strings
+  CharacterMatrix mat(bufptr->rows, bufptr->cols);
+  for (size_t i = 0; i < n; i++) {
+    mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
+  }
+  return(mat);
+}
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {

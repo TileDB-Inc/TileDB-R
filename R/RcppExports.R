@@ -421,6 +421,10 @@ libtiledb_query_show_bufptr <- function(bufptr) {
     invisible(.Call(`_tiledb_libtiledb_query_show_bufptr`, bufptr))
 }
 
+libtiledb_query_get_var_string_vector_from_buffer <- function(bufptr) {
+    .Call(`_tiledb_libtiledb_query_get_var_string_vector_from_buffer`, bufptr)
+}
+
 libtiledb_query_submit <- function(query) {
     .Call(`_tiledb_libtiledb_query_submit`, query)
 }
