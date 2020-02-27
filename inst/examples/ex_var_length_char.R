@@ -42,13 +42,6 @@ write_array <- function() {
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  ## this does not work (where dblvec is trying to hold the uint64_t'ed offsets
-  ##qryptr <- tiledb:::libtiledb_query_set_buffer_var_string(qryptr, "a1", dblvec, data)
-  ##qryptr <- tiledb:::libtiledb_query_submit(qryptr)
-
-  ## this works
-  ##qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_and_submit(qryptr, "a1", offsets, data)
-
   bufptr <- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
   qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
@@ -77,7 +70,6 @@ read_array <- function(txt="", subarr=NULL) {
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
-  #tiledb:::libtiledb_query_show_bufptr(bufptr)
   print(tiledb:::libtiledb_query_get_buffer_var_char(bufptr), quote=FALSE)
 }
 
