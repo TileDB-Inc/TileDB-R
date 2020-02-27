@@ -648,8 +648,8 @@ test_that("low-level variable-length character array write and read works", {
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
@@ -658,17 +658,17 @@ test_that("low-level variable-length character array write and read works", {
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
 
   subarr <- c(1L,4L, 1L,4L)
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc(arrptr, subarr, "a1")
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
-  mat <- tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr)
+  mat <- tiledb:::libtiledb_query_get_buffer_var_char(bufptr)
   expect_equal(mat,  matrix(c("a",   "eee",  "i",    "m",
                               "bb",  "f",    "jjj",  "n",
                               "ccc", "g",    "kk",   "oo",
@@ -687,8 +687,8 @@ test_that("low-level variable-length character array write and read works", {
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
 
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
@@ -699,17 +699,17 @@ test_that("low-level variable-length character array write and read works", {
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
 
   subarr <- c(1L,4L, 1L,4L)
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc(arrptr, subarr, "a1")
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
-  mat <- tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr)
+  mat <- tiledb:::libtiledb_query_get_buffer_var_char(bufptr)
   expect_equal(mat,  matrix(c("a",   "eee",  "i",    "m",
                               "bb",  "K",    "MM",   "n",
                               "ccc", "LLL",  "N",    "oo",
@@ -720,17 +720,17 @@ test_that("low-level variable-length character array write and read works", {
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
 
   subarr <- c(2L,3L, 2L,3L)
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc(arrptr, subarr, "a1")
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
-  mat <- tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr)
+  mat <- tiledb:::libtiledb_query_get_buffer_var_char(bufptr)
   expect_equal(mat,  matrix(c("K",    "MM",
                               "LLL",  "N"), 2, 2, byrow=TRUE))
 })

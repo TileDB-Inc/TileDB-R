@@ -1317,9 +1317,9 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_allocate(XPtr<tiledb::Array> array,
-                                                          SEXP subarray,
-                                                          std::string attribute) {
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
+                                                     SEXP subarray,
+                                                     std::string attribute) {
   XPtr<vlsbuf_t> buf = XPtr<vlsbuf_t>(new vlsbuf_t);
   if (TYPEOF(subarray) == INTSXP) {
     auto sub = as<std::vector<int32_t>>(subarray);
@@ -1346,8 +1346,8 @@ XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_allocate(XPtr<tiledb::Array> ar
 
 // assigning (for a write) allocates
 // [[Rcpp::export]]
-XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_assign(IntegerVector intoffsets,
-                                                        std::string data) {
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
+                                                      std::string data) {
   XPtr<vlsbuf_t> bufptr = XPtr<vlsbuf_t>(new vlsbuf_t);
   int n = intoffsets.size();
   bufptr->offsets.resize(n);
@@ -1360,24 +1360,15 @@ XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_assign(IntegerVector intoffsets
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_set_buffer_var_string_from_buffer(XPtr<tiledb::Query> query,
-                                                                      std::string attr,
-                                                                      XPtr<vlsbuf_t> bufptr) {
+XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> query,
+                                                        std::string attr,
+                                                        XPtr<vlsbuf_t> bufptr) {
   query->set_buffer(attr, bufptr->offsets, bufptr->str);
   return query;
 }
 
 // [[Rcpp::export]]
-void libtiledb_query_show_bufptr(XPtr<vlsbuf_t> bufptr) {
-  for (size_t i=0; i<bufptr->offsets.size(); i++)
-    Rcpp::Rcout << bufptr->offsets[i] << " ";
-  Rcpp::Rcout << std::endl
-              << bufptr->str
-              << std::endl;
-}
-
-// [[Rcpp::export]]
-CharacterMatrix libtiledb_query_get_var_string_vector_from_buffer(XPtr<vlsbuf_t> bufptr) {
+CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlsbuf_t> bufptr) {
   size_t n = bufptr->offsets.size();
   std::vector<uint64_t> str_sizes(n);
   for (size_t i = 0; i < n - 1; i++) {                          // all but last

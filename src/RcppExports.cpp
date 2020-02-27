@@ -1176,62 +1176,52 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_buffer_var_string_allocate
-XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_allocate(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_string_allocate(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP) {
+// libtiledb_query_buffer_var_char_alloc
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
     Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_string_allocate(array, subarray, attribute));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc(array, subarray, attribute));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_buffer_var_string_assign
-XPtr<vlsbuf_t> libtiledb_query_buffer_var_string_assign(IntegerVector intoffsets, std::string data);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_string_assign(SEXP intoffsetsSEXP, SEXP dataSEXP) {
+// libtiledb_query_buffer_var_char_create
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets, std::string data);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_create(SEXP intoffsetsSEXP, SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type intoffsets(intoffsetsSEXP);
     Rcpp::traits::input_parameter< std::string >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_string_assign(intoffsets, data));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_create(intoffsets, data));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_set_buffer_var_string_from_buffer
-XPtr<tiledb::Query> libtiledb_query_set_buffer_var_string_from_buffer(XPtr<tiledb::Query> query, std::string attr, XPtr<vlsbuf_t> bufptr);
-RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_string_from_buffer(SEXP querySEXP, SEXP attrSEXP, SEXP bufptrSEXP) {
+// libtiledb_query_set_buffer_var_char
+XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> query, std::string attr, XPtr<vlsbuf_t> bufptr);
+RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_char(SEXP querySEXP, SEXP attrSEXP, SEXP bufptrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< std::string >::type attr(attrSEXP);
     Rcpp::traits::input_parameter< XPtr<vlsbuf_t> >::type bufptr(bufptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_var_string_from_buffer(query, attr, bufptr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_var_char(query, attr, bufptr));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_show_bufptr
-void libtiledb_query_show_bufptr(XPtr<vlsbuf_t> bufptr);
-RcppExport SEXP _tiledb_libtiledb_query_show_bufptr(SEXP bufptrSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<vlsbuf_t> >::type bufptr(bufptrSEXP);
-    libtiledb_query_show_bufptr(bufptr);
-    return R_NilValue;
-END_RCPP
-}
-// libtiledb_query_get_var_string_vector_from_buffer
-CharacterMatrix libtiledb_query_get_var_string_vector_from_buffer(XPtr<vlsbuf_t> bufptr);
-RcppExport SEXP _tiledb_libtiledb_query_get_var_string_vector_from_buffer(SEXP bufptrSEXP) {
+// libtiledb_query_get_buffer_var_char
+CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlsbuf_t> bufptr);
+RcppExport SEXP _tiledb_libtiledb_query_get_buffer_var_char(SEXP bufptrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<vlsbuf_t> >::type bufptr(bufptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_var_string_vector_from_buffer(bufptr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_var_char(bufptr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1725,11 +1715,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_subarray", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray, 2},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 2},
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
-    {"_tiledb_libtiledb_query_buffer_var_string_allocate", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_string_allocate, 3},
-    {"_tiledb_libtiledb_query_buffer_var_string_assign", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_string_assign, 2},
-    {"_tiledb_libtiledb_query_set_buffer_var_string_from_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_string_from_buffer, 3},
-    {"_tiledb_libtiledb_query_show_bufptr", (DL_FUNC) &_tiledb_libtiledb_query_show_bufptr, 1},
-    {"_tiledb_libtiledb_query_get_var_string_vector_from_buffer", (DL_FUNC) &_tiledb_libtiledb_query_get_var_string_vector_from_buffer, 1},
+    {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 3},
+    {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
+    {"_tiledb_libtiledb_query_set_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char, 3},
+    {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 1},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},
     {"_tiledb_libtiledb_query_status", (DL_FUNC) &_tiledb_libtiledb_query_status, 1},

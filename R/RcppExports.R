@@ -405,24 +405,20 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
-libtiledb_query_buffer_var_string_allocate <- function(array, subarray, attribute) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_string_allocate`, array, subarray, attribute)
+libtiledb_query_buffer_var_char_alloc <- function(array, subarray, attribute) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc`, array, subarray, attribute)
 }
 
-libtiledb_query_buffer_var_string_assign <- function(intoffsets, data) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_string_assign`, intoffsets, data)
+libtiledb_query_buffer_var_char_create <- function(intoffsets, data) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_create`, intoffsets, data)
 }
 
-libtiledb_query_set_buffer_var_string_from_buffer <- function(query, attr, bufptr) {
-    .Call(`_tiledb_libtiledb_query_set_buffer_var_string_from_buffer`, query, attr, bufptr)
+libtiledb_query_set_buffer_var_char <- function(query, attr, bufptr) {
+    .Call(`_tiledb_libtiledb_query_set_buffer_var_char`, query, attr, bufptr)
 }
 
-libtiledb_query_show_bufptr <- function(bufptr) {
-    invisible(.Call(`_tiledb_libtiledb_query_show_bufptr`, bufptr))
-}
-
-libtiledb_query_get_var_string_vector_from_buffer <- function(bufptr) {
-    .Call(`_tiledb_libtiledb_query_get_var_string_vector_from_buffer`, bufptr)
+libtiledb_query_get_buffer_var_char <- function(bufptr) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr)
 }
 
 libtiledb_query_submit <- function(query) {

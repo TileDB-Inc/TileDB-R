@@ -49,8 +49,8 @@ write_array <- function() {
   ## this works
   ##qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_and_submit(qryptr, "a1", offsets, data)
 
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
   invisible(NULL)
@@ -61,18 +61,18 @@ read_array <- function(txt="", subarr=c(1L,4L,1L,4L)) {
   ctx <- tiledb_ctx()
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
 
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_allocate(arrptr, subarr, "a1")
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc(arrptr, subarr, "a1")
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
   #tiledb:::libtiledb_query_show_bufptr(bufptr)
-  print(tiledb:::libtiledb_query_get_var_string_vector_from_buffer(bufptr), quote=FALSE)
+  print(tiledb:::libtiledb_query_get_buffer_var_char(bufptr), quote=FALSE)
 }
 
 write_subarray <- function() {
@@ -87,8 +87,8 @@ write_subarray <- function() {
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  bufptr <- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, "a1", bufptr)
+  bufptr <- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
 
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
