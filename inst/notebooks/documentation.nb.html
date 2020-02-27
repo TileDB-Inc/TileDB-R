@@ -1859,24 +1859,7 @@ summary {
 <li><a href="#writing-encrypted-arrays">Writing Encrypted Arrays</a></li>
 <li><a href="#fixed-length-attributes">Fixed-length Attributes</a></li>
 <li><a href="#var-length-attributes">Var-length Attributes</a></li>
-<li><a href="#getting-the-fragment-info">Getting the Fragment Info</a></li>
-</ul></li>
-<li><a href="#reading-arrays">Reading Arrays</a><ul>
-<li><a href="#reading-the-array-schema">Reading the Array Schema</a></li>
 <li><a href="#basic-reading">Basic Reading</a></li>
-<li><a href="#reading-encrypted-arrays">Reading Encrypted Arrays</a></li>
-<li><a href="#multi-range-subarrays">Multi-range Subarrays</a></li>
-<li><a href="#incomplete-queries">Incomplete Queries</a></li>
-<li><a href="#result-estimation">Result Estimation</a></li>
-<li><a href="#time-traveling">Time Traveling</a></li>
-</ul></li>
-<li><a href="#embedded-sql">Embedded SQL</a></li>
-<li><a href="#asynchronous-queries">Asynchronous Queries</a></li>
-<li><a href="#configuration">Configuration</a></li>
-<li><a href="#array-metadata">Array Metadata</a><ul>
-<li><a href="#writing-array-metadata">Writing Array Metadata</a></li>
-<li><a href="#reading-array-metadata">Reading Array Metadata</a></li>
-<li><a href="#deleting-array-metadata">Deleting Array Metadata</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1890,7 +1873,7 @@ When you save the notebook, an HTML file containing the code and output will be 
 <p>We will the two basic examples for a dense and sparse array simply to create array data on disk to refer to later in examples that follow.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWxlZGIpXG5cbnRkaXIgPC0gdGVtcGRpcigpXG51cmlkZW5zZSA8LSBmaWxlLnBhdGgodGRpciwgXCJkZW5zZVwiKVxudXJpZGVuc2VmaXggPC0gZmlsZS5wYXRoKHRkaXIsIFwiZGVuc2VmaXhcIilcbnVyaWRlbnNldmFyIDwtIGZpbGUucGF0aCh0ZGlyLCBcImRlbnNldmFyXCIpXG5cbmNyZWF0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7XG4gICAgIyBDaGVjayBpZiB0aGUgYXJyYXkgYWxyZWFkeSBleGlzdHMuXG4gICAgaWYgKHRpbGVkYl9vYmplY3RfdHlwZShhcnJheV9uYW1lKSA9PSBcIkFSUkFZXCIpIHtcbiAgICAgICAgbWVzc2FnZShcIkFycmF5IGFscmVhZHkgZXhpc3RzLlwiKVxuICAgICAgICByZXR1cm4oaW52aXNpYmxlKE5VTEwpKVxuICAgIH1cblxuICAgICMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyBcInJvd3NcIiBhbmQgXCJjb2xzXCIsIHdpdGggZG9tYWluIFsxLDRdLlxuICAgIGRvbSA8LSB0aWxlZGJfZG9tYWluKGRpbXMgPSBjKHRpbGVkYl9kaW0oXCJyb3dzXCIsIGMoMUwsIDRMKSwgNEwsIFwiSU5UMzJcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZWRiX2RpbShcImNvbHNcIiwgYygxTCwgNEwpLCA0TCwgXCJJTlQzMlwiKSkpXG5cbiAgICAjIFRoZSBhcnJheSB3aWxsIGJlIGRlbnNlIHdpdGggYSBzaW5nbGUgYXR0cmlidXRlIFwiYVwiIHNvIGVhY2ggKGksaikgY2VsbCBjYW4gc3RvcmUgYW4gaW50ZWdlci5cbiAgICBzY2hlbWEgPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGF0dHJzID0gYyh0aWxlZGJfYXR0cihcImFcIiwgdHlwZSA9IFwiSU5UMzJcIikpKVxuXG4gICAgIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay5cbiAgICB0aWxlZGJfYXJyYXlfY3JlYXRlKGFycmF5X25hbWUsIHNjaGVtYSlcbn1cblxud3JpdGVfYXJyYXkgPC0gZnVuY3Rpb24oYXJyYXlfbmFtZSkge1xuICAgIGRhdGEgPC0gYXJyYXkoYyhjKDFMLCA1TCwgOUwsIDEzTCksXG4gICAgICAgICAgICAgICAgICAgIGMoMkwsIDZMLCAxMEwsIDE0TCksXG4gICAgICAgICAgICAgICAgICAgIGMoM0wsIDdMLCAxMUwsIDE1TCksXG4gICAgICAgICAgICAgICAgICAgIGMoNEwsIDhMLCAxMkwsIDE2TCkpLCBkaW0gPSBjKDQsNCkpXG4gICAgIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdG8gaXQuXG4gICAgQSA8LSB0aWxlZGJfZGVuc2UodXJpID0gYXJyYXlfbmFtZSlcbiAgICBBW10gPC0gZGF0YVxufVxuXG5jcmVhdGVfYXJyYXkodXJpZGVuc2UpXG53cml0ZV9hcnJheSh1cmlkZW5zZSlcblxuXG51cmlzcGFyc2UgPC0gZmlsZS5wYXRoKHRkaXIsIFwic3BhcnNlXCIpXG5cbmNyZWF0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7XG4gICAgIyBDaGVjayBpZiB0aGUgYXJyYXkgYWxyZWFkeSBleGlzdHMuXG4gICAgaWYgKHRpbGVkYl9vYmplY3RfdHlwZShhcnJheV9uYW1lKSA9PSBcIkFSUkFZXCIpIHtcbiAgICAgICAgbWVzc2FnZShcIkFycmF5IGFscmVhZHkgZXhpc3RzLlwiKVxuICAgICAgICByZXR1cm4oaW52aXNpYmxlKE5VTEwpKVxuICAgIH1cblxuICAgICMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyBcInJvd3NcIiBhbmQgXCJjb2xzXCIsIHdpdGggZG9tYWluIFsxLDRdLlxuICAgIGRvbSA8LSB0aWxlZGJfZG9tYWluKGRpbXMgPSBjKHRpbGVkYl9kaW0oXCJyb3dzXCIsIGMoMUwsIDRMKSwgNEwsIFwiSU5UMzJcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZWRiX2RpbShcImNvbHNcIiwgYygxTCwgNEwpLCA0TCwgXCJJTlQzMlwiKSkpXG5cbiAgICMgVGhlIGFycmF5IHdpbGwgYmUgZGVuc2Ugd2l0aCBhIHNpbmdsZSBhdHRyaWJ1dGUgXCJhXCIgc28gZWFjaCAoaSxqKSBjZWxsIGNhbiBzdG9yZSBhbiBpbnRlZ2VyLlxuICAgIHNjaGVtYSA9IHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBhdHRycz1jKHRpbGVkYl9hdHRyKFwiYVwiLCB0eXBlID0gXCJJTlQzMlwiKSksIHNwYXJzZSA9IFRSVUUpXG5cbiAgICAjIENyZWF0ZSB0aGUgKGVtcHR5KSBhcnJheSBvbiBkaXNrLlxuICAgIHRpbGVkYl9hcnJheV9jcmVhdGUoYXJyYXlfbmFtZSwgc2NoZW1hKVxufVxuXG53cml0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7XG4gICAgSSA8LSBjKDEsIDIsIDIpXG4gICAgSiA8LSBjKDEsIDQsIDMpXG4gICAgZGF0YSA8LSBjKDFMLCAyTCwgM0wpXG4gICAgIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdG8gaXQuXG4gICAgQSA8LSB0aWxlZGJfc3BhcnNlKHVyaSA9IGFycmF5X25hbWUpXG4gICAgQVtJLCBKXSA8LSBkYXRhXG59XG5cbmNyZWF0ZV9hcnJheSh1cmlzcGFyc2UpXG53cml0ZV9hcnJheSh1cmlzcGFyc2UpXG5cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWxlZGIpXG5cbnRkaXIgPC0gdGVtcGRpcigpXG51cmlkZW5zZSA8LSBmaWxlLnBhdGgodGRpciwgXCJkZW5zZVwiKVxudXJpZGVuc2VmaXggPC0gZmlsZS5wYXRoKHRkaXIsIFwiZGVuc2VmaXhcIilcbnVyaWRlbnNldmFyIDwtIGZpbGUucGF0aCh0ZGlyLCBcImRlbnNldmFyXCIpXG5cbmNyZWF0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7XG4gICAgIyBDaGVjayBpZiB0aGUgYXJyYXkgYWxyZWFkeSBleGlzdHMuXG4gICAgaWYgKHRpbGVkYl9vYmplY3RfdHlwZShhcnJheV9uYW1lKSA9PSBcIkFSUkFZXCIpIHtcbiAgICAgICAgbWVzc2FnZShcIkFycmF5IGFscmVhZHkgZXhpc3RzLlwiKVxuICAgICAgICByZXR1cm4oaW52aXNpYmxlKE5VTEwpKVxuICAgIH1cblxuICAgICMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyBcInJvd3NcIiBhbmQgXCJjb2xzXCIsIHdpdGggZG9tYWluIFsxLDRdLlxuICAgIGRvbSA8LSB0aWxlZGJfZG9tYWluKGRpbXMgPSBjKHRpbGVkYl9kaW0oXCJyb3dzXCIsIGMoMUwsIDRMKSwgNEwsIFwiSU5UMzJcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZWRiX2RpbShcImNvbHNcIiwgYygxTCwgNEwpLCA0TCwgXCJJTlQzMlwiKSkpXG5cbiAgICAjIFRoZSBhcnJheSB3aWxsIGJlIGRlbnNlIHdpdGggYSBzaW5nbGUgYXR0cmlidXRlIFwiYVwiIHNvIGVhY2ggKGksaikgY2VsbCBjYW4gc3RvcmUgYW4gaW50ZWdlci5cbiAgICBzY2hlbWEgPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGF0dHJzID0gYyh0aWxlZGJfYXR0cihcImFcIiwgdHlwZSA9IFwiSU5UMzJcIikpKVxuXG4gICAgIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay5cbiAgICB0aWxlZGJfYXJyYXlfY3JlYXRlKGFycmF5X25hbWUsIHNjaGVtYSlcbn1cblxud3JpdGVfYXJyYXkgPC0gZnVuY3Rpb24oYXJyYXlfbmFtZSkge1xuICAgIGRhdGEgPC0gYXJyYXkoYyhjKDFMLCA1TCwgOUwsIDEzTCksXG4gICAgICAgICAgICAgICAgICAgIGMoMkwsIDZMLCAxMEwsIDE0TCksXG4gICAgICAgICAgICAgICAgICAgIGMoM0wsIDdMLCAxMUwsIDE1TCksXG4gICAgICAgICAgICAgICAgICAgIGMoNEwsIDhMLCAxMkwsIDE2TCkpLCBkaW0gPSBjKDQsNCkpXG4gICAgIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdG8gaXQuXG4gICAgQSA8LSB0aWxlZGJfZGVuc2UodXJpID0gYXJyYXlfbmFtZSlcbiAgICBBW10gPC0gZGF0YVxufVxuXG5jcmVhdGVfYXJyYXkodXJpZGVuc2UpXG5gYGAifQ== -->
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a>tdir &lt;-<span class="st"> </span><span class="kw">tempdir</span>()</span>
@@ -1926,41 +1909,51 @@ When you save the notebook, an HTML file containing the code and output will be 
 <span id="cb1-33"><a href="#cb1-33"></a>    A[] &lt;-<span class="st"> </span>data</span>
 <span id="cb1-34"><a href="#cb1-34"></a>}</span>
 <span id="cb1-35"><a href="#cb1-35"></a></span>
-<span id="cb1-36"><a href="#cb1-36"></a><span class="kw">create_array</span>(uridense)</span>
-<span id="cb1-37"><a href="#cb1-37"></a><span class="kw">write_array</span>(uridense)</span>
-<span id="cb1-38"><a href="#cb1-38"></a></span>
-<span id="cb1-39"><a href="#cb1-39"></a></span>
-<span id="cb1-40"><a href="#cb1-40"></a>urisparse &lt;-<span class="st"> </span><span class="kw">file.path</span>(tdir, <span class="st">&quot;sparse&quot;</span>)</span>
-<span id="cb1-41"><a href="#cb1-41"></a></span>
-<span id="cb1-42"><a href="#cb1-42"></a>create_array &lt;-<span class="st"> </span><span class="cf">function</span>(array_name) {</span>
-<span id="cb1-43"><a href="#cb1-43"></a>    <span class="co"># Check if the array already exists.</span></span>
-<span id="cb1-44"><a href="#cb1-44"></a>    <span class="cf">if</span> (<span class="kw">tiledb_object_type</span>(array_name) <span class="op">==</span><span class="st"> &quot;ARRAY&quot;</span>) {</span>
-<span id="cb1-45"><a href="#cb1-45"></a>        <span class="kw">message</span>(<span class="st">&quot;Array already exists.&quot;</span>)</span>
-<span id="cb1-46"><a href="#cb1-46"></a>        <span class="kw">return</span>(<span class="kw">invisible</span>(<span class="ot">NULL</span>))</span>
-<span id="cb1-47"><a href="#cb1-47"></a>    }</span>
-<span id="cb1-48"><a href="#cb1-48"></a></span>
-<span id="cb1-49"><a href="#cb1-49"></a>    <span class="co"># The array will be 4x4 with dimensions &quot;rows&quot; and &quot;cols&quot;, with domain [1,4].</span></span>
-<span id="cb1-50"><a href="#cb1-50"></a>    dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="dt">dims =</span> <span class="kw">c</span>(<span class="kw">tiledb_dim</span>(<span class="st">&quot;rows&quot;</span>, <span class="kw">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>),</span>
-<span id="cb1-51"><a href="#cb1-51"></a>                                  <span class="kw">tiledb_dim</span>(<span class="st">&quot;cols&quot;</span>, <span class="kw">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>)))</span>
-<span id="cb1-52"><a href="#cb1-52"></a></span>
-<span id="cb1-53"><a href="#cb1-53"></a>   <span class="co"># The array will be dense with a single attribute &quot;a&quot; so each (i,j) cell can store an integer.</span></span>
-<span id="cb1-54"><a href="#cb1-54"></a>    schema =<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="dt">attrs=</span><span class="kw">c</span>(<span class="kw">tiledb_attr</span>(<span class="st">&quot;a&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;INT32&quot;</span>)), <span class="dt">sparse =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1-55"><a href="#cb1-55"></a></span>
-<span id="cb1-56"><a href="#cb1-56"></a>    <span class="co"># Create the (empty) array on disk.</span></span>
-<span id="cb1-57"><a href="#cb1-57"></a>    <span class="kw">tiledb_array_create</span>(array_name, schema)</span>
-<span id="cb1-58"><a href="#cb1-58"></a>}</span>
-<span id="cb1-59"><a href="#cb1-59"></a></span>
-<span id="cb1-60"><a href="#cb1-60"></a>write_array &lt;-<span class="st"> </span><span class="cf">function</span>(array_name) {</span>
-<span id="cb1-61"><a href="#cb1-61"></a>    I &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb1-62"><a href="#cb1-62"></a>    J &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>)</span>
-<span id="cb1-63"><a href="#cb1-63"></a>    data &lt;-<span class="st"> </span><span class="kw">c</span>(1L, 2L, 3L)</span>
-<span id="cb1-64"><a href="#cb1-64"></a>    <span class="co"># Open the array and write to it.</span></span>
-<span id="cb1-65"><a href="#cb1-65"></a>    A &lt;-<span class="st"> </span><span class="kw">tiledb_sparse</span>(<span class="dt">uri =</span> array_name)</span>
-<span id="cb1-66"><a href="#cb1-66"></a>    A[I, J] &lt;-<span class="st"> </span>data</span>
-<span id="cb1-67"><a href="#cb1-67"></a>}</span>
-<span id="cb1-68"><a href="#cb1-68"></a></span>
-<span id="cb1-69"><a href="#cb1-69"></a><span class="kw">create_array</span>(urisparse)</span>
-<span id="cb1-70"><a href="#cb1-70"></a><span class="kw">write_array</span>(urisparse)</span></code></pre></div>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="kw">create_array</span>(uridense)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiL3RtcC9SdG1wYmJNWms1L2RlbnNlXCJcbiJ9 -->
+<pre><code>[1] &quot;/tmp/RtmpbbMZk5/dense&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfYXJyYXkodXJpZGVuc2UpXG5cblxudXJpc3BhcnNlIDwtIGZpbGUucGF0aCh0ZGlyLCBcInNwYXJzZVwiKVxuXG5jcmVhdGVfYXJyYXkgPC0gZnVuY3Rpb24oYXJyYXlfbmFtZSkge1xuICAgICMgQ2hlY2sgaWYgdGhlIGFycmF5IGFscmVhZHkgZXhpc3RzLlxuICAgIGlmICh0aWxlZGJfb2JqZWN0X3R5cGUoYXJyYXlfbmFtZSkgPT0gXCJBUlJBWVwiKSB7XG4gICAgICAgIG1lc3NhZ2UoXCJBcnJheSBhbHJlYWR5IGV4aXN0cy5cIilcbiAgICAgICAgcmV0dXJuKGludmlzaWJsZShOVUxMKSlcbiAgICB9XG5cbiAgICAjIFRoZSBhcnJheSB3aWxsIGJlIDR4NCB3aXRoIGRpbWVuc2lvbnMgXCJyb3dzXCIgYW5kIFwiY29sc1wiLCB3aXRoIGRvbWFpbiBbMSw0XS5cbiAgICBkb20gPC0gdGlsZWRiX2RvbWFpbihkaW1zID0gYyh0aWxlZGJfZGltKFwicm93c1wiLCBjKDFMLCA0TCksIDRMLCBcIklOVDMyXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRpbGVkYl9kaW0oXCJjb2xzXCIsIGMoMUwsIDRMKSwgNEwsIFwiSU5UMzJcIikpKVxuXG4gICAjIFRoZSBhcnJheSB3aWxsIGJlIGRlbnNlIHdpdGggYSBzaW5nbGUgYXR0cmlidXRlIFwiYVwiIHNvIGVhY2ggKGksaikgY2VsbCBjYW4gc3RvcmUgYW4gaW50ZWdlci5cbiAgICBzY2hlbWEgPSB0aWxlZGJfYXJyYXlfc2NoZW1hKGRvbSwgYXR0cnM9Yyh0aWxlZGJfYXR0cihcImFcIiwgdHlwZSA9IFwiSU5UMzJcIikpLCBzcGFyc2UgPSBUUlVFKVxuXG4gICAgIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay5cbiAgICB0aWxlZGJfYXJyYXlfY3JlYXRlKGFycmF5X25hbWUsIHNjaGVtYSlcbn1cblxud3JpdGVfYXJyYXkgPC0gZnVuY3Rpb24oYXJyYXlfbmFtZSkge1xuICAgIEkgPC0gYygxLCAyLCAyKVxuICAgIEogPC0gYygxLCA0LCAzKVxuICAgIGRhdGEgPC0gYygxTCwgMkwsIDNMKVxuICAgICMgT3BlbiB0aGUgYXJyYXkgYW5kIHdyaXRlIHRvIGl0LlxuICAgIEEgPC0gdGlsZWRiX3NwYXJzZSh1cmkgPSBhcnJheV9uYW1lKVxuICAgIEFbSSwgSl0gPC0gZGF0YVxufVxuXG5jcmVhdGVfYXJyYXkodXJpc3BhcnNlKVxuYGBgIn0= -->
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">write_array</span>(uridense)</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a>urisparse &lt;-<span class="st"> </span><span class="kw">file.path</span>(tdir, <span class="st">&quot;sparse&quot;</span>)</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a>create_array &lt;-<span class="st"> </span><span class="cf">function</span>(array_name) {</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    <span class="co"># Check if the array already exists.</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>    <span class="cf">if</span> (<span class="kw">tiledb_object_type</span>(array_name) <span class="op">==</span><span class="st"> &quot;ARRAY&quot;</span>) {</span>
+<span id="cb3-9"><a href="#cb3-9"></a>        <span class="kw">message</span>(<span class="st">&quot;Array already exists.&quot;</span>)</span>
+<span id="cb3-10"><a href="#cb3-10"></a>        <span class="kw">return</span>(<span class="kw">invisible</span>(<span class="ot">NULL</span>))</span>
+<span id="cb3-11"><a href="#cb3-11"></a>    }</span>
+<span id="cb3-12"><a href="#cb3-12"></a></span>
+<span id="cb3-13"><a href="#cb3-13"></a>    <span class="co"># The array will be 4x4 with dimensions &quot;rows&quot; and &quot;cols&quot;, with domain [1,4].</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a>    dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="dt">dims =</span> <span class="kw">c</span>(<span class="kw">tiledb_dim</span>(<span class="st">&quot;rows&quot;</span>, <span class="kw">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>),</span>
+<span id="cb3-15"><a href="#cb3-15"></a>                                  <span class="kw">tiledb_dim</span>(<span class="st">&quot;cols&quot;</span>, <span class="kw">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>)))</span>
+<span id="cb3-16"><a href="#cb3-16"></a></span>
+<span id="cb3-17"><a href="#cb3-17"></a>   <span class="co"># The array will be dense with a single attribute &quot;a&quot; so each (i,j) cell can store an integer.</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>    schema =<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="dt">attrs=</span><span class="kw">c</span>(<span class="kw">tiledb_attr</span>(<span class="st">&quot;a&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;INT32&quot;</span>)), <span class="dt">sparse =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb3-19"><a href="#cb3-19"></a></span>
+<span id="cb3-20"><a href="#cb3-20"></a>    <span class="co"># Create the (empty) array on disk.</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a>    <span class="kw">tiledb_array_create</span>(array_name, schema)</span>
+<span id="cb3-22"><a href="#cb3-22"></a>}</span>
+<span id="cb3-23"><a href="#cb3-23"></a></span>
+<span id="cb3-24"><a href="#cb3-24"></a>write_array &lt;-<span class="st"> </span><span class="cf">function</span>(array_name) {</span>
+<span id="cb3-25"><a href="#cb3-25"></a>    I &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb3-26"><a href="#cb3-26"></a>    J &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>)</span>
+<span id="cb3-27"><a href="#cb3-27"></a>    data &lt;-<span class="st"> </span><span class="kw">c</span>(1L, 2L, 3L)</span>
+<span id="cb3-28"><a href="#cb3-28"></a>    <span class="co"># Open the array and write to it.</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a>    A &lt;-<span class="st"> </span><span class="kw">tiledb_sparse</span>(<span class="dt">uri =</span> array_name)</span>
+<span id="cb3-30"><a href="#cb3-30"></a>    A[I, J] &lt;-<span class="st"> </span>data</span>
+<span id="cb3-31"><a href="#cb3-31"></a>}</span>
+<span id="cb3-32"><a href="#cb3-32"></a></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="kw">create_array</span>(urisparse)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiL3RtcC9SdG1wYmJNWms1L3NwYXJzZVwiXG4ifQ== -->
+<pre><code>[1] &quot;/tmp/RtmpbbMZk5/sparse&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfYXJyYXkodXJpc3BhcnNlKVxuXG5gYGAifQ== -->
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">write_array</span>(urisparse)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1974,11 +1967,11 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWxlZGIpXG5cbiMgQ3JlYXRlIGRpbWVuc2lvblxuIyBJbiBDKys6IERpbWVuc2lvbjo6Y3JlYXRlPFQ+KC4uLilcbmRpbSA8LSB0aWxlZGJfZGltKFwiZGltXCIsIGMoMUwsIDRMKSwgMkwsIFwiSU5UMzJcIilcbmBgYCJ9 -->
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(tiledb)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Create dimension</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># In C++: Dimension::create&lt;T&gt;(...)</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>dim &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="st">&quot;dim&quot;</span>, <span class="kw">c</span>(1L, 4L), 2L, <span class="st">&quot;INT32&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co"># Create dimension</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># In C++: Dimension::create&lt;T&gt;(...)</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>dim &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="st">&quot;dim&quot;</span>, <span class="kw">c</span>(1L, 4L), 2L, <span class="st">&quot;INT32&quot;</span>)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1988,15 +1981,15 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWxlZGIpXG5cbiMgIC4uIGNyZWF0ZSBkaW1lbnNpb25zIGBkaW0xYCwgYGRpbTJgXG5kaW0xIDwtIHRpbGVkYl9kaW0oXCJkaW0xXCIsIGMoMUwsIDRMKSwgMkwsIFwiSU5UMzJcIilcbmRpbTIgPC0gdGlsZWRiX2RpbShcImRpbTJcIiwgYygxTCwgMkwpLCAyTCwgXCJJTlQzMlwiKVxuXG4jIENyZWF0ZSBkb21haW4gd2l0aCB0d28gZGltZW5zaW9uc1xuIyBJbiBDKys6IGRvbWFpbi5hZGRfZGltZW5zaW9ucyhkaW0xKS5hZGRfZGltZW5zaW9uKGRpbTIpXG5kb20gPC0gdGlsZWRiX2RvbWFpbihkaW1zID0gYyhkaW0xLCBkaW0yKSlcbmBgYCJ9 -->
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">library</span>(tiledb)</span>
-<span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="co">#  .. create dimensions `dim1`, `dim2`</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>dim1 &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="st">&quot;dim1&quot;</span>, <span class="kw">c</span>(1L, 4L), 2L, <span class="st">&quot;INT32&quot;</span>)</span>
-<span id="cb3-5"><a href="#cb3-5"></a>dim2 &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="st">&quot;dim2&quot;</span>, <span class="kw">c</span>(1L, 2L), 2L, <span class="st">&quot;INT32&quot;</span>)</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># Create domain with two dimensions</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="co"># In C++: domain.add_dimensions(dim1).add_dimension(dim2)</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="dt">dims =</span> <span class="kw">c</span>(dim1, dim2))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb7-2"><a href="#cb7-2"></a></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co">#  .. create dimensions `dim1`, `dim2`</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>dim1 &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="st">&quot;dim1&quot;</span>, <span class="kw">c</span>(1L, 4L), 2L, <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb7-5"><a href="#cb7-5"></a>dim2 &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="st">&quot;dim2&quot;</span>, <span class="kw">c</span>(1L, 2L), 2L, <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co"># Create domain with two dimensions</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co"># In C++: domain.add_dimensions(dim1).add_dimension(dim2)</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="dt">dims =</span> <span class="kw">c</span>(dim1, dim2))</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2006,21 +1999,21 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDcmVhdGUgYXR0cmlidXRlXG4jIEluIEMrKzogQXR0cmlidXRlOjpjcmVhdGU8VD4oY3R4LCBcImF0dHJcIilcbmF0dHIgPC0gdGlsZWRiX2F0dHIoXCJhdHRyXCIsIFwiSU5UMzJcIilcbmBgYCJ9 -->
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Create attribute</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># In C++: Attribute::create&lt;T&gt;(ctx, &quot;attr&quot;)</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Create attribute</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co"># In C++: Attribute::create&lt;T&gt;(ctx, &quot;attr&quot;)</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBXZSBjYW4gYWxzbyBzZXQgdGhlIG51bWJlciBvZiBhdHRyaWJ1dGVzIHRvIGEgdmFsdWUgb3RoZXIgdGhhbiBvbmVcbnRpbGVkYjo6OmxpYnRpbGVkYl9hdHRyaWJ1dGVfc2V0X2NlbGxfdmFsX251bShhdHRyQHB0ciwgMylcblxuIyBBbmQgd2UgY2FuIHNldCB0aGUgYSB2YXJpYWJsZSBudW1iZXIgb2YgYXR0cmlidXRlcyAodXNpbmcgTkEgdG8gc2VsZWN0IHZhcmlhYmxlIHNpemUpXG50aWxlZGI6OjpsaWJ0aWxlZGJfYXR0cmlidXRlX3NldF9jZWxsX3ZhbF9udW0oYXR0ckBwdHIsIE5BKVxuIyMgVE9ETzogUiBmdW5jdGlvbiBmb3IgbGV2ZWwgc2V0dGVyXG5gYGAifQ== -->
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># We can also set the number of attributes to a value other than one</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_attribute_set_cell_val_num</span>(attr<span class="op">@</span>ptr, <span class="dv">3</span>)</span>
-<span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co"># And we can set the a variable number of attributes (using NA to select variable size)</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_attribute_set_cell_val_num</span>(attr<span class="op">@</span>ptr, <span class="ot">NA</span>)</span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">## </span><span class="al">TODO</span><span class="co">: R function for level setter</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># We can also set the number of attributes to a value other than one</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_attribute_set_cell_val_num</span>(attr<span class="op">@</span>ptr, <span class="dv">3</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co"># And we can set the a variable number of attributes (using NA to select variable size)</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_attribute_set_cell_val_num</span>(attr<span class="op">@</span>ptr, <span class="ot">NA</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">## </span><span class="al">TODO</span><span class="co">: R function for level setter</span></span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2029,14 +2022,14 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29tcCA8LSB0aWxlZGJfZmlsdGVyKFwiR1pJUFwiKVxudGlsZWRiX2ZpbHRlcl9zZXRfb3B0aW9uKGNvbXAsXCJDT01QUkVTU0lPTl9MRVZFTFwiLCAxMClcblxuIyBDcmVhdGUgYSBmaWx0ZXIgbGlzdCB3aXRoIHRoZSBjb21wcmVzc29yXG5maWx0ZXJfbGlzdCA8LSB0aWxlZGJfZmlsdGVyX2xpc3QoYyhjb21wKSlcblxuIyBDcmVhdGUgYXR0cmlidXRlIHdpdGggdGhlIGZpbHRlciBsaXN0XG5hdHRyIDwtIHRpbGVkYl9hdHRyKFwiYXR0clwiLCBcIklOVDMyXCIsIGZpbHRlcl9saXN0ID0gZmlsdGVyX2xpc3QpXG5gYGAifQ== -->
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>comp &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;GZIP&quot;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">tiledb_filter_set_option</span>(comp,<span class="st">&quot;COMPRESSION_LEVEL&quot;</span>, <span class="dv">10</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># Create a filter list with the compressor</span></span>
-<span id="cb6-5"><a href="#cb6-5"></a>filter_list &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(comp))</span>
-<span id="cb6-6"><a href="#cb6-6"></a></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co"># Create attribute with the filter list</span></span>
-<span id="cb6-8"><a href="#cb6-8"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>comp &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;GZIP&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">tiledb_filter_set_option</span>(comp,<span class="st">&quot;COMPRESSION_LEVEL&quot;</span>, <span class="dv">10</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># Create a filter list with the compressor</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>filter_list &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(comp))</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co"># Create attribute with the filter list</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2046,15 +2039,15 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDcmVhdGUgZmlsdGVyc1xuZjEgPC0gdGlsZWRiX2ZpbHRlcihcIkJJVF9XSURUSF9SRURVQ1RJT05cIilcbmYyIDwtIHRpbGVkYl9maWx0ZXIoXCJaU1REXCIpXG5cbiMgQ3JlYXRlIGEgZmlsdGVyIGxpc3Qgd2l0aCB0aGUgdHdvIGZpbHRlcnNcbmZpbHRlcl9saXN0IDwtIHRpbGVkYl9maWx0ZXJfbGlzdChjKGYxLGYyKSlcblxuIyBDcmVhdGUgYXR0cmlidXRlIHdpdGggdGhlIGZpbHRlciBsaXN0XG5hdHRyIDwtIHRpbGVkYl9hdHRyKFwiYXR0clwiLCBcIklOVDMyXCIsIGZpbHRlcl9saXN0ID0gZmlsdGVyX2xpc3QpXG5gYGAifQ== -->
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Create filters</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>f1 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;BIT_WIDTH_REDUCTION&quot;</span>)</span>
-<span id="cb7-3"><a href="#cb7-3"></a>f2 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;ZSTD&quot;</span>)</span>
-<span id="cb7-4"><a href="#cb7-4"></a></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="co"># Create a filter list with the two filters</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a>filter_list &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(f1,f2))</span>
-<span id="cb7-7"><a href="#cb7-7"></a></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="co"># Create attribute with the filter list</span></span>
-<span id="cb7-9"><a href="#cb7-9"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Create filters</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>f1 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;BIT_WIDTH_REDUCTION&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>f2 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;ZSTD&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co"># Create a filter list with the two filters</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a>filter_list &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(f1,f2))</span>
+<span id="cb11-7"><a href="#cb11-7"></a></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="co"># Create attribute with the filter list</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2064,8 +2057,8 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyAuLi4gY3JlYXRlIGZpbHRlciBsaXN0XG5zZXRfbWF4X2NodW5rX3NpemUoZmlsdGVyX2xpc3QsIDEwMDAwKVxuYGBgIn0= -->
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># ... create filter list</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">set_max_chunk_size</span>(filter_list, <span class="dv">10000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># ... create filter list</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">set_max_chunk_size</span>(filter_list, <span class="dv">10000</span>)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2076,14 +2069,14 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyAuLi4gY3JlYXRlIGRvbWFpbiBkb21cbmF0dHIxIDwtIHRpbGVkYl9hdHRyKFwiYXR0cjFcIiwgXCJJTlQzMlwiLCBmaWx0ZXJfbGlzdCA9IGZpbHRlcl9saXN0KVxuYXR0cjIgPC0gdGlsZWRiX2F0dHIoXCJhdHRyMlwiLCBcIkZMT0FUNjRcIiwgZmlsdGVyX2xpc3QgPSBmaWx0ZXJfbGlzdClcblxuIyBDcmVhdGUgYSBkZW5zZSBhcnJheVxuc2NoZW1hIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKGF0dHIxLCBhdHRyMiksIHNwYXJzZSA9IEZBTFNFKVxuIyBPciwgY3JlYXRlIGEgc3BhZXNlIGFycmF5XG4jIHNjaGVtYSA8LSB0aWxlZGJfYXJyYXlfc2NoZW1hKGRvbSwgYyhhdHRyMSwgYXR0cjIpLCBzcGFyc2UgPSBUUlVFKVxuYGBgIn0= -->
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># ... create domain dom</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>attr1 &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span>
-<span id="cb9-3"><a href="#cb9-3"></a>attr2 &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;FLOAT64&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span>
-<span id="cb9-4"><a href="#cb9-4"></a></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="co"># Create a dense array</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a>schema &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr1, attr2), <span class="dt">sparse =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="co"># Or, create a spaese array</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># schema &lt;- tiledb_array_schema(dom, c(attr1, attr2), sparse = TRUE)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># ... create domain dom</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>attr1 &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span>
+<span id="cb13-3"><a href="#cb13-3"></a>attr2 &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;FLOAT64&quot;</span>, <span class="dt">filter_list =</span> filter_list)</span>
+<span id="cb13-4"><a href="#cb13-4"></a></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co"># Create a dense array</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a>schema &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr1, attr2), <span class="dt">sparse =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="co"># Or, create a spaese array</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="co"># schema &lt;- tiledb_array_schema(dom, c(attr1, attr2), sparse = TRUE)</span></span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2092,13 +2085,13 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyAuLi4gY3JlYXRlIGRvbWFpbiBkb21cbiMgLi4uIGNyZWF0ZSBhdHRyaWJ1dGVzIGF0dHIxLCBhdHRyMlxuXG4jIFRoZSB0aWxlIGFuZCBvcmRlciBjYW4gYmUgXCJST1dfTUFKT1JcIiBvciBcIkNPTF9NQUpPUlwiXG5zY2hlbWEgPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGMoYXR0cjEsIGF0dHIyKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNlbGxfb3JkZXIgPSBcIkNPTF9NQUpPUlwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZV9vcmRlciA9IFwiUk9XX01BSk9SXCIpXG5gYGAifQ== -->
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># ... create domain dom</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="co"># ... create attributes attr1, attr2</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># The tile and order can be &quot;ROW_MAJOR&quot; or &quot;COL_MAJOR&quot;</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a>schema &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr1, attr2),</span>
-<span id="cb10-6"><a href="#cb10-6"></a>                              <span class="dt">cell_order =</span> <span class="st">&quot;COL_MAJOR&quot;</span>,</span>
-<span id="cb10-7"><a href="#cb10-7"></a>                              <span class="dt">tile_order =</span> <span class="st">&quot;ROW_MAJOR&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># ... create domain dom</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="co"># ... create attributes attr1, attr2</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co"># The tile and order can be &quot;ROW_MAJOR&quot; or &quot;COL_MAJOR&quot;</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a>schema &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr1, attr2),</span>
+<span id="cb14-6"><a href="#cb14-6"></a>                              <span class="dt">cell_order =</span> <span class="st">&quot;COL_MAJOR&quot;</span>,</span>
+<span id="cb14-7"><a href="#cb14-7"></a>                              <span class="dt">tile_order =</span> <span class="st">&quot;ROW_MAJOR&quot;</span>)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2107,10 +2100,15 @@ When you save the notebook, an HTML file containing the code and output will be 
 <h4>Setting the Data Tile Capacity</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9zZXRfY2FwYWNpdHkoc2NoZW1hQHB0ciwgMTAwMDAwKVxudGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9nZXRfY2FwYWNpdHkoc2NoZW1hQHB0cilcbiMjIFRPRE8gUiBmdW5jdGlvbiBmb3IgYWNjZXNzb3JcbmBgYCJ9 -->
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_set_capacity</span>(schema<span class="op">@</span>ptr, <span class="dv">100000</span>)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_get_capacity</span>(schema<span class="op">@</span>ptr)</span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="co">## </span><span class="al">TODO</span><span class="co"> R function for accessor</span></span></code></pre></div>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9zZXRfY2FwYWNpdHkoc2NoZW1hQHB0ciwgMTAwMDAwKVxudGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9nZXRfY2FwYWNpdHkoc2NoZW1hQHB0cilcbmBgYCJ9 -->
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_set_capacity</span>(schema<span class="op">@</span>ptr, <span class="dv">100000</span>)</span>
+<span id="cb15-2"><a href="#cb15-2"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_get_capacity</span>(schema<span class="op">@</span>ptr)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEwMDAwMFxuIn0= -->
+<pre><code>[1] 100000</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyMgVE9ETyBSIGZ1bmN0aW9uIGZvciBhY2Nlc3NvclxuYGBgIn0= -->
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co">## </span><span class="al">TODO</span><span class="co"> R function for accessor</span></span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2120,18 +2118,18 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyAuLi4gY3JlYXRlIGRvbWFpbiBkb21cbiMgLi4uIGNyZWF0ZSBhdHRyaWJ1dGVzIGF0dHIxLCBhdHRyMlxuIyAuLi4gY3JlYXRlIGZpbHRlciBsaXN0cyBmbDEsIGZsMiwgc2ltaWxhciB0byBhdHRyaWJ1dGVzXG5mMSA8LSB0aWxlZGJfZmlsdGVyKFwiQklUX1dJRFRIX1JFRFVDVElPTlwiKVxuZjIgPC0gdGlsZWRiX2ZpbHRlcihcIlpTVERcIilcbmZsMSA8LSB0aWxlZGJfZmlsdGVyX2xpc3QoYyhmMSkpXG5mbDIgPC0gdGlsZWRiX2ZpbHRlcl9saXN0KGMoZjIpKVxuXG4jIENyZWF0ZSB0aGUgc2NoZW1hIHNldHRpbmcgdGhlIGNvb3JkaW5hdGVzIGFuZCBvZmZzZXRzIGZpbHRlciBsaXN0c1xuc2NoZW1hIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKGF0dHIxLCBhdHRyMiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb29yZHNfZmlsdGVyX2xpc3QgPSBmbDEsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBvZmZzZXRzX2ZpbHRlcl9saXN0ID0gZmwyKVxuYGBgIn0= -->
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># ... create domain dom</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># ... create attributes attr1, attr2</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="co"># ... create filter lists fl1, fl2, similar to attributes</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a>f1 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;BIT_WIDTH_REDUCTION&quot;</span>)</span>
-<span id="cb12-5"><a href="#cb12-5"></a>f2 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;ZSTD&quot;</span>)</span>
-<span id="cb12-6"><a href="#cb12-6"></a>fl1 &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(f1))</span>
-<span id="cb12-7"><a href="#cb12-7"></a>fl2 &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(f2))</span>
-<span id="cb12-8"><a href="#cb12-8"></a></span>
-<span id="cb12-9"><a href="#cb12-9"></a><span class="co"># Create the schema setting the coordinates and offsets filter lists</span></span>
-<span id="cb12-10"><a href="#cb12-10"></a>schema &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr1, attr2),</span>
-<span id="cb12-11"><a href="#cb12-11"></a>                              <span class="dt">coords_filter_list =</span> fl1,</span>
-<span id="cb12-12"><a href="#cb12-12"></a>                              <span class="dt">offsets_filter_list =</span> fl2)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># ... create domain dom</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="co"># ... create attributes attr1, attr2</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="co"># ... create filter lists fl1, fl2, similar to attributes</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>f1 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;BIT_WIDTH_REDUCTION&quot;</span>)</span>
+<span id="cb18-5"><a href="#cb18-5"></a>f2 &lt;-<span class="st"> </span><span class="kw">tiledb_filter</span>(<span class="st">&quot;ZSTD&quot;</span>)</span>
+<span id="cb18-6"><a href="#cb18-6"></a>fl1 &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(f1))</span>
+<span id="cb18-7"><a href="#cb18-7"></a>fl2 &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>(<span class="kw">c</span>(f2))</span>
+<span id="cb18-8"><a href="#cb18-8"></a></span>
+<span id="cb18-9"><a href="#cb18-9"></a><span class="co"># Create the schema setting the coordinates and offsets filter lists</span></span>
+<span id="cb18-10"><a href="#cb18-10"></a>schema &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr1, attr2),</span>
+<span id="cb18-11"><a href="#cb18-11"></a>                              <span class="dt">coords_filter_list =</span> fl1,</span>
+<span id="cb18-12"><a href="#cb18-12"></a>                              <span class="dt">offsets_filter_list =</span> fl2)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2141,8 +2139,8 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9jaGVjayhzY2hlbWFAcHRyKVxuIyMgVE9ETzogUiBmdW5jdGlvbiBmb3IgYWNjZXNzXG5gYGAifQ== -->
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_check</span>(schema<span class="op">@</span>ptr)</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="co">## </span><span class="al">TODO</span><span class="co">: R function for access</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_check</span>(schema<span class="op">@</span>ptr)</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="co">## </span><span class="al">TODO</span><span class="co">: R function for access</span></span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2153,10 +2151,10 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjpbIiMgLi4uIGNyZWF0ZSBhcnJheSBzY2hlbWEiLCIiLCIjIENyZWF0ZSB0aGUgYXJyYXkiLCJ0aWxlZGJfYXJyYXlfY3JlYXRlKHVyaWRlbnNlLCBzY2hlbWEpIl19 -->
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># ... create array schema</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a></span>
-<span id="cb14-3"><a href="#cb14-3"></a><span class="co"># Create the array</span></span>
-<span id="cb14-4"><a href="#cb14-4"></a><span class="kw">tiledb_array_create</span>(uridense, schema)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># ... create array schema</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="co"># Create the array</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="kw">tiledb_array_create</span>(uridense, schema)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2165,14 +2163,19 @@ When you save the notebook, an HTML file containing the code and output will be 
 <h3>Creating Encrypted Arrays</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW5jcnlwdGlvbl9rZXkgPC0gXCIwMTIzNDU2Nzg5YWJjZGVGMDEyMzQ1Njc4OWFiY2RlRlwiXG51cmlkZW5zZXdrZXkgPC0gZmlsZS5wYXRoKHRkaXIsIFwiZGVuc2V3a2V5XCIpXG5cbiMgc2hvcnRjdXQ6IGJvcnJvdyBzY2hlbWEgZnJvbSBkZW5zZSBhcnJheTsgY291bGQgY3JlYXRlIHNjaGVtYSB0b29cbnNjaGVtYSA8LSBzY2hlbWEodGlsZWRiX2RlbnNlKHVyaWRlbnNlKSlcbnRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9jcmVhdGVfd2l0aF9rZXkodXJpZGVuc2V3a2V5LCBzY2hlbWFAcHRyLCBlbmNyeXB0aW9uX2tleSlcbiMjVE9ETzogUiBzdXBwb3J0XG5gYGAifQ== -->
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>encryption_key &lt;-<span class="st"> &quot;0123456789abcdeF0123456789abcdeF&quot;</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a>uridensewkey &lt;-<span class="st"> </span><span class="kw">file.path</span>(tdir, <span class="st">&quot;densewkey&quot;</span>)</span>
-<span id="cb15-3"><a href="#cb15-3"></a></span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="co"># shortcut: borrow schema from dense array; could create schema too</span></span>
-<span id="cb15-5"><a href="#cb15-5"></a>schema &lt;-<span class="st"> </span><span class="kw">schema</span>(<span class="kw">tiledb_dense</span>(uridense))</span>
-<span id="cb15-6"><a href="#cb15-6"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_create_with_key</span>(uridensewkey, schema<span class="op">@</span>ptr, encryption_key)</span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="co">##TODO: R support</span></span></code></pre></div>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW5jcnlwdGlvbl9rZXkgPC0gXCIwMTIzNDU2Nzg5YWJjZGVGMDEyMzQ1Njc4OWFiY2RlRlwiXG51cmlkZW5zZXdrZXkgPC0gZmlsZS5wYXRoKHRkaXIsIFwiZGVuc2V3a2V5XCIpXG5cbiMgc2hvcnRjdXQ6IGJvcnJvdyBzY2hlbWEgZnJvbSBkZW5zZSBhcnJheTsgY291bGQgY3JlYXRlIHNjaGVtYSB0b29cbnNjaGVtYSA8LSBzY2hlbWEodGlsZWRiX2RlbnNlKHVyaWRlbnNlKSlcbnRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9jcmVhdGVfd2l0aF9rZXkodXJpZGVuc2V3a2V5LCBzY2hlbWFAcHRyLCBlbmNyeXB0aW9uX2tleSlcbmBgYCJ9 -->
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>encryption_key &lt;-<span class="st"> &quot;0123456789abcdeF0123456789abcdeF&quot;</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>uridensewkey &lt;-<span class="st"> </span><span class="kw">file.path</span>(tdir, <span class="st">&quot;densewkey&quot;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3"></a></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="co"># shortcut: borrow schema from dense array; could create schema too</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a>schema &lt;-<span class="st"> </span><span class="kw">schema</span>(<span class="kw">tiledb_dense</span>(uridense))</span>
+<span id="cb21-6"><a href="#cb21-6"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_create_with_key</span>(uridensewkey, schema<span class="op">@</span>ptr, encryption_key)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiL3RtcC9SdG1wYmJNWms1L2RlbnNld2tleVwiXG4ifQ== -->
+<pre><code>[1] &quot;/tmp/RtmpbbMZk5/densewkey&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyNUT0RPOiBSIHN1cHBvcnRcbmBgYCJ9 -->
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co">##TODO: R support</span></span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2185,33 +2188,33 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjpbIiMjIHByZXBhcmUgYSBsYXJnZXIgNSB4IDUgdG8gZW1iZWQgaW50byIsInRtcCA8LSB0ZW1wZmlsZSgpIiwiZDEgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNUwpKSIsImQyICA8LSB0aWxlZGJfZGltKGRvbWFpbiA9IGMoMUwsIDVMKSkiLCJkb20gPC0gdGlsZWRiX2RvbWFpbihjKGQxLCBkMikpIiwidmFsIDwtIHRpbGVkYl9hdHRyKG5hbWU9XCJ2YWxcIiwgdHlwZSA9IFwiSU5UMzJcIikiLCJzY2ggPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGModmFsKSkiLCJ0aWxlZGJfYXJyYXlfY3JlYXRlKHRtcCwgc2NoKSIsIiIsImRhdCA8LSBtYXRyaXgoYXMuaW50ZWdlcihybm9ybSgyNSkqMTAwKSwgNSwgNSkiLCJhcnIgPC0gdGlsZWRiX2RlbnNlKHRtcCwgYXMuZGF0YS5mcmFtZT1GQUxTRSkiLCJhcnJbXSA8LSBkYXQiLCIiLCIiLCIjIFByZXBhcmUgYSAyeDMgZGVuc2UgYXJyYXkiLCIjIENvbnRyYXJ5IHRvIFB5dGhvbiwgUiBieSBkZWZhdWx0IHN0b3JlcyBhcnJheXMgaW4gY29sLW1ham9yIG9yZGVyIiwiZGF0YSA8LSAgYXJyYXkoYygxTCwgNEwsIDJMLCA1TCwgM0wsIDZMKSwgZGltPWMoMiwzKSkiLCIiLCIjIFByZXBhcmUgdGhlIFsxLDJdIHggWzIsNF0gc3ViYXJyYXkgdG8gd3JpdGUgdG8iLCJJIDwtIGMoMToyKSIsIkogPC0gYygyOjQpIiwiIiwiIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdGhlIGRhdGEgdG8gaXQiLCJBIDwtIHRpbGVkYl9kZW5zZSh1cmkgPSB0bXApIiwiQVtJLCBKXSA8LSBkYXRhIiwiIiwidW5saW5rKHRtcCwgcmVjdXJzaXZlPVRSVUUpIl19 -->
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">## prepare a larger 5 x 5 to embed into</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()</span>
-<span id="cb16-3"><a href="#cb16-3"></a>d1  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
-<span id="cb16-4"><a href="#cb16-4"></a>d2  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
-<span id="cb16-5"><a href="#cb16-5"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="kw">c</span>(d1, d2))</span>
-<span id="cb16-6"><a href="#cb16-6"></a>val &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="dt">name=</span><span class="st">&quot;val&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
-<span id="cb16-7"><a href="#cb16-7"></a>sch &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(val))</span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="kw">tiledb_array_create</span>(tmp, sch)</span>
-<span id="cb16-9"><a href="#cb16-9"></a></span>
-<span id="cb16-10"><a href="#cb16-10"></a>dat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">as.integer</span>(<span class="kw">rnorm</span>(<span class="dv">25</span>)<span class="op">*</span><span class="dv">100</span>), <span class="dv">5</span>, <span class="dv">5</span>)</span>
-<span id="cb16-11"><a href="#cb16-11"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_dense</span>(tmp, <span class="dt">as.data.frame=</span><span class="ot">FALSE</span>)</span>
-<span id="cb16-12"><a href="#cb16-12"></a>arr[] &lt;-<span class="st"> </span>dat</span>
-<span id="cb16-13"><a href="#cb16-13"></a></span>
-<span id="cb16-14"><a href="#cb16-14"></a></span>
-<span id="cb16-15"><a href="#cb16-15"></a><span class="co"># Prepare a 2x3 dense array</span></span>
-<span id="cb16-16"><a href="#cb16-16"></a><span class="co"># Contrary to Python, R by default stores arrays in col-major order</span></span>
-<span id="cb16-17"><a href="#cb16-17"></a>data &lt;-<span class="st">  </span><span class="kw">array</span>(<span class="kw">c</span>(1L, 4L, 2L, 5L, 3L, 6L), <span class="dt">dim=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb16-18"><a href="#cb16-18"></a></span>
-<span id="cb16-19"><a href="#cb16-19"></a><span class="co"># Prepare the [1,2] x [2,4] subarray to write to</span></span>
-<span id="cb16-20"><a href="#cb16-20"></a>I &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</span>
-<span id="cb16-21"><a href="#cb16-21"></a>J &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>)</span>
-<span id="cb16-22"><a href="#cb16-22"></a></span>
-<span id="cb16-23"><a href="#cb16-23"></a><span class="co"># Open the array and write the data to it</span></span>
-<span id="cb16-24"><a href="#cb16-24"></a>A &lt;-<span class="st"> </span><span class="kw">tiledb_dense</span>(<span class="dt">uri =</span> tmp)</span>
-<span id="cb16-25"><a href="#cb16-25"></a>A[I, J] &lt;-<span class="st"> </span>data</span>
-<span id="cb16-26"><a href="#cb16-26"></a></span>
-<span id="cb16-27"><a href="#cb16-27"></a><span class="kw">unlink</span>(tmp, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co">## prepare a larger 5 x 5 to embed into</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()</span>
+<span id="cb24-3"><a href="#cb24-3"></a>d1  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
+<span id="cb24-4"><a href="#cb24-4"></a>d2  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
+<span id="cb24-5"><a href="#cb24-5"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="kw">c</span>(d1, d2))</span>
+<span id="cb24-6"><a href="#cb24-6"></a>val &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="dt">name=</span><span class="st">&quot;val&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb24-7"><a href="#cb24-7"></a>sch &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(val))</span>
+<span id="cb24-8"><a href="#cb24-8"></a><span class="kw">tiledb_array_create</span>(tmp, sch)</span>
+<span id="cb24-9"><a href="#cb24-9"></a></span>
+<span id="cb24-10"><a href="#cb24-10"></a>dat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">as.integer</span>(<span class="kw">rnorm</span>(<span class="dv">25</span>)<span class="op">*</span><span class="dv">100</span>), <span class="dv">5</span>, <span class="dv">5</span>)</span>
+<span id="cb24-11"><a href="#cb24-11"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_dense</span>(tmp, <span class="dt">as.data.frame=</span><span class="ot">FALSE</span>)</span>
+<span id="cb24-12"><a href="#cb24-12"></a>arr[] &lt;-<span class="st"> </span>dat</span>
+<span id="cb24-13"><a href="#cb24-13"></a></span>
+<span id="cb24-14"><a href="#cb24-14"></a></span>
+<span id="cb24-15"><a href="#cb24-15"></a><span class="co"># Prepare a 2x3 dense array</span></span>
+<span id="cb24-16"><a href="#cb24-16"></a><span class="co"># Contrary to Python, R by default stores arrays in col-major order</span></span>
+<span id="cb24-17"><a href="#cb24-17"></a>data &lt;-<span class="st">  </span><span class="kw">array</span>(<span class="kw">c</span>(1L, 4L, 2L, 5L, 3L, 6L), <span class="dt">dim=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb24-18"><a href="#cb24-18"></a></span>
+<span id="cb24-19"><a href="#cb24-19"></a><span class="co"># Prepare the [1,2] x [2,4] subarray to write to</span></span>
+<span id="cb24-20"><a href="#cb24-20"></a>I &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</span>
+<span id="cb24-21"><a href="#cb24-21"></a>J &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>)</span>
+<span id="cb24-22"><a href="#cb24-22"></a></span>
+<span id="cb24-23"><a href="#cb24-23"></a><span class="co"># Open the array and write the data to it</span></span>
+<span id="cb24-24"><a href="#cb24-24"></a>A &lt;-<span class="st"> </span><span class="kw">tiledb_dense</span>(<span class="dt">uri =</span> tmp)</span>
+<span id="cb24-25"><a href="#cb24-25"></a>A[I, J] &lt;-<span class="st"> </span>data</span>
+<span id="cb24-26"><a href="#cb24-26"></a></span>
+<span id="cb24-27"><a href="#cb24-27"></a><span class="kw">unlink</span>(tmp, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2220,19 +2223,19 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlLCBcIldSSVRFXCIpXG5cbiMjIGRhdGE6IHNpbXBsZSAoaW50ZWdlciBzZXF1ZW5jZSkgb2YgMToxNiB0aW1lcyAxMFxudmVjIDwtIDE6MTYgKiAxMExcbnN1YmFyciA8LSBjKDFMLDRMLCAxTCw0TClcblxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeShjdHhAcHRyLCBhcnJwdHIsIFwiV1JJVEVcIilcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X3N1YmFycmF5KHFyeXB0ciwgc3ViYXJyKVxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfbGF5b3V0KHFyeXB0ciwgXCJST1dfTUFKT1JcIilcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2J1ZmZlcihxcnlwdHIsIFwiYVwiLCB2ZWMpXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3N1Ym1pdChxcnlwdHIpXG5yZXMgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cilcbmBgYCJ9 -->
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
-<span id="cb17-2"><a href="#cb17-2"></a>arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open</span>(ctx<span class="op">@</span>ptr, uridense, <span class="st">&quot;WRITE&quot;</span>)</span>
-<span id="cb17-3"><a href="#cb17-3"></a></span>
-<span id="cb17-4"><a href="#cb17-4"></a><span class="co">## data: simple (integer sequence) of 1:16 times 10</span></span>
-<span id="cb17-5"><a href="#cb17-5"></a>vec &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">16</span> <span class="op">*</span><span class="st"> </span>10L</span>
-<span id="cb17-6"><a href="#cb17-6"></a>subarr &lt;-<span class="st"> </span><span class="kw">c</span>(1L,4L, 1L,4L)</span>
-<span id="cb17-7"><a href="#cb17-7"></a></span>
-<span id="cb17-8"><a href="#cb17-8"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
-<span id="cb17-9"><a href="#cb17-9"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
-<span id="cb17-10"><a href="#cb17-10"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
-<span id="cb17-11"><a href="#cb17-11"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
-<span id="cb17-12"><a href="#cb17-12"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
-<span id="cb17-13"><a href="#cb17-13"></a>res &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
+<span id="cb25-2"><a href="#cb25-2"></a>arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open</span>(ctx<span class="op">@</span>ptr, uridense, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb25-3"><a href="#cb25-3"></a></span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="co">## data: simple (integer sequence) of 1:16 times 10</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a>vec &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">16</span> <span class="op">*</span><span class="st"> </span>10L</span>
+<span id="cb25-6"><a href="#cb25-6"></a>subarr &lt;-<span class="st"> </span><span class="kw">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb25-7"><a href="#cb25-7"></a></span>
+<span id="cb25-8"><a href="#cb25-8"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb25-9"><a href="#cb25-9"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb25-10"><a href="#cb25-10"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb25-11"><a href="#cb25-11"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
+<span id="cb25-12"><a href="#cb25-12"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb25-13"><a href="#cb25-13"></a>res &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2242,27 +2245,30 @@ When you save the notebook, an HTML file containing the code and output will be 
 <h3>Writing Sparse Cells</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudG1wIDwtIHVyaXNwYXJzZVxudW5saW5rKHRtcCwgcmVjdXJzaXZlPVRSVUUpXG5cbmQxICA8LSB0aWxlZGJfZGltKGRvbWFpbiA9IGMoMUwsIDVMKSlcbmQyICA8LSB0aWxlZGJfZGltKGRvbWFpbiA9IGMoMUwsIDVMKSlcbmRvbSA8LSB0aWxlZGJfZG9tYWluKGMoZDEsIGQyKSlcbnZhbCA8LSB0aWxlZGJfYXR0cihcInZhbFwiLCB0eXBlID0gXCJJTlQzMlwiKVxuc2NoIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKHZhbCksIHNwYXJzZT1UUlVFKVxudGlsZWRiX2FycmF5X2NyZWF0ZSh0bXAsIHNjaClcblxuXG4jIFByZXBhcmUgc29tZSBkYXRhXG5kYXRhIDwtIGMoM0wsIDRMLCAxTCwgMkwpXG5cbkkgPC0gYygzLCA0LCAxLCAyKVxuSiA8LSBjKDMsIDQsIDIsIDEpXG5cbiMgT3BlbiB0aGUgYXJyYXkgYW5kIHdyaXRlIHRoZSBkYXRhIHRvIGl0XG5BIDwtIHRpbGVkYl9zcGFyc2UodXJpID0gdG1wKVxuQVtJLCBKXSA8LSBkYXRhXG5cbmBgYCJ9 -->
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>tmp &lt;-<span class="st"> </span>urisparse</span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">unlink</span>(tmp, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a></span>
-<span id="cb18-4"><a href="#cb18-4"></a>d1  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
-<span id="cb18-5"><a href="#cb18-5"></a>d2  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
-<span id="cb18-6"><a href="#cb18-6"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="kw">c</span>(d1, d2))</span>
-<span id="cb18-7"><a href="#cb18-7"></a>val &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;val&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
-<span id="cb18-8"><a href="#cb18-8"></a>sch &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(val), <span class="dt">sparse=</span><span class="ot">TRUE</span>)</span>
-<span id="cb18-9"><a href="#cb18-9"></a><span class="kw">tiledb_array_create</span>(tmp, sch)</span>
-<span id="cb18-10"><a href="#cb18-10"></a></span>
-<span id="cb18-11"><a href="#cb18-11"></a></span>
-<span id="cb18-12"><a href="#cb18-12"></a><span class="co"># Prepare some data</span></span>
-<span id="cb18-13"><a href="#cb18-13"></a>data &lt;-<span class="st"> </span><span class="kw">c</span>(3L, 4L, 1L, 2L)</span>
-<span id="cb18-14"><a href="#cb18-14"></a></span>
-<span id="cb18-15"><a href="#cb18-15"></a>I &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb18-16"><a href="#cb18-16"></a>J &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
-<span id="cb18-17"><a href="#cb18-17"></a></span>
-<span id="cb18-18"><a href="#cb18-18"></a><span class="co"># Open the array and write the data to it</span></span>
-<span id="cb18-19"><a href="#cb18-19"></a>A &lt;-<span class="st"> </span><span class="kw">tiledb_sparse</span>(<span class="dt">uri =</span> tmp)</span>
-<span id="cb18-20"><a href="#cb18-20"></a>A[I, J] &lt;-<span class="st"> </span>data</span></code></pre></div>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudG1wIDwtIHVyaXNwYXJzZVxudW5saW5rKHRtcCwgcmVjdXJzaXZlPVRSVUUpXG5cbmQxICA8LSB0aWxlZGJfZGltKGRvbWFpbiA9IGMoMUwsIDVMKSlcbmQyICA8LSB0aWxlZGJfZGltKGRvbWFpbiA9IGMoMUwsIDVMKSlcbmRvbSA8LSB0aWxlZGJfZG9tYWluKGMoZDEsIGQyKSlcbnZhbCA8LSB0aWxlZGJfYXR0cihcInZhbFwiLCB0eXBlID0gXCJJTlQzMlwiKVxuc2NoIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKHZhbCksIHNwYXJzZT1UUlVFKVxudGlsZWRiX2FycmF5X2NyZWF0ZSh0bXAsIHNjaClcbmBgYCJ9 -->
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>tmp &lt;-<span class="st"> </span>urisparse</span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="kw">unlink</span>(tmp, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</span>
+<span id="cb26-3"><a href="#cb26-3"></a></span>
+<span id="cb26-4"><a href="#cb26-4"></a>d1  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
+<span id="cb26-5"><a href="#cb26-5"></a>d2  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 5L))</span>
+<span id="cb26-6"><a href="#cb26-6"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="kw">c</span>(d1, d2))</span>
+<span id="cb26-7"><a href="#cb26-7"></a>val &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;val&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb26-8"><a href="#cb26-8"></a>sch &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(val), <span class="dt">sparse=</span><span class="ot">TRUE</span>)</span>
+<span id="cb26-9"><a href="#cb26-9"></a><span class="kw">tiledb_array_create</span>(tmp, sch)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiL3RtcC9SdG1wYmJNWms1L3NwYXJzZVwiXG4ifQ== -->
+<pre><code>[1] &quot;/tmp/RtmpbbMZk5/sparse&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBQcmVwYXJlIHNvbWUgZGF0YVxuZGF0YSA8LSBjKDNMLCA0TCwgMUwsIDJMKVxuXG5JIDwtIGMoMywgNCwgMSwgMilcbkogPC0gYygzLCA0LCAyLCAxKVxuXG4jIE9wZW4gdGhlIGFycmF5IGFuZCB3cml0ZSB0aGUgZGF0YSB0byBpdFxuQSA8LSB0aWxlZGJfc3BhcnNlKHVyaSA9IHRtcClcbkFbSSwgSl0gPC0gZGF0YVxuXG5gYGAifQ== -->
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># Prepare some data</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>data &lt;-<span class="st"> </span><span class="kw">c</span>(3L, 4L, 1L, 2L)</span>
+<span id="cb28-3"><a href="#cb28-3"></a></span>
+<span id="cb28-4"><a href="#cb28-4"></a>I &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb28-5"><a href="#cb28-5"></a>J &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb28-6"><a href="#cb28-6"></a></span>
+<span id="cb28-7"><a href="#cb28-7"></a><span class="co"># Open the array and write the data to it</span></span>
+<span id="cb28-8"><a href="#cb28-8"></a>A &lt;-<span class="st"> </span><span class="kw">tiledb_sparse</span>(<span class="dt">uri =</span> tmp)</span>
+<span id="cb28-9"><a href="#cb28-9"></a>A[I, J] &lt;-<span class="st"> </span>data</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2272,20 +2278,20 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuX3dpdGhfa2V5KGN0eEBwdHIsIHVyaWRlbnNld2tleSwgXCJXUklURVwiLCBlbmNyeXB0aW9uX2tleSlcblxuIyMgZGF0YTogc2ltcGxlIChpbnRlZ2VyIHNlcXVlbmNlKSBvZiAxOjE2IHRpbWVzIDEwXG52ZWMgPC0gMToxNiAqIDEwTFxuc3ViYXJyIDwtIGMoMUwsNEwsIDFMLDRMKVxuXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgXCJXUklURVwiKVxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfc3ViYXJyYXkocXJ5cHRyLCBzdWJhcnIpXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9sYXlvdXQocXJ5cHRyLCBcIlJPV19NQUpPUlwiKVxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfYnVmZmVyKHFyeXB0ciwgXCJhXCIsIHZlYylcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc3VibWl0KHFyeXB0cilcbnJlcyA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY2xvc2UoYXJycHRyKVxuIyBUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnRcblxuYGBgIn0= -->
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
-<span id="cb19-2"><a href="#cb19-2"></a>arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open_with_key</span>(ctx<span class="op">@</span>ptr, uridensewkey, <span class="st">&quot;WRITE&quot;</span>, encryption_key)</span>
-<span id="cb19-3"><a href="#cb19-3"></a></span>
-<span id="cb19-4"><a href="#cb19-4"></a><span class="co">## data: simple (integer sequence) of 1:16 times 10</span></span>
-<span id="cb19-5"><a href="#cb19-5"></a>vec &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">16</span> <span class="op">*</span><span class="st"> </span>10L</span>
-<span id="cb19-6"><a href="#cb19-6"></a>subarr &lt;-<span class="st"> </span><span class="kw">c</span>(1L,4L, 1L,4L)</span>
-<span id="cb19-7"><a href="#cb19-7"></a></span>
-<span id="cb19-8"><a href="#cb19-8"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
-<span id="cb19-9"><a href="#cb19-9"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
-<span id="cb19-10"><a href="#cb19-10"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
-<span id="cb19-11"><a href="#cb19-11"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
-<span id="cb19-12"><a href="#cb19-12"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
-<span id="cb19-13"><a href="#cb19-13"></a>res &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span>
-<span id="cb19-14"><a href="#cb19-14"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> Higher-level R support</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
+<span id="cb29-2"><a href="#cb29-2"></a>arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open_with_key</span>(ctx<span class="op">@</span>ptr, uridensewkey, <span class="st">&quot;WRITE&quot;</span>, encryption_key)</span>
+<span id="cb29-3"><a href="#cb29-3"></a></span>
+<span id="cb29-4"><a href="#cb29-4"></a><span class="co">## data: simple (integer sequence) of 1:16 times 10</span></span>
+<span id="cb29-5"><a href="#cb29-5"></a>vec &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">16</span> <span class="op">*</span><span class="st"> </span>10L</span>
+<span id="cb29-6"><a href="#cb29-6"></a>subarr &lt;-<span class="st"> </span><span class="kw">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb29-7"><a href="#cb29-7"></a></span>
+<span id="cb29-8"><a href="#cb29-8"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb29-9"><a href="#cb29-9"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb29-10"><a href="#cb29-10"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb29-11"><a href="#cb29-11"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
+<span id="cb29-12"><a href="#cb29-12"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb29-13"><a href="#cb29-13"></a>res &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb29-14"><a href="#cb29-14"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> Higher-level R support</span></span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2294,32 +2300,36 @@ When you save the notebook, an HTML file containing the code and output will be 
 <h3>Fixed-length Attributes</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWYgKGRpci5leGlzdHModXJpZGVuc2VmaXgpKSB1bmxpbmsodXJpZGVuc2VmaXgsIHJlY3Vyc2l2ZT1UUlVFKVxuZDEgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNEwpKVxuZDIgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNEwpKVxuZG9tIDwtIHRpbGVkYl9kb21haW4oYyhkMSwgZDIpKVxuXG52ZWMgPC0gMTozMiAqIDEwTFxuYXR0ciA8LSB0aWxlZGJfYXR0cihcImFcIiwgdHlwZSA9IHJfdG9fdGlsZWRiX3R5cGUodmVjKSlcblxuIyMgc2V0IHRvIHR3byB2YWx1ZXMgcGVyIGNlbGxcbnRpbGVkYjo6OmxpYnRpbGVkYl9hdHRyaWJ1dGVfc2V0X2NlbGxfdmFsX251bShhdHRyQHB0ciwgMilcbnNjaCA8LSB0aWxlZGJfYXJyYXlfc2NoZW1hKGRvbSwgYyhhdHRyKSlcbnRpbGVkYl9hcnJheV9jcmVhdGUodXJpZGVuc2VmaXgsIHNjaClcblxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlZml4LCBcIldSSVRFXCIpXG5zdWJhcnIgPC0gYygxTCw0TCwgMUwsNEwpXG5cbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnkoY3R4QHB0ciwgYXJycHRyLCBcIldSSVRFXCIpXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9zdWJhcnJheShxcnlwdHIsIHN1YmFycilcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2xheW91dChxcnlwdHIsIFwiUk9XX01BSk9SXCIpXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCBcImFcIiwgdmVjKVxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKVxucmVzIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9jbG9zZShhcnJwdHIpXG5cbiNUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnRcbmBgYCJ9 -->
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="cf">if</span> (<span class="kw">dir.exists</span>(uridensefix)) <span class="kw">unlink</span>(uridensefix, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</span>
-<span id="cb20-2"><a href="#cb20-2"></a>d1  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 4L))</span>
-<span id="cb20-3"><a href="#cb20-3"></a>d2  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 4L))</span>
-<span id="cb20-4"><a href="#cb20-4"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="kw">c</span>(d1, d2))</span>
-<span id="cb20-5"><a href="#cb20-5"></a></span>
-<span id="cb20-6"><a href="#cb20-6"></a>vec &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">32</span> <span class="op">*</span><span class="st"> </span>10L</span>
-<span id="cb20-7"><a href="#cb20-7"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;a&quot;</span>, <span class="dt">type =</span> <span class="kw">r_to_tiledb_type</span>(vec))</span>
-<span id="cb20-8"><a href="#cb20-8"></a></span>
-<span id="cb20-9"><a href="#cb20-9"></a><span class="co">## set to two values per cell</span></span>
-<span id="cb20-10"><a href="#cb20-10"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_attribute_set_cell_val_num</span>(attr<span class="op">@</span>ptr, <span class="dv">2</span>)</span>
-<span id="cb20-11"><a href="#cb20-11"></a>sch &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr))</span>
-<span id="cb20-12"><a href="#cb20-12"></a><span class="kw">tiledb_array_create</span>(uridensefix, sch)</span>
-<span id="cb20-13"><a href="#cb20-13"></a></span>
-<span id="cb20-14"><a href="#cb20-14"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
-<span id="cb20-15"><a href="#cb20-15"></a>arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open</span>(ctx<span class="op">@</span>ptr, uridensefix, <span class="st">&quot;WRITE&quot;</span>)</span>
-<span id="cb20-16"><a href="#cb20-16"></a>subarr &lt;-<span class="st"> </span><span class="kw">c</span>(1L,4L, 1L,4L)</span>
-<span id="cb20-17"><a href="#cb20-17"></a></span>
-<span id="cb20-18"><a href="#cb20-18"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
-<span id="cb20-19"><a href="#cb20-19"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
-<span id="cb20-20"><a href="#cb20-20"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
-<span id="cb20-21"><a href="#cb20-21"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
-<span id="cb20-22"><a href="#cb20-22"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
-<span id="cb20-23"><a href="#cb20-23"></a>res &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span>
-<span id="cb20-24"><a href="#cb20-24"></a></span>
-<span id="cb20-25"><a href="#cb20-25"></a><span class="co">#TODO Higher-level R support</span></span></code></pre></div>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWYgKGRpci5leGlzdHModXJpZGVuc2VmaXgpKSB1bmxpbmsodXJpZGVuc2VmaXgsIHJlY3Vyc2l2ZT1UUlVFKVxuZDEgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNEwpKVxuZDIgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNEwpKVxuZG9tIDwtIHRpbGVkYl9kb21haW4oYyhkMSwgZDIpKVxuXG52ZWMgPC0gMTozMiAqIDEwTFxuYXR0ciA8LSB0aWxlZGJfYXR0cihcImFcIiwgdHlwZSA9IHJfdG9fdGlsZWRiX3R5cGUodmVjKSlcblxuIyMgc2V0IHRvIHR3byB2YWx1ZXMgcGVyIGNlbGxcbnRpbGVkYjo6OmxpYnRpbGVkYl9hdHRyaWJ1dGVfc2V0X2NlbGxfdmFsX251bShhdHRyQHB0ciwgMilcbnNjaCA8LSB0aWxlZGJfYXJyYXlfc2NoZW1hKGRvbSwgYyhhdHRyKSlcbnRpbGVkYl9hcnJheV9jcmVhdGUodXJpZGVuc2VmaXgsIHNjaClcbmBgYCJ9 -->
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="cf">if</span> (<span class="kw">dir.exists</span>(uridensefix)) <span class="kw">unlink</span>(uridensefix, <span class="dt">recursive=</span><span class="ot">TRUE</span>)</span>
+<span id="cb30-2"><a href="#cb30-2"></a>d1  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 4L))</span>
+<span id="cb30-3"><a href="#cb30-3"></a>d2  &lt;-<span class="st"> </span><span class="kw">tiledb_dim</span>(<span class="dt">domain =</span> <span class="kw">c</span>(1L, 4L))</span>
+<span id="cb30-4"><a href="#cb30-4"></a>dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="kw">c</span>(d1, d2))</span>
+<span id="cb30-5"><a href="#cb30-5"></a></span>
+<span id="cb30-6"><a href="#cb30-6"></a>vec &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">32</span> <span class="op">*</span><span class="st"> </span>10L</span>
+<span id="cb30-7"><a href="#cb30-7"></a>attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;a&quot;</span>, <span class="dt">type =</span> <span class="kw">r_to_tiledb_type</span>(vec))</span>
+<span id="cb30-8"><a href="#cb30-8"></a></span>
+<span id="cb30-9"><a href="#cb30-9"></a><span class="co">## set to two values per cell</span></span>
+<span id="cb30-10"><a href="#cb30-10"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_attribute_set_cell_val_num</span>(attr<span class="op">@</span>ptr, <span class="dv">2</span>)</span>
+<span id="cb30-11"><a href="#cb30-11"></a>sch &lt;-<span class="st"> </span><span class="kw">tiledb_array_schema</span>(dom, <span class="kw">c</span>(attr))</span>
+<span id="cb30-12"><a href="#cb30-12"></a><span class="kw">tiledb_array_create</span>(uridensefix, sch)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiL3RtcC9SdG1wYmJNWms1L2RlbnNlZml4XCJcbiJ9 -->
+<pre><code>[1] &quot;/tmp/RtmpbbMZk5/densefix&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlZml4LCBcIldSSVRFXCIpXG5zdWJhcnIgPC0gYygxTCw0TCwgMUwsNEwpXG5cbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnkoY3R4QHB0ciwgYXJycHRyLCBcIldSSVRFXCIpXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9zdWJhcnJheShxcnlwdHIsIHN1YmFycilcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2xheW91dChxcnlwdHIsIFwiUk9XX01BSk9SXCIpXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCBcImFcIiwgdmVjKVxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKVxucmVzIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9jbG9zZShhcnJwdHIpXG5cbiNUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnRcbmBgYCJ9 -->
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
+<span id="cb32-2"><a href="#cb32-2"></a>arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open</span>(ctx<span class="op">@</span>ptr, uridensefix, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb32-3"><a href="#cb32-3"></a>subarr &lt;-<span class="st"> </span><span class="kw">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb32-4"><a href="#cb32-4"></a></span>
+<span id="cb32-5"><a href="#cb32-5"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb32-6"><a href="#cb32-6"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb32-7"><a href="#cb32-7"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb32-8"><a href="#cb32-8"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
+<span id="cb32-9"><a href="#cb32-9"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb32-10"><a href="#cb32-10"></a>res &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb32-11"><a href="#cb32-11"></a></span>
+<span id="cb32-12"><a href="#cb32-12"></a><span class="co">#TODO Higher-level R support</span></span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2328,193 +2338,247 @@ When you save the notebook, an HTML file containing the code and output will be 
 <h3>Var-length Attributes</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICAjIyBEZWZpbmUgYXJyYXlcbiAgIyMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyBcInJvd3NcIiBhbmQgXCJjb2xzXCIsIHdpdGggZG9tYWluIFsxLDRdLlxuICBkb20gPC0gdGlsZWRiX2RvbWFpbihkaW1zID0gYyh0aWxlZGJfZGltKFwicm93c1wiLCBjKDFMLCA0TCksIDRMLCBcIklOVDMyXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aWxlZGJfZGltKFwiY29sc1wiLCBjKDFMLCA0TCksIDRMLCBcIklOVDMyXCIpKSlcblxuXG4gIGF0dHIgPC0gdGlsZWRiX2F0dHIoXCJhMVwiLCB0eXBlID0gXCJDSEFSXCIpXG4gICMjIHNldCB0byB2YXJpYWJsZSBsZW5ndGhcbiAgdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCBOQSlcblxuICAjIyBub3cgc2V0IHRoZSBzY2hlbWFcbiAgY3R4IDwtIHRpbGVkYl9jdHgoKVxuICBzY2hwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9jcmVhdGUoY3R4QHB0ciwgXCJERU5TRVwiKVxuICB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX3NldF9kb21haW4oc2NocHRyLCBkb21AcHRyKVxuICB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX3NldF9jZWxsX29yZGVyKHNjaHB0ciwgXCJST1dfTUFKT1JcIilcbiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9zZXRfdGlsZV9vcmRlcihzY2hwdHIsIFwiUk9XX01BSk9SXCIpXG4gIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfYWRkX2F0dHJpYnV0ZShzY2hwdHIsIGF0dHJAcHRyKVxuXG5cblxuICAjIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay5cbiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2NyZWF0ZShhcnJheV9uYW1lLCBzY2hwdHIpXG5cbiAgZGF0YSA8LSBcImFiYmNjY2RkZWVlZmdoaGhpampqa2tsbW5vb3BcIjtcbiAgb2Zmc2V0cyA8LSBjKDBMLCAxTCwgM0wsIDZMLCA4TCwgMTFMLCAxMkwsIDEzTCwgMTZMLCAxN0wsIDIwTCwgMjJMLCAyM0wsIDI0TCwgMjVMLCAyN0wpXG5cbiAgY3R4IDwtIHRpbGVkYl9jdHgoKVxuICBhcnJwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X29wZW4oY3R4QHB0ciwgYXJyYXlfbmFtZSwgXCJXUklURVwiKVxuICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgXCJXUklURVwiKVxuICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9sYXlvdXQocXJ5cHRyLCBcIlJPV19NQUpPUlwiKVxuXG4gIGJ1ZnB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfYnVmZmVyX3Zhcl9zdHJpbmdfYXNzaWduKG9mZnNldHMsIGRhdGEpXG4gIHFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2J1ZmZlcl92YXJfc3RyaW5nX2Zyb21fYnVmZmVyKHFyeXB0ciwgXCJhMVwiLCBidWZwdHIpXG4gIHFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc3VibWl0KHFyeXB0cilcbiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cilcblxuI1RPRE8gSGlnaGVyLWxldmVsIFIgc3VwcG9ydFxuYGBgIn0= -->
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>  <span class="co">## Define array</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a>  <span class="co">## The array will be 4x4 with dimensions &quot;rows&quot; and &quot;cols&quot;, with domain [1,4].</span></span>
-<span id="cb21-3"><a href="#cb21-3"></a>  dom &lt;-<span class="st"> </span><span class="kw">tiledb_domain</span>(<span class="dt">dims =</span> <span class="kw">c</span>(<span class="kw">tiledb_dim</span>(<span class="st">&quot;rows&quot;</span>, <span class="kw">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>),</span>
-<span id="cb21-4"><a href="#cb21-4"></a>                                <span class="kw">tiledb_dim</span>(<span class="st">&quot;cols&quot;</span>, <span class="kw">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>)))</span>
-<span id="cb21-5"><a href="#cb21-5"></a></span>
-<span id="cb21-6"><a href="#cb21-6"></a></span>
-<span id="cb21-7"><a href="#cb21-7"></a>  attr &lt;-<span class="st"> </span><span class="kw">tiledb_attr</span>(<span class="st">&quot;a1&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;CHAR&quot;</span>)</span>
-<span id="cb21-8"><a href="#cb21-8"></a>  <span class="co">## set to variable length</span></span>
-<span id="cb21-9"><a href="#cb21-9"></a>  tiledb<span class="op">:::</span><span class="kw">libtiledb_attribute_set_cell_val_num</span>(attr<span class="op">@</span>ptr, <span class="ot">NA</span>)</span>
-<span id="cb21-10"><a href="#cb21-10"></a></span>
-<span id="cb21-11"><a href="#cb21-11"></a>  <span class="co">## now set the schema</span></span>
-<span id="cb21-12"><a href="#cb21-12"></a>  ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
-<span id="cb21-13"><a href="#cb21-13"></a>  schptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_create</span>(ctx<span class="op">@</span>ptr, <span class="st">&quot;DENSE&quot;</span>)</span>
-<span id="cb21-14"><a href="#cb21-14"></a>  tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_set_domain</span>(schptr, dom<span class="op">@</span>ptr)</span>
-<span id="cb21-15"><a href="#cb21-15"></a>  tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_set_cell_order</span>(schptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
-<span id="cb21-16"><a href="#cb21-16"></a>  tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_set_tile_order</span>(schptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
-<span id="cb21-17"><a href="#cb21-17"></a>  tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_add_attribute</span>(schptr, attr<span class="op">@</span>ptr)</span>
-<span id="cb21-18"><a href="#cb21-18"></a></span>
-<span id="cb21-19"><a href="#cb21-19"></a></span>
-<span id="cb21-20"><a href="#cb21-20"></a></span>
-<span id="cb21-21"><a href="#cb21-21"></a>  <span class="co">## Create the (empty) array on disk.</span></span>
-<span id="cb21-22"><a href="#cb21-22"></a>  tiledb<span class="op">:::</span><span class="kw">libtiledb_array_create</span>(array_name, schptr)</span>
-<span id="cb21-23"><a href="#cb21-23"></a></span>
-<span id="cb21-24"><a href="#cb21-24"></a>  data &lt;-<span class="st"> &quot;abbcccddeeefghhhijjjkklmnoop&quot;</span>;</span>
-<span id="cb21-25"><a href="#cb21-25"></a>  offsets &lt;-<span class="st"> </span><span class="kw">c</span>(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)</span>
-<span id="cb21-26"><a href="#cb21-26"></a></span>
-<span id="cb21-27"><a href="#cb21-27"></a>  ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
-<span id="cb21-28"><a href="#cb21-28"></a>  arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open</span>(ctx<span class="op">@</span>ptr, array_name, <span class="st">&quot;WRITE&quot;</span>)</span>
-<span id="cb21-29"><a href="#cb21-29"></a>  qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
-<span id="cb21-30"><a href="#cb21-30"></a>  qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
-<span id="cb21-31"><a href="#cb21-31"></a></span>
-<span id="cb21-32"><a href="#cb21-32"></a>  bufptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_buffer_var_string_assign</span>(offsets, data)</span>
-<span id="cb21-33"><a href="#cb21-33"></a>  qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer_var_string_from_buffer</span>(qryptr, <span class="st">&quot;a1&quot;</span>, bufptr)</span>
-<span id="cb21-34"><a href="#cb21-34"></a>  qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
-<span id="cb21-35"><a href="#cb21-35"></a>  tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span>
-<span id="cb21-36"><a href="#cb21-36"></a></span>
-<span id="cb21-37"><a href="#cb21-37"></a><span class="co">#TODO Higher-level R support</span></span></code></pre></div>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuICAjIyBEZWZpbmUgYXJyYXlcbiAgIyMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyBcXHJvd3NcXCBhbmQgXFxjb2xzXFwsIHdpdGggZG9tYWluIFsxLDRdLlxuICBkb20gPC0gdGlsZWRiX2RvbWFpbihkaW1zID0gYyh0aWxlZGJfZGltKFxccm93c1xcLCBjKDFMLCA0TCksIDRMLCBcXElOVDMyXFwpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aWxlZGJfZGltKFxcY29sc1xcLCBjKDFMLCA0TCksIDRMLCBcXElOVDMyXFwpKSlcblxuXG4gIGF0dHIgPC0gdGlsZWRiX2F0dHIoXFxhMVxcLCB0eXBlID0gXFxDSEFSXFwpXG4gICMjIHNldCB0byB2YXJpYWJsZSBsZW5ndGhcbiAgdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCBOQSlcblxuICAjIyBub3cgc2V0IHRoZSBzY2hlbWFcbiAgY3R4IDwtIHRpbGVkYl9jdHgoKVxuICBzY2hwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9jcmVhdGUoY3R4QHB0ciwgXFxERU5TRVxcKVxuICB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX3NldF9kb21haW4oc2NocHRyLCBkb21AcHRyKVxuICB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX3NldF9jZWxsX29yZGVyKHNjaHB0ciwgXFxST1dfTUFKT1JcXClcbiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9zZXRfdGlsZV9vcmRlcihzY2hwdHIsIFxcUk9XX01BSk9SXFwpXG4gIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfYWRkX2F0dHJpYnV0ZShzY2hwdHIsIGF0dHJAcHRyKVxuXG5cblxuICAjIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay5cbiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2NyZWF0ZShhcnJheV9uYW1lLCBzY2hwdHIpXG5cbiAgZGF0YSA8LSBcXGFiYmNjY2RkZWVlZmdoaGhpampqa2tsbW5vb3BcXDtcbiAgb2Zmc2V0cyA8LSBjKDBMLCAxTCwgM0wsIDZMLCA4TCwgMTFMLCAxMkwsIDEzTCwgMTZMLCAxN0wsIDIwTCwgMjJMLCAyM0wsIDI0TCwgMjVMLCAyN0wpXG5cbiAgY3R4IDwtIHRpbGVkYl9jdHgoKVxuICBhcnJwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X29wZW4oY3R4QHB0ciwgYXJyYXlfbmFtZSwgXFxXUklURVxcKVxuICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgXFxXUklURVxcKVxuICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9sYXlvdXQocXJ5cHRyLCBcXFJPV19NQUpPUlxcKVxuXG4gIGJ1ZnB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfYnVmZmVyX3Zhcl9zdHJpbmdfYXNzaWduKG9mZnNldHMsIGRhdGEpXG4gIHFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2J1ZmZlcl92YXJfc3RyaW5nX2Zyb21fYnVmZmVyKHFyeXB0ciwgXFxhMVxcLCBidWZwdHIpXG4gIHFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc3VibWl0KHFyeXB0cilcbiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cilcblxuI1RPRE8gSGlnaGVyLWxldmVsIFIgc3VwcG9ydFxuYGBgXG5gYGAifQ== -->
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="st">```</span><span class="dt">r</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="dt">  ## Define array</span></span>
+<span id="cb33-3"><a href="#cb33-3"></a><span class="dt">  ## The array will be 4x4 with dimensions </span><span class="ch">\r</span><span class="dt">ows\ and \cols\, with domain [1,4].</span></span>
+<span id="cb33-4"><a href="#cb33-4"></a><span class="dt">  dom &lt;- tiledb_domain(dims = c(tiledb_dim(</span><span class="ch">\r</span><span class="dt">ows\, c(1L, 4L), 4L, \INT32\),</span></span>
+<span id="cb33-5"><a href="#cb33-5"></a><span class="dt">                                tiledb_dim(\cols\, c(1L, 4L), 4L, \INT32\)))</span></span>
+<span id="cb33-6"><a href="#cb33-6"></a></span>
+<span id="cb33-7"><a href="#cb33-7"></a></span>
+<span id="cb33-8"><a href="#cb33-8"></a><span class="dt">  attr &lt;- tiledb_attr(</span><span class="ch">\a</span><span class="dt">1\, type = \CHAR\)</span></span>
+<span id="cb33-9"><a href="#cb33-9"></a><span class="dt">  ## set to variable length</span></span>
+<span id="cb33-10"><a href="#cb33-10"></a><span class="dt">  tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)</span></span>
+<span id="cb33-11"><a href="#cb33-11"></a></span>
+<span id="cb33-12"><a href="#cb33-12"></a><span class="dt">  ## now set the schema</span></span>
+<span id="cb33-13"><a href="#cb33-13"></a><span class="dt">  ctx &lt;- tiledb_ctx()</span></span>
+<span id="cb33-14"><a href="#cb33-14"></a><span class="dt">  schptr &lt;- tiledb:::libtiledb_array_schema_create(ctx@ptr, \DENSE\)</span></span>
+<span id="cb33-15"><a href="#cb33-15"></a><span class="dt">  tiledb:::libtiledb_array_schema_set_domain(schptr, dom@ptr)</span></span>
+<span id="cb33-16"><a href="#cb33-16"></a><span class="dt">  tiledb:::libtiledb_array_schema_set_cell_order(schptr, \ROW_MAJOR\)</span></span>
+<span id="cb33-17"><a href="#cb33-17"></a><span class="dt">  tiledb:::libtiledb_array_schema_set_tile_order(schptr, \ROW_MAJOR\)</span></span>
+<span id="cb33-18"><a href="#cb33-18"></a><span class="dt">  tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)</span></span>
+<span id="cb33-19"><a href="#cb33-19"></a></span>
+<span id="cb33-20"><a href="#cb33-20"></a></span>
+<span id="cb33-21"><a href="#cb33-21"></a></span>
+<span id="cb33-22"><a href="#cb33-22"></a><span class="dt">  ## Create the (empty) array on disk.</span></span>
+<span id="cb33-23"><a href="#cb33-23"></a><span class="dt">  tiledb:::libtiledb_array_create(array_name, schptr)</span></span>
+<span id="cb33-24"><a href="#cb33-24"></a></span>
+<span id="cb33-25"><a href="#cb33-25"></a><span class="dt">  data &lt;- </span><span class="ch">\a</span><span class="dt">bbcccddeeefghhhijjjkklmnoop\;</span></span>
+<span id="cb33-26"><a href="#cb33-26"></a><span class="dt">  offsets &lt;- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)</span></span>
+<span id="cb33-27"><a href="#cb33-27"></a></span>
+<span id="cb33-28"><a href="#cb33-28"></a><span class="dt">  ctx &lt;- tiledb_ctx()</span></span>
+<span id="cb33-29"><a href="#cb33-29"></a><span class="dt">  arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, array_name, \WRITE\)</span></span>
+<span id="cb33-30"><a href="#cb33-30"></a><span class="dt">  qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, \WRITE\)</span></span>
+<span id="cb33-31"><a href="#cb33-31"></a><span class="dt">  qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, \ROW_MAJOR\)</span></span>
+<span id="cb33-32"><a href="#cb33-32"></a></span>
+<span id="cb33-33"><a href="#cb33-33"></a><span class="dt">  bufptr &lt;- tiledb:::libtiledb_query_buffer_var_string_assign(offsets, data)</span></span>
+<span id="cb33-34"><a href="#cb33-34"></a><span class="dt">  qryptr &lt;- tiledb:::libtiledb_query_set_buffer_var_string_from_buffer(qryptr, </span><span class="ch">\a</span><span class="dt">1\, bufptr)</span></span>
+<span id="cb33-35"><a href="#cb33-35"></a><span class="dt">  qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)</span></span>
+<span id="cb33-36"><a href="#cb33-36"></a><span class="dt">  tiledb:::libtiledb_array_close(arrptr)</span></span>
+<span id="cb33-37"><a href="#cb33-37"></a></span>
+<span id="cb33-38"><a href="#cb33-38"></a><span class="dt">#TODO Higher-level R support</span></span></code></pre></div>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+### Getting the Fragment Info
+
+TODO R support
+
+
+## Reading Arrays
+
+### Reading the Array Schema
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYXJyYXlfbmFtZSA8LSB1cmlzcGFyc2VcbkEgPC0gdGlsZWRiX3NwYXJzZSh1cmkgPSBhcnJheV9uYW1lKVxuIyBjYW4gYWxzbyBsb2FkIGRlbnNlXG5zY2ggPC0gc2NoZW1hKEEpXG4jIGNhbiBhbHNvIG9wZW4gZW5jcnlwdGVkIGFycmF5cyB3aXRoIGtleVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+array_name &lt;- urisparse
+A &lt;- tiledb_sparse(uri = array_name)
+# can also load dense
+sch &lt;- schema(A)
+# can also open encrypted arrays with key</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### Inspecting the array schema
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYXJyYXlfbmFtZSA8LSB1cmlzcGFyc2VcblxuIyBHZXQgYXJyYXkgc2NoZW1hXG5BIDwtIHRpbGVkYl9zcGFyc2UodXJpID0gYXJyYXlfbmFtZSlcbiMgb3IgdXNlIHRpbGVkYl9kZW5zZSh1cmkgPSBhcnJheV9uYW1lKSBmb3IgZGVuc2VcbnNjaGVtYSA8LSBzY2hlbWEoQSlcblxuIyBHZXQgYXJyYXkgdHlwZVxuc3BhcnNlIDwtIGlzLnNwYXJzZShzY2hlbWEpXG5cbiMgR2V0IHRpbGUgY2FwYWNpdHlcbnRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfZ2V0X2NhcGFjaXR5KHNjaEBwdHIpXG4jIFRPRE86IFIgYWNjZXNzb3IgZm9yIHRpbGVcblxuIyBHZXQgdGlsZSBvcmRlclxudF9vcmRlciA8LSB0aWxlX29yZGVyKHNjaGVtYSlcblxuIyBHZXQgY2VsbCBvcmRlclxuY19vcmRlciA8LSBjZWxsX29yZGVyKHNjaGVtYSlcblxuIyBHZXQgY29vcmRpbmF0ZXMgYW5kIG9mZnNldCBmaWx0ZXIgbGlzdFxucmVzbGlzdCA8LSBmaWx0ZXJfbGlzdChzY2hlbWEpXG5cbiMgR2V0IHRoZSBhcnJheSBkb21haW5cbmRvbSA8LSBkb21haW4oc2NoZW1hKVxuXG4jIEdldCBhbGwgYXR0cmlidXRlcyBhcyBsaXN0XG5hdHRycyA8LSBhdHRycyhzY2hlbWEpXG5cbiMgR2V0IGF0dHJpYnV0ZSBmcm9tIG5hbWVcbmF0dHIgPC0gYXR0cnMoc2NoZW1hLCBcXGF0dHJcXClcblxuIyBEdW1wIHRoZSBhcnJheSBzY2hlbWEgaW4gQVNDSUkgZm9ybWF0IHRvIHN0ZG91dFxuc2hvdyhzY2hlbWEpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+array_name &lt;- urisparse
+
+# Get array schema
+A &lt;- tiledb_sparse(uri = array_name)
+# or use tiledb_dense(uri = array_name) for dense
+schema &lt;- schema(A)
+
+# Get array type
+sparse &lt;- is.sparse(schema)
+
+# Get tile capacity
+tiledb:::libtiledb_array_schema_get_capacity(sch@ptr)
+# TODO: R accessor for tile
+
+# Get tile order
+t_order &lt;- tile_order(schema)
+
+# Get cell order
+c_order &lt;- cell_order(schema)
+
+# Get coordinates and offset filter list
+reslist &lt;- filter_list(schema)
+
+# Get the array domain
+dom &lt;- domain(schema)
+
+# Get all attributes as list
+attrs &lt;- attrs(schema)
+
+# Get attribute from name
+attr &lt;- attrs(schema, \attr\)
+
+# Dump the array schema in ASCII format to stdout
+show(schema)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+#### Inspecting Domain
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyAuLi4gZ2V0IGFycmF5IHNjaGVtYVxuIyAuLi4gZ2V0IGRvbWFpbiBmcm9tIHNjaGVtYVxuZG9tIDwtIGRvbWFpbihzY2hlbWEpXG5cbiMgR2V0IHRoZSBkb21haW4gZGF0YXR5cGUgKGkuZS4sIHRoZSBkYXRhdHlwZSBvZiBhbGwgZGltZW5zaW9ucylcbnR5cGUgPC0gZGF0YXR5cGUoZG9tKVxuXG4jIEdldCBudW1iZXIgb2YgZGltZW5zaW9uc1xuZGltX251bSA8LSBkaW0oZG9tKVxuXG4jIEdldCBhbGwgZGltZW5zaW9uXG5kaW1zIDwtIGRpbWVuc2lvbnMoZG9tKVxuXG4jIER1bXAgdGhlIGRvbWFpbiBpbiBBU0NJSSBmb3JtYXQgaW4gdGhlIHNlbGVjdGVkIG91dHB1dFxuc2hvdyhkb20pXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+# ... get array schema
+# ... get domain from schema
+dom &lt;- domain(schema)
+
+# Get the domain datatype (i.e., the datatype of all dimensions)
+type &lt;- datatype(dom)
+
+# Get number of dimensions
+dim_num &lt;- dim(dom)
+
+# Get all dimension
+dims &lt;- dimensions(dom)
+
+# Dump the domain in ASCII format in the selected output
+show(dom)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### Inspecting Dimensions
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjpbIiMgLi4uIGdldCBhcnJheSBzY2hlbWEiLCIjIC4uLiBnZXQgZG9tYWluIiwiIyAuLi4gZ2V0IGRpbWVuc2lvbiBieSBpbmRleCBvciBuYW1lIiwiIiwiI0ZJWE1FIiwiIiwiIyBHZXQgZGltZW5zaW9uIG5hbWUiLCJkaW1fbmFtZSA8LSBuYW1lKGRpbSkiLCIiLCIjIEdldCBkaW1lbnNpb24gZGF0YXR5cGUiLCJkaW1fdHlwZSA8LSBkYXRhdHlwZShkaW0pIiwiIiwiIyBHZXQgZGltZW5zaW9uIGRvbWFpbiIsImRvbWFpbiA8LSBkb21haW4oZGltKSIsIiIsIiMgR2V0IHRpbGUgZXh0ZW50IiwidGlsZV9leHRlbnQgPC0gdGlsZShkaW0pIiwiIiwiIyBEdW1wIHRoZSBkaW1lbnNpb24gaW4gQVNDSUkgZm9ybWF0IGluIHRoZSBzZWxlY3RlZCBvdXRwdXQiLCJzaG93KGRpbSkiXX0= --&gt;
+
+```r
+# ... get array schema
+# ... get domain
+# ... get dimension by index or name
+
+#FIXME
+
+# Get dimension name
+dim_name &lt;- name(dim)
+
+# Get dimension datatype
+dim_type &lt;- datatype(dim)
+
+# Get dimension domain
+domain &lt;- domain(dim)
+
+# Get tile extent
+tile_extent &lt;- tile(dim)
+
+# Dump the dimension in ASCII format in the selected output
+show(dim)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-</div>
-<div id="getting-the-fragment-info" class="section level3">
-<h3>Getting the Fragment Info</h3>
-<p>TODO R support</p>
-</div>
-</div>
-<div id="reading-arrays" class="section level2">
-<h2>Reading Arrays</h2>
-<div id="reading-the-array-schema" class="section level3">
-<h3>Reading the Array Schema</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJyYXlfbmFtZSA8LSB1cmlzcGFyc2VcbkEgPC0gdGlsZWRiX3NwYXJzZSh1cmkgPSBhcnJheV9uYW1lKVxuIyBjYW4gYWxzbyBsb2FkIGRlbnNlXG5zY2ggPC0gc2NoZW1hKEEpXG4jIGNhbiBhbHNvIG9wZW4gZW5jcnlwdGVkIGFycmF5cyB3aXRoIGtleVxuYGBgIn0= -->
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>array_name &lt;-<span class="st"> </span>urisparse</span>
-<span id="cb22-2"><a href="#cb22-2"></a>A &lt;-<span class="st"> </span><span class="kw">tiledb_sparse</span>(<span class="dt">uri =</span> array_name)</span>
-<span id="cb22-3"><a href="#cb22-3"></a><span class="co"># can also load dense</span></span>
-<span id="cb22-4"><a href="#cb22-4"></a>sch &lt;-<span class="st"> </span><span class="kw">schema</span>(A)</span>
-<span id="cb22-5"><a href="#cb22-5"></a><span class="co"># can also open encrypted arrays with key</span></span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="inspecting-the-array-schema" class="section level4">
-<h4>Inspecting the array schema</h4>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJyYXlfbmFtZSA8LSB1cmlzcGFyc2VcblxuIyBHZXQgYXJyYXkgc2NoZW1hXG5BIDwtIHRpbGVkYl9zcGFyc2UodXJpID0gYXJyYXlfbmFtZSlcbiMgb3IgdXNlIHRpbGVkYl9kZW5zZSh1cmkgPSBhcnJheV9uYW1lKSBmb3IgZGVuc2VcbnNjaGVtYSA8LSBzY2hlbWEoQSlcblxuIyBHZXQgYXJyYXkgdHlwZVxuc3BhcnNlIDwtIGlzLnNwYXJzZShzY2hlbWEpXG5cbiMgR2V0IHRpbGUgY2FwYWNpdHlcbnRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfZ2V0X2NhcGFjaXR5KHNjaEBwdHIpXG4jIFRPRE86IFIgYWNjZXNzb3IgZm9yIHRpbGVcblxuIyBHZXQgdGlsZSBvcmRlclxudF9vcmRlciA8LSB0aWxlX29yZGVyKHNjaGVtYSlcblxuIyBHZXQgY2VsbCBvcmRlclxuY19vcmRlciA8LSBjZWxsX29yZGVyKHNjaGVtYSlcblxuIyBHZXQgY29vcmRpbmF0ZXMgYW5kIG9mZnNldCBmaWx0ZXIgbGlzdFxucmVzbGlzdCA8LSBmaWx0ZXJfbGlzdChzY2hlbWEpXG5cbiMgR2V0IHRoZSBhcnJheSBkb21haW5cbmRvbSA8LSBkb21haW4oc2NoZW1hKVxuXG4jIEdldCBhbGwgYXR0cmlidXRlcyBhcyBsaXN0XG5hdHRycyA8LSBhdHRycyhzY2hlbWEpXG5cbiMgR2V0IGF0dHJpYnV0ZSBmcm9tIG5hbWVcbmF0dHIgPC0gYXR0cnMoc2NoZW1hLCBcImF0dHJcIilcblxuIyBEdW1wIHRoZSBhcnJheSBzY2hlbWEgaW4gQVNDSUkgZm9ybWF0IHRvIHN0ZG91dFxuc2hvdyhzY2hlbWEpXG5gYGAifQ== -->
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>array_name &lt;-<span class="st"> </span>urisparse</span>
-<span id="cb23-2"><a href="#cb23-2"></a></span>
-<span id="cb23-3"><a href="#cb23-3"></a><span class="co"># Get array schema</span></span>
-<span id="cb23-4"><a href="#cb23-4"></a>A &lt;-<span class="st"> </span><span class="kw">tiledb_sparse</span>(<span class="dt">uri =</span> array_name)</span>
-<span id="cb23-5"><a href="#cb23-5"></a><span class="co"># or use tiledb_dense(uri = array_name) for dense</span></span>
-<span id="cb23-6"><a href="#cb23-6"></a>schema &lt;-<span class="st"> </span><span class="kw">schema</span>(A)</span>
-<span id="cb23-7"><a href="#cb23-7"></a></span>
-<span id="cb23-8"><a href="#cb23-8"></a><span class="co"># Get array type</span></span>
-<span id="cb23-9"><a href="#cb23-9"></a>sparse &lt;-<span class="st"> </span><span class="kw">is.sparse</span>(schema)</span>
-<span id="cb23-10"><a href="#cb23-10"></a></span>
-<span id="cb23-11"><a href="#cb23-11"></a><span class="co"># Get tile capacity</span></span>
-<span id="cb23-12"><a href="#cb23-12"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_schema_get_capacity</span>(sch<span class="op">@</span>ptr)</span>
-<span id="cb23-13"><a href="#cb23-13"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: R accessor for tile</span></span>
-<span id="cb23-14"><a href="#cb23-14"></a></span>
-<span id="cb23-15"><a href="#cb23-15"></a><span class="co"># Get tile order</span></span>
-<span id="cb23-16"><a href="#cb23-16"></a>t_order &lt;-<span class="st"> </span><span class="kw">tile_order</span>(schema)</span>
-<span id="cb23-17"><a href="#cb23-17"></a></span>
-<span id="cb23-18"><a href="#cb23-18"></a><span class="co"># Get cell order</span></span>
-<span id="cb23-19"><a href="#cb23-19"></a>c_order &lt;-<span class="st"> </span><span class="kw">cell_order</span>(schema)</span>
-<span id="cb23-20"><a href="#cb23-20"></a></span>
-<span id="cb23-21"><a href="#cb23-21"></a><span class="co"># Get coordinates and offset filter list</span></span>
-<span id="cb23-22"><a href="#cb23-22"></a>reslist &lt;-<span class="st"> </span><span class="kw">filter_list</span>(schema)</span>
-<span id="cb23-23"><a href="#cb23-23"></a></span>
-<span id="cb23-24"><a href="#cb23-24"></a><span class="co"># Get the array domain</span></span>
-<span id="cb23-25"><a href="#cb23-25"></a>dom &lt;-<span class="st"> </span><span class="kw">domain</span>(schema)</span>
-<span id="cb23-26"><a href="#cb23-26"></a></span>
-<span id="cb23-27"><a href="#cb23-27"></a><span class="co"># Get all attributes as list</span></span>
-<span id="cb23-28"><a href="#cb23-28"></a>attrs &lt;-<span class="st"> </span><span class="kw">attrs</span>(schema)</span>
-<span id="cb23-29"><a href="#cb23-29"></a></span>
-<span id="cb23-30"><a href="#cb23-30"></a><span class="co"># Get attribute from name</span></span>
-<span id="cb23-31"><a href="#cb23-31"></a>attr &lt;-<span class="st"> </span><span class="kw">attrs</span>(schema, <span class="st">&quot;attr&quot;</span>)</span>
-<span id="cb23-32"><a href="#cb23-32"></a></span>
-<span id="cb23-33"><a href="#cb23-33"></a><span class="co"># Dump the array schema in ASCII format to stdout</span></span>
-<span id="cb23-34"><a href="#cb23-34"></a><span class="kw">show</span>(schema)</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="inspecting-domain" class="section level4">
-<h4>Inspecting Domain</h4>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyAuLi4gZ2V0IGFycmF5IHNjaGVtYVxuIyAuLi4gZ2V0IGRvbWFpbiBmcm9tIHNjaGVtYVxuZG9tIDwtIGRvbWFpbihzY2hlbWEpXG5cbiMgR2V0IHRoZSBkb21haW4gZGF0YXR5cGUgKGkuZS4sIHRoZSBkYXRhdHlwZSBvZiBhbGwgZGltZW5zaW9ucylcbnR5cGUgPC0gZGF0YXR5cGUoZG9tKVxuXG4jIEdldCBudW1iZXIgb2YgZGltZW5zaW9uc1xuZGltX251bSA8LSBkaW0oZG9tKVxuXG4jIEdldCBhbGwgZGltZW5zaW9uXG5kaW1zIDwtIGRpbWVuc2lvbnMoZG9tKVxuXG4jIER1bXAgdGhlIGRvbWFpbiBpbiBBU0NJSSBmb3JtYXQgaW4gdGhlIHNlbGVjdGVkIG91dHB1dFxuc2hvdyhkb20pXG5gYGAifQ== -->
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># ... get array schema</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="co"># ... get domain from schema</span></span>
-<span id="cb24-3"><a href="#cb24-3"></a>dom &lt;-<span class="st"> </span><span class="kw">domain</span>(schema)</span>
-<span id="cb24-4"><a href="#cb24-4"></a></span>
-<span id="cb24-5"><a href="#cb24-5"></a><span class="co"># Get the domain datatype (i.e., the datatype of all dimensions)</span></span>
-<span id="cb24-6"><a href="#cb24-6"></a>type &lt;-<span class="st"> </span><span class="kw">datatype</span>(dom)</span>
-<span id="cb24-7"><a href="#cb24-7"></a></span>
-<span id="cb24-8"><a href="#cb24-8"></a><span class="co"># Get number of dimensions</span></span>
-<span id="cb24-9"><a href="#cb24-9"></a>dim_num &lt;-<span class="st"> </span><span class="kw">dim</span>(dom)</span>
-<span id="cb24-10"><a href="#cb24-10"></a></span>
-<span id="cb24-11"><a href="#cb24-11"></a><span class="co"># Get all dimension</span></span>
-<span id="cb24-12"><a href="#cb24-12"></a>dims &lt;-<span class="st"> </span><span class="kw">dimensions</span>(dom)</span>
-<span id="cb24-13"><a href="#cb24-13"></a></span>
-<span id="cb24-14"><a href="#cb24-14"></a><span class="co"># Dump the domain in ASCII format in the selected output</span></span>
-<span id="cb24-15"><a href="#cb24-15"></a><span class="kw">show</span>(dom)</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="inspecting-dimensions" class="section level4">
-<h4>Inspecting Dimensions</h4>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjpbIiMgLi4uIGdldCBhcnJheSBzY2hlbWEiLCIjIC4uLiBnZXQgZG9tYWluIiwiIyAuLi4gZ2V0IGRpbWVuc2lvbiBieSBpbmRleCBvciBuYW1lIiwiIiwiI0ZJWE1FIiwiIiwiIyBHZXQgZGltZW5zaW9uIG5hbWUiLCJkaW1fbmFtZSA8LSBuYW1lKGRpbSkiLCIiLCIjIEdldCBkaW1lbnNpb24gZGF0YXR5cGUiLCJkaW1fdHlwZSA8LSBkYXRhdHlwZShkaW0pIiwiIiwiIyBHZXQgZGltZW5zaW9uIGRvbWFpbiIsImRvbWFpbiA8LSBkb21haW4oZGltKSIsIiIsIiMgR2V0IHRpbGUgZXh0ZW50IiwidGlsZV9leHRlbnQgPC0gdGlsZShkaW0pIiwiIiwiIyBEdW1wIHRoZSBkaW1lbnNpb24gaW4gQVNDSUkgZm9ybWF0IGluIHRoZSBzZWxlY3RlZCBvdXRwdXQiLCJzaG93KGRpbSkiXX0= -->
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># ... get array schema</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a><span class="co"># ... get domain</span></span>
-<span id="cb25-3"><a href="#cb25-3"></a><span class="co"># ... get dimension by index or name</span></span>
-<span id="cb25-4"><a href="#cb25-4"></a></span>
-<span id="cb25-5"><a href="#cb25-5"></a><span class="co">#FIXME</span></span>
-<span id="cb25-6"><a href="#cb25-6"></a></span>
-<span id="cb25-7"><a href="#cb25-7"></a><span class="co"># Get dimension name</span></span>
-<span id="cb25-8"><a href="#cb25-8"></a>dim_name &lt;-<span class="st"> </span><span class="kw">name</span>(dim)</span>
-<span id="cb25-9"><a href="#cb25-9"></a></span>
-<span id="cb25-10"><a href="#cb25-10"></a><span class="co"># Get dimension datatype</span></span>
-<span id="cb25-11"><a href="#cb25-11"></a>dim_type &lt;-<span class="st"> </span><span class="kw">datatype</span>(dim)</span>
-<span id="cb25-12"><a href="#cb25-12"></a></span>
-<span id="cb25-13"><a href="#cb25-13"></a><span class="co"># Get dimension domain</span></span>
-<span id="cb25-14"><a href="#cb25-14"></a>domain &lt;-<span class="st"> </span><span class="kw">domain</span>(dim)</span>
-<span id="cb25-15"><a href="#cb25-15"></a></span>
-<span id="cb25-16"><a href="#cb25-16"></a><span class="co"># Get tile extent</span></span>
-<span id="cb25-17"><a href="#cb25-17"></a>tile_extent &lt;-<span class="st"> </span><span class="kw">tile</span>(dim)</span>
-<span id="cb25-18"><a href="#cb25-18"></a></span>
-<span id="cb25-19"><a href="#cb25-19"></a><span class="co"># Dump the dimension in ASCII format in the selected output</span></span>
-<span id="cb25-20"><a href="#cb25-20"></a><span class="kw">show</span>(dim)</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
 <div id="inspecting-attributes" class="section level4">
 <h4>Inspecting Attributes</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjpbIiMgLi4uIGdldCBhcnJheSBzY2hlbWEiLCIjIC4uLiBnZXQgYXR0cmlidXRlIGJ5IGluZGV4IG9yIG5hbWUiLCIiLCJzdG9waWZub3QoaXMubnVsbChhdHRyKSkiLCIjIEdldCBhdHRyaWJ1dGUgbmFtZSIsImF0dHJfbmFtZSA8LSBuYW1lKGF0dHIpIiwiIiwiIyBHZXQgYXR0cmlidXRlIGRhdGF0eXBlIiwiYXR0cl90eXBlIDwtIGRhdGF0eXBlKGF0dHIpIiwiIiwiIyBHZXQgZmlsdGVyIGxpc3QiLCJmaWx0ZXJfbGlzdCA8LSBmaWx0ZXJfbGlzdChhdHRyKSIsIiIsIiMgQ2hlY2sgaWYgYXR0cmlidXRlIGlzIHZhcmlhYmxlLWxlbmd0aCIsIiMgdmFyaWFibGUgbGVuZ3RoIGF0dHJpYnR1ZXMgYXJlIG5vdCBzdXBwb3J0ZWQgaW4gUiBjdXJyZW50bHkiLCIiLCIjIEdldCBudW1iZXIgb2YgdmFsdWVzIHBlciBjZWxsIiwibnVtIDwtIG5jZWxscyhhdHRyKSIsIiIsIiMgR2V0IGNlbGwgc2l6ZSBmb3IgdGhpcyBhdHRyaWJ1dGUiLCIjIFRPRE86IG5vdCBzdXBwb3J0ZGVkIHlldCIsIiIsIiMgRHVtcCB0aGUgYXR0cmlidXRlIGluIEFTQ0lJIGZvcm1hdCBpbiB0aGUgc2VsZWN0ZWQgb3V0cHV0Iiwic2hvdyhhdHRyKSJdfQ== -->
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># ... get array schema</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a><span class="co"># ... get attribute by index or name</span></span>
-<span id="cb26-3"><a href="#cb26-3"></a></span>
-<span id="cb26-4"><a href="#cb26-4"></a><span class="kw">stopifnot</span>(<span class="kw">is.null</span>(attr))</span>
-<span id="cb26-5"><a href="#cb26-5"></a><span class="co"># Get attribute name</span></span>
-<span id="cb26-6"><a href="#cb26-6"></a>attr_name &lt;-<span class="st"> </span><span class="kw">name</span>(attr)</span>
-<span id="cb26-7"><a href="#cb26-7"></a></span>
-<span id="cb26-8"><a href="#cb26-8"></a><span class="co"># Get attribute datatype</span></span>
-<span id="cb26-9"><a href="#cb26-9"></a>attr_type &lt;-<span class="st"> </span><span class="kw">datatype</span>(attr)</span>
-<span id="cb26-10"><a href="#cb26-10"></a></span>
-<span id="cb26-11"><a href="#cb26-11"></a><span class="co"># Get filter list</span></span>
-<span id="cb26-12"><a href="#cb26-12"></a>filter_list &lt;-<span class="st"> </span><span class="kw">filter_list</span>(attr)</span>
-<span id="cb26-13"><a href="#cb26-13"></a></span>
-<span id="cb26-14"><a href="#cb26-14"></a><span class="co"># Check if attribute is variable-length</span></span>
-<span id="cb26-15"><a href="#cb26-15"></a><span class="co"># variable length attribtues are not supported in R currently</span></span>
-<span id="cb26-16"><a href="#cb26-16"></a></span>
-<span id="cb26-17"><a href="#cb26-17"></a><span class="co"># Get number of values per cell</span></span>
-<span id="cb26-18"><a href="#cb26-18"></a>num &lt;-<span class="st"> </span><span class="kw">ncells</span>(attr)</span>
-<span id="cb26-19"><a href="#cb26-19"></a></span>
-<span id="cb26-20"><a href="#cb26-20"></a><span class="co"># Get cell size for this attribute</span></span>
-<span id="cb26-21"><a href="#cb26-21"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: not supportded yet</span></span>
-<span id="cb26-22"><a href="#cb26-22"></a></span>
-<span id="cb26-23"><a href="#cb26-23"></a><span class="co"># Dump the attribute in ASCII format in the selected output</span></span>
-<span id="cb26-24"><a href="#cb26-24"></a><span class="kw">show</span>(attr)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># ... get array schema</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="co"># ... get attribute by index or name</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a></span>
+<span id="cb38-4"><a href="#cb38-4"></a><span class="kw">stopifnot</span>(<span class="kw">is.null</span>(attr))</span>
+<span id="cb38-5"><a href="#cb38-5"></a><span class="co"># Get attribute name</span></span>
+<span id="cb38-6"><a href="#cb38-6"></a>attr_name &lt;-<span class="st"> </span><span class="kw">name</span>(attr)</span>
+<span id="cb38-7"><a href="#cb38-7"></a></span>
+<span id="cb38-8"><a href="#cb38-8"></a><span class="co"># Get attribute datatype</span></span>
+<span id="cb38-9"><a href="#cb38-9"></a>attr_type &lt;-<span class="st"> </span><span class="kw">datatype</span>(attr)</span>
+<span id="cb38-10"><a href="#cb38-10"></a></span>
+<span id="cb38-11"><a href="#cb38-11"></a><span class="co"># Get filter list</span></span>
+<span id="cb38-12"><a href="#cb38-12"></a>filter_list &lt;-<span class="st"> </span><span class="kw">filter_list</span>(attr)</span>
+<span id="cb38-13"><a href="#cb38-13"></a></span>
+<span id="cb38-14"><a href="#cb38-14"></a><span class="co"># Check if attribute is variable-length</span></span>
+<span id="cb38-15"><a href="#cb38-15"></a><span class="co"># variable length attribtues are not supported in R currently</span></span>
+<span id="cb38-16"><a href="#cb38-16"></a></span>
+<span id="cb38-17"><a href="#cb38-17"></a><span class="co"># Get number of values per cell</span></span>
+<span id="cb38-18"><a href="#cb38-18"></a>num &lt;-<span class="st"> </span><span class="kw">ncells</span>(attr)</span>
+<span id="cb38-19"><a href="#cb38-19"></a></span>
+<span id="cb38-20"><a href="#cb38-20"></a><span class="co"># Get cell size for this attribute</span></span>
+<span id="cb38-21"><a href="#cb38-21"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: not supportded yet</span></span>
+<span id="cb38-22"><a href="#cb38-22"></a></span>
+<span id="cb38-23"><a href="#cb38-23"></a><span class="co"># Dump the attribute in ASCII format in the selected output</span></span>
+<span id="cb38-24"><a href="#cb38-24"></a><span class="kw">show</span>(attr)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2524,17 +2588,17 @@ When you save the notebook, an HTML file containing the code and output will be 
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjpbImZsIDwtIHRpbGVkYl9maWx0ZXJfbGlzdCgpIiwiIiwiIyBnZXQgbnVtYmVyIG9mIGZpbHRlciIsInRpbGVkYjo6OmxpYnRpbGVkYl9maWx0ZXJfbGlzdF9nZXRfbmZpbHRlcnMoZmxAcHRyKSIsIiIsIiMgZ2V0IG1heCBjaHVuayBzaXplIiwidGlsZWRiOjo6bGlidGlsZWRiX2ZpbHRlcl9saXN0X2dldF9tYXhfY2h1bmtfc2l6ZShmbEBwdHIpIiwiIiwiIyBnZXQgZmlsdGVyIGZyb20gaW5kZXgiLCJpbmQgPC0gaSIsInRpbGVkYjo6OmxpYnRpbGVkYl9maWx0ZXJfbGlzdF9nZXRfZmlsdGVyX2Zyb21faW5kZXgoZmxAcHRyLCBpbmQpIl19 -->
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>fl &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>()</span>
-<span id="cb27-2"><a href="#cb27-2"></a></span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="co"># get number of filter</span></span>
-<span id="cb27-4"><a href="#cb27-4"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_filter_list_get_nfilters</span>(fl<span class="op">@</span>ptr)</span>
-<span id="cb27-5"><a href="#cb27-5"></a></span>
-<span id="cb27-6"><a href="#cb27-6"></a><span class="co"># get max chunk size</span></span>
-<span id="cb27-7"><a href="#cb27-7"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_filter_list_get_max_chunk_size</span>(fl<span class="op">@</span>ptr)</span>
-<span id="cb27-8"><a href="#cb27-8"></a></span>
-<span id="cb27-9"><a href="#cb27-9"></a><span class="co"># get filter from index</span></span>
-<span id="cb27-10"><a href="#cb27-10"></a>ind &lt;-<span class="st"> </span>i</span>
-<span id="cb27-11"><a href="#cb27-11"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_filter_list_get_filter_from_index</span>(fl<span class="op">@</span>ptr, ind)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>fl &lt;-<span class="st"> </span><span class="kw">tiledb_filter_list</span>()</span>
+<span id="cb39-2"><a href="#cb39-2"></a></span>
+<span id="cb39-3"><a href="#cb39-3"></a><span class="co"># get number of filter</span></span>
+<span id="cb39-4"><a href="#cb39-4"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_filter_list_get_nfilters</span>(fl<span class="op">@</span>ptr)</span>
+<span id="cb39-5"><a href="#cb39-5"></a></span>
+<span id="cb39-6"><a href="#cb39-6"></a><span class="co"># get max chunk size</span></span>
+<span id="cb39-7"><a href="#cb39-7"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_filter_list_get_max_chunk_size</span>(fl<span class="op">@</span>ptr)</span>
+<span id="cb39-8"><a href="#cb39-8"></a></span>
+<span id="cb39-9"><a href="#cb39-9"></a><span class="co"># get filter from index</span></span>
+<span id="cb39-10"><a href="#cb39-10"></a>ind &lt;-<span class="st"> </span>i</span>
+<span id="cb39-11"><a href="#cb39-11"></a>tiledb<span class="op">:::</span><span class="kw">libtiledb_filter_list_get_filter_from_index</span>(fl<span class="op">@</span>ptr, ind)</span></code></pre></div>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -2544,116 +2608,173 @@ When you save the notebook, an HTML file containing the code and output will be 
 <h3>Basic Reading</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDcmVhdGUgYSBUaWxlREIgY29udGV4dFxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuXG4jIE9wZW4gYSBkZW5zZSBhcnJheVxuQSA8LSB0aWxlZGJfZGVuc2UodXJpID0gdXJpZGVuc2UsIGN0eD1jdHgpXG5cbiMgT3IsIG9wZW4gYSBzcGFyc2UgYXJyYXlcbiMgQSA8LSB0aWxlZGJfc3BhcnNlKHVyaSA9IFwiPGFycmF5LXVyaT5cIiwgY3R4PWN0eClcblxuIyBTbGljZSBvbmx5IHJvd3MgMSwgMiBhbmQgY29scyAyLCAzLCA0XG5kYXRhIDwtIEFbMToyLCAyOjRdXG5zaG93KGRhdGEpXG5gYGAifQ== -->
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># Create a TileDB context</span></span>
-<span id="cb28-2"><a href="#cb28-2"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
-<span id="cb28-3"><a href="#cb28-3"></a></span>
-<span id="cb28-4"><a href="#cb28-4"></a><span class="co"># Open a dense array</span></span>
-<span id="cb28-5"><a href="#cb28-5"></a>A &lt;-<span class="st"> </span><span class="kw">tiledb_dense</span>(<span class="dt">uri =</span> uridense, <span class="dt">ctx=</span>ctx)</span>
-<span id="cb28-6"><a href="#cb28-6"></a></span>
-<span id="cb28-7"><a href="#cb28-7"></a><span class="co"># Or, open a sparse array</span></span>
-<span id="cb28-8"><a href="#cb28-8"></a><span class="co"># A &lt;- tiledb_sparse(uri = &quot;&lt;array-uri&gt;&quot;, ctx=ctx)</span></span>
-<span id="cb28-9"><a href="#cb28-9"></a></span>
-<span id="cb28-10"><a href="#cb28-10"></a><span class="co"># Slice only rows 1, 2 and cols 2, 3, 4</span></span>
-<span id="cb28-11"><a href="#cb28-11"></a>data &lt;-<span class="st"> </span>A[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">4</span>]</span>
-<span id="cb28-12"><a href="#cb28-12"></a><span class="kw">show</span>(data)</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="basic-reading-using-low-level-code" class="section level4">
-<h4>Basic Reading using Low-Level Code</h4>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlLCBcIlJFQURcIilcbiMjIHN1YmFycmF5IG9mIHJvd3MgMSwyIGFuZCBjb2xzIDIsMyw0XG5zdWJhcnIgPC0gYygxTCwyTCwgMkwsNEwpXG5cbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnkoY3R4QHB0ciwgYXJycHRyLCBcIlJFQURcIilcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X3N1YmFycmF5KHFyeXB0ciwgc3ViYXJyKVxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfbGF5b3V0KHFyeXB0ciwgXCJST1dfTUFKT1JcIilcbnYgPC0gaW50ZWdlcig2KSAgIyByZXNlcnZlIHNwYWNlXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCBcImFcIiwgdilcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc3VibWl0KHFyeXB0cilcbnByaW50KHYpICAgICAgICAgIyB1bmZvcm1lZCBhcnJheSwgbm8gY29vcmRpbmF0ZXNcbnJlcyA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY2xvc2UoYXJycHRyKVxuYGBgIn0= -->
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>ctx &lt;-<span class="st"> </span><span class="kw">tiledb_ctx</span>()</span>
-<span id="cb29-2"><a href="#cb29-2"></a>arrptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_open</span>(ctx<span class="op">@</span>ptr, uridense, <span class="st">&quot;READ&quot;</span>)</span>
-<span id="cb29-3"><a href="#cb29-3"></a><span class="co">## subarray of rows 1,2 and cols 2,3,4</span></span>
-<span id="cb29-4"><a href="#cb29-4"></a>subarr &lt;-<span class="st"> </span><span class="kw">c</span>(1L,2L, 2L,4L)</span>
-<span id="cb29-5"><a href="#cb29-5"></a></span>
-<span id="cb29-6"><a href="#cb29-6"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query</span>(ctx<span class="op">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
-<span id="cb29-7"><a href="#cb29-7"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
-<span id="cb29-8"><a href="#cb29-8"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
-<span id="cb29-9"><a href="#cb29-9"></a>v &lt;-<span class="st"> </span><span class="kw">integer</span>(<span class="dv">6</span>)  <span class="co"># reserve space</span></span>
-<span id="cb29-10"><a href="#cb29-10"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, v)</span>
-<span id="cb29-11"><a href="#cb29-11"></a>qryptr &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_query_submit</span>(qryptr)</span>
-<span id="cb29-12"><a href="#cb29-12"></a><span class="kw">print</span>(v)         <span class="co"># unformed array, no coordinates</span></span>
-<span id="cb29-13"><a href="#cb29-13"></a>res &lt;-<span class="st"> </span>tiledb<span class="op">:::</span><span class="kw">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="reading-encrypted-arrays" class="section level3">
-<h3>Reading Encrypted Arrays</h3>
-</div>
-<div id="multi-range-subarrays" class="section level3">
-<h3>Multi-range Subarrays</h3>
-</div>
-<div id="incomplete-queries" class="section level3">
-<h3>Incomplete Queries</h3>
-</div>
-<div id="result-estimation" class="section level3">
-<h3>Result Estimation</h3>
-</div>
-<div id="time-traveling" class="section level3">
-<h3>Time Traveling</h3>
-</div>
-</div>
-<div id="embedded-sql" class="section level2">
-<h2>Embedded SQL</h2>
-</div>
-<div id="asynchronous-queries" class="section level2">
-<h2>Asynchronous Queries</h2>
-</div>
-<div id="configuration" class="section level2">
-<h2>Configuration</h2>
-</div>
-<div id="array-metadata" class="section level2">
-<h2>Array Metadata</h2>
-<div id="writing-array-metadata" class="section level3">
-<h3>Writing Array Metadata</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzIDwtIHRpbGVkYl9wdXRfbWV0YWRhdGEodXJpZGVuc2UsIFwiYWFhXCIsIDEwMEwpXG5yZXMgPC0gdGlsZWRiX3B1dF9tZXRhZGF0YSh1cmlkZW5zZSwgXCJiYlwiLCBjKDEuMSwgMi4yKSlcbmBgYCJ9 -->
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>res &lt;-<span class="st"> </span><span class="kw">tiledb_put_metadata</span>(uridense, <span class="st">&quot;aaa&quot;</span>, 100L)</span>
-<span id="cb30-2"><a href="#cb30-2"></a>res &lt;-<span class="st"> </span><span class="kw">tiledb_put_metadata</span>(uridense, <span class="st">&quot;bb&quot;</span>, <span class="kw">c</span>(<span class="fl">1.1</span>, <span class="fl">2.2</span>))</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="reading-array-metadata" class="section level3">
-<h3>Reading Array Metadata</h3>
-<p>One can read by key:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGlsZWRiX2dldF9tZXRhZGF0YSh1cmlkZW5zZSwgXCJhYWFcIilcbmBgYCJ9 -->
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">tiledb_get_metadata</span>(uridense, <span class="st">&quot;aaa&quot;</span>)</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Or one can retrieve all metadata at once:</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWQgPC0gdGlsZWRiX2dldF9hbGxfbWV0YWRhdGEodXJpZGVuc2UpXG5wcmludChtZClcbmBgYCJ9 -->
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>md &lt;-<span class="st"> </span><span class="kw">tiledb_get_all_metadata</span>(uridense)</span>
-<span id="cb32-2"><a href="#cb32-2"></a><span class="kw">print</span>(md)</span></code></pre></div>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="deleting-array-metadata" class="section level3">
-<h3>Deleting Array Metadata</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzIDwtIHRpbGVkYl9kZWxldGVfbWV0YWRhdGEodXJpZGVuc2UsIFwiYWFhXCIpXG5gYGAifQ== -->
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>res &lt;-<span class="st"> </span><span class="kw">tiledb_delete_metadata</span>(uridense, <span class="st">&quot;aaa&quot;</span>)</span></code></pre></div>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBDcmVhdGUgYSBUaWxlREIgY29udGV4dFxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuXG4jIE9wZW4gYSBkZW5zZSBhcnJheVxuQSA8LSB0aWxlZGJfZGVuc2UodXJpID0gdXJpZGVuc2UsIGN0eD1jdHgpXG5cbiMgT3IsIG9wZW4gYSBzcGFyc2UgYXJyYXlcbiMgQSA8LSB0aWxlZGJfc3BhcnNlKHVyaSA9IFxcPGFycmF5LXVyaT5cXCwgY3R4PWN0eClcblxuIyBTbGljZSBvbmx5IHJvd3MgMSwgMiBhbmQgY29scyAyLCAzLCA0XG5kYXRhIDwtIEFbMToyLCAyOjRdXG5zaG93KGRhdGEpXG5gYGBcbmBgYCJ9 -->
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="st">```</span><span class="dt">r</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="dt"># Create a TileDB context</span></span>
+<span id="cb40-3"><a href="#cb40-3"></a><span class="dt">ctx &lt;- tiledb_ctx()</span></span>
+<span id="cb40-4"><a href="#cb40-4"></a></span>
+<span id="cb40-5"><a href="#cb40-5"></a><span class="dt"># Open a dense array</span></span>
+<span id="cb40-6"><a href="#cb40-6"></a><span class="dt">A &lt;- tiledb_dense(uri = uridense, ctx=ctx)</span></span>
+<span id="cb40-7"><a href="#cb40-7"></a></span>
+<span id="cb40-8"><a href="#cb40-8"></a><span class="dt"># Or, open a sparse array</span></span>
+<span id="cb40-9"><a href="#cb40-9"></a><span class="dt"># A &lt;- tiledb_sparse(uri = \&lt;array-uri&gt;\, ctx=ctx)</span></span>
+<span id="cb40-10"><a href="#cb40-10"></a></span>
+<span id="cb40-11"><a href="#cb40-11"></a><span class="dt"># Slice only rows 1, 2 and cols 2, 3, 4</span></span>
+<span id="cb40-12"><a href="#cb40-12"></a><span class="dt">data &lt;- A[1:2, 2:4]</span></span>
+<span id="cb40-13"><a href="#cb40-13"></a><span class="dt">show(data)</span></span></code></pre></div>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+#### Basic Reading using Low-Level Code
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY3R4IDwtIHRpbGVkYl9jdHgoKVxuYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlLCBcXFJFQURcXClcbiMjIHN1YmFycmF5IG9mIHJvd3MgMSwyIGFuZCBjb2xzIDIsMyw0XG5zdWJhcnIgPC0gYygxTCwyTCwgMkwsNEwpXG5cbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnkoY3R4QHB0ciwgYXJycHRyLCBcXFJFQURcXClcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X3N1YmFycmF5KHFyeXB0ciwgc3ViYXJyKVxucXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfbGF5b3V0KHFyeXB0ciwgXFxST1dfTUFKT1JcXClcbnYgPC0gaW50ZWdlcig2KSAgIyByZXNlcnZlIHNwYWNlXG5xcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCBcXGFcXCwgdilcbnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc3VibWl0KHFyeXB0cilcbnByaW50KHYpICAgICAgICAgIyB1bmZvcm1lZCBhcnJheSwgbm8gY29vcmRpbmF0ZXNcbnJlcyA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY2xvc2UoYXJycHRyKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+ctx &lt;- tiledb_ctx()
+arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridense, \READ\)
+## subarray of rows 1,2 and cols 2,3,4
+subarr &lt;- c(1L,2L, 2L,4L)
+
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, \READ\)
+qryptr &lt;- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, \ROW_MAJOR\)
+v &lt;- integer(6)  # reserve space
+qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, \a\, v)
+qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates
+res &lt;- tiledb:::libtiledb_array_close(arrptr)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+### Reading Encrypted Arrays
+### Multi-range Subarrays
+### Incomplete Queries
+### Result Estimation
+### Time Traveling
+
+## Embedded SQL
+
+## Asynchronous Queries
+
+## Configuration
+
+## Array Metadata
+
+### Writing Array Metadata
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmVzIDwtIHRpbGVkYl9wdXRfbWV0YWRhdGEodXJpZGVuc2UsIFxcYWFhXFwsIDEwMEwpXG5yZXMgPC0gdGlsZWRiX3B1dF9tZXRhZGF0YSh1cmlkZW5zZSwgXFxiYlxcLCBjKDEuMSwgMi4yKSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+res &lt;- tiledb_put_metadata(uridense, \aaa\, 100L)
+res &lt;- tiledb_put_metadata(uridense, \bb\, c(1.1, 2.2))</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+### Reading Array Metadata
+
+One can read by key:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudGlsZWRiX2dldF9tZXRhZGF0YSh1cmlkZW5zZSwgXFxhYWFcXClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+tiledb_get_metadata(uridense, \aaa\)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+Or one can retrieve all metadata at once:
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWQgPC0gdGlsZWRiX2dldF9hbGxfbWV0YWRhdGEodXJpZGVuc2UpXG5wcmludChtZClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+md &lt;- tiledb_get_all_metadata(uridense)
+print(md)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+### Deleting Array Metadata
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmVzIDwtIHRpbGVkYl9kZWxldGVfbWV0YWRhdGEodXJpZGVuc2UsIFxcYWFhXFwpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+res &lt;- tiledb_delete_metadata(uridense, \aaa\)</code></pre>
+<p>```</p>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 </div>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiVGlsZURCIFIgTm90ZWJvb2siCm91dHB1dDoKICBodG1sX2RvY3VtZW50OgogICAgdG9jOiB5ZXMKICAgIGRmX3ByaW50OiBwYWdlZAogIGh0bWxfbm90ZWJvb2s6CiAgICB0b2M6IHllcwogICAgaGlnaGxpZ2h0OiBweWdtZW50cwogICAgdGhlbWU6IGx1bWVuCi0tLQoKPCEtLVRoaXMgaXMgYW4gW1IgTWFya2Rvd25dKGh0dHA6Ly9ybWFya2Rvd24ucnN0dWRpby5jb20pIE5vdGVib29rLiBXaGVuIHlvdSBleGVjdXRlIGNvZGUgd2l0aGluIHRoZSBub3RlYm9vaywgdGhlIHJlc3VsdHMgYXBwZWFyIGJlbmVhdGggdGhlIGNvZGUuICBUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouICAgQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkN0cmwrQWx0K0kqLgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4gIFRoZSBwcmV2aWV3IHNob3dzIHlvdSBhIHJlbmRlcmVkIEhUTUwgY29weSBvZiB0aGUgY29udGVudHMgb2YgdGhlIGVkaXRvci4gQ29uc2VxdWVudGx5LCB1bmxpa2UgKktuaXQqLCAqUHJldmlldyogZG9lcyBub3QgcnVuIGFueSBSIGNvZGUgY2h1bmtzLiBJbnN0ZWFkLCB0aGUgb3V0cHV0IG9mIHRoZSBjaHVuayB3aGVuIGl0IHdhcyBsYXN0IHJ1biBpbiB0aGUgZWRpdG9yIGlzIGRpc3BsYXllZC4tLT4KCiMgUHJlbGltYXJpZXMKCldlIHdpbGwgdGhlIHR3byBiYXNpYyBleGFtcGxlcyBmb3IgYSBkZW5zZSBhbmQgc3BhcnNlIGFycmF5IHNpbXBseSB0byBjcmVhdGUKYXJyYXkgZGF0YSBvbiBkaXNrIHRvIHJlZmVyIHRvIGxhdGVyIGluIGV4YW1wbGVzIHRoYXQgZm9sbG93LgoKYGBge3IgcnVuZXhhbXBsZXN9CmxpYnJhcnkodGlsZWRiKQoKdGRpciA8LSB0ZW1wZGlyKCkKdXJpZGVuc2UgPC0gZmlsZS5wYXRoKHRkaXIsICJkZW5zZSIpCnVyaWRlbnNlZml4IDwtIGZpbGUucGF0aCh0ZGlyLCAiZGVuc2VmaXgiKQp1cmlkZW5zZXZhciA8LSBmaWxlLnBhdGgodGRpciwgImRlbnNldmFyIikKCmNyZWF0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7CiAgICAjIENoZWNrIGlmIHRoZSBhcnJheSBhbHJlYWR5IGV4aXN0cy4KICAgIGlmICh0aWxlZGJfb2JqZWN0X3R5cGUoYXJyYXlfbmFtZSkgPT0gIkFSUkFZIikgewogICAgICAgIG1lc3NhZ2UoIkFycmF5IGFscmVhZHkgZXhpc3RzLiIpCiAgICAgICAgcmV0dXJuKGludmlzaWJsZShOVUxMKSkKICAgIH0KCiAgICAjIFRoZSBhcnJheSB3aWxsIGJlIDR4NCB3aXRoIGRpbWVuc2lvbnMgInJvd3MiIGFuZCAiY29scyIsIHdpdGggZG9tYWluIFsxLDRdLgogICAgZG9tIDwtIHRpbGVkYl9kb21haW4oZGltcyA9IGModGlsZWRiX2RpbSgicm93cyIsIGMoMUwsIDRMKSwgNEwsICJJTlQzMiIpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZWRiX2RpbSgiY29scyIsIGMoMUwsIDRMKSwgNEwsICJJTlQzMiIpKSkKCiAgICAjIFRoZSBhcnJheSB3aWxsIGJlIGRlbnNlIHdpdGggYSBzaW5nbGUgYXR0cmlidXRlICJhIiBzbyBlYWNoIChpLGopIGNlbGwgY2FuIHN0b3JlIGFuIGludGVnZXIuCiAgICBzY2hlbWEgPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGF0dHJzID0gYyh0aWxlZGJfYXR0cigiYSIsIHR5cGUgPSAiSU5UMzIiKSkpCgogICAgIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay4KICAgIHRpbGVkYl9hcnJheV9jcmVhdGUoYXJyYXlfbmFtZSwgc2NoZW1hKQp9Cgp3cml0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7CiAgICBkYXRhIDwtIGFycmF5KGMoYygxTCwgNUwsIDlMLCAxM0wpLAogICAgICAgICAgICAgICAgICAgIGMoMkwsIDZMLCAxMEwsIDE0TCksCiAgICAgICAgICAgICAgICAgICAgYygzTCwgN0wsIDExTCwgMTVMKSwKICAgICAgICAgICAgICAgICAgICBjKDRMLCA4TCwgMTJMLCAxNkwpKSwgZGltID0gYyg0LDQpKQogICAgIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdG8gaXQuCiAgICBBIDwtIHRpbGVkYl9kZW5zZSh1cmkgPSBhcnJheV9uYW1lKQogICAgQVtdIDwtIGRhdGEKfQoKY3JlYXRlX2FycmF5KHVyaWRlbnNlKQp3cml0ZV9hcnJheSh1cmlkZW5zZSkKCgp1cmlzcGFyc2UgPC0gZmlsZS5wYXRoKHRkaXIsICJzcGFyc2UiKQoKY3JlYXRlX2FycmF5IDwtIGZ1bmN0aW9uKGFycmF5X25hbWUpIHsKICAgICMgQ2hlY2sgaWYgdGhlIGFycmF5IGFscmVhZHkgZXhpc3RzLgogICAgaWYgKHRpbGVkYl9vYmplY3RfdHlwZShhcnJheV9uYW1lKSA9PSAiQVJSQVkiKSB7CiAgICAgICAgbWVzc2FnZSgiQXJyYXkgYWxyZWFkeSBleGlzdHMuIikKICAgICAgICByZXR1cm4oaW52aXNpYmxlKE5VTEwpKQogICAgfQoKICAgICMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyAicm93cyIgYW5kICJjb2xzIiwgd2l0aCBkb21haW4gWzEsNF0uCiAgICBkb20gPC0gdGlsZWRiX2RvbWFpbihkaW1zID0gYyh0aWxlZGJfZGltKCJyb3dzIiwgYygxTCwgNEwpLCA0TCwgIklOVDMyIiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aWxlZGJfZGltKCJjb2xzIiwgYygxTCwgNEwpLCA0TCwgIklOVDMyIikpKQoKICAgIyBUaGUgYXJyYXkgd2lsbCBiZSBkZW5zZSB3aXRoIGEgc2luZ2xlIGF0dHJpYnV0ZSAiYSIgc28gZWFjaCAoaSxqKSBjZWxsIGNhbiBzdG9yZSBhbiBpbnRlZ2VyLgogICAgc2NoZW1hID0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGF0dHJzPWModGlsZWRiX2F0dHIoImEiLCB0eXBlID0gIklOVDMyIikpLCBzcGFyc2UgPSBUUlVFKQoKICAgICMgQ3JlYXRlIHRoZSAoZW1wdHkpIGFycmF5IG9uIGRpc2suCiAgICB0aWxlZGJfYXJyYXlfY3JlYXRlKGFycmF5X25hbWUsIHNjaGVtYSkKfQoKd3JpdGVfYXJyYXkgPC0gZnVuY3Rpb24oYXJyYXlfbmFtZSkgewogICAgSSA8LSBjKDEsIDIsIDIpCiAgICBKIDwtIGMoMSwgNCwgMykKICAgIGRhdGEgPC0gYygxTCwgMkwsIDNMKQogICAgIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdG8gaXQuCiAgICBBIDwtIHRpbGVkYl9zcGFyc2UodXJpID0gYXJyYXlfbmFtZSkKICAgIEFbSSwgSl0gPC0gZGF0YQp9CgpjcmVhdGVfYXJyYXkodXJpc3BhcnNlKQp3cml0ZV9hcnJheSh1cmlzcGFyc2UpCgpgYGAKCgoKIyBBUEkgVXNhZ2UKCiMjIENyZWF0aW5nIEFycmF5cwoKIyMjIENyZWF0ZSBEaW1lbnNpb24KCmBgYHtyIGNyZWF0ZWRpbX0KbGlicmFyeSh0aWxlZGIpCgojIENyZWF0ZSBkaW1lbnNpb24KIyBJbiBDKys6IERpbWVuc2lvbjo6Y3JlYXRlPFQ+KC4uLikKZGltIDwtIHRpbGVkYl9kaW0oImRpbSIsIGMoMUwsIDRMKSwgMkwsICJJTlQzMiIpCmBgYAoKCiMjIyBDcmVhdGUgQXJyYXkgRG9tYWluCgpgYGB7ciBjcmVhdGFycmRvbX0KbGlicmFyeSh0aWxlZGIpCgojICAuLiBjcmVhdGUgZGltZW5zaW9ucyBgZGltMWAsIGBkaW0yYApkaW0xIDwtIHRpbGVkYl9kaW0oImRpbTEiLCBjKDFMLCA0TCksIDJMLCAiSU5UMzIiKQpkaW0yIDwtIHRpbGVkYl9kaW0oImRpbTIiLCBjKDFMLCAyTCksIDJMLCAiSU5UMzIiKQoKIyBDcmVhdGUgZG9tYWluIHdpdGggdHdvIGRpbWVuc2lvbnMKIyBJbiBDKys6IGRvbWFpbi5hZGRfZGltZW5zaW9ucyhkaW0xKS5hZGRfZGltZW5zaW9uKGRpbTIpCmRvbSA8LSB0aWxlZGJfZG9tYWluKGRpbXMgPSBjKGRpbTEsIGRpbTIpKQpgYGAKCiMjIyBDcmVhdGluZyBBdHRyaWJ1dGVzCgpgYGB7ciBjcmVhdGVhdHRyfQojIENyZWF0ZSBhdHRyaWJ1dGUKIyBJbiBDKys6IEF0dHJpYnV0ZTo6Y3JlYXRlPFQ+KGN0eCwgImF0dHIiKQphdHRyIDwtIHRpbGVkYl9hdHRyKCJhdHRyIiwgIklOVDMyIikKYGBgCgpgYGB7ciBjcmVhdGVhdHRydmFybnVtfQojIFdlIGNhbiBhbHNvIHNldCB0aGUgbnVtYmVyIG9mIGF0dHJpYnV0ZXMgdG8gYSB2YWx1ZSBvdGhlciB0aGFuIG9uZQp0aWxlZGI6OjpsaWJ0aWxlZGJfYXR0cmlidXRlX3NldF9jZWxsX3ZhbF9udW0oYXR0ckBwdHIsIDMpCgojIEFuZCB3ZSBjYW4gc2V0IHRoZSBhIHZhcmlhYmxlIG51bWJlciBvZiBhdHRyaWJ1dGVzICh1c2luZyBOQSB0byBzZWxlY3QgdmFyaWFibGUgc2l6ZSkKdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCBOQSkKIyMgVE9ETzogUiBmdW5jdGlvbiBmb3IgbGV2ZWwgc2V0dGVyCmBgYAoKIyMjIyBTZXR0aW5nIGEgQ29tcHJlc3NvcgoKYGBge3Igc2V0Y29tcHJ9CmNvbXAgPC0gdGlsZWRiX2ZpbHRlcigiR1pJUCIpCnRpbGVkYl9maWx0ZXJfc2V0X29wdGlvbihjb21wLCJDT01QUkVTU0lPTl9MRVZFTCIsIDEwKQoKIyBDcmVhdGUgYSBmaWx0ZXIgbGlzdCB3aXRoIHRoZSBjb21wcmVzc29yCmZpbHRlcl9saXN0IDwtIHRpbGVkYl9maWx0ZXJfbGlzdChjKGNvbXApKQoKIyBDcmVhdGUgYXR0cmlidXRlIHdpdGggdGhlIGZpbHRlciBsaXN0CmF0dHIgPC0gdGlsZWRiX2F0dHIoImF0dHIiLCAiSU5UMzIiLCBmaWx0ZXJfbGlzdCA9IGZpbHRlcl9saXN0KQpgYGAKCgojIyMjIFNldHRpbmcgT3RoZXIgRmlsdGVycwoKYGBge3Igc2V0Zmlscn0KIyBDcmVhdGUgZmlsdGVycwpmMSA8LSB0aWxlZGJfZmlsdGVyKCJCSVRfV0lEVEhfUkVEVUNUSU9OIikKZjIgPC0gdGlsZWRiX2ZpbHRlcigiWlNURCIpCgojIENyZWF0ZSBhIGZpbHRlciBsaXN0IHdpdGggdGhlIHR3byBmaWx0ZXJzCmZpbHRlcl9saXN0IDwtIHRpbGVkYl9maWx0ZXJfbGlzdChjKGYxLGYyKSkKCiMgQ3JlYXRlIGF0dHJpYnV0ZSB3aXRoIHRoZSBmaWx0ZXIgbGlzdAphdHRyIDwtIHRpbGVkYl9hdHRyKCJhdHRyIiwgIklOVDMyIiwgZmlsdGVyX2xpc3QgPSBmaWx0ZXJfbGlzdCkKYGBgCgoKIyMjIyBTZXR0aW5nIHRoZSBUaWxlIENodW5rIFNpemUKCmBgYHtyIHNldHRpbGVjaHVua3NpemV9CiMgLi4uIGNyZWF0ZSBmaWx0ZXIgbGlzdApzZXRfbWF4X2NodW5rX3NpemUoZmlsdGVyX2xpc3QsIDEwMDAwKQpgYGAKCgojIyMgQ3JlYXRpbmcgdGhlIEFycmF5IFNjaGVtYQoKYGBge3IgY3JlYXRlYXJyc2NoZW1hfQojIC4uLiBjcmVhdGUgZG9tYWluIGRvbQphdHRyMSA8LSB0aWxlZGJfYXR0cigiYXR0cjEiLCAiSU5UMzIiLCBmaWx0ZXJfbGlzdCA9IGZpbHRlcl9saXN0KQphdHRyMiA8LSB0aWxlZGJfYXR0cigiYXR0cjIiLCAiRkxPQVQ2NCIsIGZpbHRlcl9saXN0ID0gZmlsdGVyX2xpc3QpCgojIENyZWF0ZSBhIGRlbnNlIGFycmF5CnNjaGVtYSA8LSB0aWxlZGJfYXJyYXlfc2NoZW1hKGRvbSwgYyhhdHRyMSwgYXR0cjIpLCBzcGFyc2UgPSBGQUxTRSkKIyBPciwgY3JlYXRlIGEgc3BhZXNlIGFycmF5CiMgc2NoZW1hIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKGF0dHIxLCBhdHRyMiksIHNwYXJzZSA9IFRSVUUpCmBgYAoKIyMjIyBTZXR0aW5nIHRoZSBUaWxlIGFuZCBDZWxsIE9yZGVyCgpgYGB7ciBzZXR0aWxlY2VsbG9yZGVyfQojIC4uLiBjcmVhdGUgZG9tYWluIGRvbQojIC4uLiBjcmVhdGUgYXR0cmlidXRlcyBhdHRyMSwgYXR0cjIKCiMgVGhlIHRpbGUgYW5kIG9yZGVyIGNhbiBiZSAiUk9XX01BSk9SIiBvciAiQ09MX01BSk9SIgpzY2hlbWEgPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGMoYXR0cjEsIGF0dHIyKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2VsbF9vcmRlciA9ICJDT0xfTUFKT1IiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aWxlX29yZGVyID0gIlJPV19NQUpPUiIpCmBgYAoKIyMjIyBTZXR0aW5nIHRoZSBEYXRhIFRpbGUgQ2FwYWNpdHkKCmBgYHtyIHNldHRpbGVjYXBhY2l0eX0KdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9zZXRfY2FwYWNpdHkoc2NoZW1hQHB0ciwgMTAwMDAwKQp0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX2dldF9jYXBhY2l0eShzY2hlbWFAcHRyKQojIyBUT0RPIFIgZnVuY3Rpb24gZm9yIGFjY2Vzc29yCmBgYAoKIyMjIyBTZXR0aW5nIENvb3JkaW5hdGUgYW5kIE9mZnNldCBGaWx0ZXJzCgpgYGB7ciBzZXRjb29yZG9mZnNldGZpbHR9CiMgLi4uIGNyZWF0ZSBkb21haW4gZG9tCiMgLi4uIGNyZWF0ZSBhdHRyaWJ1dGVzIGF0dHIxLCBhdHRyMgojIC4uLiBjcmVhdGUgZmlsdGVyIGxpc3RzIGZsMSwgZmwyLCBzaW1pbGFyIHRvIGF0dHJpYnV0ZXMKZjEgPC0gdGlsZWRiX2ZpbHRlcigiQklUX1dJRFRIX1JFRFVDVElPTiIpCmYyIDwtIHRpbGVkYl9maWx0ZXIoIlpTVEQiKQpmbDEgPC0gdGlsZWRiX2ZpbHRlcl9saXN0KGMoZjEpKQpmbDIgPC0gdGlsZWRiX2ZpbHRlcl9saXN0KGMoZjIpKQoKIyBDcmVhdGUgdGhlIHNjaGVtYSBzZXR0aW5nIHRoZSBjb29yZGluYXRlcyBhbmQgb2Zmc2V0cyBmaWx0ZXIgbGlzdHMKc2NoZW1hIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKGF0dHIxLCBhdHRyMiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvb3Jkc19maWx0ZXJfbGlzdCA9IGZsMSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb2Zmc2V0c19maWx0ZXJfbGlzdCA9IGZsMikKYGBgCgoKIyMjIyBDaGVja2luZyBDb3JyZWN0bmVzcwoKYGBge3IgYXJyYXlzY2hlbWFjaGVja30KdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9jaGVjayhzY2hlbWFAcHRyKQojIyBUT0RPOiBSIGZ1bmN0aW9uIGZvciBhY2Nlc3MKYGBgCgoKCiMjIyBDcmVhdGluZyB0aGUgQXJyYXkKCmBgYHtyIGNyZWF0ZWFycmF5LCBldmFsPUZBTFNFfQojIC4uLiBjcmVhdGUgYXJyYXkgc2NoZW1hCgojIENyZWF0ZSB0aGUgYXJyYXkKdGlsZWRiX2FycmF5X2NyZWF0ZSh1cmlkZW5zZSwgc2NoZW1hKQpgYGAKCiMjIyBDcmVhdGluZyBFbmNyeXB0ZWQgQXJyYXlzCgpgYGB7ciBjcmVhdGV3aXRoa2V5fQplbmNyeXB0aW9uX2tleSA8LSAiMDEyMzQ1Njc4OWFiY2RlRjAxMjM0NTY3ODlhYmNkZUYiCnVyaWRlbnNld2tleSA8LSBmaWxlLnBhdGgodGRpciwgImRlbnNld2tleSIpCgojIHNob3J0Y3V0OiBib3Jyb3cgc2NoZW1hIGZyb20gZGVuc2UgYXJyYXk7IGNvdWxkIGNyZWF0ZSBzY2hlbWEgdG9vCnNjaGVtYSA8LSBzY2hlbWEodGlsZWRiX2RlbnNlKHVyaWRlbnNlKSkKdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2NyZWF0ZV93aXRoX2tleSh1cmlkZW5zZXdrZXksIHNjaGVtYUBwdHIsIGVuY3J5cHRpb25fa2V5KQojI1RPRE86IFIgc3VwcG9ydApgYGAKCgojIyBXcml0aW5nIEFycmF5cwoKIyMjIFdyaXRpbmcgaW4gRGVuc2UgU3ViYXJyYXlzCgpgYGB7ciB3cml0ZWRlbnNlc3ViYXJyLCBldmFsPUZBTFNFfQojIyBwcmVwYXJlIGEgbGFyZ2VyIDUgeCA1IHRvIGVtYmVkIGludG8KdG1wIDwtIHRlbXBmaWxlKCkKZDEgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNUwpKQpkMiAgPC0gdGlsZWRiX2RpbShkb21haW4gPSBjKDFMLCA1TCkpCmRvbSA8LSB0aWxlZGJfZG9tYWluKGMoZDEsIGQyKSkKdmFsIDwtIHRpbGVkYl9hdHRyKG5hbWU9InZhbCIsIHR5cGUgPSAiSU5UMzIiKQpzY2ggPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGModmFsKSkKdGlsZWRiX2FycmF5X2NyZWF0ZSh0bXAsIHNjaCkKCmRhdCA8LSBtYXRyaXgoYXMuaW50ZWdlcihybm9ybSgyNSkqMTAwKSwgNSwgNSkKYXJyIDwtIHRpbGVkYl9kZW5zZSh0bXAsIGFzLmRhdGEuZnJhbWU9RkFMU0UpCmFycltdIDwtIGRhdAoKCiMgUHJlcGFyZSBhIDJ4MyBkZW5zZSBhcnJheQojIENvbnRyYXJ5IHRvIFB5dGhvbiwgUiBieSBkZWZhdWx0IHN0b3JlcyBhcnJheXMgaW4gY29sLW1ham9yIG9yZGVyCmRhdGEgPC0gIGFycmF5KGMoMUwsIDRMLCAyTCwgNUwsIDNMLCA2TCksIGRpbT1jKDIsMykpCgojIFByZXBhcmUgdGhlIFsxLDJdIHggWzIsNF0gc3ViYXJyYXkgdG8gd3JpdGUgdG8KSSA8LSBjKDE6MikKSiA8LSBjKDI6NCkKCiMgT3BlbiB0aGUgYXJyYXkgYW5kIHdyaXRlIHRoZSBkYXRhIHRvIGl0CkEgPC0gdGlsZWRiX2RlbnNlKHVyaSA9IHRtcCkKQVtJLCBKXSA8LSBkYXRhCgp1bmxpbmsodG1wLCByZWN1cnNpdmU9VFJVRSkKYGBgCgoKIyMjIyBCYXNpYyBXcml0aW5nIHVzaW5nIExvdy1MZXZlbCBDb2RlCgpgYGB7ciBiYXNpc2N3cml0aW5nbG93bGV2ZWx9CmN0eCA8LSB0aWxlZGJfY3R4KCkKYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlLCAiV1JJVEUiKQoKIyMgZGF0YTogc2ltcGxlIChpbnRlZ2VyIHNlcXVlbmNlKSBvZiAxOjE2IHRpbWVzIDEwCnZlYyA8LSAxOjE2ICogMTBMCnN1YmFyciA8LSBjKDFMLDRMLCAxTCw0TCkKCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnkoY3R4QHB0ciwgYXJycHRyLCAiV1JJVEUiKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9zdWJhcnJheShxcnlwdHIsIHN1YmFycikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfbGF5b3V0KHFyeXB0ciwgIlJPV19NQUpPUiIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2J1ZmZlcihxcnlwdHIsICJhIiwgdmVjKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3N1Ym1pdChxcnlwdHIpCnJlcyA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY2xvc2UoYXJycHRyKQpgYGAKCgojIyMgV3JpdGluZyBTcGFyc2UgQ2VsbHMKCmBgYHtyIHdyaXRlc3BhcnNlY2VsbHN9CnRtcCA8LSB1cmlzcGFyc2UKdW5saW5rKHRtcCwgcmVjdXJzaXZlPVRSVUUpCgpkMSAgPC0gdGlsZWRiX2RpbShkb21haW4gPSBjKDFMLCA1TCkpCmQyICA8LSB0aWxlZGJfZGltKGRvbWFpbiA9IGMoMUwsIDVMKSkKZG9tIDwtIHRpbGVkYl9kb21haW4oYyhkMSwgZDIpKQp2YWwgPC0gdGlsZWRiX2F0dHIoInZhbCIsIHR5cGUgPSAiSU5UMzIiKQpzY2ggPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGModmFsKSwgc3BhcnNlPVRSVUUpCnRpbGVkYl9hcnJheV9jcmVhdGUodG1wLCBzY2gpCgoKIyBQcmVwYXJlIHNvbWUgZGF0YQpkYXRhIDwtIGMoM0wsIDRMLCAxTCwgMkwpCgpJIDwtIGMoMywgNCwgMSwgMikKSiA8LSBjKDMsIDQsIDIsIDEpCgojIE9wZW4gdGhlIGFycmF5IGFuZCB3cml0ZSB0aGUgZGF0YSB0byBpdApBIDwtIHRpbGVkYl9zcGFyc2UodXJpID0gdG1wKQpBW0ksIEpdIDwtIGRhdGEKCmBgYAoKCiMjIyBXcml0aW5nIEVuY3J5cHRlZCBBcnJheXMKCmBgYHtyIHdyaXRpbmdlbmNyeXB0ZWRsb3dsZXZlbH0KY3R4IDwtIHRpbGVkYl9jdHgoKQphcnJwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X29wZW5fd2l0aF9rZXkoY3R4QHB0ciwgdXJpZGVuc2V3a2V5LCAiV1JJVEUiLCBlbmNyeXB0aW9uX2tleSkKCiMjIGRhdGE6IHNpbXBsZSAoaW50ZWdlciBzZXF1ZW5jZSkgb2YgMToxNiB0aW1lcyAxMAp2ZWMgPC0gMToxNiAqIDEwTApzdWJhcnIgPC0gYygxTCw0TCwgMUwsNEwpCgpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgIldSSVRFIikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfc3ViYXJyYXkocXJ5cHRyLCBzdWJhcnIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2xheW91dChxcnlwdHIsICJST1dfTUFKT1IiKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCAiYSIsIHZlYykKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKQpyZXMgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cikKIyBUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnQKCmBgYAoKCgoKIyMjIEZpeGVkLWxlbmd0aCBBdHRyaWJ1dGVzCgpgYGB7ciBmaXhlZGxlbmd0aGF0dHJpYnV0ZXN9CmlmIChkaXIuZXhpc3RzKHVyaWRlbnNlZml4KSkgdW5saW5rKHVyaWRlbnNlZml4LCByZWN1cnNpdmU9VFJVRSkKZDEgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNEwpKQpkMiAgPC0gdGlsZWRiX2RpbShkb21haW4gPSBjKDFMLCA0TCkpCmRvbSA8LSB0aWxlZGJfZG9tYWluKGMoZDEsIGQyKSkKCnZlYyA8LSAxOjMyICogMTBMCmF0dHIgPC0gdGlsZWRiX2F0dHIoImEiLCB0eXBlID0gcl90b190aWxlZGJfdHlwZSh2ZWMpKQoKIyMgc2V0IHRvIHR3byB2YWx1ZXMgcGVyIGNlbGwKdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCAyKQpzY2ggPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGMoYXR0cikpCnRpbGVkYl9hcnJheV9jcmVhdGUodXJpZGVuc2VmaXgsIHNjaCkKCmN0eCA8LSB0aWxlZGJfY3R4KCkKYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlZml4LCAiV1JJVEUiKQpzdWJhcnIgPC0gYygxTCw0TCwgMUwsNEwpCgpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgIldSSVRFIikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfc3ViYXJyYXkocXJ5cHRyLCBzdWJhcnIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2xheW91dChxcnlwdHIsICJST1dfTUFKT1IiKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCAiYSIsIHZlYykKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKQpyZXMgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cikKCiNUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnQKYGBgCgojIyMgVmFyLWxlbmd0aCBBdHRyaWJ1dGVzCgpgYGB7cn0KICAjIyBEZWZpbmUgYXJyYXkKICAjIyBUaGUgYXJyYXkgd2lsbCBiZSA0eDQgd2l0aCBkaW1lbnNpb25zICJyb3dzIiBhbmQgImNvbHMiLCB3aXRoIGRvbWFpbiBbMSw0XS4KICBkb20gPC0gdGlsZWRiX2RvbWFpbihkaW1zID0gYyh0aWxlZGJfZGltKCJyb3dzIiwgYygxTCwgNEwpLCA0TCwgIklOVDMyIiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZWRiX2RpbSgiY29scyIsIGMoMUwsIDRMKSwgNEwsICJJTlQzMiIpKSkKCgogIGF0dHIgPC0gdGlsZWRiX2F0dHIoImExIiwgdHlwZSA9ICJDSEFSIikKICAjIyBzZXQgdG8gdmFyaWFibGUgbGVuZ3RoCiAgdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCBOQSkKCiAgIyMgbm93IHNldCB0aGUgc2NoZW1hCiAgY3R4IDwtIHRpbGVkYl9jdHgoKQogIHNjaHB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX2NyZWF0ZShjdHhAcHRyLCAiREVOU0UiKQogIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfc2V0X2RvbWFpbihzY2hwdHIsIGRvbUBwdHIpCiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9zZXRfY2VsbF9vcmRlcihzY2hwdHIsICJST1dfTUFKT1IiKQogIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfc2V0X3RpbGVfb3JkZXIoc2NocHRyLCAiUk9XX01BSk9SIikKICB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX2FkZF9hdHRyaWJ1dGUoc2NocHRyLCBhdHRyQHB0cikKCgoKICAjIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay4KICB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY3JlYXRlKGFycmF5X25hbWUsIHNjaHB0cikKCiAgZGF0YSA8LSAiYWJiY2NjZGRlZWVmZ2hoaGlqampra2xtbm9vcCI7CiAgb2Zmc2V0cyA8LSBjKDBMLCAxTCwgM0wsIDZMLCA4TCwgMTFMLCAxMkwsIDEzTCwgMTZMLCAxN0wsIDIwTCwgMjJMLCAyM0wsIDI0TCwgMjVMLCAyN0wpCgogIGN0eCA8LSB0aWxlZGJfY3R4KCkKICBhcnJwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X29wZW4oY3R4QHB0ciwgYXJyYXlfbmFtZSwgIldSSVRFIikKICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgIldSSVRFIikKICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9sYXlvdXQocXJ5cHRyLCAiUk9XX01BSk9SIikKCiAgYnVmcHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9idWZmZXJfdmFyX3N0cmluZ19hc3NpZ24ob2Zmc2V0cywgZGF0YSkKICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXJfdmFyX3N0cmluZ19mcm9tX2J1ZmZlcihxcnlwdHIsICJhMSIsIGJ1ZnB0cikKICBxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3N1Ym1pdChxcnlwdHIpCiAgdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cikKCiNUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnQKYGBgCgoKIyMjIEdldHRpbmcgdGhlIEZyYWdtZW50IEluZm8KClRPRE8gUiBzdXBwb3J0CgoKIyMgUmVhZGluZyBBcnJheXMKCiMjIyBSZWFkaW5nIHRoZSBBcnJheSBTY2hlbWEKCmBgYHtyIHNjaGVtYWxvYWR9CmFycmF5X25hbWUgPC0gdXJpc3BhcnNlCkEgPC0gdGlsZWRiX3NwYXJzZSh1cmkgPSBhcnJheV9uYW1lKQojIGNhbiBhbHNvIGxvYWQgZGVuc2UKc2NoIDwtIHNjaGVtYShBKQojIGNhbiBhbHNvIG9wZW4gZW5jcnlwdGVkIGFycmF5cyB3aXRoIGtleQpgYGAKCiMjIyMgSW5zcGVjdGluZyB0aGUgYXJyYXkgc2NoZW1hCgpgYGB7ciBzY2hlbWFpbnNwZWN0fQphcnJheV9uYW1lIDwtIHVyaXNwYXJzZQoKIyBHZXQgYXJyYXkgc2NoZW1hCkEgPC0gdGlsZWRiX3NwYXJzZSh1cmkgPSBhcnJheV9uYW1lKQojIG9yIHVzZSB0aWxlZGJfZGVuc2UodXJpID0gYXJyYXlfbmFtZSkgZm9yIGRlbnNlCnNjaGVtYSA8LSBzY2hlbWEoQSkKCiMgR2V0IGFycmF5IHR5cGUKc3BhcnNlIDwtIGlzLnNwYXJzZShzY2hlbWEpCgojIEdldCB0aWxlIGNhcGFjaXR5CnRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfZ2V0X2NhcGFjaXR5KHNjaEBwdHIpCiMgVE9ETzogUiBhY2Nlc3NvciBmb3IgdGlsZQoKIyBHZXQgdGlsZSBvcmRlcgp0X29yZGVyIDwtIHRpbGVfb3JkZXIoc2NoZW1hKQoKIyBHZXQgY2VsbCBvcmRlcgpjX29yZGVyIDwtIGNlbGxfb3JkZXIoc2NoZW1hKQoKIyBHZXQgY29vcmRpbmF0ZXMgYW5kIG9mZnNldCBmaWx0ZXIgbGlzdApyZXNsaXN0IDwtIGZpbHRlcl9saXN0KHNjaGVtYSkKCiMgR2V0IHRoZSBhcnJheSBkb21haW4KZG9tIDwtIGRvbWFpbihzY2hlbWEpCgojIEdldCBhbGwgYXR0cmlidXRlcyBhcyBsaXN0CmF0dHJzIDwtIGF0dHJzKHNjaGVtYSkKCiMgR2V0IGF0dHJpYnV0ZSBmcm9tIG5hbWUKYXR0ciA8LSBhdHRycyhzY2hlbWEsICJhdHRyIikKCiMgRHVtcCB0aGUgYXJyYXkgc2NoZW1hIGluIEFTQ0lJIGZvcm1hdCB0byBzdGRvdXQKc2hvdyhzY2hlbWEpCmBgYAoKCiMjIyMgSW5zcGVjdGluZyBEb21haW4KCmBgYHtyIGluc3BlY3Rkb21haW59CiMgLi4uIGdldCBhcnJheSBzY2hlbWEKIyAuLi4gZ2V0IGRvbWFpbiBmcm9tIHNjaGVtYQpkb20gPC0gZG9tYWluKHNjaGVtYSkKCiMgR2V0IHRoZSBkb21haW4gZGF0YXR5cGUgKGkuZS4sIHRoZSBkYXRhdHlwZSBvZiBhbGwgZGltZW5zaW9ucykKdHlwZSA8LSBkYXRhdHlwZShkb20pCgojIEdldCBudW1iZXIgb2YgZGltZW5zaW9ucwpkaW1fbnVtIDwtIGRpbShkb20pCgojIEdldCBhbGwgZGltZW5zaW9uCmRpbXMgPC0gZGltZW5zaW9ucyhkb20pCgojIER1bXAgdGhlIGRvbWFpbiBpbiBBU0NJSSBmb3JtYXQgaW4gdGhlIHNlbGVjdGVkIG91dHB1dApzaG93KGRvbSkKYGBgCgojIyMjIEluc3BlY3RpbmcgRGltZW5zaW9ucwoKYGBge3IgaW5zcGVjdGRpbWVuc2lvbnMsIGV2YWw9RkFMU0V9CiMgLi4uIGdldCBhcnJheSBzY2hlbWEKIyAuLi4gZ2V0IGRvbWFpbgojIC4uLiBnZXQgZGltZW5zaW9uIGJ5IGluZGV4IG9yIG5hbWUKCiNGSVhNRQoKIyBHZXQgZGltZW5zaW9uIG5hbWUKZGltX25hbWUgPC0gbmFtZShkaW0pCgojIEdldCBkaW1lbnNpb24gZGF0YXR5cGUKZGltX3R5cGUgPC0gZGF0YXR5cGUoZGltKQoKIyBHZXQgZGltZW5zaW9uIGRvbWFpbgpkb21haW4gPC0gZG9tYWluKGRpbSkKCiMgR2V0IHRpbGUgZXh0ZW50CnRpbGVfZXh0ZW50IDwtIHRpbGUoZGltKQoKIyBEdW1wIHRoZSBkaW1lbnNpb24gaW4gQVNDSUkgZm9ybWF0IGluIHRoZSBzZWxlY3RlZCBvdXRwdXQKc2hvdyhkaW0pCgpgYGAKCgojIyMjIEluc3BlY3RpbmcgQXR0cmlidXRlcwoKYGBge3IgaW5zcGVjdGF0dHIsIGV2YWw9RkFMU0V9CiMgLi4uIGdldCBhcnJheSBzY2hlbWEKIyAuLi4gZ2V0IGF0dHJpYnV0ZSBieSBpbmRleCBvciBuYW1lCgpzdG9waWZub3QoaXMubnVsbChhdHRyKSkKIyBHZXQgYXR0cmlidXRlIG5hbWUKYXR0cl9uYW1lIDwtIG5hbWUoYXR0cikKCiMgR2V0IGF0dHJpYnV0ZSBkYXRhdHlwZQphdHRyX3R5cGUgPC0gZGF0YXR5cGUoYXR0cikKCiMgR2V0IGZpbHRlciBsaXN0CmZpbHRlcl9saXN0IDwtIGZpbHRlcl9saXN0KGF0dHIpCgojIENoZWNrIGlmIGF0dHJpYnV0ZSBpcyB2YXJpYWJsZS1sZW5ndGgKIyB2YXJpYWJsZSBsZW5ndGggYXR0cmlidHVlcyBhcmUgbm90IHN1cHBvcnRlZCBpbiBSIGN1cnJlbnRseQoKIyBHZXQgbnVtYmVyIG9mIHZhbHVlcyBwZXIgY2VsbApudW0gPC0gbmNlbGxzKGF0dHIpCgojIEdldCBjZWxsIHNpemUgZm9yIHRoaXMgYXR0cmlidXRlCiMgVE9ETzogbm90IHN1cHBvcnRkZWQgeWV0CgojIER1bXAgdGhlIGF0dHJpYnV0ZSBpbiBBU0NJSSBmb3JtYXQgaW4gdGhlIHNlbGVjdGVkIG91dHB1dApzaG93KGF0dHIpCmBgYAoKCgojIyMjIEluc3BlY3RpbmcgRmlsdGVycwoKYGBge3IgaW5zcGVjdGZpbHRlcnMsIGV2YWw9RkFMU0V9CmZsIDwtIHRpbGVkYl9maWx0ZXJfbGlzdCgpCgojIGdldCBudW1iZXIgb2YgZmlsdGVyCnRpbGVkYjo6OmxpYnRpbGVkYl9maWx0ZXJfbGlzdF9nZXRfbmZpbHRlcnMoZmxAcHRyKQoKIyBnZXQgbWF4IGNodW5rIHNpemUKdGlsZWRiOjo6bGlidGlsZWRiX2ZpbHRlcl9saXN0X2dldF9tYXhfY2h1bmtfc2l6ZShmbEBwdHIpCgojIGdldCBmaWx0ZXIgZnJvbSBpbmRleAppbmQgPC0gaQp0aWxlZGI6OjpsaWJ0aWxlZGJfZmlsdGVyX2xpc3RfZ2V0X2ZpbHRlcl9mcm9tX2luZGV4KGZsQHB0ciwgaW5kKQpgYGAKCiMjIyBCYXNpYyBSZWFkaW5nCgpgYGB7ciBiYXNpc2NyZWFkaW5nfQojIENyZWF0ZSBhIFRpbGVEQiBjb250ZXh0CmN0eCA8LSB0aWxlZGJfY3R4KCkKCiMgT3BlbiBhIGRlbnNlIGFycmF5CkEgPC0gdGlsZWRiX2RlbnNlKHVyaSA9IHVyaWRlbnNlLCBjdHg9Y3R4KQoKIyBPciwgb3BlbiBhIHNwYXJzZSBhcnJheQojIEEgPC0gdGlsZWRiX3NwYXJzZSh1cmkgPSAiPGFycmF5LXVyaT4iLCBjdHg9Y3R4KQoKIyBTbGljZSBvbmx5IHJvd3MgMSwgMiBhbmQgY29scyAyLCAzLCA0CmRhdGEgPC0gQVsxOjIsIDI6NF0Kc2hvdyhkYXRhKQpgYGAKCiMjIyMgQmFzaWMgUmVhZGluZyB1c2luZyBMb3ctTGV2ZWwgQ29kZQoKYGBge3IgYmFzaXNjcmVhZGluZ2xvd2xldmVsfQpjdHggPC0gdGlsZWRiX2N0eCgpCmFycnB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfb3BlbihjdHhAcHRyLCB1cmlkZW5zZSwgIlJFQUQiKQojIyBzdWJhcnJheSBvZiByb3dzIDEsMiBhbmQgY29scyAyLDMsNApzdWJhcnIgPC0gYygxTCwyTCwgMkwsNEwpCgpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgIlJFQUQiKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9zdWJhcnJheShxcnlwdHIsIHN1YmFycikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfbGF5b3V0KHFyeXB0ciwgIlJPV19NQUpPUiIpCnYgPC0gaW50ZWdlcig2KSAgIyByZXNlcnZlIHNwYWNlCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2J1ZmZlcihxcnlwdHIsICJhIiwgdikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKQpwcmludCh2KSAgICAgICAgICMgdW5mb3JtZWQgYXJyYXksIG5vIGNvb3JkaW5hdGVzCnJlcyA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY2xvc2UoYXJycHRyKQpgYGAKCiMjIyBSZWFkaW5nIEVuY3J5cHRlZCBBcnJheXMKIyMjIE11bHRpLXJhbmdlIFN1YmFycmF5cwojIyMgSW5jb21wbGV0ZSBRdWVyaWVzCiMjIyBSZXN1bHQgRXN0aW1hdGlvbgojIyMgVGltZSBUcmF2ZWxpbmcKCiMjIEVtYmVkZGVkIFNRTAoKIyMgQXN5bmNocm9ub3VzIFF1ZXJpZXMKCiMjIENvbmZpZ3VyYXRpb24KCiMjIEFycmF5IE1ldGFkYXRhCgojIyMgV3JpdGluZyBBcnJheSBNZXRhZGF0YQoKYGBge3Igd3JpdGVtZXRhZGF0YX0KcmVzIDwtIHRpbGVkYl9wdXRfbWV0YWRhdGEodXJpZGVuc2UsICJhYWEiLCAxMDBMKQpyZXMgPC0gdGlsZWRiX3B1dF9tZXRhZGF0YSh1cmlkZW5zZSwgImJiIiwgYygxLjEsIDIuMikpCmBgYAoKIyMjIFJlYWRpbmcgQXJyYXkgTWV0YWRhdGEKCk9uZSBjYW4gcmVhZCBieSBrZXk6CgpgYGB7ciByZWFkbWV0YWRhdGF9CnRpbGVkYl9nZXRfbWV0YWRhdGEodXJpZGVuc2UsICJhYWEiKQpgYGAKCk9yIG9uZSBjYW4gcmV0cmlldmUgYWxsIG1ldGFkYXRhIGF0IG9uY2U6CgpgYGB7ciByZWFkbWV0YWRhdGFhbGx9Cm1kIDwtIHRpbGVkYl9nZXRfYWxsX21ldGFkYXRhKHVyaWRlbnNlKQpwcmludChtZCkKYGBgCgojIyMgRGVsZXRpbmcgQXJyYXkgTWV0YWRhdGEKCmBgYHtyIGRlbGV0ZW1ldGFkYXRhfQpyZXMgPC0gdGlsZWRiX2RlbGV0ZV9tZXRhZGF0YSh1cmlkZW5zZSwgImFhYSIpCmBgYAo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiVGlsZURCIFIgTm90ZWJvb2siCm91dHB1dDoKICBodG1sX2RvY3VtZW50OgogICAgdG9jOiB5ZXMKICAgIGRmX3ByaW50OiBwYWdlZAogIGh0bWxfbm90ZWJvb2s6CiAgICB0b2M6IHllcwogICAgaGlnaGxpZ2h0OiBweWdtZW50cwogICAgdGhlbWU6IGx1bWVuCi0tLQoKPCEtLVRoaXMgaXMgYW4gW1IgTWFya2Rvd25dKGh0dHA6Ly9ybWFya2Rvd24ucnN0dWRpby5jb20pIE5vdGVib29rLiBXaGVuIHlvdSBleGVjdXRlIGNvZGUgd2l0aGluIHRoZSBub3RlYm9vaywgdGhlIHJlc3VsdHMgYXBwZWFyIGJlbmVhdGggdGhlIGNvZGUuICBUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ3RybCtTaGlmdCtFbnRlciouICAgQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkN0cmwrQWx0K0kqLgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4gIFRoZSBwcmV2aWV3IHNob3dzIHlvdSBhIHJlbmRlcmVkIEhUTUwgY29weSBvZiB0aGUgY29udGVudHMgb2YgdGhlIGVkaXRvci4gQ29uc2VxdWVudGx5LCB1bmxpa2UgKktuaXQqLCAqUHJldmlldyogZG9lcyBub3QgcnVuIGFueSBSIGNvZGUgY2h1bmtzLiBJbnN0ZWFkLCB0aGUgb3V0cHV0IG9mIHRoZSBjaHVuayB3aGVuIGl0IHdhcyBsYXN0IHJ1biBpbiB0aGUgZWRpdG9yIGlzIGRpc3BsYXllZC4tLT4KCiMgUHJlbGltYXJpZXMKCldlIHdpbGwgdGhlIHR3byBiYXNpYyBleGFtcGxlcyBmb3IgYSBkZW5zZSBhbmQgc3BhcnNlIGFycmF5IHNpbXBseSB0byBjcmVhdGUKYXJyYXkgZGF0YSBvbiBkaXNrIHRvIHJlZmVyIHRvIGxhdGVyIGluIGV4YW1wbGVzIHRoYXQgZm9sbG93LgoKYGBge3IgcnVuZXhhbXBsZXN9CmxpYnJhcnkodGlsZWRiKQoKdGRpciA8LSB0ZW1wZGlyKCkKdXJpZGVuc2UgPC0gZmlsZS5wYXRoKHRkaXIsICJkZW5zZSIpCnVyaWRlbnNlZml4IDwtIGZpbGUucGF0aCh0ZGlyLCAiZGVuc2VmaXgiKQp1cmlkZW5zZXZhciA8LSBmaWxlLnBhdGgodGRpciwgImRlbnNldmFyIikKCmNyZWF0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7CiAgICAjIENoZWNrIGlmIHRoZSBhcnJheSBhbHJlYWR5IGV4aXN0cy4KICAgIGlmICh0aWxlZGJfb2JqZWN0X3R5cGUoYXJyYXlfbmFtZSkgPT0gIkFSUkFZIikgewogICAgICAgIG1lc3NhZ2UoIkFycmF5IGFscmVhZHkgZXhpc3RzLiIpCiAgICAgICAgcmV0dXJuKGludmlzaWJsZShOVUxMKSkKICAgIH0KCiAgICAjIFRoZSBhcnJheSB3aWxsIGJlIDR4NCB3aXRoIGRpbWVuc2lvbnMgInJvd3MiIGFuZCAiY29scyIsIHdpdGggZG9tYWluIFsxLDRdLgogICAgZG9tIDwtIHRpbGVkYl9kb21haW4oZGltcyA9IGModGlsZWRiX2RpbSgicm93cyIsIGMoMUwsIDRMKSwgNEwsICJJTlQzMiIpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZWRiX2RpbSgiY29scyIsIGMoMUwsIDRMKSwgNEwsICJJTlQzMiIpKSkKCiAgICAjIFRoZSBhcnJheSB3aWxsIGJlIGRlbnNlIHdpdGggYSBzaW5nbGUgYXR0cmlidXRlICJhIiBzbyBlYWNoIChpLGopIGNlbGwgY2FuIHN0b3JlIGFuIGludGVnZXIuCiAgICBzY2hlbWEgPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGF0dHJzID0gYyh0aWxlZGJfYXR0cigiYSIsIHR5cGUgPSAiSU5UMzIiKSkpCgogICAgIyBDcmVhdGUgdGhlIChlbXB0eSkgYXJyYXkgb24gZGlzay4KICAgIHRpbGVkYl9hcnJheV9jcmVhdGUoYXJyYXlfbmFtZSwgc2NoZW1hKQp9Cgp3cml0ZV9hcnJheSA8LSBmdW5jdGlvbihhcnJheV9uYW1lKSB7CiAgICBkYXRhIDwtIGFycmF5KGMoYygxTCwgNUwsIDlMLCAxM0wpLAogICAgICAgICAgICAgICAgICAgIGMoMkwsIDZMLCAxMEwsIDE0TCksCiAgICAgICAgICAgICAgICAgICAgYygzTCwgN0wsIDExTCwgMTVMKSwKICAgICAgICAgICAgICAgICAgICBjKDRMLCA4TCwgMTJMLCAxNkwpKSwgZGltID0gYyg0LDQpKQogICAgIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdG8gaXQuCiAgICBBIDwtIHRpbGVkYl9kZW5zZSh1cmkgPSBhcnJheV9uYW1lKQogICAgQVtdIDwtIGRhdGEKfQoKY3JlYXRlX2FycmF5KHVyaWRlbnNlKQp3cml0ZV9hcnJheSh1cmlkZW5zZSkKCgp1cmlzcGFyc2UgPC0gZmlsZS5wYXRoKHRkaXIsICJzcGFyc2UiKQoKY3JlYXRlX2FycmF5IDwtIGZ1bmN0aW9uKGFycmF5X25hbWUpIHsKICAgICMgQ2hlY2sgaWYgdGhlIGFycmF5IGFscmVhZHkgZXhpc3RzLgogICAgaWYgKHRpbGVkYl9vYmplY3RfdHlwZShhcnJheV9uYW1lKSA9PSAiQVJSQVkiKSB7CiAgICAgICAgbWVzc2FnZSgiQXJyYXkgYWxyZWFkeSBleGlzdHMuIikKICAgICAgICByZXR1cm4oaW52aXNpYmxlKE5VTEwpKQogICAgfQoKICAgICMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyAicm93cyIgYW5kICJjb2xzIiwgd2l0aCBkb21haW4gWzEsNF0uCiAgICBkb20gPC0gdGlsZWRiX2RvbWFpbihkaW1zID0gYyh0aWxlZGJfZGltKCJyb3dzIiwgYygxTCwgNEwpLCA0TCwgIklOVDMyIiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aWxlZGJfZGltKCJjb2xzIiwgYygxTCwgNEwpLCA0TCwgIklOVDMyIikpKQoKICAgIyBUaGUgYXJyYXkgd2lsbCBiZSBkZW5zZSB3aXRoIGEgc2luZ2xlIGF0dHJpYnV0ZSAiYSIgc28gZWFjaCAoaSxqKSBjZWxsIGNhbiBzdG9yZSBhbiBpbnRlZ2VyLgogICAgc2NoZW1hID0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGF0dHJzPWModGlsZWRiX2F0dHIoImEiLCB0eXBlID0gIklOVDMyIikpLCBzcGFyc2UgPSBUUlVFKQoKICAgICMgQ3JlYXRlIHRoZSAoZW1wdHkpIGFycmF5IG9uIGRpc2suCiAgICB0aWxlZGJfYXJyYXlfY3JlYXRlKGFycmF5X25hbWUsIHNjaGVtYSkKfQoKd3JpdGVfYXJyYXkgPC0gZnVuY3Rpb24oYXJyYXlfbmFtZSkgewogICAgSSA8LSBjKDEsIDIsIDIpCiAgICBKIDwtIGMoMSwgNCwgMykKICAgIGRhdGEgPC0gYygxTCwgMkwsIDNMKQogICAgIyBPcGVuIHRoZSBhcnJheSBhbmQgd3JpdGUgdG8gaXQuCiAgICBBIDwtIHRpbGVkYl9zcGFyc2UodXJpID0gYXJyYXlfbmFtZSkKICAgIEFbSSwgSl0gPC0gZGF0YQp9CgpjcmVhdGVfYXJyYXkodXJpc3BhcnNlKQp3cml0ZV9hcnJheSh1cmlzcGFyc2UpCgpgYGAKCgoKIyBBUEkgVXNhZ2UKCiMjIENyZWF0aW5nIEFycmF5cwoKIyMjIENyZWF0ZSBEaW1lbnNpb24KCmBgYHtyIGNyZWF0ZWRpbX0KbGlicmFyeSh0aWxlZGIpCgojIENyZWF0ZSBkaW1lbnNpb24KIyBJbiBDKys6IERpbWVuc2lvbjo6Y3JlYXRlPFQ+KC4uLikKZGltIDwtIHRpbGVkYl9kaW0oImRpbSIsIGMoMUwsIDRMKSwgMkwsICJJTlQzMiIpCmBgYAoKCiMjIyBDcmVhdGUgQXJyYXkgRG9tYWluCgpgYGB7ciBjcmVhdGFycmRvbX0KbGlicmFyeSh0aWxlZGIpCgojICAuLiBjcmVhdGUgZGltZW5zaW9ucyBgZGltMWAsIGBkaW0yYApkaW0xIDwtIHRpbGVkYl9kaW0oImRpbTEiLCBjKDFMLCA0TCksIDJMLCAiSU5UMzIiKQpkaW0yIDwtIHRpbGVkYl9kaW0oImRpbTIiLCBjKDFMLCAyTCksIDJMLCAiSU5UMzIiKQoKIyBDcmVhdGUgZG9tYWluIHdpdGggdHdvIGRpbWVuc2lvbnMKIyBJbiBDKys6IGRvbWFpbi5hZGRfZGltZW5zaW9ucyhkaW0xKS5hZGRfZGltZW5zaW9uKGRpbTIpCmRvbSA8LSB0aWxlZGJfZG9tYWluKGRpbXMgPSBjKGRpbTEsIGRpbTIpKQpgYGAKCiMjIyBDcmVhdGluZyBBdHRyaWJ1dGVzCgpgYGB7ciBjcmVhdGVhdHRyfQojIENyZWF0ZSBhdHRyaWJ1dGUKIyBJbiBDKys6IEF0dHJpYnV0ZTo6Y3JlYXRlPFQ+KGN0eCwgImF0dHIiKQphdHRyIDwtIHRpbGVkYl9hdHRyKCJhdHRyIiwgIklOVDMyIikKYGBgCgpgYGB7ciBjcmVhdGVhdHRydmFybnVtfQojIFdlIGNhbiBhbHNvIHNldCB0aGUgbnVtYmVyIG9mIGF0dHJpYnV0ZXMgdG8gYSB2YWx1ZSBvdGhlciB0aGFuIG9uZQp0aWxlZGI6OjpsaWJ0aWxlZGJfYXR0cmlidXRlX3NldF9jZWxsX3ZhbF9udW0oYXR0ckBwdHIsIDMpCgojIEFuZCB3ZSBjYW4gc2V0IHRoZSBhIHZhcmlhYmxlIG51bWJlciBvZiBhdHRyaWJ1dGVzICh1c2luZyBOQSB0byBzZWxlY3QgdmFyaWFibGUgc2l6ZSkKdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCBOQSkKIyMgVE9ETzogUiBmdW5jdGlvbiBmb3IgbGV2ZWwgc2V0dGVyCmBgYAoKIyMjIyBTZXR0aW5nIGEgQ29tcHJlc3NvcgoKYGBge3Igc2V0Y29tcHJ9CmNvbXAgPC0gdGlsZWRiX2ZpbHRlcigiR1pJUCIpCnRpbGVkYl9maWx0ZXJfc2V0X29wdGlvbihjb21wLCJDT01QUkVTU0lPTl9MRVZFTCIsIDEwKQoKIyBDcmVhdGUgYSBmaWx0ZXIgbGlzdCB3aXRoIHRoZSBjb21wcmVzc29yCmZpbHRlcl9saXN0IDwtIHRpbGVkYl9maWx0ZXJfbGlzdChjKGNvbXApKQoKIyBDcmVhdGUgYXR0cmlidXRlIHdpdGggdGhlIGZpbHRlciBsaXN0CmF0dHIgPC0gdGlsZWRiX2F0dHIoImF0dHIiLCAiSU5UMzIiLCBmaWx0ZXJfbGlzdCA9IGZpbHRlcl9saXN0KQpgYGAKCgojIyMjIFNldHRpbmcgT3RoZXIgRmlsdGVycwoKYGBge3Igc2V0Zmlscn0KIyBDcmVhdGUgZmlsdGVycwpmMSA8LSB0aWxlZGJfZmlsdGVyKCJCSVRfV0lEVEhfUkVEVUNUSU9OIikKZjIgPC0gdGlsZWRiX2ZpbHRlcigiWlNURCIpCgojIENyZWF0ZSBhIGZpbHRlciBsaXN0IHdpdGggdGhlIHR3byBmaWx0ZXJzCmZpbHRlcl9saXN0IDwtIHRpbGVkYl9maWx0ZXJfbGlzdChjKGYxLGYyKSkKCiMgQ3JlYXRlIGF0dHJpYnV0ZSB3aXRoIHRoZSBmaWx0ZXIgbGlzdAphdHRyIDwtIHRpbGVkYl9hdHRyKCJhdHRyIiwgIklOVDMyIiwgZmlsdGVyX2xpc3QgPSBmaWx0ZXJfbGlzdCkKYGBgCgoKIyMjIyBTZXR0aW5nIHRoZSBUaWxlIENodW5rIFNpemUKCmBgYHtyIHNldHRpbGVjaHVua3NpemV9CiMgLi4uIGNyZWF0ZSBmaWx0ZXIgbGlzdApzZXRfbWF4X2NodW5rX3NpemUoZmlsdGVyX2xpc3QsIDEwMDAwKQpgYGAKCgojIyMgQ3JlYXRpbmcgdGhlIEFycmF5IFNjaGVtYQoKYGBge3IgY3JlYXRlYXJyc2NoZW1hfQojIC4uLiBjcmVhdGUgZG9tYWluIGRvbQphdHRyMSA8LSB0aWxlZGJfYXR0cigiYXR0cjEiLCAiSU5UMzIiLCBmaWx0ZXJfbGlzdCA9IGZpbHRlcl9saXN0KQphdHRyMiA8LSB0aWxlZGJfYXR0cigiYXR0cjIiLCAiRkxPQVQ2NCIsIGZpbHRlcl9saXN0ID0gZmlsdGVyX2xpc3QpCgojIENyZWF0ZSBhIGRlbnNlIGFycmF5CnNjaGVtYSA8LSB0aWxlZGJfYXJyYXlfc2NoZW1hKGRvbSwgYyhhdHRyMSwgYXR0cjIpLCBzcGFyc2UgPSBGQUxTRSkKIyBPciwgY3JlYXRlIGEgc3BhZXNlIGFycmF5CiMgc2NoZW1hIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKGF0dHIxLCBhdHRyMiksIHNwYXJzZSA9IFRSVUUpCmBgYAoKIyMjIyBTZXR0aW5nIHRoZSBUaWxlIGFuZCBDZWxsIE9yZGVyCgpgYGB7ciBzZXR0aWxlY2VsbG9yZGVyfQojIC4uLiBjcmVhdGUgZG9tYWluIGRvbQojIC4uLiBjcmVhdGUgYXR0cmlidXRlcyBhdHRyMSwgYXR0cjIKCiMgVGhlIHRpbGUgYW5kIG9yZGVyIGNhbiBiZSAiUk9XX01BSk9SIiBvciAiQ09MX01BSk9SIgpzY2hlbWEgPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGMoYXR0cjEsIGF0dHIyKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2VsbF9vcmRlciA9ICJDT0xfTUFKT1IiLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aWxlX29yZGVyID0gIlJPV19NQUpPUiIpCmBgYAoKIyMjIyBTZXR0aW5nIHRoZSBEYXRhIFRpbGUgQ2FwYWNpdHkKCmBgYHtyIHNldHRpbGVjYXBhY2l0eX0KdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9zZXRfY2FwYWNpdHkoc2NoZW1hQHB0ciwgMTAwMDAwKQp0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX2dldF9jYXBhY2l0eShzY2hlbWFAcHRyKQojIyBUT0RPIFIgZnVuY3Rpb24gZm9yIGFjY2Vzc29yCmBgYAoKIyMjIyBTZXR0aW5nIENvb3JkaW5hdGUgYW5kIE9mZnNldCBGaWx0ZXJzCgpgYGB7ciBzZXRjb29yZG9mZnNldGZpbHR9CiMgLi4uIGNyZWF0ZSBkb21haW4gZG9tCiMgLi4uIGNyZWF0ZSBhdHRyaWJ1dGVzIGF0dHIxLCBhdHRyMgojIC4uLiBjcmVhdGUgZmlsdGVyIGxpc3RzIGZsMSwgZmwyLCBzaW1pbGFyIHRvIGF0dHJpYnV0ZXMKZjEgPC0gdGlsZWRiX2ZpbHRlcigiQklUX1dJRFRIX1JFRFVDVElPTiIpCmYyIDwtIHRpbGVkYl9maWx0ZXIoIlpTVEQiKQpmbDEgPC0gdGlsZWRiX2ZpbHRlcl9saXN0KGMoZjEpKQpmbDIgPC0gdGlsZWRiX2ZpbHRlcl9saXN0KGMoZjIpKQoKIyBDcmVhdGUgdGhlIHNjaGVtYSBzZXR0aW5nIHRoZSBjb29yZGluYXRlcyBhbmQgb2Zmc2V0cyBmaWx0ZXIgbGlzdHMKc2NoZW1hIDwtIHRpbGVkYl9hcnJheV9zY2hlbWEoZG9tLCBjKGF0dHIxLCBhdHRyMiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvb3Jkc19maWx0ZXJfbGlzdCA9IGZsMSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb2Zmc2V0c19maWx0ZXJfbGlzdCA9IGZsMikKYGBgCgoKIyMjIyBDaGVja2luZyBDb3JyZWN0bmVzcwoKYGBge3IgYXJyYXlzY2hlbWFjaGVja30KdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9jaGVjayhzY2hlbWFAcHRyKQojIyBUT0RPOiBSIGZ1bmN0aW9uIGZvciBhY2Nlc3MKYGBgCgoKCiMjIyBDcmVhdGluZyB0aGUgQXJyYXkKCmBgYHtyIGNyZWF0ZWFycmF5LCBldmFsPUZBTFNFfQojIC4uLiBjcmVhdGUgYXJyYXkgc2NoZW1hCgojIENyZWF0ZSB0aGUgYXJyYXkKdGlsZWRiX2FycmF5X2NyZWF0ZSh1cmlkZW5zZSwgc2NoZW1hKQpgYGAKCiMjIyBDcmVhdGluZyBFbmNyeXB0ZWQgQXJyYXlzCgpgYGB7ciBjcmVhdGV3aXRoa2V5fQplbmNyeXB0aW9uX2tleSA8LSAiMDEyMzQ1Njc4OWFiY2RlRjAxMjM0NTY3ODlhYmNkZUYiCnVyaWRlbnNld2tleSA8LSBmaWxlLnBhdGgodGRpciwgImRlbnNld2tleSIpCgojIHNob3J0Y3V0OiBib3Jyb3cgc2NoZW1hIGZyb20gZGVuc2UgYXJyYXk7IGNvdWxkIGNyZWF0ZSBzY2hlbWEgdG9vCnNjaGVtYSA8LSBzY2hlbWEodGlsZWRiX2RlbnNlKHVyaWRlbnNlKSkKdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2NyZWF0ZV93aXRoX2tleSh1cmlkZW5zZXdrZXksIHNjaGVtYUBwdHIsIGVuY3J5cHRpb25fa2V5KQojI1RPRE86IFIgc3VwcG9ydApgYGAKCgojIyBXcml0aW5nIEFycmF5cwoKIyMjIFdyaXRpbmcgaW4gRGVuc2UgU3ViYXJyYXlzCgpgYGB7ciB3cml0ZWRlbnNlc3ViYXJyLCBldmFsPUZBTFNFfQojIyBwcmVwYXJlIGEgbGFyZ2VyIDUgeCA1IHRvIGVtYmVkIGludG8KdG1wIDwtIHRlbXBmaWxlKCkKZDEgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNUwpKQpkMiAgPC0gdGlsZWRiX2RpbShkb21haW4gPSBjKDFMLCA1TCkpCmRvbSA8LSB0aWxlZGJfZG9tYWluKGMoZDEsIGQyKSkKdmFsIDwtIHRpbGVkYl9hdHRyKG5hbWU9InZhbCIsIHR5cGUgPSAiSU5UMzIiKQpzY2ggPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGModmFsKSkKdGlsZWRiX2FycmF5X2NyZWF0ZSh0bXAsIHNjaCkKCmRhdCA8LSBtYXRyaXgoYXMuaW50ZWdlcihybm9ybSgyNSkqMTAwKSwgNSwgNSkKYXJyIDwtIHRpbGVkYl9kZW5zZSh0bXAsIGFzLmRhdGEuZnJhbWU9RkFMU0UpCmFycltdIDwtIGRhdAoKCiMgUHJlcGFyZSBhIDJ4MyBkZW5zZSBhcnJheQojIENvbnRyYXJ5IHRvIFB5dGhvbiwgUiBieSBkZWZhdWx0IHN0b3JlcyBhcnJheXMgaW4gY29sLW1ham9yIG9yZGVyCmRhdGEgPC0gIGFycmF5KGMoMUwsIDRMLCAyTCwgNUwsIDNMLCA2TCksIGRpbT1jKDIsMykpCgojIFByZXBhcmUgdGhlIFsxLDJdIHggWzIsNF0gc3ViYXJyYXkgdG8gd3JpdGUgdG8KSSA8LSBjKDE6MikKSiA8LSBjKDI6NCkKCiMgT3BlbiB0aGUgYXJyYXkgYW5kIHdyaXRlIHRoZSBkYXRhIHRvIGl0CkEgPC0gdGlsZWRiX2RlbnNlKHVyaSA9IHRtcCkKQVtJLCBKXSA8LSBkYXRhCgp1bmxpbmsodG1wLCByZWN1cnNpdmU9VFJVRSkKYGBgCgoKIyMjIyBCYXNpYyBXcml0aW5nIHVzaW5nIExvdy1MZXZlbCBDb2RlCgpgYGB7ciBiYXNpc2N3cml0aW5nbG93bGV2ZWx9CmN0eCA8LSB0aWxlZGJfY3R4KCkKYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlLCAiV1JJVEUiKQoKIyMgZGF0YTogc2ltcGxlIChpbnRlZ2VyIHNlcXVlbmNlKSBvZiAxOjE2IHRpbWVzIDEwCnZlYyA8LSAxOjE2ICogMTBMCnN1YmFyciA8LSBjKDFMLDRMLCAxTCw0TCkKCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnkoY3R4QHB0ciwgYXJycHRyLCAiV1JJVEUiKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9zdWJhcnJheShxcnlwdHIsIHN1YmFycikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfbGF5b3V0KHFyeXB0ciwgIlJPV19NQUpPUiIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2J1ZmZlcihxcnlwdHIsICJhIiwgdmVjKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3N1Ym1pdChxcnlwdHIpCnJlcyA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY2xvc2UoYXJycHRyKQpgYGAKCgojIyMgV3JpdGluZyBTcGFyc2UgQ2VsbHMKCmBgYHtyIHdyaXRlc3BhcnNlY2VsbHN9CnRtcCA8LSB1cmlzcGFyc2UKdW5saW5rKHRtcCwgcmVjdXJzaXZlPVRSVUUpCgpkMSAgPC0gdGlsZWRiX2RpbShkb21haW4gPSBjKDFMLCA1TCkpCmQyICA8LSB0aWxlZGJfZGltKGRvbWFpbiA9IGMoMUwsIDVMKSkKZG9tIDwtIHRpbGVkYl9kb21haW4oYyhkMSwgZDIpKQp2YWwgPC0gdGlsZWRiX2F0dHIoInZhbCIsIHR5cGUgPSAiSU5UMzIiKQpzY2ggPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGModmFsKSwgc3BhcnNlPVRSVUUpCnRpbGVkYl9hcnJheV9jcmVhdGUodG1wLCBzY2gpCgoKIyBQcmVwYXJlIHNvbWUgZGF0YQpkYXRhIDwtIGMoM0wsIDRMLCAxTCwgMkwpCgpJIDwtIGMoMywgNCwgMSwgMikKSiA8LSBjKDMsIDQsIDIsIDEpCgojIE9wZW4gdGhlIGFycmF5IGFuZCB3cml0ZSB0aGUgZGF0YSB0byBpdApBIDwtIHRpbGVkYl9zcGFyc2UodXJpID0gdG1wKQpBW0ksIEpdIDwtIGRhdGEKCmBgYAoKCiMjIyBXcml0aW5nIEVuY3J5cHRlZCBBcnJheXMKCmBgYHtyIHdyaXRpbmdlbmNyeXB0ZWRsb3dsZXZlbH0KY3R4IDwtIHRpbGVkYl9jdHgoKQphcnJwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X29wZW5fd2l0aF9rZXkoY3R4QHB0ciwgdXJpZGVuc2V3a2V5LCAiV1JJVEUiLCBlbmNyeXB0aW9uX2tleSkKCiMjIGRhdGE6IHNpbXBsZSAoaW50ZWdlciBzZXF1ZW5jZSkgb2YgMToxNiB0aW1lcyAxMAp2ZWMgPC0gMToxNiAqIDEwTApzdWJhcnIgPC0gYygxTCw0TCwgMUwsNEwpCgpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgIldSSVRFIikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfc3ViYXJyYXkocXJ5cHRyLCBzdWJhcnIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2xheW91dChxcnlwdHIsICJST1dfTUFKT1IiKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCAiYSIsIHZlYykKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKQpyZXMgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cikKIyBUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnQKCmBgYAoKCgoKIyMjIEZpeGVkLWxlbmd0aCBBdHRyaWJ1dGVzCgpgYGB7ciBmaXhlZGxlbmd0aGF0dHJpYnV0ZXN9CmlmIChkaXIuZXhpc3RzKHVyaWRlbnNlZml4KSkgdW5saW5rKHVyaWRlbnNlZml4LCByZWN1cnNpdmU9VFJVRSkKZDEgIDwtIHRpbGVkYl9kaW0oZG9tYWluID0gYygxTCwgNEwpKQpkMiAgPC0gdGlsZWRiX2RpbShkb21haW4gPSBjKDFMLCA0TCkpCmRvbSA8LSB0aWxlZGJfZG9tYWluKGMoZDEsIGQyKSkKCnZlYyA8LSAxOjMyICogMTBMCmF0dHIgPC0gdGlsZWRiX2F0dHIoImEiLCB0eXBlID0gcl90b190aWxlZGJfdHlwZSh2ZWMpKQoKIyMgc2V0IHRvIHR3byB2YWx1ZXMgcGVyIGNlbGwKdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCAyKQpzY2ggPC0gdGlsZWRiX2FycmF5X3NjaGVtYShkb20sIGMoYXR0cikpCnRpbGVkYl9hcnJheV9jcmVhdGUodXJpZGVuc2VmaXgsIHNjaCkKCmN0eCA8LSB0aWxlZGJfY3R4KCkKYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlZml4LCAiV1JJVEUiKQpzdWJhcnIgPC0gYygxTCw0TCwgMUwsNEwpCgpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5KGN0eEBwdHIsIGFycnB0ciwgIldSSVRFIikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfc3ViYXJyYXkocXJ5cHRyLCBzdWJhcnIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2xheW91dChxcnlwdHIsICJST1dfTUFKT1IiKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9idWZmZXIocXJ5cHRyLCAiYSIsIHZlYykKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKQpyZXMgPC0gdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X2Nsb3NlKGFycnB0cikKCiNUT0RPIEhpZ2hlci1sZXZlbCBSIHN1cHBvcnQKYGBgCgojIyMgVmFyLWxlbmd0aCBBdHRyaWJ1dGVzCgpgYGB7cn0KaWYgKGRpci5leGlzdHModXJpZGVuc2V2YXIpKSB1bmxpbmsodXJpZGVuc2V2YXIsIHJlY3Vyc2l2ZT1UUlVFKQojIyBEZWZpbmUgYXJyYXkKIyMgVGhlIGFycmF5IHdpbGwgYmUgNHg0IHdpdGggZGltZW5zaW9ucyAicm93cyIgYW5kICJjb2xzIiwgd2l0aCBkb21haW4gWzEsNF0uCmRvbSA8LSB0aWxlZGJfZG9tYWluKGRpbXMgPSBjKHRpbGVkYl9kaW0oInJvd3MiLCBjKDFMLCA0TCksIDRMLCAiSU5UMzIiKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGlsZWRiX2RpbSgiY29scyIsIGMoMUwsIDRMKSwgNEwsICJJTlQzMiIpKSkKCgphdHRyIDwtIHRpbGVkYl9hdHRyKCJhMSIsIHR5cGUgPSAiQ0hBUiIpCiMjIHNldCB0byB2YXJpYWJsZSBsZW5ndGgKdGlsZWRiOjo6bGlidGlsZWRiX2F0dHJpYnV0ZV9zZXRfY2VsbF92YWxfbnVtKGF0dHJAcHRyLCBOQSkKCiMjIG5vdyBzZXQgdGhlIHNjaGVtYQpjdHggPC0gdGlsZWRiX2N0eCgpCnNjaHB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX2NyZWF0ZShjdHhAcHRyLCAiREVOU0UiKQp0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX3NldF9kb21haW4oc2NocHRyLCBkb21AcHRyKQp0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfc2NoZW1hX3NldF9jZWxsX29yZGVyKHNjaHB0ciwgIlJPV19NQUpPUiIpCnRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9zY2hlbWFfc2V0X3RpbGVfb3JkZXIoc2NocHRyLCAiUk9XX01BSk9SIikKdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9hZGRfYXR0cmlidXRlKHNjaHB0ciwgYXR0ckBwdHIpCgoKCiMjIENyZWF0ZSB0aGUgKGVtcHR5KSBhcnJheSBvbiBkaXNrLgp0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY3JlYXRlKHVyaWRlbnNldmFyLCBzY2hwdHIpCgpkYXRhIDwtICJhYmJjY2NkZGVlZWZnaGhoaWpqamtrbG1ub29wIjsKb2Zmc2V0cyA8LSBjKDBMLCAxTCwgM0wsIDZMLCA4TCwgMTFMLCAxMkwsIDEzTCwgMTZMLCAxN0wsIDIwTCwgMjJMLCAyM0wsIDI0TCwgMjVMLCAyN0wpCgpjdHggPC0gdGlsZWRiX2N0eCgpCmFycnB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfb3BlbihjdHhAcHRyLCB1cmlkZW5zZXZhciwgIldSSVRFIikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeShjdHhAcHRyLCBhcnJwdHIsICJXUklURSIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2xheW91dChxcnlwdHIsICJST1dfTUFKT1IiKQoKYnVmcHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9idWZmZXJfdmFyX2NoYXJfY3JlYXRlKG9mZnNldHMsIGRhdGEpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X2J1ZmZlcl92YXJfY2hhcihxcnlwdHIsICJhMSIsIGJ1ZnB0cikKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zdWJtaXQocXJ5cHRyKQp0aWxlZGI6OjpsaWJ0aWxlZGJfYXJyYXlfY2xvc2UoYXJycHRyKQoKI1RPRE8gSGlnaGVyLWxldmVsIFIgc3VwcG9ydApgYGAKCgojIyMgR2V0dGluZyB0aGUgRnJhZ21lbnQgSW5mbwoKVE9ETyBSIHN1cHBvcnQKCgojIyBSZWFkaW5nIEFycmF5cwoKIyMjIFJlYWRpbmcgdGhlIEFycmF5IFNjaGVtYQoKYGBge3Igc2NoZW1hbG9hZH0KYXJyYXlfbmFtZSA8LSB1cmlzcGFyc2UKQSA8LSB0aWxlZGJfc3BhcnNlKHVyaSA9IGFycmF5X25hbWUpCiMgY2FuIGFsc28gbG9hZCBkZW5zZQpzY2ggPC0gc2NoZW1hKEEpCiMgY2FuIGFsc28gb3BlbiBlbmNyeXB0ZWQgYXJyYXlzIHdpdGgga2V5CmBgYAoKIyMjIyBJbnNwZWN0aW5nIHRoZSBhcnJheSBzY2hlbWEKCmBgYHtyIHNjaGVtYWluc3BlY3R9CmFycmF5X25hbWUgPC0gdXJpc3BhcnNlCgojIEdldCBhcnJheSBzY2hlbWEKQSA8LSB0aWxlZGJfc3BhcnNlKHVyaSA9IGFycmF5X25hbWUpCiMgb3IgdXNlIHRpbGVkYl9kZW5zZSh1cmkgPSBhcnJheV9uYW1lKSBmb3IgZGVuc2UKc2NoZW1hIDwtIHNjaGVtYShBKQoKIyBHZXQgYXJyYXkgdHlwZQpzcGFyc2UgPC0gaXMuc3BhcnNlKHNjaGVtYSkKCiMgR2V0IHRpbGUgY2FwYWNpdHkKdGlsZWRiOjo6bGlidGlsZWRiX2FycmF5X3NjaGVtYV9nZXRfY2FwYWNpdHkoc2NoQHB0cikKIyBUT0RPOiBSIGFjY2Vzc29yIGZvciB0aWxlCgojIEdldCB0aWxlIG9yZGVyCnRfb3JkZXIgPC0gdGlsZV9vcmRlcihzY2hlbWEpCgojIEdldCBjZWxsIG9yZGVyCmNfb3JkZXIgPC0gY2VsbF9vcmRlcihzY2hlbWEpCgojIEdldCBjb29yZGluYXRlcyBhbmQgb2Zmc2V0IGZpbHRlciBsaXN0CnJlc2xpc3QgPC0gZmlsdGVyX2xpc3Qoc2NoZW1hKQoKIyBHZXQgdGhlIGFycmF5IGRvbWFpbgpkb20gPC0gZG9tYWluKHNjaGVtYSkKCiMgR2V0IGFsbCBhdHRyaWJ1dGVzIGFzIGxpc3QKYXR0cnMgPC0gYXR0cnMoc2NoZW1hKQoKIyBHZXQgYXR0cmlidXRlIGZyb20gbmFtZQphdHRyIDwtIGF0dHJzKHNjaGVtYSwgImF0dHIiKQoKIyBEdW1wIHRoZSBhcnJheSBzY2hlbWEgaW4gQVNDSUkgZm9ybWF0IHRvIHN0ZG91dApzaG93KHNjaGVtYSkKYGBgCgoKIyMjIyBJbnNwZWN0aW5nIERvbWFpbgoKYGBge3IgaW5zcGVjdGRvbWFpbn0KIyAuLi4gZ2V0IGFycmF5IHNjaGVtYQojIC4uLiBnZXQgZG9tYWluIGZyb20gc2NoZW1hCmRvbSA8LSBkb21haW4oc2NoZW1hKQoKIyBHZXQgdGhlIGRvbWFpbiBkYXRhdHlwZSAoaS5lLiwgdGhlIGRhdGF0eXBlIG9mIGFsbCBkaW1lbnNpb25zKQp0eXBlIDwtIGRhdGF0eXBlKGRvbSkKCiMgR2V0IG51bWJlciBvZiBkaW1lbnNpb25zCmRpbV9udW0gPC0gZGltKGRvbSkKCiMgR2V0IGFsbCBkaW1lbnNpb24KZGltcyA8LSBkaW1lbnNpb25zKGRvbSkKCiMgRHVtcCB0aGUgZG9tYWluIGluIEFTQ0lJIGZvcm1hdCBpbiB0aGUgc2VsZWN0ZWQgb3V0cHV0CnNob3coZG9tKQpgYGAKCiMjIyMgSW5zcGVjdGluZyBEaW1lbnNpb25zCgpgYGB7ciBpbnNwZWN0ZGltZW5zaW9ucywgZXZhbD1GQUxTRX0KIyAuLi4gZ2V0IGFycmF5IHNjaGVtYQojIC4uLiBnZXQgZG9tYWluCiMgLi4uIGdldCBkaW1lbnNpb24gYnkgaW5kZXggb3IgbmFtZQoKI0ZJWE1FCgojIEdldCBkaW1lbnNpb24gbmFtZQpkaW1fbmFtZSA8LSBuYW1lKGRpbSkKCiMgR2V0IGRpbWVuc2lvbiBkYXRhdHlwZQpkaW1fdHlwZSA8LSBkYXRhdHlwZShkaW0pCgojIEdldCBkaW1lbnNpb24gZG9tYWluCmRvbWFpbiA8LSBkb21haW4oZGltKQoKIyBHZXQgdGlsZSBleHRlbnQKdGlsZV9leHRlbnQgPC0gdGlsZShkaW0pCgojIER1bXAgdGhlIGRpbWVuc2lvbiBpbiBBU0NJSSBmb3JtYXQgaW4gdGhlIHNlbGVjdGVkIG91dHB1dApzaG93KGRpbSkKCmBgYAoKCiMjIyMgSW5zcGVjdGluZyBBdHRyaWJ1dGVzCgpgYGB7ciBpbnNwZWN0YXR0ciwgZXZhbD1GQUxTRX0KIyAuLi4gZ2V0IGFycmF5IHNjaGVtYQojIC4uLiBnZXQgYXR0cmlidXRlIGJ5IGluZGV4IG9yIG5hbWUKCnN0b3BpZm5vdChpcy5udWxsKGF0dHIpKQojIEdldCBhdHRyaWJ1dGUgbmFtZQphdHRyX25hbWUgPC0gbmFtZShhdHRyKQoKIyBHZXQgYXR0cmlidXRlIGRhdGF0eXBlCmF0dHJfdHlwZSA8LSBkYXRhdHlwZShhdHRyKQoKIyBHZXQgZmlsdGVyIGxpc3QKZmlsdGVyX2xpc3QgPC0gZmlsdGVyX2xpc3QoYXR0cikKCiMgQ2hlY2sgaWYgYXR0cmlidXRlIGlzIHZhcmlhYmxlLWxlbmd0aAojIHZhcmlhYmxlIGxlbmd0aCBhdHRyaWJ0dWVzIGFyZSBub3Qgc3VwcG9ydGVkIGluIFIgY3VycmVudGx5CgojIEdldCBudW1iZXIgb2YgdmFsdWVzIHBlciBjZWxsCm51bSA8LSBuY2VsbHMoYXR0cikKCiMgR2V0IGNlbGwgc2l6ZSBmb3IgdGhpcyBhdHRyaWJ1dGUKIyBUT0RPOiBub3Qgc3VwcG9ydGRlZCB5ZXQKCiMgRHVtcCB0aGUgYXR0cmlidXRlIGluIEFTQ0lJIGZvcm1hdCBpbiB0aGUgc2VsZWN0ZWQgb3V0cHV0CnNob3coYXR0cikKYGBgCgoKCiMjIyMgSW5zcGVjdGluZyBGaWx0ZXJzCgpgYGB7ciBpbnNwZWN0ZmlsdGVycywgZXZhbD1GQUxTRX0KZmwgPC0gdGlsZWRiX2ZpbHRlcl9saXN0KCkKCiMgZ2V0IG51bWJlciBvZiBmaWx0ZXIKdGlsZWRiOjo6bGlidGlsZWRiX2ZpbHRlcl9saXN0X2dldF9uZmlsdGVycyhmbEBwdHIpCgojIGdldCBtYXggY2h1bmsgc2l6ZQp0aWxlZGI6OjpsaWJ0aWxlZGJfZmlsdGVyX2xpc3RfZ2V0X21heF9jaHVua19zaXplKGZsQHB0cikKCiMgZ2V0IGZpbHRlciBmcm9tIGluZGV4CmluZCA8LSBpCnRpbGVkYjo6OmxpYnRpbGVkYl9maWx0ZXJfbGlzdF9nZXRfZmlsdGVyX2Zyb21faW5kZXgoZmxAcHRyLCBpbmQpCmBgYAoKIyMjIEJhc2ljIFJlYWRpbmcKCmBgYHtyIGJhc2lzY3JlYWRpbmd9CiMgQ3JlYXRlIGEgVGlsZURCIGNvbnRleHQKY3R4IDwtIHRpbGVkYl9jdHgoKQoKIyBPcGVuIGEgZGVuc2UgYXJyYXkKQSA8LSB0aWxlZGJfZGVuc2UodXJpID0gdXJpZGVuc2UsIGN0eD1jdHgpCgojIE9yLCBvcGVuIGEgc3BhcnNlIGFycmF5CiMgQSA8LSB0aWxlZGJfc3BhcnNlKHVyaSA9ICI8YXJyYXktdXJpPiIsIGN0eD1jdHgpCgojIFNsaWNlIG9ubHkgcm93cyAxLCAyIGFuZCBjb2xzIDIsIDMsIDQKZGF0YSA8LSBBWzE6MiwgMjo0XQpzaG93KGRhdGEpCmBgYAoKIyMjIyBCYXNpYyBSZWFkaW5nIHVzaW5nIExvdy1MZXZlbCBDb2RlCgpgYGB7ciBiYXNpc2NyZWFkaW5nbG93bGV2ZWx9CmN0eCA8LSB0aWxlZGJfY3R4KCkKYXJycHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9vcGVuKGN0eEBwdHIsIHVyaWRlbnNlLCAiUkVBRCIpCiMjIHN1YmFycmF5IG9mIHJvd3MgMSwyIGFuZCBjb2xzIDIsMyw0CnN1YmFyciA8LSBjKDFMLDJMLCAyTCw0TCkKCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnkoY3R4QHB0ciwgYXJycHRyLCAiUkVBRCIpCnFyeXB0ciA8LSB0aWxlZGI6OjpsaWJ0aWxlZGJfcXVlcnlfc2V0X3N1YmFycmF5KHFyeXB0ciwgc3ViYXJyKQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3NldF9sYXlvdXQocXJ5cHRyLCAiUk9XX01BSk9SIikKdiA8LSBpbnRlZ2VyKDYpICAjIHJlc2VydmUgc3BhY2UKcXJ5cHRyIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9xdWVyeV9zZXRfYnVmZmVyKHFyeXB0ciwgImEiLCB2KQpxcnlwdHIgPC0gdGlsZWRiOjo6bGlidGlsZWRiX3F1ZXJ5X3N1Ym1pdChxcnlwdHIpCnByaW50KHYpICAgICAgICAgIyB1bmZvcm1lZCBhcnJheSwgbm8gY29vcmRpbmF0ZXMKcmVzIDwtIHRpbGVkYjo6OmxpYnRpbGVkYl9hcnJheV9jbG9zZShhcnJwdHIpCmBgYAoKIyMjIFJlYWRpbmcgRW5jcnlwdGVkIEFycmF5cwojIyMgTXVsdGktcmFuZ2UgU3ViYXJyYXlzCiMjIyBJbmNvbXBsZXRlIFF1ZXJpZXMKIyMjIFJlc3VsdCBFc3RpbWF0aW9uCiMjIyBUaW1lIFRyYXZlbGluZwoKIyMgRW1iZWRkZWQgU1FMCgojIyBBc3luY2hyb25vdXMgUXVlcmllcwoKIyMgQ29uZmlndXJhdGlvbgoKIyMgQXJyYXkgTWV0YWRhdGEKCiMjIyBXcml0aW5nIEFycmF5IE1ldGFkYXRhCgpgYGB7ciB3cml0ZW1ldGFkYXRhfQpyZXMgPC0gdGlsZWRiX3B1dF9tZXRhZGF0YSh1cmlkZW5zZSwgImFhYSIsIDEwMEwpCnJlcyA8LSB0aWxlZGJfcHV0X21ldGFkYXRhKHVyaWRlbnNlLCAiYmIiLCBjKDEuMSwgMi4yKSkKYGBgCgojIyMgUmVhZGluZyBBcnJheSBNZXRhZGF0YQoKT25lIGNhbiByZWFkIGJ5IGtleToKCmBgYHtyIHJlYWRtZXRhZGF0YX0KdGlsZWRiX2dldF9tZXRhZGF0YSh1cmlkZW5zZSwgImFhYSIpCmBgYAoKT3Igb25lIGNhbiByZXRyaWV2ZSBhbGwgbWV0YWRhdGEgYXQgb25jZToKCmBgYHtyIHJlYWRtZXRhZGF0YWFsbH0KbWQgPC0gdGlsZWRiX2dldF9hbGxfbWV0YWRhdGEodXJpZGVuc2UpCnByaW50KG1kKQpgYGAKCiMjIyBEZWxldGluZyBBcnJheSBNZXRhZGF0YQoKYGBge3IgZGVsZXRlbWV0YWRhdGF9CnJlcyA8LSB0aWxlZGJfZGVsZXRlX21ldGFkYXRhKHVyaWRlbnNlLCAiYWFhIikKYGBgCg==</div>
 
 
 
