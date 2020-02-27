@@ -56,11 +56,17 @@ write_array <- function() {
   invisible(NULL)
 }
 
-read_array <- function(txt="", subarr=c(1L,4L,1L,4L)) {
+read_array <- function(txt="", subarr=NULL) {
   cat("\nReading", txt, "\n")
   ctx <- tiledb_ctx()
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
-
+  if (is.null(subarr)) {
+      schptr <- tiledb:::libtiledb_array_get_schema(arrptr)
+      domptr <- tiledb:::libtiledb_array_schema_get_domain(schptr)
+      lst <- tiledb:::libtiledb_domain_get_dimensions(domptr)
+      subarr <- c(tiledb:::libtiledb_dim_get_domain(lst[[1]]),
+                  tiledb:::libtiledb_dim_get_domain(lst[[2]]))
+  }
   bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc(arrptr, subarr, "a1")
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
