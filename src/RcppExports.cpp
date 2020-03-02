@@ -1177,15 +1177,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_var_char_alloc
-XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP) {
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute, int szoffsets, int szdata);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP, SEXP szoffsetsSEXP, SEXP szdataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
     Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc(array, subarray, attribute));
+    Rcpp::traits::input_parameter< int >::type szoffsets(szoffsetsSEXP);
+    Rcpp::traits::input_parameter< int >::type szdata(szdataSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc(array, subarray, attribute, szoffsets, szdata));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1715,7 +1717,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_subarray", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray, 2},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 2},
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
-    {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 3},
+    {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 5},
     {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 1},

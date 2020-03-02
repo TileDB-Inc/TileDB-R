@@ -1318,28 +1318,25 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
-                                                     SEXP subarray,
-                                                     std::string attribute) {
+                                                     SEXP subarray, std::string attribute,
+                                                     int szoffsets = 0, int szdata = 0) {
   XPtr<vlsbuf_t> buf = XPtr<vlsbuf_t>(new vlsbuf_t);
   if (TYPEOF(subarray) == INTSXP) {
     auto sub = as<std::vector<int32_t>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
-    buf->offsets.resize(max_elements[attribute].first);
-    buf->str.resize(max_elements[attribute].second);
+    buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
+    buf->str.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
     buf->rows = sub[1] - sub[0] + 1;
     buf->cols = sub[3] - sub[2] + 1;
   } else if (TYPEOF(subarray) == REALSXP) {
     auto sub = as<std::vector<double>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
-    buf->offsets.resize(max_elements[attribute].first);
-    buf->str.resize(max_elements[attribute].second);
+    buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
+    buf->str.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
     buf->rows = sub[1] - sub[0] + 1;
     buf->cols = sub[3] - sub[2] + 1;
   } else {
-    std::stringstream errmsg;
-    errmsg << "Invalid subarray buffer type for domain :"
-           << Rcpp::type2name(subarray);
-    throw Rcpp::exception(errmsg.str().c_str());
+    Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
   }
   return buf;
 }

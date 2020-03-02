@@ -405,8 +405,8 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
-libtiledb_query_buffer_var_char_alloc <- function(array, subarray, attribute) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc`, array, subarray, attribute)
+libtiledb_query_buffer_var_char_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc`, array, subarray, attribute, szoffsets, szdata)
 }
 
 libtiledb_query_buffer_var_char_create <- function(intoffsets, data) {
