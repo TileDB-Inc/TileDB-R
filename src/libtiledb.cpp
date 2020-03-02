@@ -1316,11 +1316,13 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
   }
 }
 
+// -- vlc_buf_t functions below
+
 // [[Rcpp::export]]
-XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
-                                                     SEXP subarray, std::string attribute,
-                                                     int szoffsets = 0, int szdata = 0) {
-  XPtr<vlsbuf_t> buf = XPtr<vlsbuf_t>(new vlsbuf_t);
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
+                                                      SEXP subarray, std::string attribute,
+                                                      int szoffsets = 0, int szdata = 0) {
+  XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t);
   if (TYPEOF(subarray) == INTSXP) {
     auto sub = as<std::vector<int32_t>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
@@ -1343,9 +1345,9 @@ XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
 
 // assigning (for a write) allocates
 // [[Rcpp::export]]
-XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
-                                                      std::string data) {
-  XPtr<vlsbuf_t> bufptr = XPtr<vlsbuf_t>(new vlsbuf_t);
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
+                                                       std::string data) {
+  XPtr<vlc_buf_t> bufptr = XPtr<vlc_buf_t>(new vlc_buf_t);
   int n = intoffsets.size();
   bufptr->offsets.resize(n);
   for (int i=0; i<n; i++) {
@@ -1359,13 +1361,13 @@ XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> query,
                                                         std::string attr,
-                                                        XPtr<vlsbuf_t> bufptr) {
+                                                        XPtr<vlc_buf_t> bufptr) {
   query->set_buffer(attr, bufptr->offsets, bufptr->str);
   return query;
 }
 
 // [[Rcpp::export]]
-CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlsbuf_t> bufptr) {
+CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr) {
   size_t n = bufptr->offsets.size();
   std::vector<uint64_t> str_sizes(n);
   for (size_t i = 0; i < n - 1; i++) {                          // all but last
@@ -1380,6 +1382,97 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlsbuf_t> bufptr) {
   }
   return(mat);
 }
+
+// -- vlv_buf_t functions below
+
+// // [ [Rcpp::export ] ]
+// XPtr<vli_buf_t_old> libtiledb_query_buffer_var_vec_alloc_INT(XPtr<tiledb::Array> array,
+//                                                              SEXP subarray, std::string attribute,
+//                                                              int szoffsets = 0, int szdata = 0) {
+//   XPtr<vli_buf_t_old> buf = XPtr<vli_buf_t_old>(new vli_buf_t_old);
+//   if (TYPEOF(subarray) == INTSXP) {
+//     auto sub = as<std::vector<int32_t>>(subarray);
+//     auto max_elements = array->max_buffer_elements(sub);
+//     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
+//     buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
+//   } else if (TYPEOF(subarray) == REALSXP) {
+//     auto sub = as<std::vector<double>>(subarray);
+//     auto max_elements = array->max_buffer_elements(sub);
+//     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
+//     buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
+//   } else {
+//     Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
+//   }
+//   return buf;
+// }
+
+// In the following signature we cannot have a templated type as the return type so we have
+// to bring the switch between types 'inside' and make it run-time dependent on the subarray
+// type we already had
+// [[Rcpp::export]]
+SEXP libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array,
+                                          SEXP subarray, std::string attribute,
+                                          int szoffsets = 0, int szdata = 0) {
+  if (TYPEOF(subarray) == INTSXP) {
+    XPtr<vli_buf_t> buf = XPtr<vli_buf_t>(new vli_buf_t);
+    auto sub = as<std::vector<int32_t>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
+    buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
+    return Rcpp::wrap(buf);
+  } else if (TYPEOF(subarray) == REALSXP) {
+    XPtr<vld_buf_t> buf = XPtr<vld_buf_t>(new vld_buf_t);
+    auto sub = as<std::vector<double>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
+    buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
+    return Rcpp::wrap(buf);
+  }
+  Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
+}
+
+// assigning (for a write) allocates
+// [[Rcpp::export]]
+SEXP libtiledb_query_buffer_var_vec_create(IntegerVector intoffsets, SEXP data) {
+  int n = intoffsets.size();
+  if (TYPEOF(data) == INTSXP) {
+    XPtr<vli_buf_t> bufptr = XPtr<vli_buf_t>(new vli_buf_t);
+    bufptr->offsets.resize(n);
+    for (int i=0; i<n; i++) {
+      bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
+    }
+    bufptr->data = Rcpp::as<std::vector<int32_t>>(data);
+    return(bufptr);
+  } else if (TYPEOF(data) == REALSXP) {
+    XPtr<vld_buf_t> bufptr = XPtr<vld_buf_t>(new vld_buf_t);
+    bufptr->offsets.resize(n);
+    for (int i=0; i<n; i++) {
+      bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
+    }
+    bufptr->data = Rcpp::as<std::vector<double>>(data);
+    return(bufptr);
+  }
+  Rcpp::stop("Invalid data type for buffer: '%s'", Rcpp::type2name(data));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_set_buffer_var_vec(XPtr<tiledb::Query> query,
+                                                       std::string attr,
+                                                       SEXP sexp,
+                                                       std::string typestr) {
+  if (typestr == "INT32") {
+    XPtr<vli_buf_t> bufptr(sexp);
+    query->set_buffer(attr, bufptr->offsets, bufptr->data);
+  } else if (typestr == "DOUBLE") {
+    XPtr<vld_buf_t> bufptr(sexp);
+    query->set_buffer(attr, bufptr->offsets, bufptr->data);
+  } else {
+    Rcpp::stop("Unsupported type '%s' for buffer", typestr.c_str());
+  }
+  return query;
+}
+
+
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {
