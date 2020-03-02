@@ -73,7 +73,6 @@ setMethod("show", "tiledb_dense",
 #' Returns true is if the array or array_schema is sparse
 #'
 #' @param object tiledb_dense
-#' @param ... Extra parameter for method signature, currently unused.
 #' @return FALSE
 #' @export
 setMethod("is.sparse", "tiledb_dense", function(object) FALSE)
