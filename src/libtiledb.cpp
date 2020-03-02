@@ -1463,13 +1463,52 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_vec(XPtr<tiledb::Query> query
   if (typestr == "INT32") {
     XPtr<vli_buf_t> bufptr(sexp);
     query->set_buffer(attr, bufptr->offsets, bufptr->data);
-  } else if (typestr == "DOUBLE") {
+  } else if (typestr == "FLOAT64") {
     XPtr<vld_buf_t> bufptr(sexp);
     query->set_buffer(attr, bufptr->offsets, bufptr->data);
   } else {
     Rcpp::stop("Unsupported type '%s' for buffer", typestr.c_str());
   }
   return query;
+}
+
+// [[Rcpp::export]]
+List libtiledb_query_get_buffer_var_vec(SEXP sexp, std::string typestr) {
+
+  if (typestr == "INT32") {
+    XPtr<vli_buf_t> bufptr(sexp);
+    int n = bufptr->offsets.size();
+    IntegerVector ivec(n);
+    for (int i=0; i<n; i++) {
+      ivec[i] = static_cast<int32_t>(bufptr->offsets[i]);
+    }
+    n = bufptr->data.size();
+    IntegerVector dvec(n);
+    for (int i=0; i<n; i++) {
+      dvec[i] = static_cast<int32_t>(bufptr->data[i]);
+    }
+    List rl = List::create(Rcpp::Named("offsets") = ivec,
+                           Rcpp::Named("data")    = dvec);
+    return(rl);
+  } else if (typestr == "FLOAT64") {
+    XPtr<vld_buf_t> bufptr(sexp);
+    int n = bufptr->offsets.size();
+    IntegerVector ivec(n);
+    for (int i=0; i<n; i++) {
+      ivec[i] = static_cast<int32_t>(bufptr->offsets[i]);
+    }
+    n = bufptr->data.size();
+    NumericVector dvec(n);
+    for (int i=0; i<n; i++) {
+      dvec[i] = static_cast<double>(bufptr->data[i]);
+    }
+    List rl = List::create(Rcpp::Named("offsets") = ivec,
+                           Rcpp::Named("data")    = dvec);
+    return(rl);
+  } else {
+    Rcpp::stop("Unsupported type '%s' for buffer", typestr.c_str());
+  }
+  return Rcpp::as<Rcpp::List>(R_NilValue); // not reached
 }
 
 

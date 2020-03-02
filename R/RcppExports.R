@@ -433,6 +433,10 @@ libtiledb_query_set_buffer_var_vec <- function(query, attr, sexp, typestr) {
     .Call(`_tiledb_libtiledb_query_set_buffer_var_vec`, query, attr, sexp, typestr)
 }
 
+libtiledb_query_get_buffer_var_vec <- function(sexp, typestr) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, sexp, typestr)
+}
+
 libtiledb_query_submit <- function(query) {
     .Call(`_tiledb_libtiledb_query_submit`, query)
 }
