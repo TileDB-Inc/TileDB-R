@@ -137,7 +137,6 @@ setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 #' Returns a list of `tiledb_dim` objects associated with the `tiledb_array_schema`
 #'
 #' @param object tiledb_array_schema
-#' @param ... Extra parameter for method signature, currently unused.
 #' @return a list of tiledb_dim objects
 #' @examples
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),

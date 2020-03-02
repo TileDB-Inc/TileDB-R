@@ -218,12 +218,14 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string tpstr);
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,std::string uri);
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string key);
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Domain> dom);
+void                      libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Domain> dom);
 XPtr<tiledb::Domain>      libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema);
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Attribute> attr);
+void                      libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Attribute> attr);
 List                      libtiledb_array_schema_attributes(XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_schema_get_array_type(XPtr<tiledb::ArraySchema> schema);
+void                      libtiledb_array_schema_set_cell_order(XPtr<tiledb::ArraySchema> schema, std::string ord);
 std::string               libtiledb_array_schema_get_cell_order(XPtr<tiledb::ArraySchema> schema);
+void                      libtiledb_array_schema_get_tile_order(XPtr<tiledb::ArraySchema> schema, std::string ord);
 std::string               libtiledb_array_schema_get_tile_order(XPtr<tiledb::ArraySchema> schema);
 void                      libtiledb_array_schema_set_capacity(XPtr<tiledb::ArraySchema> schema, int cap);
 int                       libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema);

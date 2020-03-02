@@ -682,14 +682,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_schema_create
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string tpstr);
-RcppExport SEXP _tiledb_libtiledb_array_schema_create(SEXP ctxSEXP, SEXP tpstrSEXP) {
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string atstr);
+RcppExport SEXP _tiledb_libtiledb_array_schema_create(SEXP ctxSEXP, SEXP atstrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
-    Rcpp::traits::input_parameter< std::string >::type tpstr(tpstrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_create(ctx, tpstr));
+    Rcpp::traits::input_parameter< std::string >::type atstr(atstrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_create(ctx, atstr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -719,15 +719,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_schema_set_domain
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Domain> dom);
+void libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Domain> dom);
 RcppExport SEXP _tiledb_libtiledb_array_schema_set_domain(SEXP schemaSEXP, SEXP domSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::Domain> >::type dom(domSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_set_domain(schema, dom));
-    return rcpp_result_gen;
+    libtiledb_array_schema_set_domain(schema, dom);
+    return R_NilValue;
 END_RCPP
 }
 // libtiledb_array_schema_get_domain
@@ -742,15 +741,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_schema_add_attribute
-XPtr<tiledb::ArraySchema> libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Attribute> attr);
+void libtiledb_array_schema_add_attribute(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::Attribute> attr);
 RcppExport SEXP _tiledb_libtiledb_array_schema_add_attribute(SEXP schemaSEXP, SEXP attrSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_add_attribute(schema, attr));
-    return rcpp_result_gen;
+    libtiledb_array_schema_add_attribute(schema, attr);
+    return R_NilValue;
 END_RCPP
 }
 // libtiledb_array_schema_attributes
@@ -775,6 +773,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_schema_set_cell_order
+void libtiledb_array_schema_set_cell_order(XPtr<tiledb::ArraySchema> schema, std::string ord);
+RcppExport SEXP _tiledb_libtiledb_array_schema_set_cell_order(SEXP schemaSEXP, SEXP ordSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    Rcpp::traits::input_parameter< std::string >::type ord(ordSEXP);
+    libtiledb_array_schema_set_cell_order(schema, ord);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_array_schema_get_cell_order
 std::string libtiledb_array_schema_get_cell_order(XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_libtiledb_array_schema_get_cell_order(SEXP schemaSEXP) {
@@ -784,6 +793,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_get_cell_order(schema));
     return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_schema_set_tile_order
+void libtiledb_array_schema_set_tile_order(XPtr<tiledb::ArraySchema> schema, std::string ord);
+RcppExport SEXP _tiledb_libtiledb_array_schema_set_tile_order(SEXP schemaSEXP, SEXP ordSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    Rcpp::traits::input_parameter< std::string >::type ord(ordSEXP);
+    libtiledb_array_schema_set_tile_order(schema, ord);
+    return R_NilValue;
 END_RCPP
 }
 // libtiledb_array_schema_get_tile_order
@@ -1156,6 +1176,57 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_buffer_var_char_alloc
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute, int szoffsets, int szdata);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP, SEXP szoffsetsSEXP, SEXP szdataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
+    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
+    Rcpp::traits::input_parameter< int >::type szoffsets(szoffsetsSEXP);
+    Rcpp::traits::input_parameter< int >::type szdata(szdataSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc(array, subarray, attribute, szoffsets, szdata));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_buffer_var_char_create
+XPtr<vlsbuf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets, std::string data);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_create(SEXP intoffsetsSEXP, SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type intoffsets(intoffsetsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type data(dataSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_create(intoffsets, data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_set_buffer_var_char
+XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> query, std::string attr, XPtr<vlsbuf_t> bufptr);
+RcppExport SEXP _tiledb_libtiledb_query_set_buffer_var_char(SEXP querySEXP, SEXP attrSEXP, SEXP bufptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< std::string >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< XPtr<vlsbuf_t> >::type bufptr(bufptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_buffer_var_char(query, attr, bufptr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_get_buffer_var_char
+CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlsbuf_t> bufptr);
+RcppExport SEXP _tiledb_libtiledb_query_get_buffer_var_char(SEXP bufptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<vlsbuf_t> >::type bufptr(bufptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_var_char(bufptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_submit
 XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query);
 RcppExport SEXP _tiledb_libtiledb_query_submit(SEXP querySEXP) {
@@ -1245,6 +1316,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
     Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_array_max_buffer_elements(array, subarray, attribute));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_max_buffer_elements_vec
+NumericVector libtiledb_array_max_buffer_elements_vec(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute);
+RcppExport SEXP _tiledb_libtiledb_array_max_buffer_elements_vec(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
+    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_max_buffer_elements_vec(array, subarray, attribute));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1598,7 +1682,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_schema_add_attribute", (DL_FUNC) &_tiledb_libtiledb_array_schema_add_attribute, 2},
     {"_tiledb_libtiledb_array_schema_attributes", (DL_FUNC) &_tiledb_libtiledb_array_schema_attributes, 1},
     {"_tiledb_libtiledb_array_schema_get_array_type", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_array_type, 1},
+    {"_tiledb_libtiledb_array_schema_set_cell_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_cell_order, 2},
     {"_tiledb_libtiledb_array_schema_get_cell_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_cell_order, 1},
+    {"_tiledb_libtiledb_array_schema_set_tile_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_tile_order, 2},
     {"_tiledb_libtiledb_array_schema_get_tile_order", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_tile_order, 1},
     {"_tiledb_libtiledb_array_schema_set_capacity", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_capacity, 2},
     {"_tiledb_libtiledb_array_schema_get_capacity", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_capacity, 1},
@@ -1631,6 +1717,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_subarray", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray, 2},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 2},
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
+    {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 5},
+    {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
+    {"_tiledb_libtiledb_query_set_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char, 3},
+    {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 1},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},
     {"_tiledb_libtiledb_query_status", (DL_FUNC) &_tiledb_libtiledb_query_status, 1},
@@ -1639,6 +1729,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_zip_coords_integer", (DL_FUNC) &_tiledb_libtiledb_zip_coords_integer, 2},
     {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},
     {"_tiledb_libtiledb_array_max_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements, 3},
+    {"_tiledb_libtiledb_array_max_buffer_elements_vec", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_vec, 3},
     {"_tiledb_libtiledb_group_create", (DL_FUNC) &_tiledb_libtiledb_group_create, 2},
     {"_tiledb_libtiledb_object_type", (DL_FUNC) &_tiledb_libtiledb_object_type, 2},
     {"_tiledb_libtiledb_object_remove", (DL_FUNC) &_tiledb_libtiledb_object_remove, 2},

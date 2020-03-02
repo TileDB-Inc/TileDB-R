@@ -1,6 +1,9 @@
 #include <tiledb/tiledb>
 #include <Rcpp.h>
 
+// in inst/include so that Rcpp code generation can use the types for glue code
+#include <tiledb.h>
+
 #ifndef __libtiledb_h__
 #define __libtiledb_h__
 
