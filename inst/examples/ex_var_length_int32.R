@@ -77,8 +77,31 @@ read_array <- function(txt="", subarr=NULL) {
   invisible(rl)
 }
 
+write_subarray <- function() {
+  data <- c(11L, 11L, 22L, 22L, 33L, 44L)
+  offsets <- c(0L, 2L, 4L, 5L)
+  offsets <- offsets * 4 # known fixed size of integer
+
+  subarr <- c(2L,3L, 2L,3L)
+
+  ctx <- tiledb_ctx()
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  bufptr <- tiledb:::libtiledb_query_buffer_var_vec_create(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr, "INT32")
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_array_close(arrptr)
+  invisible(NULL)
+}
+
 create_array()
 write_array()
-print(read_array())
+print(read_array("original"))
+write_subarray()
+print(read_array("after subarray"))
+print(read_array("after subarray, subset", c(2L,3L, 2L,3L)))
 
 cat("Done.\n")

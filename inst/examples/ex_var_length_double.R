@@ -38,7 +38,7 @@ write_array <- function() {
             11.1, 12.2, 12.2, 13.3, 14.4, 14.4, 14.4, 15.5, 16.6)
   offsets <- c(0L, 2L, 4L, 5L, 6L, 7L, 9L, 11L, 14L, 16L, 17L, 18L, 20L, 21L, 24L, 25L)
   offsets <- offsets * 8 # known and fixed size of double
-  print(offsets)
+
   ctx <- tiledb_ctx()
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
@@ -77,8 +77,31 @@ read_array <- function(txt="", subarr=NULL) {
   invisible(rl)
 }
 
+write_subarray <- function() {
+  data <- c(11.1, 11.1, 22.2, 22.2, 33.3, 44.4)
+  offsets <- c(0L, 2L, 4L, 5L)
+  offsets <- offsets * 4 # known fixed size of integer
+
+  subarr <- c(2L,3L, 2L,3L)
+
+  ctx <- tiledb_ctx()
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+  bufptr <- tiledb:::libtiledb_query_buffer_var_vec_create(offsets, data)
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr, "FLOAT64")
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  tiledb:::libtiledb_array_close(arrptr)
+  invisible(NULL)
+}
+
 create_array()
 write_array()
-print(read_array())
+print(read_array("original"))
+write_subarray()
+print(read_array("after subarray"))
+print(read_array("after subarray, subset", c(2L,3L, 2L,3L)))
 
 cat("Done.\n")
