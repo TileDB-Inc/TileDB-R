@@ -1228,17 +1228,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_var_vec_alloc
-SEXP libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute, int szoffsets, int szdata);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_vec_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP, SEXP szoffsetsSEXP, SEXP szdataSEXP) {
+SEXP libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute, std::string typestr, int szoffsets, int szdata);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_vec_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP, SEXP typestrSEXP, SEXP szoffsetsSEXP, SEXP szdataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
     Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
     Rcpp::traits::input_parameter< int >::type szoffsets(szoffsetsSEXP);
     Rcpp::traits::input_parameter< int >::type szdata(szdataSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_vec_alloc(array, subarray, attribute, szoffsets, szdata));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_vec_alloc(array, subarray, attribute, typestr, szoffsets, szdata));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1776,7 +1777,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 1},
-    {"_tiledb_libtiledb_query_buffer_var_vec_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_alloc, 5},
+    {"_tiledb_libtiledb_query_buffer_var_vec_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_alloc, 6},
     {"_tiledb_libtiledb_query_buffer_var_vec_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec, 4},
     {"_tiledb_libtiledb_query_get_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_vec, 4},

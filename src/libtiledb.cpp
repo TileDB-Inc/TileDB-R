@@ -1385,44 +1385,24 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr) {
 
 // -- vlv_buf_t functions below
 
-// // [ [Rcpp::export ] ]
-// XPtr<vli_buf_t_old> libtiledb_query_buffer_var_vec_alloc_INT(XPtr<tiledb::Array> array,
-//                                                              SEXP subarray, std::string attribute,
-//                                                              int szoffsets = 0, int szdata = 0) {
-//   XPtr<vli_buf_t_old> buf = XPtr<vli_buf_t_old>(new vli_buf_t_old);
-//   if (TYPEOF(subarray) == INTSXP) {
-//     auto sub = as<std::vector<int32_t>>(subarray);
-//     auto max_elements = array->max_buffer_elements(sub);
-//     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
-//     buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
-//   } else if (TYPEOF(subarray) == REALSXP) {
-//     auto sub = as<std::vector<double>>(subarray);
-//     auto max_elements = array->max_buffer_elements(sub);
-//     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
-//     buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
-//   } else {
-//     Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
-//   }
-//   return buf;
-// }
-
 // In the following signature we cannot have a templated type as the return type so we have
 // to bring the switch between types 'inside' and make it run-time dependent on the subarray
 // type we already had
 // [[Rcpp::export]]
 SEXP libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array,
                                           SEXP subarray, std::string attribute,
+                                          std::string typestr,
                                           int szoffsets = 0, int szdata = 0) {
-  if (TYPEOF(subarray) == INTSXP) {
+  if (typestr == "INT32") { //TYPEOF(subarray) == INTSXP) {
     XPtr<vli_buf_t> buf = XPtr<vli_buf_t>(new vli_buf_t);
     auto sub = as<std::vector<int32_t>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
     buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
     return Rcpp::wrap(buf);
-  } else if (TYPEOF(subarray) == REALSXP) {
+  } else if (typestr == "FLOAT64") { //(TYPEOF(subarray) == REALSXP) {
     XPtr<vld_buf_t> buf = XPtr<vld_buf_t>(new vld_buf_t);
-    auto sub = as<std::vector<double>>(subarray);
+    auto sub = as<std::vector<int32_t>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
     buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
