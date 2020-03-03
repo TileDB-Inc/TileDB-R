@@ -1269,14 +1269,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_get_buffer_var_vec
-List libtiledb_query_get_buffer_var_vec(SEXP sexp, std::string typestr);
-RcppExport SEXP _tiledb_libtiledb_query_get_buffer_var_vec(SEXP sexpSEXP, SEXP typestrSEXP) {
+List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string attr, SEXP sexp, std::string typestr);
+RcppExport SEXP _tiledb_libtiledb_query_get_buffer_var_vec(SEXP querySEXP, SEXP attrSEXP, SEXP sexpSEXP, SEXP typestrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< std::string >::type attr(attrSEXP);
     Rcpp::traits::input_parameter< SEXP >::type sexp(sexpSEXP);
     Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_var_vec(sexp, typestr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_var_vec(query, attr, sexp, typestr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1777,7 +1779,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_buffer_var_vec_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_alloc, 5},
     {"_tiledb_libtiledb_query_buffer_var_vec_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec, 4},
-    {"_tiledb_libtiledb_query_get_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_vec, 2},
+    {"_tiledb_libtiledb_query_get_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_vec, 4},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},
     {"_tiledb_libtiledb_query_status", (DL_FUNC) &_tiledb_libtiledb_query_status, 1},

@@ -1473,7 +1473,10 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_vec(XPtr<tiledb::Query> query
 }
 
 // [[Rcpp::export]]
-List libtiledb_query_get_buffer_var_vec(SEXP sexp, std::string typestr) {
+List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string attr,
+                                        SEXP sexp, std::string typestr) {
+
+  auto dims = query->result_buffer_elements()[attr]; // actual result dims post query
 
   if (typestr == "INT32") {
     XPtr<vli_buf_t> bufptr(sexp);
@@ -1482,7 +1485,7 @@ List libtiledb_query_get_buffer_var_vec(SEXP sexp, std::string typestr) {
     for (int i=0; i<n; i++) {
       ivec[i] = static_cast<int32_t>(bufptr->offsets[i]);
     }
-    n = bufptr->data.size();
+    n = dims.second;            // actual size, not allocated size
     IntegerVector dvec(n);
     for (int i=0; i<n; i++) {
       dvec[i] = static_cast<int32_t>(bufptr->data[i]);
@@ -1497,7 +1500,7 @@ List libtiledb_query_get_buffer_var_vec(SEXP sexp, std::string typestr) {
     for (int i=0; i<n; i++) {
       ivec[i] = static_cast<int32_t>(bufptr->offsets[i]);
     }
-    n = bufptr->data.size();
+    n = dims.second;            // actual size, not allocated size
     NumericVector dvec(n);
     for (int i=0; i<n; i++) {
       dvec[i] = static_cast<double>(bufptr->data[i]);
@@ -1548,8 +1551,7 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
 }
 
 // [[Rcpp::export]]
-R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
-                                                std::string attribute) {
+R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute) {
   R_xlen_t nelem = query->result_buffer_elements()[attribute].second;
   return nelem;
 }
