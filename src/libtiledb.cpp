@@ -1401,11 +1401,11 @@ XPtr<vlv_buf_t> libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array,
   auto sub = as<std::vector<int32_t>>(subarray);
   auto max_elements = array->max_buffer_elements(sub);
   buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
-  if (typestr == "INT32") { //TYPEOF(subarray) == INTSXP) {
+  if (typestr == "INT32") {
     buf->idata.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
     buf->ddata.clear();
     buf->dtype = TILEDB_INT32;
-  } else if (typestr == "FLOAT64") { //(TYPEOF(subarray) == REALSXP) {
+  } else if (typestr == "FLOAT64") {
     buf->ddata.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
     buf->idata.clear();
     buf->dtype = TILEDB_FLOAT64;
