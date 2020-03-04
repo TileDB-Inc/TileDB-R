@@ -1389,107 +1389,98 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr) {
 // to bring the switch between types 'inside' and make it run-time dependent on the subarray
 // type we already had
 // [[Rcpp::export]]
-SEXP libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array,
-                                          SEXP subarray, std::string attribute,
-                                          std::string typestr,
-                                          int szoffsets = 0, int szdata = 0) {
+XPtr<vlv_buf_t> libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array,
+                                                     SEXP subarray, std::string attribute,
+                                                     int szoffsets = 0, int szdata = 0) {
+
+  XPtr<tiledb::ArraySchema> sch = libtiledb_array_get_schema(array);
+  XPtr<tiledb::Domain> dom = libtiledb_array_schema_get_domain(sch);
+  XPtr<tiledb::Attribute> attr = libtiledb_array_schema_get_attribute_from_name(sch, attribute);
+  std::string typestr = libtiledb_attribute_get_type(attr);
+  XPtr<vlv_buf_t> buf = XPtr<vlv_buf_t>(new vlv_buf_t);
+  auto sub = as<std::vector<int32_t>>(subarray);
+  auto max_elements = array->max_buffer_elements(sub);
+  buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
   if (typestr == "INT32") { //TYPEOF(subarray) == INTSXP) {
-    XPtr<vli_buf_t> buf = XPtr<vli_buf_t>(new vli_buf_t);
-    auto sub = as<std::vector<int32_t>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
-    buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
-    return Rcpp::wrap(buf);
+    buf->idata.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
+    buf->ddata.clear();
+    buf->dtype = TILEDB_INT32;
   } else if (typestr == "FLOAT64") { //(TYPEOF(subarray) == REALSXP) {
-    XPtr<vld_buf_t> buf = XPtr<vld_buf_t>(new vld_buf_t);
-    auto sub = as<std::vector<int32_t>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
-    buf->data.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
-    return Rcpp::wrap(buf);
+    buf->ddata.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
+    buf->idata.clear();
+    buf->dtype = TILEDB_FLOAT64;
+  } else {
+    Rcpp::stop("Invalid type for buffer: '%s'", typestr.c_str());
   }
-  Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
+  return buf;
 }
 
 // assigning (for a write) allocates
 // [[Rcpp::export]]
-SEXP libtiledb_query_buffer_var_vec_create(IntegerVector intoffsets, SEXP data) {
+XPtr<vlv_buf_t> libtiledb_query_buffer_var_vec_create(IntegerVector intoffsets, SEXP data) {
   int n = intoffsets.size();
-  if (TYPEOF(data) == INTSXP) {
-    XPtr<vli_buf_t> bufptr = XPtr<vli_buf_t>(new vli_buf_t);
-    bufptr->offsets.resize(n);
-    for (int i=0; i<n; i++) {
-      bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
-    }
-    bufptr->data = Rcpp::as<std::vector<int32_t>>(data);
-    return(bufptr);
-  } else if (TYPEOF(data) == REALSXP) {
-    XPtr<vld_buf_t> bufptr = XPtr<vld_buf_t>(new vld_buf_t);
-    bufptr->offsets.resize(n);
-    for (int i=0; i<n; i++) {
-      bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
-    }
-    bufptr->data = Rcpp::as<std::vector<double>>(data);
-    return(bufptr);
+  XPtr<vlv_buf_t> bufptr = XPtr<vlv_buf_t>(new vlv_buf_t);
+  bufptr->offsets.resize(n);
+  for (int i=0; i<n; i++) {
+    bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
   }
-  Rcpp::stop("Invalid data type for buffer: '%s'", Rcpp::type2name(data));
+  if (TYPEOF(data) == INTSXP) {
+    bufptr->idata = Rcpp::as<std::vector<int32_t>>(data);
+    bufptr->ddata.clear();
+    bufptr->dtype = TILEDB_INT32;
+  } else if (TYPEOF(data) == REALSXP) {
+    bufptr->ddata = Rcpp::as<std::vector<double>>(data);
+    bufptr->idata.clear();
+    bufptr->dtype = TILEDB_FLOAT64;
+    return(bufptr);
+  } else {
+    Rcpp::stop("Invalid data type for buffer: '%s'", Rcpp::type2name(data));
+  }
+  return(bufptr);
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_vec(XPtr<tiledb::Query> query,
-                                                       std::string attr,
-                                                       SEXP sexp,
-                                                       std::string typestr) {
-  if (typestr == "INT32") {
-    XPtr<vli_buf_t> bufptr(sexp);
-    query->set_buffer(attr, bufptr->offsets, bufptr->data);
-  } else if (typestr == "FLOAT64") {
-    XPtr<vld_buf_t> bufptr(sexp);
-    query->set_buffer(attr, bufptr->offsets, bufptr->data);
+                                                       std::string attr, XPtr<vlv_buf_t> buf) {
+  if (buf->dtype == TILEDB_INT32) {
+    query->set_buffer(attr, buf->offsets, buf->idata);
+  } else if (buf->dtype == TILEDB_FLOAT64) {
+    query->set_buffer(attr, buf->offsets, buf->ddata);
   } else {
-    Rcpp::stop("Unsupported type '%s' for buffer", typestr.c_str());
+    Rcpp::stop("Unsupported type '%s' for buffer", _tiledb_datatype_to_string(buf->dtype));
   }
   return query;
 }
 
 // [[Rcpp::export]]
 List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string attr,
-                                        SEXP sexp, std::string typestr) {
+                                        XPtr<vlv_buf_t> buf) {
 
+  int n = buf->offsets.size();
+  IntegerVector ivec(n);
+  for (int i=0; i<n; i++) {
+    ivec[i] = static_cast<int32_t>(buf->offsets[i]);
+  }
   auto dims = query->result_buffer_elements()[attr]; // actual result dims post query
-
-  if (typestr == "INT32") {
-    XPtr<vli_buf_t> bufptr(sexp);
-    int n = bufptr->offsets.size();
-    IntegerVector ivec(n);
-    for (int i=0; i<n; i++) {
-      ivec[i] = static_cast<int32_t>(bufptr->offsets[i]);
-    }
-    n = dims.second;            // actual size, not allocated size
+  n = dims.second;            // actual size, not allocated size
+  if (buf->dtype == TILEDB_INT32) {
     IntegerVector dvec(n);
     for (int i=0; i<n; i++) {
-      dvec[i] = static_cast<int32_t>(bufptr->data[i]);
+      dvec[i] = static_cast<int32_t>(buf->idata[i]);
     }
     List rl = List::create(Rcpp::Named("offsets") = ivec,
                            Rcpp::Named("data")    = dvec);
     return(rl);
-  } else if (typestr == "FLOAT64") {
-    XPtr<vld_buf_t> bufptr(sexp);
-    int n = bufptr->offsets.size();
-    IntegerVector ivec(n);
-    for (int i=0; i<n; i++) {
-      ivec[i] = static_cast<int32_t>(bufptr->offsets[i]);
-    }
-    n = dims.second;            // actual size, not allocated size
+  } else if (buf->dtype == TILEDB_FLOAT64) {
     NumericVector dvec(n);
     for (int i=0; i<n; i++) {
-      dvec[i] = static_cast<double>(bufptr->data[i]);
+      dvec[i] = static_cast<double>(buf->ddata[i]);
     }
     List rl = List::create(Rcpp::Named("offsets") = ivec,
                            Rcpp::Named("data")    = dvec);
     return(rl);
   } else {
-    Rcpp::stop("Unsupported type '%s' for buffer", typestr.c_str());
+    Rcpp::stop("Unsupported type '%s' for buffer", _tiledb_datatype_to_string(buf->dtype));
   }
   return Rcpp::as<Rcpp::List>(R_NilValue); // not reached
 }

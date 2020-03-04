@@ -421,20 +421,20 @@ libtiledb_query_get_buffer_var_char <- function(bufptr) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr)
 }
 
-libtiledb_query_buffer_var_vec_alloc <- function(array, subarray, attribute, typestr, szoffsets = 0L, szdata = 0L) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_vec_alloc`, array, subarray, attribute, typestr, szoffsets, szdata)
+libtiledb_query_buffer_var_vec_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_vec_alloc`, array, subarray, attribute, szoffsets, szdata)
 }
 
 libtiledb_query_buffer_var_vec_create <- function(intoffsets, data) {
     .Call(`_tiledb_libtiledb_query_buffer_var_vec_create`, intoffsets, data)
 }
 
-libtiledb_query_set_buffer_var_vec <- function(query, attr, sexp, typestr) {
-    .Call(`_tiledb_libtiledb_query_set_buffer_var_vec`, query, attr, sexp, typestr)
+libtiledb_query_set_buffer_var_vec <- function(query, attr, buf) {
+    .Call(`_tiledb_libtiledb_query_set_buffer_var_vec`, query, attr, buf)
 }
 
-libtiledb_query_get_buffer_var_vec <- function(query, attr, sexp, typestr) {
-    .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, query, attr, sexp, typestr)
+libtiledb_query_get_buffer_var_vec <- function(query, attr, buf) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, query, attr, buf)
 }
 
 libtiledb_query_submit <- function(query) {

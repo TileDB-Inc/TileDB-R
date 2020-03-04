@@ -21,15 +21,25 @@ typedef struct var_length_char_buffer vlc_buf_t;
 // using vli_buf_t_old = struct var_length_vec_buffer_initial<int32_t>;
 // using vld_buf_t_old = struct var_length_vec_buffer_initial<double>;
 
+// THIS WORKS
+// template <typename T>
+// struct var_length_vec_buffer {
+// public:
+//   std::vector<uint64_t> offsets;  // vector for offset values
+//   std::vector<T> data;            // vector for data values
+// };
+// using vli_buf_t = struct var_length_vec_buffer<int32_t>;
+// using vld_buf_t = struct var_length_vec_buffer<double>;
 
-template <typename T>
 struct var_length_vec_buffer {
 public:
   std::vector<uint64_t> offsets;  // vector for offset values
-  std::vector<T> data;            // vector for data values
+  // cannot template as cannot have the template type in the C interface for created functions
+  // void *dataptr;                  // vector for data values
+  std::vector<int32_t> idata;        // vector for data values
+  std::vector<double> ddata;         // vector for data values
+  tiledb_datatype_t dtype;           // data type
 };
-using vli_buf_t = struct var_length_vec_buffer<int32_t>;
-using vld_buf_t = struct var_length_vec_buffer<double>;
-
+typedef struct var_length_vec_buffer vlv_buf_t;
 
 #endif // __tiledb_h__

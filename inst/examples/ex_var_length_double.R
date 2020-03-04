@@ -45,7 +45,7 @@ write_array <- function() {
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
   bufptr <- tiledb:::libtiledb_query_buffer_var_vec_create(offsets, data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr, "FLOAT64")
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
   invisible(NULL)
@@ -63,17 +63,17 @@ read_array <- function(txt="", subarr=NULL) {
       subarr <- c(tiledb:::libtiledb_dim_get_domain(lst[[1]]),
                   tiledb:::libtiledb_dim_get_domain(lst[[2]]))
   }
-  bufptr <- tiledb:::libtiledb_query_buffer_var_vec_alloc(arrptr, subarr, "a", "FLOAT64")
+  bufptr <- tiledb:::libtiledb_query_buffer_var_vec_alloc(arrptr, subarr, "a")
 
   qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr, "FLOAT64")
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
 
-  rl <- tiledb:::libtiledb_query_get_buffer_var_vec(qryptr, "a", bufptr, "FLOAT64")
+  rl <- tiledb:::libtiledb_query_get_buffer_var_vec(qryptr, "a", bufptr)
   invisible(rl)
 }
 
@@ -91,7 +91,7 @@ write_subarray <- function() {
   qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
 
   bufptr <- tiledb:::libtiledb_query_buffer_var_vec_create(offsets, data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr, "FLOAT64")
+  qryptr <- tiledb:::libtiledb_query_set_buffer_var_vec(qryptr, "a", bufptr)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   tiledb:::libtiledb_array_close(arrptr)
   invisible(NULL)
