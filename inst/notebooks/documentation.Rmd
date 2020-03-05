@@ -251,6 +251,7 @@ tiledb_array_create(uridense, schema)
 ```{r createwithkey}
 encryption_key <- "0123456789abcdeF0123456789abcdeF"
 uridensewkey <- file.path(tdir, "densewkey")
+if (dir.exists(uridensewkey)) unlink(uridensewkey, recursive=TRUE)
 
 # shortcut: borrow schema from dense array; could create schema too
 schema <- schema(tiledb_dense(uridense))
@@ -564,7 +565,7 @@ filter_list <- filter_list(attr)
 num <- ncells(attr)
 
 # Get cell size for this attribute
-# TODO: not supportded yet
+sz <-- tiledb:::libtiledb_attribute_get_cell_val(attr@ptr)
 
 # Dump the attribute in ASCII format in the selected output
 show(attr)
