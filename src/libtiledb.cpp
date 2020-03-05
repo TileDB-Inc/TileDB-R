@@ -1253,6 +1253,11 @@ XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
+std::string libtiledb_query_type(XPtr<tiledb::Query> query) {
+  return _tiledb_query_type_to_string(query->query_type());
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_layout(XPtr<tiledb::Query> query,
                                             std::string layout) {
   auto _layout = _string_to_tiledb_layout(layout);
@@ -1515,6 +1520,7 @@ std::string _query_status_to_string(tiledb::Query::Status status) {
   }
 }
 
+
 // [[Rcpp::export]]
 std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
   tiledb::Query::Status status = query->query_status();
@@ -1526,6 +1532,24 @@ R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::
   R_xlen_t nelem = query->result_buffer_elements()[attribute].second;
   return nelem;
 }
+
+// [[Rcpp::export]]
+int libtiledb_query_get_fragment_num(XPtr<tiledb::Query> query) {
+  if (query->query_type() != TILEDB_WRITE) {
+    Rcpp::stop("Fragment number only applicable to 'write' queries.");
+  }
+  return query->fragment_num();
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_query_get_fragment_uri(XPtr<tiledb::Query> query, int idx) {
+  if (query->query_type() != TILEDB_WRITE) {
+    Rcpp::stop("Fragment URI only applicable to 'write' queries.");
+  }
+  uint32_t uidx = static_cast<uint32_t>(idx);
+  return query->fragment_uri(uidx);
+}
+
 
 /**
  * Array helper functions

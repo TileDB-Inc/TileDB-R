@@ -389,6 +389,10 @@ libtiledb_query <- function(ctx, array, type) {
     .Call(`_tiledb_libtiledb_query`, ctx, array, type)
 }
 
+libtiledb_query_type <- function(query) {
+    .Call(`_tiledb_libtiledb_query_type`, query)
+}
+
 libtiledb_query_set_layout <- function(query, layout) {
     .Call(`_tiledb_libtiledb_query_set_layout`, query, layout)
 }
@@ -451,6 +455,14 @@ libtiledb_query_status <- function(query) {
 
 libtiledb_query_result_buffer_elements <- function(query, attribute) {
     .Call(`_tiledb_libtiledb_query_result_buffer_elements`, query, attribute)
+}
+
+libtiledb_query_get_fragment_num <- function(query) {
+    .Call(`_tiledb_libtiledb_query_get_fragment_num`, query)
+}
+
+libtiledb_query_get_fragment_uri <- function(query, idx) {
+    .Call(`_tiledb_libtiledb_query_get_fragment_uri`, query, idx)
 }
 
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {

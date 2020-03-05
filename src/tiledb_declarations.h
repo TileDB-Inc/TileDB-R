@@ -308,7 +308,7 @@ std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
 ## y Query(const Context& ctx, const Array& array, tiledb_query_type_t type)
 ##   Query(const Context& ctx, const Array& array)
 ##   std::shared_ptr<tiledb_query_t> ptr()
-##   tiledb_query_type_t query_type()
+## y tiledb_query_type_t query_type()
 ## y Query& set_layout(tiledb_layout_t layout)
 ##   tiledb_layout_t query_layout()
 ##   Status query_status()
@@ -323,8 +323,8 @@ std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
 ##   template <class T> std::array<T, 3> range(unsigned dim_idx, uint64_t range_idx)
 ##   uint64_t est_result_size(const std::string& attr_name)
 ##   std::pair<uint64_t, uint64_t> est_result_size_var(const std::string& attr_name)
-##   uint32_t fragment_num()
-##   std::string fragment_uri(uint32_t idx)
+## y uint32_t fragment_num()
+## y std::string fragment_uri(uint32_t idx)
 ##   std::pair<uint64_t, uint64_t> fragment_timestamp_range(uint32_t idx)
 ## y template <typename T = uint64_t> Query& set_subarray(const T* pairs, uint64_t size)
 ##   template <typename Vec> Query& set_subarray(const Vec& pairs)
@@ -336,9 +336,9 @@ std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
 ##   Query& set_buffer(const std::string& attr, void* buff, uint64_t nelements)
 ##   template <typename T> Query& set_buffer(const std::string& attr, uint64_t* offsets, uint64_t offset_nelements, T* data, uint64_t data_nelements)
 ##   Query& set_buffer(const std::string& attr, uint64_t* offsets, uint64_t offset_nelements, void* data, uint64_t data_nelements)
-##   template <typename T> Query& set_buffer(const std::string& attr, std::vector<uint64_t>& offsets, std::vector<T>& data)
+## y template <typename T> Query& set_buffer(const std::string& attr, std::vector<uint64_t>& offsets, std::vector<T>& data)
 ##   template <typename T> Query& set_buffer(const std::string& attr, std::pair<std::vector<uint64_t>, std::vector<T>>& buf)
-##   Query& set_buffer(const std::string& attr, std::vector<uint64_t>& offsets, std::string& data)
+## y Query& set_buffer(const std::string& attr, std::vector<uint64_t>& offsets, std::string& data)
 ## y static Status to_status(const tiledb_query_status_t& status)
 ##   static std::string to_str(tiledb_query_type_t type)
 XPtr<tiledb::Query>       libtiledb_query(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array, std::string type);
@@ -350,6 +350,7 @@ XPtr<tiledb::Query>       libtiledb_query_submit(XPtr<tiledb::Query> query);
 XPtr<tiledb::Query>       libtiledb_query_finalize(XPtr<tiledb::Query> query);
 std::string               libtiledb_query_status(XPtr<tiledb::Query> query);
 R_xlen_t                  libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute);
+int                       libtiledb_query_get_fragment_num(XPtr<tiledb::Query> query);
 
 
 ## Array Helpers
