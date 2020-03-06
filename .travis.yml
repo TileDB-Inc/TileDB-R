@@ -1,4 +1,4 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+# R package check using Docker containers
 
 os: linux
 dist: bionic
@@ -6,9 +6,13 @@ sudo: required
 services: docker
 
 env:
+  matrix:
+    - INFO="dev"
+      DOCKER_CNTR="tiledb/ci-r"
+    - INFO="1.7.6"
+      DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.6"
   global:
-    - DOCKER_CNTR="tiledb/ci-r"
-      DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
+    - DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
       R_BLD_OPTS="--no-build-vignettes --no-manual"
       R_CHK_OPTS="--no-vignettes --no-manual"
 
@@ -26,4 +30,3 @@ notifications:
   email:
     on_success: change
     on_failure: change
-
