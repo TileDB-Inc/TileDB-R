@@ -6,15 +6,17 @@ sudo: required
 services: docker
 
 env:
+  global:
+    - DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
+      R_BLD_OPTS="--no-build-vignettes --no-manual"
+      R_CHK_OPTS="--no-vignettes --no-manual"
   jobs:
     - INFO="dev"
       DOCKER_CNTR="tiledb/ci-r"
     - INFO="1.7.6"
       DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.6"
-  global:
-    - DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
-      R_BLD_OPTS="--no-build-vignettes --no-manual"
-      R_CHK_OPTS="--no-vignettes --no-manual"
+    - INFO="1.7.5"
+      DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.5"
 
 before_install:
   - docker pull ${DOCKER_CNTR}
