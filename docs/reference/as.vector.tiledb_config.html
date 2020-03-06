@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -156,40 +156,46 @@
 #&gt;                              "1"                              "1" 
 #&gt;               sm.num_tbb_threads            sm.num_writer_threads 
 #&gt;                             "-1"                              "1" 
-#&gt;               sm.tile_cache_size        vfs.file.enable_filelocks 
-#&gt;                       "10000000"                           "true" 
-#&gt;        vfs.file.max_parallel_ops  vfs.hdfs.kerb_ticket_cache_path 
-#&gt;                             "12"                               "" 
-#&gt;           vfs.hdfs.name_node_uri                vfs.hdfs.username 
+#&gt;               sm.tile_cache_size          vfs.azure.blob_endpoint 
+#&gt;                       "10000000"                               "" 
+#&gt;  vfs.azure.block_list_block_size       vfs.azure.max_parallel_ops 
+#&gt;                        "5242880"                             "12" 
+#&gt;    vfs.azure.storage_account_key   vfs.azure.storage_account_name 
 #&gt;                               ""                               "" 
-#&gt;                vfs.min_batch_gap               vfs.min_batch_size 
-#&gt;                         "512000"                       "20971520" 
-#&gt;            vfs.min_parallel_size                  vfs.num_threads 
-#&gt;                       "10485760"                             "12" 
-#&gt;         vfs.s3.aws_access_key_id     vfs.s3.aws_secret_access_key 
-#&gt;                               ""                               "" 
-#&gt;         vfs.s3.aws_session_token                   vfs.s3.ca_file 
-#&gt;                               ""                               "" 
-#&gt;                   vfs.s3.ca_path         vfs.s3.connect_max_tries 
-#&gt;                               ""                              "5" 
-#&gt;      vfs.s3.connect_scale_factor        vfs.s3.connect_timeout_ms 
-#&gt;                             "25"                           "3000" 
-#&gt;         vfs.s3.endpoint_override             vfs.s3.logging_level 
-#&gt;                               ""                            "Off" 
-#&gt;          vfs.s3.max_parallel_ops       vfs.s3.multipart_part_size 
-#&gt;                             "12"                        "5242880" 
-#&gt;                vfs.s3.proxy_host            vfs.s3.proxy_password 
-#&gt;                               ""                               "" 
-#&gt;                vfs.s3.proxy_port              vfs.s3.proxy_scheme 
-#&gt;                              "0"                          "https" 
-#&gt;            vfs.s3.proxy_username                    vfs.s3.region 
-#&gt;                               ""                      "us-east-1" 
-#&gt;        vfs.s3.request_timeout_ms                    vfs.s3.scheme 
-#&gt;                           "3000"                          "https" 
-#&gt;      vfs.s3.use_multipart_upload    vfs.s3.use_virtual_addressing 
+#&gt;  vfs.azure.use_block_list_upload              vfs.azure.use_https 
 #&gt;                           "true"                           "true" 
-#&gt;                vfs.s3.verify_ssl 
-#&gt;                           "true" </div><div class='input'>
+#&gt;        vfs.file.enable_filelocks        vfs.file.max_parallel_ops 
+#&gt;                           "true"                             "12" 
+#&gt;  vfs.hdfs.kerb_ticket_cache_path           vfs.hdfs.name_node_uri 
+#&gt;                               ""                               "" 
+#&gt;                vfs.hdfs.username                vfs.min_batch_gap 
+#&gt;                               ""                         "512000" 
+#&gt;               vfs.min_batch_size            vfs.min_parallel_size 
+#&gt;                       "20971520"                       "10485760" 
+#&gt;                  vfs.num_threads         vfs.s3.aws_access_key_id 
+#&gt;                             "12"                               "" 
+#&gt;     vfs.s3.aws_secret_access_key         vfs.s3.aws_session_token 
+#&gt;                               ""                               "" 
+#&gt;                   vfs.s3.ca_file                   vfs.s3.ca_path 
+#&gt;                               ""                               "" 
+#&gt;         vfs.s3.connect_max_tries      vfs.s3.connect_scale_factor 
+#&gt;                              "5"                             "25" 
+#&gt;        vfs.s3.connect_timeout_ms         vfs.s3.endpoint_override 
+#&gt;                           "3000"                               "" 
+#&gt;             vfs.s3.logging_level          vfs.s3.max_parallel_ops 
+#&gt;                            "Off"                             "12" 
+#&gt;       vfs.s3.multipart_part_size                vfs.s3.proxy_host 
+#&gt;                        "5242880"                               "" 
+#&gt;            vfs.s3.proxy_password                vfs.s3.proxy_port 
+#&gt;                               ""                              "0" 
+#&gt;              vfs.s3.proxy_scheme            vfs.s3.proxy_username 
+#&gt;                          "https"                               "" 
+#&gt;                    vfs.s3.region        vfs.s3.request_timeout_ms 
+#&gt;                      "us-east-1"                           "3000" 
+#&gt;                    vfs.s3.scheme      vfs.s3.use_multipart_upload 
+#&gt;                          "https"                           "true" 
+#&gt;    vfs.s3.use_virtual_addressing                vfs.s3.verify_ssl 
+#&gt;                           "true"                           "true" </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -131,10 +131,7 @@
     <p><code>tiledb_config</code> object associated with the <code>tiledb_ctx</code> instance</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"sm.tile_cache_size"</span> <span class='kw'>=</span> <span class='st'>"10"</span>))
-<span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='generics.html'>config</a></span>(<span class='no'>ctx</span>)
-<span class='no'>cfg</span>[<span class='st'>"sm.tile_cache_size"</span>]</div><div class='output co'>#&gt; sm.tile_cache_size 
-#&gt;               "10" </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"sm.tile_cache_size"</span> <span class='kw'>=</span> <span class='st'>"10"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in version(): could not find function "version"</span></div><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='generics.html'>config</a></span>(<span class='no'>ctx</span>)</div><div class='output co'>#&gt; <span class='error'>Error in config(ctx): object 'ctx' not found</span></div><div class='input'><span class='no'>cfg</span>[<span class='st'>"sm.tile_cache_size"</span>]</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'cfg' not found</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

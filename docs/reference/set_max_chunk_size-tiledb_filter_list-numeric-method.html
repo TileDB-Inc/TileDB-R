@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -132,10 +132,7 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>)
-<span class='fu'><a href='tiledb_filter_set_option.html'>tiledb_filter_set_option</a></span>(<span class='no'>flt</span>, <span class='st'>"COMPRESSION_LEVEL"</span>, <span class='fl'>5</span>)
-<span class='no'>filter_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>flt</span>))
-<span class='fu'><a href='generics.html'>set_max_chunk_size</a></span>(<span class='no'>filter_list</span>, <span class='fl'>10</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in version(): could not find function "version"</span></div><div class='input'><span class='fu'><a href='tiledb_filter_set_option.html'>tiledb_filter_set_option</a></span>(<span class='no'>flt</span>, <span class='st'>"COMPRESSION_LEVEL"</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='error'>Error in is(object, "tiledb_filter"): object 'flt' not found</span></div><div class='input'><span class='no'>filter_list</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>flt</span>))</div><div class='output co'>#&gt; <span class='error'>Error in version(): could not find function "version"</span></div><div class='input'><span class='fu'><a href='generics.html'>set_max_chunk_size</a></span>(<span class='no'>filter_list</span>, <span class='fl'>10</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (classes, fdef, mtable) {    methods &lt;- .findInheritedMethods(classes, fdef, mtable)    if (length(methods) == 1L)         return(methods[[1L]])    else if (length(methods) == 0L) {        cnames &lt;- paste0("\"", vapply(classes, as.character,             ""), "\"", collapse = ", ")        stop(gettextf("unable to find an inherited method for function %s for signature %s",             sQuote(fdef@generic), sQuote(cnames)), domain = NA)    }    else stop("Internal error in finding inherited methods; didn't return a unique method",         domain = NA)})(list(structure("standardGeneric", package = "methods"), "numeric"),     new("standardGeneric", .Data = function (object, value)     standardGeneric("set_max_chunk_size"), generic = structure("set_max_chunk_size", package = "tiledb"),         package = "tiledb", group = list(), valueClass = character(0),         signature = c("object", "value"), default = NULL, skeleton = (function (object,             value)         stop("invalid call in method dispatch to 'set_max_chunk_size' (no default method)",             domain = NA))(object, value)), &lt;environment&gt;): unable to find an inherited method for function ‘set_max_chunk_size’ for signature ‘"standardGeneric", "numeric"’</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
