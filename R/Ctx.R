@@ -141,12 +141,12 @@ tiledb_ctx_set_tag <- function(object, key, value) {
 #' Sets default context tags
 #'
 #' @param object `tiledb_ctx` object
-#'
+#' @importFrom utils packageVersion
 tiledb_ctx_set_default_tags <- function(object) {
   stopifnot(is(object, "tiledb_ctx"))
 
   tiledb_ctx_set_tag(object, "x-tiledb-api-language", "r")
-  tiledb_ctx_set_tag(object, "x-tiledb-api-language-version", paste(version(), sep=".", collapse=""))
+  tiledb_ctx_set_tag(object, "x-tiledb-api-language-version", as.character(packageVersion("tiledb")))
   info <- Sys.info()
   tiledb_ctx_set_tag(object, "x-tiledb-api-sys-platform", paste(info["sysname"], info["release"], info["machine"], collapse=""))
 }
