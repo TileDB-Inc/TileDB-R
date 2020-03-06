@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -134,13 +134,14 @@
     <p>tiledb_filter_list object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>)
-<span class='fu'><a href='tiledb_filter_set_option.html'>tiledb_filter_set_option</a></span>(<span class='no'>flt</span>, <span class='st'>"COMPRESSION_LEVEL"</span>, <span class='fl'>5</span>)
-<span class='no'>filter_list</span> <span class='kw'>&lt;-</span> <span class='fu'>tiledb_filter_list</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>flt</span>))
-<span class='no'>filter_list</span></div><div class='output co'>#&gt; An object of class "tiledb_filter_list"
-#&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x56485d2c5f70&gt;
-#&gt; </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in version(): could not find function "version"</span></div><div class='input'><span class='fu'><a href='tiledb_filter_set_option.html'>tiledb_filter_set_option</a></span>(<span class='no'>flt</span>, <span class='st'>"COMPRESSION_LEVEL"</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt; <span class='error'>Error in is(object, "tiledb_filter"): object 'flt' not found</span></div><div class='input'><span class='no'>filter_list</span> <span class='kw'>&lt;-</span> <span class='fu'>tiledb_filter_list</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>flt</span>))</div><div class='output co'>#&gt; <span class='error'>Error in version(): could not find function "version"</span></div><div class='input'><span class='no'>filter_list</span></div><div class='output co'>#&gt; standardGeneric for "filter_list" defined from package "tiledb"
+#&gt; 
+#&gt; function (object, ...) 
+#&gt; standardGeneric("filter_list")
+#&gt; &lt;bytecode: 0x55cb0e71d270&gt;
+#&gt; &lt;environment: 0x55cb0e710710&gt;
+#&gt; Methods may be defined for arguments: object
+#&gt; Use  showMethods("filter_list")  for currently available ones.</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
