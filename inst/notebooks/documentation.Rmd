@@ -440,8 +440,14 @@ tiledb:::libtiledb_array_close(arrptr)
 
 ### Getting the Fragment Info
 
-TODO R support
+```{r fragmentinfo}
+## continuing from previous example on dense variable length array
+## (but this works of course with any array after a write is needed
+numfrag <- tiledb:::libtiledb_query_get_fragment_num(qryptr)
+uritxt <- tiledb:::libtiledb_query_get_fragment_uri(qryptr, 0)
 
+##TODO Higher-level R support
+```
 
 ## Reading Arrays
 
