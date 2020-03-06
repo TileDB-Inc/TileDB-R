@@ -7,8 +7,10 @@ services: docker
 
 env:
   jobs:
-    - INFO="dev"
+    - INFO="ci-r"
       CONTAINER="tiledb/ci-r"
+    - INFO="dev"
+      CONTAINER="eddelbuettel/rocker-tiledb:dev"
     - INFO="1.7.6"
       CONTAINER="eddelbuettel/rocker-tiledb:1.7.6"
     - INFO="1.7.5"
