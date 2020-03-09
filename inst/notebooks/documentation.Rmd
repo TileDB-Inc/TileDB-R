@@ -673,6 +673,24 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 ```
 
 ### Incomplete Queries
+
+```{r incompletereads}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+subarr <- c(1L,4L, 1L,4L)
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+vec <- integer(4)  # reserve (insufficient) space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
+finished <- FALSE
+while (!finished) {
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  print(vec)
+  finished <- tiledb:::libtiledb_query_status(qryptr) == "COMPLETE"
+}
+res <- tiledb:::libtiledb_array_close(arrptr)
+```
+
 ### Result Estimation
 ### Time Traveling
 
