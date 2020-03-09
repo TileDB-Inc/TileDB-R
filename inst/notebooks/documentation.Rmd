@@ -692,6 +692,16 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 ```
 
 ### Result Estimation
+
+```{r resultestimation}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+estsz <- tiledb:::libtiledb_query_get_est_result_size_var(qryptr, "a1")
+res <- tiledb:::libtiledb_array_close(arrptr)
+estsz
+```
+
 ### Time Traveling
 
 ## Embedded SQL

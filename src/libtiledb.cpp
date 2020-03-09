@@ -1582,6 +1582,18 @@ XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iid
   return query;
 }
 
+// [[Rcpp::export]]
+R_xlen_t libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::string attr) {
+  uint64_t est = query->est_result_size(attr);
+  return static_cast<R_xlen_t>(est);
+}
+
+// [[Rcpp::export]]
+NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query, std::string attr) {
+  std::pair<uint64_t, uint64_t> est = query->est_result_size_var(attr);
+  return NumericVector::create(static_cast<R_xlen_t>(est.first), static_cast<R_xlen_t>(est.second));
+}
+
 /**
  * Array helper functions
  */

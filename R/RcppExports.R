@@ -469,6 +469,14 @@ libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL)
     .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
 }
 
+libtiledb_query_get_est_result_size <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size`, query, attr)
+}
+
+libtiledb_query_get_est_result_size_var <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size_var`, query, attr)
+}
+
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {
     .Call(`_tiledb_libtiledb_zip_coords_numeric`, coords, coord_length)
 }
