@@ -287,7 +287,9 @@ void                      libtiledb_array_schema_check(XPtr<tiledb::ArraySchema>
 std::string               libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
 std::string               libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema, std::string encryption_key);
 XPtr<tiledb::Array>       libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri, std::string type);
+XPtr<tiledb::Array>       libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::string uri, std::string type, Datetime tstamp);
 XPtr<tiledb::Array>       libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
+XPtr<tiledb::Array>       libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key, Datetime tstamp);
 XPtr<tiledb::Array>       libtiledb_array_open_with_ptr(XPtr<tiledb::Array> array, std::string query_type);
 bool                      libtiledb_array_is_open(XPtr<tiledb::Array> array);
 bool                      libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array);   /* simple extension */
@@ -351,6 +353,10 @@ XPtr<tiledb::Query>       libtiledb_query_finalize(XPtr<tiledb::Query> query);
 std::string               libtiledb_query_status(XPtr<tiledb::Query> query);
 R_xlen_t                  libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute);
 int                       libtiledb_query_get_fragment_num(XPtr<tiledb::Query> query);
+std::string               libtiledb_query_get_fragment_uri(XPtr<tiledb::Query> query, int idx);
+XPtr<tiledb::Query>       libtiledb_query_add_range(XPtr<tiledb::Query> query, int iidx, SEXP starts, SEXP ends, SEXP strides=R_NilValue);
+R_xlen_t                  libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::string attr);
+NumericVector             libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query, std::string attr);
 
 
 ## Array Helpers
