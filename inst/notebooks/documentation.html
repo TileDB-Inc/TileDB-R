@@ -1718,7 +1718,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(uridense)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9drsyy/dense&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/dense&quot;</code></pre>
 <pre class="r"><code>write_array(uridense)
 
 
@@ -1752,7 +1752,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(urisparse)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9drsyy/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/sparse&quot;</code></pre>
 <pre class="r"><code>write_array(urisparse)</code></pre>
 </div>
 <div id="api-usage" class="section level1">
@@ -1883,7 +1883,7 @@ if (dir.exists(uridensewkey)) unlink(uridensewkey, recursive=TRUE)
 # shortcut: borrow schema from dense array; could create schema too
 schema &lt;- schema(tiledb_dense(uridense))
 tiledb:::libtiledb_array_create_with_key(uridensewkey, schema@ptr, encryption_key)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9drsyy/densewkey&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densewkey&quot;</code></pre>
 <pre class="r"><code>##TODO: R support</code></pre>
 </div>
 </div>
@@ -1946,7 +1946,7 @@ dom &lt;- tiledb_domain(c(d1, d2))
 val &lt;- tiledb_attr(&quot;val&quot;, type = &quot;INT32&quot;)
 sch &lt;- tiledb_array_schema(dom, c(val), sparse=TRUE)
 tiledb_array_create(tmp, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9drsyy/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/sparse&quot;</code></pre>
 <pre class="r"><code># Prepare some data
 data &lt;- c(3L, 4L, 1L, 2L)
 
@@ -1988,7 +1988,7 @@ attr &lt;- tiledb_attr(&quot;a&quot;, type = r_to_tiledb_type(vec))
 tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, 2)
 sch &lt;- tiledb_array_schema(dom, c(attr))
 tiledb_array_create(uridensefix, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9drsyy/densefix&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densefix&quot;</code></pre>
 <pre class="r"><code>ctx &lt;- tiledb_ctx()
 arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridensefix, &quot;WRITE&quot;)
 subarr &lt;- c(1L,4L, 1L,4L)
@@ -2027,7 +2027,7 @@ tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
 
 ## Create the (empty) array on disk.
 tiledb:::libtiledb_array_create(uridensevar, schptr)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmp9drsyy/densevar&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densevar&quot;</code></pre>
 <pre class="r"><code>data &lt;- &quot;abbcccddeeefghhhijjjkklmnoop&quot;;
 offsets &lt;- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)
 
@@ -2040,7 +2040,7 @@ bufptr &lt;- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
 qryptr &lt;- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, &quot;a1&quot;, bufptr)
 qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
 tiledb:::libtiledb_array_close(arrptr)</code></pre>
-<pre><code>## &lt;pointer: 0x561e5a74f390&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55a211bf8a20&gt;</code></pre>
 <pre class="r"><code>#TODO Higher-level R support</code></pre>
 </div>
 <div id="getting-the-fragment-info" class="section level3">
@@ -2291,6 +2291,20 @@ estsz</code></pre>
 </div>
 <div id="time-traveling" class="section level3">
 <h3>Time Traveling</h3>
+<pre class="r"><code>ctx &lt;- tiledb_ctx()
+tstamp &lt;- Sys.time() - 1.0; # one seconds ago (as the arrays created here are in temp.files)
+arrptr &lt;- tiledb:::libtiledb_array_open_at(ctx@ptr, uridense, &quot;READ&quot;, tstamp)</code></pre>
+<pre><code>## [1] &quot;2020-03-09 12:18:22.387257 CDT&quot;</code></pre>
+<pre class="r"><code>subarr &lt;- c(1L,2L, 2L,4L)
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;READ&quot;)
+qryptr &lt;- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, &quot;ROW_MAJOR&quot;)
+v &lt;- integer(6)  # reserve space
+qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, &quot;a&quot;, v)
+qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
+res &lt;- tiledb:::libtiledb_array_close(arrptr)
+v</code></pre>
+<pre><code>## [1] 0 0 0 0 0 0</code></pre>
 </div>
 </div>
 <div id="embedded-sql" class="section level2">

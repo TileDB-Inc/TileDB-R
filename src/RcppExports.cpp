@@ -977,6 +977,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_open_at
+XPtr<tiledb::Array> libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::string uri, std::string type, Datetime tstamp);
+RcppExport SEXP _tiledb_libtiledb_array_open_at(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP, SEXP tstampSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< Datetime >::type tstamp(tstampSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_open_at(ctx, uri, type, tstamp));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_open_with_key
 XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key);
 RcppExport SEXP _tiledb_libtiledb_array_open_with_key(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP, SEXP enc_keySEXP) {
@@ -988,6 +1002,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
     Rcpp::traits::input_parameter< std::string >::type enc_key(enc_keySEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_array_open_with_key(ctx, uri, type, enc_key));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_open_at_with_key
+XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type, std::string enc_key, Datetime tstamp);
+RcppExport SEXP _tiledb_libtiledb_array_open_at_with_key(SEXP ctxSEXP, SEXP uriSEXP, SEXP typeSEXP, SEXP enc_keySEXP, SEXP tstampSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type enc_key(enc_keySEXP);
+    Rcpp::traits::input_parameter< Datetime >::type tstamp(tstampSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_open_at_with_key(ctx, uri, type, enc_key, tstamp));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1826,7 +1855,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_create", (DL_FUNC) &_tiledb_libtiledb_array_create, 2},
     {"_tiledb_libtiledb_array_create_with_key", (DL_FUNC) &_tiledb_libtiledb_array_create_with_key, 3},
     {"_tiledb_libtiledb_array_open", (DL_FUNC) &_tiledb_libtiledb_array_open, 3},
+    {"_tiledb_libtiledb_array_open_at", (DL_FUNC) &_tiledb_libtiledb_array_open_at, 4},
     {"_tiledb_libtiledb_array_open_with_key", (DL_FUNC) &_tiledb_libtiledb_array_open_with_key, 4},
+    {"_tiledb_libtiledb_array_open_at_with_key", (DL_FUNC) &_tiledb_libtiledb_array_open_at_with_key, 5},
     {"_tiledb_libtiledb_array_open_with_ptr", (DL_FUNC) &_tiledb_libtiledb_array_open_with_ptr, 2},
     {"_tiledb_libtiledb_array_is_open", (DL_FUNC) &_tiledb_libtiledb_array_is_open, 1},
     {"_tiledb_libtiledb_array_is_open_for_reading", (DL_FUNC) &_tiledb_libtiledb_array_is_open_for_reading, 1},

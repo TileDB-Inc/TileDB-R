@@ -1,13 +1,13 @@
 ---
 title: "TileDB R Notebook"
 output:
-  html_document:
-    toc: yes
-    df_print: paged
   html_notebook:
     toc: yes
     highlight: pygments
     theme: lumen
+  html_document:
+    toc: yes
+    df_print: paged
 ---
 
 <!--This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.   Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
@@ -703,6 +703,21 @@ estsz
 ```
 
 ### Time Traveling
+
+```{r timetravel}
+ctx <- tiledb_ctx()
+tstamp <- Sys.time() - 1.0; # one seconds ago (as the arrays created here are in temp.files)
+arrptr <- tiledb:::libtiledb_array_open_at(ctx@ptr, uridense, "READ", tstamp)
+subarr <- c(1L,2L, 2L,4L)
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+v <- integer(6)  # reserve space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+res <- tiledb:::libtiledb_array_close(arrptr)
+v
+```
 
 ## Embedded SQL
 

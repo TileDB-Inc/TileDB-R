@@ -1137,20 +1137,47 @@ std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArrayS
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri, std::string type) {
+XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri,
+                                         std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
   return array;
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type,
+XPtr<tiledb::Array> libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::string uri,
+                                            std::string type, Datetime tstamp) {
+  auto query_type = _string_to_tiledb_query_type(type);
+  // get timestamp as seconds since epoch (plus fractional seconds, returns double), scale to millisec
+  uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri,
+                                                                   query_type, ts_ms)));
+  return array;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri,
+                                                  std::string type,
                                                   std::string enc_key) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
                                                                    TILEDB_AES_256_GCM,
                                                                    enc_key.data(),
                                                                    (uint32_t)enc_key.size())));
+  return array;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, std::string uri,
+                                                     std::string type, std::string enc_key,
+                                                     Datetime tstamp) {
+  auto query_type = _string_to_tiledb_query_type(type);
+  uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
+                                                                   TILEDB_AES_256_GCM,
+                                                                   enc_key.data(),
+                                                                   (uint32_t)enc_key.size(),
+                                                                   ts_ms)));
   return array;
 }
 

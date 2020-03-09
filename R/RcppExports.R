@@ -337,8 +337,16 @@ libtiledb_array_open <- function(ctx, uri, type) {
     .Call(`_tiledb_libtiledb_array_open`, ctx, uri, type)
 }
 
+libtiledb_array_open_at <- function(ctx, uri, type, tstamp) {
+    .Call(`_tiledb_libtiledb_array_open_at`, ctx, uri, type, tstamp)
+}
+
 libtiledb_array_open_with_key <- function(ctx, uri, type, enc_key) {
     .Call(`_tiledb_libtiledb_array_open_with_key`, ctx, uri, type, enc_key)
+}
+
+libtiledb_array_open_at_with_key <- function(ctx, uri, type, enc_key, tstamp) {
+    .Call(`_tiledb_libtiledb_array_open_at_with_key`, ctx, uri, type, enc_key, tstamp)
 }
 
 libtiledb_array_open_with_ptr <- function(array, query_type) {
