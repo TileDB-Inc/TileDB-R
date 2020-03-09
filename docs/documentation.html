@@ -1718,7 +1718,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(uridense)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpD0r0AD/dense&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/dense&quot;</code></pre>
 <pre class="r"><code>write_array(uridense)
 
 
@@ -1752,7 +1752,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(urisparse)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpD0r0AD/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/sparse&quot;</code></pre>
 <pre class="r"><code>write_array(urisparse)</code></pre>
 </div>
 <div id="api-usage" class="section level1">
@@ -1878,11 +1878,12 @@ tiledb_array_create(uridense, schema)</code></pre>
 <h3>Creating Encrypted Arrays</h3>
 <pre class="r"><code>encryption_key &lt;- &quot;0123456789abcdeF0123456789abcdeF&quot;
 uridensewkey &lt;- file.path(tdir, &quot;densewkey&quot;)
+if (dir.exists(uridensewkey)) unlink(uridensewkey, recursive=TRUE)
 
 # shortcut: borrow schema from dense array; could create schema too
 schema &lt;- schema(tiledb_dense(uridense))
 tiledb:::libtiledb_array_create_with_key(uridensewkey, schema@ptr, encryption_key)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpD0r0AD/densewkey&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densewkey&quot;</code></pre>
 <pre class="r"><code>##TODO: R support</code></pre>
 </div>
 </div>
@@ -1945,7 +1946,7 @@ dom &lt;- tiledb_domain(c(d1, d2))
 val &lt;- tiledb_attr(&quot;val&quot;, type = &quot;INT32&quot;)
 sch &lt;- tiledb_array_schema(dom, c(val), sparse=TRUE)
 tiledb_array_create(tmp, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpD0r0AD/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/sparse&quot;</code></pre>
 <pre class="r"><code># Prepare some data
 data &lt;- c(3L, 4L, 1L, 2L)
 
@@ -1987,7 +1988,7 @@ attr &lt;- tiledb_attr(&quot;a&quot;, type = r_to_tiledb_type(vec))
 tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, 2)
 sch &lt;- tiledb_array_schema(dom, c(attr))
 tiledb_array_create(uridensefix, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpD0r0AD/densefix&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densefix&quot;</code></pre>
 <pre class="r"><code>ctx &lt;- tiledb_ctx()
 arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridensefix, &quot;WRITE&quot;)
 subarr &lt;- c(1L,4L, 1L,4L)
@@ -2026,7 +2027,7 @@ tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
 
 ## Create the (empty) array on disk.
 tiledb:::libtiledb_array_create(uridensevar, schptr)</code></pre>
-<pre><code>## [1] &quot;/tmp/RtmpD0r0AD/densevar&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densevar&quot;</code></pre>
 <pre class="r"><code>data &lt;- &quot;abbcccddeeefghhhijjjkklmnoop&quot;;
 offsets &lt;- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)
 
@@ -2039,12 +2040,17 @@ bufptr &lt;- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
 qryptr &lt;- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, &quot;a1&quot;, bufptr)
 qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
 tiledb:::libtiledb_array_close(arrptr)</code></pre>
-<pre><code>## &lt;pointer: 0x55d1166ea080&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55a211bf8a20&gt;</code></pre>
 <pre class="r"><code>#TODO Higher-level R support</code></pre>
 </div>
 <div id="getting-the-fragment-info" class="section level3">
 <h3>Getting the Fragment Info</h3>
-<p>TODO R support</p>
+<pre class="r"><code>## continuing from previous example on dense variable length array
+## (but this works of course with any array after a write is needed
+numfrag &lt;- tiledb:::libtiledb_query_get_fragment_num(qryptr)
+uritxt &lt;- tiledb:::libtiledb_query_get_fragment_uri(qryptr, 0)
+
+##TODO Higher-level R support</code></pre>
 </div>
 </div>
 <div id="reading-arrays" class="section level2">
@@ -2157,7 +2163,7 @@ filter_list &lt;- filter_list(attr)
 num &lt;- ncells(attr)
 
 # Get cell size for this attribute
-# TODO: not supportded yet
+sz &lt;-- tiledb:::libtiledb_attribute_get_cell_val(attr@ptr)
 
 # Dump the attribute in ASCII format in the selected output
 show(attr)</code></pre>
@@ -2214,18 +2220,91 @@ print(v)         # unformed array, no coordinates</code></pre>
 </div>
 <div id="reading-encrypted-arrays" class="section level3">
 <h3>Reading Encrypted Arrays</h3>
+<pre class="r"><code>ctx &lt;- tiledb_ctx()
+arrptr &lt;- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uridensewkey, &quot;READ&quot;, encryption_key)
+
+## subarray of rows 1,2 and cols 2,3,4
+subarr &lt;- c(1L,2L, 2L,4L)
+
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;READ&quot;)
+qryptr &lt;- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, &quot;ROW_MAJOR&quot;)
+v &lt;- integer(6)  # reserve space
+qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, &quot;a&quot;, v)
+qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates</code></pre>
+<pre><code>## [1] 20 30 40 60 70 80</code></pre>
+<pre class="r"><code>res &lt;- tiledb:::libtiledb_array_close(arrptr)
+
+## TODO open at timestamp example</code></pre>
 </div>
 <div id="multi-range-subarrays" class="section level3">
 <h3>Multi-range Subarrays</h3>
+<pre class="r"><code>ctx &lt;- tiledb_ctx()
+arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridense, &quot;READ&quot;)
+
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;READ&quot;)
+
+## range of rows 1 and 2, and 4 for dim 1, all rows for dim 2
+qryptr &lt;- tiledb:::libtiledb_query_add_range(qryptr, 0, 1L, 2L)
+qryptr &lt;- tiledb:::libtiledb_query_add_range(qryptr, 0, 4L, 4L)
+qryptr &lt;- tiledb:::libtiledb_query_add_range(qryptr, 1, 1L, 4L)
+
+qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, &quot;ROW_MAJOR&quot;)
+v &lt;- integer(12)  # reserve space
+qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, &quot;a&quot;, v)
+qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates</code></pre>
+<pre><code>##  [1]  10  20  30  40  50  60  70  80 130 140 150 160</code></pre>
+<pre class="r"><code>res &lt;- tiledb:::libtiledb_array_close(arrptr)</code></pre>
 </div>
 <div id="incomplete-queries" class="section level3">
 <h3>Incomplete Queries</h3>
+<pre class="r"><code>ctx &lt;- tiledb_ctx()
+arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridense, &quot;READ&quot;)
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;READ&quot;)
+subarr &lt;- c(1L,4L, 1L,4L)
+qryptr &lt;- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+vec &lt;- integer(4)  # reserve (insufficient) space
+qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, &quot;a&quot;, vec)
+finished &lt;- FALSE
+while (!finished) {
+  qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
+  print(vec)
+  finished &lt;- tiledb:::libtiledb_query_status(qryptr) == &quot;COMPLETE&quot;
+}</code></pre>
+<pre><code>## [1] 10 20 30 40
+## [1] 50 60 70 80
+## [1]  90 100 110 120
+## [1] 130 140 150 160</code></pre>
+<pre class="r"><code>res &lt;- tiledb:::libtiledb_array_close(arrptr)</code></pre>
 </div>
 <div id="result-estimation" class="section level3">
 <h3>Result Estimation</h3>
+<pre class="r"><code>ctx &lt;- tiledb_ctx()
+arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, &quot;READ&quot;)
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;READ&quot;)
+estsz &lt;- tiledb:::libtiledb_query_get_est_result_size_var(qryptr, &quot;a1&quot;)
+res &lt;- tiledb:::libtiledb_array_close(arrptr)
+estsz</code></pre>
+<pre><code>## [1] 16 28</code></pre>
 </div>
 <div id="time-traveling" class="section level3">
 <h3>Time Traveling</h3>
+<pre class="r"><code>ctx &lt;- tiledb_ctx()
+tstamp &lt;- Sys.time() - 1.0; # one seconds ago (as the arrays created here are in temp.files)
+arrptr &lt;- tiledb:::libtiledb_array_open_at(ctx@ptr, uridense, &quot;READ&quot;, tstamp)</code></pre>
+<pre><code>## [1] &quot;2020-03-09 12:18:22.387257 CDT&quot;</code></pre>
+<pre class="r"><code>subarr &lt;- c(1L,2L, 2L,4L)
+qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;READ&quot;)
+qryptr &lt;- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, &quot;ROW_MAJOR&quot;)
+v &lt;- integer(6)  # reserve space
+qryptr &lt;- tiledb:::libtiledb_query_set_buffer(qryptr, &quot;a&quot;, v)
+qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
+res &lt;- tiledb:::libtiledb_array_close(arrptr)
+v</code></pre>
+<pre><code>## [1] 0 0 0 0 0 0</code></pre>
 </div>
 </div>
 <div id="embedded-sql" class="section level2">
