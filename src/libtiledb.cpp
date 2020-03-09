@@ -1550,6 +1550,37 @@ std::string libtiledb_query_get_fragment_uri(XPtr<tiledb::Query> query, int idx)
   return query->fragment_uri(uidx);
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iidx,
+                                              SEXP starts, SEXP ends,
+                                              SEXP strides=R_NilValue) {
+  if (TYPEOF(starts) != TYPEOF(ends)) {
+    Rcpp::stop("'start' and 'end' must be of identical types");
+  }
+  uint32_t uidx = static_cast<uint32_t>(iidx);
+  if (TYPEOF(starts) == INTSXP) {
+    int32_t start = as<int32_t>(starts);
+    int32_t end = as<int32_t>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      int32_t stride = as<int32_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (TYPEOF(starts) == REALSXP) {
+    double start = as<double>(starts);
+    double end = as<double>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      double stride = as<double>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else {
+    Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
+  }
+  return query;
+}
 
 /**
  * Array helper functions

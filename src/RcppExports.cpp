@@ -1359,6 +1359,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_add_range
+XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iidx, SEXP starts, SEXP ends, SEXP strides);
+RcppExport SEXP _tiledb_libtiledb_query_add_range(SEXP querySEXP, SEXP iidxSEXP, SEXP startsSEXP, SEXP endsSEXP, SEXP stridesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< int >::type iidx(iidxSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type starts(startsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ends(endsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type strides(stridesSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_add_range(query, iidx, starts, ends, strides));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_zip_coords_numeric
 NumericVector libtiledb_zip_coords_numeric(List coords, R_xlen_t coord_length);
 RcppExport SEXP _tiledb_libtiledb_zip_coords_numeric(SEXP coordsSEXP, SEXP coord_lengthSEXP) {
@@ -1819,6 +1834,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_result_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_query_result_buffer_elements, 2},
     {"_tiledb_libtiledb_query_get_fragment_num", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_num, 1},
     {"_tiledb_libtiledb_query_get_fragment_uri", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_uri, 2},
+    {"_tiledb_libtiledb_query_add_range", (DL_FUNC) &_tiledb_libtiledb_query_add_range, 5},
     {"_tiledb_libtiledb_zip_coords_numeric", (DL_FUNC) &_tiledb_libtiledb_zip_coords_numeric, 2},
     {"_tiledb_libtiledb_zip_coords_integer", (DL_FUNC) &_tiledb_libtiledb_zip_coords_integer, 2},
     {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},

@@ -631,7 +631,47 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 ```
 
 ### Reading Encrypted Arrays
+
+```{r readencrypted}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uridensewkey, "READ", encryption_key)
+
+## subarray of rows 1,2 and cols 2,3,4
+subarr <- c(1L,2L, 2L,4L)
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+v <- integer(6)  # reserve space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates
+res <- tiledb:::libtiledb_array_close(arrptr)
+
+## TODO open at timestamp example
+```
+
 ### Multi-range Subarrays
+
+```{r multirange}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+
+## range of rows 1 and 2, and 4 for dim 1, all rows for dim 2
+qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, 1L, 2L)
+qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, 4L, 4L)
+qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 1, 1L, 4L)
+
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+v <- integer(12)  # reserve space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates
+res <- tiledb:::libtiledb_array_close(arrptr)
+```
+
 ### Incomplete Queries
 ### Result Estimation
 ### Time Traveling

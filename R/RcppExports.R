@@ -465,6 +465,10 @@ libtiledb_query_get_fragment_uri <- function(query, idx) {
     .Call(`_tiledb_libtiledb_query_get_fragment_uri`, query, idx)
 }
 
+libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
+}
+
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {
     .Call(`_tiledb_libtiledb_zip_coords_numeric`, coords, coord_length)
 }
