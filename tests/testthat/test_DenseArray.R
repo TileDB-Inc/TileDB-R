@@ -1037,3 +1037,50 @@ test_that("low-level variable-length double array write and read works", {
   expect_equal(rl[[2]], data)
 
 })
+
+
+test_that("low-level multi-range subarray read works", {
+  array_name <- tempfile()
+  setup({
+    unlink_and_create(array_name)
+  })
+
+  ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+
+  ## one attribute, set schema, create array
+  attr <- tiledb_attr("a", type = "INT32")
+  ctx <- tiledb_ctx()
+  schptr <- tiledb:::libtiledb_array_schema_create(ctx@ptr, "DENSE")
+  tiledb:::libtiledb_array_schema_set_domain(schptr, dom@ptr)
+  tiledb:::libtiledb_array_schema_set_cell_order(schptr, "ROW_MAJOR")
+  tiledb:::libtiledb_array_schema_set_tile_order(schptr, "ROW_MAJOR")
+  tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
+  tiledb:::libtiledb_array_create(array_name, schptr)
+
+  data <- 1:16
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "WRITE")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+  qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", data)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  expect_equal(tiledb:::libtiledb_query_status(qryptr), "COMPLETE")
+  tiledb:::libtiledb_array_close(arrptr)
+
+  ## ## read and test
+  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
+  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+
+  ## range of rows 1 and 2, and 4 for dim 1, all rows for dim 2
+  qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, 1L, 2L)
+  qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, 4L, 4L)
+  qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 1, 1L, 4L)
+
+  v <- integer(12)
+  qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  expect_equal(tiledb:::libtiledb_query_status(qryptr), "COMPLETE")
+  tiledb:::libtiledb_array_close(arrptr)
+  expect_equal(data[c(1:8,13:16)], v)
+})
