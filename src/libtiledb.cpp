@@ -1137,20 +1137,47 @@ std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArrayS
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri, std::string type) {
+XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string uri,
+                                         std::string type) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
   return array;
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri, std::string type,
+XPtr<tiledb::Array> libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::string uri,
+                                            std::string type, Datetime tstamp) {
+  auto query_type = _string_to_tiledb_query_type(type);
+  // get timestamp as seconds since epoch (plus fractional seconds, returns double), scale to millisec
+  uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri,
+                                                                   query_type, ts_ms)));
+  return array;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri,
+                                                  std::string type,
                                                   std::string enc_key) {
   auto query_type = _string_to_tiledb_query_type(type);
   auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
                                                                    TILEDB_AES_256_GCM,
                                                                    enc_key.data(),
                                                                    (uint32_t)enc_key.size())));
+  return array;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, std::string uri,
+                                                     std::string type, std::string enc_key,
+                                                     Datetime tstamp) {
+  auto query_type = _string_to_tiledb_query_type(type);
+  uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+  auto array = XPtr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
+                                                                   TILEDB_AES_256_GCM,
+                                                                   enc_key.data(),
+                                                                   (uint32_t)enc_key.size(),
+                                                                   ts_ms)));
   return array;
 }
 
@@ -1250,6 +1277,11 @@ XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
   auto query = XPtr<tiledb::Query>(
     new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type)));
   return query;
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_query_type(XPtr<tiledb::Query> query) {
+  return _tiledb_query_type_to_string(query->query_type());
 }
 
 // [[Rcpp::export]]
@@ -1515,6 +1547,7 @@ std::string _query_status_to_string(tiledb::Query::Status status) {
   }
 }
 
+
 // [[Rcpp::export]]
 std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
   tiledb::Query::Status status = query->query_status();
@@ -1525,6 +1558,67 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
 R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute) {
   R_xlen_t nelem = query->result_buffer_elements()[attribute].second;
   return nelem;
+}
+
+// [[Rcpp::export]]
+int libtiledb_query_get_fragment_num(XPtr<tiledb::Query> query) {
+  if (query->query_type() != TILEDB_WRITE) {
+    Rcpp::stop("Fragment number only applicable to 'write' queries.");
+  }
+  return query->fragment_num();
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_query_get_fragment_uri(XPtr<tiledb::Query> query, int idx) {
+  if (query->query_type() != TILEDB_WRITE) {
+    Rcpp::stop("Fragment URI only applicable to 'write' queries.");
+  }
+  uint32_t uidx = static_cast<uint32_t>(idx);
+  return query->fragment_uri(uidx);
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iidx,
+                                              SEXP starts, SEXP ends,
+                                              SEXP strides=R_NilValue) {
+  if (TYPEOF(starts) != TYPEOF(ends)) {
+    Rcpp::stop("'start' and 'end' must be of identical types");
+  }
+  uint32_t uidx = static_cast<uint32_t>(iidx);
+  if (TYPEOF(starts) == INTSXP) {
+    int32_t start = as<int32_t>(starts);
+    int32_t end = as<int32_t>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      int32_t stride = as<int32_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (TYPEOF(starts) == REALSXP) {
+    double start = as<double>(starts);
+    double end = as<double>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      double stride = as<double>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else {
+    Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
+  }
+  return query;
+}
+
+// [[Rcpp::export]]
+R_xlen_t libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::string attr) {
+  uint64_t est = query->est_result_size(attr);
+  return static_cast<R_xlen_t>(est);
+}
+
+// [[Rcpp::export]]
+NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query, std::string attr) {
+  std::pair<uint64_t, uint64_t> est = query->est_result_size_var(attr);
+  return NumericVector::create(static_cast<R_xlen_t>(est.first), static_cast<R_xlen_t>(est.second));
 }
 
 /**

@@ -1,13 +1,13 @@
 ---
 title: "TileDB R Notebook"
 output:
-  html_document:
-    toc: yes
-    df_print: paged
   html_notebook:
     toc: yes
     highlight: pygments
     theme: lumen
+  html_document:
+    toc: yes
+    df_print: paged
 ---
 
 <!--This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.   Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
@@ -251,6 +251,7 @@ tiledb_array_create(uridense, schema)
 ```{r createwithkey}
 encryption_key <- "0123456789abcdeF0123456789abcdeF"
 uridensewkey <- file.path(tdir, "densewkey")
+if (dir.exists(uridensewkey)) unlink(uridensewkey, recursive=TRUE)
 
 # shortcut: borrow schema from dense array; could create schema too
 schema <- schema(tiledb_dense(uridense))
@@ -439,8 +440,14 @@ tiledb:::libtiledb_array_close(arrptr)
 
 ### Getting the Fragment Info
 
-TODO R support
+```{r fragmentinfo}
+## continuing from previous example on dense variable length array
+## (but this works of course with any array after a write is needed
+numfrag <- tiledb:::libtiledb_query_get_fragment_num(qryptr)
+uritxt <- tiledb:::libtiledb_query_get_fragment_uri(qryptr, 0)
 
+##TODO Higher-level R support
+```
 
 ## Reading Arrays
 
@@ -564,7 +571,7 @@ filter_list <- filter_list(attr)
 num <- ncells(attr)
 
 # Get cell size for this attribute
-# TODO: not supportded yet
+sz <-- tiledb:::libtiledb_attribute_get_cell_val(attr@ptr)
 
 # Dump the attribute in ASCII format in the selected output
 show(attr)
@@ -624,10 +631,93 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 ```
 
 ### Reading Encrypted Arrays
+
+```{r readencrypted}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uridensewkey, "READ", encryption_key)
+
+## subarray of rows 1,2 and cols 2,3,4
+subarr <- c(1L,2L, 2L,4L)
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+v <- integer(6)  # reserve space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates
+res <- tiledb:::libtiledb_array_close(arrptr)
+
+## TODO open at timestamp example
+```
+
 ### Multi-range Subarrays
+
+```{r multirange}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+
+## range of rows 1 and 2, and 4 for dim 1, all rows for dim 2
+qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, 1L, 2L)
+qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, 4L, 4L)
+qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 1, 1L, 4L)
+
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+v <- integer(12)  # reserve space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+print(v)         # unformed array, no coordinates
+res <- tiledb:::libtiledb_array_close(arrptr)
+```
+
 ### Incomplete Queries
+
+```{r incompletereads}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+subarr <- c(1L,4L, 1L,4L)
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+vec <- integer(4)  # reserve (insufficient) space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
+finished <- FALSE
+while (!finished) {
+  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+  print(vec)
+  finished <- tiledb:::libtiledb_query_status(qryptr) == "COMPLETE"
+}
+res <- tiledb:::libtiledb_array_close(arrptr)
+```
+
 ### Result Estimation
+
+```{r resultestimation}
+ctx <- tiledb_ctx()
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+estsz <- tiledb:::libtiledb_query_get_est_result_size_var(qryptr, "a1")
+res <- tiledb:::libtiledb_array_close(arrptr)
+estsz
+```
+
 ### Time Traveling
+
+```{r timetravel}
+ctx <- tiledb_ctx()
+tstamp <- Sys.time() - 1.0; # one seconds ago (as the arrays created here are in temp.files)
+arrptr <- tiledb:::libtiledb_array_open_at(ctx@ptr, uridense, "READ", tstamp)
+subarr <- c(1L,2L, 2L,4L)
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+v <- integer(6)  # reserve space
+qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+res <- tiledb:::libtiledb_array_close(arrptr)
+v
+```
 
 ## Embedded SQL
 

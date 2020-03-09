@@ -337,8 +337,16 @@ libtiledb_array_open <- function(ctx, uri, type) {
     .Call(`_tiledb_libtiledb_array_open`, ctx, uri, type)
 }
 
+libtiledb_array_open_at <- function(ctx, uri, type, tstamp) {
+    .Call(`_tiledb_libtiledb_array_open_at`, ctx, uri, type, tstamp)
+}
+
 libtiledb_array_open_with_key <- function(ctx, uri, type, enc_key) {
     .Call(`_tiledb_libtiledb_array_open_with_key`, ctx, uri, type, enc_key)
+}
+
+libtiledb_array_open_at_with_key <- function(ctx, uri, type, enc_key, tstamp) {
+    .Call(`_tiledb_libtiledb_array_open_at_with_key`, ctx, uri, type, enc_key, tstamp)
 }
 
 libtiledb_array_open_with_ptr <- function(array, query_type) {
@@ -387,6 +395,10 @@ libtiledb_array_consolidate <- function(ctx, uri) {
 
 libtiledb_query <- function(ctx, array, type) {
     .Call(`_tiledb_libtiledb_query`, ctx, array, type)
+}
+
+libtiledb_query_type <- function(query) {
+    .Call(`_tiledb_libtiledb_query_type`, query)
 }
 
 libtiledb_query_set_layout <- function(query, layout) {
@@ -451,6 +463,26 @@ libtiledb_query_status <- function(query) {
 
 libtiledb_query_result_buffer_elements <- function(query, attribute) {
     .Call(`_tiledb_libtiledb_query_result_buffer_elements`, query, attribute)
+}
+
+libtiledb_query_get_fragment_num <- function(query) {
+    .Call(`_tiledb_libtiledb_query_get_fragment_num`, query)
+}
+
+libtiledb_query_get_fragment_uri <- function(query, idx) {
+    .Call(`_tiledb_libtiledb_query_get_fragment_uri`, query, idx)
+}
+
+libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
+}
+
+libtiledb_query_get_est_result_size <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size`, query, attr)
+}
+
+libtiledb_query_get_est_result_size_var <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size_var`, query, attr)
 }
 
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {
