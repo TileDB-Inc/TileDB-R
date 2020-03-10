@@ -333,8 +333,8 @@ libtiledb_array_nonempty_domain <- function(array) {
     .Call(`_tiledb_libtiledb_array_nonempty_domain`, array)
 }
 
-libtiledb_array_consolidate <- function(ctx, uri) {
-    .Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri)
+libtiledb_array_consolidate <- function(ctx, uri, cfgptr = NULL) {
+    invisible(.Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri, cfgptr))
 }
 
 libtiledb_array_put_metadata <- function(array, key, obj) {

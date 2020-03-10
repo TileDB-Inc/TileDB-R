@@ -1260,10 +1260,16 @@ List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-std::string libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
-                                        std::string uri) {
-  tiledb::Array::consolidate(*ctx.get(), uri);
-  return uri;
+void libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
+                                 std::string uri,
+                                 Nullable<XPtr<tiledb::Config>> cfgptr = R_NilValue) {
+
+  if (cfgptr.isNotNull()) {
+    XPtr<tiledb::Config> cfg(cfgptr);
+    tiledb::Array::consolidate(*ctx.get(), uri, cfg);
+  } else {
+    tiledb::Array::consolidate(*ctx.get(), uri);
+  }
 }
 
 // [[Rcpp::export]]
