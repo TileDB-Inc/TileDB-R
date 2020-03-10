@@ -278,7 +278,7 @@ void                      libtiledb_array_schema_check(XPtr<tiledb::ArraySchema>
 ##   static void consolidate_metadata(const Context& ctx, const std::string& uri, Config* const config = nullptr)
 ##   static void consolidate_metadata(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length, Config* const config = nullptr)
 ##   static void consolidate_metadata(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const std::string& encryption_key, Config* const config = nullptr)
-##   void put_metadata(const std::string& key, tiledb_datatype_t value_type, uint32_t value_num, const void* value)
+## y void put_metadata(const std::string& key, tiledb_datatype_t value_type, uint32_t value_num, const void* value)
 ##   void delete_metadata(const std::string& key)
 ##   void get_metadata(const std::string& key, tiledb_datatype_t* value_type, uint32_t* value_num, const void** value)
 ##   bool has_metadata(const std::string& key, tiledb_datatype_t* value_type)
@@ -301,6 +301,10 @@ XPtr<tiledb::Array>       libtiledb_array_close(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_query_type(XPtr<tiledb::Array> array);
 List                      libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx, std::string uri);
+bool                      libtiledb_array_put_metadata(XPtr<tiledb::Array> array, std::string key, SEXP obj);
+R_xlen_t                  libtiledb_array_get_metadata_num(XPtr<tiledb::Array> array);
+SEXP                      libtiledb_array_get_metadata_from_index(XPtr<tiledb::Array> array, int idx);
+void                      libtiledb_array_delete_metadata(XPtr<tiledb::Array> array, std::string key);
 
 
 ## Query

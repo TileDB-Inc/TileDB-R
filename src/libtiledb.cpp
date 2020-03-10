@@ -921,15 +921,15 @@ void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
  * TileDB Array Schema
  */
 //[[Rcpp::export]]
-XPtr<tiledb::ArraySchema> libtiledb_array_schema(
-    XPtr<tiledb::Context> ctx,
-    XPtr<tiledb::Domain> domain,
-    List attributes,
-    std::string cell_order,
-    std::string tile_order,
-    Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue,
-    Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue,
-    bool sparse = false) {
+XPtr<tiledb::ArraySchema>
+libtiledb_array_schema(XPtr<tiledb::Context> ctx,
+                       XPtr<tiledb::Domain> domain,
+                       List attributes,
+                       std::string cell_order,
+                       std::string tile_order,
+                       Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue,
+                       Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue,
+                       bool sparse = false) {
   // check that external pointers are supported
   R_xlen_t nattr = attributes.length();
   if (nattr == 0) {
@@ -1195,12 +1195,12 @@ bool libtiledb_array_is_open(XPtr<tiledb::Array> array) {
 
 // [[Rcpp::export]]
 bool libtiledb_array_is_open_for_reading(XPtr<tiledb::Array> array) {
-  return array->is_open() && array->query_type() != TILEDB_READ;
+  return array->is_open() && array->query_type() == TILEDB_READ;
 }
 
 // [[Rcpp::export]]
 bool libtiledb_array_is_open_for_writing(XPtr<tiledb::Array> array) {
-  return array->is_open() && array->query_type() != TILEDB_WRITE;
+  return array->is_open() && array->query_type() == TILEDB_WRITE;
 }
 
 // [[Rcpp::export]]
@@ -1261,9 +1261,162 @@ List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
 
 // [[Rcpp::export]]
 std::string libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
-                                     std::string uri) {
+                                        std::string uri) {
   tiledb::Array::consolidate(*ctx.get(), uri);
   return uri;
+}
+
+// [[Rcpp::export]]
+bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
+                                  std::string key, SEXP obj) {
+
+  // we implement a simpler interface here as the 'type' is given from
+  // the supplied SEXP, as is the extend
+  switch(TYPEOF(obj)) {
+    case VECSXP: {
+      Rcpp::stop("List objects are not supported.");
+      break;// not reached
+    }
+    case REALSXP: {
+      Rcpp::NumericVector v(obj);
+      array->put_metadata(key.c_str(), TILEDB_FLOAT64, v.size(), v.begin());
+      break;
+    }
+    case INTSXP: {
+      Rcpp::IntegerVector v(obj);
+      array->put_metadata(key.c_str(), TILEDB_INT32, v.size(), v.begin());
+      break;
+    }
+    case STRSXP: {
+      Rcpp::CharacterVector v(obj);
+      std::string s(v[0]);
+      // We use TILEDB_CHAR interchangeably with TILEDB_STRING_ASCII is this best string type?
+      array->put_metadata(key.c_str(), TILEDB_CHAR, s.length(), s.c_str());
+      break;
+    }
+    case LGLSXP: {              // experimental: map R logical (ie TRUE, FALSE, NA) to int8
+      Rcpp::LogicalVector v(obj);
+      size_t n = static_cast<size_t>(v.size());
+      std::vector<int8_t> ints(n);
+      for (size_t i=0; i<n; i++) ints[i] = static_cast<int8_t>(v[i]);
+      array->put_metadata(key.c_str(), TILEDB_INT8, ints.size(), ints.data());
+      break;
+    }
+    default: {
+      Rcpp::stop("No support (yet) for type '%d'.", TYPEOF(obj));
+      break; // not reached
+    }
+  }
+  // Close array - Important so that the metadata get flushed
+  // not here, array opening and closing responsibility of caller:  array.close();
+  return true;
+}
+
+// [[Rcpp::export]]
+R_xlen_t libtiledb_array_get_metadata_num(XPtr<tiledb::Array> array) {
+  uint64_t num = array->metadata_num();
+  return static_cast<R_xlen_t>(num);
+}
+
+// helper function to copy int vector
+template <typename T>
+Rcpp::IntegerVector copy_int_vector(const uint32_t v_num, const void* v) {
+  // Strictly speaking a check for under/overflow would be needed here yet this for
+  // metadata annotation (and not data payload) so extreme ranges are less likely
+  Rcpp::IntegerVector vec(v_num);
+  const T *ivec = static_cast<const T*>(v);
+  size_t n = static_cast<size_t>(v_num);
+  for (size_t i=0; i<n; i++) vec[i] = static_cast<int32_t>(ivec[i]);
+  return(vec);
+}
+
+// helper function to convert_metadata
+SEXP _metadata_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num, const void* v) {
+  // This supports a limited set of basic types as the metadata
+  // annotation is not meant to support complete serialization
+  if (v_type == TILEDB_INT32) {
+    Rcpp::IntegerVector vec(v_num);
+    std::memcpy(vec.begin(), v, v_num*sizeof(int32_t));
+    return(vec);
+  } else if (v_type == TILEDB_FLOAT64) {
+    Rcpp::NumericVector vec(v_num);
+    std::memcpy(vec.begin(), v, v_num*sizeof(double));
+    return(vec);
+  } else if (v_type == TILEDB_FLOAT32) {
+    Rcpp::NumericVector vec(v_num);
+    const float *fvec = static_cast<const float*>(v);
+    size_t n = static_cast<size_t>(v_num);
+    for (size_t i=0; i<n; i++) vec[i] = static_cast<double>(fvec[i]);
+    return(vec);
+  } else if (v_type == TILEDB_CHAR || v_type == TILEDB_STRING_ASCII) {
+    Rcpp::CharacterVector vec(1);
+    std::string s(static_cast<const char*>(v));
+    s.resize(v_num);        // incoming char* not null terminated, ensures v_num bytes and terminate
+    return(Rcpp::wrap(s));
+  } else if (v_type == TILEDB_INT8) {
+    Rcpp::LogicalVector vec(v_num);
+    const int8_t *ivec = static_cast<const int8_t*>(v);
+    size_t n = static_cast<size_t>(v_num);
+    for (size_t i=0; i<n; i++) vec[i] = static_cast<bool>(ivec[i]);
+    return(vec);
+  } else if (v_type == TILEDB_UINT8) {
+    // Strictly speaking a check for under/overflow would be needed here (and below) yet this
+    // is for metadata annotation (and not data payload) so extreme ranges are less likely
+    return copy_int_vector<uint8_t>(v_num, v);
+  } else if (v_type == TILEDB_INT16) {
+    return copy_int_vector<int16_t>(v_num, v);
+  } else if (v_type == TILEDB_UINT16) {
+    return copy_int_vector<uint16_t>(v_num, v);
+  } else if (v_type == TILEDB_UINT32) {
+    return copy_int_vector<uint32_t>(v_num, v);
+  } else if (v_type == TILEDB_INT64) {
+    return copy_int_vector<int64_t>(v_num, v);
+  } else if (v_type == TILEDB_UINT64) {
+    return copy_int_vector<uint64_t>(v_num, v);
+  } else {
+    Rcpp::stop("No support yet for %s", _tiledb_datatype_to_string(v_type));
+  }
+}
+
+// [[Rcpp::export]]
+SEXP libtiledb_array_get_metadata_from_index(XPtr<tiledb::Array> array, int idx) {
+  std::string key;
+  tiledb_datatype_t v_type;
+  uint32_t v_num;
+  const void* v;
+  array->get_metadata_from_index(static_cast<uint64_t>(idx), &key, &v_type, &v_num, &v);
+  if (v == NULL) {
+    return R_NilValue;
+  }
+
+  RObject vec = _metadata_to_sexp(v_type, v_num, v);
+  vec.attr("names") = Rcpp::CharacterVector::create(key);
+  return vec;
+}
+
+// [[Rcpp::export]]
+SEXP libtiledb_array_get_metadata_list(XPtr<tiledb::Array> array) {
+  uint64_t num = array->metadata_num();
+  int n = static_cast<int>(num);
+  Rcpp::List lst(n);
+  Rcpp::CharacterVector names(n);
+  for (auto i=0; i<n; i++) {
+    // we trick this a little by having the returned object also carry an attribute
+    // cleaner way (in a C++ pure sense) would be to return a pair of string and SEXP
+    SEXP v = libtiledb_array_get_metadata_from_index(array, i);
+    Rcpp::RObject obj(v);
+    Rcpp::CharacterVector objnms = obj.attr("names");
+    names(i) = objnms[0];
+    obj.attr("names") = R_NilValue; // remove attribute from object
+    lst(i) = obj;
+  }
+  lst.attr("names") = names;
+  return lst;
+}
+
+// [[Rcpp::export]]
+void libtiledb_array_delete_metadata(XPtr<tiledb::Array> array, std::string key) {
+  array->delete_metadata(key.c_str());
 }
 
 /**
