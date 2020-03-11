@@ -31,7 +31,7 @@ tiledb_domain <- function(dims, ctx = tiledb_get_context()) {
   }
   is_dim <- function(obj) is(obj, "tiledb_dim")
   if (is_dim(dims)) {                   # if a dim object given:
-    dimn <- list(dims)                  # make it a list so that lapply works below
+    dims <- list(dims)                  # make it a vector so that lapply works below
   }
   if (missing(dims) || length(dims) == 0 || !all(vapply(dims, is_dim, logical(1)))) {
     stop("argument dims must be a list of one or more tileb_dim")
