@@ -51,6 +51,9 @@ tiledb_array_schema <- function(
     stop("domain argument must be a tiledb::Domain")
   }
   is_attr <- function(obj) is(obj, "tiledb_attr")
+  if (is_attr(attrs)) {                 # if an attrs object given:
+    attrs <- list(attrs)                # make it a list so that lapply works below
+  }
   if (missing(attrs) || length(attrs) == 0 || !all(vapply(attrs, is_attr, logical(1)))) {
     stop("attrs argument must be a list of one or tiled_attr objects")
   }

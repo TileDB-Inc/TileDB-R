@@ -28,6 +28,9 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
     stop("argument ctx must be a tiledb_ctx")
   }
   is_filter <- function(obj) is(obj, "tiledb_filter")
+  if (is_filter(filters)) {             # if a filters object given:
+    filters <- list(filters)            # make it a list so that lapply works below
+  }
   filter_ptrs = c()
   if (length(filters) > 0) {
     if (!all(vapply(filters, is_filter, logical(1)))) {
