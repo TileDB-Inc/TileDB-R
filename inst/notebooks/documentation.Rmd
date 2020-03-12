@@ -38,7 +38,7 @@ create_array <- function(array_name) {
                                   tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
 
     # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
+    schema <- tiledb_array_schema(dom, attrs = tiledb_attr("a", type = "INT32"))
 
     # Create the (empty) array on disk.
     tiledb_array_create(array_name, schema)
@@ -71,8 +71,8 @@ create_array <- function(array_name) {
     dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
                                   tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
 
-   # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    schema = tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
+    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
+    schema = tiledb_array_schema(dom, attrs=tiledb_attr("a", type = "INT32"), sparse = TRUE)
 
     # Create the (empty) array on disk.
     tiledb_array_create(array_name, schema)
@@ -90,6 +90,10 @@ write_array <- function(array_name) {
 create_array(urisparse)
 write_array(urisparse)
 
+close_and_reopen <- function(arr, txt) {
+  res <- tiledb:::libtiledb_array_close(arr@ptr)
+  res <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, txt)
+}
 ```
 
 
@@ -147,7 +151,7 @@ comp <- tiledb_filter("GZIP")
 tiledb_filter_set_option(comp,"COMPRESSION_LEVEL", 10)
 
 # Create a filter list with the compressor
-filter_list <- tiledb_filter_list(c(comp))
+filter_list <- tiledb_filter_list(comp)
 
 # Create attribute with the filter list
 attr <- tiledb_attr("attr", "INT32", filter_list = filter_list)
@@ -324,7 +328,7 @@ d1  <- tiledb_dim(domain = c(1L, 5L))
 d2  <- tiledb_dim(domain = c(1L, 5L))
 dom <- tiledb_domain(c(d1, d2))
 val <- tiledb_attr("val", type = "INT32")
-sch <- tiledb_array_schema(dom, c(val), sparse=TRUE)
+sch <- tiledb_array_schema(dom, val, sparse=TRUE)
 tiledb_array_create(tmp, sch)
 
 
@@ -377,7 +381,7 @@ attr <- tiledb_attr("a", type = r_to_tiledb_type(vec))
 
 ## set to two values per cell
 tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, 2)
-sch <- tiledb_array_schema(dom, c(attr))
+sch <- tiledb_array_schema(dom, attr)
 tiledb_array_create(uridensefix, sch)
 
 ctx <- tiledb_ctx()
@@ -730,8 +734,11 @@ v
 ### Writing Array Metadata
 
 ```{r writemetadata}
-res <- tiledb_put_metadata(uridense, "aaa", 100L)
-res <- tiledb_put_metadata(uridense, "bb", c(1.1, 2.2))
+arr <- tiledb_dense(uridense)
+close_and_reopen(arr, "WRITE")
+res <- tiledb_put_metadata(arr, "aaa", 100L)
+res <- tiledb_put_metadata(arr, "bb", c(1.1, 2.2))
+invisible(tiledb:::libtiledb_array_close(arr@ptr))
 ```
 
 ### Reading Array Metadata
@@ -739,18 +746,21 @@ res <- tiledb_put_metadata(uridense, "bb", c(1.1, 2.2))
 One can read by key:
 
 ```{r readmetadata}
-tiledb_get_metadata(uridense, "aaa")
+close_and_reopen(arr, "READ")
+tiledb_get_metadata(arr, "aaa")
 ```
 
 Or one can retrieve all metadata at once:
 
 ```{r readmetadataall}
-md <- tiledb_get_all_metadata(uridense)
+md <- tiledb_get_all_metadata(arr)
 print(md)
 ```
 
 ### Deleting Array Metadata
 
 ```{r deletemetadata}
-res <- tiledb_delete_metadata(uridense, "aaa")
+close_and_reopen(arr, "WRITE")
+res <- tiledb_delete_metadata(arr, "aaa")
+
 ```

@@ -278,7 +278,7 @@ void                      libtiledb_array_schema_check(XPtr<tiledb::ArraySchema>
 ##   static void consolidate_metadata(const Context& ctx, const std::string& uri, Config* const config = nullptr)
 ##   static void consolidate_metadata(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const void* encryption_key, uint32_t key_length, Config* const config = nullptr)
 ##   static void consolidate_metadata(const Context& ctx, const std::string& uri, tiledb_encryption_type_t encryption_type, const std::string& encryption_key, Config* const config = nullptr)
-##   void put_metadata(const std::string& key, tiledb_datatype_t value_type, uint32_t value_num, const void* value)
+## y void put_metadata(const std::string& key, tiledb_datatype_t value_type, uint32_t value_num, const void* value)
 ##   void delete_metadata(const std::string& key)
 ##   void get_metadata(const std::string& key, tiledb_datatype_t* value_type, uint32_t* value_num, const void** value)
 ##   bool has_metadata(const std::string& key, tiledb_datatype_t* value_type)
@@ -301,6 +301,10 @@ XPtr<tiledb::Array>       libtiledb_array_close(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_query_type(XPtr<tiledb::Array> array);
 List                      libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array);
 std::string               libtiledb_array_consolidate(XPtr<tiledb::Context> ctx, std::string uri);
+bool                      libtiledb_array_put_metadata(XPtr<tiledb::Array> array, std::string key, SEXP obj);
+R_xlen_t                  libtiledb_array_get_metadata_num(XPtr<tiledb::Array> array);
+SEXP                      libtiledb_array_get_metadata_from_index(XPtr<tiledb::Array> array, int idx);
+void                      libtiledb_array_delete_metadata(XPtr<tiledb::Array> array, std::string key);
 
 
 ## Query
@@ -377,6 +381,29 @@ DataFrame                 libtiledb_object_walk(XPtr<tiledb::Context> ctx, std::
 
 
 ## VFS
+##
+## C++ API
+##
+##   VFS(const Context& ctx, const Config& config)
+##   void create_bucket(const std::string& uri)
+##   void remove_bucket(const std::string& uri)
+##   bool is_bucket(const std::string& uri)
+##   void empty_bucket(const std::string& bucket)
+##   bool is_empty_bucket(const std::string& bucket)
+##   void create_dir(const std::string& uri)
+##   bool is_dir(const std::string& uri)
+##   bool is_file(const std::string& uri)
+##   void remove_file(const std::string& uri)
+##   uint64_t dir_size(const std::string& uri)
+##   std::vector<std::string> ls(const std::string& uri)
+##   uint64_t file_size(const std::string& uri)
+##   void move_file(const std::string& old_uri, const std::string& new_uri)
+##   void move_dir(const std::string& old_uri, const std::string& new_uri)
+##   void touch(const std::string& uri)
+##   const Context& context()
+##   std::shared_ptr<tiledb_vfs_t> ptr()
+##   Config config()
+##   static int ls_getter(const char* path, void* data)
 XPtr<tiledb::VFS>         tiledb_vfs(XPtr<tiledb::Context> ctx, Nullable<XPtr<tiledb::Config>> config=R_NilValue);
 std::string               tiledb_vfs_create_bucket(XPtr<tiledb::VFS> vfs, std::string uri);
 std::string               tiledb_vfs_remove_bucket(XPtr<tiledb::VFS> vfs, std::string uri);
@@ -392,6 +419,23 @@ R_xlen_t                  tiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::strin
 std::string               tiledb_vfs_move_file(XPtr<tiledb::VFS> vfs, std::string old_uri, std::string new_uri);
 std::string               tiledb_vfs_move_dir(XPtr<tiledb::VFS> vfs, std::string old_uri, std::string new_uri);
 std::string               tiledb_vfs_touch(XPtr<tiledb::VFS> vfs, std::string uri);
+
+## VFSFilebuf
+##
+## C++ API
+##
+##   VFSFilebuf(const VFS& vfs)
+##   VFSFilebuf* open(const std::string& uri, std::ios::openmode openmode = std::ios::in)
+##   bool is_open()
+##   VFSFilebuf* close()
+##   const std::string& get_uri()
+##   std::streambuf::pos_type seekoff( off_type offset, std::ios::seekdir seekdir, std::ios::openmode openmode)
+##   pos_type seekpos(pos_type pos, std::ios::openmode openmode)
+##   std::streamsize showmanyc()
+##   std::streamsize xsgetn(char_type* s, std::streamsize n)
+##   int_type uflow()
+##   std::streamsize xsputn(const char_type* s, std::streamsize n)
+##   int_type overflow(int_type c)
 
 
 ## Stats

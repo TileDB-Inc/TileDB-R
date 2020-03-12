@@ -1701,7 +1701,7 @@ create_array &lt;- function(array_name) {
                                   tiledb_dim(&quot;cols&quot;, c(1L, 4L), 4L, &quot;INT32&quot;)))
 
     # The array will be dense with a single attribute &quot;a&quot; so each (i,j) cell can store an integer.
-    schema &lt;- tiledb_array_schema(dom, attrs = c(tiledb_attr(&quot;a&quot;, type = &quot;INT32&quot;)))
+    schema &lt;- tiledb_array_schema(dom, attrs = tiledb_attr(&quot;a&quot;, type = &quot;INT32&quot;))
 
     # Create the (empty) array on disk.
     tiledb_array_create(array_name, schema)
@@ -1718,7 +1718,7 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(uridense)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/dense&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpoOK3ly/dense&quot;</code></pre>
 <pre class="r"><code>write_array(uridense)
 
 
@@ -1735,8 +1735,8 @@ create_array &lt;- function(array_name) {
     dom &lt;- tiledb_domain(dims = c(tiledb_dim(&quot;rows&quot;, c(1L, 4L), 4L, &quot;INT32&quot;),
                                   tiledb_dim(&quot;cols&quot;, c(1L, 4L), 4L, &quot;INT32&quot;)))
 
-   # The array will be dense with a single attribute &quot;a&quot; so each (i,j) cell can store an integer.
-    schema = tiledb_array_schema(dom, attrs=c(tiledb_attr(&quot;a&quot;, type = &quot;INT32&quot;)), sparse = TRUE)
+    # The array will be dense with a single attribute &quot;a&quot; so each (i,j) cell can store an integer.
+    schema = tiledb_array_schema(dom, attrs=tiledb_attr(&quot;a&quot;, type = &quot;INT32&quot;), sparse = TRUE)
 
     # Create the (empty) array on disk.
     tiledb_array_create(array_name, schema)
@@ -1752,8 +1752,13 @@ write_array &lt;- function(array_name) {
 }
 
 create_array(urisparse)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/sparse&quot;</code></pre>
-<pre class="r"><code>write_array(urisparse)</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpoOK3ly/sparse&quot;</code></pre>
+<pre class="r"><code>write_array(urisparse)
+
+close_and_reopen &lt;- function(arr, txt) {
+  res &lt;- tiledb:::libtiledb_array_close(arr@ptr)
+  res &lt;- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, txt)
+}</code></pre>
 </div>
 <div id="api-usage" class="section level1">
 <h1>API Usage</h1>
@@ -1796,7 +1801,7 @@ tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
 tiledb_filter_set_option(comp,&quot;COMPRESSION_LEVEL&quot;, 10)
 
 # Create a filter list with the compressor
-filter_list &lt;- tiledb_filter_list(c(comp))
+filter_list &lt;- tiledb_filter_list(comp)
 
 # Create attribute with the filter list
 attr &lt;- tiledb_attr(&quot;attr&quot;, &quot;INT32&quot;, filter_list = filter_list)</code></pre>
@@ -1883,7 +1888,7 @@ if (dir.exists(uridensewkey)) unlink(uridensewkey, recursive=TRUE)
 # shortcut: borrow schema from dense array; could create schema too
 schema &lt;- schema(tiledb_dense(uridense))
 tiledb:::libtiledb_array_create_with_key(uridensewkey, schema@ptr, encryption_key)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densewkey&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpoOK3ly/densewkey&quot;</code></pre>
 <pre class="r"><code>##TODO: R support</code></pre>
 </div>
 </div>
@@ -1944,9 +1949,9 @@ d1  &lt;- tiledb_dim(domain = c(1L, 5L))
 d2  &lt;- tiledb_dim(domain = c(1L, 5L))
 dom &lt;- tiledb_domain(c(d1, d2))
 val &lt;- tiledb_attr(&quot;val&quot;, type = &quot;INT32&quot;)
-sch &lt;- tiledb_array_schema(dom, c(val), sparse=TRUE)
+sch &lt;- tiledb_array_schema(dom, val, sparse=TRUE)
 tiledb_array_create(tmp, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpoOK3ly/sparse&quot;</code></pre>
 <pre class="r"><code># Prepare some data
 data &lt;- c(3L, 4L, 1L, 2L)
 
@@ -1986,9 +1991,9 @@ attr &lt;- tiledb_attr(&quot;a&quot;, type = r_to_tiledb_type(vec))
 
 ## set to two values per cell
 tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, 2)
-sch &lt;- tiledb_array_schema(dom, c(attr))
+sch &lt;- tiledb_array_schema(dom, attr)
 tiledb_array_create(uridensefix, sch)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densefix&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpoOK3ly/densefix&quot;</code></pre>
 <pre class="r"><code>ctx &lt;- tiledb_ctx()
 arrptr &lt;- tiledb:::libtiledb_array_open(ctx@ptr, uridensefix, &quot;WRITE&quot;)
 subarr &lt;- c(1L,4L, 1L,4L)
@@ -2027,7 +2032,7 @@ tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
 
 ## Create the (empty) array on disk.
 tiledb:::libtiledb_array_create(uridensevar, schptr)</code></pre>
-<pre><code>## [1] &quot;/tmp/Rtmpz7aolS/densevar&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/RtmpoOK3ly/densevar&quot;</code></pre>
 <pre class="r"><code>data &lt;- &quot;abbcccddeeefghhhijjjkklmnoop&quot;;
 offsets &lt;- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)
 
@@ -2040,7 +2045,7 @@ bufptr &lt;- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
 qryptr &lt;- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, &quot;a1&quot;, bufptr)
 qryptr &lt;- tiledb:::libtiledb_query_submit(qryptr)
 tiledb:::libtiledb_array_close(arrptr)</code></pre>
-<pre><code>## &lt;pointer: 0x55a211bf8a20&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55d5011abad0&gt;</code></pre>
 <pre class="r"><code>#TODO Higher-level R support</code></pre>
 </div>
 <div id="getting-the-fragment-info" class="section level3">
@@ -2293,9 +2298,8 @@ estsz</code></pre>
 <h3>Time Traveling</h3>
 <pre class="r"><code>ctx &lt;- tiledb_ctx()
 tstamp &lt;- Sys.time() - 1.0; # one seconds ago (as the arrays created here are in temp.files)
-arrptr &lt;- tiledb:::libtiledb_array_open_at(ctx@ptr, uridense, &quot;READ&quot;, tstamp)</code></pre>
-<pre><code>## [1] &quot;2020-03-09 12:18:22.387257 CDT&quot;</code></pre>
-<pre class="r"><code>subarr &lt;- c(1L,2L, 2L,4L)
+arrptr &lt;- tiledb:::libtiledb_array_open_at(ctx@ptr, uridense, &quot;READ&quot;, tstamp)
+subarr &lt;- c(1L,2L, 2L,4L)
 qryptr &lt;- tiledb:::libtiledb_query(ctx@ptr, arrptr, &quot;READ&quot;)
 qryptr &lt;- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
 qryptr &lt;- tiledb:::libtiledb_query_set_layout(qryptr, &quot;ROW_MAJOR&quot;)
@@ -2320,23 +2324,28 @@ v</code></pre>
 <h2>Array Metadata</h2>
 <div id="writing-array-metadata" class="section level3">
 <h3>Writing Array Metadata</h3>
-<pre class="r"><code>res &lt;- tiledb_put_metadata(uridense, &quot;aaa&quot;, 100L)
-res &lt;- tiledb_put_metadata(uridense, &quot;bb&quot;, c(1.1, 2.2))</code></pre>
+<pre class="r"><code>arr &lt;- tiledb_dense(uridense)
+close_and_reopen(arr, &quot;WRITE&quot;)
+res &lt;- tiledb_put_metadata(arr, &quot;aaa&quot;, 100L)
+res &lt;- tiledb_put_metadata(arr, &quot;bb&quot;, c(1.1, 2.2))
+invisible(tiledb:::libtiledb_array_close(arr@ptr))</code></pre>
 </div>
 <div id="reading-array-metadata" class="section level3">
 <h3>Reading Array Metadata</h3>
 <p>One can read by key:</p>
-<pre class="r"><code>tiledb_get_metadata(uridense, &quot;aaa&quot;)</code></pre>
+<pre class="r"><code>close_and_reopen(arr, &quot;READ&quot;)
+tiledb_get_metadata(arr, &quot;aaa&quot;)</code></pre>
 <pre><code>## [1] 100</code></pre>
 <p>Or one can retrieve all metadata at once:</p>
-<pre class="r"><code>md &lt;- tiledb_get_all_metadata(uridense)
+<pre class="r"><code>md &lt;- tiledb_get_all_metadata(arr)
 print(md)</code></pre>
 <pre><code>## aaa: 100
 ## bb:  1.1, 2.2</code></pre>
 </div>
 <div id="deleting-array-metadata" class="section level3">
 <h3>Deleting Array Metadata</h3>
-<pre class="r"><code>res &lt;- tiledb_delete_metadata(uridense, &quot;aaa&quot;)</code></pre>
+<pre class="r"><code>close_and_reopen(arr, &quot;WRITE&quot;)
+res &lt;- tiledb_delete_metadata(arr, &quot;aaa&quot;)</code></pre>
 </div>
 </div>
 </div>

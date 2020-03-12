@@ -4,7 +4,7 @@
 #' @slot uri A character despription
 #' @slot as.data.frame A logical value
 #' @slot ptr External pointer to the underlying implementation
-#' @exportClass "tiledb_sparse"
+#' @exportClass tiledb_sparse
 setClass("tiledb_sparse",
          slots = list(ctx = "tiledb_ctx", uri = "character",
                       as.data.frame = "logical", ptr = "externalptr"))

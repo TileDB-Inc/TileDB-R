@@ -12,7 +12,8 @@ tiledb_get_metadata(arr, key)
 \item{key}{A character value describing a metadata key}
 }
 \value{
-A object stored in the Metadata under the given key
+A object stored in the Metadata under the given key,
+or \sQuote{NULL} if none found.
 }
 \description{
 Return a TileDB Array Metadata object given by key

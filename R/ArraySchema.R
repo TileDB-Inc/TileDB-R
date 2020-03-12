@@ -6,7 +6,7 @@ setClass("tiledb_array_schema",
          slots = list(ptr = "externalptr"))
 
 tiledb_array_schema.from_ptr <- function(ptr) {
-   if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
+  if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
     stop("ptr argument must be a non NULL externalptr to a tiledb_array_schema instance")
   }
   new("tiledb_array_schema", ptr = ptr)
@@ -51,6 +51,9 @@ tiledb_array_schema <- function(
     stop("domain argument must be a tiledb::Domain")
   }
   is_attr <- function(obj) is(obj, "tiledb_attr")
+  if (is_attr(attrs)) {                 # if an attrs object given:
+    attrs <- list(attrs)                # make it a list so that lapply works below
+  }
   if (missing(attrs) || length(attrs) == 0 || !all(vapply(attrs, is_attr, logical(1)))) {
     stop("attrs argument must be a list of one or tiled_attr objects")
   }
