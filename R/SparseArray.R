@@ -53,9 +53,12 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
 sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
+  domaintype <- libtiledb_domain_get_type(dom@ptr)
   attributes <- list()
   # first alloc coordinate buffer
-  ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
+  #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
+  ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
+                                                          libtiledb_coords(), domaintype)
   if (is.integral(dom)) {
     attributes[["coords"]] <- integer(length = ncells)
   } else {
@@ -70,7 +73,8 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
   for(attr in attrs) {
     aname <- tiledb::name(attr)
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
-    ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
+    #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
+    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
     buff <- vector(mode = type, length = ncells)
     attributes[[aname]] <- buff
   }
@@ -124,6 +128,7 @@ setMethod("[", "tiledb_sparse",
             uri <- x@uri
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
+            domaintype <- libtiledb_domain_get_type(dom@ptr)
             if (!tiledb::is.integral(dom)) {
               stop("subscript indexing only valid for integral Domain's")
             }
@@ -139,7 +144,8 @@ setMethod("[", "tiledb_sparse",
                 buffers <- sparse_attribute_buffers(x, schema, dom, subarray)
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
                 qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                qry <- libtiledb_query_set_subarray(qry, subarray)
+                #qry <- libtiledb_query_set_subarray(qry, subarray)
+                qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype)
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                     aname <- attr_names[[idx]]

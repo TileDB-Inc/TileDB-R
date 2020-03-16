@@ -369,8 +369,8 @@ libtiledb_query_set_layout <- function(query, layout) {
     .Call(`_tiledb_libtiledb_query_set_layout`, query, layout)
 }
 
-libtiledb_query_set_subarray_datetime <- function(query, subarray) {
-    .Call(`_tiledb_libtiledb_query_set_subarray_datetime`, query, subarray)
+libtiledb_query_set_subarray_with_type <- function(query, subarray, typestr) {
+    .Call(`_tiledb_libtiledb_query_set_subarray_with_type`, query, subarray, typestr)
 }
 
 libtiledb_query_set_subarray <- function(query, subarray) {
@@ -465,8 +465,12 @@ libtiledb_coords <- function() {
     .Call(`_tiledb_libtiledb_coords`)
 }
 
-libtiledb_array_max_buffer_elements_test <- function(array, sch, dom, subarray, attr, verbose = TRUE) {
+libtiledb_array_max_buffer_elements_test <- function(array, sch, dom, subarray, attr, verbose = FALSE) {
     .Call(`_tiledb_libtiledb_array_max_buffer_elements_test`, array, sch, dom, subarray, attr, verbose)
+}
+
+libtiledb_array_max_buffer_elements_with_type <- function(array, subarray, attribute, typestr) {
+    .Call(`_tiledb_libtiledb_array_max_buffer_elements_with_type`, array, subarray, attribute, typestr)
 }
 
 libtiledb_array_max_buffer_elements <- function(array, subarray, attribute) {

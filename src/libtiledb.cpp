@@ -99,10 +99,34 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_INT64;
   } else if (typestr == "UINT64") {
     return TILEDB_UINT64;
+  } else if (typestr == "DATETIME_YEAR") {
+    return TILEDB_DATETIME_YEAR;
+  } else if (typestr == "DATETIME_MONTH") {
+    return TILEDB_DATETIME_MONTH;
+  } else if (typestr == "DATETIME_WEEK") {
+    return TILEDB_DATETIME_WEEK;
+  } else if (typestr == "DATETIME_DAY") {
+    return TILEDB_DATETIME_DAY;
+  } else if (typestr == "DATETIME_HR") {
+    return TILEDB_DATETIME_HR;
+  } else if (typestr == "DATETIME_MIN") {
+    return TILEDB_DATETIME_MIN;
+  } else if (typestr == "DATETIME_SEC") {
+    return TILEDB_DATETIME_SEC;
+  } else if (typestr == "DATETIME_MS") {
+    return TILEDB_DATETIME_MS;
+  } else if (typestr == "DATETIME_US") {
+    return TILEDB_DATETIME_US;
+  } else if (typestr == "DATETIME_NS") {
+    return TILEDB_DATETIME_NS;
+  } else if (typestr == "DATETIME_PS") {
+    return TILEDB_DATETIME_PS;
+  } else if (typestr == "DATETIME_FS") {
+    return TILEDB_DATETIME_FS;
+  } else if (typestr == "DATETIME_AS") {
+    return TILEDB_DATETIME_AS;
   } else {
-    std::stringstream errmsg;
-    errmsg << "Unknown TileDB type \"" << typestr << "\"";
-    throw Rcpp::exception(errmsg.str().c_str());
+    Rcpp::stop("Unknown TileDB type '%s'", typestr.c_str());
   }
 }
 
@@ -1500,15 +1524,34 @@ XPtr<tiledb::Query> libtiledb_query_set_layout(XPtr<tiledb::Query> query,
   return query;
 }
 
-// ad-hoc
+// generalized version which switched
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_set_subarray_datetime(XPtr<tiledb::Query> query,
-                                                          SEXP subarray) {
-  NumericVector sub(subarray);
-  std::vector<int64_t> v(sub.length());
-  for (int i=0; i<sub.length(); i++)
-    v[i] = static_cast<int64_t>(sub[i]);
-  query->set_subarray(v);
+XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> query,
+                                                           SEXP subarray, std::string typestr) {
+  if (typestr == "INT32") {
+    IntegerVector sub(subarray);
+    query->set_subarray(sub.begin(), sub.length());
+  } else if (typestr == "FLOAT64") {
+    NumericVector sub(subarray);
+    query->set_subarray(sub.begin(), sub.length());
+  } else if (typestr == "INT64" ||
+             typestr == "UINT64" ||
+             typestr == "UINT32" ||
+             typestr == "DATETIME_DAY" ||
+             typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS" ||
+             typestr == "DATETIME_US" ||
+             typestr == "DATETIME_NS") {
+    NumericVector sub(subarray);
+    std::vector<int64_t> v(sub.length());
+    for (int i=0; i<sub.length(); i++)
+      v[i] = static_cast<int64_t>(sub[i]);
+    query->set_subarray(v);
+  } else {
+    Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
+  }
   return query;
 }
 
@@ -1524,7 +1567,7 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
     query->set_subarray(sub.begin(), sub.length());
     return query;
   } else {
-    throw Rcpp::exception("invalid subarray datatype");
+    Rcpp::stop("currently unsupported subarray datatype");
   }
 }
 
@@ -1897,12 +1940,10 @@ R_xlen_t libtiledb_array_max_buffer_elements_test(XPtr<tiledb::Array> array,
   tiledb_array_t *c_array = array->ptr().get();
   tiledb_datatype_t tp = dom->type();
   uint64_t attr_size = 0; //, type_size = 1;
-  int res ;//= -1;
   if (verbose) Rcpp::Rcout << "Dom type is " << _tiledb_datatype_to_string(tp) << std::endl;
-  if (attr != "__coords") {
-    XPtr<tiledb::Attribute> attribute = libtiledb_array_schema_get_attribute_from_name(sch, attr);
-
-  }
+  //if (attr != "__coords") {
+  //  XPtr<tiledb::Attribute> attribute = libtiledb_array_schema_get_attribute_from_name(sch, attr);
+  //}
 
   auto schema_attrs = sch->attributes();
 
@@ -1919,14 +1960,14 @@ R_xlen_t libtiledb_array_max_buffer_elements_test(XPtr<tiledb::Array> array,
     for (int i=0; i<subarray.size(); i++) {
       v[i] = static_cast<int32_t>(subarray[i]);
     }
-    res = tiledb_array_max_buffer_size(c_ctx, c_array, attr.c_str(), v.data(), &attr_size);
+    tiledb_array_max_buffer_size(c_ctx, c_array, attr.c_str(), v.data(), &attr_size);
     if (verbose) Rcpp::Rcout << "int32 Attr size is " << attr_size << std::endl;
   } else if (tp == TILEDB_FLOAT64) {
     std::vector<double> v(subarray.size());
     for (int i=0; i<subarray.size(); i++) {
       v[i] = static_cast<double>(subarray[i]);
     }
-    res = tiledb_array_max_buffer_size(c_ctx, c_array, attr.c_str(), v.data(), &attr_size);
+    tiledb_array_max_buffer_size(c_ctx, c_array, attr.c_str(), v.data(), &attr_size);
     if (verbose) Rcpp::Rcout << "double Attr size is " << attr_size << std::endl;
   } else if (tp == TILEDB_INT64 ||
              tp == TILEDB_DATETIME_YEAR  ||
@@ -1946,10 +1987,46 @@ R_xlen_t libtiledb_array_max_buffer_elements_test(XPtr<tiledb::Array> array,
     for (int i=0; i<subarray.size(); i++) {
       v[i] = static_cast<int64_t>(subarray[i]);
     }
-    res = tiledb_array_max_buffer_size(c_ctx, c_array, attr.c_str(), v.data(), &attr_size);
+    tiledb_array_max_buffer_size(c_ctx, c_array, attr.c_str(), v.data(), &attr_size);
     if (verbose) Rcpp::Rcout << "DT Attr size is " << attr_size << std::endl;
   }
   return attr_size;
+}
+
+// using domain type information
+// [[Rcpp::export]]
+R_xlen_t libtiledb_array_max_buffer_elements_with_type(XPtr<tiledb::Array> array,
+                                                       SEXP subarray,
+                                                       std::string attribute,
+                                                       std::string typestr) {
+  if (typestr == "INT32") {
+    auto sub = as<std::vector<int32_t>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    return max_elements[attribute].second;
+  } else if (typestr == "FLOAT64") {
+    auto sub = as<std::vector<double>>(subarray);
+    auto max_elements = array->max_buffer_elements(sub);
+    return max_elements[attribute].second;
+  } else if (typestr == "INT64" ||
+             typestr == "UINT64" ||
+             typestr == "UINT32" ||
+             typestr == "DATETIME_DAY" ||
+             typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS" ||
+             typestr == "DATETIME_US" ||
+             typestr == "DATETIME_NS") {
+    NumericVector svec(subarray);
+    std::vector<int64_t> v(svec.size());
+    for (int i=0; i<svec.size(); i++) {
+      v[i] = static_cast<int64_t>(svec[i]);
+    }
+    auto max_elements = array->max_buffer_elements(v);
+    return max_elements[attribute].second * sizeof(double);
+  } else {
+    Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
+  }
 }
 
 // [[Rcpp::export]]
@@ -1958,12 +2035,9 @@ R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array,
                                              std::string attribute) {
   if (TYPEOF(subarray) == INTSXP) {
     auto sub = as<std::vector<int32_t>>(subarray);
-    REprintf("in libtiledb_array_max_buffer_elements A %s\n", attribute.c_str());
     auto max_elements = array->max_buffer_elements(sub);
-    REprintf("in libtiledb_array_max_buffer_elements B %s\n", attribute.c_str());
     return max_elements[attribute].second;
   } else if (TYPEOF(subarray) == REALSXP) {
-    REprintf("in libtiledb_array_max_buffer_elements C %s\n", attribute.c_str());
     auto sub = as<std::vector<double>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
     return max_elements[attribute].second;
