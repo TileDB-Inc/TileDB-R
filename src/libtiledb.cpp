@@ -24,7 +24,7 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
     case TILEDB_INT64:
       return "INT64";
     case TILEDB_UINT64:
-      return "FLOAT32";
+      return "UINT64";
     case TILEDB_FLOAT32:
       return "FLOAT32";
     case TILEDB_FLOAT64:
