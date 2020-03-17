@@ -9,8 +9,8 @@ try_datetime <- function(uri) {
   uri <- x@uri
   schema <- tiledb::schema(x)
   dom <- tiledb::domain(schema)
-  ##print(dom)
-  ##print(libtiledb_domain_get_type(dom@ptr))
+  ## we need the data type of the domain (as a string)
+  domaintype <- libtiledb_domain_get_type(dom@ptr)
   if (!tiledb::is.integral(dom)) {
     stop("subscript indexing only valid for integral Domain's")
   }
@@ -22,7 +22,6 @@ try_datetime <- function(uri) {
   } else {
     subarray <- as.double(subarray)
   }
-  #print(str(subarray))
 
   ## -- replacing sparse_attribute_buffers
   local_sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
@@ -34,13 +33,17 @@ try_datetime <- function(uri) {
     ## FIXME: libtiledb_array_max_buffer_elements
     ## ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
     ## ncells <- max(sub) - min(sub) + 1
-    ncells <- libtiledb_array_max_buffer_elements_test(array@ptr, sch@ptr,
-                                                       dom@ptr, sub, libtiledb_coords())
-    if (is.integral(dom)) {
-      attributes[["coords"]] <- integer(length = ncells)
+    #ncells <- libtiledb_array_max_buffer_elements_test(array@ptr, sch@ptr,
+    #                                                   dom@ptr, sub, libtiledb_coords())
+    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
+                                                            libtiledb_coords(), domaintype)
+    if (is.integral(dom) && !grepl("^DATETIME", domaintype)) {
+      attributes[["coords"]] <- integer(length = ncells)*8
     } else {
-      attributes[["coords"]]  <- numeric(length = ncells)
+      attributes[["coords"]]  <- numeric(length = ncells)*8
     }
+    cat("For buffer 'coords' set up size of '", ncells, "' of type '",
+        ifelse(is.integral(dom) && !grepl("^DATETIME", domaintype), "int", "dbl"), "\n", sep="")
 
     attrs <- tiledb::attrs(sch)
     if (length(filter_attributes) > 0) {
@@ -52,9 +55,12 @@ try_datetime <- function(uri) {
       type <- tiledb_datatype_R_type(tiledb::datatype(attr))
       ## FIXME ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
       ##       ncells <- max(sub) - min(sub) + 1
-      ncells <- libtiledb_array_max_buffer_elements_test(array@ptr, sch@ptr, dom@ptr, sub, aname)
-      buff <- vector(mode = type, length = ncells)
+      #ncells <- libtiledb_array_max_buffer_elements_test(array@ptr, sch@ptr, dom@ptr, sub, aname)
+      ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
+                                                              aname, domaintype)
+      buff <- vector(mode = type, length = ncells*8)
       attributes[[aname]] <- buff
+      cat("For buffer '", aname, "' set up size of '", ncells, "' of type '", type, "'\n", sep="")
     }
     return(attributes)
   }
@@ -62,8 +68,8 @@ try_datetime <- function(uri) {
   buffers <- local_sparse_attribute_buffers(x, schema, dom, subarray)
   qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
   qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-  #FIXME  qry <- libtiledb_query_set_subarray(qry, subarray)
-  qry <- libtiledb_query_set_subarray_datetime(qry, subarray)
+  #FIXME  qry <- libtiledb_query_set_subarray(qry, subarray) -- now '_with_type'
+  qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype)
   attr_names <- names(buffers)
   for (idx in seq_along(buffers)) {
     aname <- attr_names[[idx]]
@@ -94,7 +100,9 @@ try_datetime <- function(uri) {
     if (ncells < length(old_buffer)) {
       buffers[[idx]] <- old_buffer[1:ncells]
     }
+    cat("Setting size to '", ncells, "' for '", aname, "'\n", sep="")
   }
+  fixup_coord_buffer(buffers[[1]]);
   if (x@as.data.frame) {
     return(as_data_frame(dom, buffers))
   } else {
@@ -104,4 +112,9 @@ try_datetime <- function(uri) {
     }
     return(buffers)
   }
+}
+
+testDatetime <- function(uri="/tmp/tiledb/datetime-types/ms") {
+  rl <- try_datetime(uri)
+  res <- cbind(matrix(rl$coords, 100, 2, byrow=TRUE), rl$a1)
 }

@@ -6,6 +6,16 @@
 
 using namespace Rcpp;
 
+// fixup_coord_buffer
+void fixup_coord_buffer(Rcpp::NumericVector v);
+RcppExport SEXP _tiledb_fixup_coord_buffer(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type v(vSEXP);
+    fixup_coord_buffer(v);
+    return R_NilValue;
+END_RCPP
+}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -1225,6 +1235,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_buffer_sparse_coords_alloc
+XPtr<sp_crd_buf_t> libtiledb_query_buffer_sparse_coords_alloc(XPtr<tiledb::Array> array, std::string domaintype, R_xlen_t ncells);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_sparse_coords_alloc(SEXP arraySEXP, SEXP domaintypeSEXP, SEXP ncellsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< std::string >::type domaintype(domaintypeSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type ncells(ncellsSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_sparse_coords_alloc(array, domaintype, ncells));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_submit
 XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query);
 RcppExport SEXP _tiledb_libtiledb_query_submit(SEXP querySEXP) {
@@ -1363,22 +1386,6 @@ BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     rcpp_result_gen = Rcpp::wrap(libtiledb_coords());
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_array_max_buffer_elements_test
-R_xlen_t libtiledb_array_max_buffer_elements_test(XPtr<tiledb::Array> array, XPtr<tiledb::ArraySchema> sch, XPtr<tiledb::Domain> dom, IntegerVector subarray, std::string attr, bool verbose);
-RcppExport SEXP _tiledb_libtiledb_array_max_buffer_elements_test(SEXP arraySEXP, SEXP schSEXP, SEXP domSEXP, SEXP subarraySEXP, SEXP attrSEXP, SEXP verboseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type sch(schSEXP);
-    Rcpp::traits::input_parameter< XPtr<tiledb::Domain> >::type dom(domSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type subarray(subarraySEXP);
-    Rcpp::traits::input_parameter< std::string >::type attr(attrSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_max_buffer_elements_test(array, sch, dom, subarray, attr, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1706,6 +1713,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_tiledb_fixup_coord_buffer", (DL_FUNC) &_tiledb_fixup_coord_buffer, 1},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
@@ -1810,6 +1818,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_buffer_var_vec_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_vec, 3},
+    {"_tiledb_libtiledb_query_buffer_sparse_coords_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_sparse_coords_alloc, 3},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},
     {"_tiledb_libtiledb_query_status", (DL_FUNC) &_tiledb_libtiledb_query_status, 1},
@@ -1822,7 +1831,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_zip_coords_numeric", (DL_FUNC) &_tiledb_libtiledb_zip_coords_numeric, 2},
     {"_tiledb_libtiledb_zip_coords_integer", (DL_FUNC) &_tiledb_libtiledb_zip_coords_integer, 2},
     {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},
-    {"_tiledb_libtiledb_array_max_buffer_elements_test", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_test, 6},
     {"_tiledb_libtiledb_array_max_buffer_elements_with_type", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_with_type, 4},
     {"_tiledb_libtiledb_array_max_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements, 3},
     {"_tiledb_libtiledb_array_max_buffer_elements_vec", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_vec, 3},
