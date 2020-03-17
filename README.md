@@ -4,7 +4,8 @@
 
 # TileDB-R
 
-The TileDB R package offers an [R](https://www.r-project.org/) interface to the [storage engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
+The TileDB R package offers an [R](https://www.r-project.org/) interface to the [storage
+engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
 
 Note that the R interface to TileDB is under development, and the API is subject to change.
 
@@ -22,15 +23,17 @@ for the TileDB R package to build and link correctly:
     > library(tiledb)
     > tiledb_version()
     major minor patch
-        1     7     6
+        1     7     5
     > help(package=tiledb)
 
 ## Installation
 
-As the TileDB R package has not been published on [CRAN](https://cran.r-project.org/),
-it must be installed from source.
+As the TileDB R package has not been published on [CRAN](https://cran.r-project.org/), it must be
+installed from source.
 
-The most recent released version can be installed from [Github](https://github.com/TileDB-Inc/TileDB-R) using the package [remotes](https://cran.r-project.org/package=remotes).
+The most recent released version can be installed from
+[Github](https://github.com/TileDB-Inc/TileDB-R) using the package
+[remotes](https://cran.r-project.org/package=remotes).
 
     install.packages("remotes")
     library(remotes)
@@ -41,7 +44,8 @@ If the TileDB library is installed in a custom location, you need to pass the ex
     remotes::install_github("TileDB-Inc/TileDB-R",
         args="--configure-args='--with-tiledb=/path/to/tiledb'")
 
-Note that the TileDB R package is developed and tested against the latest stable (`v1.7.x`) version of TileDB, but should also build against the newest development version.
+Note that the TileDB R package is developed and tested against the latest stable (`v1.7.x`) version
+of TileDB, but should also build against the newest development version.
 
 ## Quick Links
 
