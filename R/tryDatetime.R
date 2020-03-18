@@ -37,14 +37,12 @@ try_datetime <- function(uri) {
     #                                                   dom@ptr, sub, libtiledb_coords())
     ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
                                                             libtiledb_coords(), domaintype)
-    if (is.integral(dom) && !grepl("^DATETIME", domaintype)) {
-      attributes[["coords"]] <- integer(length = ncells)*8
-    } else {
-      attributes[["coords"]]  <- numeric(length = ncells)*8
-    }
-    cat("For buffer 'coords' set up size of '", ncells, "' of type '",
-        ifelse(is.integral(dom) && !grepl("^DATETIME", domaintype), "int", "dbl"), "\n", sep="")
-
+    #if (is.integral(dom) && !grepl("^DATETIME", domaintype)) {
+    #  attributes[["coords"]] <- integer(length = ncells)*8
+    #} else {
+    #  attributes[["coords"]]  <- numeric(length = ncells)*8
+    #}
+    attributes[["coords"]] <- libtiledb_query_buffer_alloc_ptr(array@ptr, domaintype, ncells)
     attrs <- tiledb::attrs(sch)
     if (length(filter_attributes) > 0) {
       attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
@@ -58,9 +56,10 @@ try_datetime <- function(uri) {
       #ncells <- libtiledb_array_max_buffer_elements_test(array@ptr, sch@ptr, dom@ptr, sub, aname)
       ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
                                                               aname, domaintype)
-      buff <- vector(mode = type, length = ncells*8)
+      #buff <- vector(mode = type, length = ncells*8)
+      buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, tiledb::datatype(attr), ncells)
       attributes[[aname]] <- buff
-      cat("For buffer '", aname, "' set up size of '", ncells, "' of type '", type, "'\n", sep="")
+      #cat("For buffer '", aname, "' set up size of '", ncells, "' of type '", type, "'\n", sep="")
     }
     return(attributes)
   }
@@ -75,12 +74,16 @@ try_datetime <- function(uri) {
     aname <- attr_names[[idx]]
     val <- buffers[[idx]]
     if (aname == "coords") {
-      qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+      #qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+      qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
     } else {
-      if (is.character(val) || is.list(val))
+      if (is.character(val) || is.list(val)) {
+        stop("var length TODO")
         qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-      else
-        qry <- libtiledb_query_set_buffer(qry, aname, val)
+      } else {
+        #qry <- libtiledb_query_set_buffer(qry, aname, val)
+        qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
+      }
     }
   }
   qry <- libtiledb_query_submit(qry)
@@ -90,7 +93,8 @@ try_datetime <- function(uri) {
   ## get the actual number of results, instead of realloc
   ## just modify the vector length so there is no additional copy
   for (idx in seq_along(attr_names)) {
-    old_buffer <- buffers[[idx]]
+    #old_buffer <- buffers[[idx]]
+    old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]])
     aname <- attr_names[[idx]]
     if (aname == "coords") {
       ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
@@ -100,9 +104,9 @@ try_datetime <- function(uri) {
     if (ncells < length(old_buffer)) {
       buffers[[idx]] <- old_buffer[1:ncells]
     }
-    cat("Setting size to '", ncells, "' for '", aname, "'\n", sep="")
+    #cat("Setting size to '", ncells, "' for '", aname, "'\n", sep="")
   }
-  fixup_coord_buffer(buffers[[1]]);
+  #fixup_coord_buffer(buffers[[1]]);
   if (x@as.data.frame) {
     return(as_data_frame(dom, buffers))
   } else {
