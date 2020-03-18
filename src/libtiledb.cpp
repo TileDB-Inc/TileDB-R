@@ -1780,19 +1780,19 @@ List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string a
   return Rcpp::as<Rcpp::List>(R_NilValue); // not reached
 }
 
-// -- sp_crd_buf_t aka sparse_coords_buf_t
+// -- query_buf_t aka sparse_coords_buf_t
 
 // In the following signature we cannot have a templated type as the return type so we have
 // to bring the switch between types 'inside' and make it run-time dependent on the subarray
 // type we already had
 // [[Rcpp::export]]
-XPtr<sp_crd_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
+XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
                                                     std::string domaintype,
                                                     R_xlen_t ncells) {
-  XPtr<sp_crd_buf_t> buf = XPtr<sp_crd_buf_t>(new sp_crd_buf_t);
+  XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32" ||
       domaintype == "UINT32") {
-    buf->size = sizeof(int32_t);
+     buf->size = sizeof(int32_t);
   } else if (domaintype == "INT64" ||
              domaintype == "UINT64" ||
              domaintype == "DATETIME_YEAR" ||
@@ -1808,52 +1808,65 @@ XPtr<sp_crd_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
              domaintype == "DATETIME_PS" ||
              domaintype == "DATETIME_FS" ||
              domaintype == "DATETIME_AS") {
-    buf->size = sizeof(int64_t);
+     buf->size = sizeof(int64_t);
   } else if (domaintype == "FLOAT64") {
-    buf->size = sizeof(double);
+     buf->size = sizeof(double);
   } else if (domaintype == "FLOAT32") {
-    buf->size = sizeof(float);
+     buf->size = sizeof(float);
   } else {
-    Rcpp::stop("Currently unsupported domain type '%s'", domaintype.c_str());
+     Rcpp::stop("Currently unsupported domain type '%s'", domaintype.c_str());
   }
   buf->dtype = _string_to_tiledb_datatype(domaintype);
   buf->ncells = ncells;
   buf->vec.resize(ncells * buf->size);
+  Rcpp::Rcout << "In query_alloc_buffer_ptr"
+              << " type " << domaintype
+              << " cells " << buf->ncells
+              << " size " << buf->size
+              << std::endl;
   return buf;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    std::string attr,
-                                                   XPtr<sp_crd_buf_t> buf) {
+                                                   XPtr<query_buf_t> buf) {
   Rcpp::Rcout << "In query_set_bufer " << attr
               << " type " << _tiledb_datatype_to_string(buf->dtype)
               << " cells " << buf->ncells
               << " size " << buf->size
               << std::endl;
   query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
-  //query->set_buffer(attr, buf->ptr, buf->ncells);
   return query;
 }
 
 // [[Rcpp::export]]
-RObject libtiledb_query_get_buffer_ptr(XPtr<sp_crd_buf_t> buf) {
+RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
   if (dtype == "INT32") {
-    return Rcpp::wrap(std::vector<int32_t>(buf->vec.begin(), buf->vec.end()));
+    IntegerVector v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return v;
   } else if (dtype == "UINT32") {
-    return Rcpp::wrap(std::vector<uint32_t>(buf->vec.begin(), buf->vec.end()));
-  } else if (dtype == "FLOAT64") {
-    std::vector<double> v(buf->ncells);
-    //std::memcpy(v.data(), buf->ptr, buf->ncells * buf->size);
-    std::memcpy(v.data(), (void*) buf->vec.data(), buf->ncells * buf->size);
+    std::vector<uint32_t> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
+  } else if (dtype == "FLOAT64") {
+    NumericVector v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return v;
   } else if (dtype == "FLOAT32") {
-    return Rcpp::wrap(std::vector<float>(buf->vec.begin(), buf->vec.end()));
+    std::vector<float> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return Rcpp::wrap(v);
   } else if (dtype == "UINT64") {
-    return Rcpp::wrap(std::vector<uint64_t>(buf->vec.begin(), buf->vec.end()));
+    std::vector<uint64_t> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return Rcpp::wrap(v);
   } else if (dtype == "INT64") {
-    return Rcpp::wrap(std::vector<int64_t>(buf->vec.begin(), buf->vec.end()));
+    std::vector<int64_t> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return Rcpp::wrap(v);
   } else if (dtype == "DATETIME_YEAR" ||
              dtype == "DATETIME_MONTH" ||
              dtype == "DATETIME_WEEK" ||
@@ -1867,13 +1880,11 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<sp_crd_buf_t> buf) {
              dtype == "DATETIME_PS" ||
              dtype == "DATETIME_FS" ||
              dtype == "DATETIME_AS") {
-    //std::vector<int64_t> intvec(buf->vec.begin(), buf->vec.end());
-
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
     //std::memcpy(tt.data(), buf->ptr, n*buf->size);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-    NumericVector dd(n);
+    NumericVector dd(n);        // for NOW an NumericVector
     for (int i=0; i<n; i++) {
       dd[i] = static_cast<double>(tt[i]);
     }

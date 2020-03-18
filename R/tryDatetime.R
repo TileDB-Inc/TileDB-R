@@ -95,16 +95,19 @@ try_datetime <- function(uri) {
   for (idx in seq_along(attr_names)) {
     #old_buffer <- buffers[[idx]]
     old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]])
+    #cat("Idx is ", idx, " and name is ", attr_names[idx], ". Retrieved buffer follows\n", sep="")
+    #print(str(old_buffer))
     aname <- attr_names[[idx]]
     if (aname == "coords") {
       ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
     } else {
       ncells <- libtiledb_query_result_buffer_elements(qry, aname)
     }
-    if (ncells < length(old_buffer)) {
+    if (ncells <= length(old_buffer)) {
       buffers[[idx]] <- old_buffer[1:ncells]
     }
-    #cat("Setting size to '", ncells, "' for '", aname, "'\n", sep="")
+    #cat("Setting size to '", ncells, "' for '", aname, "', buffer follows\n", sep="")
+    #print(buffers[[idx]])
   }
   #fixup_coord_buffer(buffers[[1]]);
   if (x@as.data.frame) {
