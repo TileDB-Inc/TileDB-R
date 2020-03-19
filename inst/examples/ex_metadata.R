@@ -2,7 +2,7 @@
 uri <- "array_metadata_array"
 
 if (!dir.exists(uri)) {                 # if that example does not exist, create new one
-  dim <- tiledb_dim(domain = c(1L, 10L))
+  dim <- tiledb_dim("dim", domain = c(1L, 10L))
   dom <- tiledb_domain(c(dim))
   a1  <- tiledb_attr("a1", type = "FLOAT64")
   a2  <- tiledb_attr("a2", type = "FLOAT64")
