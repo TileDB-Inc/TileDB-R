@@ -1841,7 +1841,8 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
+RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
+                                       bool castDatetime=true) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
@@ -1882,11 +1883,19 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
              dtype == "DATETIME_AS") {
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
-    //std::memcpy(tt.data(), buf->ptr, n*buf->size);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-    NumericVector dd(n);        // for NOW an NumericVector
-    for (int i=0; i<n; i++) {
-      dd[i] = static_cast<double>(tt[i]);
+    NumericVector dd(n);
+    if (castDatetime) {
+      for (int i=0; i<n; i++) {
+        dd[i] = static_cast<double>(tt[i]);
+      }
+    } else {                    		// return as a nanotime classed objed
+      std::memcpy(&(dd[0]), tt.data(), n*buf->size);
+      Rcpp::CharacterVector cl = Rcpp::CharacterVector::create("nanotime");
+      cl.attr("package") = "nanotime";
+      dd.attr(".S3Class") = "integer64";
+      dd.attr("class") = cl;
+      SET_S4_OBJECT(dd);
     }
     return dd;
   } else {
