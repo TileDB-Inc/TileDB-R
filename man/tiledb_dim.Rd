@@ -4,10 +4,10 @@
 \alias{tiledb_dim}
 \title{Contructs a \code{tiledb_dim} object}
 \usage{
-tiledb_dim(name = "", domain, tile, type, ctx = tiledb_get_context())
+tiledb_dim(name, domain, tile, type, ctx = tiledb_get_context())
 }
 \arguments{
-\item{name}{The dimension name / label string.  If emtpy, the domain is anonymous and will be assigned a positional label.}
+\item{name}{The dimension name / label string.  This argument is required.}
 
 \item{domain}{The dimension (inclusive) domain. The dimension’s domain is defined by a (lower bound, upper bound) vector}
 

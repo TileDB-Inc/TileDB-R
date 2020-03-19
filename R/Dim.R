@@ -15,7 +15,7 @@ tiledb_dim.from_ptr <- function(ptr) {
 
 #' Contructs a `tiledb_dim` object
 #'
-#' @param name The dimension name / label string.  If emtpy, the domain is anonymous and will be assigned a positional label.
+#' @param name The dimension name / label string.  This argument is required.
 #' @param domain The dimension (inclusive) domain. The dimension’s domain is defined by a (lower bound, upper bound) vector
 #' @param tile The tile dimension tile extent
 #' @param type The dimension TileDB datatype string
@@ -26,14 +26,18 @@ tiledb_dim.from_ptr <- function(ptr) {
 #'
 #' @importFrom methods new
 #' @export tiledb_dim
-tiledb_dim <- function(name="", domain, tile, type, ctx = tiledb_get_context()) {
+tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
+  if (missing(name)) {
+    stop("'name' argument must be supplied when creating a dimension object.")
+  }
+  if (!is.scalar(name, "character")) {
+    stop("'name' argument must be a scalar string when creating a dimension object.")
+  }
+  if ((typeof(domain) != "integer" && typeof(domain) != "double") || (length(domain) != 2)) {
+    stop("domain must be an integer or double vector of length 2")
+  }
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
-  } else if (!is.scalar(name, "character")) {
-    stop("name argument must be a scalar string")
-  } else if ((typeof(domain) != "integer" && typeof(domain) != "double")
-             || (length(domain) != 2)) {
-    stop("domain must be an integer or double vector of length 2")
   }
   # by default, tile extent should span the whole domain
   if (missing(tile)) {
