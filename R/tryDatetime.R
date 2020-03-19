@@ -123,5 +123,5 @@ try_datetime <- function(uri) {
 
 testDatetime <- function(uri="/tmp/tiledb/datetime-types/ms") {
   rl <- try_datetime(uri)
-  res <- cbind(matrix(rl$coords, 100, 2, byrow=TRUE), rl$a1)
+  res <- data.frame(time=rl$coords, a1=rl$a1)
 }

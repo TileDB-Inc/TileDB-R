@@ -824,6 +824,59 @@ void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   domain->dump();
 }
 
+double _domain_datatype_time_scale_factor(tiledb_datatype_t dtype) {
+  Rcpp::Rcout << "In _domain_datatype_time_scale_factor " << dtype << std::endl;
+  switch (dtype) {
+  case TILEDB_INT8:
+  case TILEDB_UINT8:
+  case TILEDB_INT16:
+  case TILEDB_UINT16:
+  case TILEDB_INT32:
+  case TILEDB_UINT32:
+  case TILEDB_INT64:
+  case TILEDB_UINT64:
+  case TILEDB_FLOAT32:
+  case TILEDB_FLOAT64:
+  case TILEDB_CHAR:
+  case TILEDB_STRING_ASCII:
+  case TILEDB_STRING_UTF8:
+  case TILEDB_STRING_UTF16:
+  case TILEDB_STRING_UTF32:
+  case TILEDB_STRING_UCS2:
+  case TILEDB_STRING_UCS4:
+  case TILEDB_ANY:
+    return 1.0;               // fallback, could also error here
+  case TILEDB_DATETIME_YEAR:
+  case TILEDB_DATETIME_MONTH:
+  case TILEDB_DATETIME_WEEK:
+    return 1.0;                 // also fallback
+  case TILEDB_DATETIME_DAY:
+    return 24 * 60 * 60 * 1e9;
+  case TILEDB_DATETIME_HR:
+    return 60 * 60 * 1e9;
+  case TILEDB_DATETIME_MIN:
+    return 60 * 1e9;
+  case TILEDB_DATETIME_SEC:
+    return 1e9;
+  case TILEDB_DATETIME_MS:
+    return 1e6;
+  case TILEDB_DATETIME_US:
+    return 1e3;
+  case TILEDB_DATETIME_NS:
+    return 1;
+  case TILEDB_DATETIME_PS:
+    return 1e-3;
+  case TILEDB_DATETIME_FS:
+    return 1e-6;
+  case TILEDB_DATETIME_AS:
+    return 1e-9;
+  default:
+    Rcpp::stop("Unsupport datatype (%d)", dtype);
+  }
+  return R_NaReal; // not reached
+}
+
+
 /**
  * TileDB Filter
  */
@@ -1890,6 +1943,13 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
         dd[i] = static_cast<double>(tt[i]);
       }
     } else {                    		// return as a nanotime classed objed
+      double scalefactor = _domain_datatype_time_scale_factor(buf->dtype);
+      Rcpp::Rcout << "Scaling time by " << scalefactor << std::endl;
+      if (scalefactor != 1.0) {
+        for (auto& x: tt) {
+          x *= scalefactor;
+        }
+      }
       std::memcpy(&(dd[0]), tt.data(), n*buf->size);
       Rcpp::CharacterVector cl = Rcpp::CharacterVector::create("nanotime");
       cl.attr("package") = "nanotime";
