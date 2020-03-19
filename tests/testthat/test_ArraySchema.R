@@ -4,7 +4,7 @@ library(tiledb)
 context("tiledb_array_schema")
 
 test_that("tiledb_array_schema default constructor works", {
-  d1  <- tiledb_dim(domain=c(1L, 100L))
+  d1  <- tiledb_dim("d1", domain=c(1L, 100L))
   dom <- tiledb_domain(c(d1))
   a1  <- tiledb_attr(type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(a1))
@@ -12,8 +12,8 @@ test_that("tiledb_array_schema default constructor works", {
 })
 
 test_that("tiledb_array_schema default constructor arugment values are correct",  {
-  d1  <- tiledb_dim(domain = c(1L, 100L))
-  d2  <- tiledb_dim(domain = c(1L, 100L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 100L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 100L))
   dom <- tiledb_domain(c(d1, d2))
   a1  <- tiledb_attr(type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(a1))
@@ -41,9 +41,9 @@ test_that("tiledb_array_schema default constructor arugment values are correct",
 })
 
 test_that("tiledb_array_schema full constructor argument values are correct",  {
-  d1  <- tiledb_dim(domain = c(1L, 100L))
-  d2  <- tiledb_dim(domain = c(1L, 100L))
-  d3  <- tiledb_dim(domain = c(1L, 100L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 100L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 100L))
+  d3  <- tiledb_dim("d3", domain = c(1L, 100L))
 
   dom <- tiledb_domain(c(d1, d2, d3))
 

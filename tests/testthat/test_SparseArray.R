@@ -41,8 +41,8 @@ test_that("test tiledb_subarray read for sparse array", {
   #})
   tmp <- tempdir()
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val), sparse=TRUE)
@@ -77,8 +77,8 @@ test_that("test tiledb_subarray read for sparse array with attribute list", {
   #})
   tmp <- tempdir()
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("val", type = "FLOAT64")
   val2 <- tiledb_attr("val2", type = "FLOAT64")
@@ -159,8 +159,8 @@ test_that("test tiledb_subarray read/write for sparse array with list of coordin
   #})
   tmp <- tempdir()
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val), sparse=TRUE)

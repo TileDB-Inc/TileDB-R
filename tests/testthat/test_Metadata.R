@@ -7,7 +7,7 @@ unlink_and_create_simple <- function(tmp) {
   if (dir.exists(tmp)) unlink(tmp, recursive = TRUE, force = TRUE)
   dir.create(tmp, recursive = TRUE)
 
-  dim <- tiledb_dim(domain = c(1L, 4L))
+  dim <- tiledb_dim("dim", domain = c(1L, 4L))
   dom <- tiledb_domain(c(dim))
   a1  <- tiledb_attr("a1", type = "INT32")
   a2  <- tiledb_attr("a2", type = "INT32")
