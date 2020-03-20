@@ -4,11 +4,11 @@ library(tiledb)
 ## Name of the array to create.
 array_name <- "ex_1"
 ## Path is either current directory, or a local config value is found
-uri <- file.path(getOption("TileDB_Data_Path", ""), array_name)
+uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 
-create_array <- function() {
+create_array <- function(uri) {
     # Check if the array already exists.
-    if (tiledb_object_type(array_name) == "ARRAY") {
+    if (tiledb_object_type(uri) == "ARRAY") {
         message("Array already exists.")
         return(invisible(NULL))
     }
@@ -26,7 +26,7 @@ create_array <- function() {
 }
 
 
-write_array <- function() {
+write_array <- function(uri) {
   data <- list(array(seq(1:50), dim = c(10,5)),
                array(as.double(seq(101,150)), dim = c(10,5)))
   ## Open the array and write to it.
@@ -34,7 +34,7 @@ write_array <- function() {
   A[] <- data
 }
 
-read_array <- function() {
+read_array <- function(uri) {
   ## Open the array and read from it.
   A <- tiledb_dense(uri = uri)
   data <- A[1:3, 2:5]
@@ -44,6 +44,6 @@ read_array <- function() {
   show(a)
 }
 
-create_array()
-write_array()
-read_array()
+create_array(uri)
+write_array(uri)
+read_array(uri)
