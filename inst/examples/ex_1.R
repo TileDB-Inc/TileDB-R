@@ -44,6 +44,13 @@ read_array <- function(uri) {
   show(a)
 }
 
+read_as_df <- function(uri) {
+  A <- tiledb_dense(uri = uri, as.data.frame = TRUE)
+  data <- A[1:3, 2:5]
+  show(data)
+}
+
 create_array(uri)
 write_array(uri)
 read_array(uri)
+read_as_df(uri)

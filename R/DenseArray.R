@@ -150,12 +150,13 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
   is_scalar <- all(sub_dim == 1L)
+  domaintype <- libtiledb_domain_get_type(dom@ptr)
 
   attributes <- list()
 
   # first alloc coordinate buffer if we are returning a data.frame
   if(array@as.data.frame) {
-    ncells_coords <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
+    ncells_coords <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, libtiledb_coords(), domaintype)
     if (is.integral(dom)) {
       attributes[["coords"]] <- integer(length = ncells_coords)
     } else {
@@ -171,8 +172,8 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
     aname <- tiledb::name(attr)
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
     # If we are going to get it as a dataframe we need to use max buffer elements to get proper buffer size
-    if(array@as.data.frame) {
-      ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
+    if (array@as.data.frame) {
+      ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
     }
     buff <- vector(mode = type, length = ncells)
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
