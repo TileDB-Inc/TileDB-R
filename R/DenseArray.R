@@ -304,6 +304,7 @@ setMethod("[", "tiledb_dense",
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param value The value being assigned
 #' @return The modified object
+#' @importFrom utils head
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
