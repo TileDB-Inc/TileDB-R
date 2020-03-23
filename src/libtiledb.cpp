@@ -966,8 +966,8 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                                             XPtr<tiledb::FilterList> filter_list,
                                             int ncells) {
   tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
-  if (ncells < 1) {
-    throw Rcpp::exception("ncells must be >= 1");
+  if (ncells < 1 && ncells != R_NaInt) {
+    Rcpp::stop("ncells must be >= 1 (or NA for variable cells)");
   }
   if (attr_dtype == TILEDB_INT32) {
     using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
@@ -983,9 +983,14 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     attr->set_filter_list(*filter_list);
+    uint64_t num = static_cast<uint64_t>(ncells);
+    if (ncells == R_NaInt) {
+      num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
+    }
+    attr->set_cell_val_num(num);
     return attr;
   } else {
-    throw Rcpp::exception("only integer (INT32), logical (INT32), real (FLOAT64) and character (CHAR) attributes are supported");
+    Rcpp::stop("only integer (INT32), logical (INT32), real (FLOAT64) and character (CHAR) attributes are supported");
   }
 }
 
@@ -1657,10 +1662,8 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
     query->set_buffer(attr, vec.begin(), vec.length());
     return query;
   } else {
-    std::stringstream errmsg;
-    errmsg << "Invalid attribute buffer type for attribute "
-           << "\""<< attr << "\": " << Rcpp::type2name(buffer);
-    throw Rcpp::exception(errmsg.str().c_str());
+    Rcpp::stop("Invalid attribute buffer type for attribute '%s': %s",
+               attr.c_str(), Rcpp::type2name(buffer));
   }
 }
 

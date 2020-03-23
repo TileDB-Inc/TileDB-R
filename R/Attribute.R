@@ -47,8 +47,8 @@ tiledb_attr <- function(name,
         stop("name argument must be a scalar string")
     } else if(!is(filter_list, "tiledb_filter_list")) {
         stop("filter_list argument must be a tiledb_filter_list instance")
-    } else if (ncells != 1) {
-        stop("only single cell attributes are supported")
+    #} else if (ncells != 1) {
+    #    stop("only single cell attributes are supported")
     }
     ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells)
     new("tiledb_attr", ptr = ptr)

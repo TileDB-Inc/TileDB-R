@@ -13,13 +13,14 @@ create_array <- function(uri) {
         return(invisible(NULL))
     }
 
-  ## The array will be 10x5 with dimensions "rows" and "cols", with domain [1,10].
+  ## The array will be 10x5 with dimensions "rows" and "cols", with domains [1,10] and [1,5].
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 10L, "INT32"),
                                 tiledb_dim("cols", c(1L, 5L), 5L, "INT32")))
 
   ## The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32"),
-                                               tiledb_attr("b", type = "FLOAT64")))
+                                               tiledb_attr("b", type = "FLOAT64"),
+                                               tiledb_attr("c", type = "CHAR", ncells=NA_integer_)))
 
   ## Create the (empty) array on disk.
   tiledb_array_create(uri, schema)
@@ -28,7 +29,8 @@ create_array <- function(uri) {
 
 write_array <- function(uri) {
   data <- list(array(seq(1:50), dim = c(10,5)),
-               array(as.double(seq(101,150)), dim = c(10,5)))
+               array(as.double(seq(101,150)), dim = c(10,5)),
+               array(c(letters[1:26], "brown", "fox", LETTERS[1:22]), dim = c(10,5)))
   ## Open the array and write to it.
   A <- tiledb_dense(uri = uri)
   A[] <- data
@@ -37,7 +39,7 @@ write_array <- function(uri) {
 read_array <- function(uri) {
   ## Open the array and read from it.
   A <- tiledb_dense(uri = uri)
-  data <- A[1:3, 2:5]
+  data <- A[6:9, 2:4]
   show(data)
 
   a <- data[["a"]]
@@ -46,7 +48,7 @@ read_array <- function(uri) {
 
 read_as_df <- function(uri) {
   A <- tiledb_dense(uri = uri, as.data.frame = TRUE)
-  data <- A[1:3, 2:5]
+  data <- A[3:7, 2:4]
   show(data)
 }
 

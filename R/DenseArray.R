@@ -156,7 +156,8 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
 
   # first alloc coordinate buffer if we are returning a data.frame
   if(array@as.data.frame) {
-    ncells_coords <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, libtiledb_coords(), domaintype)
+    ncells_coords <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
+                                                                   libtiledb_coords(), domaintype)
     if (is.integral(dom)) {
       attributes[["coords"]] <- integer(length = ncells_coords)
     } else {
@@ -170,14 +171,21 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   }
   for(attr in attrs) {
     aname <- tiledb::name(attr)
-    type <- tiledb_datatype_R_type(tiledb::datatype(attr))
-    # If we are going to get it as a dataframe we need to use max buffer elements to get proper buffer size
+    dtype <- tiledb::datatype(attr)
+    type <- tiledb_datatype_R_type(dtype)
+    ## If getting it as a dataframe we need to use max buffer elements to get proper buffer size
     if (array@as.data.frame) {
       ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
     }
-    buff <- vector(mode = type, length = ncells)
+    if (type %in% c("integer", "double")) {
+      buff <- vector(mode = type, length = ncells)
+    } else if (dtype %in% c("CHAR")) {  # TODO: add other char types
+      buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, as.integer(sub), aname)
+    } else {
+      stop("Unsupported data type for attribute ", aname)
+    }
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
-    if (!is_scalar && !array@as.data.frame) {
+    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR")) {
       attr(buff, "dim") <- sub_dim
     }
     attributes[[aname]] <- buff
@@ -224,14 +232,17 @@ setMethod("[", "tiledb_dense",
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                   aname <- attr_names[[idx]]
-                  val = buffers[[idx]]
+                  val <- buffers[[idx]]
                   if (aname == "coords") {
-                      qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+                    qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
                   } else {
-                      if (is.character(val) || is.list(val))
-                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                      else
-                          qry <- libtiledb_query_set_buffer(qry, aname, val)
+                    if (is.character(val) || is.list(val)) {
+                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                    } else if (is(val, "externalptr")) {
+                      qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
+                    } else {
+                      qry <- libtiledb_query_set_buffer(qry, aname, val)
+                    }
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
@@ -249,17 +260,24 @@ setMethod("[", "tiledb_dense",
                 # just modify the vector length so there is no additional copy
                 for (idx in seq_along(attr_names)) {
                   old_buffer <- buffers[[idx]]
+
+                  if (is(old_buffer, "externalptr")) {
+                    old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
+                  }
+
                   aname <- attr_names[[idx]]
                   if (aname == "coords") {
                     ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
                   } else {
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
                   }
-                  if (ncells < length(old_buffer)) {
-                    buffers[[idx]] <- old_buffer[1:ncells]
+                  if (ncells < length(old_buffer) || x@as.data.frame) {
+                    # for char attributtes ncells is sum of nchar and an overestimate for the indexing
+                    buffers[[idx]] <- old_buffer[1:min(ncells, length(old_buffer))]
+                  } else {
+                    buffers[[idx]] <- old_buffer
                   }
                 }
-
                 if (x@as.data.frame) {
                   return(as_data_frame(dom, buffers))
                 } else {
@@ -288,7 +306,7 @@ setMethod("[", "tiledb_dense",
 #' @return The modified object
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
-             if (!is.list(value)) {
+            if (!is.list(value)) {
               if (is.array(value) || is.vector(value)) {
                 value <- list(value)
               } else {
@@ -362,12 +380,19 @@ setMethod("[<-", "tiledb_dense",
                 attr_names <- names(value)
                 for (idx in seq_along(value)) {
                   aname <- attr_names[[idx]]
-                  val = value[[idx]]
+                  val <- value[[idx]]
                   if (is.list(val) || is.character(val)) {
-                      stop("Sorry, char support is not currently available.")
-                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                    ##qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                    n <- prod(dim(val))
+                    string <- paste(val[1:n], collapse="")
+                    ##offs <- seq(1,n) - 1L
+                    ## offsets starts: cumulative sum of all word lengths as provided by nchar
+                    ## but starting at 0 and then omitting the last
+                    offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
+                    bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
+                    qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
                   } else {
-                      qry <- libtiledb_query_set_buffer(qry, aname, val)
+                    qry <- libtiledb_query_set_buffer(qry, aname, val)
                   }
                 }
                 qry <- libtiledb_query_submit(qry)
@@ -375,7 +400,7 @@ setMethod("[<-", "tiledb_dense",
                   stop("error in write query")
                 }
                 qry <- libtiledb_query_finalize(qry)
-                return(x);
+                return(x)
               },
               finally = {
                 libtiledb_array_close(x@ptr)
