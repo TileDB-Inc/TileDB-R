@@ -384,7 +384,7 @@ setMethod("[<-", "tiledb_dense",
                   val <- value[[idx]]
                   if (is.list(val) || is.character(val)) {
                     ##qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                    n <- prod(dim(val))
+                    n <- ifelse(is.vector(val), length(val), prod(dim(val)))
                     string <- paste(val[1:n], collapse="")
                     ##offs <- seq(1,n) - 1L
                     ## offsets starts: cumulative sum of all word lengths as provided by nchar
