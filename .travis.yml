@@ -24,13 +24,13 @@ env:
 
 before_install:
   - docker pull ${DOCKER_CNTR}
-  - docker ${DOCKER_OPTS} ${DOCKER_CNTR} r -p -e 'sessionInfo()'
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} r -p -e 'sessionInfo()'
 
 install:
-  - docker ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD build --no-build-vignettes --no-manual .
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD build --no-build-vignettes --no-manual .
 
 script:
-  - docker ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD check --no-vignettes --no-manual tiledb_*.tar.gz
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD check --no-vignettes --no-manual tiledb_*.tar.gz
 
 notifications:
   email:
