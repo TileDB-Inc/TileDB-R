@@ -217,10 +217,12 @@ tiledb_filter_type_t _string_to_tiledb_filter(std::string filter) {
     return TILEDB_FILTER_BYTESHUFFLE;
   } else if (filter == "POSITIVE_DELTA") {
     return TILEDB_FILTER_POSITIVE_DELTA;
+  } else if (filter == "CHECKSUM_MD5") {
+    return TILEDB_FILTER_CHECKSUM_MD5;
+  } else if (filter == "CHECKSUM_SHA256") {
+    return TILEDB_FILTER_CHECKSUM_SHA256;
   } else {
-    std::stringstream errmsg;
-    errmsg << "Unknown TileDB filter \"" << filter << "\"";
-    throw Rcpp::exception(errmsg.str().c_str());
+    Rcpp::stop("Unknown TileDB filter '%s'", filter.c_str());
   }
 }
 
@@ -248,8 +250,12 @@ const char* _tiledb_filter_to_string(tiledb_filter_type_t filter) {
       return "BYTESHUFFLE";
     case TILEDB_FILTER_POSITIVE_DELTA:
       return "POSITIVE_DELTA";
+    case TILEDB_FILTER_CHECKSUM_MD5:
+      return "CHECKSUM_MD5";
+    case TILEDB_FILTER_CHECKSUM_SHA256:
+      return "CHECKSUM_SHA256";
     default: {
-      throw Rcpp::exception("unknown tiledb_filter_t");
+      Rcpp::stop("unknown tiledb_filter_t (%d)", filter);
     }
   }
 }
