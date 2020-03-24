@@ -35,10 +35,10 @@ fromDataFrame <- function(obj, uri) {
 
   df <- tiledb_dense(uri)
   df[] <- obj
-  TRUE
+  invisble(NULL)
 }
 
-testFromDataFrame <- function(obj, uri) {
+.testFromDataFrame <- function(obj, uri) {
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
   fromDataFrame(obj, uri)
 
