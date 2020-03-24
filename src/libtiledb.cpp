@@ -1691,14 +1691,22 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
     buf->str.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
     buf->rows = sub[1] - sub[0] + 1;
-    buf->cols = sub[3] - sub[2] + 1;
+    if (sub.size() == 4) {
+      buf->cols = sub[3] - sub[2] + 1;
+    } else {
+      buf->cols = 1;
+    }
   } else if (TYPEOF(subarray) == REALSXP) {
     auto sub = as<std::vector<double>>(subarray);
     auto max_elements = array->max_buffer_elements(sub);
     buf->offsets.resize(szoffsets <= 0 ? max_elements[attribute].first : szoffsets);
     buf->str.resize(szdata <= 0 ? max_elements[attribute].second : szdata);
     buf->rows = sub[1] - sub[0] + 1;
-    buf->cols = sub[3] - sub[2] + 1;
+    if (sub.size() == 4) {
+      buf->cols = sub[3] - sub[2] + 1;
+    } else {
+      buf->cols = 1;
+    }
   } else {
     Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
   }

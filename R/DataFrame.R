@@ -35,7 +35,7 @@ fromDataFrame <- function(obj, uri) {
 
   df <- tiledb_dense(uri)
   df[] <- obj
-  invisble(NULL)
+  invisible(NULL)
 }
 
 .testFromDataFrame <- function(obj, uri) {
