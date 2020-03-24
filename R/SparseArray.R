@@ -87,21 +87,25 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
 #'
 #' @param dom tiledb_domain object
 #' @param data tiledb object to be converted
+#' @param extended optional logical variable selected wider display
+#' with coordinates, defaults to false
 #' @return data.frame object constructed from `data`
 #' @export
-as_data_frame <- function(dom, data) {
+as_data_frame <- function(dom, data, extended=FALSE) {
   if (!is(dom, "tiledb_domain")) {
     stop("as_data_frame must be called with a tiledb_domain object")
   }
   # If coordinates are present convert to columns in the data.frame
   if (!is.null(data[["coords"]])) {
-    ndim <- tiledb_ndim(dom)
-    dimensions <- dimensions(dom)
-    for (i in seq(1, ndim, 1)) {
-      dim_name <- name(dimensions[[i]])
-      l = list()
-      l[[dim_name]] = data$coords[seq(i, length(data$coords), ndim)]
-      data = c(data, l)
+    if (extended) {
+      ndim <- tiledb_ndim(dom)
+      dimensions <- dimensions(dom)
+      for (i in seq(1, ndim, 1)) {
+        dim_name <- name(dimensions[[i]])
+        l <- list()
+        l[[dim_name]] = data$coords[seq(i, length(data$coords), ndim)]
+        data <- c(data, l)
+      }
     }
     data$coords <- NULL
   }

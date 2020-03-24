@@ -4,6 +4,7 @@
 #' @slot uri A character despription
 #' @slot as.data.frame A logical value
 #' @slot attrs A character vector
+#' @slot extended A logical value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_dense
 setClass("tiledb_dense",
@@ -11,6 +12,7 @@ setClass("tiledb_dense",
                       uri = "character",
                       as.data.frame = "logical",
                       attrs = "character",
+                      extended = "logical",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_dense object backed by a persisted tiledb array uri
@@ -20,13 +22,16 @@ setClass("tiledb_dense",
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
 #' @param attrs optional character vector to select attributes, default is
 #' empty implying all are selected
-#' @param ctx tiledb_ctx (optional)
+#' @param extended optional logical switch selecting wide \sQuote{data.frame}
+#' format, defaults to "FALSE"
+#' #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_dense array object
 #' @export
 tiledb_dense <- function(uri,
                          query_type = c("READ", "WRITE"),
                          as.data.frame = FALSE,
                          attrs = character(),
+                         extended = FALSE,
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
@@ -43,7 +48,8 @@ tiledb_dense <- function(uri,
   }
   array_xptr <- libtiledb_array_close(array_xptr)
   new("tiledb_dense", ctx = ctx, uri = uri,
-      as.data.frame = as.data.frame, attrs = attrs, ptr = array_xptr)
+      as.data.frame = as.data.frame, attrs = attrs,
+      extended = FALSE, ptr = array_xptr)
 }
 
 setMethod("show", "tiledb_dense",
@@ -292,7 +298,7 @@ setMethod("[", "tiledb_dense",
               }
             }
             if (x@as.data.frame) {
-              return(as_data_frame(dom, buffers))
+              return(as_data_frame(dom, buffers, x@extended))
             } else {
               ## if there is only one buffer, don't return a list of attribute buffers
               if (length(buffers) == 1L) {
