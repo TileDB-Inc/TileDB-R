@@ -52,7 +52,15 @@ read_as_df <- function(uri) {
   show(data)
 }
 
+read_array_subset <- function(uri) {
+  ## Open the array and read from it.
+  A <- tiledb_dense(uri = uri, attrs = c("b","c"))
+  data <- A[6:9, 2:4]
+  show(data)
+}
+
 create_array(uri)
 write_array(uri)
 read_array(uri)
 read_as_df(uri)
+read_array_subset(uri)
