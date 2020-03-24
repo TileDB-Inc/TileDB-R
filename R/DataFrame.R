@@ -38,9 +38,7 @@ fromDataFrame <- function(obj, uri) {
   TRUE
 }
 
-testFromDataFrame <- function() {
-  obj <- iris
-  uri <- "/tmp/tiledb/testiris"
+testFromDataFrame <- function(obj, uri) {
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
   fromDataFrame(obj, uri)
 
