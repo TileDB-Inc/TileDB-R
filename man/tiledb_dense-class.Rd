@@ -16,6 +16,8 @@ An S4 class for a TileDB dense array
 
 \item{\code{as.data.frame}}{A logical value}
 
+\item{\code{attrs}}{A character vector}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 

@@ -3,22 +3,31 @@
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription
 #' @slot as.data.frame A logical value
+#' @slot attrs A character vector
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_dense
 setClass("tiledb_dense",
-         slots = list(ctx = "tiledb_ctx", uri = "character",
-                      as.data.frame = "logical", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx",
+                      uri = "character",
+                      as.data.frame = "logical",
+                      attrs = "character",
+                      ptr = "externalptr"))
 
 #' Constructs a tiledb_dense object backed by a persisted tiledb array uri
 #'
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
+#' @param attrs optional character vector to select attributes, default is
+#' empty implying all are selected
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_dense array object
 #' @export
-tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
-                         as.data.frame=FALSE, ctx = tiledb_get_context()) {
+tiledb_dense <- function(uri,
+                         query_type = c("READ", "WRITE"),
+                         as.data.frame = FALSE,
+                         attrs = character(),
+                         ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -33,7 +42,8 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
     stop("array URI must be a dense array")
   }
   array_xptr <- libtiledb_array_close(array_xptr)
-  new("tiledb_dense", ctx = ctx, uri = uri, as.data.frame = as.data.frame, ptr = array_xptr)
+  new("tiledb_dense", ctx = ctx, uri = uri,
+      as.data.frame = as.data.frame, attrs = attrs, ptr = array_xptr)
 }
 
 setMethod("show", "tiledb_dense",
@@ -144,7 +154,7 @@ subarray_dim <- function(sub) {
   return(sub_dim)
 }
 
-attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
+attribute_buffers <- function(array, sch, dom, sub, selected) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
   sub_dim <- subarray_dim(sub)
@@ -164,13 +174,15 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
       attributes[["coords"]]  <- numeric(length = ncells_coords)
     }
   }
-
   attrs <- tiledb::attrs(sch)
-  if (length(filter_attributes) > 0) {
-    attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
+  if (length(selected) == 0) {          # no selection given -> use all
+    selected <- names(attrs)
   }
-  for(attr in attrs) {
+  for (attr in attrs) {
     aname <- tiledb::name(attr)
+    if (! aname %in% selected) {
+      next
+    }
     dtype <- tiledb::datatype(attr)
     type <- tiledb_datatype_R_type(dtype)
     ## If getting it as a dataframe we need to use max buffer elements to get proper buffer size
@@ -203,6 +215,7 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
 #' @return An element from a dense array
 setMethod("[", "tiledb_dense",
           function(x, i, j, ..., drop = FALSE) {
+            ## helper function to deal with i and/or j missing
             index <- nd_index_from_syscall(sys.call(), parent.frame())
             # If we have a list of lists of lists we need to remove one layer
             # This happens when a user uses a list of coordinates
@@ -211,6 +224,7 @@ setMethod("[", "tiledb_dense",
             }
             ctx <- x@ctx
             uri <- x@uri
+            sel <- x@attrs
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) {
@@ -220,7 +234,7 @@ setMethod("[", "tiledb_dense",
             on.exit(libtiledb_array_close(x@ptr))
 
             subarray <- domain_subarray(dom, index = index)
-            buffers <- attribute_buffers(x, schema, dom, subarray)
+            buffers <- attribute_buffers(x, schema, dom, subarray, sel)
             qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
             qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
             if (is.integral(dom)) {
@@ -403,8 +417,8 @@ as.array.tiledb_dense <- function(x, ...) {
 
 #' @export
 as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ...,
-                                    cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
-                                    stringsAsFactors = default.stringsAsFactors()) {
+                                       cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
+                                       stringsAsFactors = default.stringsAsFactors()) {
   lst <- x[]
   if (!is(lst, "list")) {
     lst <- list(lst)
