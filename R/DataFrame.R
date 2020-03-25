@@ -1,6 +1,28 @@
 
 ## helper functions for data frame, roughly modeled on what python has
 
+##' Create a TileDB Dense Array from a given \code{data.frame} Object
+##'
+##' The supplied \code{data.frame} object is (currently) limited to integer,
+##' numeric, or character columns.
+##'
+##' The create (Dense) Array will have as many attributes as there are columns in
+##' the \code{data.frame}.  Each attribute will be a single column.
+##'
+##' At present, factor variable are converted to character.
+##'
+##' @param obj A \code{data.frame} object.
+##' @param uri A character variable with an Array URI.
+##' @return Null, invisibly.
+##' @examples
+##' uri <- tempfile()
+##' ## turn factor into character
+##' irisdf <- within(iris, Species <- as.character(Species))
+##' fromDataFrame(irisdf, uri)
+##' arr <- tiledb_dense(uri, as.data.frame=TRUE)
+##' newdf <- arr[]
+##' all.equal(iris, newdf)
+##' @export
 fromDataFrame <- function(obj, uri) {
   dims <- dim(obj)
 
