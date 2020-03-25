@@ -18,6 +18,8 @@ An S4 class for a TileDB dense array
 
 \item{\code{attrs}}{A character vector}
 
+\item{\code{extended}}{A logical value}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 

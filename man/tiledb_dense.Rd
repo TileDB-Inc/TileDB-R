@@ -9,6 +9,7 @@ tiledb_dense(
   query_type = c("READ", "WRITE"),
   as.data.frame = FALSE,
   attrs = character(),
+  extended = FALSE,
   ctx = tiledb_get_context()
 )
 }
@@ -21,6 +22,9 @@ tiledb_dense(
 
 \item{attrs}{optional character vector to select attributes, default is
 empty implying all are selected}
+
+\item{extended}{optional logical switch selecting wide \sQuote{data.frame}
+format, defaults to "FALSE"}
 
 \item{ctx}{tiledb_ctx (optional)}
 }

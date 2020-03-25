@@ -24,7 +24,7 @@ setClass("tiledb_dense",
 #' empty implying all are selected
 #' @param extended optional logical switch selecting wide \sQuote{data.frame}
 #' format, defaults to "FALSE"
-#' #' @param ctx tiledb_ctx (optional)
+#' @param ctx tiledb_ctx (optional)
 #' @return tiledb_dense array object
 #' @export
 tiledb_dense <- function(uri,
