@@ -56,7 +56,7 @@ fromDataFrame <- function(obj, uri) {
   schema <- tiledb_array_schema(dom, attrs = attributes)
   tiledb_array_create(uri, schema)
   #cat("Schema written and array created.\n")
-  
+
   df <- tiledb_dense(uri)
   df[] <- obj
   invisible(NULL)
@@ -70,12 +70,12 @@ fromDataFrame <- function(obj, uri) {
   df[]
 }
 
-.testWithDate <- function(uri) {
-  banklist <- read.csv("~/git/tiledb-data/csv-pandas/banklist.csv", stringsAsFactors = FALSE)
-  bkdf <- within(banklist, { 
-    Closing.Date <- as.Date(Closing.Date, "%d-%b-%y") 
-    Updated.Date <- as.Date(Updated.Date, "%d-%b-%y") 
+.testWithDate <- function(df, uri) {
+  #df <- read.csv("~/git/tiledb-data/csv-pandas/banklist.csv", stringsAsFactors = FALSE)
+  bkdf <- within(df, {
+    Closing.Date <- as.Date(Closing.Date, "%d-%b-%y")
+    Updated.Date <- as.Date(Updated.Date, "%d-%b-%y")
   })
-  
+
   fromDataFrame(bkdf, uri)
 }

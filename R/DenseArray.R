@@ -191,7 +191,7 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
     }
     dtype <- tiledb::datatype(attr)
     type <- tiledb_datatype_R_type(dtype)
-    datatype <- tiledb:::libtiledb_attribute_get_type(attr@ptr)
+    datatype <- libtiledb_attribute_get_type(attr@ptr)
     #cat("dtype:", dtype, " type:", type, " datatype:", datatype, "\n", sep="")
     ## If getting it as a dataframe we need to use max buffer elements to get proper buffer size
     if (array@as.data.frame) {
@@ -317,6 +317,9 @@ setMethod("[", "tiledb_dense",
               } else {
                 buffers[[idx]] <- old_buffer
               }
+            }
+            for (i in 1:length(buffers)) {
+              attr(buffers[[i]], "datatype") <- NULL
             }
             if (x@as.data.frame) {
               return(as_data_frame(dom, buffers, x@extended))

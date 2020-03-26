@@ -386,6 +386,9 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
           buffers[[idx]] <- old_buffer[1:ncells]
         }
       }
+      for (i in 1:length(buffers)) {
+        attr(buffers[[i]], "datatype") <- NULL
+      }
       if (A@as.data.frame) {
         return(as_data_frame(dom, buffers))
       } else {
