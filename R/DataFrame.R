@@ -96,6 +96,5 @@ fromDataFrame <- function(obj, uri) {
 
   arr <- tiledb_dense(uri, as.data.frame = TRUE)
   newdf <- arr[]
-  show(newdf)
-  newdf
+  invisible(newdf)
 }
