@@ -16,6 +16,21 @@ test_that("tiledb_fromdataframe", {
   ## result comes back as factor by default
   newdf <- within(newdf, Species <- as.character(Species))
   expect_equal(irisdf, newdf)
+
+
+  ## test attrs subselection
+  arr <- tiledb_dense(uri, as.data.frame=TRUE,
+                      attrs = c("Petal.Length", "Petal.Width"))
+  newdf <- arr[]
+  expect_equal(iris[, c("Petal.Length", "Petal.Width")], newdf)
+
+
+  ## test list
+  arr <- tiledb_dense(uri)
+  res <- arr[]
+  expect_equal(class(res), "list")
+  expect_equal(length(res), 5)
+
 })
 
 test_that("tiledb_date_datetime_types", {

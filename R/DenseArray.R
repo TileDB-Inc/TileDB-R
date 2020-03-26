@@ -207,7 +207,7 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
       stop("Unsupported data type for attribute ", aname)
     }
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
-    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR")) {
+    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_MS")) {
       attr(buff, "dim") <- sub_dim
     }
     attr(buff, "datatype") <- datatype
