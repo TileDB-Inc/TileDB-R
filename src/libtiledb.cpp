@@ -160,9 +160,10 @@ std::string tiledb_datatype_R_type(std::string datatype) {
       return "any";
     case TILEDB_DATETIME_DAY:
       return "DATETIME_DAY";
-    default: {
-      throw Rcpp::exception("unknown tiledb_datatype_t");
-    }
+    case TILEDB_DATETIME_MS:
+      return "DATETIME_MS";
+    default:
+      Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
 }
 
@@ -1002,14 +1003,16 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     }
     attr->set_cell_val_num(num);
     return attr;
-  } else if (attr_dtype == TILEDB_DATETIME_DAY) {
+  } else if (attr_dtype == TILEDB_DATETIME_DAY ||
+             attr_dtype == TILEDB_DATETIME_MS) {
     //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     attr->set_filter_list(*filter_list);
     return attr;
   } else {
-    Rcpp::stop("only integer (INT32), logical (INT32), real (FLOAT64), ",
-               "Date (DATEIME_DAY) and character (CHAR) attributes are supported");
+    Rcpp::stop("only integer (INT32), logical (INT32), real (FLOAT64), "
+               "Date (DATEIME_DAY), Datetime (DATETIME_MS) and character (CHAR) "
+               "attributes are supported");
   }
 }
 
@@ -1914,7 +1917,11 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
                                                     std::string dtype,
                                                     SEXP vec) {
-  if (dtype == "DATETIME_DAY") {
+  if (dtype == "DATETIME_DAY" || dtype == "DATETIME_MS") {
+    // The Date type in R stores days since the epoch, but as fractional values
+    // so it uses a double. Ditto for POSIXct which uses double for fractional
+    // seconds since the epoch.  But when we store these as we need is an assignment
+    // to doubles.
     NumericVector v(vec);
     if (v.size() != buf->ncells) {
       Rcpp::stop("Mismatched size\n");
@@ -1969,6 +1976,10 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
     return Rcpp::wrap(v);
   } else if (dtype == "DATETIME_DAY") {
     DateVector v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return v;
+  } else if (dtype == "DATETIME_MS") {
+    DatetimeVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return v;
   } else if (dtype == "DATETIME_NS") {

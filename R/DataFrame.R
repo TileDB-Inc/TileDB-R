@@ -38,7 +38,7 @@ fromDataFrame <- function(obj, uri) {
 
   makeAttr <- function(ind) {
     col <- obj[,ind]
-    cl <- class(col)
+    cl <- class(col)[1]
     if (cl == "integer")
       tp <- "INT32"
     else if (cl == "numeric")
@@ -47,6 +47,8 @@ fromDataFrame <- function(obj, uri) {
       tp <- "CHAR"
     else if (cl == "Date")
       tp <- "DATETIME_DAY"
+    else if (cl == "POSIXct" || cl == "POSIXlt")
+      tp <- "DATETIME_MS"
     else
       stop("Currently unsupported type: ", cl)
     tiledb_attr(colnames(obj)[ind], type=tp, ncells=ifelse(tp=="CHAR",NA_integer_,1))
@@ -78,4 +80,22 @@ fromDataFrame <- function(obj, uri) {
   })
 
   fromDataFrame(bkdf, uri)
+}
+
+.testWithDatetime <- function(df, uri) {
+  #banklist <- read.csv("~/git/tiledb-data/csv-pandas/banklist.csv", stringsAsFactors = FALSE)
+  bkdf <- within(df, {
+    Closing.Date <- as.POSIXct(as.Date(Closing.Date, "%d-%b-%y"))
+    Updated.Date <- as.POSIXct(as.Date(Updated.Date, "%d-%b-%y"))
+  })
+  if (dir.exists(uri)) {
+    message("Removing existing directory ", uri)
+    unlink(uri, recursive=TRUE)
+  }
+  fromDataFrame(bkdf[1:5,], uri)
+
+  arr <- tiledb_dense(uri, as.data.frame = TRUE)
+  newdf <- arr[]
+  show(newdf)
+  newdf
 }

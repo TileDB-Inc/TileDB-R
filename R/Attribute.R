@@ -31,8 +31,8 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @export
 tiledb_attr <- function(name,
                         type,
-                        filter_list=tiledb_filter_list(),
-                        ncells=1,
+                        filter_list = tiledb_filter_list(),
+                        ncells = 1,
                         ctx = tiledb_get_context()
                         ) {
     if (missing(name)) {
