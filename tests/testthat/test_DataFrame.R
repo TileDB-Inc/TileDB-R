@@ -16,4 +16,5 @@ test_that("tiledb_fromdataframe", {
   newdf <- within(newdf, Species <- as.character(Species))
   expect_equal(irisdf, newdf)
 
- })
+})
+

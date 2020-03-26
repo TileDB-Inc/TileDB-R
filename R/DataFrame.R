@@ -45,6 +45,8 @@ fromDataFrame <- function(obj, uri) {
       tp <- "FLOAT64"
     else if (cl == "character")
       tp <- "CHAR"
+    else if (cl == "Date")
+      tp <- "DATETIME_DAY"
     else
       stop("Currently unsupported type: ", cl)
     tiledb_attr(colnames(obj)[ind], type=tp, ncells=ifelse(tp=="CHAR",NA_integer_,1))
@@ -52,9 +54,9 @@ fromDataFrame <- function(obj, uri) {
   attributes <- sapply(seq_len(dims[2]), makeAttr)
 
   schema <- tiledb_array_schema(dom, attrs = attributes)
-
   tiledb_array_create(uri, schema)
-
+  #cat("Schema written and array created.\n")
+  
   df <- tiledb_dense(uri)
   df[] <- obj
   invisible(NULL)
@@ -66,4 +68,14 @@ fromDataFrame <- function(obj, uri) {
 
   df <- tiledb_dense(uri, as.data.frame=TRUE)
   df[]
+}
+
+.testWithDate <- function(uri) {
+  banklist <- read.csv("~/git/tiledb-data/csv-pandas/banklist.csv", stringsAsFactors = FALSE)
+  bkdf <- within(banklist, { 
+    Closing.Date <- as.Date(Closing.Date, "%d-%b-%y") 
+    Updated.Date <- as.Date(Updated.Date, "%d-%b-%y") 
+  })
+  
+  fromDataFrame(bkdf, uri)
 }

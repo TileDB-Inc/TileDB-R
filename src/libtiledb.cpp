@@ -158,6 +158,8 @@ std::string tiledb_datatype_R_type(std::string datatype) {
       return "character";
     case TILEDB_ANY:
       return "any";
+    case TILEDB_DATETIME_DAY:
+      return "DATETIME_DAY";
     default: {
       throw Rcpp::exception("unknown tiledb_datatype_t");
     }
@@ -1000,8 +1002,14 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     }
     attr->set_cell_val_num(num);
     return attr;
+  } else if (attr_dtype == TILEDB_DATETIME_DAY) {
+    //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+    attr->set_filter_list(*filter_list);
+    return attr;
   } else {
-    Rcpp::stop("only integer (INT32), logical (INT32), real (FLOAT64) and character (CHAR) attributes are supported");
+    Rcpp::stop("only integer (INT32), logical (INT32), real (FLOAT64), ",
+               "Date (DATEIME_DAY) and character (CHAR) attributes are supported");
   }
 }
 
@@ -1894,11 +1902,27 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
   buf->dtype = _string_to_tiledb_datatype(domaintype);
   buf->ncells = ncells;
   buf->vec.resize(ncells * buf->size);
-  Rcpp::Rcout << "In query_alloc_buffer_ptr"
-              << " type " << domaintype
-              << " cells " << buf->ncells
-              << " size " << buf->size
-              << std::endl;
+  //Rcpp::Rcout << "In query_alloc_buffer_ptr"
+  //            << " type " << domaintype
+  //            << " cells " << buf->ncells
+  //            << " size " << buf->size
+  //            << std::endl;
+  return buf;
+}
+
+// [[Rcpp::export]]
+XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
+                                                    std::string dtype,
+                                                    SEXP vec) {
+  if (dtype == "DATETIME_DAY") {
+    NumericVector v(vec);
+    if (v.size() != buf->ncells) {
+      Rcpp::stop("Mismatched size\n");
+    }
+    std::memcpy(buf->vec.data(), &(v[0]), buf->ncells * buf->size);
+  } else {
+    Rcpp::stop("Currently unsupported type '%s'", dtype);
+  }
   return buf;
 }
 
@@ -1906,11 +1930,11 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    std::string attr,
                                                    XPtr<query_buf_t> buf) {
-  Rcpp::Rcout << "In query_set_bufer " << attr
-              << " type " << _tiledb_datatype_to_string(buf->dtype)
-              << " cells " << buf->ncells
-              << " size " << buf->size
-              << std::endl;
+  //Rcpp::Rcout << "In query_set_buffer " << attr
+  //            << " type " << _tiledb_datatype_to_string(buf->dtype)
+  //            << " cells " << buf->ncells
+  //            << " size " << buf->size
+  //            << std::endl;
   query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
   return query;
 }
@@ -1943,19 +1967,11 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
-  } else if (dtype == "DATETIME_YEAR" ||
-             dtype == "DATETIME_MONTH" ||
-             dtype == "DATETIME_WEEK" ||
-             dtype == "DATETIME_DAY" ||
-             dtype == "DATETIME_HR" ||
-             dtype == "DATETIME_MIN" ||
-             dtype == "DATETIME_SEC" ||
-             dtype == "DATETIME_MS" ||
-             dtype == "DATETIME_US" ||
-             dtype == "DATETIME_NS" ||
-             dtype == "DATETIME_PS" ||
-             dtype == "DATETIME_FS" ||
-             dtype == "DATETIME_AS") {
+  } else if (dtype == "DATETIME_DAY") {
+    DateVector v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return v;
+  } else if (dtype == "DATETIME_NS") {
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
