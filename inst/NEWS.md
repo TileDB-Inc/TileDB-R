@@ -11,6 +11,8 @@
 
 - Added support for new filter types for md5 and sha256 checksums
 
+- Added support for Date, Datetime (i.e. POSIXct) and nanosecond dense array attributes
+
 
 # 0.5.0
 
