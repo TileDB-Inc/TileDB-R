@@ -162,6 +162,8 @@ std::string tiledb_datatype_R_type(std::string datatype) {
       return "DATETIME_DAY";
     case TILEDB_DATETIME_MS:
       return "DATETIME_MS";
+    case TILEDB_DATETIME_NS:
+      return "DATETIME_NS";
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
@@ -496,50 +498,47 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
   // check that the dimension type is supported
   const tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
   if (_type != TILEDB_INT32 && _type != TILEDB_FLOAT64) {
-    throw Rcpp::exception("only integer (INT32), and real (FLOAT64) domains are supported");
+    Rcpp::stop("only integer (INT32), and real (FLOAT64) domains are supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (_type == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
     throw Rcpp::exception("domain or tile_extent does not match dimension type");
-  } else if (_type == TILEDB_FLOAT64 && (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
-    throw Rcpp::exception("domain or tile_extent does not match dimenson type");
+  } else if (_type == TILEDB_FLOAT64 &&
+             (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
+    Rcpp::stop("domain or tile_extent does not match dimenson type");
   }
-  try {
-    if (_type == TILEDB_INT32) {
-      using Dtype = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-      auto domain_vec = as<IntegerVector>(domain);
-      if (domain_vec.length() != 2) {
-        throw Rcpp::exception("dimension domain must be a c(lower bound, upper bound) pair");
-      }
-      auto tile_extent_vec = as<IntegerVector>(tile_extent);
-      if (tile_extent_vec.length() != 1) {
-        throw Rcpp::exception("tile_extent must be a scalar");
-      }
-      std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
-      std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
-      return XPtr<tiledb::Dimension>(
-        new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
-    } else if (_type == TILEDB_FLOAT64) {
-      using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-      auto domain_vec = as<NumericVector>(domain);
-      if (domain_vec.length() != 2) {
-        throw Rcpp::exception("dimension domain must be a c(lower bound, upper bound) pair");
-      }
-      auto tile_extent_vec = as<NumericVector>(tile_extent);
-      if (tile_extent_vec.length() != 1) {
-        throw Rcpp::exception("tile_extent must be a scalar");
-      }
-      std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
-      std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
-      return XPtr<tiledb::Dimension>(
-        new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
-    } else {
-      std::stringstream errmsg;
-      errmsg << "Unsupported tiledb type (id): " << _type << " this should not happen!";
-      throw Rcpp::exception(errmsg.str().c_str());
+  if (_type == TILEDB_INT32) {
+    using Dtype = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+    auto domain_vec = as<IntegerVector>(domain);
+    if (domain_vec.length() != 2) {
+      Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
     }
-  } catch (tiledb::TileDBError& err) {
-    throw Rcpp::exception(err.what());
+    auto tile_extent_vec = as<IntegerVector>(tile_extent);
+    if (tile_extent_vec.length() != 1) {
+      Rcpp::stop("tile_extent must be a scalar");
+    }
+    std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
+    std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
+    return XPtr<tiledb::Dimension>(
+      new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
+  } else if (_type == TILEDB_FLOAT64) {
+    using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+    auto domain_vec = as<NumericVector>(domain);
+    if (domain_vec.length() != 2) {
+      Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
+    }
+    auto tile_extent_vec = as<NumericVector>(tile_extent);
+    if (tile_extent_vec.length() != 1) {
+      Rcpp::stop("tile_extent must be a scalar");
+    }
+    std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
+    std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
+    return XPtr<tiledb::Dimension>(
+      new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
+  } else {
+    std::stringstream errmsg;
+    errmsg << "Unsupported tiledb type (id): " << _type << " this should not happen!";
+    Rcpp::stop(errmsg.str().c_str());
   }
 }
 
@@ -839,7 +838,7 @@ void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
 }
 
 double _domain_datatype_time_scale_factor(tiledb_datatype_t dtype) {
-  Rcpp::Rcout << "In _domain_datatype_time_scale_factor " << dtype << std::endl;
+  //Rcpp::Rcout << "In _domain_datatype_time_scale_factor " << dtype << std::endl;
   switch (dtype) {
   case TILEDB_INT8:
   case TILEDB_UINT8:
@@ -1004,15 +1003,16 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     attr->set_cell_val_num(num);
     return attr;
   } else if (attr_dtype == TILEDB_DATETIME_DAY ||
-             attr_dtype == TILEDB_DATETIME_MS) {
+             attr_dtype == TILEDB_DATETIME_MS  ||
+             attr_dtype == TILEDB_DATETIME_NS) {
     //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     attr->set_filter_list(*filter_list);
     return attr;
   } else {
     Rcpp::stop("only integer (INT32), logical (INT32), real (FLOAT64), "
-               "Date (DATEIME_DAY), Datetime (DATETIME_MS) and character (CHAR) "
-               "attributes are supported");
+               "Date (DATEIME_DAY), Datetime (DATETIME_MS), nanotime (DATETIME_NS) "
+               "and character (CHAR) attributes are supported");
   }
 }
 
@@ -1917,7 +1917,7 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
                                                     std::string dtype,
                                                     SEXP vec) {
-  if (dtype == "DATETIME_DAY" || dtype == "DATETIME_MS") {
+  if (dtype == "DATETIME_DAY" || dtype == "DATETIME_MS" || dtype == "DATETIME_NS") {
     // The Date type in R stores days since the epoch, but as fractional values
     // so it uses a double. Ditto for POSIXct which uses double for fractional
     // seconds since the epoch.  But when we store these as we need is an assignment
@@ -1993,7 +1993,7 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
       }
     } else {                    		// return as a nanotime classed objed
       double scalefactor = _domain_datatype_time_scale_factor(buf->dtype);
-      Rcpp::Rcout << "Scaling time by " << scalefactor << std::endl;
+      //Rcpp::Rcout << "Scaling time by " << scalefactor << std::endl;
       if (scalefactor != 1.0) {
         for (auto& x: tt) {
           x *= scalefactor;

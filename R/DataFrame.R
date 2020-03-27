@@ -49,6 +49,8 @@ fromDataFrame <- function(obj, uri) {
       tp <- "DATETIME_DAY"
     else if (cl == "POSIXct" || cl == "POSIXlt")
       tp <- "DATETIME_MS"
+    else if (cl == "nanotime")
+      tp <- "DATETIME_NS"
     else
       stop("Currently unsupported type: ", cl)
     tiledb_attr(colnames(obj)[ind], type=tp, ncells=ifelse(tp=="CHAR",NA_integer_,1))
@@ -92,8 +94,21 @@ fromDataFrame <- function(obj, uri) {
     message("Removing existing directory ", uri)
     unlink(uri, recursive=TRUE)
   }
-  fromDataFrame(bkdf[1:5,], uri)
+  fromDataFrame(bkdf, uri)
 
+  arr <- tiledb_dense(uri, as.data.frame = TRUE)
+  newdf <- arr[]
+  invisible(newdf)
+}
+
+.testWithNanotime <- function(df, uri) {
+  if (dir.exists(uri)) {
+    message("Removing existing directory ", uri)
+    unlink(uri, recursive=TRUE)
+  }
+  fromDataFrame(df, uri)
+  cat("Data written\n")
+  
   arr <- tiledb_dense(uri, as.data.frame = TRUE)
   newdf <- arr[]
   invisible(newdf)
