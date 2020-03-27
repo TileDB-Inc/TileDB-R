@@ -9,9 +9,15 @@
 
 - Added enhanced support for data.frame returns from dense array
 
+- Added support for data.frame column selection (i.e. attributes) from dense array
+
 - Added support for new filter types for md5 and sha256 checksums
 
 - Added support for Date, Datetime (i.e. POSIXct) and nanosecond dense array attributes
+
+## Changes
+
+- Dimension attributes must now be named
 
 
 # 0.5.0
