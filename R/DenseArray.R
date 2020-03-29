@@ -554,8 +554,16 @@ setGeneric("attrs<-", function(x, value) standardGeneric("attrs<-"))
 setReplaceMethod("attrs",
                  signature = "tiledb_dense",
                  function(x, value) {
-  x@attrs <- value
-  ## maybe check against schema attribute names ?
+  nm <- names(attrs(schema(x)))
+  if (length(nm) == 0) {                # none set so far
+    x@attrs <- value
+  } else {
+    pm <- pmatch(value, nm)
+    if (any(is.na(pm))) {
+      stop("Multiple partial matches ambiguous: ", paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
+    }
+    x@attrs <- nm[pm]
+  }
   validObject(x)
   x
 })
