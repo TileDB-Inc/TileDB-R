@@ -207,7 +207,7 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
       stop("Unsupported data type for attribute ", aname)
     }
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
-    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_MS")) {
+    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
       attr(buff, "dim") <- sub_dim
     }
     attr(buff, "datatype") <- datatype
@@ -486,7 +486,7 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
 ## -- as.data.frame accessor
 
 #' @rdname return.data.frame-tiledb_dense-method
-#' @param ... Currently usnused
+#' @param ... Currently unused
 #' @export
 setGeneric("return.data.frame", function(object, ...) standardGeneric("return.data.frame"))
 
