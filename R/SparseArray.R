@@ -56,15 +56,9 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
   domaintype <- libtiledb_domain_get_type(dom@ptr)
   attributes <- list()
   # first alloc coordinate buffer
-  #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
   ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
                                                           libtiledb_coords(), domaintype)
-  if (is.integral(dom)) {
-    attributes[["coords"]] <- integer(length = ncells)
-  } else {
-    attributes[["coords"]]  <- numeric(length = ncells)
-  }
-
+  attributes[["coords"]] <- libtiledb_query_buffer_alloc_ptr(array@ptr, domaintype, ncells)
   attrs <- tiledb::attrs(sch)
   if (length(filter_attributes) > 0) {
     attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
@@ -73,9 +67,8 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
   for(attr in attrs) {
     aname <- tiledb::name(attr)
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
-    #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
     ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
-    buff <- vector(mode = type, length = ncells)
+    buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, tiledb::datatype(attr), ncells)
     attributes[[aname]] <- buff
   }
   return(attributes)
@@ -153,14 +146,16 @@ setMethod("[", "tiledb_sparse",
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                     aname <- attr_names[[idx]]
-                    val = buffers[[idx]]
+                    val <- buffers[[idx]]
                     if (aname == "coords") {
-                        qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+                      qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
                     } else {
-                      if (is.character(val) || is.list(val))
-                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                      else
-                          qry <- libtiledb_query_set_buffer(qry, aname, val)
+                      if (is.character(val) || is.list(val)) {
+                        qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                      } else {
+                        #qry <- libtiledb_query_set_buffer(qry, aname, val)
+                        qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
+                      }
                     }
                 }
                 qry <- libtiledb_query_submit(qry)
@@ -170,15 +165,18 @@ setMethod("[", "tiledb_sparse",
                 # get the actual number of results, instead of realloc
                 # just modify the vector length so there is no additional copy
                 for (idx in seq_along(attr_names)) {
-                  old_buffer <- buffers[[idx]]
+                  ##old_buffer <- buffers[[idx]]
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
                   aname <- attr_names[[idx]]
                   if (aname == "coords") {
                     ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
                   } else {
                     ncells <- libtiledb_query_result_buffer_elements(qry, aname)
                   }
-                  if (ncells < length(old_buffer)) {
+                  if (ncells <= length(old_buffer)) {
                     buffers[[idx]] <- old_buffer[1:ncells]
+                  } else {
+                    buffers[[idx]] <- old_buffer
                   }
                 }
                 if (x@as.data.frame) {
@@ -363,9 +361,15 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
       for (idx in seq_along(buffers)) {
         aname <- attr_names[[idx]]
         if (aname == "coords") {
-          qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
+          if (is(buffers[[idx]], "externalptr")) {
+            qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), buffers[[idx]])
+          } else {
+            qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
+          }
+        } else if (is(buffers[[idx]], "externalptr")) {
+          qry <- libtiledb_query_set_buffer_ptr(qry, aname, buffers[[idx]])
         } else {
-          qry <-  libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
+          qry <- libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
         }
       }
       qry <- libtiledb_query_submit(qry)
@@ -375,7 +379,11 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
       # get the actual number of results, instead of realloc
       # just modify the vector length so there is no additional copy
       for (idx in seq_along(attr_names)) {
-        old_buffer <- buffers[[idx]]
+        if (is(buffers[[idx]], "externalptr")) {
+          old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
+        } else {
+          old_buffer <- buffers[[idx]]
+        }
         aname <- attr_names[[idx]]
         if (aname == "coords") {
           ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
@@ -384,6 +392,8 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
         }
         if (ncells < length(old_buffer)) {
           buffers[[idx]] <- old_buffer[1:ncells]
+        } else {
+          buffers[[idx]] <- old_buffer
         }
       }
       for (i in 1:length(buffers)) {

@@ -1950,6 +1950,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
                                        bool castDatetime=true) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
+  //Rcpp::Rcout << "dtype: " << dtype << std::endl;
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
@@ -1982,7 +1983,7 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
     DatetimeVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return v;
-  } else if (dtype == "DATETIME_NS") {
+  } else if (dtype == "DATETIME_NS") {// || dtype == "DATETIME_MS") {
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
