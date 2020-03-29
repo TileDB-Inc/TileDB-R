@@ -482,3 +482,80 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
                        cut.names = cut.names, col.names = col.names, fix.empty.names = fix.empty.names,
                        stringsAsFactors = default.stringsAsFactors()))
 }
+
+## -- as.data.frame accessor
+
+#' @rdname return.data.frame-tiledb_dense-method
+#' @param ... Currently usnused
+#' @export
+setGeneric("return.data.frame", function(object, ...) standardGeneric("return.data.frame"))
+
+#' Retrieve data.frame return toggle
+#'
+#' A \code{tiledb_dense} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods returns the selection value.
+#' @param object A \code{tiledb_dense} array object
+#' @return A logical value indicating whether \code{data.frame} return is selected
+#' @export
+setMethod("return.data.frame",
+          signature = "tiledb_dense",
+          function(object) object@as.data.frame)
+
+
+## -- as.data.frame setter
+
+#' @rdname return.data.frame-set-tiledb_dense-method
+#' @export
+setGeneric("return.data.frame<-", function(x, value) standardGeneric("return.data.frame<-"))
+
+#' Set data.frame return toggle
+#'
+#' A \code{tiledb_dense} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods sets the selection value.
+#' @param x A \code{tiledb_dense} array object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_dense} array object
+#' @export
+setReplaceMethod("return.data.frame",
+                 signature = "tiledb_dense",
+                 function(x, value) {
+  x@as.data.frame <- value
+  validObject(x)
+  x
+})
+
+
+## -- attrs
+
+#' Retrieve attributes from \code{tiledb_dense} object
+#'
+#' By default, all attributes will be selected. But if a subset of attribute
+#' names is assigned to the internal slot \code{attrs}, then only those attributes
+#' will be queried.  This methods accesses the slot.
+#' @param object A \code{tiledb_dense} array object
+#' @return An empty character vector if no attributes have been selected or else
+#' a vector with attributes.
+#' @importFrom methods validObject
+#' @export
+setMethod("attrs",
+          signature = "tiledb_dense",
+          function(object) object@attrs)
+
+#' @rdname attrs-set-tiledb_dense-method
+#' @export
+setGeneric("attrs<-", function(x, value) standardGeneric("attrs<-"))
+
+#' Selects attributes for the given TileDB array
+#'
+#' @param x A \code{tiledb_dense} array object
+#' @param value A character vector with attributes
+#' @return The modified \code{tiledb_dense} array object
+#' @export
+setReplaceMethod("attrs",
+                 signature = "tiledb_dense",
+                 function(x, value) {
+  x@attrs <- value
+  ## maybe check against schema attribute names ?
+  validObject(x)
+  x
+})
