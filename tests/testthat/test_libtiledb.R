@@ -99,7 +99,12 @@ test_that("libtiledb_domain throws an error when dimensions are different dtypes
   ctx <- tiledb:::libtiledb_ctx()
   d1 <- tiledb:::libtiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
   d2 <- tiledb:::libtiledb_dim(ctx, "d2", "FLOAT64", c(1, 100), 10)
-  expect_error(tiledb:::libtiledb_domain(ctx, c(d1, d2)))
+  if (tiledb_version(compact=TRUE) < as.package_version("1.8.0"))
+    expect_error(tiledb:::libtiledb_domain(ctx, c(d1, d2)))
+  else {
+    dom <- tiledb:::libtiledb_domain(ctx, c(d1, d2))
+    expect_is(dom, "externalptr")
+  }
 })
 
 test_that("basic integer libtiledb_attr constructor works", {
