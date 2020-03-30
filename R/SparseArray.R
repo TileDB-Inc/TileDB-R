@@ -126,9 +126,9 @@ setMethod("[", "tiledb_sparse",
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
             domaintype <- libtiledb_domain_get_type(dom@ptr)
-            if (!tiledb::is.integral(dom)) {
-              stop("subscript indexing only valid for integral Domain's")
-            }
+            #if (!tiledb::is.integral(dom)) {
+            #  stop("subscript indexing only valid for integral Domain's")
+            #}
             libtiledb_array_open_with_ptr(x@ptr, "READ")
             out <- tryCatch(
               {
@@ -285,27 +285,29 @@ setMethod("[<-", "tiledb_sparse",
               zip_coords <- libtiledb_zip_coords_numeric(coords, coord_length)
             }
             libtiledb_array_open_with_ptr(x@ptr, "WRITE")
-            out <- tryCatch(
-              {
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
-                qry <- libtiledb_query_set_layout(qry, "UNORDERED")
-                qry <- libtiledb_query_set_coordinates(qry, zip_coords)
-                # set attribute buffers
-                attr_names <- names(value)
-                for (idx in seq_along(value)) {
-                  qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
-                }
-                qry <- libtiledb_query_submit(qry)
-                if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in incomplete sparse write query")
-                }
-                qry <- libtiledb_query_finalize(qry)
-                return(x);
-              },
-              finally = {
-                libtiledb_array_close(x@ptr)
-              })
-            return(out)
+            on.exit(libtiledb_array_close(x@ptr))
+            qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
+            qry <- libtiledb_query_set_layout(qry, "UNORDERED")
+            qry <- libtiledb_query_set_coordinates(qry, zip_coords)
+            ## set attribute buffers
+            attr_names <- names(value)
+            for (idx in seq_along(value)) {
+              aname <- attr_names[[idx]]
+              val <- value[[idx]]
+              if (inherits(val, "POSIXt")) {
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else {
+                qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
+              }
+            }
+            qry <- libtiledb_query_submit(qry)
+            if (libtiledb_query_status(qry) != "COMPLETE") {
+              stop("error in incomplete sparse write query")
+            }
+            qry <- libtiledb_query_finalize(qry)
+            return(x)
           })
 
 setMethod("show", "tiledb_sparse",

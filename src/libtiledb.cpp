@@ -499,14 +499,16 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
                                       SEXP tile_extent) {
   // check that the dimension type is supported
   const tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
-  if (_type != TILEDB_INT32 && _type != TILEDB_FLOAT64) {
-    Rcpp::stop("only integer (INT32), and real (FLOAT64) domains are supported");
+  if (_type != TILEDB_INT32 &&
+      _type != TILEDB_FLOAT64 &&
+      _type != TILEDB_DATETIME_MS &&
+      _type != TILEDB_DATETIME_NS) {
+    Rcpp::stop("only integer (INT32), real (FLOAT64) and DATETIME_{MS,NS} domains are supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (_type == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
-    throw Rcpp::exception("domain or tile_extent does not match dimension type");
-  } else if (_type == TILEDB_FLOAT64 &&
-             (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
+    Rcpp::stop("domain or tile_extent does not match dimension type");
+  } else if (_type == TILEDB_FLOAT64 && (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
     Rcpp::stop("domain or tile_extent does not match dimenson type");
   }
   if (_type == TILEDB_INT32) {
@@ -537,10 +539,24 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
     return XPtr<tiledb::Dimension>(
       new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
+
+  } else if (_type == TILEDB_DATETIME_MS) {
+    using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+    auto domain_vec = as<DatetimeVector>(domain);
+    if (domain_vec.length() != 2) {
+      Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
+    }
+    auto tile_extent_vec = as<NumericVector>(tile_extent);
+    if (tile_extent_vec.length() != 1) {
+      Rcpp::stop("tile_extent must be a scalar");
+    }
+    std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
+    std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
+    return XPtr<tiledb::Dimension>(
+      new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
+
   } else {
-    std::stringstream errmsg;
-    errmsg << "Unsupported tiledb type (id): " << _type << " this should not happen!";
-    Rcpp::stop(errmsg.str().c_str());
+    Rcpp::stop("Unsupported tiledb type (%d) this should not happen!", _type);
   }
 }
 

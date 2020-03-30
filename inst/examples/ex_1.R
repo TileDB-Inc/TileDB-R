@@ -59,8 +59,26 @@ read_array_subset <- function(uri) {
   show(data)
 }
 
+open_read_change_read <- function(uri) {
+  ## Open the array and read from it.
+  A <- tiledb_dense(uri = uri)
+  data <- A[6:9, 2:4]
+  show(data)
+
+  ## now activate data.frame mode
+  return.data.frame(A) <- TRUE
+  data <- A[6:9, 2:4]
+  show(data)
+
+  ## now select subset
+  attrs(A) <- c("b", "c")
+  data <- A[6:9, 2:4]
+  show(data)
+}
+
 create_array(uri)
 write_array(uri)
 read_array(uri)
 read_as_df(uri)
 read_array_subset(uri)
+open_read_change_read(uri)
