@@ -166,7 +166,7 @@ setMethod("[", "tiledb_sparse",
                 # just modify the vector length so there is no additional copy
                 for (idx in seq_along(attr_names)) {
                   ##old_buffer <- buffers[[idx]]
-                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], TRUE, FALSE)
                   aname <- attr_names[[idx]]
                   if (aname == "coords") {
                     ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
@@ -380,7 +380,7 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
       # just modify the vector length so there is no additional copy
       for (idx in seq_along(attr_names)) {
         if (is(buffers[[idx]], "externalptr")) {
-          old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
+          old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], TRUE, FALSE)
         } else {
           old_buffer <- buffers[[idx]]
         }

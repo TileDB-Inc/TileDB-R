@@ -94,7 +94,7 @@ try_datetime <- function(uri) {
   ## just modify the vector length so there is no additional copy
   for (idx in seq_along(attr_names)) {
     #old_buffer <- buffers[[idx]]
-    old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
+    old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], TRUE, FALSE)
     #cat("Idx is ", idx, " and name is ", attr_names[idx], ". Retrieved buffer follows\n", sep="")
     #print(str(old_buffer))
     aname <- attr_names[[idx]]

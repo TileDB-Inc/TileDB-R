@@ -300,7 +300,7 @@ setMethod("[", "tiledb_dense",
                 if (dtype == "CHAR") {
                   old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
                 } else if (dtype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
-                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], TRUE, FALSE)
                 } else {
                   stop("Unsupported data type for attribute ", aname)
                 }
@@ -422,13 +422,10 @@ setMethod("[<-", "tiledb_dense",
             for (idx in seq_along(value)) {
               aname <- attr_names[[idx]]
               val <- value[[idx]]
-              #print(val)
-              #print(class(val))
               if (is.list(val) || is.character(val)) {
                 ##qry <- libtiledb_query_set_buffer_var(qry, aname, val)
                 n <- ifelse(is.vector(val), length(val), prod(dim(val)))
                 string <- paste(val[1:n], collapse="")
-                ##offs <- seq(1,n) - 1L
                 ## offsets starts: cumulative sum of all word lengths as provided by nchar
                 ## but starting at 0 and then omitting the last
                 offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
@@ -436,12 +433,11 @@ setMethod("[<-", "tiledb_dense",
                 qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
 
               } else if (inherits(val, "Date")) {
-                ## allocates, does not copy
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
                 bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "POSIXt")) {
-                ## allocates, does not copy
+                # could also use DATETIME_SEC here but _MS dominates it with higher resolution
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
                 bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)

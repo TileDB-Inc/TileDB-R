@@ -429,8 +429,8 @@ libtiledb_query_set_buffer_ptr <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_set_buffer_ptr`, query, attr, buf)
 }
 
-libtiledb_query_get_buffer_ptr <- function(buf, castDatetime = TRUE) {
-    .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf, castDatetime)
+libtiledb_query_get_buffer_ptr <- function(buf, useRType = TRUE, castDatetime = TRUE) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf, useRType, castDatetime)
 }
 
 libtiledb_query_submit <- function(query) {
