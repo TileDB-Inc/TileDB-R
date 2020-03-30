@@ -38,9 +38,9 @@ write_array <- function(uri) {
   #             array(ISOdatetime(2020,1,1,0,0,0) + cumsum(rnorm(10) * 1e5), dim=c(10,1)))
   data <- list(seq(1:10),
                as.double(seq(101,110)),
-               #array(c(letters[1:26], "brown", "fox", LETTERS[1:22])[1:10], dim = c(10,1)),
-               ISOdate(2020,1,1) + cumsum(runif(10)*5),
-               ISOdatetime(2020,1,1,0,0,0) + cumsum(rnorm(10) * 1e5))
+               #c(letters[1:26], "brown", "fox", LETTERS[1:22])[1:10],
+               as.Date("2020-01-01") + cumsum(runif(10)*5),
+               ISOdatetime(2020,1,1,6,0,0) + cumsum(rnorm(10) * 1e5))
   ## Open the array and write to it.
   A <- tiledb_sparse(uri = uri)
   coords <- ISOdatetime(2020,1,1,0,0,0) + (1:10)*60
@@ -52,13 +52,22 @@ read_array <- function(uri) {
   A <- tiledb_sparse(uri = uri)
   data <- A[]
   show(data)
+  ##schema(A)
+
 }
 
+read_as_df <- function(uri) {
+  A <- tiledb_sparse(uri = uri, as.data.frame = TRUE)
+  data <- A[1577858580:1577858700]
+  show(data)
+}
 
 set.seed(42)
-if (tiledb_object_type(array_name) != "ARRAY") {
+#if (tiledb_object_type(array_name) != "ARRAY") {
+if (!dir.exists(array_name)) {
   create_array(uri)
   write_array(uri)
 }
 read_array(uri)
+read_as_df(uri)
 cat("Done.\n")

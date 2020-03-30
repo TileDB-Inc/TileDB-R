@@ -66,9 +66,16 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
   # for every attribute, compute the number of cells and allocate vectors
   for(attr in attrs) {
     aname <- tiledb::name(attr)
-    type <- tiledb_datatype_R_type(tiledb::datatype(attr))
+    dtype <- tiledb::datatype(attr)
+    type <- tiledb_datatype_R_type(dtype)
+    datatype <- libtiledb_attribute_get_type(attr@ptr)
+    #cat("dtype:", dtype, " type:", type, " datatype:", datatype, "\n", sep="")
     ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
-    buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, tiledb::datatype(attr), ncells)
+    if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
+      buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, sub, aname)
+    } else {
+      buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, tiledb::datatype(attr), ncells)
+    }
     attributes[[aname]] <- buff
   }
   return(attributes)
@@ -115,6 +122,7 @@ as_data_frame <- function(dom, data, extended=FALSE) {
 #' @return An element from the sparse array
 setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
+            ## helper function to deal with i and/or j missing
             index <- nd_index_from_syscall(sys.call(), parent.frame())
             # If we have a list of lists of lists we need to remove one layer
             # This happens when a user uses a list of coordinates
@@ -131,6 +139,7 @@ setMethod("[", "tiledb_sparse",
             #}
             libtiledb_array_open_with_ptr(x@ptr, "READ")
             on.exit(libtiledb_array_close(x@ptr))
+
             subarray <- domain_subarray(dom, index = index)
             if (is.integral(dom)) {
               subarray <- as.integer(subarray)
@@ -287,9 +296,14 @@ setMethod("[<-", "tiledb_sparse",
             for (idx in seq_along(value)) {
               aname <- attr_names[[idx]]
               val <- value[[idx]]
+              #print(class(val))
               if (inherits(val, "POSIXt")) {
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
                 bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else if (inherits(val, "Date")) {
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "character")) {
                 n <- ifelse(is.vector(val), length(val), prod(dim(val)))
@@ -310,6 +324,7 @@ setMethod("[<-", "tiledb_sparse",
             qry <- libtiledb_query_finalize(qry)
             return(x)
           })
+
 
 setMethod("show", "tiledb_sparse",
           function (object) {
