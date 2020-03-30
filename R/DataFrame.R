@@ -85,7 +85,9 @@ fromDataFrame <- function(obj, uri) {
 }
 
 .testWithDatetime <- function(df, uri) {
-  #banklist <- read.csv("~/git/tiledb-data/csv-pandas/banklist.csv", stringsAsFactors = FALSE)
+  ## one example data set can be created / read via
+  ##   banklist <- read.csv("~/git/tiledb-data/csv-pandas/banklist.csv", stringsAsFactors = FALSE)
+  ## pprovided one has those files
   bkdf <- within(df, {
     Closing.Date <- as.POSIXct(as.Date(Closing.Date, "%d-%b-%y"))
     Updated.Date <- as.POSIXct(as.Date(Updated.Date, "%d-%b-%y"))
@@ -108,7 +110,7 @@ fromDataFrame <- function(obj, uri) {
   }
   fromDataFrame(df, uri)
   cat("Data written\n")
-  
+
   arr <- tiledb_dense(uri, as.data.frame = TRUE)
   newdf <- arr[]
   invisible(newdf)
