@@ -130,71 +130,64 @@ setMethod("[", "tiledb_sparse",
             #  stop("subscript indexing only valid for integral Domain's")
             #}
             libtiledb_array_open_with_ptr(x@ptr, "READ")
-            out <- tryCatch(
-              {
-                subarray <- domain_subarray(dom, index = index)
-                if (is.integral(dom)) {
-                  subarray <- as.integer(subarray)
+            on.exit(libtiledb_array_close(x@ptr))
+            subarray <- domain_subarray(dom, index = index)
+            if (is.integral(dom)) {
+              subarray <- as.integer(subarray)
+            } else {
+              subarray <- as.double(subarray)
+            }
+            buffers <- sparse_attribute_buffers(x, schema, dom, subarray)
+            qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
+            qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
+            #qry <- libtiledb_query_set_subarray(qry, subarray)
+            qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype)
+            attr_names <- names(buffers)
+            for (idx in seq_along(buffers)) {
+              aname <- attr_names[[idx]]
+              val <- buffers[[idx]]
+              if (aname == "coords") {
+                qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
+              } else {
+                if (is.character(val) || is.list(val)) {
+                  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
                 } else {
-                  subarray <- as.double(subarray)
+                  #qry <- libtiledb_query_set_buffer(qry, aname, val)
+                  qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
                 }
-                buffers <- sparse_attribute_buffers(x, schema, dom, subarray)
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
-                qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                #qry <- libtiledb_query_set_subarray(qry, subarray)
-                qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype)
-                attr_names <- names(buffers)
-                for (idx in seq_along(buffers)) {
-                    aname <- attr_names[[idx]]
-                    val <- buffers[[idx]]
-                    if (aname == "coords") {
-                      qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
-                    } else {
-                      if (is.character(val) || is.list(val)) {
-                        qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                      } else {
-                        #qry <- libtiledb_query_set_buffer(qry, aname, val)
-                        qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
-                      }
-                    }
-                }
-                qry <- libtiledb_query_submit(qry)
-                if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in read query (not 'COMPLETE')")
-                }
-                # get the actual number of results, instead of realloc
-                # just modify the vector length so there is no additional copy
-                for (idx in seq_along(attr_names)) {
-                  ##old_buffer <- buffers[[idx]]
-                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], TRUE, FALSE)
-                  aname <- attr_names[[idx]]
-                  if (aname == "coords") {
-                    ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
-                  } else {
-                    ncells <- libtiledb_query_result_buffer_elements(qry, aname)
-                  }
-                  if (ncells <= length(old_buffer)) {
-                    buffers[[idx]] <- old_buffer[1:ncells]
-                  } else {
-                    buffers[[idx]] <- old_buffer
-                  }
-                }
-                if (x@as.data.frame) {
-                  return(as_data_frame(dom, buffers))
-                } else {
-                # if there is only one buffer, don't return a list of attribute buffers
-                if (length(buffers) == 1L) {
-                  return(buffers[[1L]])
-                }
-                  return(buffers)
-                }
-              },
-              finally = {
-                libtiledb_array_close(x@ptr)
               }
-            )
-            return(out);
-          })
+            }
+            qry <- libtiledb_query_submit(qry)
+            if (libtiledb_query_status(qry) != "COMPLETE") {
+              stop("error in read query (not 'COMPLETE')")
+            }
+            # get the actual number of results, instead of realloc
+            # just modify the vector length so there is no additional copy
+            for (idx in seq_along(attr_names)) {
+              ##old_buffer <- buffers[[idx]]
+              old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], TRUE, FALSE)
+              aname <- attr_names[[idx]]
+              if (aname == "coords") {
+                ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
+              } else {
+                ncells <- libtiledb_query_result_buffer_elements(qry, aname)
+              }
+              if (ncells <= length(old_buffer)) {
+                buffers[[idx]] <- old_buffer[1:ncells]
+              } else {
+                buffers[[idx]] <- old_buffer
+              }
+            }
+            if (x@as.data.frame) {
+              return(as_data_frame(dom, buffers))
+            } else {
+              ## if there is only one buffer, don't return a list of attribute buffers
+              if (length(buffers) == 1L) {
+                return(buffers[[1L]])
+              }
+              return(buffers)
+            }
+})
 
 #' Sets a sparse array value
 #'
@@ -298,6 +291,14 @@ setMethod("[<-", "tiledb_sparse",
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
                 bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else if (inherits(val, "character")) {
+                n <- ifelse(is.vector(val), length(val), prod(dim(val)))
+                string <- paste(val[1:n], collapse="")
+                ## offsets starts: cumulative sum of all word lengths as provided by nchar
+                ## but starting at 0 and then omitting the last
+                offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
+                bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
+                qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
               } else {
                 qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
               }
