@@ -1,13 +1,13 @@
 ---
 title: "TileDB R Notebook"
 output:
+  html_document:
+    toc: yes
+    df_print: paged
   html_notebook:
     toc: yes
     highlight: pygments
     theme: lumen
-  html_document:
-    toc: yes
-    df_print: paged
 ---
 
 <!--This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.   Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
@@ -211,7 +211,7 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 ```{r settilecapacity}
 tiledb:::libtiledb_array_schema_set_capacity(schema@ptr, 100000)
 tiledb:::libtiledb_array_schema_get_capacity(schema@ptr)
-## TODO R function for accessor
+## TODO higher-level R functions
 ```
 
 #### Setting Coordinate and Offset Filters
@@ -236,7 +236,7 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 
 ```{r arrayschemacheck}
 tiledb:::libtiledb_array_schema_check(schema@ptr)
-## TODO: R function for access
+## TODO higher-level R functions
 ```
 
 
@@ -271,8 +271,8 @@ tiledb:::libtiledb_array_create_with_key(uridensewkey, schema@ptr, encryption_ke
 ```{r writedensesubarr, eval=FALSE}
 ## prepare a larger 5 x 5 to embed into
 tmp <- tempfile()
-d1  <- tiledb_dim(domain = c(1L, 5L))
-d2  <- tiledb_dim(domain = c(1L, 5L))
+d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+d2  <- tiledb_dim("d2", domain = c(1L, 5L))
 dom <- tiledb_domain(c(d1, d2))
 val <- tiledb_attr(name="val", type = "INT32")
 sch <- tiledb_array_schema(dom, c(val))
@@ -324,8 +324,8 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 tmp <- urisparse
 unlink(tmp, recursive=TRUE)
 
-d1  <- tiledb_dim(domain = c(1L, 5L))
-d2  <- tiledb_dim(domain = c(1L, 5L))
+d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+d2  <- tiledb_dim("d2", domain = c(1L, 5L))
 dom <- tiledb_domain(c(d1, d2))
 val <- tiledb_attr("val", type = "INT32")
 sch <- tiledb_array_schema(dom, val, sparse=TRUE)
@@ -372,8 +372,8 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 
 ```{r fixedlengthattributes}
 if (dir.exists(uridensefix)) unlink(uridensefix, recursive=TRUE)
-d1  <- tiledb_dim(domain = c(1L, 4L))
-d2  <- tiledb_dim(domain = c(1L, 4L))
+d1  <- tiledb_dim("d1", domain = c(1L, 4L))
+d2  <- tiledb_dim("d2", domain = c(1L, 4L))
 dom <- tiledb_domain(c(d1, d2))
 
 vec <- 1:32 * 10L
@@ -632,6 +632,35 @@ qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
 qryptr <- tiledb:::libtiledb_query_submit(qryptr)
 print(v)         # unformed array, no coordinates
 res <- tiledb:::libtiledb_array_close(arrptr)
+```
+
+### Variable-length Attributes
+
+```{r readvarlength}
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
+
+subarr <- c(1L,4L, 1L,4L)
+bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc(arrptr, subarr, "a1", 16, 100)
+
+qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+
+qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
+qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+tiledb:::libtiledb_array_close(arrptr)
+
+mat <- tiledb:::libtiledb_query_get_buffer_var_char(bufptr)
+print(mat, quote=FALSE)
+```
+
+### Getting the Non-empty Domain
+
+```{r nonempty}
+arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
+# returns a list object
+reslist <- tiledb:::libtiledb_array_nonempty_domain(arrptr)
+tiledb:::libtiledb_array_close(arrptr)
 ```
 
 ### Reading Encrypted Arrays

@@ -37,10 +37,12 @@ library(tiledb)
 
 # Name of the array to create.
 array_name <- "quickstart_dense"
+## Path is either current directory, or a local config value is found
+uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 
-create_array <- function() {
+create_array <- function(uri) {
     # Check if the array already exists.
-    if (tiledb_object_type(array_name) == "ARRAY") {
+    if (tiledb_object_type(uri) == "ARRAY") {
         message("Array already exists.")
         return(invisible(NULL))
     }
@@ -53,26 +55,26 @@ create_array <- function() {
     schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
 
     # Create the (empty) array on disk.
-    tiledb_array_create(array_name, schema)
+    tiledb_array_create(uri, schema)
 }
 
-write_array <- function() {
+write_array <- function(uri) {
     data <- array(c(c(1L, 5L, 9L, 13L),
                     c(2L, 6L, 10L, 14L),
                     c(3L, 7L, 11L, 15L),
                     c(4L, 8L, 12L, 16L)), dim = c(4,4))
     # Open the array and write to it.
-    A <- tiledb_dense(uri = array_name)
+    A <- tiledb_dense(uri = uri)
     A[] <- data
 }
 
-read_array <- function() {
+read_array <- function(uri) {
     # Open the array and read from it.
-    A <- tiledb_dense(uri = array_name)
+    A <- tiledb_dense(uri = uri)
     data <- A[1:2, 2:4]
     show(data)
 }
 
-create_array()
-write_array()
-read_array()
+create_array(uri)
+write_array(uri)
+read_array(uri)

@@ -4,14 +4,20 @@
 \alias{tiledb_version}
 \title{The version of the libtiledb library}
 \usage{
-tiledb_version()
+tiledb_version(compact = FALSE)
+}
+\arguments{
+\item{compact}{Logical value indicating wheter a compact
+\code{package_version} object should be returned}
 }
 \value{
-An named int vector c(major, minor, patch)
+An named int vector c(major, minor, patch), or if select,
+a \code{package_version} object
 }
 \description{
 The version of the libtiledb library
 }
 \examples{
 tiledb_version()
+tiledb_version(compact = TRUE)
 }

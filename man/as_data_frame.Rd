@@ -4,12 +4,15 @@
 \alias{as_data_frame}
 \title{Construct a data.frame from query results}
 \usage{
-as_data_frame(dom, data)
+as_data_frame(dom, data, extended = FALSE)
 }
 \arguments{
 \item{dom}{tiledb_domain object}
 
 \item{data}{tiledb object to be converted}
+
+\item{extended}{optional logical variable selected wider display
+with coordinates, defaults to false}
 }
 \value{
 data.frame object constructed from \code{data}

@@ -42,4 +42,15 @@ public:
 };
 typedef struct var_length_vec_buffer vlv_buf_t;
 
+
+struct query_buffer {
+  //void *ptr;                    // pointer to data as an alternativ
+  std::vector<int8_t> vec;        // vector of int8_t as a memory container
+  tiledb_datatype_t dtype;        // data type
+  R_xlen_t ncells;                // extent
+  size_t size;                    // element size
+};
+typedef struct query_buffer query_buf_t;
+
+
 #endif // __tiledb_h__

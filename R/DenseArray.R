@@ -3,22 +3,36 @@
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription
 #' @slot as.data.frame A logical value
+#' @slot attrs A character vector
+#' @slot extended A logical value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_dense
 setClass("tiledb_dense",
-         slots = list(ctx = "tiledb_ctx", uri = "character",
-                      as.data.frame = "logical", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx",
+                      uri = "character",
+                      as.data.frame = "logical",
+                      attrs = "character",
+                      extended = "logical",
+                      ptr = "externalptr"))
 
 #' Constructs a tiledb_dense object backed by a persisted tiledb array uri
 #'
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
+#' @param attrs optional character vector to select attributes, default is
+#' empty implying all are selected
+#' @param extended optional logical switch selecting wide \sQuote{data.frame}
+#' format, defaults to "FALSE"
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_dense array object
 #' @export
-tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
-                         as.data.frame=FALSE, ctx = tiledb_get_context()) {
+tiledb_dense <- function(uri,
+                         query_type = c("READ", "WRITE"),
+                         as.data.frame = FALSE,
+                         attrs = character(),
+                         extended = FALSE,
+                         ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -33,7 +47,9 @@ tiledb_dense <- function(uri, query_type = c("READ", "WRITE"),
     stop("array URI must be a dense array")
   }
   array_xptr <- libtiledb_array_close(array_xptr)
-  new("tiledb_dense", ctx = ctx, uri = uri, as.data.frame = as.data.frame, ptr = array_xptr)
+  new("tiledb_dense", ctx = ctx, uri = uri,
+      as.data.frame = as.data.frame, attrs = attrs,
+      extended = FALSE, ptr = array_xptr)
 }
 
 setMethod("show", "tiledb_dense",
@@ -144,41 +160,57 @@ subarray_dim <- function(sub) {
   return(sub_dim)
 }
 
-attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
+attribute_buffers <- function(array, sch, dom, sub, selected) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
   is_scalar <- all(sub_dim == 1L)
+  domaintype <- libtiledb_domain_get_type(dom@ptr)
 
   attributes <- list()
 
   # first alloc coordinate buffer if we are returning a data.frame
   if(array@as.data.frame) {
-    ncells_coords <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
+    ncells_coords <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
+                                                                   libtiledb_coords(), domaintype)
     if (is.integral(dom)) {
       attributes[["coords"]] <- integer(length = ncells_coords)
     } else {
       attributes[["coords"]]  <- numeric(length = ncells_coords)
     }
   }
-
   attrs <- tiledb::attrs(sch)
-  if (length(filter_attributes) > 0) {
-    attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
+  if (length(selected) == 0) {          # no selection given -> use all
+    selected <- names(attrs)
   }
-  for(attr in attrs) {
+  for (attr in attrs) {
     aname <- tiledb::name(attr)
-    type <- tiledb_datatype_R_type(tiledb::datatype(attr))
-    # If we are going to get it as a dataframe we need to use max buffer elements to get proper buffer size
-    if(array@as.data.frame) {
-      ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
+    if (! aname %in% selected) {
+      next
     }
-    buff <- vector(mode = type, length = ncells)
+    dtype <- tiledb::datatype(attr)
+    type <- tiledb_datatype_R_type(dtype)
+    datatype <- libtiledb_attribute_get_type(attr@ptr)
+    #cat("dtype:", dtype, " type:", type, " datatype:", datatype, "\n", sep="")
+    ## If getting it as a dataframe we need to use max buffer elements to get proper buffer size
+    if (array@as.data.frame) {
+      ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
+    }
+    if (type %in% c("integer", "double")) {
+      buff <- vector(mode = type, length = ncells)
+    } else if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
+      buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, as.integer(sub), aname)
+    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+      buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)
+    } else {
+      stop("Unsupported data type for attribute ", aname)
+    }
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
-    if (!is_scalar && !array@as.data.frame) {
+    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
       attr(buff, "dim") <- sub_dim
     }
+    attr(buff, "datatype") <- datatype
     attributes[[aname]] <- buff
   }
   return(attributes)
@@ -194,6 +226,7 @@ attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
 #' @return An element from a dense array
 setMethod("[", "tiledb_dense",
           function(x, i, j, ..., drop = FALSE) {
+            ## helper function to deal with i and/or j missing
             index <- nd_index_from_syscall(sys.call(), parent.frame())
             # If we have a list of lists of lists we need to remove one layer
             # This happens when a user uses a list of coordinates
@@ -202,79 +235,102 @@ setMethod("[", "tiledb_dense",
             }
             ctx <- x@ctx
             uri <- x@uri
+            sel <- x@attrs
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
             if (!tiledb::is.integral(dom)) {
-              stop("subscript indexing only valid for integral Domain's")
+              stop("subscript indexing only valid for integral Domain types")
             }
             libtiledb_array_open_with_ptr(x@ptr, "READ")
+            on.exit(libtiledb_array_close(x@ptr))
 
-            out <- tryCatch(
-              {
-                subarray <- domain_subarray(dom, index = index)
-                buffers <- attribute_buffers(x, schema, dom, subarray)
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
-                qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                if (is.integral(dom)) {
-                  qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
-                } else {
-                  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
-                }
-                attr_names <- names(buffers)
-                for (idx in seq_along(buffers)) {
-                  aname <- attr_names[[idx]]
-                  val = buffers[[idx]]
-                  if (aname == "coords") {
-                      qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+            subarray <- domain_subarray(dom, index = index)
+            buffers <- attribute_buffers(x, schema, dom, subarray, sel)
+            qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
+            qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
+            if (is.integral(dom)) {
+              qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
+            } else {
+              qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
+            }
+            attr_names <- names(buffers)
+            for (idx in seq_along(buffers)) {
+              aname <- attr_names[[idx]]
+              val <- buffers[[idx]]
+              if (aname == "coords") {
+                qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
+              } else {
+                if (is.character(val) || is.list(val)) {
+                  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                } else if (is(val, "externalptr")) {
+                  datatype <- attr(val, "datatype")
+                  if (datatype == "CHAR") {
+                    qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
+                  } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+                    qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
                   } else {
-                      if (is.character(val) || is.list(val))
-                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                      else
-                          qry <- libtiledb_query_set_buffer(qry, aname, val)
+                    stop("Currently unsupported type: ", datatype)
                   }
-                }
-                qry <- libtiledb_query_submit(qry)
-                if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in read query (not 'COMPLETE')")
-                }
-                # If true, delete the dimensions of an array which have only one level
-                if (drop) {
-                  for (i in seq_len(length(buffers))) {
-                    buffers[[i]] <- drop(buffers[[i]])
-                  }
-                }
-
-                # get the actual number of results, instead of realloc
-                # just modify the vector length so there is no additional copy
-                for (idx in seq_along(attr_names)) {
-                  old_buffer <- buffers[[idx]]
-                  aname <- attr_names[[idx]]
-                  if (aname == "coords") {
-                    ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
-                  } else {
-                    ncells <- libtiledb_query_result_buffer_elements(qry, aname)
-                  }
-                  if (ncells < length(old_buffer)) {
-                    buffers[[idx]] <- old_buffer[1:ncells]
-                  }
-                }
-
-                if (x@as.data.frame) {
-                  return(as_data_frame(dom, buffers))
                 } else {
-                  # if there is only one buffer, don't return a list of attribute buffers
-                  if (length(buffers) == 1L) {
-                    return(buffers[[1L]])
-                  }
-                  return(buffers)
+                  qry <- libtiledb_query_set_buffer(qry, aname, val)
                 }
-              },
-              finally = {
-                libtiledb_array_close(x@ptr)
               }
-            )
-            return(out);
-          })
+            }
+            qry <- libtiledb_query_submit(qry)
+            if (libtiledb_query_status(qry) != "COMPLETE") {
+              stop("error in read query (not 'COMPLETE')")
+            }
+            ## If true, delete the dimensions of an array which have only one level
+            if (drop) {
+              for (i in seq_len(length(buffers))) {
+                buffers[[i]] <- drop(buffers[[i]])
+              }
+            }
+
+            ## get the actual number of results, instead of realloc
+            ## just modify the vector length so there is no additional copy
+            for (idx in seq_along(attr_names)) {
+              old_buffer <- buffers[[idx]]
+
+              aname <- attr_names[[idx]]
+              dtype <- attr(buffers[[idx]], "datatype")
+              #cat("---Name: ", aname, " ----Type: ", dtype, "\n")
+
+              if (is(old_buffer, "externalptr")) {
+                if (dtype == "CHAR") {
+                  old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
+                } else if (dtype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
+                } else {
+                  stop("Unsupported data type for attribute ", aname)
+                }
+              }
+
+              if (aname == "coords") {
+                ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
+              } else {
+                ncells <- libtiledb_query_result_buffer_elements(qry, aname)
+              }
+              if (ncells < length(old_buffer) || x@as.data.frame) {
+                ## for char attributtes ncells is sum of nchar and an overestimate for the indexing
+                buffers[[idx]] <- old_buffer[1:min(ncells, length(old_buffer))]
+              } else {
+                buffers[[idx]] <- old_buffer
+              }
+            }
+            for (i in 1:length(buffers)) {
+              attr(buffers[[i]], "datatype") <- NULL
+            }
+            if (x@as.data.frame) {
+              return(as_data_frame(dom, buffers, x@extended))
+            } else {
+              ## if there is only one buffer, don't return a list of attribute buffers
+              if (length(buffers) == 1L) {
+                return(buffers[[1L]])
+              }
+              return(buffers)
+            }
+})
 
 
 #' Sets a dense array value
@@ -285,13 +341,14 @@ setMethod("[", "tiledb_dense",
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param value The value being assigned
 #' @return The modified object
+#' @importFrom utils head
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
-             if (!is.list(value)) {
-              if (is.array(value) || is.vector(value)) {
+            if (!is.list(value)) {
+              if (is.array(value) || is.vector(value) || isS4(value)) {
                 value <- list(value)
               } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
+                stop("Cannot assign initial value of type '", typeof(value), "'")
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -312,21 +369,21 @@ setMethod("[<-", "tiledb_dense",
             nvalue <- length(value)
             nattrs <- length(attrs)
             if (nvalue > nattrs) {
-               stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
+               stop("invalid number of attribute values (", nvalue, " != ", nattrs, ")")
             }
             attr_names <- names(attrs)
             value_names <- names(value)
             if (is.null(value_names)) {
               # check the list shape / types against attributes
               if (nvalue != nattrs) {
-                stop(paste("invalid number of attribute values (", nvalue, " != ", nattrs, ")"))
+                stop("invalid number of attribute values (", nvalue, " != ", nattrs, ")")
               }
               names(value) <- ifelse(attr_names == "", "__attr", attr_names)
             } else {
               # check associative assignment
               for (name in value_names)  {
                 if (!(name %in%  attr_names)) {
-                  stop(paste("invalid array attribute value name: \"", name, "\""))
+                  stop("invalid array attribute value name: '", name, "'")
                 }
               }
             }
@@ -335,8 +392,12 @@ setMethod("[<-", "tiledb_dense",
             sub_dim <- subarray_dim(subarray)
 
             for (i in seq_along(value)) {
+              #if (class(value[[i]])=="Date") browser()
               val <- value[[i]]
-              if (is.vector(val)) {
+              if (is.vector(val) ||
+                  inherits(val, "Date") ||
+                  inherits(val, "POSIXt") ||
+                  inherits(val, "nanotime")) {
                 if (length(sub_dim) != 1 || sub_dim[1L] != length(val)) {
                   stop("value dim does not match array subscript")
                 }
@@ -345,41 +406,59 @@ setMethod("[<-", "tiledb_dense",
                   stop("value dim does not match array subscript")
                 }
               } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
+                stop("cannot assign column value of type '", typeof(value), "'")
               }
             }
             libtiledb_array_open_with_ptr(x@ptr, "WRITE")
-            out <- tryCatch(
-              {
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
-                qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                if (is.integral(dom)) {
-                  qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
-                } else {
-                  qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
-                }
-                attr_names <- names(value)
-                for (idx in seq_along(value)) {
-                  aname <- attr_names[[idx]]
-                  val = value[[idx]]
-                  if (is.list(val) || is.character(val)) {
-                      stop("Sorry, char support is not currently available.")
-                      qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                  } else {
-                      qry <- libtiledb_query_set_buffer(qry, aname, val)
-                  }
-                }
-                qry <- libtiledb_query_submit(qry)
-                if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in write query")
-                }
-                qry <- libtiledb_query_finalize(qry)
-                return(x);
-              },
-              finally = {
-                libtiledb_array_close(x@ptr)
-              })
-            return(out)
+            on.exit(libtiledb_array_close(x@ptr))
+            qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
+            qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
+            if (is.integral(dom)) {
+              qry <- libtiledb_query_set_subarray(qry, as.integer(subarray))
+            } else {
+              qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
+            }
+            attr_names <- names(value)
+            for (idx in seq_along(value)) {
+              aname <- attr_names[[idx]]
+              val <- value[[idx]]
+              #print(val)
+              #print(class(val))
+              if (is.list(val) || is.character(val)) {
+                ##qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                n <- ifelse(is.vector(val), length(val), prod(dim(val)))
+                string <- paste(val[1:n], collapse="")
+                ##offs <- seq(1,n) - 1L
+                ## offsets starts: cumulative sum of all word lengths as provided by nchar
+                ## but starting at 0 and then omitting the last
+                offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
+                bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
+                qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
+
+              } else if (inherits(val, "Date")) {
+                ## allocates, does not copy
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else if (inherits(val, "POSIXt")) {
+                ## allocates, does not copy
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else if (inherits(val, "nanotime")) {
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_NS", length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_NS", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else {
+                qry <- libtiledb_query_set_buffer(qry, aname, val)
+              }
+            }
+            qry <- libtiledb_query_submit(qry)
+            if (libtiledb_query_status(qry) != "COMPLETE") {
+              stop("error in write query")
+            }
+            qry <- libtiledb_query_finalize(qry)
+            return(x)
           })
 
 #' @export
@@ -389,8 +468,8 @@ as.array.tiledb_dense <- function(x, ...) {
 
 #' @export
 as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ...,
-                                    cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
-                                    stringsAsFactors = default.stringsAsFactors()) {
+                                       cut.names = FALSE, col.names = NULL, fix.empty.names = TRUE,
+                                       stringsAsFactors = default.stringsAsFactors()) {
   lst <- x[]
   if (!is(lst, "list")) {
     lst <- list(lst)
@@ -403,3 +482,88 @@ as.data.frame.tiledb_dense <- function(x, row.names = NULL, optional = FALSE, ..
                        cut.names = cut.names, col.names = col.names, fix.empty.names = fix.empty.names,
                        stringsAsFactors = default.stringsAsFactors()))
 }
+
+## -- as.data.frame accessor
+
+#' @rdname return.data.frame-tiledb_dense-method
+#' @param ... Currently unused
+#' @export
+setGeneric("return.data.frame", function(object, ...) standardGeneric("return.data.frame"))
+
+#' Retrieve data.frame return toggle
+#'
+#' A \code{tiledb_dense} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods returns the selection value.
+#' @param object A \code{tiledb_dense} array object
+#' @return A logical value indicating whether \code{data.frame} return is selected
+#' @export
+setMethod("return.data.frame",
+          signature = "tiledb_dense",
+          function(object) object@as.data.frame)
+
+
+## -- as.data.frame setter
+
+#' @rdname return.data.frame-set-tiledb_dense-method
+#' @export
+setGeneric("return.data.frame<-", function(x, value) standardGeneric("return.data.frame<-"))
+
+#' Set data.frame return toggle
+#'
+#' A \code{tiledb_dense} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods sets the selection value.
+#' @param x A \code{tiledb_dense} array object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_dense} array object
+#' @export
+setReplaceMethod("return.data.frame",
+                 signature = "tiledb_dense",
+                 function(x, value) {
+  x@as.data.frame <- value
+  validObject(x)
+  x
+})
+
+
+## -- attrs
+
+#' Retrieve attributes from \code{tiledb_dense} object
+#'
+#' By default, all attributes will be selected. But if a subset of attribute
+#' names is assigned to the internal slot \code{attrs}, then only those attributes
+#' will be queried.  This methods accesses the slot.
+#' @param object A \code{tiledb_dense} array object
+#' @return An empty character vector if no attributes have been selected or else
+#' a vector with attributes.
+#' @importFrom methods validObject
+#' @export
+setMethod("attrs",
+          signature = "tiledb_dense",
+          function(object) object@attrs)
+
+#' @rdname attrs-set-tiledb_dense-method
+#' @export
+setGeneric("attrs<-", function(x, value) standardGeneric("attrs<-"))
+
+#' Selects attributes for the given TileDB array
+#'
+#' @param x A \code{tiledb_dense} array object
+#' @param value A character vector with attributes
+#' @return The modified \code{tiledb_dense} array object
+#' @export
+setReplaceMethod("attrs",
+                 signature = "tiledb_dense",
+                 function(x, value) {
+  nm <- names(attrs(schema(x)))
+  if (length(nm) == 0) {                # none set so far
+    x@attrs <- value
+  } else {
+    pm <- pmatch(value, nm)
+    if (any(is.na(pm))) {
+      stop("Multiple partial matches ambiguous: ", paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
+    }
+    x@attrs <- nm[pm]
+  }
+  validObject(x)
+  x
+})

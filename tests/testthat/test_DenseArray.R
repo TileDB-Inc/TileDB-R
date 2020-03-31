@@ -52,7 +52,7 @@ test_that("Can read / write a simple 1D vector", {
     unlink_and_create(tmp)
   })
 
-  dim <- tiledb_dim(domain = c(1L, 10L))
+  dim <- tiledb_dim("dim", domain = c(1L, 10L))
   dom <- tiledb_domain(c(dim))
   val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
@@ -95,8 +95,8 @@ test_that("Can read / write a simple 2D matrix", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
@@ -132,9 +132,9 @@ test_that("Can read / write a simple 3D matrix", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
-  d3  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
+  d3  <- tiledb_dim("d3", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2, d3))
   val <- tiledb_attr(name="val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
@@ -168,7 +168,7 @@ test_that("Can read / write 1D multi-attribute array", {
    unlink_and_create(tmp)
   })
 
-  dim <- tiledb_dim(domain = c(1L, 10L))
+  dim <- tiledb_dim("dim", domain = c(1L, 10L))
   dom <- tiledb_domain(c(dim))
   a1  <- tiledb_attr("a1", type = "FLOAT64")
   a2  <- tiledb_attr("a2", type = "FLOAT64")
@@ -199,8 +199,8 @@ test_that("Can read / write 2D multi-attribute array", {
    unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 10L))
-  d2  <- tiledb_dim(domain = c(1L, 10L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 10L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 10L))
   dom <- tiledb_domain(c(d1, d2))
   a1  <- tiledb_attr("a1", type = "FLOAT64")
   a2  <- tiledb_attr("a2", type = "FLOAT64")
@@ -240,7 +240,7 @@ test_that("as.array() conversion method", {
    unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 10L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 10L))
   dom <- tiledb_domain(c(d1))
   a1  <- tiledb_attr("a1", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(a1))
@@ -262,7 +262,7 @@ test_that("as.data.frame() conversion method", {
    unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 10L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 10L))
   dom <- tiledb_domain(c(d1))
   a1  <- tiledb_attr("a1", type = "FLOAT64")
   a2  <- tiledb_attr("a2", type = "FLOAT64")
@@ -289,8 +289,8 @@ test_that("test tiledb_subarray read for dense array", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr(name="val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
@@ -320,8 +320,8 @@ test_that("test tiledb_subarray read for dense array with select attributes", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val1 <- tiledb_attr("val1", type = "FLOAT64")
   val2 <- tiledb_attr("val2", type = "FLOAT64")
@@ -355,8 +355,8 @@ test_that("test tiledb_subarray read for dense array as dataframe", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val1 <- tiledb_attr("val1", type = "FLOAT64")
   val2 <- tiledb_attr("val2", type = "FLOAT64")
@@ -389,8 +389,8 @@ test_that("Can read / write a simple 2D matrix with list of coordinates", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("val", type = "FLOAT64")
   sch <- tiledb_array_schema(dom, c(val))
@@ -425,8 +425,8 @@ test_that("treating logical as INT32 works", {
 
   dat <- matrix(rnorm(25) > 0, 5, 5)
 
-  d1  <- tiledb_dim(domain = c(1L, 5L))
-  d2  <- tiledb_dim(domain = c(1L, 5L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 5L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 5L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("val", type = r_to_tiledb_type(dat))
   sch <- tiledb_array_schema(dom, c(val))
@@ -451,8 +451,8 @@ test_that("low-level write and read works", {
   ## data: simple (integer sequence) of 1:16 times 10
   vec <- 1:16 * 10L
 
-  d1  <- tiledb_dim(domain = c(1L, 4L))
-  d2  <- tiledb_dim(domain = c(1L, 4L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 4L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 4L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("a", type = r_to_tiledb_type(vec))
   sch <- tiledb_array_schema(dom, c(val))
@@ -512,8 +512,8 @@ test_that("low-level encrypted array write and read works", {
 
   encryption_key <- "0123456789abcdeF0123456789abcdeF"
 
-  d1  <- tiledb_dim(domain = c(1L, 4L))
-  d2  <- tiledb_dim(domain = c(1L, 4L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 4L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 4L))
   dom <- tiledb_domain(c(d1, d2))
   val <- tiledb_attr("a", type = r_to_tiledb_type(vec))
   sch <- tiledb_array_schema(dom, c(val))
@@ -567,8 +567,8 @@ test_that("low-level fixed-length write and read works", {
     unlink_and_create(tmp)
   })
 
-  d1  <- tiledb_dim(domain = c(1L, 4L))
-  d2  <- tiledb_dim(domain = c(1L, 4L))
+  d1  <- tiledb_dim("d1", domain = c(1L, 4L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 4L))
   dom <- tiledb_domain(c(d1, d2))
 
   vec <- 1:32 * 10L

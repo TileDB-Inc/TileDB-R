@@ -53,9 +53,12 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
 sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
+  domaintype <- libtiledb_domain_get_type(dom@ptr)
   attributes <- list()
   # first alloc coordinate buffer
-  ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
+  #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
+  ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
+                                                          libtiledb_coords(), domaintype)
   if (is.integral(dom)) {
     attributes[["coords"]] <- integer(length = ncells)
   } else {
@@ -70,7 +73,8 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
   for(attr in attrs) {
     aname <- tiledb::name(attr)
     type <- tiledb_datatype_R_type(tiledb::datatype(attr))
-    ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
+    #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
+    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
     buff <- vector(mode = type, length = ncells)
     attributes[[aname]] <- buff
   }
@@ -83,21 +87,25 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
 #'
 #' @param dom tiledb_domain object
 #' @param data tiledb object to be converted
+#' @param extended optional logical variable selected wider display
+#' with coordinates, defaults to false
 #' @return data.frame object constructed from `data`
 #' @export
-as_data_frame <- function(dom, data) {
+as_data_frame <- function(dom, data, extended=FALSE) {
   if (!is(dom, "tiledb_domain")) {
     stop("as_data_frame must be called with a tiledb_domain object")
   }
   # If coordinates are present convert to columns in the data.frame
   if (!is.null(data[["coords"]])) {
-    ndim <- tiledb_ndim(dom)
-    dimensions <- dimensions(dom)
-    for (i in seq(1, ndim, 1)) {
-      dim_name <- name(dimensions[[i]])
-      l = list()
-      l[[dim_name]] = data$coords[seq(i, length(data$coords), ndim)]
-      data = c(data, l)
+    if (extended) {
+      ndim <- tiledb_ndim(dom)
+      dimensions <- dimensions(dom)
+      for (i in seq(1, ndim, 1)) {
+        dim_name <- name(dimensions[[i]])
+        l <- list()
+        l[[dim_name]] = data$coords[seq(i, length(data$coords), ndim)]
+        data <- c(data, l)
+      }
     }
     data$coords <- NULL
   }
@@ -124,6 +132,7 @@ setMethod("[", "tiledb_sparse",
             uri <- x@uri
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
+            domaintype <- libtiledb_domain_get_type(dom@ptr)
             if (!tiledb::is.integral(dom)) {
               stop("subscript indexing only valid for integral Domain's")
             }
@@ -139,7 +148,8 @@ setMethod("[", "tiledb_sparse",
                 buffers <- sparse_attribute_buffers(x, schema, dom, subarray)
                 qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
                 qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                qry <- libtiledb_query_set_subarray(qry, subarray)
+                #qry <- libtiledb_query_set_subarray(qry, subarray)
+                qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype)
                 attr_names <- names(buffers)
                 for (idx in seq_along(buffers)) {
                     aname <- attr_names[[idx]]
@@ -375,6 +385,9 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
         if (ncells < length(old_buffer)) {
           buffers[[idx]] <- old_buffer[1:ncells]
         }
+      }
+      for (i in 1:length(buffers)) {
+        attr(buffers[[i]], "datatype") <- NULL
       }
       if (A@as.data.frame) {
         return(as_data_frame(dom, buffers))

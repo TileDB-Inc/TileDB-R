@@ -34,16 +34,14 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' schema
 #'
 #' @export
-tiledb_array_schema <- function(
-                        domain,
-                        attrs,
-                        cell_order = "COL_MAJOR",
-                        tile_order = "COL_MAJOR",
-                        sparse = FALSE,
-                        coords_filter_list = NULL,
-                        offsets_filter_list = NULL,
-                        ctx = tiledb_get_context()
-                        ) {
+tiledb_array_schema <- function(domain,
+                                attrs,
+                                cell_order = "COL_MAJOR",
+                                tile_order = "COL_MAJOR",
+                                sparse = FALSE,
+                                coords_filter_list = NULL,
+                                offsets_filter_list = NULL,
+                                ctx = tiledb_get_context()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   }
@@ -82,7 +80,7 @@ tiledb_array_schema <- function(
     offsets_filter_list_ptr <- offsets_filter_list@ptr
   }
   ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order,
-                             coords_filter_list_ptr, offsets_filter_list_ptr, sparse)
+                                coords_filter_list_ptr, offsets_filter_list_ptr, sparse)
   return(new("tiledb_array_schema", ptr = ptr))
 }
 

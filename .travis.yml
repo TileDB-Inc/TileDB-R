@@ -5,26 +5,32 @@ dist: bionic
 sudo: required
 services: docker
 
+jobs:
+  include:
+    - name: ci-r
+      env: DOCKER_CNTR="tiledb/ci-r"
+    - name: dev
+      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:dev"
+    - name: 1.7.6
+      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.6"
+    - name: 1.7.5
+      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.5"
+
 env:
-  jobs:
-    - INFO="ci-r"
-      CONTAINER="tiledb/ci-r"
-    - INFO="dev"
-      CONTAINER="eddelbuettel/rocker-tiledb:dev"
-    - INFO="1.7.6"
-      CONTAINER="eddelbuettel/rocker-tiledb:1.7.6"
-    - INFO="1.7.5"
-      CONTAINER="eddelbuettel/rocker-tiledb:1.7.5"
+  global:
+    - DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
+      R_BLD_OPTS="--no-build-vignettes --no-manual"
+      R_CHK_OPTS="--no-vignettes --no-manual"
 
 before_install:
-  - docker pull ${CONTAINER}
-  - docker run --rm -ti -v $(pwd):/mnt -w /mnt ${CONTAINER} r -p -e 'sessionInfo()'
+  - docker pull ${DOCKER_CNTR}
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} r -p -e 'sessionInfo()'
 
 install:
-  - docker run --rm -ti -v $(pwd):/mnt -w /mnt ${CONTAINER} R CMD build --no-build-vignettes --no-manual .
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD build ${R_BLD_OPTS} .
 
 script:
-  - docker run --rm -ti -v $(pwd):/mnt -w /mnt ${CONTAINER} R CMD check --no-vignettes --no-manual tiledb_*.tar.gz
+  - docker run ${DOCKER_OPTS} ${DOCKER_CNTR} R CMD check ${R_CHK_OPTS} tiledb_*.tar.gz
 
 notifications:
   email:
