@@ -11,10 +11,12 @@ jobs:
       env: DOCKER_CNTR="tiledb/ci-r"
     - name: dev
       env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:dev"
-    - name: 1.7.6
-      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.6"
     - name: 1.7.5
       env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.5"
+    - name: 1.7.6
+      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.6"
+    - name: 1.7.7
+      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.7"
 
 env:
   global:
