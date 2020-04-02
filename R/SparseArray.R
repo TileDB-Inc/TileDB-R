@@ -298,7 +298,10 @@ setMethod("[<-", "tiledb_sparse",
             on.exit(libtiledb_array_close(x@ptr))
             qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
             qry <- libtiledb_query_set_layout(qry, "UNORDERED")
-            qry <- libtiledb_query_set_coordinates(qry, zip_coords)
+            domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
+                                 libtiledb_dim_get_datatype)
+            #cat("Zipped coords\n"); print(zip_coords)
+            qry <- libtiledb_query_set_coordinates(qry, zip_coords, domaintype[1])
             ## set attribute buffers
             attr_names <- names(value)
             for (idx in seq_along(value)) {
@@ -325,6 +328,7 @@ setMethod("[<-", "tiledb_sparse",
                 qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
               }
             }
+            #cat("About to submit\n")
             qry <- libtiledb_query_submit(qry)
             if (libtiledb_query_status(qry) != "COMPLETE") {
               stop("error in incomplete sparse write query")

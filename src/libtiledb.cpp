@@ -508,7 +508,8 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (_type == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
     Rcpp::stop("domain or tile_extent does not match dimension type");
-  } else if (_type == TILEDB_FLOAT64 && (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
+  } else if (_type == TILEDB_FLOAT64 &&
+             (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
     Rcpp::stop("domain or tile_extent does not match dimenson type");
   }
   if (_type == TILEDB_INT32) {
@@ -541,19 +542,15 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
 
   } else if (_type == TILEDB_DATETIME_MS) {
-    using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-    auto domain_vec = as<DatetimeVector>(domain);
-    if (domain_vec.length() != 2) {
+    auto domain_vec = as<std::vector<int64_t>>(domain);
+    if (domain_vec.size() != 2) {
       Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
     }
-    auto tile_extent_vec = as<NumericVector>(tile_extent);
-    if (tile_extent_vec.length() != 1) {
-      Rcpp::stop("tile_extent must be a scalar");
-    }
-    std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
-    std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
-    return XPtr<tiledb::Dimension>(
-      new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
+    int64_t domain[] = {domain_vec[0], domain_vec[1]};
+    int64_t extent = Rcpp::as<int64_t>(tile_extent);
+    auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, TILEDB_DATETIME_MS,
+                                                               domain, &extent));
+    return XPtr<tiledb::Dimension>(dim);
 
   } else {
     Rcpp::stop("Unsupported tiledb type (%d) this should not happen!", _type);
@@ -1673,8 +1670,20 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
-                                                    SEXP coords) {
-  if (TYPEOF(coords) == INTSXP) {
+                                                    SEXP coords,
+                                                    std::string dtype) {
+  //printf("In qsc %s\n", dtype.c_str());
+  if (dtype == "DATETIME_MS") {
+    IntegerVector sub(coords);
+    std::vector<int64_t> vec(sub.length());
+    for (int i=0; i<sub.length(); i++) {
+      vec[i] = sub[i];
+      //Rprintf("%d %d %ld %lu\n", sub[i], vec[i],
+      //        static_cast<int64_t>(sub[i]), static_cast<uint64_t>(sub[i]));
+    }
+    query->set_coordinates(vec.data(), vec.size());
+    return query;
+  } else if (TYPEOF(coords) == INTSXP) {
     IntegerVector sub(coords);
     query->set_coordinates(sub.begin(), sub.length());
     return query;
@@ -2164,7 +2173,7 @@ NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query,
  * Array helper functions
  */
 // [[Rcpp::export]]
-NumericVector libtiledb_zip_coords_numeric( List coords, R_xlen_t coord_length) {
+NumericVector libtiledb_zip_coords_numeric(List coords, R_xlen_t coord_length) {
   auto ndim = coords.length();
   NumericVector result(ndim * coord_length);
   if (result.length() < 2) {
@@ -2182,7 +2191,7 @@ NumericVector libtiledb_zip_coords_numeric( List coords, R_xlen_t coord_length) 
 }
 
 // [[Rcpp::export]]
-IntegerVector libtiledb_zip_coords_integer( List coords, R_xlen_t coord_length) {
+IntegerVector libtiledb_zip_coords_integer(List coords, R_xlen_t coord_length) {
   auto ndim = coords.length();
   IntegerVector result(ndim * coord_length);
   if (result.length() < 2) {

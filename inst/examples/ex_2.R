@@ -7,17 +7,23 @@ array_name <- "ex_2"
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 
 create_array <- function(uri) {
-    # Check if the array already exists.
-    if (tiledb_object_type(uri) == "ARRAY") {
-        message("Array already exists.")
-        return(invisible(NULL))
-    }
+  ## Check if the array already exists.
+  if (tiledb_object_type(uri) == "ARRAY") {
+    message("Array already exists.")
+    return(invisible(NULL))
+  }
 
   ## The array will be 10x5 with dimensions "rows" and "cols", with domains [1,10] and [1,5].
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(ISOdatetime(2010,1,1,0,0,0),
                                                      ISOdatetime(2029,12,31,23,59,59.999)),
-                                           10L, type = "DATETIME_MS")))
+                                           10,
+                                           #type = "DATETIME_MS")))
+                                           type = "FLOAT64")))
+  ## issue: when setting datetime_ms as domain type, and even when triple-checking domain values
+  ## written, we get an abdsurd looking value violation
+  ## [TileDB::Dimension] Error: Coordinate 4670750291592297664 is out of domain bounds ...
 
+  #print(dom)
   ## The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32"),
                                                tiledb_attr("b", type = "FLOAT64"),
@@ -44,6 +50,7 @@ write_array <- function(uri) {
   ## Open the array and write to it.
   A <- tiledb_sparse(uri = uri)
   coords <- ISOdatetime(2020,1,1,0,0,0) + (1:10)*60
+  #cat("Coords in R\n"); print(coords)
   A[coords] <- data
 }
 
@@ -63,8 +70,12 @@ read_as_df <- function(uri) {
 }
 
 set.seed(42)
-#if (tiledb_object_type(array_name) != "ARRAY") {
-if (!dir.exists(array_name)) {
+##if (tiledb_object_type(uri) != "ARRAY") {
+if (dir.exists(uri)) {
+  cat("Nuking existing array\n")
+  unlink(uri, recursive=TRUE)
+}
+if (!dir.exists(uri)) {
   create_array(uri)
   write_array(uri)
 }

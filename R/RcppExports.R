@@ -377,8 +377,8 @@ libtiledb_query_set_subarray <- function(query, subarray) {
     .Call(`_tiledb_libtiledb_query_set_subarray`, query, subarray)
 }
 
-libtiledb_query_set_coordinates <- function(query, coords) {
-    .Call(`_tiledb_libtiledb_query_set_coordinates`, query, coords)
+libtiledb_query_set_coordinates <- function(query, coords, dtype) {
+    .Call(`_tiledb_libtiledb_query_set_coordinates`, query, coords, dtype)
 }
 
 libtiledb_query_set_buffer <- function(query, attr, buffer) {

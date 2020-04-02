@@ -1097,14 +1097,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_set_coordinates
-XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query, SEXP coords);
-RcppExport SEXP _tiledb_libtiledb_query_set_coordinates(SEXP querySEXP, SEXP coordsSEXP) {
+XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query, SEXP coords, std::string dtype);
+RcppExport SEXP _tiledb_libtiledb_query_set_coordinates(SEXP querySEXP, SEXP coordsSEXP, SEXP dtypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< SEXP >::type coords(coordsSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_coordinates(query, coords));
+    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_coordinates(query, coords, dtype));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1836,7 +1837,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_layout", (DL_FUNC) &_tiledb_libtiledb_query_set_layout, 2},
     {"_tiledb_libtiledb_query_set_subarray_with_type", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray_with_type, 3},
     {"_tiledb_libtiledb_query_set_subarray", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray, 2},
-    {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 2},
+    {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
     {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 5},
     {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
