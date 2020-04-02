@@ -67,18 +67,20 @@ read_as_df <- function(uri) {
   A <- tiledb_sparse(uri = uri, as.data.frame = TRUE)
   data <- A[1577858580:1577858700]
   show(data)
+  data <- A[as.POSIXct("2020-01-01 00:01:00"):as.POSIXct("2020-01-01 00:03:00")]
+  show(data)
 }
 
 set.seed(42)
 ##if (tiledb_object_type(uri) != "ARRAY") {
-if (dir.exists(uri)) {
-  cat("Nuking existing array\n")
-  unlink(uri, recursive=TRUE)
-}
+#if (dir.exists(uri)) {
+#  cat("Nuking existing array\n")
+#  unlink(uri, recursive=TRUE)
+#}
 if (!dir.exists(uri)) {
   create_array(uri)
-  write_array(uri)
 }
+write_array(uri)
 read_array(uri)
 read_as_df(uri)
 cat("Done.\n")

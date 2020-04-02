@@ -3,11 +3,17 @@
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription
 #' @slot as.data.frame A logical value
+#' @slot attrs A character vector
+#' @slot extended A logical value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_sparse
 setClass("tiledb_sparse",
-         slots = list(ctx = "tiledb_ctx", uri = "character",
-                      as.data.frame = "logical", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx",
+                      uri = "character",
+                      as.data.frame = "logical",
+                      attrs = "character",
+                      extended = "logical",
+                      ptr = "externalptr"))
 
 #' Constructs a tiledb_sparse object backed by a persisted tiledb array uri
 #'
@@ -16,11 +22,19 @@ setClass("tiledb_sparse",
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
+#' @param attrs optional character vector to select attributes, default is
+#' empty implying all are selected
+#' @param extended optional logical switch selecting wide \sQuote{data.frame}
+#' format, defaults to "TRUE"
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_sparse array object
 #' @export
-tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"),
-                          as.data.frame=FALSE, ctx = tiledb_get_context()) {
+tiledb_sparse <- function(uri,
+                          query_type = c("READ", "WRITE"),
+                          as.data.frame = FALSE,
+                          attrs = character(),
+                          extended = TRUE,
+                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
@@ -35,7 +49,9 @@ tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"),
     stop("array URI must be a sparse array")
   }
   array_xptr <- libtiledb_array_close(array_xptr)
-  new("tiledb_sparse", ctx = ctx, uri = uri, as.data.frame = as.data.frame, ptr = array_xptr)
+  new("tiledb_sparse", ctx = ctx, uri = uri,
+      as.data.frame = as.data.frame, attrs = attrs,
+      extended = extended, ptr = array_xptr)
 }
 
 #' Return a schema from a sparse array
@@ -50,7 +66,7 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
   return(tiledb_array_schema.from_ptr(schema_xptr))
 })
 
-sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
+sparse_attribute_buffers <- function(array, sch, dom, sub, selected) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
   #domaintype <- libtiledb_domain_get_type(dom@ptr)
@@ -63,12 +79,15 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=lis
                                                           libtiledb_coords(), domaintype[1])
   attributes[["coords"]] <- libtiledb_query_buffer_alloc_ptr(array@ptr, domaintype[1], ncells)
   attrs <- tiledb::attrs(sch)
-  if (length(filter_attributes) > 0) {
-    attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
+  if (length(selected) == 0) {          # no selection given -> use all
+    selected <- names(attrs)
   }
   # for every attribute, compute the number of cells and allocate vectors
   for (attr in attrs) {
     aname <- tiledb::name(attr)
+    if (! aname %in% selected) {
+      next
+    }
     dtype <- tiledb::datatype(attr)
     type <- tiledb_datatype_R_type(dtype)
     datatype <- libtiledb_attribute_get_type(attr@ptr)
@@ -134,6 +153,7 @@ setMethod("[", "tiledb_sparse",
             }
             ctx <- x@ctx
             uri <- x@uri
+            sel <- x@attrs
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
 
@@ -154,7 +174,7 @@ setMethod("[", "tiledb_sparse",
             } else {
               subarray <- as.double(subarray)
             }
-            buffers <- sparse_attribute_buffers(x, schema, dom, subarray)
+            buffers <- sparse_attribute_buffers(x, schema, dom, subarray, sel)
             qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
             qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
             #qry <- libtiledb_query_set_subarray(qry, subarray)
@@ -196,7 +216,7 @@ setMethod("[", "tiledb_sparse",
               }
             }
             if (x@as.data.frame) {
-              return(as_data_frame(dom, buffers))
+              return(as_data_frame(dom, buffers, x@extended))
             } else {
               ## if there is only one buffer, don't return a list of attribute buffers
               if (length(buffers) == 1L) {
@@ -445,3 +465,76 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
   )
   return(out);
 }
+
+## -- as.data.frame accessor (generic in DenseArray.R)
+
+#' Retrieve data.frame return toggle
+#'
+#' A \code{tiledb_sparse} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods returns the selection value.
+#' @param object A \code{tiledb_sparse} array object
+#' @return A logical value indicating whether \code{data.frame} return is selected
+#' @export
+setMethod("return.data.frame",
+          signature = "tiledb_sparse",
+          function(object) object@as.data.frame)
+
+
+## -- as.data.frame setter (generic in DenseArray.R)
+
+#' Set data.frame return toggle
+#'
+#' A \code{tiledb_sparse} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods sets the selection value.
+#' @param x A \code{tiledb_sparse} array object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_sparse} array object
+#' @export
+setReplaceMethod("return.data.frame",
+                 signature = "tiledb_sparse",
+                 function(x, value) {
+  x@as.data.frame <- value
+  validObject(x)
+  x
+})
+
+
+## -- attrs (generic in Attributes.R and DenseArray.R)
+
+#' Retrieve attributes from \code{tiledb_sparse} object
+#'
+#' By default, all attributes will be selected. But if a subset of attribute
+#' names is assigned to the internal slot \code{attrs}, then only those attributes
+#' will be queried.  This methods accesses the slot.
+#' @param object A \code{tiledb_sparse} array object
+#' @return An empty character vector if no attributes have been selected or else
+#' a vector with attributes.
+#' @importFrom methods validObject
+#' @export
+setMethod("attrs",
+          signature = "tiledb_sparse",
+          function(object) object@attrs)
+
+#' Selects attributes for the given TileDB array
+#'
+#' @param x A \code{tiledb_sparse} array object
+#' @param value A character vector with attributes
+#' @return The modified \code{tiledb_sparse} array object
+#' @export
+setReplaceMethod("attrs",
+                 signature = "tiledb_sparse",
+                 function(x, value) {
+  nm <- names(attrs(schema(x)))
+  if (length(nm) == 0) {                # none set so far
+    x@attrs <- value
+  } else {
+    pm <- pmatch(value, nm)
+    if (any(is.na(pm))) {
+      stop("Multiple partial matches ambiguous: ",
+           paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
+    }
+    x@attrs <- nm[pm]
+  }
+  validObject(x)
+  x
+})

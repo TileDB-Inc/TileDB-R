@@ -16,6 +16,10 @@ An S4 class for a TileDB sparse array
 
 \item{\code{as.data.frame}}{A logical value}
 
+\item{\code{attrs}}{A character vector}
+
+\item{\code{extended}}{A logical value}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 

@@ -49,7 +49,7 @@ tiledb_dense <- function(uri,
   array_xptr <- libtiledb_array_close(array_xptr)
   new("tiledb_dense", ctx = ctx, uri = uri,
       as.data.frame = as.data.frame, attrs = attrs,
-      extended = FALSE, ptr = array_xptr)
+      extended = extended, ptr = array_xptr)
 }
 
 setMethod("show", "tiledb_dense",
@@ -556,7 +556,8 @@ setReplaceMethod("attrs",
   } else {
     pm <- pmatch(value, nm)
     if (any(is.na(pm))) {
-      stop("Multiple partial matches ambiguous: ", paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
+      stop("Multiple partial matches ambiguous: ",
+           paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
     }
     x@attrs <- nm[pm]
   }
