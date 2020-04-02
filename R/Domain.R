@@ -78,8 +78,12 @@ setMethod("dimensions", "tiledb_domain",
 #' @export
 setMethod("datatype", "tiledb_domain",
           function(object) {
-            return(libtiledb_domain_get_type(object@ptr))
-          })
+            ##return(libtiledb_domain_get_type(object@ptr))
+            #generalize from   domaintype <- libtiledb_domain_get_type(dom@ptr)   to
+            domaintype <- sapply(libtiledb_domain_get_dimensions(object@ptr),
+                                 libtiledb_dim_get_datatype)
+            return(domaintype)
+})
 
 #' Returns the number of dimensions of the `tiledb_domain`
 #'

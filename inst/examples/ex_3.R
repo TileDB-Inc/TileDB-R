@@ -1,5 +1,7 @@
 library(tiledb)
 
+## work-in-progress, does not yet work
+
 ## Name of the array to create.
 array_name <- "ex_3"
 ## Path is either current directory, or a local config value is found

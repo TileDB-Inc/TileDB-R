@@ -21,7 +21,7 @@ setClass("tiledb_sparse",
 #' @export
 tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"),
                           as.data.frame=FALSE, ctx = tiledb_get_context()) {
-    query_type = match.arg(query_type)
+  query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   } else if (missing(uri) || !is.scalar(uri, "character")) {
@@ -53,24 +53,27 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
 sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
-  domaintype <- libtiledb_domain_get_type(dom@ptr)
+  #domaintype <- libtiledb_domain_get_type(dom@ptr)
+  domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
+                       libtiledb_dim_get_datatype)
   attributes <- list()
   # first alloc coordinate buffer
+  #print(domaintype)
   ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
-                                                          libtiledb_coords(), domaintype)
-  attributes[["coords"]] <- libtiledb_query_buffer_alloc_ptr(array@ptr, domaintype, ncells)
+                                                          libtiledb_coords(), domaintype[1])
+  attributes[["coords"]] <- libtiledb_query_buffer_alloc_ptr(array@ptr, domaintype[1], ncells)
   attrs <- tiledb::attrs(sch)
   if (length(filter_attributes) > 0) {
     attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
   }
   # for every attribute, compute the number of cells and allocate vectors
-  for(attr in attrs) {
+  for (attr in attrs) {
     aname <- tiledb::name(attr)
     dtype <- tiledb::datatype(attr)
     type <- tiledb_datatype_R_type(dtype)
     datatype <- libtiledb_attribute_get_type(attr@ptr)
     #cat("dtype:", dtype, " type:", type, " datatype:", datatype, "\n", sep="")
-    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
+    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype[1])
     if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
       buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, sub, aname)
     } else {
@@ -133,7 +136,11 @@ setMethod("[", "tiledb_sparse",
             uri <- x@uri
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
-            domaintype <- libtiledb_domain_get_type(dom@ptr)
+
+            nd <- libtiledb_domain_get_ndim(dom@ptr)
+            #domaintype <- libtiledb_domain_get_type(dom@ptr)
+            domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
+                                 libtiledb_dim_get_datatype)
             #if (!tiledb::is.integral(dom)) {
             #  stop("subscript indexing only valid for integral Domain's")
             #}
@@ -141,6 +148,7 @@ setMethod("[", "tiledb_sparse",
             on.exit(libtiledb_array_close(x@ptr))
 
             subarray <- domain_subarray(dom, index = index)
+            #print(subarray)
             if (is.integral(dom)) {
               subarray <- as.integer(subarray)
             } else {
@@ -150,7 +158,7 @@ setMethod("[", "tiledb_sparse",
             qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
             qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
             #qry <- libtiledb_query_set_subarray(qry, subarray)
-            qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype)
+            qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype[1])
             attr_names <- names(buffers)
             for (idx in seq_along(buffers)) {
               aname <- attr_names[[idx]]

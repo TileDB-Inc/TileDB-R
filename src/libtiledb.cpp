@@ -1268,7 +1268,7 @@ XPtr<tiledb::Attribute> libtiledb_array_schema_get_attribute_from_index(XPtr<til
 // [[Rcpp::export]]
 XPtr<tiledb::Attribute> libtiledb_array_schema_get_attribute_from_name(XPtr<tiledb::ArraySchema> schema,
                                                                        std::string name) {
-  return XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(name)));
+   return XPtr<tiledb::Attribute>(new tiledb::Attribute(schema->attribute(name)));
 }
 
 // [[Rcpp::export]]
@@ -1893,8 +1893,8 @@ List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string a
 // type we already had
 // [[Rcpp::export]]
 XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
-                                                    std::string domaintype,
-                                                    R_xlen_t ncells) {
+                                                   std::string domaintype,
+                                                   R_xlen_t ncells) {
   XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32" ||
       domaintype == "UINT32") {
@@ -2237,7 +2237,8 @@ R_xlen_t libtiledb_array_max_buffer_elements_with_type(XPtr<tiledb::Array> array
     auto max_elements = array->max_buffer_elements(v);
     return max_elements[attribute].second;
   } else {
-    Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
+    Rcpp::stop("Invalid subarray buffer type '%s' for domain: '%s'",
+               typestr.c_str(), Rcpp::type2name(subarray));
   }
 }
 
