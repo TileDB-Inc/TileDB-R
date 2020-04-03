@@ -52,10 +52,17 @@ tiledb_dense <- function(uri,
       extended = extended, ptr = array_xptr)
 }
 
-setMethod("show", "tiledb_dense",
-          function (object) {
-            cat("tiledb_dense(uri = \"", object@uri, "\")\n", sep="")
-          })
+setMethod("show",
+          signature = "tiledb_dense",
+          definition = function (object) {
+  cat("tiledb_dense array\n"
+     ,"  uri           = '", object@uri, "'\n"
+     ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
+                            else paste(objects@attrs, sep=","), "\n"
+     ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
+    , sep="")
+  })
 
 #' #' Reopens a TileDB array an opened tiledb array
 #' #'

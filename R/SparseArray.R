@@ -358,10 +358,18 @@ setMethod("[<-", "tiledb_sparse",
           })
 
 
-setMethod("show", "tiledb_sparse",
-          function (object) {
-            cat("tiledb_sparse(uri = \"", object@uri, "\")\n", sep="")
-          })
+setMethod("show",
+          signature = "tiledb_sparse",
+          definition = function (object) {
+  cat("tiledb_sparse array\n"
+     ,"  uri           = '", object@uri, "'\n"
+     ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
+                            else paste(objects@attrs, sep=","), "\n"
+     ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
+    , sep="")
+
+  })
 
 #' Check if object is sparse
 #'
