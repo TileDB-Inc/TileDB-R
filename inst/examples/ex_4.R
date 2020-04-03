@@ -15,11 +15,12 @@ create_array <- function(uri) {
   dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1.0, 20.0), 5.0, type="FLOAT64"),
                                 tiledb_dim("d2", c(1L, 30L), 5L, type="INT32")))
 
+  myorder <- "COL_MAJOR"
+  #cat("Using cell and tile order:", myorder, "\n")
   ## The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
   schema <- tiledb_array_schema(dom,
                                 attrs = c(tiledb_attr("a", type = "INT32")),
-                                cell_order = "ROW_MAJOR",
-                                tile_order = "ROW_MAJOR",
+                                cell_order = myorder, tile_order = myorder,
                                 sparse=TRUE)
 
   ## Create the (empty) array on disk.
@@ -72,6 +73,7 @@ read_array <- function(uri) {
 if (tiledb_object_type(uri) == "ARRAY") {
   message("Array already exists.")
 } else {
+  message("Creating and writing.")
   create_array(uri)
   write_array(uri)
 }
