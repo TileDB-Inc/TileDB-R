@@ -267,9 +267,11 @@ setMethod("[", "tiledb_dense",
               if (aname == "coords") {
                 qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
               } else {
-                if (is.character(val) || is.list(val)) {
-                  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                } else if (is(val, "externalptr")) {
+                #if (is.character(val) || is.list(val)) {
+                #  stop("var length never implemented")
+                #  #qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                #} else
+                if (is(val, "externalptr")) {
                   datatype <- attr(val, "datatype")
                   if (datatype == "CHAR") {
                     qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)

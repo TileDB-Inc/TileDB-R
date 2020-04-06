@@ -77,13 +77,13 @@ try_datetime <- function(uri) {
       #qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
       qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
     } else {
-      if (is.character(val) || is.list(val)) {
-        stop("var length TODO")
-        qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-      } else {
+      #if (is.character(val) || is.list(val)) {
+      #  stop("var length TODO")
+      #  #qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+      #} else {
         #qry <- libtiledb_query_set_buffer(qry, aname, val)
         qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
-      }
+      #}
     }
   }
   qry <- libtiledb_query_submit(qry)

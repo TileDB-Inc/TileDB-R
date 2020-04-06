@@ -186,12 +186,12 @@ setMethod("[", "tiledb_sparse",
               if (aname == "coords") {
                 qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
               } else {
-                if (is.character(val) || is.list(val)) {
-                  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                } else {
+                #if (is.character(val) || is.list(val)) {
+                #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                #} else {
                   #qry <- libtiledb_query_set_buffer(qry, aname, val)
                   qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
-                }
+                #}
               }
             }
             qry <- libtiledb_query_submit(qry)
