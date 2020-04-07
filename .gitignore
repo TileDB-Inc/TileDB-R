@@ -37,3 +37,4 @@ config.status
 autom4te.cache
 # local sketches
 src/unused*
+local*
