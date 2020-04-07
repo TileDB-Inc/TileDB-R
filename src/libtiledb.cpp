@@ -2047,7 +2047,6 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
       }
     } else {                    		// return as a nanotime classed objed
       double scalefactor = _domain_datatype_time_scale_factor(buf->dtype);
-      Rcpp::Rcout << "Scaling time by " << scalefactor << std::endl;
       if (scalefactor != 1.0) {
         for (auto& x: tt) {
           x *= scalefactor;

@@ -309,7 +309,9 @@ setMethod("[", "tiledb_dense",
                 if (dtype == "CHAR") {
                   old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
                 } else if (dtype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
-                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], TRUE, FALSE)
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]],
+                                                               getOption("tiledb.useRDatetimeType",TRUE),
+                                                               getOption("tiledb.castTime",FALSE))
                 } else {
                   stop("Unsupported data type for attribute ", aname)
                 }
