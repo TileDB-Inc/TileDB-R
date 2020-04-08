@@ -1945,20 +1945,42 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 // [[Rcpp::export]]
 XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
                                                     std::string dtype,
-                                                    SEXP vec) {
-  if (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
-      dtype == "DATETIME_MS" || dtype == "DATETIME_NS") {
-    // The Date type in R stores days since the epoch, but as fractional values
-    // so it uses a double. Ditto for POSIXct which uses double for fractional
-    // seconds since the epoch.  But when we store these we need an assignment
-    // to doubles.
-    NumericVector v(vec);
-    if (v.size() != buf->ncells) {
-      Rcpp::stop("Mismatched size\n");
+                                                    SEXP vec,
+                                                    bool useRType=true,
+                                                    bool castDatetime=true) {
+  if (useRType) {
+    if (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
+        dtype == "DATETIME_MS" || dtype == "DATETIME_NS") {
+      // The Date type in R stores days since the epoch, but as fractional values
+      // so it uses a double. Ditto for POSIXct which uses double for fractional
+      // seconds since the epoch.  But when we store these we need an assignment
+      // to doubles.
+      NumericVector v(vec);
+      if (v.size() != buf->ncells) {
+        Rcpp::stop("Mismatched size\n");
+      }
+      std::memcpy(buf->vec.data(), &(v[0]), buf->ncells * buf->size);
+    } else {
+      Rcpp::stop("Currently unsupported type '%s'", dtype);
     }
-    std::memcpy(buf->vec.data(), &(v[0]), buf->ncells * buf->size);
   } else {
-    Rcpp::stop("Currently unsupported type '%s'", dtype);
+    NumericVector v(vec);
+    //double scalefactor = (dtype == "DATETIME_MS" ? 1e-3 : 1.0);
+    if (dtype == "DATETIME_DAY") {
+      if (castDatetime) {
+        int n = buf->ncells;
+        std::vector<int64_t> tt(n);
+        for (int i=0; i<n; i++) {
+          tt[i] = static_cast<int64_t>(v[i]);
+          //Rprintf("setting date: %f -> %ld \n", v[i], tt[i]);
+        }
+        std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
+      } else {
+        Rcpp::stop("Day resolution requires castDatetime option too");
+      }
+    } else {
+      Rcpp::stop("Case of useRType == false not yet complete");
+    }
   }
   return buf;
 }
@@ -2044,6 +2066,10 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
     if (castDatetime) {
       for (int i=0; i<n; i++) {
         dd[i] = static_cast<double>(tt[i]);
+        //Rprintf("getting date: %ld -> %f \n", tt[i], dd[i]);
+      }
+      if (dtype == "DATETIME_DAY") {
+        dd.attr("class") = "Date";
       }
     } else {                    		// return as a nanotime classed objed
       double scalefactor = _domain_datatype_time_scale_factor(buf->dtype);

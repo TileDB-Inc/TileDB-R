@@ -356,7 +356,7 @@ setMethod("[", "tiledb_dense",
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
-              if (is.array(value) || is.vector(value) || isS4(value)) {
+              if (is.array(value) || is.vector(value) || isS4(value) || is(value, "Date")) {
                 value <- list(value)
               } else {
                 stop("Cannot assign initial value of type '", typeof(value), "'")
@@ -442,10 +442,11 @@ setMethod("[<-", "tiledb_dense",
                 offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
                 bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
                 qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
-
               } else if (inherits(val, "Date")) {
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val,
+                                                            getOption("tiledb.useRDatetimeType",TRUE),
+                                                            getOption("tiledb.castTime",FALSE))
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "POSIXt")) {
                 # could also use DATETIME_SEC here but _MS dominates it with higher resolution
