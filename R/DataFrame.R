@@ -26,7 +26,10 @@
 fromDataFrame <- function(obj, uri) {
   dims <- dim(obj)
 
-  dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, dims[1]), dims[1], "INT32"))
+  dom <- tiledb_domain(dims = tiledb_dim(name = "rows",
+                                         domain = c(1L, dims[1]),
+                                         tile = min(10000L, dims[1]),
+                                         type = "INT32"))
 
   ## turn factor columns in char columns
   factcols <- grep("factor", sapply(obj, class))

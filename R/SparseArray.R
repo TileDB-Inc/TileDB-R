@@ -146,6 +146,8 @@ setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
             ## helper function to deal with i and/or j missing
             index <- nd_index_from_syscall(sys.call(), parent.frame())
+            #print(str(index))
+            #print(object.size(index))
             # If we have a list of lists of lists we need to remove one layer
             # This happens when a user uses a list of coordinates
             if (isNestedList(index[1])) {
