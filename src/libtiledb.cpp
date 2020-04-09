@@ -1972,12 +1972,25 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
         std::vector<int64_t> tt(n);
         for (int i=0; i<n; i++) {
           tt[i] = static_cast<int64_t>(v[i]);
+        }
+        std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
+      } else {
+        Rcpp::stop("Day resolution requires castDatetime option too");
+      }
+    } else if (dtype == "DATETIME_MS" || dtype == "DATETIME_SEC") {
+      if (castDatetime) {
+        int n = buf->ncells;
+        double scalefactor = (dtype == "DATETIME_MS" ? 1e3 : 1e9);
+        std::vector<int64_t> tt(n);
+        for (int i=0; i<n; i++) {
+          tt[i] = static_cast<int64_t>(v[i] * scalefactor);
           //Rprintf("setting date: %f -> %ld \n", v[i], tt[i]);
         }
         std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
       } else {
         Rcpp::stop("Day resolution requires castDatetime option too");
       }
+
     } else {
       Rcpp::stop("Case of useRType == false not yet complete");
     }
@@ -2063,13 +2076,19 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
     std::vector<int64_t> tt(n);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
     NumericVector dd(n);
+    double scalefactor = 1.0; // FIXME = _domain_datatype_time_scale_factor(buf->dtype);
+    if (dtype == "DATETIME_MS") scalefactor = 1e3;
     if (castDatetime) {
       for (int i=0; i<n; i++) {
-        dd[i] = static_cast<double>(tt[i]);
-        //Rprintf("getting date: %ld -> %f \n", tt[i], dd[i]);
+        dd[i] = static_cast<double>(tt[i] / scalefactor);
+        //Rprintf("getting date: %ld -> %f (%f)\n", tt[i], dd[i], scalefactor);
       }
       if (dtype == "DATETIME_DAY") {
         dd.attr("class") = "Date";
+      } else {
+        // an R thing: POSIXct (represented as a double) and
+        // POSIXlt (a list) both inherit from POSIXt
+        dd.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
       }
     } else {                    		// return as a nanotime classed objed
       double scalefactor = _domain_datatype_time_scale_factor(buf->dtype);

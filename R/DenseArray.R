@@ -308,7 +308,8 @@ setMethod("[", "tiledb_dense",
               if (is(old_buffer, "externalptr")) {
                 if (dtype == "CHAR") {
                   old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
-                } else if (dtype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+                } else if (dtype %in% c("DATETIME_DAY", "DATETIME_SEC",
+                                        "DATETIME_MS", "DATETIME_NS")) {
                   old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]],
                                                                getOption("tiledb.useRDatetimeType",TRUE),
                                                                getOption("tiledb.castTime",FALSE))
@@ -356,7 +357,8 @@ setMethod("[", "tiledb_dense",
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
-              if (is.array(value) || is.vector(value) || isS4(value) || is(value, "Date")) {
+              if (is.array(value) || is.vector(value) ||
+                  isS4(value) || is(value, "Date") || inherits(value, "POSIXt")) {
                 value <- list(value)
               } else {
                 stop("Cannot assign initial value of type '", typeof(value), "'")
@@ -449,9 +451,12 @@ setMethod("[<-", "tiledb_dense",
                                                             getOption("tiledb.castTime",FALSE))
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "POSIXt")) {
+                #cat("*** POSIXt case\n")
                 # could also use DATETIME_SEC here but _MS dominates it with higher resolution
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val)
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val,
+                                                            getOption("tiledb.useRDatetimeType",TRUE),
+                                                            getOption("tiledb.castTime",FALSE))
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "nanotime")) {
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_NS", length(val))
