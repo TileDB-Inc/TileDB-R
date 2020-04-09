@@ -208,14 +208,16 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
       buff <- vector(mode = type, length = ncells)
     } else if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
       buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, as.integer(sub), aname)
-    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
+    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                               "DATETIME_US", "DATETIME_NS")) {
       buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)
     } else {
       stop("Unsupported data type for attribute ", aname)
     }
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
     if (!is_scalar && !array@as.data.frame &&
-        !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
+        !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                      "DATETIME_US", "DATETIME_NS")) {
       attr(buff, "dim") <- sub_dim
     }
     attr(buff, "datatype") <- datatype

@@ -503,9 +503,11 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
   const tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
   if (_type != TILEDB_INT32 &&
       _type != TILEDB_FLOAT64 &&
+      _type != TILEDB_DATETIME_SEC &&
       _type != TILEDB_DATETIME_MS &&
+      _type != TILEDB_DATETIME_US &&
       _type != TILEDB_DATETIME_NS) {
-    Rcpp::stop("only integer (INT32), real (FLOAT64) and DATETIME_{MS,NS} domains are supported");
+    Rcpp::stop("only integer (INT32), real (FLOAT64), DATETIME_{SEC,MS,US,NS} domains supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (_type == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
@@ -889,9 +891,9 @@ double _domain_datatype_time_scale_factor(tiledb_datatype_t dtype) {
   case TILEDB_DATETIME_SEC:
     return 1e9;
   case TILEDB_DATETIME_MS:
-    return 1e3;
-  case TILEDB_DATETIME_US:
     return 1e6;
+  case TILEDB_DATETIME_US:
+    return 1e3;
   case TILEDB_DATETIME_NS:
     return 1;
   case TILEDB_DATETIME_PS:

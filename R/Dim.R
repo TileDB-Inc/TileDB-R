@@ -49,7 +49,8 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
   }
   if (missing(type)) {
     type <- ifelse(is.integer(domain), "INT32", "FLOAT64")
-  } else if (!type %in% c("INT32", "FLOAT64", "DATETIME_MS", "DATETIME_NS")) {
+  } else if (!type %in% c("INT32", "FLOAT64", "DATETIME_DAT", "DATETIME_SEC",
+                          "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
     stop("type argument must be 'INT32' or 'FLOAT64' or a supported 'DATETIME_*' type.", call.=FALSE)
   }
   ptr <- libtiledb_dim(ctx@ptr, name, type, domain, tile)
