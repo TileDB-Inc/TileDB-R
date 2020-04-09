@@ -164,6 +164,8 @@ std::string tiledb_datatype_R_type(std::string datatype) {
       return "DATETIME_SEC";
     case TILEDB_DATETIME_MS:
       return "DATETIME_MS";
+    case TILEDB_DATETIME_US:
+      return "DATETIME_US";
     case TILEDB_DATETIME_NS:
       return "DATETIME_NS";
     default:
@@ -887,9 +889,9 @@ double _domain_datatype_time_scale_factor(tiledb_datatype_t dtype) {
   case TILEDB_DATETIME_SEC:
     return 1e9;
   case TILEDB_DATETIME_MS:
-    return 1e6;
-  case TILEDB_DATETIME_US:
     return 1e3;
+  case TILEDB_DATETIME_US:
+    return 1e6;
   case TILEDB_DATETIME_NS:
     return 1;
   case TILEDB_DATETIME_PS:
@@ -1020,6 +1022,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
   } else if (attr_dtype == TILEDB_DATETIME_DAY ||
              attr_dtype == TILEDB_DATETIME_SEC ||
              attr_dtype == TILEDB_DATETIME_MS  ||
+             attr_dtype == TILEDB_DATETIME_US  ||
              attr_dtype == TILEDB_DATETIME_NS) {
     //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
@@ -1027,7 +1030,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     return attr;
   } else {
     Rcpp::stop("Only integer (INT32), logical (INT32), real (FLOAT64), "
-               "Date (DATEIME_DAY), Datetime (DATETIME_SEC, DATETIME_MS), "
+               "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
                "nanotime (DATETIME_NS) and character (CHAR) attributes "
                "are supported");
   }
@@ -1977,14 +1980,21 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
       } else {
         Rcpp::stop("Day resolution requires castDatetime option too");
       }
-    } else if (dtype == "DATETIME_MS" || dtype == "DATETIME_SEC") {
+    } else if (dtype == "DATETIME_MS" ||
+               dtype == "DATETIME_US" ||
+               dtype == "DATETIME_SEC") {
       if (castDatetime) {
         int n = buf->ncells;
-        double scalefactor = (dtype == "DATETIME_MS" ? 1e3 : 1e9);
+        double scalefactor = 1.0;
+        if (dtype == "DATETIME_MS") {
+          scalefactor = 1e3;
+        } else if (dtype == "DATETIME_US") {
+          scalefactor = 1e6;
+        }
         std::vector<int64_t> tt(n);
         for (int i=0; i<n; i++) {
           tt[i] = static_cast<int64_t>(v[i] * scalefactor);
-          //Rprintf("setting date: %f -> %ld \n", v[i], tt[i]);
+          //Rprintf("setting date: %f -> %ld %s \n", v[i], tt[i], dtype.c_str());
         }
         std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
       } else {
@@ -1992,7 +2002,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
       }
 
     } else {
-      Rcpp::stop("Case of useRType == false not yet complete");
+      Rcpp::print(vec);
+      Rcpp::stop("Case of useRType == false not yet complete for %s", dtype.c_str());
     }
   }
   return buf;
@@ -2055,29 +2066,40 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
       std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     }
     return v;
-  } else if (useRType && (dtype == "DATETIME_MS" || dtype == "DATETIME_SEC")) {
+  } else if (useRType && (dtype == "DATETIME_MS" ||
+                          dtype == "DATETIME_US" ||
+                          dtype == "DATETIME_SEC")) {
     DatetimeVector v(buf->ncells);
     if (castDatetime) {
       int n = buf->ncells;
       std::vector<int64_t> tt(n);
       std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-      double scalefactor = (dtype == "DATETIME_MS" ? 1e-3 : 1.0);
+      double scalefactor = 1.0;
+      if (dtype == "DATETIME_MS") {
+        scalefactor = 1e3;
+      } else if (dtype == "DATETIME_US") {
+        scalefactor = 1e6;
+      }
       for (int i=0; i<n; i++) {
-        v[i] = static_cast<double>(tt[i]) * scalefactor;
+        v[i] = static_cast<double>(tt[i]) / scalefactor;
       }
     } else {
       std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     }
     return v;
   } else if (!useRType &&
-             (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
+             (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" || dtype == "DATETIME_US" ||
               dtype == "DATETIME_MS" || dtype == "DATETIME_NS")) {
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
     NumericVector dd(n);
     double scalefactor = 1.0; // FIXME = _domain_datatype_time_scale_factor(buf->dtype);
-    if (dtype == "DATETIME_MS") scalefactor = 1e3;
+      if (dtype == "DATETIME_MS") {
+        scalefactor = 1e3;
+      } else if (dtype == "DATETIME_US") {
+        scalefactor = 1e6;
+      }
     if (castDatetime) {
       for (int i=0; i<n; i++) {
         dd[i] = static_cast<double>(tt[i] / scalefactor);

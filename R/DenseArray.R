@@ -208,13 +208,14 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
       buff <- vector(mode = type, length = ncells)
     } else if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
       buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, as.integer(sub), aname)
-    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
       buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)
     } else {
       stop("Unsupported data type for attribute ", aname)
     }
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
-    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+    if (!is_scalar && !array@as.data.frame &&
+        !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
       attr(buff, "dim") <- sub_dim
     }
     attr(buff, "datatype") <- datatype
@@ -275,7 +276,8 @@ setMethod("[", "tiledb_dense",
                   datatype <- attr(val, "datatype")
                   if (datatype == "CHAR") {
                     qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
-                  } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+                  } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS",
+                                             "DATETIME_US", "DATETIME_NS")) {
                     qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
                   } else {
                     stop("Currently unsupported type: ", datatype)
@@ -309,7 +311,7 @@ setMethod("[", "tiledb_dense",
                 if (dtype == "CHAR") {
                   old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
                 } else if (dtype %in% c("DATETIME_DAY", "DATETIME_SEC",
-                                        "DATETIME_MS", "DATETIME_NS")) {
+                                        "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
                   old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]],
                                                                getOption("tiledb.useRDatetimeType",TRUE),
                                                                getOption("tiledb.castTime",FALSE))
@@ -435,6 +437,10 @@ setMethod("[<-", "tiledb_dense",
             for (idx in seq_along(value)) {
               aname <- attr_names[[idx]]
               val <- value[[idx]]
+
+              attribute <- libtiledb_array_schema_get_attribute_from_name(schema@ptr, aname)
+              attrtype <- libtiledb_attribute_get_type(attribute)
+
               if (is.list(val) || is.character(val)) {
                 ##qry <- libtiledb_query_set_buffer_var(qry, aname, val)
                 n <- ifelse(is.vector(val), length(val), prod(dim(val)))
@@ -453,8 +459,8 @@ setMethod("[<-", "tiledb_dense",
               } else if (inherits(val, "POSIXt")) {
                 #cat("*** POSIXt case\n")
                 # could also use DATETIME_SEC here but _MS dominates it with higher resolution
-                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val,
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val,
                                                             getOption("tiledb.useRDatetimeType",TRUE),
                                                             getOption("tiledb.castTime",FALSE))
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
@@ -474,7 +480,7 @@ setMethod("[<-", "tiledb_dense",
             return(x)
           })
 
-#' @export
+#' @exportl
 as.array.tiledb_dense <- function(x, ...) {
  return(x[])
 }
