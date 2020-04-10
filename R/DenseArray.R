@@ -365,7 +365,7 @@ setMethod("[<-", "tiledb_dense",
                   isS4(value) || is(value, "Date") || inherits(value, "POSIXt")) {
                 value <- list(value)
               } else {
-                stop("Cannot assign initial value of type '", typeof(value), "'")
+                stop("Cannot assign initial value of type '", typeof(value), "'", call.=FALSE)
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())

@@ -95,9 +95,13 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, selected) {
     ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype[1])
     if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
       buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, sub, aname)
+    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                               "DATETIME_US", "DATETIME_NS")) {
+      buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)
     } else {
-      buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, tiledb::datatype(attr), ncells)
+      stop("Unsupported data type for attribute ", aname)
     }
+    attr(buff, "datatype") <- datatype
     attributes[[aname]] <- buff
   }
   return(attributes)
@@ -188,12 +192,15 @@ setMethod("[", "tiledb_sparse",
               if (aname == "coords") {
                 qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
               } else {
-                #if (is.character(val) || is.list(val)) {
-                #  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                #} else {
-                  #qry <- libtiledb_query_set_buffer(qry, aname, val)
+                datatype <- attr(val, "datatype")
+                if (datatype == "CHAR") {
+                  qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
+                } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                                           "DATETIME_US", "DATETIME_NS")) {
                   qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
-                #}
+                } else {
+                  stop("Currently unsupported type: ", datatype)
+                }
               }
             }
             qry <- libtiledb_query_submit(qry)
@@ -241,10 +248,11 @@ setMethod("[", "tiledb_sparse",
 setMethod("[<-", "tiledb_sparse",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
-              if (is.array(value) || is.vector(value)) {
+              if (is.array(value) || is.vector(value) ||
+                  isS4(value) || is(value, "Date") || inherits(value, "POSIXt")) {
                 value <- list(value)
               } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
+                stop("Cannot assign value of type '", typeof(value), "'", call.=FALSE)
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -331,17 +339,21 @@ setMethod("[<-", "tiledb_sparse",
             for (idx in seq_along(value)) {
               aname <- attr_names[[idx]]
               val <- value[[idx]]
-
               attribute <- libtiledb_array_schema_get_attribute_from_name(schema@ptr, aname)
               attrtype <- libtiledb_attribute_get_type(attribute)
 
               if (inherits(val, "POSIXt")) {
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val)
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val,
+                                                            getOption("tiledb.useRDatetimeType",TRUE),
+                                                            getOption("tiledb.castTime",FALSE))
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "Date")) {
+                cat("** writing"); print(val)
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val,
+                                                            getOption("tiledb.useRDatetimeType",TRUE),
+                                                            getOption("tiledb.castTime",FALSE))
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "character")) {
                 n <- ifelse(is.vector(val), length(val), prod(dim(val)))
