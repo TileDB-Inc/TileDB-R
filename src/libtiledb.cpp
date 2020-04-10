@@ -1950,9 +1950,11 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 // [[Rcpp::export]]
 XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
                                                     std::string dtype,
-                                                    SEXP vec,
-                                                    bool useRType=true,
-                                                    bool castDatetime=true) {
+                                                    SEXP vec) {
+                                                    //bool useRType=true,
+                                                    //bool castDatetime=true) {
+  bool useRType = false;
+  bool castDatetime = true;
   if (useRType) {
     if (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
         dtype == "DATETIME_MS" || dtype == "DATETIME_NS") {
@@ -2025,9 +2027,13 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf,
-                                       bool useRType=true,
-                                       bool castDatetime=true) {
+RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
+  //bool useRType=true,
+  //bool castDatetime=true) {
+
+  bool useRType = false;
+  bool castDatetime = true;
+
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
   //Rcpp::Rcout << "dtype: " << dtype << std::endl;
   //Rcpp::Rcout << "useRType: " << (useRType ? "yes" : "no") << std::endl;

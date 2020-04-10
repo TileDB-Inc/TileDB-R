@@ -1240,17 +1240,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_assign_ptr
-XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::string dtype, SEXP vec, bool useRType, bool castDatetime);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_assign_ptr(SEXP bufSEXP, SEXP dtypeSEXP, SEXP vecSEXP, SEXP useRTypeSEXP, SEXP castDatetimeSEXP) {
+XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::string dtype, SEXP vec);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_assign_ptr(SEXP bufSEXP, SEXP dtypeSEXP, SEXP vecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<query_buf_t> >::type buf(bufSEXP);
     Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
     Rcpp::traits::input_parameter< SEXP >::type vec(vecSEXP);
-    Rcpp::traits::input_parameter< bool >::type useRType(useRTypeSEXP);
-    Rcpp::traits::input_parameter< bool >::type castDatetime(castDatetimeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_assign_ptr(buf, dtype, vec, useRType, castDatetime));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_assign_ptr(buf, dtype, vec));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1268,15 +1266,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_get_buffer_ptr
-RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool useRType, bool castDatetime);
-RcppExport SEXP _tiledb_libtiledb_query_get_buffer_ptr(SEXP bufSEXP, SEXP useRTypeSEXP, SEXP castDatetimeSEXP) {
+RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf);
+RcppExport SEXP _tiledb_libtiledb_query_get_buffer_ptr(SEXP bufSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<query_buf_t> >::type buf(bufSEXP);
-    Rcpp::traits::input_parameter< bool >::type useRType(useRTypeSEXP);
-    Rcpp::traits::input_parameter< bool >::type castDatetime(castDatetimeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_ptr(buf, useRType, castDatetime));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_ptr(buf));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1850,9 +1846,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_vec, 3},
     {"_tiledb_libtiledb_query_buffer_alloc_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_alloc_ptr, 3},
-    {"_tiledb_libtiledb_query_buffer_assign_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_assign_ptr, 5},
+    {"_tiledb_libtiledb_query_buffer_assign_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_assign_ptr, 3},
     {"_tiledb_libtiledb_query_set_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_ptr, 3},
-    {"_tiledb_libtiledb_query_get_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_ptr, 3},
+    {"_tiledb_libtiledb_query_get_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_ptr, 1},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},
     {"_tiledb_libtiledb_query_status", (DL_FUNC) &_tiledb_libtiledb_query_status, 1},
