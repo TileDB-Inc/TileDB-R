@@ -6,10 +6,6 @@ context("tiledb_date_time")
 test_that("Can read / write a simple Date dense vector", {
   uri <- tempfile()
 
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
-
   dates <- Sys.Date() + 0:9
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 
@@ -25,16 +21,11 @@ test_that("Can read / write a simple Date dense vector", {
   arr2 <- tiledb_dense(uri)
   expect_equal(dates, arr2[])
 
-  options(op)
   unlink(uri, recursive=TRUE)
 })
 
 test_that("Can read / write simple DATETIME_SEC dense vectors", {
   uri <- tempfile()
-
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
 
   datetimes <- Sys.time() + 0:59
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -51,17 +42,12 @@ test_that("Can read / write simple DATETIME_SEC dense vectors", {
   arr2 <- tiledb_dense(uri)
   expect_equal(trunc(datetimes), arr2[])
 
-  options(op)
   unlink(uri, recursive=TRUE)
 
 })
 
 test_that("Can read / write simple DATETIME_MS dense vectors", {
   uri <- tempfile()
-
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
 
   datetimes <- Sys.time() + 0:59
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -78,17 +64,12 @@ test_that("Can read / write simple DATETIME_MS dense vectors", {
   arr2 <- tiledb_dense(uri)
   expect_equal(trunc(1e3*as.numeric(datetimes))/1e3, as.numeric(arr2[]))
 
-  options(op)
   unlink(uri, recursive=TRUE)
 
 })
 
 test_that("Can read / write simple DATETIME_US dense vectors", {
   uri <- tempfile()
-
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
 
   datetimes <- Sys.time() + 0:59
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -105,7 +86,6 @@ test_that("Can read / write simple DATETIME_US dense vectors", {
   arr2 <- tiledb_dense(uri)
   expect_equal(datetimes, arr2[])
 
-  options(op)
   unlink(uri, recursive=TRUE)
 
 })
@@ -114,10 +94,6 @@ test_that("Can read / write simple DATETIME_US dense vectors", {
 
 test_that("Can read / write a simple Date sparse vector", {
   uri <- tempfile()
-
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
 
   dates <- Sys.Date() + 0:9
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -134,16 +110,11 @@ test_that("Can read / write a simple Date sparse vector", {
   arr2 <- tiledb_sparse(uri)
   expect_equal(dates, arr2[]$dat)
 
-  options(op)
   unlink(uri, recursive=TRUE)
 })
 
 test_that("Can read / write simple DATETIME_SEC sparse vectors", {
   uri <- tempfile()
-
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
 
   datetimes <- Sys.time() + 0:59
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -160,17 +131,12 @@ test_that("Can read / write simple DATETIME_SEC sparse vectors", {
   arr2 <- tiledb_sparse(uri)
   expect_equal(trunc(datetimes), arr2[]$dat)
 
-  options(op)
   unlink(uri, recursive=TRUE)
 
 })
 
 test_that("Can read / write simple DATETIME_MS sparse vectors", {
   uri <- tempfile()
-
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
 
   datetimes <- Sys.time() + 0:59
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -187,17 +153,12 @@ test_that("Can read / write simple DATETIME_MS sparse vectors", {
   arr2 <- tiledb_sparse(uri)
   expect_equal(trunc(1e3*as.numeric(datetimes))/1e3, as.numeric(arr2[]$dat))
 
-  options(op)
   unlink(uri, recursive=TRUE)
 
 })
 
 test_that("Can read / write simple DATETIME_US sparse vectors", {
   uri <- tempfile()
-
-  op <- options()
-  options("tiledb.useRDatetimeType"=FALSE,
-          "tiledb.castTime"=TRUE)
 
   datetimes <- Sys.time() + 0:59
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -214,7 +175,6 @@ test_that("Can read / write simple DATETIME_US sparse vectors", {
   arr2 <- tiledb_sparse(uri)
   expect_equal(datetimes, arr2[]$dat)
 
-  options(op)
   unlink(uri, recursive=TRUE)
 
 })

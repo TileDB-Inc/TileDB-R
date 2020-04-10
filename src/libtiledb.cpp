@@ -1951,64 +1951,31 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
                                                     std::string dtype,
                                                     SEXP vec) {
-                                                    //bool useRType=true,
-                                                    //bool castDatetime=true) {
-  bool useRType = false;
-  bool castDatetime = true;
-  if (useRType) {
-    if (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
-        dtype == "DATETIME_MS" || dtype == "DATETIME_NS") {
-      // The Date type in R stores days since the epoch, but as fractional values
-      // so it uses a double. Ditto for POSIXct which uses double for fractional
-      // seconds since the epoch.  But when we store these we need an assignment
-      // to doubles.
-      NumericVector v(vec);
-      if (v.size() != buf->ncells) {
-        Rcpp::stop("Mismatched size\n");
-      }
-      std::memcpy(buf->vec.data(), &(v[0]), buf->ncells * buf->size);
-    } else {
-      Rcpp::stop("Currently unsupported type '%s'", dtype);
+  NumericVector v(vec);
+  //double scalefactor = (dtype == "DATETIME_MS" ? 1e-3 : 1.0);
+  if (dtype == "DATETIME_DAY") {
+    int n = buf->ncells;
+    std::vector<int64_t> tt(n);
+    for (int i=0; i<n; i++) {
+      tt[i] = static_cast<int64_t>(v[i]);
     }
-  } else {
-    NumericVector v(vec);
-    //double scalefactor = (dtype == "DATETIME_MS" ? 1e-3 : 1.0);
-    if (dtype == "DATETIME_DAY") {
-      if (castDatetime) {
-        int n = buf->ncells;
-        std::vector<int64_t> tt(n);
-        for (int i=0; i<n; i++) {
-          tt[i] = static_cast<int64_t>(v[i]);
-        }
-        std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
-      } else {
-        Rcpp::stop("Day resolution requires castDatetime option too");
-      }
-    } else if (dtype == "DATETIME_MS" ||
-               dtype == "DATETIME_US" ||
-               dtype == "DATETIME_SEC") {
-      if (castDatetime) {
-        int n = buf->ncells;
-        double scalefactor = 1.0;
-        if (dtype == "DATETIME_MS") {
-          scalefactor = 1e3;
-        } else if (dtype == "DATETIME_US") {
-          scalefactor = 1e6;
-        }
-        std::vector<int64_t> tt(n);
-        for (int i=0; i<n; i++) {
-          tt[i] = static_cast<int64_t>(v[i] * scalefactor);
-          //Rprintf("setting date: %f -> %ld %s \n", v[i], tt[i], dtype.c_str());
-        }
-        std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
-      } else {
-        Rcpp::stop("Day resolution requires castDatetime option too");
-      }
-
-    } else {
-      Rcpp::print(vec);
-      Rcpp::stop("Case of useRType == false not yet complete for %s", dtype.c_str());
+    std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
+  } else if (dtype == "DATETIME_MS" ||
+             dtype == "DATETIME_US" ||
+             dtype == "DATETIME_SEC") {
+    int n = buf->ncells;
+    double scalefactor = 1.0;
+    if (dtype == "DATETIME_MS") {
+      scalefactor = 1e3;
+    } else if (dtype == "DATETIME_US") {
+      scalefactor = 1e6;
     }
+    std::vector<int64_t> tt(n);
+    for (int i=0; i<n; i++) {
+      tt[i] = static_cast<int64_t>(v[i] * scalefactor);
+      //Rprintf("setting date: %f -> %ld %s \n", v[i], tt[i], dtype.c_str());
+    }
+    std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
   }
   return buf;
 }
@@ -2028,12 +1995,6 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
-  //bool useRType=true,
-  //bool castDatetime=true) {
-
-  bool useRType = false;
-  bool castDatetime = true;
-
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
   //Rcpp::Rcout << "dtype: " << dtype << std::endl;
   //Rcpp::Rcout << "useRType: " << (useRType ? "yes" : "no") << std::endl;
@@ -2061,79 +2022,75 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
-  } else if (useRType && dtype == "DATETIME_DAY") {
-    DateVector v(buf->ncells);
-    if (castDatetime) {
-      int n = buf->ncells;
-      std::vector<int64_t> tt(n);
-      std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-      for (int i=0; i<n; i++) {
-        v[i] = static_cast<double>(tt[i]);
-      }
-    } else {
-      std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    }
-    return v;
-  } else if (useRType && (dtype == "DATETIME_MS" ||
-                          dtype == "DATETIME_US" ||
-                          dtype == "DATETIME_SEC")) {
-    DatetimeVector v(buf->ncells);
-    if (castDatetime) {
-      int n = buf->ncells;
-      std::vector<int64_t> tt(n);
-      std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-      double scalefactor = 1.0;
-      if (dtype == "DATETIME_MS") {
-        scalefactor = 1e3;
-      } else if (dtype == "DATETIME_US") {
-        scalefactor = 1e6;
-      }
-      for (int i=0; i<n; i++) {
-        v[i] = static_cast<double>(tt[i]) / scalefactor;
-      }
-    } else {
-      std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    }
-    return v;
-  } else if (!useRType &&
-             (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" || dtype == "DATETIME_US" ||
-              dtype == "DATETIME_MS" || dtype == "DATETIME_NS")) {
+  // } else if (useRType && dtype == "DATETIME_DAY") {
+  //   DateVector v(buf->ncells);
+  //   if (castDatetime) {
+  //     int n = buf->ncells;
+  //     std::vector<int64_t> tt(n);
+  //     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
+  //     for (int i=0; i<n; i++) {
+  //       v[i] = static_cast<double>(tt[i]);
+  //     }
+  //   } else {
+  //     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+  //   }
+  //   return v;
+  // } else if (useRType && (dtype == "DATETIME_MS" ||
+  //                         dtype == "DATETIME_US" ||
+  //                         dtype == "DATETIME_SEC")) {
+  //   DatetimeVector v(buf->ncells);
+  //   if (castDatetime) {
+  //     int n = buf->ncells;
+  //     std::vector<int64_t> tt(n);
+  //     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
+  //     double scalefactor = 1.0;
+  //     if (dtype == "DATETIME_MS") {
+  //       scalefactor = 1e3;
+  //     } else if (dtype == "DATETIME_US") {
+  //       scalefactor = 1e6;
+  //     }
+  //     for (int i=0; i<n; i++) {
+  //       v[i] = static_cast<double>(tt[i]) / scalefactor;
+  //     }
+  //   } else {
+  //     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+  //   }
+  //   return v;
+  } else if (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
+             dtype == "DATETIME_US" || dtype == "DATETIME_MS") {
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
     NumericVector dd(n);
     double scalefactor = 1.0; // FIXME = _domain_datatype_time_scale_factor(buf->dtype);
-      if (dtype == "DATETIME_MS") {
-        scalefactor = 1e3;
-      } else if (dtype == "DATETIME_US") {
-        scalefactor = 1e6;
-      }
-    if (castDatetime) {
-      for (int i=0; i<n; i++) {
-        dd[i] = static_cast<double>(tt[i] / scalefactor);
-        //Rprintf("getting date: %ld -> %f (%f)\n", tt[i], dd[i], scalefactor);
-      }
-      if (dtype == "DATETIME_DAY") {
-        dd.attr("class") = "Date";
-      } else {
-        // an R thing: POSIXct (represented as a double) and
-        // POSIXlt (a list) both inherit from POSIXt
-        dd.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
-      }
-    } else {                    		// return as a nanotime classed objed
-      double scalefactor = _domain_datatype_time_scale_factor(buf->dtype);
-      if (scalefactor != 1.0) {
-        for (auto& x: tt) {
-          x *= scalefactor;
-        }
-      }
-      std::memcpy(&(dd[0]), tt.data(), n*buf->size);
-      Rcpp::CharacterVector cl = Rcpp::CharacterVector::create("nanotime");
-      cl.attr("package") = "nanotime";
-      dd.attr(".S3Class") = "integer64";
-      dd.attr("class") = cl;
-      SET_S4_OBJECT(dd);
+    if (dtype == "DATETIME_MS") {
+      scalefactor = 1e3;
+    } else if (dtype == "DATETIME_US") {
+      scalefactor = 1e6;
     }
+    for (int i=0; i<n; i++) {
+      dd[i] = static_cast<double>(tt[i] / scalefactor);
+      //Rprintf("getting date: %ld -> %f (%f)\n", tt[i], dd[i], scalefactor);
+    }
+    if (dtype == "DATETIME_DAY") {
+      dd.attr("class") = "Date";
+    } else {
+      // an R thing: POSIXct (represented as a double) and
+      // POSIXlt (a list) both inherit from POSIXt
+      dd.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
+    }
+    return dd;
+  } else if (dtype == "DATETIME_NS") {
+    int n = buf->ncells;
+    std::vector<int64_t> tt(n);
+    std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
+    NumericVector dd(n);
+    std::memcpy(&(dd[0]), tt.data(), n*buf->size);
+    Rcpp::CharacterVector cl = Rcpp::CharacterVector::create("nanotime");
+    cl.attr("package") = "nanotime";
+    dd.attr(".S3Class") = "integer64";
+    dd.attr("class") = cl;
+    SET_S4_OBJECT(dd);
     return dd;
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());
