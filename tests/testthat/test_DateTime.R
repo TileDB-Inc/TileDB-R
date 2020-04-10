@@ -3,7 +3,7 @@ library(testthat)
 library(tiledb)
 context("tiledb_date_time")
 
-test_that("Can read / write a simple Date vector", {
+test_that("Can read / write a simple Date dense vector", {
   uri <- tempfile()
 
   op <- options()
@@ -29,7 +29,7 @@ test_that("Can read / write a simple Date vector", {
   unlink(uri, recursive=TRUE)
 })
 
-test_that("Can read / write simple DATETIME_SEC vectors", {
+test_that("Can read / write simple DATETIME_SEC dense vectors", {
   uri <- tempfile()
 
   op <- options()
@@ -56,7 +56,7 @@ test_that("Can read / write simple DATETIME_SEC vectors", {
 
 })
 
-test_that("Can read / write simple DATETIME_MS vectors", {
+test_that("Can read / write simple DATETIME_MS dense vectors", {
   uri <- tempfile()
 
   op <- options()
@@ -83,7 +83,7 @@ test_that("Can read / write simple DATETIME_MS vectors", {
 
 })
 
-test_that("Can read / write simple DATETIME_US vectors", {
+test_that("Can read / write simple DATETIME_US dense vectors", {
   uri <- tempfile()
 
   op <- options()
@@ -104,6 +104,115 @@ test_that("Can read / write simple DATETIME_US vectors", {
 
   arr2 <- tiledb_dense(uri)
   expect_equal(datetimes, arr2[])
+
+  options(op)
+  unlink(uri, recursive=TRUE)
+
+})
+
+## Sparse
+
+test_that("Can read / write a simple Date sparse vector", {
+  uri <- tempfile()
+
+  op <- options()
+  options("tiledb.useRDatetimeType"=FALSE,
+          "tiledb.castTime"=TRUE)
+
+  dates <- Sys.Date() + 0:9
+  if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+
+  dim <- tiledb_dim("dim", domain = c(1L, 10L))
+  dom <- tiledb_domain(dim)
+  val <- tiledb_attr("dat", type = "DATETIME_DAY")
+  sch <- tiledb_array_schema(dom, val, sparse = TRUE)
+  tiledb_array_create(uri, sch)
+
+  arr <- tiledb_sparse(uri)
+  arr[1:10] <- dates
+
+  arr2 <- tiledb_sparse(uri)
+  expect_equal(dates, arr2[]$dat)
+
+  options(op)
+  unlink(uri, recursive=TRUE)
+})
+
+test_that("Can read / write simple DATETIME_SEC sparse vectors", {
+  uri <- tempfile()
+
+  op <- options()
+  options("tiledb.useRDatetimeType"=FALSE,
+          "tiledb.castTime"=TRUE)
+
+  datetimes <- Sys.time() + 0:59
+  if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+
+  dim <- tiledb_dim("dim", domain = c(1L, 60L))
+  dom <- tiledb_domain(dim)
+  val <- tiledb_attr("dat", type = "DATETIME_SEC")
+  sch <- tiledb_array_schema(dom, val, sparse = TRUE)
+  tiledb_array_create(uri, sch)
+
+  arr <- tiledb_sparse(uri)
+  arr[1:60] <- datetimes
+
+  arr2 <- tiledb_sparse(uri)
+  expect_equal(trunc(datetimes), arr2[]$dat)
+
+  options(op)
+  unlink(uri, recursive=TRUE)
+
+})
+
+test_that("Can read / write simple DATETIME_MS sparse vectors", {
+  uri <- tempfile()
+
+  op <- options()
+  options("tiledb.useRDatetimeType"=FALSE,
+          "tiledb.castTime"=TRUE)
+
+  datetimes <- Sys.time() + 0:59
+  if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+
+  dim <- tiledb_dim("dim", domain = c(1L, 60L))
+  dom <- tiledb_domain(dim)
+  val <- tiledb_attr("dat", type = "DATETIME_MS")
+  sch <- tiledb_array_schema(dom, val, sparse = TRUE)
+  tiledb_array_create(uri, sch)
+
+  arr <- tiledb_sparse(uri)
+  arr[1:60] <- datetimes
+
+  arr2 <- tiledb_sparse(uri)
+  expect_equal(trunc(1e3*as.numeric(datetimes))/1e3, as.numeric(arr2[]$dat))
+
+  options(op)
+  unlink(uri, recursive=TRUE)
+
+})
+
+test_that("Can read / write simple DATETIME_US sparse vectors", {
+  uri <- tempfile()
+
+  op <- options()
+  options("tiledb.useRDatetimeType"=FALSE,
+          "tiledb.castTime"=TRUE)
+
+  datetimes <- Sys.time() + 0:59
+  if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+
+  dim <- tiledb_dim("dim", domain = c(1L, 60L))
+  dom <- tiledb_domain(dim)
+  val <- tiledb_attr("dat", type = "DATETIME_US")
+  sch <- tiledb_array_schema(dom, val, sparse = TRUE)
+  tiledb_array_create(uri, sch)
+
+  arr <- tiledb_sparse(uri)
+  arr[1:60] <- datetimes
+
+  arr2 <- tiledb_sparse(uri)
+  expect_equal(datetimes, arr2[]$dat)
 
   options(op)
   unlink(uri, recursive=TRUE)

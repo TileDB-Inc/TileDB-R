@@ -374,7 +374,6 @@ setMethod("[<-", "tiledb_sparse",
                                                             getOption("tiledb.castTime",FALSE))
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "Date")) {
-                cat("** writing"); print(val)
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
                 bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val,
                                                             getOption("tiledb.useRDatetimeType",TRUE),
