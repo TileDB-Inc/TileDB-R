@@ -482,7 +482,7 @@ setMethod("[<-", "tiledb_dense",
             return(x)
           })
 
-#' @exportl
+#' @export
 as.array.tiledb_dense <- function(x, ...) {
  return(x[])
 }

@@ -98,6 +98,8 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, selected) {
     } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
                                "DATETIME_US", "DATETIME_NS")) {
       buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)
+    } else if (type %in% c("integer", "double")) {
+      buff <- vector(mode = type, length = ncells)
     } else {
       stop("Unsupported data type for attribute ", aname)
     }
@@ -192,14 +194,18 @@ setMethod("[", "tiledb_sparse",
               if (aname == "coords") {
                 qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
               } else {
-                datatype <- attr(val, "datatype")
-                if (datatype == "CHAR") {
-                  qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
-                } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
-                                           "DATETIME_US", "DATETIME_NS")) {
-                  qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
+                if (is(val, "externalptr")) {
+                  datatype <- attr(val, "datatype")
+                  if (datatype == "CHAR") {
+                    qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
+                  } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                                             "DATETIME_US", "DATETIME_NS")) {
+                    qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
+                  } else {
+                    stop("Currently unsupported type: ", datatype)
+                  }
                 } else {
-                  stop("Currently unsupported type: ", datatype)
+                  qry <- libtiledb_query_set_buffer(qry, aname, val)
                 }
               }
             }
@@ -210,11 +216,30 @@ setMethod("[", "tiledb_sparse",
             # get the actual number of results, instead of realloc
             # just modify the vector length so there is no additional copy
             for (idx in seq_along(attr_names)) {
-              ##old_buffer <- buffers[[idx]]
-              old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]],
-                                                           getOption("tiledb.useRDatetimeType",TRUE),
-                                                           getOption("tiledb.castTime",FALSE))
+              old_buffer <- buffers[[idx]]
               aname <- attr_names[[idx]]
+
+              if (aname == "coords") {
+                old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]],
+                                                             getOption("tiledb.useRDatetimeType",TRUE),
+                                                             getOption("tiledb.castTime",FALSE))
+
+              } else if (is(old_buffer, "externalptr")) {
+                ##attribute <- libtiledb_array_schema_get_attribute_from_name(schema@ptr, aname)
+                ##attrtype <- libtiledb_attribute_get_type(attribute)
+                dtype <- attr(buffers[[idx]], "datatype")
+                if (dtype == "CHAR") {
+                  old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
+                } else if (dtype %in% c("DATETIME_DAY", "DATETIME_SEC",
+                                        "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]],
+                                                               getOption("tiledb.useRDatetimeType",TRUE),
+                                                               getOption("tiledb.castTime",FALSE))
+                } else {
+                  stop("Unsupported data type for attribute ", aname)
+                }
+              }
+
               if (aname == "coords") {
                 ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
               } else {
