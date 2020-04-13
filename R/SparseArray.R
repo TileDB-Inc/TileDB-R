@@ -362,7 +362,7 @@ setMethod("[<-", "tiledb_sparse",
               attribute <- libtiledb_array_schema_get_attribute_from_name(schema@ptr, aname)
               attrtype <- libtiledb_attribute_get_type(attribute)
 
-              if (inherits(val, "POSIXt")) {
+              if (inherits(val, "POSIXt") || inherits(val, "nanotime")) {
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
                 bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
