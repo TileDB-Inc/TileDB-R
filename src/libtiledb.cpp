@@ -1976,6 +1976,13 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
       //Rprintf("setting date: %f -> %ld %s \n", v[i], tt[i], dtype.c_str());
     }
     std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
+  } else if (dtype == "DATETIME_NS") {
+    // nanosecond time uses the nanotime package which uses the bit64 package
+    // to store the int64_t 'payload' on 64-bit double, so memcpy does the trick
+    NumericVector v(vec);
+    std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+  } else {
+    Rcpp::stop("Datetime assignment to '%s' currently unsupported.", dtype.c_str());
   }
   return buf;
 }
