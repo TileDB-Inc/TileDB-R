@@ -51,7 +51,6 @@ write <- function(uri) {
 read <- function(uri) {
     arr <- tiledb_sparse(uri)
     #print(schema(arr))
-    invisible(NULL)
 
     ctx <- tiledb_ctx()
     arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uri, "READ")
