@@ -19,7 +19,7 @@ create <- function(uri) {
     #dom <- new("tiledb_domain", ptr=dim@ptr)
 
     a <- tiledb_attr("a", type = "INT32")
-    sch <- tiledb_array_schema(dom, a, "ROW_MAJOR", "ROW_MAJOR", sparse = TRUE)
+    sch <- tiledb_array_schema(dom, a, sparse = TRUE)
     tiledb_array_create(uri, sch)
     invisible(NULL)
 }

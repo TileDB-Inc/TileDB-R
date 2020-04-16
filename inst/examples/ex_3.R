@@ -24,7 +24,7 @@ create_array <- function(uri) {
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(0, 1e12), 1, type = domrowtype)))
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
                                                tiledb_attr("d1", type = attrowtype)),
-                                "ROW_MAJOR", "ROW_MAJOR", sparse=TRUE)
+                                sparse=TRUE)
   tiledb_array_create(uri, schema)
 }
 
