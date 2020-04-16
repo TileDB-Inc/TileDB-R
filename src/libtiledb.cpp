@@ -502,24 +502,25 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
                                       SEXP domain,
                                       SEXP tile_extent) {
   // check that the dimension type is supported
-  const tiledb_datatype_t _type = _string_to_tiledb_datatype(type);
-  if (_type != TILEDB_INT32 &&
-      _type != TILEDB_FLOAT64 &&
-      _type != TILEDB_DATETIME_SEC &&
-      _type != TILEDB_DATETIME_MS &&
-      _type != TILEDB_DATETIME_US &&
-      _type != TILEDB_DATETIME_NS &&
-      _type != TILEDB_STRING_ASCII) {
+  const tiledb_datatype_t dtype = _string_to_tiledb_datatype(type);
+  if (dtype != TILEDB_INT32 &&
+      dtype != TILEDB_FLOAT64 &&
+      dtype != TILEDB_DATETIME_DAY &&
+      dtype != TILEDB_DATETIME_SEC &&
+      dtype != TILEDB_DATETIME_MS &&
+      dtype != TILEDB_DATETIME_US &&
+      dtype != TILEDB_DATETIME_NS &&
+      dtype != TILEDB_STRING_ASCII) {
     Rcpp::stop("only integer (INT32), real (FLOAT64), DATETIME_{SEC,MS,US,NS}, DATETIME_STRING_ACII domains supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
-  if (_type == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
+  if (dtype == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
     Rcpp::stop("domain or tile_extent does not match dimension type");
-  } else if (_type == TILEDB_FLOAT64 &&
+  } else if (dtype == TILEDB_FLOAT64 &&
              (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
     Rcpp::stop("domain or tile_extent does not match dimenson type");
   }
-  if (_type == TILEDB_INT32) {
+  if (dtype == TILEDB_INT32) {
     using Dtype = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
     auto domain_vec = as<IntegerVector>(domain);
     if (domain_vec.length() != 2) {
@@ -533,7 +534,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
     return XPtr<tiledb::Dimension>(
       new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
-  } else if (_type == TILEDB_FLOAT64) {
+  } else if (dtype == TILEDB_FLOAT64) {
     using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto domain_vec = as<NumericVector>(domain);
     if (domain_vec.length() != 2) {
@@ -548,17 +549,21 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     return XPtr<tiledb::Dimension>(
       new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
 
-  } else if (_type == TILEDB_DATETIME_MS) {
+  } else if (dtype == TILEDB_DATETIME_DAY ||
+             dtype == TILEDB_DATETIME_SEC ||
+             dtype == TILEDB_DATETIME_MS  ||
+             dtype == TILEDB_DATETIME_US  ||
+             dtype == TILEDB_DATETIME_NS     ) {
     auto domain_vec = as<std::vector<int64_t>>(domain);
     if (domain_vec.size() != 2) {
       Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
     }
     int64_t domain[] = {domain_vec[0], domain_vec[1]};
     int64_t extent = Rcpp::as<int64_t>(tile_extent);
-    auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, TILEDB_DATETIME_MS,
+    auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype,
                                                                domain, &extent));
     return XPtr<tiledb::Dimension>(dim);
-  } else if (_type == TILEDB_STRING_ASCII) {
+  } else if (dtype == TILEDB_STRING_ASCII) {
     if (Rf_isNull(domain) && Rf_isNull(tile_extent)) {
       auto d = tiledb::Dimension::create(*ctx.get(), name, TILEDB_STRING_ASCII, nullptr, nullptr);
       auto dim = new tiledb::Dimension(d);
@@ -567,7 +572,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       Rcpp::stop("Non-null domain or extend to be added.");
     }
   } else {
-    Rcpp::stop("Unsupported tiledb type (%d) this should not happen!", _type);
+    Rcpp::stop("Unsupported tiledb type (%d) this should not happen!", dtype);
   }
 }
 
@@ -1463,6 +1468,24 @@ CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array
 }
 
 // [[Rcpp::export]]
+CharacterVector libtiledb_array_nonempty_domain_var_from_index(XPtr<tiledb::Array> array,
+                                                               int32_t idx) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+  auto domain = array->schema().domain();
+  if (domain.type() == TILEDB_STRING_ASCII) {
+    auto res = array->non_empty_domain_var(idx);
+    return CharacterVector::create(res.first, res.second);
+  } else {
+    Rcpp::stop("Invalid tiledb_schema domain type: '%s'", _tiledb_datatype_to_string(domain.type()));
+  }
+  // not reached
+  return CharacterVector::create("", "");
+#else
+  return CharacterVector::create("NA", "NA");
+#endif
+}
+
+// [[Rcpp::export]]
 void libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
                                  std::string uri,
                                  Nullable<XPtr<tiledb::Config>> cfgptr = R_NilValue) {
@@ -2238,6 +2261,68 @@ XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iid
     }
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
   } else if (TYPEOF(starts) == STRSXP) {
+    std::string start = as<std::string>(starts);
+    std::string end = as<std::string>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      Rcpp::stop("Non-emoty stride for string not supported yet.");
+    }
+#endif
+  } else {
+    Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
+  }
+  return query;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> query,
+                                                        int iidx,
+                                                        std::string typestr,
+                                                        SEXP starts, SEXP ends,
+                                                        SEXP strides = R_NilValue) {
+  if (TYPEOF(starts) != TYPEOF(ends)) {
+    Rcpp::stop("'start' and 'end' must be of identical types");
+  }
+  uint32_t uidx = static_cast<uint32_t>(iidx);
+  if (typestr == "INT32") {
+    int32_t start = as<int32_t>(starts);
+    int32_t end = as<int32_t>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      int32_t stride = as<int32_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (typestr == "FLOAT64") {
+    double start = as<double>(starts);
+    double end = as<double>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      double stride = as<double>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (typestr == "INT64" ||
+             typestr == "UINT64" ||
+             typestr == "UINT32" ||
+             typestr == "DATETIME_DAY" ||
+             typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS" ||
+             typestr == "DATETIME_US" ||
+             typestr == "DATETIME_NS") {
+    int64_t start = as<int64_t>(starts);
+    int64_t end = as<int64_t>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      int64_t stride = as<int64_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+  } else if (typestr == "ASCII" || typestr == "CHAR") {
     std::string start = as<std::string>(starts);
     std::string end = as<std::string>(ends);
     if (strides == R_NilValue) {

@@ -337,6 +337,10 @@ libtiledb_array_nonempty_domain_var_from_name <- function(array, name) {
     .Call(`_tiledb_libtiledb_array_nonempty_domain_var_from_name`, array, name)
 }
 
+libtiledb_array_nonempty_domain_var_from_index <- function(array, idx) {
+    .Call(`_tiledb_libtiledb_array_nonempty_domain_var_from_index`, array, idx)
+}
+
 libtiledb_array_consolidate <- function(ctx, uri, cfgptr = NULL) {
     invisible(.Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri, cfgptr))
 }
@@ -467,6 +471,10 @@ libtiledb_query_get_fragment_uri <- function(query, idx) {
 
 libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
     .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
+}
+
+libtiledb_query_add_range_with_type <- function(query, iidx, typestr, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_query_add_range_with_type`, query, iidx, typestr, starts, ends, strides)
 }
 
 libtiledb_query_get_est_result_size <- function(query, attr) {
