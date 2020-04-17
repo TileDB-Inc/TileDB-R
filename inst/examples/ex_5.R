@@ -59,7 +59,7 @@ read <- function(uri) {
     qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
     qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, "a", "ee")
 
-    bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc_direct(arrptr, "a1", 4, 10)
+    bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc_direct(4, 10)
     qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "d", bufptr)
     qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
     qryptr <- tiledb:::libtiledb_query_submit(qryptr)

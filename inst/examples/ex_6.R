@@ -1,10 +1,10 @@
+## generalizes ex_R to two dims
+
 suppressMessages({
   library(tiledb)
   library(nanotime)
   library(bit64)
 })
-
-## work-in-progress, does not yet work
 
 domrowtype <- "DATETIME_NS"
 domcoltype <- "INT32"
