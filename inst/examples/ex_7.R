@@ -12,7 +12,7 @@ domcoltype <- "ASCII"
 attrowtype <- "DATETIME_US"
 
 ## Name of the array to create.
-array_name <- "ex_3_2d_char"
+array_name <- "ex_7"
 ## Path is either current directory, or a local config value is found
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 
@@ -97,6 +97,8 @@ read_array <- function(uri) {
 
   #bufptr1 <- tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domcoltype, 10)
   #qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "cols", bufptr1)
+  qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, "a", "z")
+
   bufptr1 <- tiledb:::libtiledb_query_buffer_var_char_alloc_direct(10, 40)
   qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "cols", bufptr1)
 
@@ -113,8 +115,8 @@ read_array <- function(uri) {
   cols <- tiledb:::libtiledb_query_get_buffer_var_char(bufptr1)
   d2r <- tiledb:::libtiledb_query_get_buffer_ptr(bufptr)
   #print(na.omit(data.frame(rows,cols[,1],d1r,d2r)))
-  print(data.frame(rows,d1r,d2r))
-  print(cols)
+  print(data.frame(rows,cols,d1r,d2r))
+  #print(cols)
 }
 
 read_check <- function(uri) {
@@ -146,9 +148,8 @@ read_check <- function(uri) {
 }
 
 set.seed(42)
-#if (dir.exists(uri)) unlink(uri, recursive=TRUE)
-#create_array(uri)
-#write_array(uri)
-#read_array(uri)
-#read_array_df(uri)
-read_check("/tmp/tiledb/string_dom_time_ex1")
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+create_array(uri)
+write_array(uri)
+read_array(uri)
+#read_check("/tmp/tiledb/string_dom_time_ex1")
