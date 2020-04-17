@@ -1453,15 +1453,15 @@ List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
 CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array> array,
                                                               std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  auto domain = array->schema().domain();
-  if (domain.type() == TILEDB_STRING_ASCII) {
+  //auto domain = array->schema().domain();
+  //if (domain.type() == TILEDB_STRING_ASCII) {
     auto res = array->non_empty_domain_var(name);
     return CharacterVector::create(res.first, res.second);
-  } else {
-    Rcpp::stop("Invalid tiledb_schema domain type: '%s'", _tiledb_datatype_to_string(domain.type()));
-  }
+    //} else {
+    //Rcpp::stop("Invalid tiledb_schema domain type: '%s'", _tiledb_datatype_to_string(domain.type()));
+    //}
   // not reached
-  return CharacterVector::create("", "");
+  //return CharacterVector::create("", "");
 #else
   return CharacterVector::create("NA", "NA");
 #endif
@@ -1810,9 +1810,7 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
 }
 
 // [[Rcpp::export]]
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(XPtr<tiledb::Array> array,
-                                                             std::string attribute,
-                                                             int szoffsets, int szdata) {
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata) {
   XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t);
   buf->offsets.resize(szoffsets);
   buf->str.resize(szdata);
