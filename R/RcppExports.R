@@ -413,6 +413,10 @@ libtiledb_query_get_buffer_var_char <- function(bufptr) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr)
 }
 
+libtiledb_query_get_buffer_var_char_simple <- function(bufptr) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_var_char_simple`, bufptr)
+}
+
 libtiledb_query_buffer_var_vec_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
     .Call(`_tiledb_libtiledb_query_buffer_var_vec_alloc`, array, subarray, attribute, szoffsets, szdata)
 }

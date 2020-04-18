@@ -1859,6 +1859,12 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr) {
   return(mat);
 }
 
+// more of a debugging helper
+// [[Rcpp::export]]
+std::string libtiledb_query_get_buffer_var_char_simple(XPtr<vlc_buf_t> bufptr) {
+  return(bufptr->str);
+}
+
 // -- vlv_buf_t functions below
 
 // In the following signature we cannot have a templated type as the return type so we have
