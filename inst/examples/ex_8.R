@@ -47,7 +47,6 @@ write_thrice_array <- function(uri) {
                    DATETIME_NS = rep(nanotime(as.POSIXct("2020-01-01 00:00:00")) + (i)*10, 10),
                    INT32 = (i-1)*10 + seq(1,10),
                    default = (i-1)*10 + 1:10)
-    print(rows)
     rowbufptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domrowtype, 10)
     rowbufptr <-tiledb:::libtiledb_query_buffer_assign_ptr(rowbufptr, domrowtype, rows)
     qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "rows", rowbufptr)
