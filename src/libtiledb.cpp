@@ -1453,15 +1453,8 @@ List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
 CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array> array,
                                                               std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  //auto domain = array->schema().domain();
-  //if (domain.type() == TILEDB_STRING_ASCII) {
-    auto res = array->non_empty_domain_var(name);
-    return CharacterVector::create(res.first, res.second);
-    //} else {
-    //Rcpp::stop("Invalid tiledb_schema domain type: '%s'", _tiledb_datatype_to_string(domain.type()));
-    //}
-  // not reached
-  //return CharacterVector::create("", "");
+  auto res = array->non_empty_domain_var(name);
+  return CharacterVector::create(res.first, res.second);
 #else
   return CharacterVector::create("NA", "NA");
 #endif
@@ -2006,11 +1999,6 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
   buf->dtype = _string_to_tiledb_datatype(domaintype);
   buf->ncells = ncells;
   buf->vec.resize(ncells * buf->size);
-  // Rcpp::Rcout << "In query_alloc_buffer_ptr"
-  //             << " type " << domaintype
-  //             << " cells " << buf->ncells
-  //             << " size " << buf->size
-  //             << std::endl;
   return buf;
 }
 
@@ -2065,11 +2053,6 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
 XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    std::string attr,
                                                    XPtr<query_buf_t> buf) {
-  //Rcpp::Rcout << "In query_set_buffer " << attr
-  //            << " type " << _tiledb_datatype_to_string(buf->dtype)
-  //            << " cells " << buf->ncells
-  //            << " size " << buf->size
-  //            << std::endl;
   query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
   return query;
 }
@@ -2103,40 +2086,6 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
-  // } else if (useRType && dtype == "DATETIME_DAY") {
-  //   DateVector v(buf->ncells);
-  //   if (castDatetime) {
-  //     int n = buf->ncells;
-  //     std::vector<int64_t> tt(n);
-  //     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-  //     for (int i=0; i<n; i++) {
-  //       v[i] = static_cast<double>(tt[i]);
-  //     }
-  //   } else {
-  //     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-  //   }
-  //   return v;
-  // } else if (useRType && (dtype == "DATETIME_MS" ||
-  //                         dtype == "DATETIME_US" ||
-  //                         dtype == "DATETIME_SEC")) {
-  //   DatetimeVector v(buf->ncells);
-  //   if (castDatetime) {
-  //     int n = buf->ncells;
-  //     std::vector<int64_t> tt(n);
-  //     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-  //     double scalefactor = 1.0;
-  //     if (dtype == "DATETIME_MS") {
-  //       scalefactor = 1e3;
-  //     } else if (dtype == "DATETIME_US") {
-  //       scalefactor = 1e6;
-  //     }
-  //     for (int i=0; i<n; i++) {
-  //       v[i] = static_cast<double>(tt[i]) / scalefactor;
-  //     }
-  //   } else {
-  //     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-  //   }
-  //   return v;
   } else if (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
              dtype == "DATETIME_US" || dtype == "DATETIME_MS") {
     int n = buf->ncells;
