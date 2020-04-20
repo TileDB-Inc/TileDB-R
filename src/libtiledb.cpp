@@ -1254,6 +1254,18 @@ int libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
+bool libtiledb_array_schema_get_allows_dups(XPtr<tiledb::ArraySchema> schema) {
+  return schema->allows_dups();
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_allows_dups(XPtr<tiledb::ArraySchema> schema,
+                                                                 bool allows_dups) {
+  schema->set_allows_dups(allows_dups);
+  return schema;
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_array_schema_get_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->coords_filter_list()));
 }

@@ -233,6 +233,14 @@ libtiledb_array_schema_get_capacity <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_capacity`, schema)
 }
 
+libtiledb_array_schema_get_allows_dups <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_allows_dups`, schema)
+}
+
+libtiledb_array_schema_set_allows_dups <- function(schema, allows_dups) {
+    .Call(`_tiledb_libtiledb_array_schema_set_allows_dups`, schema, allows_dups)
+}
+
 libtiledb_array_schema_get_coords_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_coords_filter_list`, schema)
 }
