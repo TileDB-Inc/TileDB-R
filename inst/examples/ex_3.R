@@ -4,8 +4,6 @@ suppressMessages({
   library(bit64)
 })
 
-## work-in-progress, does not yet work
-
 domrowtype <- "DATETIME_NS"
 attrowtype <- "DATETIME_US"
 
@@ -91,15 +89,8 @@ read_array <- function(uri) {
 
 }
 
-#read_array_df <- function(uri) {
-#  arr <- tiledb_sparse(uri, as.data.frame=TRUE)
-#  print(arr[])
-#}
-
 set.seed(42)
-#if (tiledb_object_type(array_name) != "ARRAY") {
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 create_array(uri)
 write_array(uri)
 read_array(uri)
-#read_array_df(uri)

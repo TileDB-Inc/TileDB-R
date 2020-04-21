@@ -12,8 +12,8 @@
 #' @slot attrs A character vector
 #' @slot extended A logical value
 #' @slot ptr External pointer to the underlying implementation
-#' @exportClass tiledbArray
-setClass("tiledbArray",
+#' @exportClass tiledb_array
+setClass("tiledb_array",
          slots = list(ctx = "tiledb_ctx",
                       uri = "character",
                       is.sparse = "logical",
@@ -22,9 +22,9 @@ setClass("tiledbArray",
                       extended = "logical",
                       ptr = "externalptr"))
 
-#' Constructs a tiledbArray object backed by a persisted tiledb array uri
+#' Constructs a tiledb_array object backed by a persisted tiledb array uri
 #'
-#' tiledbArray returns a new object. This class is experimental.
+#' tiledb_array returns a new object. This class is experimental.
 #'
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
@@ -37,7 +37,7 @@ setClass("tiledbArray",
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_sparse array object
 #' @export
-tiledbArray <- function(uri,
+tiledb_array <- function(uri,
                         query_type = c("READ", "WRITE"),
                         is.sparse = NA,
                         as.data.frame = FALSE,
@@ -59,7 +59,7 @@ tiledbArray <- function(uri,
   }
   is.sparse <- is_sparse_status
   array_xptr <- libtiledb_array_close(array_xptr)
-  new("tiledbArray",
+  new("tiledb_array",
       ctx = ctx,
       uri = uri,
       is.sparse = is.sparse,
@@ -69,12 +69,12 @@ tiledbArray <- function(uri,
       ptr = array_xptr)
 }
 
-#' Return a schema from a tiledbArray object
+#' Return a schema from a tiledb_array object
 #'
 #' @param object sparse array object
 #' @param ... Extra parameter for function signature, currently unused
 #' @return The scheme for the object
-setMethod("schema", "tiledbArray", function(object, ...) {
+setMethod("schema", "tiledb_array", function(object, ...) {
   ctx <- object@ctx
   uri <- object@uri
   schema_xptr <- libtiledb_array_schema_load(ctx@ptr, uri)
@@ -82,9 +82,9 @@ setMethod("schema", "tiledbArray", function(object, ...) {
 })
 
 setMethod("show",
-          signature = "tiledbArray",
+          signature = "tiledb_array",
           definition = function (object) {
-  cat("tiledbArray\n"
+  cat("tiledb_array\n"
      ,"  uri           = '", object@uri, "'\n"
      ,"  is.sparse     = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
      ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
@@ -95,17 +95,17 @@ setMethod("show",
 })
 
 
-#' Gets a tiledbArray value
+#' Gets a tiledb_array value
 #'
 #' This function is incomplete.
 #'
-#' @param x tiledbArray object
+#' @param x tiledb_array object
 #' @param i row index expression
 #' @param j column index expression
 #' @param ... Extra parameter for method signature
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return An element from the sparse array
-setMethod("[", "tiledbArray",
+setMethod("[", "tiledb_array",
           function(x, i, j, ..., drop = FALSE) {
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
