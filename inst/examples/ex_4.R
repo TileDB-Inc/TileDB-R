@@ -5,7 +5,6 @@ library(tiledb)
 
 ## Name of the array to create.
 array_name <- "ex_4"
-#array_name <- "hetdom_ex2"
 
 ## Path is either current directory, or a local config value is found
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
