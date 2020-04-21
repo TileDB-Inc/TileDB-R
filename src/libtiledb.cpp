@@ -1255,13 +1255,19 @@ int libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema) {
 
 // [[Rcpp::export]]
 bool libtiledb_array_schema_get_allows_dups(XPtr<tiledb::ArraySchema> schema) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   return schema->allows_dups();
+#else
+  return true;
+#endif
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_allows_dups(XPtr<tiledb::ArraySchema> schema,
                                                                  bool allows_dups) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   schema->set_allows_dups(allows_dups);
+#endif
   return schema;
 }
 
