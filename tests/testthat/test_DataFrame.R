@@ -41,11 +41,11 @@ test_that("tiledb_date_datetime_types", {
                    int=1:4,
                    dbl=sqrt(1:4),
                    date=Sys.Date() + 0:3,
-                   datetime=Sys.Date() + 0.3,
+                   datetime=Sys.time() + 0.3,
                    stringsAsFactors = FALSE)
   ## eval() trickery to not formally depend on nanotime which we do not currently have as formal
   ## dependency, or suggestion, of the package, and not installed on the Docker CI images
-  eval("if (requireNamespace(\"nanotime\", quietly=TRUE)) df[,\"nanotime\"] <- nanotime::nanotime(now) + 0:3")
+  #eval("if (requireNamespace(\"nanotime\", quietly=TRUE)) df[,\"nanotime\"] <- nanotime::nanotime(now) + 0:3")
 
   fromDataFrame(df, uri)
 

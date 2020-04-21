@@ -3,7 +3,7 @@
 #ifndef __tiledb_version_h__
 #define __tiledb_version_h__
 
-// create a single 'comparable' number out of version, minor and path
+// create a single 'comparable' number out of version, minor and patch
 #define TileDB_Version(v,m,p)	(((v) * 65536) + ((m) * 256) + (p))
 
 // current build is encoded in TILEDB_VERSION

@@ -49,13 +49,20 @@ tiledb_dense <- function(uri,
   array_xptr <- libtiledb_array_close(array_xptr)
   new("tiledb_dense", ctx = ctx, uri = uri,
       as.data.frame = as.data.frame, attrs = attrs,
-      extended = FALSE, ptr = array_xptr)
+      extended = extended, ptr = array_xptr)
 }
 
-setMethod("show", "tiledb_dense",
-          function (object) {
-            cat("tiledb_dense(uri = \"", object@uri, "\")\n", sep="")
-          })
+setMethod("show",
+          signature = "tiledb_dense",
+          definition = function (object) {
+  cat("tiledb_dense array\n"
+     ,"  uri           = '", object@uri, "'\n"
+     ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
+                            else paste(objects@attrs, sep=","), "\n"
+     ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
+    , sep="")
+  })
 
 #' #' Reopens a TileDB array an opened tiledb array
 #' #'
@@ -201,13 +208,16 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
       buff <- vector(mode = type, length = ncells)
     } else if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
       buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, as.integer(sub), aname)
-    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                               "DATETIME_US", "DATETIME_NS")) {
       buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)
     } else {
       stop("Unsupported data type for attribute ", aname)
     }
     # If its not scalar and we are not getting it as a data.frame set the dimension attribute
-    if (!is_scalar && !array@as.data.frame && !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+    if (!is_scalar && !array@as.data.frame &&
+        !dtype %in% c("CHAR", "DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                      "DATETIME_US", "DATETIME_NS")) {
       attr(buff, "dim") <- sub_dim
     }
     attr(buff, "datatype") <- datatype
@@ -260,13 +270,16 @@ setMethod("[", "tiledb_dense",
               if (aname == "coords") {
                 qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
               } else {
-                if (is.character(val) || is.list(val)) {
-                  qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                } else if (is(val, "externalptr")) {
+                #if (is.character(val) || is.list(val)) {
+                #  stop("var length never implemented")
+                #  #qry <- libtiledb_query_set_buffer_var(qry, aname, val)
+                #} else
+                if (is(val, "externalptr")) {
                   datatype <- attr(val, "datatype")
                   if (datatype == "CHAR") {
                     qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
-                  } else if (datatype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
+                  } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                                             "DATETIME_US", "DATETIME_NS")) {
                     qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
                   } else {
                     stop("Currently unsupported type: ", datatype)
@@ -299,8 +312,9 @@ setMethod("[", "tiledb_dense",
               if (is(old_buffer, "externalptr")) {
                 if (dtype == "CHAR") {
                   old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
-                } else if (dtype %in% c("DATETIME_DAY", "DATETIME_MS", "DATETIME_NS")) {
-                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]], FALSE)
+                } else if (dtype %in% c("DATETIME_DAY", "DATETIME_SEC",
+                                        "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]])
                 } else {
                   stop("Unsupported data type for attribute ", aname)
                 }
@@ -345,10 +359,11 @@ setMethod("[", "tiledb_dense",
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
-              if (is.array(value) || is.vector(value) || isS4(value)) {
+              if (is.array(value) || is.vector(value) ||
+                  isS4(value) || is(value, "Date") || inherits(value, "POSIXt")) {
                 value <- list(value)
               } else {
-                stop("Cannot assign initial value of type '", typeof(value), "'")
+                stop("Cannot assign initial value of type '", typeof(value), "'", call.=FALSE)
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -422,28 +437,28 @@ setMethod("[<-", "tiledb_dense",
             for (idx in seq_along(value)) {
               aname <- attr_names[[idx]]
               val <- value[[idx]]
-              #print(val)
-              #print(class(val))
+
+              attribute <- libtiledb_array_schema_get_attribute_from_name(schema@ptr, aname)
+              attrtype <- libtiledb_attribute_get_type(attribute)
+
               if (is.list(val) || is.character(val)) {
                 ##qry <- libtiledb_query_set_buffer_var(qry, aname, val)
                 n <- ifelse(is.vector(val), length(val), prod(dim(val)))
                 string <- paste(val[1:n], collapse="")
-                ##offs <- seq(1,n) - 1L
                 ## offsets starts: cumulative sum of all word lengths as provided by nchar
                 ## but starting at 0 and then omitting the last
                 offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
                 bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
                 qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
-
               } else if (inherits(val, "Date")) {
-                ## allocates, does not copy
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
                 bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "POSIXt")) {
-                ## allocates, does not copy
-                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_MS", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_MS", val)
+                #cat("*** POSIXt case\n")
+                # could also use DATETIME_SEC here but _MS dominates it with higher resolution
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
               } else if (inherits(val, "nanotime")) {
                 bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_NS", length(val))
@@ -560,7 +575,8 @@ setReplaceMethod("attrs",
   } else {
     pm <- pmatch(value, nm)
     if (any(is.na(pm))) {
-      stop("Multiple partial matches ambiguous: ", paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
+      stop("Multiple partial matches ambiguous: ",
+           paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
     }
     x@attrs <- nm[pm]
   }

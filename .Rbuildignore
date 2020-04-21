@@ -1,7 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
-^\docs
 ^_pgkdown.yml
 ^.*\.tar\.gz$
 ^docs
@@ -12,3 +11,4 @@
 ^inst/examples/array_metadata_array$
 ^\.editorconfig$
 ^src/unused_*cpp.txt$
+^local

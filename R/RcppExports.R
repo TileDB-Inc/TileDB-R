@@ -233,6 +233,14 @@ libtiledb_array_schema_get_capacity <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_capacity`, schema)
 }
 
+libtiledb_array_schema_get_allows_dups <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_allows_dups`, schema)
+}
+
+libtiledb_array_schema_set_allows_dups <- function(schema, allows_dups) {
+    .Call(`_tiledb_libtiledb_array_schema_set_allows_dups`, schema, allows_dups)
+}
+
 libtiledb_array_schema_get_coords_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_coords_filter_list`, schema)
 }
@@ -333,6 +341,14 @@ libtiledb_array_nonempty_domain <- function(array) {
     .Call(`_tiledb_libtiledb_array_nonempty_domain`, array)
 }
 
+libtiledb_array_nonempty_domain_var_from_name <- function(array, name) {
+    .Call(`_tiledb_libtiledb_array_nonempty_domain_var_from_name`, array, name)
+}
+
+libtiledb_array_nonempty_domain_var_from_index <- function(array, idx) {
+    .Call(`_tiledb_libtiledb_array_nonempty_domain_var_from_index`, array, idx)
+}
+
 libtiledb_array_consolidate <- function(ctx, uri, cfgptr = NULL) {
     invisible(.Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri, cfgptr))
 }
@@ -377,8 +393,8 @@ libtiledb_query_set_subarray <- function(query, subarray) {
     .Call(`_tiledb_libtiledb_query_set_subarray`, query, subarray)
 }
 
-libtiledb_query_set_coordinates <- function(query, coords) {
-    .Call(`_tiledb_libtiledb_query_set_coordinates`, query, coords)
+libtiledb_query_set_coordinates <- function(query, coords, dtype) {
+    .Call(`_tiledb_libtiledb_query_set_coordinates`, query, coords, dtype)
 }
 
 libtiledb_query_set_buffer <- function(query, attr, buffer) {
@@ -387,6 +403,10 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
 
 libtiledb_query_buffer_var_char_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
     .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc`, array, subarray, attribute, szoffsets, szdata)
+}
+
+libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata)
 }
 
 libtiledb_query_buffer_var_char_create <- function(intoffsets, data) {
@@ -399,6 +419,10 @@ libtiledb_query_set_buffer_var_char <- function(query, attr, bufptr) {
 
 libtiledb_query_get_buffer_var_char <- function(bufptr) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr)
+}
+
+libtiledb_query_get_buffer_var_char_simple <- function(bufptr) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_var_char_simple`, bufptr)
 }
 
 libtiledb_query_buffer_var_vec_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
@@ -429,8 +453,8 @@ libtiledb_query_set_buffer_ptr <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_set_buffer_ptr`, query, attr, buf)
 }
 
-libtiledb_query_get_buffer_ptr <- function(buf, castDatetime = TRUE) {
-    .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf, castDatetime)
+libtiledb_query_get_buffer_ptr <- function(buf) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf)
 }
 
 libtiledb_query_submit <- function(query) {
@@ -459,6 +483,10 @@ libtiledb_query_get_fragment_uri <- function(query, idx) {
 
 libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
     .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
+}
+
+libtiledb_query_add_range_with_type <- function(query, iidx, typestr, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_query_add_range_with_type`, query, iidx, typestr, starts, ends, strides)
 }
 
 libtiledb_query_get_est_result_size <- function(query, attr) {

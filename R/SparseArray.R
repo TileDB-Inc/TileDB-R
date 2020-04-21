@@ -3,11 +3,17 @@
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription
 #' @slot as.data.frame A logical value
+#' @slot attrs A character vector
+#' @slot extended A logical value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_sparse
 setClass("tiledb_sparse",
-         slots = list(ctx = "tiledb_ctx", uri = "character",
-                      as.data.frame = "logical", ptr = "externalptr"))
+         slots = list(ctx = "tiledb_ctx",
+                      uri = "character",
+                      as.data.frame = "logical",
+                      attrs = "character",
+                      extended = "logical",
+                      ptr = "externalptr"))
 
 #' Constructs a tiledb_sparse object backed by a persisted tiledb array uri
 #'
@@ -16,12 +22,20 @@ setClass("tiledb_sparse",
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
+#' @param attrs optional character vector to select attributes, default is
+#' empty implying all are selected
+#' @param extended optional logical switch selecting wide \sQuote{data.frame}
+#' format, defaults to "TRUE"
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_sparse array object
 #' @export
-tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"),
-                          as.data.frame=FALSE, ctx = tiledb_get_context()) {
-    query_type = match.arg(query_type)
+tiledb_sparse <- function(uri,
+                          query_type = c("READ", "WRITE"),
+                          as.data.frame = FALSE,
+                          attrs = character(),
+                          extended = TRUE,
+                          ctx = tiledb_get_context()) {
+  query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx")) {
     stop("argument ctx must be a tiledb_ctx")
   } else if (missing(uri) || !is.scalar(uri, "character")) {
@@ -35,7 +49,9 @@ tiledb_sparse <- function(uri, query_type = c("READ", "WRITE"),
     stop("array URI must be a sparse array")
   }
   array_xptr <- libtiledb_array_close(array_xptr)
-  new("tiledb_sparse", ctx = ctx, uri = uri, as.data.frame = as.data.frame, ptr = array_xptr)
+  new("tiledb_sparse", ctx = ctx, uri = uri,
+      as.data.frame = as.data.frame, attrs = attrs,
+      extended = extended, ptr = array_xptr)
 }
 
 #' Return a schema from a sparse array
@@ -50,32 +66,44 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
   return(tiledb_array_schema.from_ptr(schema_xptr))
 })
 
-sparse_attribute_buffers <- function(array, sch, dom, sub, filter_attributes=list()) {
+sparse_attribute_buffers <- function(array, sch, dom, sub, selected) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
-  domaintype <- libtiledb_domain_get_type(dom@ptr)
+  #domaintype <- libtiledb_domain_get_type(dom@ptr)
+  domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
+                       libtiledb_dim_get_datatype)
   attributes <- list()
   # first alloc coordinate buffer
-  #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, libtiledb_coords())
+  #print(domaintype)
   ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
-                                                          libtiledb_coords(), domaintype)
-  if (is.integral(dom)) {
-    attributes[["coords"]] <- integer(length = ncells)
-  } else {
-    attributes[["coords"]]  <- numeric(length = ncells)
-  }
-
+                                                          libtiledb_coords(), domaintype[1])
+  attributes[["coords"]] <- libtiledb_query_buffer_alloc_ptr(array@ptr, domaintype[1], ncells)
   attrs <- tiledb::attrs(sch)
-  if (length(filter_attributes) > 0) {
-    attrs <- Filter(function(a) is.element(name(a), filter_attributes), attrs)
+  if (length(selected) == 0) {          # no selection given -> use all
+    selected <- names(attrs)
   }
   # for every attribute, compute the number of cells and allocate vectors
-  for(attr in attrs) {
+  for (attr in attrs) {
     aname <- tiledb::name(attr)
-    type <- tiledb_datatype_R_type(tiledb::datatype(attr))
-    #ncells <- libtiledb_array_max_buffer_elements(array@ptr, sub, aname)
-    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
-    buff <- vector(mode = type, length = ncells)
+    if (! aname %in% selected) {
+      next
+    }
+    dtype <- tiledb::datatype(attr)
+    type <- tiledb_datatype_R_type(dtype)
+    datatype <- libtiledb_attribute_get_type(attr@ptr)
+    #cat("dtype:", dtype, " type:", type, " datatype:", datatype, "\n", sep="")
+    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype[1])
+    if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
+      buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, sub, aname)
+    } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                               "DATETIME_US", "DATETIME_NS")) {
+      buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)
+    } else if (type %in% c("integer", "double")) {
+      buff <- vector(mode = type, length = ncells)
+    } else {
+      stop("Unsupported data type for attribute ", aname)
+    }
+    attr(buff, "datatype") <- datatype
     attributes[[aname]] <- buff
   }
   return(attributes)
@@ -122,7 +150,10 @@ as_data_frame <- function(dom, data, extended=FALSE) {
 #' @return An element from the sparse array
 setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
+            ## helper function to deal with i and/or j missing
             index <- nd_index_from_syscall(sys.call(), parent.frame())
+            #print(str(index))
+            #print(object.size(index))
             # If we have a list of lists of lists we need to remove one layer
             # This happens when a user uses a list of coordinates
             if (isNestedList(index[1])) {
@@ -130,73 +161,101 @@ setMethod("[", "tiledb_sparse",
             }
             ctx <- x@ctx
             uri <- x@uri
+            sel <- x@attrs
             schema <- tiledb::schema(x)
             dom <- tiledb::domain(schema)
-            domaintype <- libtiledb_domain_get_type(dom@ptr)
-            if (!tiledb::is.integral(dom)) {
-              stop("subscript indexing only valid for integral Domain's")
-            }
+
+            nd <- libtiledb_domain_get_ndim(dom@ptr)
+            #domaintype <- libtiledb_domain_get_type(dom@ptr)
+            domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
+                                 libtiledb_dim_get_datatype)
+            #if (!tiledb::is.integral(dom)) {
+            #  stop("subscript indexing only valid for integral Domain's")
+            #}
             libtiledb_array_open_with_ptr(x@ptr, "READ")
-            out <- tryCatch(
-              {
-                subarray <- domain_subarray(dom, index = index)
-                if (is.integral(dom)) {
-                  subarray <- as.integer(subarray)
-                } else {
-                  subarray <- as.double(subarray)
-                }
-                buffers <- sparse_attribute_buffers(x, schema, dom, subarray)
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
-                qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
-                #qry <- libtiledb_query_set_subarray(qry, subarray)
-                qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype)
-                attr_names <- names(buffers)
-                for (idx in seq_along(buffers)) {
-                    aname <- attr_names[[idx]]
-                    val = buffers[[idx]]
-                    if (aname == "coords") {
-                        qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), val)
-                    } else {
-                      if (is.character(val) || is.list(val))
-                          qry <- libtiledb_query_set_buffer_var(qry, aname, val)
-                      else
-                          qry <- libtiledb_query_set_buffer(qry, aname, val)
-                    }
-                }
-                qry <- libtiledb_query_submit(qry)
-                if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in read query (not 'COMPLETE')")
-                }
-                # get the actual number of results, instead of realloc
-                # just modify the vector length so there is no additional copy
-                for (idx in seq_along(attr_names)) {
-                  old_buffer <- buffers[[idx]]
-                  aname <- attr_names[[idx]]
-                  if (aname == "coords") {
-                    ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
+            on.exit(libtiledb_array_close(x@ptr))
+
+            subarray <- domain_subarray(dom, index = index)
+            #print(subarray)
+            if (is.integral(dom)) {
+              subarray <- as.integer(subarray)
+            } else {
+              subarray <- as.double(subarray)
+            }
+            buffers <- sparse_attribute_buffers(x, schema, dom, subarray, sel)
+            qry <- libtiledb_query(ctx@ptr, x@ptr, "READ")
+            qry <- libtiledb_query_set_layout(qry, "COL_MAJOR")
+            #qry <- libtiledb_query_set_subarray(qry, subarray)
+            qry <- libtiledb_query_set_subarray_with_type(qry, subarray, domaintype[1])
+            attr_names <- names(buffers)
+            for (idx in seq_along(buffers)) {
+              aname <- attr_names[[idx]]
+              val <- buffers[[idx]]
+              if (aname == "coords") {
+                qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), val)
+              } else {
+                if (is(val, "externalptr")) {
+                  datatype <- attr(val, "datatype")
+                  if (datatype == "CHAR") {
+                    qry <- libtiledb_query_set_buffer_var_char(qry, aname, val)
+                  } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
+                                             "DATETIME_US", "DATETIME_NS")) {
+                    qry <- libtiledb_query_set_buffer_ptr(qry, aname, val)
                   } else {
-                    ncells <- libtiledb_query_result_buffer_elements(qry, aname)
+                    stop("Currently unsupported type: ", datatype)
                   }
-                  if (ncells < length(old_buffer)) {
-                    buffers[[idx]] <- old_buffer[1:ncells]
-                  }
-                }
-                if (x@as.data.frame) {
-                  return(as_data_frame(dom, buffers))
                 } else {
-                # if there is only one buffer, don't return a list of attribute buffers
-                if (length(buffers) == 1L) {
-                  return(buffers[[1L]])
+                  qry <- libtiledb_query_set_buffer(qry, aname, val)
                 }
-                  return(buffers)
-                }
-              },
-              finally = {
-                libtiledb_array_close(x@ptr)
               }
-            )
-            return(out);
-          })
+            }
+            qry <- libtiledb_query_submit(qry)
+            if (libtiledb_query_status(qry) != "COMPLETE") {
+              stop("error in read query (not 'COMPLETE')")
+            }
+            # get the actual number of results, instead of realloc
+            # just modify the vector length so there is no additional copy
+            for (idx in seq_along(attr_names)) {
+              old_buffer <- buffers[[idx]]
+              aname <- attr_names[[idx]]
+
+              if (aname == "coords") {
+                old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]])
+              } else if (is(old_buffer, "externalptr")) {
+                ##attribute <- libtiledb_array_schema_get_attribute_from_name(schema@ptr, aname)
+                ##attrtype <- libtiledb_attribute_get_type(attribute)
+                dtype <- attr(buffers[[idx]], "datatype")
+                if (dtype == "CHAR") {
+                  old_buffer <- libtiledb_query_get_buffer_var_char(buffers[[idx]])
+                } else if (dtype %in% c("DATETIME_DAY", "DATETIME_SEC",
+                                        "DATETIME_MS", "DATETIME_US", "DATETIME_NS")) {
+                  old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]])
+                } else {
+                  stop("Unsupported data type for attribute ", aname)
+                }
+              }
+
+              if (aname == "coords") {
+                ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
+              } else {
+                ncells <- libtiledb_query_result_buffer_elements(qry, aname)
+              }
+              if (ncells <= length(old_buffer)) {
+                buffers[[idx]] <- old_buffer[1:ncells]
+              } else {
+                buffers[[idx]] <- old_buffer
+              }
+            }
+            if (x@as.data.frame) {
+              return(as_data_frame(dom, buffers, x@extended))
+            } else {
+              ## if there is only one buffer, don't return a list of attribute buffers
+              if (length(buffers) == 1L) {
+                return(buffers[[1L]])
+              }
+              return(buffers)
+            }
+})
 
 #' Sets a sparse array value
 #'
@@ -209,10 +268,11 @@ setMethod("[", "tiledb_sparse",
 setMethod("[<-", "tiledb_sparse",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
-              if (is.array(value) || is.vector(value)) {
+              if (is.array(value) || is.vector(value) ||
+                  isS4(value) || is(value, "Date") || inherits(value, "POSIXt")) {
                 value <- list(value)
               } else {
-                stop(paste("cannot assign value of type \"", typeof(value), "\""))
+                stop("Cannot assign value of type '", typeof(value), "'", call.=FALSE)
               }
             }
             index <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -287,33 +347,63 @@ setMethod("[<-", "tiledb_sparse",
               zip_coords <- libtiledb_zip_coords_numeric(coords, coord_length)
             }
             libtiledb_array_open_with_ptr(x@ptr, "WRITE")
-            out <- tryCatch(
-              {
-                qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
-                qry <- libtiledb_query_set_layout(qry, "UNORDERED")
-                qry <- libtiledb_query_set_coordinates(qry, zip_coords)
-                # set attribute buffers
-                attr_names <- names(value)
-                for (idx in seq_along(value)) {
-                  qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
-                }
-                qry <- libtiledb_query_submit(qry)
-                if (libtiledb_query_status(qry) != "COMPLETE") {
-                  stop("error in incomplete sparse write query")
-                }
-                qry <- libtiledb_query_finalize(qry)
-                return(x);
-              },
-              finally = {
-                libtiledb_array_close(x@ptr)
-              })
-            return(out)
+            on.exit(libtiledb_array_close(x@ptr))
+            qry <- libtiledb_query(ctx@ptr, x@ptr, "WRITE")
+            qry <- libtiledb_query_set_layout(qry, "UNORDERED")
+            domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
+                                 libtiledb_dim_get_datatype)
+            #cat("Zipped coords\n"); print(zip_coords)
+            qry <- libtiledb_query_set_coordinates(qry, zip_coords, domaintype[1])
+            ## set attribute buffers
+            attr_names <- names(value)
+            for (idx in seq_along(value)) {
+              aname <- attr_names[[idx]]
+              val <- value[[idx]]
+              attribute <- libtiledb_array_schema_get_attribute_from_name(schema@ptr, aname)
+              attrtype <- libtiledb_attribute_get_type(attribute)
+
+              if (inherits(val, "POSIXt") || inherits(val, "nanotime")) {
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else if (inherits(val, "Date")) {
+                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
+                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+              } else if (inherits(val, "character")) {
+                n <- ifelse(is.vector(val), length(val), prod(dim(val)))
+                string <- paste(val[1:n], collapse="")
+                ## offsets starts: cumulative sum of all word lengths as provided by nchar
+                ## but starting at 0 and then omitting the last
+                offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
+                bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
+                qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
+              } else {
+                qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
+              }
+            }
+            #cat("About to submit\n")
+            qry <- libtiledb_query_submit(qry)
+            if (libtiledb_query_status(qry) != "COMPLETE") {
+              stop("error in incomplete sparse write query")
+            }
+            qry <- libtiledb_query_finalize(qry)
+            return(x)
           })
 
-setMethod("show", "tiledb_sparse",
-          function (object) {
-            cat("tiledb_sparse(uri = \"", object@uri, "\")\n", sep="")
-          })
+
+setMethod("show",
+          signature = "tiledb_sparse",
+          definition = function (object) {
+  cat("tiledb_sparse array\n"
+     ,"  uri           = '", object@uri, "'\n"
+     ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
+                            else paste(objects@attrs, sep=","), "\n"
+     ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
+    , sep="")
+
+  })
 
 #' Check if object is sparse
 #'
@@ -363,9 +453,15 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
       for (idx in seq_along(buffers)) {
         aname <- attr_names[[idx]]
         if (aname == "coords") {
-          qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
+          if (is(buffers[[idx]], "externalptr")) {
+            qry <- libtiledb_query_set_buffer_ptr(qry, libtiledb_coords(), buffers[[idx]])
+          } else {
+            qry <- libtiledb_query_set_buffer(qry, libtiledb_coords(), buffers[[idx]])
+          }
+        } else if (is(buffers[[idx]], "externalptr")) {
+          qry <- libtiledb_query_set_buffer_ptr(qry, aname, buffers[[idx]])
         } else {
-          qry <-  libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
+          qry <- libtiledb_query_set_buffer(qry, aname, buffers[[idx]])
         }
       }
       qry <- libtiledb_query_submit(qry)
@@ -375,7 +471,11 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
       # get the actual number of results, instead of realloc
       # just modify the vector length so there is no additional copy
       for (idx in seq_along(attr_names)) {
-        old_buffer <- buffers[[idx]]
+        if (is(buffers[[idx]], "externalptr")) {
+          old_buffer <- libtiledb_query_get_buffer_ptr(buffers[[idx]]) #, TRUE, FALSE)
+        } else {
+          old_buffer <- buffers[[idx]]
+        }
         aname <- attr_names[[idx]]
         if (aname == "coords") {
           ncells <- libtiledb_query_result_buffer_elements(qry, libtiledb_coords())
@@ -384,6 +484,8 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
         }
         if (ncells < length(old_buffer)) {
           buffers[[idx]] <- old_buffer[1:ncells]
+        } else {
+          buffers[[idx]] <- old_buffer
         }
       }
       for (i in 1:length(buffers)) {
@@ -405,3 +507,76 @@ tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
   )
   return(out);
 }
+
+## -- as.data.frame accessor (generic in DenseArray.R)
+
+#' Retrieve data.frame return toggle
+#'
+#' A \code{tiledb_sparse} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods returns the selection value.
+#' @param object A \code{tiledb_sparse} array object
+#' @return A logical value indicating whether \code{data.frame} return is selected
+#' @export
+setMethod("return.data.frame",
+          signature = "tiledb_sparse",
+          function(object) object@as.data.frame)
+
+
+## -- as.data.frame setter (generic in DenseArray.R)
+
+#' Set data.frame return toggle
+#'
+#' A \code{tiledb_sparse} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods sets the selection value.
+#' @param x A \code{tiledb_sparse} array object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_sparse} array object
+#' @export
+setReplaceMethod("return.data.frame",
+                 signature = "tiledb_sparse",
+                 function(x, value) {
+  x@as.data.frame <- value
+  validObject(x)
+  x
+})
+
+
+## -- attrs (generic in Attributes.R and DenseArray.R)
+
+#' Retrieve attributes from \code{tiledb_sparse} object
+#'
+#' By default, all attributes will be selected. But if a subset of attribute
+#' names is assigned to the internal slot \code{attrs}, then only those attributes
+#' will be queried.  This methods accesses the slot.
+#' @param object A \code{tiledb_sparse} array object
+#' @return An empty character vector if no attributes have been selected or else
+#' a vector with attributes.
+#' @importFrom methods validObject
+#' @export
+setMethod("attrs",
+          signature = "tiledb_sparse",
+          function(object) object@attrs)
+
+#' Selects attributes for the given TileDB array
+#'
+#' @param x A \code{tiledb_sparse} array object
+#' @param value A character vector with attributes
+#' @return The modified \code{tiledb_sparse} array object
+#' @export
+setReplaceMethod("attrs",
+                 signature = "tiledb_sparse",
+                 function(x, value) {
+  nm <- names(attrs(schema(x)))
+  if (length(nm) == 0) {                # none set so far
+    x@attrs <- value
+  } else {
+    pm <- pmatch(value, nm)
+    if (any(is.na(pm))) {
+      stop("Multiple partial matches ambiguous: ",
+           paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
+    }
+    x@attrs <- nm[pm]
+  }
+  validObject(x)
+  x
+})

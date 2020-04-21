@@ -1,11 +1,14 @@
 
 # Ongoing
 
-* This release of the R package supports [TileDB 1.7.6](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.6)
+* This release of the R package supports [TileDB
+  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.6) as well as
+  the 2.0.0 release candidates
 
 ## Improvements
 
-- Added support for data.frame object import and conversion to dense array
+- Added support for data.frame object import and conversion to dense and
+  sparse arrays
 
 - Added enhanced support for data.frame returns from dense array
 
@@ -13,7 +16,8 @@
 
 - Added support for new filter types for md5 and sha256 checksums
 
-- Added support for Date, Datetime (i.e. POSIXct) and nanosecond dense array attributes
+- Added support for Date, Datetime (i.e. POSIXct) and nanosecond dense and
+  sparse array attributes and domains
 
 ## Changes
 
