@@ -2615,37 +2615,16 @@ void libtiledb_stats_disable() {
 }
 
 // [[Rcpp::export]]
-void libtiledb_stats_dump(std::string path) {
-  FILE* fptr = nullptr;
-  fptr = fopen(path.c_str(), "w");
-  if (fptr == nullptr) {
-    Rcpp::stop("error opening stats dump file for writing");
-  }
-  tiledb::Stats::dump(fptr);
-  fclose(fptr);
-}
-
-// [[Rcpp::export]]
-void libtiledb_stats_print() {
-  // TODO: look up the proper way to do this in R
-  // Done -- at least in a first pass
-  // get a temporary filename from the per-session directory R uses
-  Rcpp::Function rfunc("tempfile");
-  std::string filename = Rcpp::as<std::string>(rfunc());
-  // dump to the file
-  libtiledb_stats_dump(filename);
-
-  // and read and print from the file
-  std::ifstream f(filename);
-  std::string line;
-  if (f.is_open()) {
-    while (getline(f, line)) {
-      Rprintf("%s\n", line.c_str());
+void libtiledb_stats_dump(std::string path = "") {
+  if (path == "") {
+    tiledb::Stats::dump();
+  } else {
+    FILE* fptr = nullptr;
+    fptr = fopen(path.c_str(), "w");
+    if (fptr == nullptr) {
+      Rcpp::stop("error opening stats dump file for writing");
     }
-    f.close();
-  }
-  // remove tempfile (though R would too at end of session)
-  if (unlink(filename.c_str()) == -1) {
-    Rcpp::stop("Error removing temporary file %s", filename.c_str());
+    tiledb::Stats::dump(fptr);
+    fclose(fptr);
   }
 }

@@ -1816,15 +1816,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// libtiledb_stats_print
-void libtiledb_stats_print();
-RcppExport SEXP _tiledb_libtiledb_stats_print() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    libtiledb_stats_print();
-    return R_NilValue;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
@@ -1980,7 +1971,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
     {"_tiledb_libtiledb_stats_dump", (DL_FUNC) &_tiledb_libtiledb_stats_dump, 1},
-    {"_tiledb_libtiledb_stats_print", (DL_FUNC) &_tiledb_libtiledb_stats_print, 0},
     {NULL, NULL, 0}
 };
 

@@ -609,11 +609,7 @@ libtiledb_stats_disable <- function() {
     invisible(.Call(`_tiledb_libtiledb_stats_disable`))
 }
 
-libtiledb_stats_dump <- function(path) {
+libtiledb_stats_dump <- function(path = "") {
     invisible(.Call(`_tiledb_libtiledb_stats_dump`, path))
-}
-
-libtiledb_stats_print <- function() {
-    invisible(.Call(`_tiledb_libtiledb_stats_print`))
 }
 
