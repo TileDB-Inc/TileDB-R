@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <unistd.h>
-#include <Rcpp.h>
+
 using namespace Rcpp;
 
 // [[Rcpp::plugins(cpp11)]]
@@ -1419,7 +1419,7 @@ std::string libtiledb_array_query_type(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
+List libtiledb_array_get_non_empty_domain(XPtr<tiledb::Array> array) {
   List nonempty_domain;
   auto domain = array->schema().domain();
   if (domain.type() == TILEDB_INT32) {
@@ -1447,8 +1447,8 @@ List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array> array,
-                                                              std::string name) {
+CharacterVector libtiledb_array_get_non_empty_domain_var_from_name(XPtr<tiledb::Array> array,
+                                                                   std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
   auto res = array->non_empty_domain_var(name);
   return CharacterVector::create(res.first, res.second);
@@ -1458,8 +1458,8 @@ CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array
 }
 
 // [[Rcpp::export]]
-CharacterVector libtiledb_array_nonempty_domain_var_from_index(XPtr<tiledb::Array> array,
-                                                               int32_t idx) {
+CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb::Array> array,
+                                                                    int32_t idx) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
   auto domain = array->schema().domain();
   if (domain.type() == TILEDB_STRING_ASCII) {
@@ -1474,6 +1474,21 @@ CharacterVector libtiledb_array_nonempty_domain_var_from_index(XPtr<tiledb::Arra
   return CharacterVector::create("NA", "NA");
 #endif
 }
+
+
+// [[Rcpp::export]]
+NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> array,
+                                                          int32_t idx,
+                                                          std::string typestr) {
+  if (typestr == "DATETIME_NS") {
+    auto p = array->non_empty_domain<int64_t>(idx);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeNanotime(v);
+  } else {
+    return NumericVector::create(NA_REAL, NA_REAL);
+  }
+}
+
 
 // [[Rcpp::export]]
 void libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
@@ -2109,16 +2124,9 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     return dd;
   } else if (dtype == "DATETIME_NS") {
     int n = buf->ncells;
-    std::vector<int64_t> tt(n);
-    std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-    NumericVector dd(n);
-    std::memcpy(&(dd[0]), tt.data(), n*buf->size);
-    Rcpp::CharacterVector cl = Rcpp::CharacterVector::create("nanotime");
-    cl.attr("package") = "nanotime";
-    dd.attr(".S3Class") = "integer64";
-    dd.attr("class") = cl;
-    SET_S4_OBJECT(dd);
-    return dd;
+    std::vector<int64_t> vec(n);
+    std::memcpy(vec.data(), buf->vec.data(), n*buf->size);
+    return makeNanotime(vec);
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());
   }

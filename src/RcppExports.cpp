@@ -977,38 +977,51 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_array_nonempty_domain
-List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array);
-RcppExport SEXP _tiledb_libtiledb_array_nonempty_domain(SEXP arraySEXP) {
+// libtiledb_array_get_non_empty_domain
+List libtiledb_array_get_non_empty_domain(XPtr<tiledb::Array> array);
+RcppExport SEXP _tiledb_libtiledb_array_get_non_empty_domain(SEXP arraySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_nonempty_domain(array));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_get_non_empty_domain(array));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_array_nonempty_domain_var_from_name
-CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array> array, std::string name);
-RcppExport SEXP _tiledb_libtiledb_array_nonempty_domain_var_from_name(SEXP arraySEXP, SEXP nameSEXP) {
+// libtiledb_array_get_non_empty_domain_var_from_name
+CharacterVector libtiledb_array_get_non_empty_domain_var_from_name(XPtr<tiledb::Array> array, std::string name);
+RcppExport SEXP _tiledb_libtiledb_array_get_non_empty_domain_var_from_name(SEXP arraySEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_nonempty_domain_var_from_name(array, name));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_get_non_empty_domain_var_from_name(array, name));
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_array_nonempty_domain_var_from_index
-CharacterVector libtiledb_array_nonempty_domain_var_from_index(XPtr<tiledb::Array> array, int32_t idx);
-RcppExport SEXP _tiledb_libtiledb_array_nonempty_domain_var_from_index(SEXP arraySEXP, SEXP idxSEXP) {
+// libtiledb_array_get_non_empty_domain_var_from_index
+CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb::Array> array, int32_t idx);
+RcppExport SEXP _tiledb_libtiledb_array_get_non_empty_domain_var_from_index(SEXP arraySEXP, SEXP idxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< int32_t >::type idx(idxSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_nonempty_domain_var_from_index(array, idx));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_get_non_empty_domain_var_from_index(array, idx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_non_empty_domain_from_index
+NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> array, int32_t idx, std::string typestr);
+RcppExport SEXP _tiledb_libtiledb_array_non_empty_domain_from_index(SEXP arraySEXP, SEXP idxSEXP, SEXP typestrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< int32_t >::type idx(idxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_non_empty_domain_from_index(array, idx, typestr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1902,9 +1915,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_reopen", (DL_FUNC) &_tiledb_libtiledb_array_reopen, 1},
     {"_tiledb_libtiledb_array_close", (DL_FUNC) &_tiledb_libtiledb_array_close, 1},
     {"_tiledb_libtiledb_array_query_type", (DL_FUNC) &_tiledb_libtiledb_array_query_type, 1},
-    {"_tiledb_libtiledb_array_nonempty_domain", (DL_FUNC) &_tiledb_libtiledb_array_nonempty_domain, 1},
-    {"_tiledb_libtiledb_array_nonempty_domain_var_from_name", (DL_FUNC) &_tiledb_libtiledb_array_nonempty_domain_var_from_name, 2},
-    {"_tiledb_libtiledb_array_nonempty_domain_var_from_index", (DL_FUNC) &_tiledb_libtiledb_array_nonempty_domain_var_from_index, 2},
+    {"_tiledb_libtiledb_array_get_non_empty_domain", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain, 1},
+    {"_tiledb_libtiledb_array_get_non_empty_domain_var_from_name", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain_var_from_name, 2},
+    {"_tiledb_libtiledb_array_get_non_empty_domain_var_from_index", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain_var_from_index, 2},
+    {"_tiledb_libtiledb_array_non_empty_domain_from_index", (DL_FUNC) &_tiledb_libtiledb_array_non_empty_domain_from_index, 3},
     {"_tiledb_libtiledb_array_consolidate", (DL_FUNC) &_tiledb_libtiledb_array_consolidate, 3},
     {"_tiledb_libtiledb_array_put_metadata", (DL_FUNC) &_tiledb_libtiledb_array_put_metadata, 3},
     {"_tiledb_libtiledb_array_get_metadata_num", (DL_FUNC) &_tiledb_libtiledb_array_get_metadata_num, 1},
