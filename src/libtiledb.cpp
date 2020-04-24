@@ -1480,6 +1480,7 @@ CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb:
 NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> array,
                                                           int32_t idx,
                                                           std::string typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   if (typestr == "DATETIME_NS") {
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
@@ -1487,6 +1488,9 @@ NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> ar
   } else {
     return NumericVector::create(NA_REAL, NA_REAL);
   }
+#else
+  return NumericVector::create(NA_REAL, NA_REAL);
+#endif
 }
 
 
