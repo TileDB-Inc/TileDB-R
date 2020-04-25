@@ -120,7 +120,8 @@ setGeneric("is.integral", function(object) standardGeneric("is.integral"))
 setMethod("is.integral", "tiledb_domain",
           function(object) {
             dt <- datatype(object)
-            return(ifelse(dt == "FLOAT32" || dt == "FLOAT64", FALSE, TRUE))
+            res <- dt %in% c("FLOAT32","FLOAT64")
+            return(!res)
           })
 
 #' Retrieve the dimension (domain extent) of the domain
@@ -137,8 +138,8 @@ setMethod("is.integral", "tiledb_domain",
 #' @export
 dim.tiledb_domain <- function(x) {
   dtype <- datatype(x)
-  if (dtype == "FLOAT32" || dtype == "FLOAT64")  {
-   stop("dim() is only defined for integral domains")
+  if (dtype %in% c("FLOAT32", "FLOAT64")) {
+    stop("dim() is only defined for integral domains")
   }
   return(vapply(dimensions(x), dim, integer(1L)))
 }
