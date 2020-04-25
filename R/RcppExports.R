@@ -425,8 +425,8 @@ libtiledb_query_set_buffer_var_char <- function(query, attr, bufptr) {
     .Call(`_tiledb_libtiledb_query_set_buffer_var_char`, query, attr, bufptr)
 }
 
-libtiledb_query_get_buffer_var_char <- function(bufptr) {
-    .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr)
+libtiledb_query_get_buffer_var_char <- function(bufptr, len = 0L, nchar = 0L) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr, len, nchar)
 }
 
 libtiledb_query_get_buffer_var_char_simple <- function(bufptr) {

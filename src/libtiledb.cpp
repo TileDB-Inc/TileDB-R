@@ -1879,15 +1879,21 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
   return query;
 }
 
+// 'len' is the length of the query result set, i.e. buffer elements for standard columns
+// 'nchar' is the length of the result set for the particular column, i.e. actual (ex-pos)
+//    string length in bufptr (as opposed to ex-ante guess)
 // [[Rcpp::export]]
-CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr) {
-  size_t n = bufptr->offsets.size();
+CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
+                                                    int32_t len=0, int32_t nchar=0) {
+  size_t n = (len==0 ? bufptr->offsets.size() : len);
+  //Rprintf("n=%d, strsize=%d, row %d col %d, nchar %d\n",
+  //        n, bufptr->str.size(), bufptr->rows, bufptr->cols, nchar);
   std::vector<uint64_t> str_sizes(n);
   for (size_t i = 0; i < n - 1; i++) {                          // all but last
+    //Rprintf("%d %d %d\n", i, bufptr->offsets[i + 1] , bufptr->offsets[i]);
     str_sizes[i] = bufptr->offsets[i + 1] - bufptr->offsets[i];
   }                                                             // last is total size minus last start
-  str_sizes[n-1] = bufptr->str.size() * sizeof(char) - bufptr->offsets[n-1];
-
+  str_sizes[n-1] = (nchar==0 ? bufptr->str.size() * sizeof(char) : nchar) - bufptr->offsets[n-1];
   // Get the strings
   CharacterMatrix mat(bufptr->rows, bufptr->cols);
   for (size_t i = 0; i < n; i++) {
@@ -2311,8 +2317,8 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
              typestr == "DATETIME_MS" ||
              typestr == "DATETIME_US" ||
              typestr == "DATETIME_NS") {
-    int64_t start = as<int64_t>(starts);
-    int64_t end = as<int64_t>(ends);
+    int64_t start = makeScalarInteger64(as<double>(starts));
+    int64_t end = makeScalarInteger64(as<double>(ends));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {

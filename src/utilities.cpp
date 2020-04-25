@@ -38,3 +38,12 @@ Rcpp::NumericVector makeInteger64(const std::vector<int64_t>& vec) {
   num.attr("class") = "integer64";
   return(num);
 }
+
+
+// Convert to a scalar int64_t
+//
+int64_t makeScalarInteger64(const double val) {
+  int64_t newval;
+  memcpy(&newval, &val, sizeof(double));
+  return newval;
+}

@@ -1249,13 +1249,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_get_buffer_var_char
-CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr);
-RcppExport SEXP _tiledb_libtiledb_query_get_buffer_var_char(SEXP bufptrSEXP) {
+CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr, int32_t len, int32_t nchar);
+RcppExport SEXP _tiledb_libtiledb_query_get_buffer_var_char(SEXP bufptrSEXP, SEXP lenSEXP, SEXP ncharSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<vlc_buf_t> >::type bufptr(bufptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_var_char(bufptr));
+    Rcpp::traits::input_parameter< int32_t >::type len(lenSEXP);
+    Rcpp::traits::input_parameter< int32_t >::type nchar(ncharSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_buffer_var_char(bufptr, len, nchar));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1951,7 +1953,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_buffer_var_char_alloc_direct", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc_direct, 2},
     {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char, 3},
-    {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 1},
+    {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_char_simple", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char_simple, 1},
     {"_tiledb_libtiledb_query_buffer_var_vec_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_alloc, 5},
     {"_tiledb_libtiledb_query_buffer_var_vec_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_create, 2},
