@@ -114,7 +114,14 @@ tiledb_get_all_metadata <- function(arr) {
   return(res)
 }
 
+##' Print a TileDB Array Metadata object
+##'
+##' @param x A TileDB array object
+##' @param width Optional display width, defaults to NULL
+##' @param ... Optional method arguments, currently unused
+##' @return The array object, invisibly
 ##' @export
+##' @method print tiledb_metadata
 print.tiledb_metadata <- function(x, width=NULL, ...) {
   nm <- names(x)
   for (i in 1:length(nm)) {
