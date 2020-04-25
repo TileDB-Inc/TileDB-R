@@ -1459,19 +1459,42 @@ CharacterVector libtiledb_array_get_non_empty_domain_var_from_name(XPtr<tiledb::
 
 // [[Rcpp::export]]
 CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb::Array> array,
-                                                                    int32_t idx) {
+                                                                    int32_t idx,
+                                                                    std::string typestr) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  auto domain = array->schema().domain();
-  if (domain.type() == TILEDB_STRING_ASCII) {
+  //auto domain = array->schema().domain();
+  if (typestr == "ASCII") {
     auto res = array->non_empty_domain_var(idx);
     return CharacterVector::create(res.first, res.second);
   } else {
-    Rcpp::stop("Invalid tiledb_schema domain type: '%s'", _tiledb_datatype_to_string(domain.type()));
+    Rcpp::stop("Invalid tiledb_schema domain type: '%s'", typestr.c_str());
   }
   // not reached
   return CharacterVector::create("", "");
 #else
   return CharacterVector::create("NA", "NA");
+#endif
+}
+
+// [[Rcpp::export]]
+NumericVector libtiledb_array_non_empty_domain_from_name(XPtr<tiledb::Array> array,
+                                                         std::string name,
+                                                         std::string typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+  if (typestr == "DATETIME_NS") {
+    auto p = array->non_empty_domain<int64_t>(name);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeNanotime(v);
+  } else if (typestr == "INT64") {
+    auto p = array->non_empty_domain<int64_t>(name);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeInteger64(v);
+  } else {
+    Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
+    return NumericVector::create(NA_REAL, NA_REAL); // not reached
+  }
+#else
+  return NumericVector::create(NA_REAL, NA_REAL);
 #endif
 }
 
@@ -1485,8 +1508,13 @@ NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> ar
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
     return makeNanotime(v);
+  } else if (typestr == "INT64") {
+    auto p = array->non_empty_domain<int64_t>(idx);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeInteger64(v);
   } else {
-    return NumericVector::create(NA_REAL, NA_REAL);
+    Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
+    return NumericVector::create(NA_REAL, NA_REAL); // not reached
   }
 #else
   return NumericVector::create(NA_REAL, NA_REAL);
@@ -2267,8 +2295,16 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     }
   } else if (typestr == "INT64" ||
              typestr == "UINT64" ||
-             typestr == "UINT32" ||
-             typestr == "DATETIME_DAY" ||
+             typestr == "UINT32") {
+    int64_t start = as<int64_t>(starts);
+    int64_t end = as<int64_t>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      int64_t stride = as<int64_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (typestr == "DATETIME_DAY" ||
              typestr == "DATETIME_HR"  ||
              typestr == "DATETIME_MIN" ||
              typestr == "DATETIME_SEC" ||
