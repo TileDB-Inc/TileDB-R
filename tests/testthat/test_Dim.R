@@ -77,6 +77,6 @@ test_that("tiledb_dim dim() method", {
   d <- tiledb_dim("", c(-1L, 100L))
   expect_equal(dim(d), 102L)
 
-  d <- tiledb_dim("", c(1, 100))
-  expect_error(dim(d))
+  #d <- tiledb_dim("", c(1, 100))
+  #expect_error(dim(d))
 })
