@@ -164,7 +164,7 @@ is.anonymous.tiledb_dim <- function(object) {
 #' @export
 dim.tiledb_dim <- function(x) {
   dtype <- datatype(x)
-  if (dtype %in% c("FLOAT32", "FLOAT64")) {
+  if (isTRUE(any(sapply(dtype, match, c("FLOAT32","FLOAT32"))))) {
     stop("dim() is only defined for integral domains")
   }
   dom <- domain(x)
