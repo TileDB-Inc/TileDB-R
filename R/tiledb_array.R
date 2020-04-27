@@ -115,7 +115,8 @@ setMethod("[", "tiledb_array",
   ## keep unevaluated substitute expressions
   is <- substitute(i)
   js <- substitute(j)
-  #print(is); print(str(is))l #print(is[[2]])
+  #print(is); print(is.null(is)); print(is[[2]])
+  #print(js); print(is.null(js)); print(js[[2]])
   ## -- evaluates first, not useful  print(str(enquote(i)))
   ## -- creates char, not useful     print(str(deparse(substitute(i))))
 
@@ -154,16 +155,44 @@ setMethod("[", "tiledb_array",
     }
   }
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
-  print(nonemptydom)
+  #print(str(nonemptydom))
 
-  #ymbol_range <- c("A", "ZZZ")
-  symbol_range <- c("TSLA", "TSLA")
-  time_range <- c(nanotime("2020-01-30T08:30:00.000000000+00:00"),
-                  nanotime("2020-01-30T09:00:00.000000000+00:00"))
+  symbol_range <- nonemptydom$symbol
+  time_range <- nonemptydom$timestamp
+
+  #symbol_range <- c("A", "ZZZ")
+  #symbol_range <- c("TSLA", "TSLA")
+  #time_range <- c(nanotime("2020-01-30T08:30:00.000000000+00:00"),
+  #                nanotime("2020-01-30T09:00:00.000000000+00:00"))
+  #time_range <- c(nanotime("2020-01-30T00:00:00.000000000+00:00"),
+  #                nanotime("2020-01-30T23:59:59.999999999+00:00"))
+
 
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
-  qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], time_range[1], time_range[2])
-  qryptr <- libtiledb_query_add_range(qryptr, 1, symbol_range[1], symbol_range[2])
+
+  ## first dimension
+  if (is.null(is)) {
+    qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], time_range[1], time_range[2])
+  } else {
+    if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
+    if (length(is) == 1) stop("No content to parse in row argument.")
+    for (i in 2:length(is)) {
+      el <- is[[i]]
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], min(eval(el)), max(eval(el)))
+    }
+  }
+
+  ## second dimension
+  if (is.null(js)) {
+    qryptr <- libtiledb_query_add_range(qryptr, 1, symbol_range[1], symbol_range[2])
+  } else {
+    if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
+    if (length(js) == 1) stop("No content to parse in col argument.")
+    for (i in 2:length(js)) {
+      el <- js[[i]]
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], min(eval(el)), max(eval(el)))
+    }
+  }
 
   tsm <- libtiledb_query_get_est_result_size(qryptr, "timestamp")
   symm <- libtiledb_query_get_est_result_size_var(qryptr, "symbol")
