@@ -349,8 +349,8 @@ libtiledb_array_get_non_empty_domain_var_from_index <- function(array, idx, type
     .Call(`_tiledb_libtiledb_array_get_non_empty_domain_var_from_index`, array, idx, typestr)
 }
 
-libtiledb_array_non_empty_domain_from_name <- function(array, name, typestr) {
-    .Call(`_tiledb_libtiledb_array_non_empty_domain_from_name`, array, name, typestr)
+libtiledb_array_get_non_empty_domain_from_name <- function(array, name, typestr) {
+    .Call(`_tiledb_libtiledb_array_get_non_empty_domain_from_name`, array, name, typestr)
 }
 
 libtiledb_array_non_empty_domain_from_index <- function(array, idx, typestr) {

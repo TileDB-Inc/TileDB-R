@@ -1477,9 +1477,9 @@ CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb:
 }
 
 // [[Rcpp::export]]
-NumericVector libtiledb_array_non_empty_domain_from_name(XPtr<tiledb::Array> array,
-                                                         std::string name,
-                                                         std::string typestr) {
+NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array> array,
+                                                             std::string name,
+                                                             std::string typestr) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
   if (typestr == "DATETIME_NS") {
     auto p = array->non_empty_domain<int64_t>(name);
