@@ -802,6 +802,7 @@ NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript)
 
 // [[Rcpp::export]]
 int libtiledb_dim_get_cell_val_num(XPtr<tiledb::Dimension> dim) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   unsigned int ncells = dim->cell_val_num();
   if (ncells == TILEDB_VAR_NUM) {
     return R_NaInt;          // set to R's NA for integer
@@ -809,6 +810,9 @@ int libtiledb_dim_get_cell_val_num(XPtr<tiledb::Dimension> dim) {
     Rcpp::stop("tiledb_attr ncells value not representable as an R integer");
   }
   return static_cast<int32_t>(ncells);
+#else
+  return R_NaInt;
+#endif
 }
 
 
