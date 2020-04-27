@@ -800,6 +800,17 @@ NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript)
   return wrap(sub);
 }
 
+// [[Rcpp::export]]
+int libtiledb_dim_get_cell_val_num(XPtr<tiledb::Dimension> dim) {
+  unsigned int ncells = dim->cell_val_num();
+  if (ncells == TILEDB_VAR_NUM) {
+    return R_NaInt;          // set to R's NA for integer
+  } else if (ncells > std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("tiledb_attr ncells value not representable as an R integer");
+  }
+  return static_cast<int32_t>(ncells);
+}
+
 
 /**
  * TileDB Domain
@@ -1026,8 +1037,13 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     attr->set_filter_list(*filter_list);
     return attr;
+  } else if (attr_dtype == TILEDB_INT64) {
+    //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+    attr->set_filter_list(*filter_list);
+    return attr;
   } else {
-    Rcpp::stop("Only integer (INT32), logical (INT32), real (FLOAT64), "
+    Rcpp::stop("Only integer (INT32,INT64), logical (INT32), real (FLOAT64), "
                "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
                "nanotime (DATETIME_NS) and character (CHAR) attributes "
                "are supported");
@@ -2091,6 +2107,10 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
   } else if (dtype == "DATETIME_NS") {
     // nanosecond time uses the nanotime package which uses the bit64 package
     // to store the int64_t 'payload' on 64-bit double, so memcpy does the trick
+    NumericVector v(vec);
+    std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+  } else if (dtype == "INT64") {
+    // integer64 from the bit64 package uses doubles, see nanosecond
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
   } else {

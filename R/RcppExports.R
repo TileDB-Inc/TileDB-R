@@ -81,6 +81,10 @@ dim_domain_subarray <- function(domain, subscript) {
     .Call(`_tiledb_dim_domain_subarray`, domain, subscript)
 }
 
+libtiledb_dim_get_cell_val_num <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_get_cell_val_num`, dim)
+}
+
 libtiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_libtiledb_domain`, ctx, dims)
 }
