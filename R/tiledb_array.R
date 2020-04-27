@@ -105,11 +105,19 @@ setMethod("show",
 #' @param ... Extra parameter for method signature
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return An element from the sparse array
+#' @import nanotime
 setMethod("[", "tiledb_array",
           function(x, i, j, ..., drop = FALSE) {
+  ## add defaults
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
-  ##if (missing(...)) ... <- NULL
+
+  ## keep unevaluated substitute expressions
+  is <- substitute(i)
+  js <- substitute(j)
+  #print(is); print(str(is))l #print(is[[2]])
+  ## -- evaluates first, not useful  print(str(enquote(i)))
+  ## -- creates char, not useful     print(str(deparse(substitute(i))))
 
   #cat("\ni:\n"); print(str(i))
   #cat("\nj:\n"); print(str(j))
@@ -122,19 +130,89 @@ setMethod("[", "tiledb_array",
   sch <- tiledb::schema(x)
   dom <- tiledb::domain(sch)
 
-  ## d1r <- vector(mode="numeric", length=3)
-  ## d2r <- vector(mode="integer", length=3)
-  ## ar <- vector(mode="integer", length=3)
-  ## tiledb_array_open(x, "READ")
-  ## qry <- tiledb:::libtiledb_query(x@ctx@ptr, x@ptr, "READ")
-  ## qry <- tiledb:::libtiledb_query_set_buffer(qry, "d1", d1r)
-  ## qry <- tiledb:::libtiledb_query_set_buffer(qry, "d2", d2r)
-  ## qry <- tiledb:::libtiledb_query_set_buffer(qry, "a", ar)
-  ## qry <- tiledb:::libtiledb_query_set_layout(qry, "UNORDERED")
-  ## qry <- tiledb:::libtiledb_query_add_range(qry, 0, 1.15, 1.35)
-  ## qry <- tiledb:::libtiledb_query_add_range(qry, 1, 2L, 4L)
-  ## qry <- tiledb:::libtiledb_query_submit(qry)
+  libtiledb_array_open_with_ptr(x@ptr, "READ")
+  on.exit(libtiledb_array_close(x@ptr))
+
+  dims <- tiledb::dimensions(dom)
+  dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
+  dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
+
+  attrs <- tiledb::attrs(schema(x))
+  attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
+  attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
+  #print(c(dimnames, attrnames))
+  #print(c(dimtypes, attrtypes))
+
+  arrptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
+
+  ## helper function to sweep over names and types of domain
+  getDomain <- function(nm, tp) {
+    if (tp %in% c("ASCII", "CHAR")) {
+      libtiledb_array_get_non_empty_domain_var_from_name(arrptr, nm)
+    } else {
+      libtiledb_array_get_non_empty_domain_from_name(arrptr, nm, tp)
+    }
+  }
+  nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
+  print(nonemptydom)
+
+  #ymbol_range <- c("A", "ZZZ")
+  symbol_range <- c("TSLA", "TSLA")
+  time_range <- c(nanotime("2020-01-30T08:30:00.000000000+00:00"),
+                  nanotime("2020-01-30T09:00:00.000000000+00:00"))
+
+  qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
+  qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], time_range[1], time_range[2])
+  qryptr <- libtiledb_query_add_range(qryptr, 1, symbol_range[1], symbol_range[2])
+
+  tsm <- libtiledb_query_get_est_result_size(qryptr, "timestamp")
+  symm <- libtiledb_query_get_est_result_size_var(qryptr, "symbol")
+  shm <- libtiledb_query_get_est_result_size(qryptr, "shares")
+  prm <- libtiledb_query_get_est_result_size(qryptr, "price")
+  resrv <- max(tsm, shm, prm)
+
+  tsbuf <- libtiledb_query_buffer_alloc_ptr(arrptr, dimtypes[1], resrv)
+  qryptr <- libtiledb_query_set_buffer_ptr(qryptr, dimnames[1], tsbuf)
+
+  symbuf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
+  qryptr <- libtiledb_query_set_buffer_var_char(qryptr, dimnames[2], symbuf)
+
+  shbuf <- libtiledb_query_buffer_alloc_ptr(arrptr, attrtypes[1], resrv)
+  qryptr <- libtiledb_query_set_buffer_ptr(qryptr, attrnames[1], shbuf)
+
+  prbuf <- libtiledb_query_buffer_alloc_ptr(arrptr, attrtypes[2], resrv)
+  qryptr <- libtiledb_query_set_buffer_ptr(qryptr, attrnames[2], prbuf)
+
+  qryptr <- libtiledb_query_submit(qryptr)
+  libtiledb_array_close(arrptr)
+
+  tsm <- libtiledb_query_result_buffer_elements(qryptr, "timestamp")
+  symm <- libtiledb_query_result_buffer_elements(qryptr, "symbol")
+  shm <- libtiledb_query_result_buffer_elements(qryptr, "shares")
+  prm <- libtiledb_query_result_buffer_elements(qryptr, "price")
+  resrv <- max(tsm, shm, prm)
+
+  res <- data.frame(times = libtiledb_query_get_buffer_ptr(tsbuf),
+                    symbols = libtiledb_query_get_buffer_var_char(symbuf, resrv, symm)[,1],
+                    shares = libtiledb_query_get_buffer_ptr(shbuf),
+                    prices = libtiledb_query_get_buffer_ptr(prbuf))[1:resrv,]
 
 
-  invisible(NULL)
+  #print(libtiledb_query_get_buffer_var_char_simple(symbuf))
+  #print(nsym <- libtiledb_query_result_buffer_elements(qryptr, "symbol"))
+  #print(syms <- libtiledb_query_get_buffer_var_char_sized(symbuf, resrv))
+#  print(syms <- libtiledb_query_get_buffer_var_char(symbuf))
+
+  ## by dim object name
+  ## for (i in seq_along(dimnames)) {
+  ##   #cat(sprintf("%d %s %s\n", i, dimnames[i], dimtypes[i]))
+  ##   if (dimtypes[i] %in% c("ASCII", "CHAR")) {
+  ##     print(libtiledb_array_get_non_empty_domain_var_from_name(arrptr, dimnames[i]))
+  ##   } else {
+  ##     #print(format(libtiledb_array_non_empty_domain_from_index(arrptr, i-1, dimtypes[i])))
+  ##     print(libtiledb_array_non_empty_domain_from_name(arrptr, dimnames[i], dimtypes[i]))
+  ##   }
+  ## }
+
+  invisible(res)
 })
