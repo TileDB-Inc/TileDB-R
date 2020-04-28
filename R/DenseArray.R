@@ -59,7 +59,7 @@ setMethod("show",
      ,"  uri           = '", object@uri, "'\n"
      ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
      ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
-                            else paste(objects@attrs, sep=","), "\n"
+                            else paste(object@attrs, sep=","), "\n"
      ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
     , sep="")
   })
