@@ -20,7 +20,7 @@ that this is a \emph{required} parameter.}
 
 \item{filter_list}{(default filter_list("NONE")) The tiledb_attr filter_list}
 
-\item{ncells}{(default 1) The number of cells, must be 1 for now}
+\item{ncells}{(default 1) The number of cells, use \code{NA} to signal variable length}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }
