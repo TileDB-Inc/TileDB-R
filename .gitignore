@@ -38,3 +38,7 @@ autom4te.cache
 # local sketches
 src/unused*
 local*
+# ggtags
+GPATH
+GRTAGS
+GTAGS
