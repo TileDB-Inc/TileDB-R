@@ -112,18 +112,9 @@ setMethod("[", "tiledb_array",
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
 
-  ## keep unevaluated substitute expressions
+  ## keep unevaluated substitute expressions, creates a language object we can subset
   is <- substitute(i)
   js <- substitute(j)
-  #print(is); print(is.null(is)); print(is[[2]])
-  #print(js); print(is.null(js)); print(js[[2]])
-  ## -- evaluates first, not useful  print(str(enquote(i)))
-  ## -- creates char, not useful     print(str(deparse(substitute(i))))
-
-  #cat("\ni:\n"); print(str(i))
-  #cat("\nj:\n"); print(str(j))
-  #cat("\n...:\n"); print(str(...))
-  #print(...length())
 
   ctx <- x@ctx
   uri <- x@uri
@@ -159,19 +150,12 @@ setMethod("[", "tiledb_array",
     }
   }
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
-  #print(str(nonemptydom))
-
-  #symbol_range <- c("A", "ZZZ")
-  #symbol_range <- c("TSLA", "TSLA")
-  #time_range <- c(nanotime("2020-01-30T08:30:00.000000000+00:00"),
-  #                nanotime("2020-01-30T09:00:00.000000000+00:00"))
-  #time_range <- c(nanotime("2020-01-30T00:00:00.000000000+00:00"),
-  #                nanotime("2020-01-30T23:59:59.999999999+00:00"))
 
 
+  ## open array
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
 
-  ## first dimension
+  ## set range(s) on first dimension
   if (is.null(is)) {
     qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], nonemptydom[[1]][1], nonemptydom[[1]][2])
   } else {
@@ -183,7 +167,7 @@ setMethod("[", "tiledb_array",
     }
   }
 
-  ## second dimension
+  ## set range(s) on  second dimension
   if (is.null(js)) {
     qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], nonemptydom[[2]][1], nonemptydom[[2]][2])
   } else {
@@ -195,6 +179,7 @@ setMethod("[", "tiledb_array",
     }
   }
 
+  ## retrieve est_result_size
   getEstimatedSize <- function(name, varnum, qryptr) {
     if (is.na(varnum))
       libtiledb_query_get_est_result_size_var(qryptr, name)[1]
@@ -203,9 +188,8 @@ setMethod("[", "tiledb_array",
   }
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(ressizes)
-  #print(ressizes)
-  #print(resrv)
 
+  ## allocate and set buffers
   getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
     if (is.na(varnum)) {
       buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
@@ -221,23 +205,12 @@ setMethod("[", "tiledb_array",
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                     SIMPLIFY=FALSE)
 
-  ## tsbuf <- libtiledb_query_buffer_alloc_ptr(arrptr, dimtypes[1], resrv)
-  ## qryptr <- libtiledb_query_set_buffer_ptr(qryptr, dimnames[1], tsbuf)
 
-  ## symbuf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
-  ## qryptr <- libtiledb_query_set_buffer_var_char(qryptr, dimnames[2], symbuf)
-
-  ## shbuf <- libtiledb_query_buffer_alloc_ptr(arrptr, attrtypes[1], resrv)
-  ## qryptr <- libtiledb_query_set_buffer_ptr(qryptr, attrnames[1], shbuf)
-
-  ## prbuf <- libtiledb_query_buffer_alloc_ptr(arrptr, attrtypes[2], resrv)
-  ## qryptr <- libtiledb_query_set_buffer_ptr(qryptr, attrnames[2], prbuf)
-
-  ## -- fire off query and close array
+  ## fire off query and close array
   qryptr <- libtiledb_query_submit(qryptr)
   libtiledb_array_close(arrptr)
 
-
+  ## retrieve actual result size (from fixed size element columns)
   getResultSize <- function(name, varnum, qryptr) {
     if (is.na(varnum))                  # symbols come up with higher count
       varnum
@@ -246,13 +219,8 @@ setMethod("[", "tiledb_array",
   }
   estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(estsz, na.rm=TRUE)
-  #print(resrv)
-  #tsm <- libtiledb_query_result_buffer_elements(qryptr, "timestamp")
-  #symm <- libtiledb_query_result_buffer_elements(qryptr, "symbol")
-  #shm <- libtiledb_query_result_buffer_elements(qryptr, "shares")
-  #prm <- libtiledb_query_result_buffer_elements(qryptr, "price")
-  #resrv <- max(tsm, shm, prm)
 
+  ## get results
   getResult <- function(buf, name, varnum, resrv, qryptr) {
     if (is.na(varnum)) {
       sz <- libtiledb_query_result_buffer_elements(qryptr, name)
@@ -262,30 +230,10 @@ setMethod("[", "tiledb_array",
     }
   }
   reslist <- mapply(getResult, buflist, allnames, allvarnum, MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-  #res <- data.frame(times = libtiledb_query_get_buffer_ptr(tsbuf),
-  #                  symbols = libtiledb_query_get_buffer_var_char(symbuf, resrv, symm)[,1],
-  #                  shares = libtiledb_query_get_buffer_ptr(shbuf),
-  #                  prices = libtiledb_query_get_buffer_ptr(prbuf))[1:resrv,]
 
-  #print(str(reslist))
+  ## convert list into data.frame (cheaply) and subset
   res <- data.frame(reslist)[1:resrv,]
   colnames(res) <- allnames
-
-  #print(libtiledb_query_get_buffer_var_char_simple(symbuf))
-  #print(nsym <- libtiledb_query_result_buffer_elements(qryptr, "symbol"))
-  #print(syms <- libtiledb_query_get_buffer_var_char_sized(symbuf, resrv))
-  #print(syms <- libtiledb_query_get_buffer_var_char(symbuf))
-
-  ## by dim object name
-  ## for (i in seq_along(dimnames)) {
-  ##   #cat(sprintf("%d %s %s\n", i, dimnames[i], dimtypes[i]))
-  ##   if (dimtypes[i] %in% c("ASCII", "CHAR")) {
-  ##     print(libtiledb_array_get_non_empty_domain_var_from_name(arrptr, dimnames[i]))
-  ##   } else {
-  ##     #print(format(libtiledb_array_non_empty_domain_from_index(arrptr, i-1, dimtypes[i])))
-  ##     print(libtiledb_array_non_empty_domain_from_name(arrptr, dimnames[i], dimtypes[i]))
-  ##   }
-  ## }
 
   invisible(res)
 })
