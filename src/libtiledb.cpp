@@ -1509,6 +1509,12 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
     return makeInteger64(v);
+  } else if (typestr == "INT32") {
+    auto p = array->non_empty_domain<int32_t>(name);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "FLOAT64") {
+    auto p = array->non_empty_domain<double>(name);
+    return NumericVector::create(p.first, p.second);
   } else {
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
