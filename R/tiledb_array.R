@@ -95,10 +95,12 @@ setMethod("show",
 })
 
 
-#' Returns a tiledb array value, allowing for specific subset ranges.
+#' Returns a TileDB array, allowing for specific subset ranges.
 #'
-#' #' This function is still under development.
+#' Heterogenous domains are supported, including timestamps and characters.
 #'
+#' This function may still still change; the current implementation should be
+#' considered as an initial draft.
 #' @param x tiledb_array object
 #' @param i optional row index expression which can be a list in which case minimum and maximum
 #' of each list element determine a range; multiple list elements can be used to supply multiple
@@ -251,34 +253,41 @@ setMethod("[", "tiledb_array",
 
 #' Sets a tiledb array value or value range
 #'
-#' @param x sparse array object
-#' @param i parameter key string
-#' @param j parameter key string, currently unused.
+#' This function assigns a right-hand side object, typically a data.frame or
+#' something that can be coerced to a data.frame, to a tiledb array.
+#'
+#' For sparse matrices, row and column indices can either be supplied
+#' as part of the left-hand side object, or as part of the data.frame
+#' provided approrpiate column names.
+#'
+#' This function may still still change; the current implementation should be
+#' considered as an initial draft.
+#' @param x sparse or dense TileDB array object
+#' @param i parameter row index
+#' @param j parameter column index
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param value The value being assigned
 #' @return The modified object
+#' @examples
+#' \dontrun{
+#' uri <- "quickstart_sparse"      ## as created by the other example
+#' arr <- tiledb_array(uri)        ## open array
+#' df <- arr[]                     ## read current content
+#' ## First approach: matching data.frame with appriate row and column
+#' newdf <- data.frame(rows=c(1,2,2), cols=c(1,3,4), a=df$a+100)
+#' ## Second approach: supply indices explicitly
+#' arr[c(1,2), c(1,3)] <- c(42,43) ## two values
+#' arr[2, 4] <- 88                 ## or just one
+#' }
 setMethod("[<-", "tiledb_array",
           function(x, i, j, ..., value) {
-
-  if (!is.list(value)) {
-    if (is.array(value)   ||
-        is.vector(value)  ||
-        isS4(value)       ||
-        is(value, "Date") ||
-        inherits(value, "POSIXt")) {
-      value <- list(value)
-    } else {
-      stop("Cannot assign value of type '", typeof(value), "'", call.=FALSE)
-    }
+  if (!is.data.frame(value)) {
+    value <- as.data.frame(value)
   }
 
   ## add defaults
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
-
-  ## keep unevaluated substitute expressions, creates a language object we can subset
-  is <- substitute(i)
-  js <- substitute(j)
 
   ctx <- x@ctx
   uri <- x@uri
@@ -287,9 +296,6 @@ setMethod("[<-", "tiledb_array",
   dom <- tiledb::domain(sch)
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
-
-  #libtiledb_array_open_with_ptr(x@ptr, "READ")
-  #on.exit(libtiledb_array_close(x@ptr))
 
   dims <- tiledb::dimensions(dom)
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
@@ -305,88 +311,51 @@ setMethod("[<-", "tiledb_array",
   alltypes <- c(dimtypes, attrtypes)
   allvarnum <- c(dimvarnum, attrvarnum)
 
-  #arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
+  ## we will recognize two standard cases
+  ##  1) arr[]    <- value    where value contains two columns with the dimnames
+  ##  2) arr[i,j] <- value    where contains just the attrnames
+  ## There is more to do here but it is a start
 
-  if (FALSE) {
-  ## helper function to sweep over names and types of domain
-  getDomain <- function(nm, tp) {
-    if (tp %in% c("ASCII", "CHAR")) {
-      libtiledb_array_get_non_empty_domain_var_from_name(arrptr, nm)
+  ## Case 1
+  if (length(colnames(value)) == length(allnames)) {
+    ## same length is good
+    if (length(intersect(colnames(value), allnames)) == length(allnames)) {
+      ## all good, proceed
+      #message("Yay all columns found")
     } else {
-      libtiledb_array_get_non_empty_domain_from_name(arrptr, nm, tp)
+      stop("Assigned data.frame does not contain all required attribute and dimension columns.")
     }
   }
-  nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
+
+  ## Case 2
+  if (length(colnames(value)) == length(attrnames)) {
+    if (is.null(i)) stop("For sparse arrays a row index has to be supplied.")
+    if (is.null(j)) stop("For sparse arrays a column index has to be supplied.")
+    if (length(i) != nrow(value)) stop("Row index must have same number of observations as data")
+    if (length(j) == 1) j <- rep(j, nrow(value))
+    if (length(colnames(value)) == 1 && colnames(value) == "value") colnames(value) <- attrnames
+    newvalue <- data.frame(i, j)
+    colnames(newvalue) <- dimnames
+    value <- cbind(newvalue, value)
   }
-
-  ## open query
-  #qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
-
-  ## set range(s) on first dimension
-  if (!sparse) {
-    if (is.null(is)) {
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
-                                                    nonemptydom[[1]][1], nonemptydom[[1]][2])
-    } else {
-      if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
-      if (length(is) == 1) stop("No content to parse in row argument.")
-      for (i in 2:length(is)) {
-        el <- is[[i]]
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
-                                                      min(eval(el)), max(eval(el)))
-      }
-    }
-
-    ## set range(s) on  second dimension
-    if (is.null(js)) {
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
-                                                    nonemptydom[[2]][1], nonemptydom[[2]][2])
-    } else {
-      if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
-      if (length(js) == 1) stop("No content to parse in col argument.")
-      for (i in 2:length(js)) {
-        el <- js[[i]]
-
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
-                                                      min(eval(el)), max(eval(el)))
-      }
-    }
-  }
-  #libtiledb_array_close(arrptr)
-
 
   nc <- ncol(value)
   nr <- nrow(value)
-  cat("Rows is ", nr, "\n")
-  #print(str(value))
-  print(allnames)
-  print(colnames(value))
-  if (all.equal(allnames,colnames(value))) {
-    arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uri, "WRITE")
-    qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
+  if (all.equal(sort(allnames),sort(colnames(value)))) {
+    arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
+    qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
     qryptr <- libtiledb_query_set_layout(qryptr, "UNORDERED")
 
     buflist <- vector(mode="list", length=nc)
     for (i in 1:nc) {
-      #cat("Preparing", allnames[i], ",", alltypes[i], "\n")
-      #print(value[[i]])
       buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
       buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
       qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])
     }
 
-    cat("Would be committing\n")
     qryptr <- libtiledb_query_submit(qryptr)
     libtiledb_array_close(arrptr)
 
   }
-  cat("Done\n")
   invisible(NULL)
 })
-
-
-#testWrite <- function() {
-#  df <- data.frame(A=11:20,B=21:30,C=31:40)
-#  rownames(df) <- 1:10
-#  df
-#}

@@ -7,11 +7,11 @@
 \S4method{[}{tiledb_array,ANY,ANY,ANY}(x, i, j, ...) <- value
 }
 \arguments{
-\item{x}{sparse array object}
+\item{x}{sparse or dense TileDB array object}
 
-\item{i}{parameter key string}
+\item{i}{parameter row index}
 
-\item{j}{parameter key string, currently unused.}
+\item{j}{parameter column index}
 
 \item{...}{Extra parameter for method signature, currently unused.}
 
@@ -21,5 +21,26 @@
 The modified object
 }
 \description{
-Sets a tiledb array value or value range
+This function assigns a right-hand side object, typically a data.frame or
+something that can be coerced to a data.frame, to a tiledb array.
+}
+\details{
+For sparse matrices, row and column indices can either be supplied
+as part of the left-hand side object, or as part of the data.frame
+provided approrpiate column names.
+
+This function may still still change; the current implementation should be
+considered as an initial draft.
+}
+\examples{
+\dontrun{
+uri <- "quickstart_sparse"      ## as created by the other example
+arr <- tiledb_array(uri)        ## open array
+df <- arr[]                     ## read current content
+## First approach: matching data.frame with appriate row and column
+newdf <- data.frame(rows=c(1,2,2), cols=c(1,3,4), a=df$a+100)
+## Second approach: supply indices explicitly
+arr[c(1,2), c(1,3)] <- c(42,43) ## two values
+arr[2, 4] <- 88                 ## or just one
+}
 }

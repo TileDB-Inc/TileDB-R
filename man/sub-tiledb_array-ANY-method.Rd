@@ -2,7 +2,7 @@
 % Please edit documentation in R/tiledb_array.R
 \name{[,tiledb_array,ANY-method}
 \alias{[,tiledb_array,ANY-method}
-\title{Returns a tiledb array value, allowing for specific subset ranges.}
+\title{Returns a TileDB array, allowing for specific subset ranges.}
 \usage{
 \S4method{[}{tiledb_array,ANY}(x, i, j, ..., drop = FALSE)
 }
@@ -25,5 +25,9 @@ ranges.}
 An element from the sparse array
 }
 \description{
-#' This function is still under development.
+Heterogenous domains are supported, including timestamps and characters.
+}
+\details{
+This function may still still change; the current implementation should be
+considered as an initial draft.
 }
