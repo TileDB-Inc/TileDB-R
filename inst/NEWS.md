@@ -2,8 +2,8 @@
 # Ongoing
 
 * This release of the R package supports [TileDB
-  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.6) as well as
-  the 2.0.0 release candidates
+  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and the the
+  2.0.0 release candidates
 
 ## Improvements
 
@@ -18,6 +18,14 @@
 
 - Added support for Date, Datetime (i.e. POSIXct) and nanosecond dense and
   sparse array attributes and domains
+
+- Documentation and examples were enhanced and extended
+
+- `tiledb_stats_dump()` is now simpler (but needs to be enabled first as
+  usual)
+
+- Support for nanosecond and integer64 columns was added, this is an optional
+  feature for which the nanotime (and bit64) packages need to be installed
 
 ## Changes
 
