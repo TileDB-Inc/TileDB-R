@@ -37,8 +37,10 @@ library(tiledb)
 
 # Name of the array to create.
 array_name <- "quickstart_sparse"
+## Path is either current directory, or a local config value is found
+uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 
-create_array <- function() {
+create_array <- function(array_name) {
     # Check if the array already exists.
     if (tiledb_object_type(array_name) == "ARRAY") {
         message("Array already exists.")
@@ -56,7 +58,7 @@ create_array <- function() {
     tiledb_array_create(array_name, schema)
 }
 
-write_array <- function() {
+write_array <- function(array_name) {
     I <- c(1, 2, 2)
     J <- c(1, 4, 3)
     data <- c(1L, 2L, 3L)
@@ -65,7 +67,7 @@ write_array <- function() {
     A[I, J] <- data
 }
 
-read_array <- function() {
+read_array <- function(array_name) {
     # Open the array and read from it.
     A <- tiledb_sparse(uri = array_name)
     data <- A[1:2, 2:4]
@@ -78,6 +80,6 @@ read_array <- function() {
     }
 }
 
-create_array()
-write_array()
-read_array()
+create_array(uri)
+write_array(uri)
+read_array(uri)
