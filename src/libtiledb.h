@@ -1,4 +1,6 @@
 #include <tiledb/tiledb>
+
+#define STRICT_R_HEADERS
 #include <Rcpp.h>
 
 // in inst/include so that Rcpp code generation can use the types for glue code
@@ -22,5 +24,10 @@ Rcpp::CharacterVector tiledb_config_get(Rcpp::XPtr<tiledb::Config> xconfig,
                                         std::string param);
 
 void tiledb_config_dump(Rcpp::XPtr<tiledb::Config> config);
+
+// Conversion helper
+Rcpp::NumericVector makeNanotime(const std::vector<int64_t>& vec);
+Rcpp::NumericVector makeInteger64(const std::vector<int64_t>& vec);
+int64_t makeScalarInteger64(const double val);
 
 #endif

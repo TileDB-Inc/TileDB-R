@@ -10,6 +10,7 @@ test_that("tiledb_fromdataframe", {
 
   arr <- tiledb_dense(uri, as.data.frame=TRUE)
   newdf <- arr[]
+  if (getRversion() >= '4.0.0') newdf$Species <- as.factor(newdf$Species)
   expect_equal(iris, newdf)
   expect_equal(dim(irisdf), dim(newdf))
 

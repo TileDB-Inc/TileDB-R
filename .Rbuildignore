@@ -12,3 +12,6 @@
 ^\.editorconfig$
 ^src/unused_*cpp.txt$
 ^local
+^GPATH
+^GRTAGS
+^GTAGS

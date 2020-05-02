@@ -7,8 +7,8 @@ services: docker
 
 jobs:
   include:
-    - name: ci-r
-      env: DOCKER_CNTR="tiledb/ci-r"
+    #- name: ci-r
+    #  env: DOCKER_CNTR="tiledb/ci-r"
     - name: dev
       env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:dev"
     - name: 1.7.5

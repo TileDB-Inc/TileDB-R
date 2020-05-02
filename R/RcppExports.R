@@ -81,6 +81,10 @@ dim_domain_subarray <- function(domain, subscript) {
     .Call(`_tiledb_dim_domain_subarray`, domain, subscript)
 }
 
+libtiledb_dim_get_cell_val_num <- function(dim) {
+    .Call(`_tiledb_libtiledb_dim_get_cell_val_num`, dim)
+}
+
 libtiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_libtiledb_domain`, ctx, dims)
 }
@@ -337,16 +341,24 @@ libtiledb_array_query_type <- function(array) {
     .Call(`_tiledb_libtiledb_array_query_type`, array)
 }
 
-libtiledb_array_nonempty_domain <- function(array) {
-    .Call(`_tiledb_libtiledb_array_nonempty_domain`, array)
+libtiledb_array_get_non_empty_domain <- function(array) {
+    .Call(`_tiledb_libtiledb_array_get_non_empty_domain`, array)
 }
 
-libtiledb_array_nonempty_domain_var_from_name <- function(array, name) {
-    .Call(`_tiledb_libtiledb_array_nonempty_domain_var_from_name`, array, name)
+libtiledb_array_get_non_empty_domain_var_from_name <- function(array, name) {
+    .Call(`_tiledb_libtiledb_array_get_non_empty_domain_var_from_name`, array, name)
 }
 
-libtiledb_array_nonempty_domain_var_from_index <- function(array, idx) {
-    .Call(`_tiledb_libtiledb_array_nonempty_domain_var_from_index`, array, idx)
+libtiledb_array_get_non_empty_domain_var_from_index <- function(array, idx, typestr) {
+    .Call(`_tiledb_libtiledb_array_get_non_empty_domain_var_from_index`, array, idx, typestr)
+}
+
+libtiledb_array_get_non_empty_domain_from_name <- function(array, name, typestr) {
+    .Call(`_tiledb_libtiledb_array_get_non_empty_domain_from_name`, array, name, typestr)
+}
+
+libtiledb_array_non_empty_domain_from_index <- function(array, idx, typestr) {
+    .Call(`_tiledb_libtiledb_array_non_empty_domain_from_index`, array, idx, typestr)
 }
 
 libtiledb_array_consolidate <- function(ctx, uri, cfgptr = NULL) {
@@ -417,8 +429,8 @@ libtiledb_query_set_buffer_var_char <- function(query, attr, bufptr) {
     .Call(`_tiledb_libtiledb_query_set_buffer_var_char`, query, attr, bufptr)
 }
 
-libtiledb_query_get_buffer_var_char <- function(bufptr) {
-    .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr)
+libtiledb_query_get_buffer_var_char <- function(bufptr, len = 0L, nchar = 0L) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_var_char`, bufptr, len, nchar)
 }
 
 libtiledb_query_get_buffer_var_char_simple <- function(bufptr) {
@@ -609,11 +621,7 @@ libtiledb_stats_disable <- function() {
     invisible(.Call(`_tiledb_libtiledb_stats_disable`))
 }
 
-libtiledb_stats_dump <- function(path) {
+libtiledb_stats_dump <- function(path = "") {
     invisible(.Call(`_tiledb_libtiledb_stats_dump`, path))
-}
-
-libtiledb_stats_print <- function() {
-    invisible(.Call(`_tiledb_libtiledb_stats_print`))
 }
 

@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <unistd.h>
-#include <Rcpp.h>
+
 using namespace Rcpp;
 
 // [[Rcpp::plugins(cpp11)]]
@@ -800,6 +800,21 @@ NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript)
   return wrap(sub);
 }
 
+// [[Rcpp::export]]
+int libtiledb_dim_get_cell_val_num(XPtr<tiledb::Dimension> dim) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+  unsigned int ncells = dim->cell_val_num();
+  if (ncells == TILEDB_VAR_NUM) {
+    return R_NaInt;          // set to R's NA for integer
+  } else if (ncells > std::numeric_limits<int32_t>::max()) {
+    Rcpp::stop("tiledb_attr ncells value not representable as an R integer");
+  }
+  return static_cast<int32_t>(ncells);
+#else
+  return R_NaInt;
+#endif
+}
+
 
 /**
  * TileDB Domain
@@ -1026,8 +1041,13 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     attr->set_filter_list(*filter_list);
     return attr;
+  } else if (attr_dtype == TILEDB_INT64) {
+    //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+    attr->set_filter_list(*filter_list);
+    return attr;
   } else {
-    Rcpp::stop("Only integer (INT32), logical (INT32), real (FLOAT64), "
+    Rcpp::stop("Only integer (INT32,INT64), logical (INT32), real (FLOAT64), "
                "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
                "nanotime (DATETIME_NS) and character (CHAR) attributes "
                "are supported");
@@ -1419,7 +1439,7 @@ std::string libtiledb_array_query_type(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
+List libtiledb_array_get_non_empty_domain(XPtr<tiledb::Array> array) {
   List nonempty_domain;
   auto domain = array->schema().domain();
   if (domain.type() == TILEDB_INT32) {
@@ -1447,8 +1467,8 @@ List libtiledb_array_nonempty_domain(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array> array,
-                                                              std::string name) {
+CharacterVector libtiledb_array_get_non_empty_domain_var_from_name(XPtr<tiledb::Array> array,
+                                                                   std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
   auto res = array->non_empty_domain_var(name);
   return CharacterVector::create(res.first, res.second);
@@ -1458,15 +1478,16 @@ CharacterVector libtiledb_array_nonempty_domain_var_from_name(XPtr<tiledb::Array
 }
 
 // [[Rcpp::export]]
-CharacterVector libtiledb_array_nonempty_domain_var_from_index(XPtr<tiledb::Array> array,
-                                                               int32_t idx) {
+CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb::Array> array,
+                                                                    int32_t idx,
+                                                                    std::string typestr) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  auto domain = array->schema().domain();
-  if (domain.type() == TILEDB_STRING_ASCII) {
+  //auto domain = array->schema().domain();
+  if (typestr == "ASCII") {
     auto res = array->non_empty_domain_var(idx);
     return CharacterVector::create(res.first, res.second);
   } else {
-    Rcpp::stop("Invalid tiledb_schema domain type: '%s'", _tiledb_datatype_to_string(domain.type()));
+    Rcpp::stop("Invalid tiledb_schema domain type: '%s'", typestr.c_str());
   }
   // not reached
   return CharacterVector::create("", "");
@@ -1474,6 +1495,58 @@ CharacterVector libtiledb_array_nonempty_domain_var_from_index(XPtr<tiledb::Arra
   return CharacterVector::create("NA", "NA");
 #endif
 }
+
+// [[Rcpp::export]]
+NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array> array,
+                                                             std::string name,
+                                                             std::string typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+  if (typestr == "DATETIME_NS") {
+    auto p = array->non_empty_domain<int64_t>(name);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeNanotime(v);
+  } else if (typestr == "INT64") {
+    auto p = array->non_empty_domain<int64_t>(name);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeInteger64(v);
+  } else if (typestr == "INT32") {
+    auto p = array->non_empty_domain<int32_t>(name);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "FLOAT64") {
+    auto p = array->non_empty_domain<double>(name);
+    return NumericVector::create(p.first, p.second);
+  } else {
+    Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
+    return NumericVector::create(NA_REAL, NA_REAL); // not reached
+  }
+#else
+  return NumericVector::create(NA_REAL, NA_REAL);
+#endif
+}
+
+
+// [[Rcpp::export]]
+NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> array,
+                                                          int32_t idx,
+                                                          std::string typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+  if (typestr == "DATETIME_NS") {
+    auto p = array->non_empty_domain<int64_t>(idx);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeNanotime(v);
+  } else if (typestr == "INT64") {
+    auto p = array->non_empty_domain<int64_t>(idx);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeInteger64(v);
+  } else {
+    Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
+    return NumericVector::create(NA_REAL, NA_REAL); // not reached
+  }
+#else
+  return NumericVector::create(NA_REAL, NA_REAL);
+#endif
+}
+
 
 // [[Rcpp::export]]
 void libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
@@ -1832,15 +1905,21 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
   return query;
 }
 
+// 'len' is the length of the query result set, i.e. buffer elements for standard columns
+// 'nchar' is the length of the result set for the particular column, i.e. actual (ex-pos)
+//    string length in bufptr (as opposed to ex-ante guess)
 // [[Rcpp::export]]
-CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr) {
-  size_t n = bufptr->offsets.size();
+CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
+                                                    int32_t len=0, int32_t nchar=0) {
+  size_t n = (len==0 ? bufptr->offsets.size() : len);
+  //Rprintf("n=%d, strsize=%d, row %d col %d, nchar %d\n",
+  //        n, bufptr->str.size(), bufptr->rows, bufptr->cols, nchar);
   std::vector<uint64_t> str_sizes(n);
   for (size_t i = 0; i < n - 1; i++) {                          // all but last
+    //Rprintf("%d %d %d\n", i, bufptr->offsets[i + 1] , bufptr->offsets[i]);
     str_sizes[i] = bufptr->offsets[i + 1] - bufptr->offsets[i];
   }                                                             // last is total size minus last start
-  str_sizes[n-1] = bufptr->str.size() * sizeof(char) - bufptr->offsets[n-1];
-
+  str_sizes[n-1] = (nchar==0 ? bufptr->str.size() * sizeof(char) : nchar) - bufptr->offsets[n-1];
   // Get the strings
   CharacterMatrix mat(bufptr->rows, bufptr->cols);
   for (size_t i = 0; i < n; i++) {
@@ -2040,6 +2119,10 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
     // to store the int64_t 'payload' on 64-bit double, so memcpy does the trick
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+  } else if (dtype == "INT64") {
+    // integer64 from the bit64 package uses doubles, see nanosecond
+    NumericVector v(vec);
+    std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
   } else {
     Rcpp::stop("Assignment to '%s' currently unsupported.", dtype.c_str());
   }
@@ -2109,16 +2192,9 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     return dd;
   } else if (dtype == "DATETIME_NS") {
     int n = buf->ncells;
-    std::vector<int64_t> tt(n);
-    std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-    NumericVector dd(n);
-    std::memcpy(&(dd[0]), tt.data(), n*buf->size);
-    Rcpp::CharacterVector cl = Rcpp::CharacterVector::create("nanotime");
-    cl.attr("package") = "nanotime";
-    dd.attr(".S3Class") = "integer64";
-    dd.attr("class") = cl;
-    SET_S4_OBJECT(dd);
-    return dd;
+    std::vector<int64_t> vec(n);
+    std::memcpy(vec.data(), buf->vec.data(), n*buf->size);
+    return makeNanotime(vec);
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());
   }
@@ -2255,16 +2331,24 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     }
   } else if (typestr == "INT64" ||
              typestr == "UINT64" ||
-             typestr == "UINT32" ||
-             typestr == "DATETIME_DAY" ||
+             typestr == "UINT32") {
+    int64_t start = as<int64_t>(starts);
+    int64_t end = as<int64_t>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      int64_t stride = as<int64_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (typestr == "DATETIME_DAY" ||
              typestr == "DATETIME_HR"  ||
              typestr == "DATETIME_MIN" ||
              typestr == "DATETIME_SEC" ||
              typestr == "DATETIME_MS" ||
              typestr == "DATETIME_US" ||
              typestr == "DATETIME_NS") {
-    int64_t start = as<int64_t>(starts);
-    int64_t end = as<int64_t>(ends);
+    int64_t start = makeScalarInteger64(as<double>(starts));
+    int64_t end = makeScalarInteger64(as<double>(ends));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
@@ -2615,37 +2699,16 @@ void libtiledb_stats_disable() {
 }
 
 // [[Rcpp::export]]
-void libtiledb_stats_dump(std::string path) {
-  FILE* fptr = nullptr;
-  fptr = fopen(path.c_str(), "w");
-  if (fptr == nullptr) {
-    Rcpp::stop("error opening stats dump file for writing");
-  }
-  tiledb::Stats::dump(fptr);
-  fclose(fptr);
-}
-
-// [[Rcpp::export]]
-void libtiledb_stats_print() {
-  // TODO: look up the proper way to do this in R
-  // Done -- at least in a first pass
-  // get a temporary filename from the per-session directory R uses
-  Rcpp::Function rfunc("tempfile");
-  std::string filename = Rcpp::as<std::string>(rfunc());
-  // dump to the file
-  libtiledb_stats_dump(filename);
-
-  // and read and print from the file
-  std::ifstream f(filename);
-  std::string line;
-  if (f.is_open()) {
-    while (getline(f, line)) {
-      Rprintf("%s\n", line.c_str());
+void libtiledb_stats_dump(std::string path = "") {
+  if (path == "") {
+    tiledb::Stats::dump();
+  } else {
+    FILE* fptr = nullptr;
+    fptr = fopen(path.c_str(), "w");
+    if (fptr == nullptr) {
+      Rcpp::stop("error opening stats dump file for writing");
     }
-    f.close();
-  }
-  // remove tempfile (though R would too at end of session)
-  if (unlink(filename.c_str()) == -1) {
-    Rcpp::stop("Error removing temporary file %s", filename.c_str());
+    tiledb::Stats::dump(fptr);
+    fclose(fptr);
   }
 }

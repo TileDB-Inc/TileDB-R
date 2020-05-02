@@ -29,7 +29,7 @@ create_array <- function(uri) {
 
 write_array <- function(uri) {
   data <- list(array(seq(1:50), dim = c(10,5)),
-               array(as.double(seq(101,150)), dim = c(10,5)),
+               array(as.double(seq(101,by=0.5,length=50)), dim = c(10,5)),
                array(c(letters[1:26], "brown", "fox", LETTERS[1:22]), dim = c(10,5)))
   ## Open the array and write to it.
   A <- tiledb_dense(uri = uri)

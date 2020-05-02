@@ -12,10 +12,9 @@ Description: The efficient multi-dimensional array management system
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
-Imports: methods, Rcpp
+Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
-SystemRequirements: C++11
 Suggests: testthat
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Encoding: UTF-8
