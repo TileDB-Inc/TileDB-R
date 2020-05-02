@@ -2,7 +2,7 @@
 # Ongoing
 
 * This release of the R package supports [TileDB
-  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and the the
+  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and the
   2.0.0 release candidates
 
 ## Improvements
