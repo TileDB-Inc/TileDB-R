@@ -9,7 +9,11 @@ engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
 
 Note that the R interface to TileDB is under development, and the API is subject to change.
 
-## [Documentation](https://tiledb-inc.github.io/TileDB-R/)
+## Documentation
+
+Documentation is available for [the R
+package](https://tiledb-inc.github.io/TileDB-R/) as well as for the [TileDB
+API](https://docs.tiledb.com/main/).
 
 ## Installation
 
