@@ -7,51 +7,80 @@ reference:
   - starts_with("tiledb_ctx")
   - starts_with("tiledb_is_supported_fs")
   - starts_with("tiledb_ctx_set_tag")
+  - ends_with("_context")
+  - ends_with("tiledb_ctx-method")
+  - matches("tiledb_get_context")
+  - matches("tiledb_set_context")
 - title: Config
   contents:
   - starts_with("tiledb_config")
-  - starts_with("`[`.tiledb_config")
   - starts_with("as.vector.tiledb_config")
   - starts_with("as.data.frame.tiledb_config")
+  - ends_with("tiledb_config-method")
+  - matches(",tiledb_config,ANY")
 - title: Array
   contents:
   - starts_with("tiledb_array_create")
   - starts_with("tiledb_dense")
   - starts_with("tiledb_sparse")
+  - matches("tiledb_array")
+  - matches(",tiledb_dense")
+  - matches(",tiledb_sparse")
+  - matches("tiledb_subarray")
 - title: ArraySchema
   contents:
   - starts_with("tiledb_array_schema")
+  - matches("r_to_tiledb_type")
 - title: Attribute
   contents:
   - starts_with("tiledb_attr")
   - starts_with("attr")
+  - ends_with("tiledb_attr-method")
 - title: Filter
   contents:
   - starts_with("tiledb_filter")
   - starts_with("filter")
 - title: FilterList
   contents:
-  - starts_with("tiledb_filterlist")
-  - starts_with("filterlist")
+  - matches("tiledb_filter_list")
+  - starts_with("filter_list")
+  - ends_with("filter_list-method")
 - title: Domain
   contents:
-  - starts_with("tiledb_domain") 
+  - starts_with("tiledb_domain")
   - starts_with("tiledb_ndim")
+  - ends_with("tiledb_domain-method")
 - title: Dim
   contents:
   - starts_with("tiledb_dim")
   - starts_with("dim")
+  - ends_with("tiledb_dim-method")
+  - ends_with("tiledb_dim")
 - title: Group
   contents:
   - starts_with("tiledb_group")
 - title: Object
   desc: object management functions
   contents:
-  - starts_with("tiledb_object") 
+  - starts_with("tiledb_object")
+  - matches("is.anonymous")
+- title: MetaData
+  desc: arrray metadata functionality
+  contents:
+  - ends_with("metadata")
 - title: Stats
   desc:  performance stat collection functions
   contents:
   - starts_with("tiledb_stats")
-- title: Version
+- title: DataFrame
+  desc:  data.frame functionality functions
+  contents:
+  - matches("as_data_frame")
+  - matches("fromDataFrame")
+  - starts_with("return.data.frame")
+  - matches("data.frame")
+- title: Package
+  desc: package and version information
   contents:
   - starts_with("tiledb_version")
+  - matches("tiledb-package")
