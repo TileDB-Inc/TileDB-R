@@ -2,8 +2,8 @@ Package: tiledb
 Type: Package
 Title: Sparse and Dense Multidimensional Array Data Management
 Version: 0.5.0
-Author: TileDB <help@tiledb.com>
-Maintainer: TileDB <help@tiledb.com>
+Author: TileDB Inc.
+Maintainer: TileDB R <tiledb-r@tiledb.com>
 Description: The efficient multi-dimensional array management system
  'TileDB' introduces a novel on-disk format that can effectively store
  dense and sparse array data with support for fast updates and
