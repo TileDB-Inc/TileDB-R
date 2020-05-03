@@ -1,11 +1,17 @@
 
-# Ongoing
+# 0.6.0
 
 * This release of the R package supports [TileDB
-  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and the
-  2.0.0 release candidates
+  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and
+  [TileDB 2.0.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.0)
 
 ## Improvements
+
+- Added support for heterogenous domains
+
+- Added support for string dimensions
+
+- Added support for duplicate dimension values in sparse arrays
 
 - Added support for data.frame object import and conversion to dense and
   sparse arrays

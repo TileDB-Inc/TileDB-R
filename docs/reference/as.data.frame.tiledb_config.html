@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Convert a <code>tiledb_config</code> object to a R data.frame — as.data.frame.tiledb_config" />
 <meta property="og:description" content="Convert a tiledb_config object to a R data.frame" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -87,7 +90,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/TileDB-Inc/TileDB-R">
+  <a href="https://github.com/TileDB-Inc/TileDB-R/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -137,87 +140,91 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span>()
 <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>cfg</span>)</div><div class='output co'>#&gt;                           parameter                  value
-#&gt; 1              rest.http_compressor                    any
-#&gt; 2               rest.server_address https://api.tiledb.com
-#&gt; 3  rest.server_serialization_format                  CAPNP
-#&gt; 4               sm.check_coord_dups                   true
-#&gt; 5                sm.check_coord_oob                   true
-#&gt; 6             sm.check_global_order                   true
-#&gt; 7    sm.consolidation.amplification                    1.0
-#&gt; 8      sm.consolidation.buffer_size               50000000
-#&gt; 9   sm.consolidation.step_max_frags             4294967295
-#&gt; 10  sm.consolidation.step_min_frags             4294967295
-#&gt; 11 sm.consolidation.step_size_ratio                    0.0
-#&gt; 12           sm.consolidation.steps             4294967295
-#&gt; 13                  sm.dedup_coords                  false
-#&gt; 14        sm.enable_signal_handlers                   true
-#&gt; 15                 sm.memory_budget             5368709120
-#&gt; 16             sm.memory_budget_var            10737418240
-#&gt; 17             sm.num_async_threads                      1
-#&gt; 18            sm.num_reader_threads                      1
-#&gt; 19               sm.num_tbb_threads                     -1
-#&gt; 20            sm.num_writer_threads                      1
-#&gt; 21               sm.tile_cache_size               10000000
-#&gt; 22          vfs.azure.blob_endpoint                       
-#&gt; 23  vfs.azure.block_list_block_size                5242880
-#&gt; 24       vfs.azure.max_parallel_ops                     12
-#&gt; 25    vfs.azure.storage_account_key                       
-#&gt; 26   vfs.azure.storage_account_name                       
-#&gt; 27  vfs.azure.use_block_list_upload                   true
-#&gt; 28              vfs.azure.use_https                   true
-#&gt; 29        vfs.file.enable_filelocks                   true
-#&gt; 30        vfs.file.max_parallel_ops                     12
-#&gt; 31  vfs.hdfs.kerb_ticket_cache_path                       
-#&gt; 32           vfs.hdfs.name_node_uri                       
-#&gt; 33                vfs.hdfs.username                       
-#&gt; 34                vfs.min_batch_gap                 512000
-#&gt; 35               vfs.min_batch_size               20971520
-#&gt; 36            vfs.min_parallel_size               10485760
-#&gt; 37                  vfs.num_threads                     12
-#&gt; 38         vfs.s3.aws_access_key_id                       
-#&gt; 39     vfs.s3.aws_secret_access_key                       
-#&gt; 40         vfs.s3.aws_session_token                       
-#&gt; 41                   vfs.s3.ca_file                       
-#&gt; 42                   vfs.s3.ca_path                       
-#&gt; 43         vfs.s3.connect_max_tries                      5
-#&gt; 44      vfs.s3.connect_scale_factor                     25
-#&gt; 45        vfs.s3.connect_timeout_ms                   3000
-#&gt; 46         vfs.s3.endpoint_override                       
-#&gt; 47             vfs.s3.logging_level                    Off
-#&gt; 48          vfs.s3.max_parallel_ops                     12
-#&gt; 49       vfs.s3.multipart_part_size                5242880
-#&gt; 50                vfs.s3.proxy_host                       
-#&gt; 51            vfs.s3.proxy_password                       
-#&gt; 52                vfs.s3.proxy_port                      0
-#&gt; 53              vfs.s3.proxy_scheme                  https
-#&gt; 54            vfs.s3.proxy_username                       
-#&gt; 55                    vfs.s3.region              us-east-1
-#&gt; 56        vfs.s3.request_timeout_ms                   3000
-#&gt; 57                    vfs.s3.scheme                  https
-#&gt; 58      vfs.s3.use_multipart_upload                   true
-#&gt; 59    vfs.s3.use_virtual_addressing                   true
-#&gt; 60                vfs.s3.verify_ssl                   true</div><div class='input'>
+#&gt; 1             config.env_var_prefix                TILEDB_
+#&gt; 2              rest.http_compressor                    any
+#&gt; 3               rest.server_address https://api.tiledb.com
+#&gt; 4  rest.server_serialization_format                  CAPNP
+#&gt; 5               sm.check_coord_dups                   true
+#&gt; 6                sm.check_coord_oob                   true
+#&gt; 7             sm.check_global_order                   true
+#&gt; 8    sm.consolidation.amplification                    1.0
+#&gt; 9      sm.consolidation.buffer_size               50000000
+#&gt; 10            sm.consolidation.mode              fragments
+#&gt; 11  sm.consolidation.step_max_frags             4294967295
+#&gt; 12  sm.consolidation.step_min_frags             4294967295
+#&gt; 13 sm.consolidation.step_size_ratio                    0.0
+#&gt; 14           sm.consolidation.steps             4294967295
+#&gt; 15                  sm.dedup_coords                  false
+#&gt; 16        sm.enable_signal_handlers                   true
+#&gt; 17                 sm.memory_budget             5368709120
+#&gt; 18             sm.memory_budget_var            10737418240
+#&gt; 19             sm.num_async_threads                      1
+#&gt; 20            sm.num_reader_threads                     12
+#&gt; 21               sm.num_tbb_threads                     -1
+#&gt; 22            sm.num_writer_threads                     12
+#&gt; 23      sm.skip_checksum_validation                  false
+#&gt; 24               sm.tile_cache_size               10000000
+#&gt; 25                   sm.vacuum.mode              fragments
+#&gt; 26          vfs.azure.blob_endpoint                       
+#&gt; 27  vfs.azure.block_list_block_size                5242880
+#&gt; 28       vfs.azure.max_parallel_ops                     12
+#&gt; 29    vfs.azure.storage_account_key                       
+#&gt; 30   vfs.azure.storage_account_name                       
+#&gt; 31  vfs.azure.use_block_list_upload                   true
+#&gt; 32              vfs.azure.use_https                   true
+#&gt; 33        vfs.file.enable_filelocks                   true
+#&gt; 34        vfs.file.max_parallel_ops                     12
+#&gt; 35         vfs.gcs.max_parallel_ops                     12
+#&gt; 36          vfs.gcs.multi_part_size                5242880
+#&gt; 37               vfs.gcs.project_id                       
+#&gt; 38    vfs.gcs.use_multi_part_upload                   true
+#&gt; 39  vfs.hdfs.kerb_ticket_cache_path                       
+#&gt; 40           vfs.hdfs.name_node_uri                       
+#&gt; 41                vfs.hdfs.username                       
+#&gt; 42                vfs.min_batch_gap                 512000
+#&gt; 43               vfs.min_batch_size               20971520
+#&gt; 44            vfs.min_parallel_size               10485760
+#&gt; 45                  vfs.num_threads                     12
+#&gt; 46         vfs.s3.aws_access_key_id                       
+#&gt; 47     vfs.s3.aws_secret_access_key                       
+#&gt; 48         vfs.s3.aws_session_token                       
+#&gt; 49                   vfs.s3.ca_file                       
+#&gt; 50                   vfs.s3.ca_path                       
+#&gt; 51         vfs.s3.connect_max_tries                      5
+#&gt; 52      vfs.s3.connect_scale_factor                     25
+#&gt; 53        vfs.s3.connect_timeout_ms                   3000
+#&gt; 54         vfs.s3.endpoint_override                       
+#&gt; 55             vfs.s3.logging_level                    Off
+#&gt; 56          vfs.s3.max_parallel_ops                     12
+#&gt; 57       vfs.s3.multipart_part_size                5242880
+#&gt; 58                vfs.s3.proxy_host                       
+#&gt; 59            vfs.s3.proxy_password                       
+#&gt; 60                vfs.s3.proxy_port                      0
+#&gt; 61              vfs.s3.proxy_scheme                  https
+#&gt; 62            vfs.s3.proxy_username                       
+#&gt; 63                    vfs.s3.region              us-east-1
+#&gt; 64        vfs.s3.request_timeout_ms                   3000
+#&gt; 65                    vfs.s3.scheme                  https
+#&gt; 66      vfs.s3.use_multipart_upload                   true
+#&gt; 67    vfs.s3.use_virtual_addressing                   true
+#&gt; 68                vfs.s3.verify_ssl                   true</div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
 
       <footer>
       <div class="copyright">
-  <p>Developed by  TileDB.</p>
+  <p>Developed by TileDB R.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
