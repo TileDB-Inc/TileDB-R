@@ -356,9 +356,17 @@ setMethod("[<-", "tiledb_array",
 
     buflist <- vector(mode="list", length=nc)
     for (i in 1:nc) {
-      buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
-      buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
-      qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])
+      if (alltypes[i] %in% c("CHAR", "ASCII")) { # variable length
+        txtvec <- as.character(value[[i]])
+        offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
+        data <- paste(txtvec, collapse="")
+        buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
+        qryptr <- libtiledb_query_set_buffer_var_char(qryptr, allnames[i], buflist[[i]])
+      } else {
+        buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
+        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
+        qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])
+      }
     }
 
     qryptr <- libtiledb_query_submit(qryptr)
