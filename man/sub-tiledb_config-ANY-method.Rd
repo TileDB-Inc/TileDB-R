@@ -2,6 +2,10 @@
 % Please edit documentation in R/Config.R
 \name{[,tiledb_config,ANY-method}
 \alias{[,tiledb_config,ANY-method}
+\alias{[,tiledb_config}
+\alias{[,tiledb_config-method}
+\alias{[,tiledb_config,ANY,tiledb_config-method}
+\alias{[,tiledb_config,ANY,ANY,tiledb_config-method}
 \title{Gets a config parameter value}
 \usage{
 \S4method{[}{tiledb_config,ANY}(x, i, j, ..., drop = FALSE)
@@ -27,5 +31,4 @@ Gets a config parameter value
 cfg <- tiledb_config()
 cfg["sm.tile_cache_size"]
 cfg["does_not_exist"]
-
 }

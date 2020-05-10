@@ -1,9 +1,14 @@
+# Ongoing
+
+* This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.0)
+
+## Improvements
+
+- All S4 classes are now consistently documented or aliased
 
 # 0.6.0
 
-* This release of the R package supports [TileDB
-  1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and
-  [TileDB 2.0.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.0)
+* This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.0)
 
 ## Improvements
 
