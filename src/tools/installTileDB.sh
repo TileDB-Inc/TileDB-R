@@ -5,8 +5,13 @@ if [ ! -f tiledb.tar.gz ]; then
 fi
 
 if [ ! -d tiledb-src ]; then
-    mkdir tiledb-src
-    tar xaf tiledb.tar.gz -C tiledb-src --strip-components 1
+    if test $(uname) == "Darwin"; then
+        tar -xf tiledb.tar.gz
+        mv Tile* tiledb-src
+    else
+        mkdir tiledb-src
+        tar xaf tiledb.tar.gz -C tiledb-src --strip-components 1
+    fi
 fi
 
 if [ ! -d tiledb-inst ]; then
@@ -22,4 +27,4 @@ cd ..
 
 if [ ! -f .keep_build_dirs ]; then
     rm -rf build tiledb-src
-fi    
+fi

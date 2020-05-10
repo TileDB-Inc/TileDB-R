@@ -2761,8 +2761,19 @@ $as_echo "** Installting TileDB" >&6; }
     TILEDB_INCLUDE="-Itiledb-inst/include"
 
     ## omitting libbz2.a and libz.a we R provides them
-    TILEDB_LIBS="tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a tiledb-inst/lib/libssl.a tiledb-inst/lib/libcrypto.a tiledb-inst/lib/libzstd.a tiledb-inst/lib/liblz4.a"
+    if test -d src/tiledb-inst/lib64; then
+        ## checking for lib64 used e.g. on Fedora
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: ** Now using src/tiledb-inst/lib64/" >&5
+$as_echo "** Now using src/tiledb-inst/lib64/" >&6; }
+        TILEDB_LIBS="tiledb-inst/lib64/libtiledb.a tiledb-inst/lib64/libtbb.a tiledb-inst/lib64/libssl.a tiledb-inst/lib64/libcrypto.a tiledb-inst/lib64/libzstd.a tiledb-inst/lib64/liblz4.a"
 
+    else
+        ## default lib used e.g. on Debian and Ubuntu
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: ** Now using src/tiledb-inst/lib/" >&5
+$as_echo "** Now using src/tiledb-inst/lib/" >&6; }
+        TILEDB_LIBS="tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a tiledb-inst/lib/libssl.a tiledb-inst/lib/libcrypto.a tiledb-inst/lib/libzstd.a tiledb-inst/lib/liblz4.a"
+
+    fi
 
     CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"

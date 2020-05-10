@@ -47,7 +47,15 @@ if test x"${have_tiledb}" = x"0"; then
     cd src && tools/installTileDB.sh && cd -
     AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
     ## omitting libbz2.a and libz.a we R provides them
-    AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a tiledb-inst/lib/libssl.a tiledb-inst/lib/libcrypto.a tiledb-inst/lib/libzstd.a tiledb-inst/lib/liblz4.a")
+    if test -d src/tiledb-inst/lib64; then
+        ## checking for lib64 used e.g. on Fedora
+        AC_MSG_RESULT([** Now using src/tiledb-inst/lib64/])
+        AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib64/libtiledb.a tiledb-inst/lib64/libtbb.a tiledb-inst/lib64/libssl.a tiledb-inst/lib64/libcrypto.a tiledb-inst/lib64/libzstd.a tiledb-inst/lib64/liblz4.a")
+    else
+        ## default lib used e.g. on Debian and Ubuntu
+        AC_MSG_RESULT([** Now using src/tiledb-inst/lib/])
+        AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a tiledb-inst/lib/libssl.a tiledb-inst/lib/libcrypto.a tiledb-inst/lib/libzstd.a tiledb-inst/lib/liblz4.a")
+    fi
 
     CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
