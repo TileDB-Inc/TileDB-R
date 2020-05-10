@@ -234,10 +234,6 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return An element from a dense array
-#' @aliases [,tiledb_dense
-#' @aliases [,tiledb_dense-method
-#' @aliases [,tiledb_dense,ANY,tiledb_dense-method
-#' @aliases [,tiledb_dense,ANY,ANY,tiledb_dense-method
 setMethod("[", "tiledb_dense",
           function(x, i, j, ..., drop = FALSE) {
             ## helper function to deal with i and/or j missing
@@ -360,10 +356,6 @@ setMethod("[", "tiledb_dense",
 #' @param value The value being assigned
 #' @return The modified object
 #' @importFrom utils head
-#' @aliases [<-,tiledb_dense
-#' @aliases [<-,tiledb_dense-method
-#' @aliases [<-,tiledb_dense,ANY,tiledb_dense-method
-#' @aliases [<-,tiledb_dense,ANY,ANY,tiledb_dense-method
 setMethod("[<-", "tiledb_dense",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {

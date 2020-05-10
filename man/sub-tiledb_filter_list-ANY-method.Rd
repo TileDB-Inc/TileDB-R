@@ -2,10 +2,6 @@
 % Please edit documentation in R/FilterList.R
 \name{[,tiledb_filter_list,ANY-method}
 \alias{[,tiledb_filter_list,ANY-method}
-\alias{[,tiledb_filter_list}
-\alias{[,tiledb_filter_list-method}
-\alias{[,tiledb_filter_list,ANY,tiledb_filter_list-method}
-\alias{[,tiledb_filter_list,ANY,ANY,tiledb_filter_list-method}
 \title{Returns the filter at given index}
 \usage{
 \S4method{[}{tiledb_filter_list,ANY}(x, i, j, ..., drop = FALSE)

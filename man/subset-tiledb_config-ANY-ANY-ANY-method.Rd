@@ -2,10 +2,6 @@
 % Please edit documentation in R/Config.R
 \name{[<-,tiledb_config,ANY,ANY,ANY-method}
 \alias{[<-,tiledb_config,ANY,ANY,ANY-method}
-\alias{[<-,tiledb_config}
-\alias{[<-,tiledb_config-method}
-\alias{[<-,tiledb_config,ANY,tiledb_config-method}
-\alias{[<-,tiledb_config,ANY,ANY,tiledb_config-method}
 \title{Sets a config parameter value}
 \usage{
 \S4method{[}{tiledb_config,ANY,ANY,ANY}(x, i, j) <- value

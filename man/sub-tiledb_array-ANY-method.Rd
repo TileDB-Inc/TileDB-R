@@ -2,10 +2,6 @@
 % Please edit documentation in R/tiledb_array.R
 \name{[,tiledb_array,ANY-method}
 \alias{[,tiledb_array,ANY-method}
-\alias{[,tiledb_array}
-\alias{[,tiledb_array-method}
-\alias{[,tiledb_array,ANY,tiledb_array-method}
-\alias{[,tiledb_array,ANY,ANY,tiledb_array-method}
 \title{Returns a TileDB array, allowing for specific subset ranges.}
 \usage{
 \S4method{[}{tiledb_array,ANY}(x, i, j, ..., drop = FALSE)

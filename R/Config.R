@@ -51,10 +51,7 @@ tiledb_config <- function(config = NA_character_) {
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
 #' cfg["does_not_exist"]
-#' @aliases [,tiledb_config
-#' @aliases [,tiledb_config-method
-#' @aliases [,tiledb_config,ANY,tiledb_config-method
-#' @aliases [,tiledb_config,ANY,ANY,tiledb_config-method
+#'
 setMethod("[", "tiledb_config",
           function(x, i, j, ..., drop=FALSE) {
             if (!is.character(i)) {
@@ -82,10 +79,6 @@ setMethod("[", "tiledb_config",
 #' cfg["sm.tile_cache_size"] <- 100
 #' cfg["sm.tile_cache_size"]
 #'
-#' @aliases [<-,tiledb_config
-#' @aliases [<-,tiledb_config-method
-#' @aliases [<-,tiledb_config,ANY,tiledb_config-method
-#' @aliases [<-,tiledb_config,ANY,ANY,tiledb_config-method
 setMethod("[<-", "tiledb_config",
           function(x, i, j, value) {
             if (!is.character(i)) {

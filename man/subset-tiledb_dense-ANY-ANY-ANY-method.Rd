@@ -2,10 +2,6 @@
 % Please edit documentation in R/DenseArray.R
 \name{[<-,tiledb_dense,ANY,ANY,ANY-method}
 \alias{[<-,tiledb_dense,ANY,ANY,ANY-method}
-\alias{[<-,tiledb_dense}
-\alias{[<-,tiledb_dense-method}
-\alias{[<-,tiledb_dense,ANY,tiledb_dense-method}
-\alias{[<-,tiledb_dense,ANY,ANY,tiledb_dense-method}
 \title{Sets a dense array value}
 \usage{
 \S4method{[}{tiledb_dense,ANY,ANY,ANY}(x, i, j, ...) <- value

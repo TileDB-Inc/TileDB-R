@@ -148,10 +148,6 @@ as_data_frame <- function(dom, data, extended=FALSE) {
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return An element from the sparse array
-#' @aliases [,tiledb_sparse
-#' @aliases [,tiledb_sparse-method
-#' @aliases [,tiledb_sparse,ANY,tiledb_sparse-method
-#' @aliases [,tiledb_sparse,ANY,ANY,tiledb_sparse-method
 setMethod("[", "tiledb_sparse",
           function(x, i, j, ..., drop = FALSE) {
             ## helper function to deal with i and/or j missing
@@ -269,10 +265,6 @@ setMethod("[", "tiledb_sparse",
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param value The value being assigned
 #' @return The modified object
-#' @aliases [<-,tiledb_sparse
-#' @aliases [<-,tiledb_sparse-method
-#' @aliases [<-,tiledb_sparse,ANY,tiledb_sparse-method
-#' @aliases [<-,tiledb_sparse,ANY,ANY,tiledb_sparse-method
 setMethod("[<-", "tiledb_sparse",
           function(x, i, j, ..., value) {
             if (!is.list(value)) {
