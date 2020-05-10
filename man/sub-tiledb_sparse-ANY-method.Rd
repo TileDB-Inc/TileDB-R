@@ -2,6 +2,10 @@
 % Please edit documentation in R/SparseArray.R
 \name{[,tiledb_sparse,ANY-method}
 \alias{[,tiledb_sparse,ANY-method}
+\alias{[,tiledb_sparse}
+\alias{[,tiledb_sparse-method}
+\alias{[,tiledb_sparse,ANY,tiledb_sparse-method}
+\alias{[,tiledb_sparse,ANY,ANY,tiledb_sparse-method}
 \title{Gets a sparse array value}
 \usage{
 \S4method{[}{tiledb_sparse,ANY}(x, i, j, ..., drop = FALSE)
