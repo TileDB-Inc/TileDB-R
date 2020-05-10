@@ -44,18 +44,18 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
 
 if test x"${have_tiledb}" = x"0"; then
     AC_MSG_RESULT([** Installting TileDB])
-    cd src && tools/installTileDB.sh
+    cd src && tools/installTileDB.sh && cd -
     AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
-    AC_SUBST([TILEDB_LIBS], "-Ltiledb-inst/lib -ltbb -ltiledb")
+    AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a -lssl -lcrypto -lzstd -lz -lbz2 -llz4")
 
     CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
-    AC_MSG_CHECKING([compilation with TileDB])
-    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
-                                    tiledb::Context ctx;])],
-                  [AC_MSG_RESULT(yes); ],
-                  [AC_MSG_ERROR(no)])
+    #AC_MSG_CHECKING([compilation with TileDB])
+    #AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
+    #                                tiledb::Context ctx;])],
+    #              [AC_MSG_RESULT(yes); ],
+    #              [AC_MSG_ERROR(no)])
 fi
 
 AC_CONFIG_FILES([src/Makevars])

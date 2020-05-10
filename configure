@@ -2757,36 +2757,20 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 if test x"${have_tiledb}" = x"0"; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: ** Installting TileDB" >&5
 $as_echo "** Installting TileDB" >&6; }
-    cd src && tools/installTileDB.sh
+    cd src && tools/installTileDB.sh && cd -
     TILEDB_INCLUDE="-Itiledb-inst/include"
 
-    TILEDB_LIBS="-Ltiledb-inst/lib -ltbb -ltiledb"
+    TILEDB_LIBS="tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a -lssl -lcrypto -lzstd -lz -lbz2 -llz4"
 
 
     CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking compilation with TileDB" >&5
-$as_echo_n "checking compilation with TileDB... " >&6; }
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <tiledb/tiledb>
-                                    tiledb::Context ctx;
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; };
-else
-  as_fn_error $? "no" "$LINENO" 5
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+    #AC_MSG_CHECKING([compilation with TileDB])
+    #AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
+    #                                tiledb::Context ctx;])],
+    #              [AC_MSG_RESULT(yes); ],
+    #              [AC_MSG_ERROR(no)])
 fi
 
 ac_config_files="$ac_config_files src/Makevars"
