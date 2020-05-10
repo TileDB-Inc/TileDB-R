@@ -46,7 +46,8 @@ if test x"${have_tiledb}" = x"0"; then
     AC_MSG_RESULT([** Installting TileDB])
     cd src && tools/installTileDB.sh && cd -
     AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
-    AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a -lssl -lcrypto -lzstd -lz -lbz2 -llz4")
+    ## omitting libbz2.a and libz.a we R provides them
+    AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a tiledb-inst/lib/libssl.a tiledb-inst/lib/libcrypto.a tiledb-inst/lib/libzstd.a tiledb-inst/lib/liblz4.a")
 
     CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"

@@ -15,6 +15,6 @@ fi
 
 mkdir build
 cd build
-../tiledb-src/bootstrap --prefix=../tiledb-inst --enable-static-tiledb
+../tiledb-src/bootstrap --prefix=../tiledb-inst --enable-static-tiledb --force-build-all-deps
 make -j 8
 make -C tiledb install
