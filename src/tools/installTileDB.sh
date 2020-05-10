@@ -18,3 +18,8 @@ cd build
 ../tiledb-src/bootstrap --prefix=../tiledb-inst --enable-static-tiledb --force-build-all-deps
 make -j 8
 make -C tiledb install
+cd ..
+
+if [ ! -f .keep_build_dirs ]; then
+    rm -rf build tiledb-src
+fi    
