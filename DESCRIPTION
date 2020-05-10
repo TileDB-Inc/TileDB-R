@@ -12,6 +12,7 @@ Description: The efficient multi-dimensional array management system
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
+SystemRequirements: cmake
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
 Suggests: testthat
