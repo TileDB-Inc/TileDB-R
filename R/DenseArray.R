@@ -442,6 +442,8 @@ setMethod("[<-", "tiledb_dense",
               qry <- libtiledb_query_set_subarray(qry, as.double(subarray))
             }
             attr_names <- names(value)
+            ## we need to hold on to the allocated buffers til the query fires
+            buflst <- vector(mode="list", length=length(attr_names))
             for (idx in seq_along(value)) {
               aname <- attr_names[[idx]]
               val <- value[[idx]]
@@ -456,24 +458,27 @@ setMethod("[<-", "tiledb_dense",
                 ## offsets starts: cumulative sum of all word lengths as provided by nchar
                 ## but starting at 0 and then omitting the last
                 offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
-                bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
-                qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
+                buflst[[idx]] <- libtiledb_query_buffer_var_char_create(offs, string)
+                qry <- libtiledb_query_set_buffer_var_char(qry, aname, buflst[[idx]])
               } else if (inherits(val, "Date")) {
-                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
-                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+                buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
+                buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], "DATETIME_DAY", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               } else if (inherits(val, "POSIXt")) {
                 #cat("*** POSIXt case\n")
                 # could also use DATETIME_SEC here but _MS dominates it with higher resolution
-                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val)
-                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+                buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
+                buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], attrtype, val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               } else if (inherits(val, "nanotime")) {
-                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_NS", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_NS", val)
-                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+                buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_NS", length(val))
+                buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], "DATETIME_NS", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               } else {
-                qry <- libtiledb_query_set_buffer(qry, aname, val)
+                #qry <- libtiledb_query_set_buffer(qry, aname, val)
+                buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
+                buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], attrtype, val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               }
             }
             qry <- libtiledb_query_submit(qry)
