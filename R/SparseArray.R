@@ -364,6 +364,8 @@ setMethod("[<-", "tiledb_sparse",
             qry <- libtiledb_query_set_coordinates(qry, zip_coords, domaintype[1])
             ## set attribute buffers
             attr_names <- names(value)
+            ## we need to hold on to the allocated buffers til the query fires
+            buflst <- vector(mode="list", length=length(attr_names))
             for (idx in seq_along(value)) {
               aname <- attr_names[[idx]]
               val <- value[[idx]]
@@ -371,26 +373,28 @@ setMethod("[<-", "tiledb_sparse",
               attrtype <- libtiledb_attribute_get_type(attribute)
 
               if (inherits(val, "POSIXt") || inherits(val, "nanotime")) {
-                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, attrtype, val)
-                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+                buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
+                buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], attrtype, val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               } else if (inherits(val, "Date")) {
-                bufptr <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
-                bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "DATETIME_DAY", val)
-                qry <- libtiledb_query_set_buffer_ptr(qry, aname, bufptr)
+                buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, "DATETIME_DAY", length(val))
+                buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], "DATETIME_DAY", val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               } else if (inherits(val, "character")) {
                 n <- ifelse(is.vector(val), length(val), prod(dim(val)))
                 string <- paste(val[1:n], collapse="")
                 ## offsets starts: cumulative sum of all word lengths as provided by nchar
                 ## but starting at 0 and then omitting the last
                 offs <- cumsum(c(0, head(sapply(val[1:n], nchar, USE.NAMES=FALSE), -1)))
-                bufptr <- libtiledb_query_buffer_var_char_create(offs, string)
-                qry <- libtiledb_query_set_buffer_var_char(qry, aname, bufptr)
+                buflst[[idx]] <- libtiledb_query_buffer_var_char_create(offs, string)
+                qry <- libtiledb_query_set_buffer_var_char(qry, aname, buflst[[idx]])
               } else {
-                qry <- libtiledb_query_set_buffer(qry, attr_names[[idx]], value[[idx]])
+                #qry <- libtiledb_query_set_buffer(qry, aname, val)
+                buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
+                buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], attrtype, val)
+                qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               }
             }
-            #cat("About to submit\n")
             qry <- libtiledb_query_submit(qry)
             if (libtiledb_query_status(qry) != "COMPLETE") {
               stop("error in incomplete sparse write query")

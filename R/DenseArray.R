@@ -475,7 +475,6 @@ setMethod("[<-", "tiledb_dense",
                 buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], "DATETIME_NS", val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
               } else {
-                #qry <- libtiledb_query_set_buffer(qry, aname, val)
                 buflst[[idx]] <- libtiledb_query_buffer_alloc_ptr(x@ptr, attrtype, length(val))
                 buflst[[idx]] <- libtiledb_query_buffer_assign_ptr(buflst[[idx]], attrtype, val)
                 qry <- libtiledb_query_set_buffer_ptr(qry, aname, buflst[[idx]])
