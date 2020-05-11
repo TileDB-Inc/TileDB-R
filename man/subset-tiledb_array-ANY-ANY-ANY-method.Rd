@@ -2,6 +2,10 @@
 % Please edit documentation in R/tiledb_array.R
 \name{[<-,tiledb_array,ANY,ANY,ANY-method}
 \alias{[<-,tiledb_array,ANY,ANY,ANY-method}
+\alias{[<-,tiledb_array}
+\alias{[<-,tiledb_array-method}
+\alias{[<-,tiledb_array,ANY,tiledb_array-method}
+\alias{[<-,tiledb_array,ANY,ANY,tiledb_array-method}
 \title{Sets a tiledb array value or value range}
 \usage{
 \S4method{[}{tiledb_array,ANY,ANY,ANY}(x, i, j, ...) <- value

@@ -117,6 +117,10 @@ setMethod("nfilters", signature(object = "tiledb_filter_list"),
 #' filter_list[0]
 #'
 #' @export
+#' @aliases [,tiledb_filter_list
+#' @aliases [,tiledb_filter_list-method
+#' @aliases [,tiledb_filter_list,ANY,tiledb_filter_list-method
+#' @aliases [,tiledb_filter_list,ANY,ANY,tiledb_filter_list-method
 setMethod("[", "tiledb_filter_list",
           function(x, i, j, ..., drop = FALSE) {
             tiledb_filter.from_ptr(libtiledb_filter_list_get_filter_from_index(x@ptr, i))

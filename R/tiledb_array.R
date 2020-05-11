@@ -112,6 +112,10 @@ setMethod("show",
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return An element from the sparse array
 #' @import nanotime
+#' @aliases [,tiledb_array
+#' @aliases [,tiledb_array-method
+#' @aliases [,tiledb_array,ANY,tiledb_array-method
+#' @aliases [,tiledb_array,ANY,ANY,tiledb_array-method
 setMethod("[", "tiledb_array",
           function(x, i, j, ..., drop = FALSE) {
   ## add defaults
@@ -279,6 +283,10 @@ setMethod("[", "tiledb_array",
 #' arr[c(1,2), c(1,3)] <- c(42,43) ## two values
 #' arr[2, 4] <- 88                 ## or just one
 #' }
+#' @aliases [<-,tiledb_array
+#' @aliases [<-,tiledb_array-method
+#' @aliases [<-,tiledb_array,ANY,tiledb_array-method
+#' @aliases [<-,tiledb_array,ANY,ANY,tiledb_array-method
 setMethod("[<-", "tiledb_array",
           function(x, i, j, ..., value) {
   if (!is.data.frame(value)) {
