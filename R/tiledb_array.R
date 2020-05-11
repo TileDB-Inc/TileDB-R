@@ -161,7 +161,6 @@ setMethod("[", "tiledb_array",
   }
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
 
-
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
 
@@ -181,8 +180,10 @@ setMethod("[", "tiledb_array",
 
   ## set range(s) on  second dimension
   if (is.null(js)) {
-    qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
-                                                  nonemptydom[[2]][1], nonemptydom[[2]][2])
+    if (length(nonemptydom) == 2) {
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
+                                                    nonemptydom[[2]][1], nonemptydom[[2]][2])
+    }
   } else {
     if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
     if (length(js) == 1) stop("No content to parse in col argument.")
