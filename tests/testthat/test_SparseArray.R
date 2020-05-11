@@ -1,15 +1,6 @@
 library(tiledb)
 context("tiledb::SparseArray")
 
-unlink_and_create <- function(tmp) {
-  if (dir.exists(tmp)) {
-    unlink(tmp, recursive = TRUE)
-    dir.create(tmp)
-  } else {
-    dir.create(tmp)
-  }
-  return(tmp)
-}
 #
 # test_that("Can read / write simple 1D sparse vector", {
 #   tmp <- tempfile()
@@ -35,11 +26,7 @@ unlink_and_create <- function(tmp) {
 # })
 
 test_that("test tiledb_subarray read for sparse array", {
-  #tmp <- tempfile()
-  #setup({
-  #  unlink_and_create(tmp)
-  #})
-  tmp <- tempdir()
+  dir.create(tmp <- tempfile())
 
   d1  <- tiledb_dim("d1", domain = c(1L, 5L))
   d2  <- tiledb_dim("d2", domain = c(1L, 5L))
@@ -64,18 +51,11 @@ test_that("test tiledb_subarray read for sparse array", {
   # vector range syntax
   expect_equal(tiledb_subarray(arr, list(1,3,1,3))$val, unlist(as.list(dat[1:3, 1:3])))
 
-  #teardown({
-  #  unlink(tmp, recursive = TRUE)
-  #})
   unlink(tmp, recursive = TRUE)
 })
 
 test_that("test tiledb_subarray read for sparse array with attribute list", {
-  #tmp <- tempfile()
-  #setup({
-  #  unlink_and_create(tmp)
-  #})
-  tmp <- tempdir()
+  dir.create(tmp <- tempfile())
 
   d1  <- tiledb_dim("d1", domain = c(1L, 5L))
   d2  <- tiledb_dim("d2", domain = c(1L, 5L))
@@ -104,18 +84,11 @@ test_that("test tiledb_subarray read for sparse array with attribute list", {
   # vector range syntax
   expect_equal(tiledb_subarray(arr, list(1,3,1,3), attrs=c("val2"))$val2, unlist(as.list(dat2[1:3, 1:3])))
 
-  #teardown({
-  #  unlink(tmp, recursive = TRUE)
-  #})
   unlink(tmp, recursive = TRUE)
 })
 
 test_that("test tiledb_subarray read for sparse array as dataframe", {
-  #tmp <- tempfile()
-  #setup({
-  #  unlink_and_create(tmp)
-  #})
-  tmp <- tempdir()
+  dir.create(tmp <- tempfile())
 
   d1  <- tiledb_dim("d1", domain = c(1L, 5L))
   d2  <- tiledb_dim("d2", domain = c(1L, 5L))
@@ -145,19 +118,12 @@ test_that("test tiledb_subarray read for sparse array as dataframe", {
   # vector range syntax
   expect_equal(tiledb_subarray(arr, list(1,3,1,3), attrs=c("val2"))$val2, unlist(as.list(dat2[1:3, 1:3])))
 
-  #teardown({
-  #  unlink(tmp, recursive = TRUE)
-  #})
   unlink(tmp, recursive = TRUE)
 })
 
 
 test_that("test tiledb_subarray read/write for sparse array with list of coordinates", {
-  #tmp <- tempfile()
-  #setup({
-  #  unlink_and_create(tmp)
-  #})
-  tmp <- tempdir()
+  dir.create(tmp <- tempfile())
 
   d1  <- tiledb_dim("d1", domain = c(1L, 5L))
   d2  <- tiledb_dim("d2", domain = c(1L, 5L))
@@ -182,8 +148,5 @@ test_that("test tiledb_subarray read/write for sparse array with list of coordin
   # vector range syntax
   expect_equal(arr[list(c(1:3), c(1:3))]$val, unlist(as.list(dat[1:3, 1:3])))
 
-  #teardown({
-  #  unlink(tmp, recursive = TRUE)
-  #})
   unlink(tmp, recursive = TRUE)
 })
