@@ -43,7 +43,12 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
                   [have_tiledb=0; AC_MSG_RESULT(no, need to install TileDB)])
 
 if test x"${have_tiledb}" = x"0"; then
-    AC_MSG_RESULT([** Installting TileDB])
+    AC_DEFUN([AC_PROG_CMAKE], [AC_CHECK_PROG(have_cmake,cmake,yes)])
+    AC_PROG_CMAKE
+    if test x"${have_cmake}" != x"yes"; then
+       AC_MSG_ERROR([please install 'cmake'])
+    fi
+    AC_MSG_RESULT([** Installing TileDB])
     cd src && tools/installTileDB.sh && cd -
     AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
     ## omitting libbz2.a and libz.a we R provides them

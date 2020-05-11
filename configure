@@ -583,6 +583,7 @@ PACKAGE_URL=''
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+have_cmake
 TILEDB_LIBS
 TILEDB_INCLUDE
 CXXCPP
@@ -2755,8 +2756,49 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
 if test x"${have_tiledb}" = x"0"; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ** Installting TileDB" >&5
-$as_echo "** Installting TileDB" >&6; }
+
+    # Extract the first word of "cmake", so it can be a program name with args.
+set dummy cmake; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_cmake+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_cmake"; then
+  ac_cv_prog_have_cmake="$have_cmake" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_cmake="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_cmake=$ac_cv_prog_have_cmake
+if test -n "$have_cmake"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_cmake" >&5
+$as_echo "$have_cmake" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+    if test x"${have_cmake}" != x"yes"; then
+       as_fn_error $? "please install 'cmake'" "$LINENO" 5
+    fi
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ** Installing TileDB" >&5
+$as_echo "** Installing TileDB" >&6; }
     cd src && tools/installTileDB.sh && cd -
     TILEDB_INCLUDE="-Itiledb-inst/include"
 
