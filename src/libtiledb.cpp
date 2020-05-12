@@ -134,6 +134,8 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_DATETIME_FS;
   } else if (typestr == "DATETIME_AS") {
     return TILEDB_DATETIME_AS;
+  } else if (typestr == "UTF8") {
+    return TILEDB_STRING_UTF8;
   } else {
     Rcpp::stop("Unknown TileDB type '%s'", typestr.c_str());
   }
@@ -1515,6 +1517,10 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
     return makeInteger64(v);
+  } else if (typestr == "UINT64") {
+    auto p = array->non_empty_domain<uint64_t>(name);
+    std::vector<int64_t> v{ static_cast<int64_t>(p.first), static_cast<int64_t>(p.second) };
+    return makeInteger64(v);
   } else if (typestr == "INT32") {
     auto p = array->non_empty_domain<int32_t>(name);
     return NumericVector::create(p.first, p.second);
@@ -2335,15 +2341,31 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       double stride = as<double>(strides);
       query->add_range(uidx, start, end, stride);
     }
-  } else if (typestr == "INT64" ||
-             typestr == "UINT64" ||
-             typestr == "UINT32") {
-    int64_t start = as<int64_t>(starts);
-    int64_t end = as<int64_t>(ends);
+  } else if (typestr == "INT64") {
+    int64_t start = makeScalarInteger64(as<double>(starts));
+    int64_t end = makeScalarInteger64(as<double>(ends));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
-      int64_t stride = as<int64_t>(strides);
+      int64_t stride = makeScalarInteger64(as<double>(strides));
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (typestr == "UINT64") {
+    uint64_t start = static_cast<uint64_t>(makeScalarInteger64(as<double>(starts)));
+    uint64_t end = static_cast<uint64_t>(makeScalarInteger64(as<double>(ends)));
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      uint64_t stride = static_cast<uint64_t>(makeScalarInteger64(as<double>(strides)));
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (typestr == "UINT32") {
+    uint32_t start = as<uint32_t>(starts);
+    uint32_t end   = as<uint32_t>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      uint32_t stride = as<int32_t>(strides);
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "DATETIME_DAY" ||
