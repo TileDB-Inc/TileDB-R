@@ -48,34 +48,22 @@ if test x"${have_tiledb}" = x"0"; then
     if test x"${have_cmake}" != x"yes"; then
        AC_MSG_ERROR([please install 'cmake'])
     fi
+
     AC_MSG_RESULT([** Installing TileDB])
     #cd src && tools/installTileDB.sh && cd -
-    cd src && tools/fetchTileDB.sh && cd -
+    cd inst && ../src/tools/fetchTileDB.sh && cd ..
+
     AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
-    ## omitting libbz2.a and libz.a we R provides them
-    if test -d src/tiledb-inst/lib64; then
-        ## checking for lib64 used e.g. on Fedora
-        AC_MSG_RESULT([** Now using src/tiledb-inst/lib64/])
-        AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib64/libtiledb.a tiledb-inst/lib64/libtbb.a tiledb-inst/lib64/libssl.a tiledb-inst/lib64/libcrypto.a tiledb-inst/lib64/libzstd.a tiledb-inst/lib64/liblz4.a")
-    else
-        ## default lib used e.g. on Debian and Ubuntu
-        #AC_MSG_RESULT([** Now using src/tiledb-inst/lib/])
-        #AC_SUBST([TILEDB_LIBS], "tiledb-inst/lib/libtiledb.a tiledb-inst/lib/libtbb.a tiledb-inst/lib/libssl.a tiledb-inst/lib/libcrypto.a tiledb-inst/lib/libzstd.a tiledb-inst/lib/liblz4.a")
-        AC_MSG_RESULT([** Now using src/tiledb/lib/ and src/tiledb/include])
-        AC_SUBST([TILEDB_INCLUDE], "-Itiledb/include")
-        #AC_SUBST([TILEDB_LIBS], "tiledb/lib/libtiledb.a tiledb/lib/libaws-c-common.a tiledb/lib/libaws-c-event-stream.a tiledb/lib/libaws-checksums.a tiledb/lib/libaws-cpp-sdk-core.a tiledb/lib/libaws-cpp-sdk-s3.a tiledb/lib/libcurl.a tiledb/lib/liblz4.a tiledb/lib/libssl.a tiledb/lib/libcrypto.a tiledb/lib/libtbb.a tiledb/lib/libzstd.a tiledb/lib/libkj.a tiledb/lib/libcapnp.a")
-        pwd=$(pwd)
-        AC_SUBST([TILEDB_LIBS], "-ltiledb -Ltiledb/lib -Wl,-rpath,${pwd}/tiledb/lib")
-    fi
+    AC_MSG_RESULT([** Now using src/tiledb/lib/ and src/tiledb/include])
+    AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
+    AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
+    RPATH=`"${R_HOME}/bin/R" -s -e 'cat(file.path(.libPaths()[[1]], "tiledb"))'`
+    echo "RPATH is ${RPATH}"
+    AC_SUBST([TILEDB_RPATH], "${RPATH}")
 
     CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
-    #AC_MSG_CHECKING([compilation with TileDB])
-    #AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
-    #                                tiledb::Context ctx;])],
-    #              [AC_MSG_RESULT(yes); ],
-    #              [AC_MSG_ERROR(no)])
 fi
 
 AC_CONFIG_FILES([src/Makevars])
