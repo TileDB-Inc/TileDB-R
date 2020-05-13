@@ -43,22 +43,16 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
                   [have_tiledb=0; AC_MSG_RESULT(no, need to install TileDB)])
 
 if test x"${have_tiledb}" = x"0"; then
-    AC_DEFUN([AC_PROG_CMAKE], [AC_CHECK_PROG(have_cmake,cmake,yes)])
-    AC_PROG_CMAKE
-    if test x"${have_cmake}" != x"yes"; then
-       AC_MSG_ERROR([please install 'cmake'])
-    fi
-
-    AC_MSG_RESULT([** Installing TileDB])
+    AC_MSG_RESULT([installing TileDB...])
     #cd src && tools/installTileDB.sh && cd -
     cd inst && ../src/tools/fetchTileDB.sh && cd ..
 
     AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
-    AC_MSG_RESULT([** Now using src/tiledb/lib/ and src/tiledb/include])
+    AC_MSG_RESULT([using inst/tiledb/{lib,include}])
     AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
     AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
     RPATH=`"${R_HOME}/bin/R" -s -e 'cat(file.path(.libPaths()[[1]], "tiledb"))'`
-    echo "RPATH is ${RPATH}"
+    #echo "RPATH is ${RPATH}"
     AC_SUBST([TILEDB_RPATH], "${RPATH}")
 
     CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"

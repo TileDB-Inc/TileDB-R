@@ -10,14 +10,11 @@ if [ ! -f ${tarball} ]; then
 fi
 
 if [ -d tiledb ]; then
-    rm -rfv tiledb
+    rm -rf tiledb
 fi
 
 if [ ! -d tiledb ]; then
     mkdir tiledb
     tar xaf ${tarball} -C tiledb
     rm ${tarball}
-    ## making a full copy is inelegant but apparently needed
-    cd tiledb/lib && cp -vax libtiledb.so.?.? libtiledb.so && cd -
-    #ls -lR tiledb/
 fi
