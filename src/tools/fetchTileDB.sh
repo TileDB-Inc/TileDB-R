@@ -1,11 +1,12 @@
 #!/bin/sh
 
+repo=https://tiledb-inc.github.io/tiledb-linux-library
 tarball=tiledb-ubuntu-16.04-shared.tar.gz
 
 #test -f /etc/os-release && echo "** On " && cat /etc/os-release
 
 if [ ! -f ${tarball} ]; then
-    curl -s -k -L -O http://dirk.eddelbuettel.com/tmp/${tarball}
+    curl -s -k -L -O ${repo}/${tarball}
 fi
 
 if [ -d tiledb ]; then
