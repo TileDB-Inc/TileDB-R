@@ -1,4 +1,4 @@
 #!/bin/sh
 
 rm -f  src/Makevars src/*.o src/*.so config.log config.status
-rm -rf tiledb.Rcheck
+rm -rf tiledb.Rcheck autom4te.cache
