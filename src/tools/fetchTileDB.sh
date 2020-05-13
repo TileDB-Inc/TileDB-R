@@ -4,7 +4,7 @@ tarball=tiledb-ubuntu-16.04-shared.tar.gz
 
 #test -f /etc/os-release && echo "** On " && cat /etc/os-release
 
-if [ ! -f tiledb_build.tar.gz ]; then
+if [ ! -f ${tarball} ]; then
     curl -s -k -L -O http://dirk.eddelbuettel.com/tmp/${tarball}
 fi
 
