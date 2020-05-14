@@ -14,11 +14,15 @@ AC_REQUIRE_CPP
 AC_PROG_CXX
 
 ## Default values
-AS_IF([test $(uname) == "Darwin"], [TILEDB_RPATH="-Wl,-rpath,/usr/local/lib"], [TILEDB_RPATH=""])
+AS_IF([test $(uname) == "Darwin"],
+            [on_macos="yes"
+             TILEDB_RPATH="-Wl,-rpath,/usr/local/lib"],
+            [on_macos="no"
+             TILEDB_RPATH=""])
 AC_SUBST([TILEDB_INCLUDE], "")
 AC_SUBST([TILEDB_LIBS], "-ltiledb")
 
-## Reflect --with-tiledb if give
+## Reflect --with-tiledb if given
 AC_ARG_WITH([tiledb],
             AC_HELP_STRING([--with-tiledb=PREFIX], [path to where TileDB is installed]),
             [TILEDB_INCLUDE="-I${with_tiledb}/include ${TILEDB_INCLUDE}"
@@ -32,32 +36,41 @@ origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
-## check for tiledb C-api header
-#AC_CHECK_HEADER([tiledb/tiledb.h], [], [AC_MSG_ERROR([unable to find tiledb/tiledb.h])])
+## Check for TileDB -- either just probing the header, or by compilations (~ 1 second)
+checkTileDBViaHeader="yes"
 
-## check we can build
-AC_MSG_CHECKING([compilation with TileDB])
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
-                                    tiledb::Context ctx;])],
-                  [have_tiledb=1; AC_MSG_RESULT(yes); ],
-                  [have_tiledb=0; AC_MSG_RESULT(no, need to install TileDB)])
+## Use either one of the tests
+if test x"${checkTileDBViaHeader}" = x"yes"; then
+    ## simply check for tiledb C-api header
+    AC_CHECK_HEADER([tiledb/tiledb.h], [have_tiledb="yes"], [have_tiledb="no"])
+else
+    ## formally check we can build
+    AC_MSG_CHECKING([compilation with TileDB])
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <tiledb/tiledb>
+                                        tiledb::Context ctx;])],
+                                       [have_tiledb="yes"; AC_MSG_RESULT(yes); ],
+                                       [have_tiledb="no"; AC_MSG_RESULT(no, need to install TileDB)])
+fi
 
-if test x"${have_tiledb}" = x"0"; then
-    AC_MSG_RESULT([installing TileDB...])
-    #cd src && tools/installTileDB.sh && cd -
-    cd inst && ../src/tools/fetchTileDB.sh && cd ..
+if test x"${have_tiledb}" = x"no"; then
+    if test x"${on_macos}" = x"yes"; then
+        AC_MSG_RESULT([installing TileDB... -- TBD for macOS])
+    else
+        AC_MSG_RESULT([installing TileDB...])
+        #cd src && tools/installTileDB.sh && cd -
+        cd inst && ../src/tools/fetchTileDB.sh && cd ..
 
-    AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
-    AC_MSG_RESULT([using inst/tiledb/{lib,include}])
-    AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
-    AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
-    RPATH=`"${R_HOME}/bin/R" -s -e 'cat(file.path(.libPaths()[[1]], "tiledb"))'`
-    #echo "RPATH is ${RPATH}"
-    AC_SUBST([TILEDB_RPATH], "${RPATH}")
+        AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
+        AC_MSG_RESULT([using inst/tiledb/{lib,include}])
+        AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
+        AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
+        RPATH=`"${R_HOME}/bin/R" -s -e 'cat(file.path(.libPaths()[[1]], "tiledb"))'`
+        #echo "RPATH is ${RPATH}"
+        AC_SUBST([TILEDB_RPATH], "${RPATH}")
 
-    CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
-    LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
-
+        CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
+        LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
+    fi
 fi
 
 AC_CONFIG_FILES([src/Makevars])
