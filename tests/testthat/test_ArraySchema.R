@@ -94,7 +94,7 @@ test_that("tiledb_array_schema full constructor argument values are correct",  {
 
 
 test_that("tiledb_array_schema created with encryption",  {
-  uri <- tempfile()
+  dir.create(uri <- tempfile())
   key <- "0123456789abcdeF0123456789abcdeF"
 
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
@@ -112,4 +112,6 @@ test_that("tiledb_array_schema created with encryption",  {
   expect_true(is(A, "tiledb_dense"))
   ##expect_true(is(schema(A), "tiledb_dense"))
   ## can't yet read / write as scheme getter not generalized for encryption
+
+  unlink(uri, recursive=TRUE)
 })

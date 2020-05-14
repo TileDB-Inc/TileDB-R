@@ -4,7 +4,9 @@
 
 ## Improvements
 
-- All S4 classes are now consistently documented or aliased
+- If needed, the build system now builds TileDB and its required component (#118)
+
+- All S4 classes are now consistently documented or aliased (#117)
 
 # 0.6.0
 

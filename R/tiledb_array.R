@@ -161,7 +161,6 @@ setMethod("[", "tiledb_array",
   }
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
 
-
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
 
@@ -181,8 +180,10 @@ setMethod("[", "tiledb_array",
 
   ## set range(s) on  second dimension
   if (is.null(js)) {
-    qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
-                                                  nonemptydom[[2]][1], nonemptydom[[2]][2])
+    if (length(nonemptydom) == 2) {
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
+                                                    nonemptydom[[2]][1], nonemptydom[[2]][2])
+    }
   } else {
     if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
     if (length(js) == 1) stop("No content to parse in col argument.")
@@ -356,9 +357,17 @@ setMethod("[<-", "tiledb_array",
 
     buflist <- vector(mode="list", length=nc)
     for (i in 1:nc) {
-      buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
-      buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
-      qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])
+      if (alltypes[i] %in% c("CHAR", "ASCII")) { # variable length
+        txtvec <- as.character(value[[i]])
+        offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
+        data <- paste(txtvec, collapse="")
+        buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
+        qryptr <- libtiledb_query_set_buffer_var_char(qryptr, allnames[i], buflist[[i]])
+      } else {
+        buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
+        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
+        qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])
+      }
     }
 
     qryptr <- libtiledb_query_submit(qryptr)

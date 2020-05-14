@@ -76,9 +76,15 @@ open_read_change_read <- function(uri) {
   show(data)
 }
 
+simple_ex <- function(uri) {
+  arr <- tiledb_dense(uri, as.data.frame = TRUE)
+  show(arr[7:9, 2:3])
+}
+
 create_array(uri)
 write_array(uri)
 read_array(uri)
 read_as_df(uri)
 read_array_subset(uri)
 open_read_change_read(uri)
+simple_ex(uri)
