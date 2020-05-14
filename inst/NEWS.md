@@ -4,9 +4,13 @@
 
 ## Improvements
 
+- All S4 classes are now consistently documented or aliased (#117)
+
 - If needed, the build system now builds TileDB and its required component (#118)
 
-- All S4 classes are now consistently documented or aliased (#117)
+- Data.frame support has been extended further and made more robust (#119)
+
+- The Description: in `DESCRIPTION` has been refreshed (#120)
 
 # 0.6.0
 
