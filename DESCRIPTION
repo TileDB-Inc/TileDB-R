@@ -3,7 +3,7 @@ Type: Package
 Version: 0.6.0
 Title: Sparse and Dense Multidimensional Array Storage Engine for Data Science
 Author: TileDB, Inc.
-Maintainer: TileDB <support@tiledb.com>
+Maintainer: Dirk Eddelbuettel <dirk@tiledb.com>
 Description: The data science storage engine 'TileDB' introduces a
  powerful on-disk format for multi-dimensional arrays. It supports
  dense and sparse arrays, dataframes and key-values stores, cloud
