@@ -3242,12 +3242,11 @@ $as_echo "installing TileDB..." >&6; }
 
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: using inst/tiledb/{lib,include}" >&5
 $as_echo "using inst/tiledb/{lib,include}" >&6; }
+        RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
         TILEDB_INCLUDE="-I../inst/tiledb/include"
 
         TILEDB_LIBS="-ltiledb -L../inst/tiledb/lib"
 
-        RPATH=`"${R_HOME}/bin/R" -s -e 'cat(file.path(.libPaths()[1], "tiledb"))'`
-        #echo "RPATH is ${RPATH}"
         TILEDB_RPATH="${RPATH}"
 
 

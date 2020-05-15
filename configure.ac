@@ -62,10 +62,9 @@ if test x"${have_tiledb}" = x"no"; then
 
         AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
         AC_MSG_RESULT([using inst/tiledb/{lib,include}])
+        RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
         AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
         AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
-        RPATH=`"${R_HOME}/bin/R" -s -e 'cat(file.path(.libPaths()[[1]], "tiledb"))'`
-        #echo "RPATH is ${RPATH}"
         AC_SUBST([TILEDB_RPATH], "${RPATH}")
 
         CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"

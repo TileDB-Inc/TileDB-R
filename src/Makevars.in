@@ -5,4 +5,5 @@ CXX_STD = CXX11
 PKG_CPPFLAGS =	-I../inst/include/ @TILEDB_INCLUDE@
 
 ## We also need the TileDB library
-PKG_LIBS = @TILEDB_LIBS@ -Wl,-rpath,@TILEDB_RPATH@/tiledb/lib
+#PKG_LIBS = @TILEDB_LIBS@ -Wl,-rpath,@TILEDB_RPATH@/tiledb/lib
+PKG_LIBS = @TILEDB_LIBS@ @TILEDB_RPATH@
