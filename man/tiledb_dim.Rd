@@ -9,9 +9,13 @@ tiledb_dim(name, domain, tile, type, ctx = tiledb_get_context())
 \arguments{
 \item{name}{The dimension name / label string.  This argument is required.}
 
-\item{domain}{The dimension (inclusive) domain. The dimension’s domain is defined by a (lower bound, upper bound) vector}
+\item{domain}{The dimension (inclusive) domain. The dimension’s domain is
+defined by a (lower bound, upper bound) vector, and is usually either of
+type \code{integer} or \code{double} (i.e. \code{numeric}). For type,
+\code{ASCII} \code{NULL} is expected.}
 
-\item{tile}{The tile dimension tile extent}
+\item{tile}{The tile dimension tile extent. For type,
+\code{ASCII} \code{NULL} is expected.}
 
 \item{type}{The dimension TileDB datatype string}
 

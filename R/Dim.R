@@ -16,8 +16,12 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' Contructs a `tiledb_dim` object
 #'
 #' @param name The dimension name / label string.  This argument is required.
-#' @param domain The dimension (inclusive) domain. The dimension’s domain is defined by a (lower bound, upper bound) vector
-#' @param tile The tile dimension tile extent
+#' @param domain The dimension (inclusive) domain. The dimension’s domain is
+#' defined by a (lower bound, upper bound) vector, and is usually either of
+#' type \code{integer} or \code{double} (i.e. \code{numeric}). For type,
+#' \code{ASCII} \code{NULL} is expected.
+#' @param tile The tile dimension tile extent. For type,
+#' \code{ASCII} \code{NULL} is expected.
 #' @param type The dimension TileDB datatype string
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
@@ -33,8 +37,16 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
   if (!is.scalar(name, "character")) {
     stop("'name' argument must be a scalar string when creating a dimension object.")
   }
-  if ((typeof(domain) != "integer" && typeof(domain) != "double") || (length(domain) != 2)) {
-    stop("domain must be an integer or double vector of length 2")
+  if (missing(type)) {
+    type <- ifelse(is.integer(domain), "INT32", "FLOAT64")
+  } else if (!type %in% c("INT32", "FLOAT64", "DATETIME_DAY", "DATETIME_SEC",
+                          "DATETIME_MS", "DATETIME_US", "DATETIME_NS", "ASCII")) {
+    stop("type argument must be 'INT32' or 'FLOAT64' or a supported 'DATETIME_*' type.", call.=FALSE)
+  }
+  if (!type %in% c("ASCII")) {
+    if ((typeof(domain) != "integer" && typeof(domain) != "double") || (length(domain) != 2)) {
+      stop("domain must be an integer or double vector of length 2")
+    }
   }
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
@@ -46,12 +58,6 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
     } else {
       tile <- (domain[2L] - domain[1L])
     }
-  }
-  if (missing(type)) {
-    type <- ifelse(is.integer(domain), "INT32", "FLOAT64")
-  } else if (!type %in% c("INT32", "FLOAT64", "DATETIME_DAY", "DATETIME_SEC",
-                          "DATETIME_MS", "DATETIME_US", "DATETIME_NS", "ASCII")) {
-    stop("type argument must be 'INT32' or 'FLOAT64' or a supported 'DATETIME_*' type.", call.=FALSE)
   }
   ptr <- libtiledb_dim(ctx@ptr, name, type, domain, tile)
   return(new("tiledb_dim", ptr = ptr))
