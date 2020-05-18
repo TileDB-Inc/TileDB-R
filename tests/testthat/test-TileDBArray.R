@@ -2,8 +2,8 @@ library(tiledb)
 context("tiledb::TileDBArray")
 
 test_that("test tiledb_array read/write sparse array with heterogenous date domains", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
   dir.create(tmp <- tempfile())
-
   d1  <- tiledb_dim("d1",
                     domain = c(as.Date("2001-01-02"), as.Date("2099-12-31")), tile=1L,
                     type="DATETIME_DAY")
@@ -28,6 +28,7 @@ test_that("test tiledb_array read/write sparse array with heterogenous date doma
 })
 
 test_that("test tiledb_array read/write sparse array with heterogenous msec domains", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
   dir.create(tmp <- tempfile())
 
   d1  <- tiledb_dim("d1", domain = c(0, 1e18), tile=1000L, type="DATETIME_MS")
