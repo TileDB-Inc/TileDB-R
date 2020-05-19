@@ -30,9 +30,9 @@ fi
 ## Build
 mkdir build
 cd build
-#../tiledb-src/bootstrap --force-build-all-deps --enable-s3 --enable-serialization
-## NB: temporarily disabling serialization and s3
-../tiledb-src/bootstrap --force-build-all-deps 
+../tiledb-src/bootstrap --force-build-all-deps --enable-serialization
+## NB: temporarily disabling and s3
+#../tiledb-src/bootstrap --force-build-all-deps 
 make -j 4
 make -C tiledb install
 cd ..

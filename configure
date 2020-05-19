@@ -3257,7 +3257,7 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
-## for now, and to test, force some selections
+## to test one can force some selection here
 #have_tiledb="no"
 #enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then

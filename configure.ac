@@ -69,7 +69,7 @@ else
                                        [have_tiledb="no"; AC_MSG_RESULT(no, need to install TileDB)])
 fi
 
-## for now, and to test, force some selections
+## to test one can force some selection here
 #have_tiledb="no"
 #enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
