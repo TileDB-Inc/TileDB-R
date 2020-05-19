@@ -621,6 +621,9 @@ ac_includes_default="\
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 TILEDB_RPATH
+have_curl
+have_git
+have_cmake
 EGREP
 GREP
 TILEDB_LIBS
@@ -675,6 +678,7 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_building
 with_tiledb
 '
       ac_precious_vars='build_alias
@@ -1303,10 +1307,17 @@ if test -n "$ac_init_help"; then
    esac
   cat <<\_ACEOF
 
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-building       build TileDB library locally instead of downloading
+                          prebuilt
+
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-tiledb=PREFIX    path to where TileDB is installed
+  --with-tiledb=PREFIX    path to installed built of TileDB
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -2913,7 +2924,19 @@ TILEDB_INCLUDE=""
 TILEDB_LIBS="-ltiledb"
 
 
-## Reflect --with-tiledb if given
+## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
+# Check whether --enable-building was given.
+if test "${enable_building+set}" = set; then :
+  enableval=$enable_building;
+fi
+
+	      #[building="${enable_building}"
+	      # AC_MSG_RESULT([Enabled chosen])],
+	      #[building="${enable_building}"],
+	      # AC_MSG_RESULT([Enabled NOT chosen])],
+	      #)
+
+## Allow --with-tiledb if given (though system location is found too)
 
 # Check whether --with-tiledb was given.
 if test "${with_tiledb+set}" = set; then :
@@ -2922,6 +2945,12 @@ if test "${with_tiledb+set}" = set; then :
              TILEDB_RPATH="-Wl,-rpath,${with_tiledb}/lib"
 fi
 
+#echo "enable_building: ${enable_building}"
+#echo "with_tiledb: ${with_tiledb}"
+## Sanity check
+if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
+    as_fn_error $? "Conflicting choice of preinstalled TileDB and enabling building TileDB." "$LINENO" 5
+fi
 
 ## Setup
 origCPPFLAGS="${CPPFLAGS}"
@@ -3228,15 +3257,146 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
+## for now, and to test, force some selections
+#have_tiledb="no"
+#enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
     if test x"${on_macos}" = x"yes"; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB... -- TBD for macOS" >&5
 $as_echo "installing TileDB... -- TBD for macOS" >&6; }
     else
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB..." >&5
-$as_echo "installing TileDB..." >&6; }
-        #cd src && tools/installTileDB.sh && cd -
-        cd inst && ../src/tools/fetchTileDB.sh && cd ..
+	if test x"${enable_building}" = x"yes"; then
+
+            # Extract the first word of "cmake", so it can be a program name with args.
+set dummy cmake; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_cmake+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_cmake"; then
+  ac_cv_prog_have_cmake="$have_cmake" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_cmake="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_cmake=$ac_cv_prog_have_cmake
+if test -n "$have_cmake"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_cmake" >&5
+$as_echo "$have_cmake" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+            if test x"${have_cmake}" != x"yes"; then
+                as_fn_error $? "please install 'cmake'" "$LINENO" 5
+            fi
+
+            # Extract the first word of "git", so it can be a program name with args.
+set dummy git; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_git+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_git"; then
+  ac_cv_prog_have_git="$have_git" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_git="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_git=$ac_cv_prog_have_git
+if test -n "$have_git"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_git" >&5
+$as_echo "$have_git" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+            if test x"${have_git}" != x"yes"; then
+                as_fn_error $? "please install 'git'" "$LINENO" 5
+            fi
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB via building locally..." >&5
+$as_echo "installing TileDB via building locally..." >&6; }
+	    src/tools/buildTileDB.sh
+	else
+
+	    # Extract the first word of "curl", so it can be a program name with args.
+set dummy curl; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_have_curl+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$have_curl"; then
+  ac_cv_prog_have_curl="$have_curl" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_curl="yes"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_curl=$ac_cv_prog_have_curl
+if test -n "$have_curl"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_curl" >&5
+$as_echo "$have_curl" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+	    if test x"${have_curl}" != x"yes"; then
+	           as_fn_error $? "please install 'curl'" "$LINENO" 5
+	    fi
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
+$as_echo "downloading TileDB library..." >&6; }
+            cd inst && ../src/tools/fetchTileDB.sh && cd ..
+        fi
 
         TILEDB_INCLUDE="-Itiledb-inst/include"
 

@@ -22,13 +22,30 @@ AS_IF([test $(uname) == "Darwin"],
 AC_SUBST([TILEDB_INCLUDE], "")
 AC_SUBST([TILEDB_LIBS], "-ltiledb")
 
-## Reflect --with-tiledb if given
+## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
+AC_ARG_ENABLE([building],
+	      AC_HELP_STRING([--enable-building],
+	                     [build TileDB library locally instead of downloading prebuilt]))
+	      #[building="${enable_building}"
+	      # AC_MSG_RESULT([Enabled chosen])],
+	      #[building="${enable_building}"],
+	      # AC_MSG_RESULT([Enabled NOT chosen])],
+	      #)
+
+## Allow --with-tiledb if given (though system location is found too)
 AC_ARG_WITH([tiledb],
-            AC_HELP_STRING([--with-tiledb=PREFIX], [path to where TileDB is installed]),
+            AC_HELP_STRING([--with-tiledb=PREFIX],
+	                   [path to installed built of TileDB]),
             [TILEDB_INCLUDE="-I${with_tiledb}/include ${TILEDB_INCLUDE}"
              TILEDB_LIBS="-L${with_tiledb}/lib ${TILEDB_LIBS}"
              TILEDB_RPATH="-Wl,-rpath,${with_tiledb}/lib"],
             [])
+#echo "enable_building: ${enable_building}"
+#echo "with_tiledb: ${with_tiledb}"
+## Sanity check
+if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
+    AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling building TileDB.])
+fi    
 
 ## Setup
 origCPPFLAGS="${CPPFLAGS}"
@@ -52,14 +69,36 @@ else
                                        [have_tiledb="no"; AC_MSG_RESULT(no, need to install TileDB)])
 fi
 
+## for now, and to test, force some selections
+#have_tiledb="no"
+#enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
     if test x"${on_macos}" = x"yes"; then
         AC_MSG_RESULT([installing TileDB... -- TBD for macOS])
     else
-        AC_MSG_RESULT([installing TileDB...])
-        #cd src && tools/installTileDB.sh && cd -
-        cd inst && ../src/tools/fetchTileDB.sh && cd ..
-
+	if test x"${enable_building}" = x"yes"; then
+	    AC_DEFUN([AC_PROG_CMAKE], [AC_CHECK_PROG(have_cmake,cmake,yes)])
+            AC_PROG_CMAKE
+            if test x"${have_cmake}" != x"yes"; then
+                AC_MSG_ERROR([please install 'cmake'])
+            fi
+	    AC_DEFUN([AC_PROG_GIT], [AC_CHECK_PROG(have_git,git,yes)])
+            AC_PROG_GIT
+            if test x"${have_git}" != x"yes"; then
+                AC_MSG_ERROR([please install 'git'])
+            fi
+            AC_MSG_RESULT([installing TileDB via building locally...])
+	    src/tools/buildTileDB.sh 
+	else
+	    AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
+	    AC_PROG_CURL
+	    if test x"${have_curl}" != x"yes"; then
+	           AC_MSG_ERROR([please install 'curl'])
+	    fi
+            AC_MSG_RESULT([downloading TileDB library...])
+            cd inst && ../src/tools/fetchTileDB.sh && cd ..
+        fi
+	
         AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
         AC_MSG_RESULT([using inst/tiledb/{lib,include}])
         RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
