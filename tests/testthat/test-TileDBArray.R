@@ -50,3 +50,82 @@ test_that("test tiledb_array read/write sparse array with heterogenous msec doma
 
   unlink(tmp, recursive = TRUE)
 })
+
+
+test_that("test full write-read cycle on sample data using fromDataFrame", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+
+  ## -- download data and extract data set, sample a portion
+  ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
+  ##               "/tmp/bank.zip")
+  ## datfull <- read.csv(unz("/tmp/bank.zip", "bank-full.csv"), sep=";")
+  ## set.seed(123)
+  ## dat <- datfull[sample(nrow(datfull), 1000, replace=FALSE),]
+  ## saveRDS(dat, "bankSample.rds")
+
+  dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
+
+  dir.create(tmpuri <- tempfile())
+  fromDataFrame(dat[,-1], tmpuri)
+
+  arr <- tiledb_dense(tmpuri, as.data.frame=TRUE)
+  newdat <- arr[]
+  expect_equal(dat[,-1], newdat)
+
+  unlink(tmpuri, recursive = TRUE)
+})
+
+test_that("test full write-read cycle on sample data using schema", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+
+  ## -- download data and extract data set, sample a portion
+  ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
+  ##               "/tmp/bank.zip")
+  ## datfull <- read.csv(unz("/tmp/bank.zip", "bank-full.csv"), sep=";")
+  ## set.seed(123)
+  ## dat <- datfull[sample(nrow(datfull), 1000, replace=FALSE),]
+  ## saveRDS(dat, "bankSample.rds")
+
+  dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
+
+  dir.create(tmpuri <- tempfile())
+
+  ctx <- tiledb_ctx()
+  n <- nrow(dat)
+  dim <- new("tiledb_dim", ptr = tiledb:::libtiledb_dim(ctx@ptr, "rows", "INT32", c(1L,n), 1L))
+  dom <- tiledb_domain(dim)
+  sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("age", type="INT32"),
+                                            tiledb_attr("job", type="CHAR", ncells=NA),
+                                            tiledb_attr("marital", type="CHAR", ncells=NA),
+                                            tiledb_attr("education", type="CHAR", ncells=NA),
+                                            tiledb_attr("default", type="CHAR", ncells=NA),
+                                            tiledb_attr("balance", type="INT32"),
+                                            tiledb_attr("housing", type="CHAR", ncells=NA),
+                                            tiledb_attr("loan", type="CHAR", ncells=NA),
+                                            tiledb_attr("contact", type="CHAR", ncells=NA),
+                                            tiledb_attr("day", type="INT32"),
+                                            tiledb_attr("month", type="CHAR", ncells=NA),
+                                            tiledb_attr("duration", type="INT32"),
+                                            tiledb_attr("campaign", type="INT32"),
+                                            tiledb_attr("pdays", type="INT32"),
+                                            tiledb_attr("previous", type="INT32"),
+                                            tiledb_attr("poutcome", type="CHAR", ncells=NA),
+                                            tiledb_attr("y", type="CHAR", ncells=NA)
+                                            ),
+                             sparse = TRUE)
+  sch@ptr <- tiledb:::libtiledb_array_schema_set_allows_dups(sch@ptr, TRUE)
+  tiledb_array_create(tmpuri, sch)
+
+  arr <- tiledb_array(tmpuri, as.data.frame=TRUE)
+  ## prefix rows index
+  # dat <- cbind(rows=1:n, dat)
+  arr[] <- dat
+
+
+  newarr <- tiledb_array(tmpuri, as.data.frame=TRUE)
+  newdat <- newarr[]
+  expect_equal(dat, newdat)
+
+  unlink(tmpuri, recursive = TRUE)
+
+})
