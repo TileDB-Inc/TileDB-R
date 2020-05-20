@@ -76,6 +76,8 @@ if test x"${have_tiledb}" = x"no"; then
     if test x"${on_macos}" = x"yes"; then
         AC_MSG_RESULT([installing TileDB... -- TBD for macOS])
     else
+        osrel=`src/tools/getOsRelease.sh`
+	AC_MSG_RESULT([running on ${osrel}])
 	if test x"${enable_building}" = x"yes"; then
 	    AC_DEFUN([AC_PROG_CMAKE], [AC_CHECK_PROG(have_cmake,cmake,yes)])
             AC_PROG_CMAKE

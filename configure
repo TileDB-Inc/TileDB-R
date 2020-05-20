@@ -3258,13 +3258,16 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
 ## to test one can force some selection here
-#have_tiledb="no"
+have_tiledb="no"
 #enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
     if test x"${on_macos}" = x"yes"; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB... -- TBD for macOS" >&5
 $as_echo "installing TileDB... -- TBD for macOS" >&6; }
     else
+        osrel=`src/tools/getOsRelease.sh`
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: running on ${osrel}" >&5
+$as_echo "running on ${osrel}" >&6; }
 	if test x"${enable_building}" = x"yes"; then
 
             # Extract the first word of "cmake", so it can be a program name with args.
