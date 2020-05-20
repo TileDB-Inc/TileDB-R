@@ -45,7 +45,7 @@ AC_ARG_WITH([tiledb],
 ## Sanity check
 if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
     AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling building TileDB.])
-fi    
+fi
 
 ## Setup
 origCPPFLAGS="${CPPFLAGS}"
@@ -90,7 +90,7 @@ if test x"${have_tiledb}" = x"no"; then
                 AC_MSG_ERROR([please install 'git'])
             fi
             AC_MSG_RESULT([installing TileDB via building locally...])
-	    src/tools/buildTileDB.sh 
+	    src/tools/buildTileDB.sh
 	else
 	    AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
 	    AC_PROG_CURL
@@ -100,7 +100,7 @@ if test x"${have_tiledb}" = x"no"; then
             AC_MSG_RESULT([downloading TileDB library...])
             cd inst && ../src/tools/fetchTileDB.sh && cd ..
         fi
-	
+
         AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
         AC_MSG_RESULT([using inst/tiledb/{lib,include}])
         RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
