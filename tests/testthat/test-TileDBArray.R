@@ -124,3 +124,43 @@ test_that("test full write-read cycle on sample data using schema", {
   unlink(tmpuri, recursive = TRUE)
 
 })
+
+test_that("test extended flag on reading", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+
+  ## -- download data and extract data set, sample a portion
+  ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
+  ##               "/tmp/bank.zip")
+  ## datfull <- read.csv(unz("/tmp/bank.zip", "bank-full.csv"), sep=";")
+  ## set.seed(123)
+  ## dat <- datfull[sample(nrow(datfull), 1000, replace=FALSE),]
+  ## saveRDS(dat, "bankSample.rds")
+
+  dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
+
+  dir.create(tmpuri <- tempfile())
+  fromDataFrame(dat[,-1], tmpuri)
+
+  arr1 <- tiledb_array(tmpuri, as.data.frame=TRUE)
+  dat1 <- arr1[]
+
+  arr2 <- tiledb_array(tmpuri, as.data.frame=TRUE, extended=FALSE)
+  dat2 <- arr2[]
+  ## dat2 should have fewer as not extended
+  expect_true(ncol(dat1) > ncol(dat2))
+
+  ## check values
+  expect_true(extended(arr1))
+  expect_false(extended(arr2))
+
+  ## change value, check again
+  extended(arr2) <- TRUE
+  expect_true(extended(arr2))
+
+  ## now dat2 should be equal to dat1
+  dat2 <- arr2[]
+  expect_equal(ncol(dat1), ncol(dat2))
+  expect_equal(dat1, dat2)
+
+  unlink(tmpuri, recursive = TRUE)
+})
