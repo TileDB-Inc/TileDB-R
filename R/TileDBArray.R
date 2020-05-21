@@ -149,8 +149,9 @@ setMethod("[", "tiledb_array",
 
   if (length(x@attrs) != 0) {
     ind <- match(x@attrs, attrnames)
-    print(ind)
-    if (length(ind) == 0) stop("Only non-existing columns selected.", call.=FALSE)
+    if (length(ind) == 0) {
+      stop("Only non-existing columns selected.", call.=FALSE)
+    }
     attrnames <- attrnames[ind]
     attrtypes <- attrtypes[ind]
     attrvarnum <- attrvarnum[ind]
@@ -266,6 +267,10 @@ setMethod("[", "tiledb_array",
   ## reduce output if extended is false
   if (!x@extended) {
     res <- res[, attrnames]
+  }
+
+  if (!x@as.data.frame) {
+    res <- as.list(res)
   }
 
   invisible(res)
