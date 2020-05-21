@@ -147,6 +147,15 @@ setMethod("[", "tiledb_array",
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
 
+  if (length(x@attrs) != 0) {
+    ind <- match(x@attrs, attrnames)
+    print(ind)
+    if (length(ind) == 0) stop("Only non-existing columns selected.", call.=FALSE)
+    attrnames <- attrnames[ind]
+    attrtypes <- attrtypes[ind]
+    attrvarnum <- attrvarnum[ind]
+  }
+
   allnames <- c(dimnames, attrnames)
   alltypes <- c(dimtypes, attrtypes)
   allvarnum <- c(dimvarnum, attrvarnum)

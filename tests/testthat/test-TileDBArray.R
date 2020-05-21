@@ -164,3 +164,34 @@ test_that("test extended flag on reading", {
 
   unlink(tmpuri, recursive = TRUE)
 })
+
+
+test_that("test attrs column selection on reading", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+
+  ## -- download data and extract data set, sample a portion
+  ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
+  ##               "/tmp/bank.zip")
+  ## datfull <- read.csv(unz("/tmp/bank.zip", "bank-full.csv"), sep=";")
+  ## set.seed(123)
+  ## dat <- datfull[sample(nrow(datfull), 1000, replace=FALSE),]
+  ## saveRDS(dat, "bankSample.rds")
+
+  dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
+
+  dir.create(tmpuri <- tempfile())
+  fromDataFrame(dat[,-1], tmpuri)
+
+  arr <- tiledb_array(tmpuri, as.data.frame=TRUE)
+  expect_true(length(attrs(arr)) == 0)
+
+  sels <-  c("age", "job", "education", "duration")
+  attrs(arr) <- sels
+  dat <- arr[]
+  expect_equal(colnames(dat), c("rows", sels))
+  extended(arr) <- FALSE
+  dat <- arr[]
+  expect_equal(colnames(dat), sels)
+
+  unlink(tmpuri, recursive = TRUE)
+})
