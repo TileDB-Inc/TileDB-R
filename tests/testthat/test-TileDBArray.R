@@ -90,9 +90,8 @@ test_that("test full write-read cycle on sample data using schema", {
 
   dir.create(tmpuri <- tempfile())
 
-  ctx <- tiledb_ctx()
   n <- nrow(dat)
-  dim <- new("tiledb_dim", ptr = tiledb:::libtiledb_dim(ctx@ptr, "rows", "INT32", c(1L,n), 1L))
+  dim <- tiledb_dim("rows", domain=c(1L,n), type="INT32", tile=1L)
   dom <- tiledb_domain(dim)
   sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("age", type="INT32"),
                                             tiledb_attr("job", type="CHAR", ncells=NA),
@@ -113,14 +112,10 @@ test_that("test full write-read cycle on sample data using schema", {
                                             tiledb_attr("y", type="CHAR", ncells=NA)
                                             ),
                              sparse = TRUE)
-  sch@ptr <- tiledb:::libtiledb_array_schema_set_allows_dups(sch@ptr, TRUE)
   tiledb_array_create(tmpuri, sch)
 
   arr <- tiledb_array(tmpuri, as.data.frame=TRUE)
-  ## prefix rows index
-  # dat <- cbind(rows=1:n, dat)
   arr[] <- dat
-
 
   newarr <- tiledb_array(tmpuri, as.data.frame=TRUE)
   newdat <- newarr[]
