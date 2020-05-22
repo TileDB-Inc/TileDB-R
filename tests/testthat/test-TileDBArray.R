@@ -3,7 +3,10 @@ context("tiledb::TileDBArray")
 
 test_that("test tiledb_array read/write sparse array with heterogenous date domains", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
+  op <- options()
+  options(stringsAsFactors=FALSE)       # accomodate R 3.*
   dir.create(tmp <- tempfile())
+
   d1  <- tiledb_dim("d1",
                     domain = c(as.Date("2001-01-02"), as.Date("2099-12-31")), tile=1L,
                     type="DATETIME_DAY")
@@ -25,10 +28,13 @@ test_that("test tiledb_array read/write sparse array with heterogenous date doma
   expect_equal(arr[]$val, df[,"val"])
 
   unlink(tmp, recursive = TRUE)
+  options(op)
 })
 
 test_that("test tiledb_array read/write sparse array with heterogenous msec domains", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
+  op <- options()
+  options(stringsAsFactors=FALSE)       # accomodate R 3.*
   dir.create(tmp <- tempfile())
 
   d1  <- tiledb_dim("d1", domain = c(0, 1e18), tile=1000L, type="DATETIME_MS")
@@ -49,11 +55,14 @@ test_that("test tiledb_array read/write sparse array with heterogenous msec doma
   expect_equal(arr[]$val, df[,"val"])
 
   unlink(tmp, recursive = TRUE)
+  options(op)
 })
 
 
 test_that("test full write-read cycle on sample data using fromDataFrame", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
+  op <- options()
+  options(stringsAsFactors=FALSE)       # accomodate R 3.*
 
   ## -- download data and extract data set, sample a portion
   ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
@@ -73,10 +82,13 @@ test_that("test full write-read cycle on sample data using fromDataFrame", {
   expect_equal(dat[,-1], newdat)
 
   unlink(tmpuri, recursive = TRUE)
+  options(op)
 })
 
 test_that("test full write-read cycle on sample data using schema", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
+  op <- options()
+  options(stringsAsFactors=FALSE)       # accomodate R 3.*
 
   ## -- download data and extract data set, sample a portion
   ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
@@ -122,11 +134,13 @@ test_that("test full write-read cycle on sample data using schema", {
   expect_equal(dat, newdat)
 
   unlink(tmpuri, recursive = TRUE)
-
+  options(op)
 })
 
 test_that("test extended flag on reading", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
+  op <- options()
+  options(stringsAsFactors=FALSE)       # accomodate R 3.*
 
   ## -- download data and extract data set, sample a portion
   ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
@@ -163,11 +177,14 @@ test_that("test extended flag on reading", {
   expect_equal(dat1, dat2)
 
   unlink(tmpuri, recursive = TRUE)
+  options(op)
 })
 
 
 test_that("test attrs column selection on reading", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
+  op <- options()
+  options(stringsAsFactors=FALSE)       # accomodate R 3.*
 
   ## -- download data and extract data set, sample a portion
   ## download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank.zip",
@@ -194,4 +211,5 @@ test_that("test attrs column selection on reading", {
   expect_equal(colnames(dat), sels)
 
   unlink(tmpuri, recursive = TRUE)
+  options(op)
 })
