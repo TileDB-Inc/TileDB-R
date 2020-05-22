@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ $# -lt 1 ]; then
+    echo "Usage: fetchTileDB.sh tarfile"
+    exit 1
+fi
+
 repo=https://tiledb-inc.github.io/tiledb-linux-library
 tarball="$1"
 
@@ -24,7 +29,7 @@ fi
 ## Expand tarball
 if [ ! -d tiledb ]; then
     mkdir tiledb
-    tar xf ${tarball} -C tiledb
+    tar xzf ${tarball} -C tiledb
     rm ${tarball}
 fi
 

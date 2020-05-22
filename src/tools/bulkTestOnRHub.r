@@ -1,4 +1,4 @@
-#!/usr/bin/env rscript
+#!/usr/bin/env Rscript
 
 library(rhub)
 
