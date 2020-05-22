@@ -1,7 +1,7 @@
 #!/bin/sh
 
 repo=https://tiledb-inc.github.io/tiledb-linux-library
-tarball=tiledb-ubuntu-16.04-shared.tar.gz
+tarball="$1"
 
 #test -f /etc/os-release && echo "** On " && cat /etc/os-release
 
@@ -24,7 +24,7 @@ fi
 ## Expand tarball
 if [ ! -d tiledb ]; then
     mkdir tiledb
-    tar xaf ${tarball} -C tiledb
+    tar xf ${tarball} -C tiledb
     rm ${tarball}
 fi
 
@@ -32,5 +32,5 @@ fi
 ## source i.e. before the inst/ directory tree is installed
 if [ ! -d ../tiledb/lib ]; then
     mkdir -p ../tiledb/lib/
-    cp -ax tiledb/lib/* ../tiledb/lib/
+    cp -a tiledb/lib/* ../tiledb/lib/
 fi

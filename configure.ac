@@ -73,33 +73,38 @@ fi
 #have_tiledb="no"
 #enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
-    if test x"${on_macos}" = x"yes"; then
-        AC_MSG_RESULT([installing TileDB... -- TBD for macOS])
-    else
-        osrel=`src/tools/getOsRelease.sh`
-        AC_MSG_RESULT([running on ${osrel}])
-        if test x"${enable_building}" = x"yes"; then
-            AC_DEFUN([AC_PROG_CMAKE], [AC_CHECK_PROG(have_cmake,cmake,yes)])
-            AC_PROG_CMAKE
-            if test x"${have_cmake}" != x"yes"; then
-                AC_MSG_ERROR([please install 'cmake'])
-            fi
-            AC_DEFUN([AC_PROG_GIT], [AC_CHECK_PROG(have_git,git,yes)])
-            AC_PROG_GIT
-            if test x"${have_git}" != x"yes"; then
-                AC_MSG_ERROR([please install 'git'])
-            fi
-            AC_MSG_RESULT([installing TileDB via building locally...])
-            src/tools/buildTileDB.sh
-        else
-            AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
-            AC_PROG_CURL
-            if test x"${have_curl}" != x"yes"; then
-                AC_MSG_ERROR([please install 'curl'])
-            fi
-            AC_MSG_RESULT([downloading TileDB library...])
-            cd inst && ../src/tools/fetchTileDB.sh && cd ..
+    osrel=`src/tools/getOsRelease.sh`
+    AC_MSG_RESULT([running on ${osrel}])
+    if test x"${enable_building}" = x"yes"; then
+        AC_DEFUN([AC_PROG_CMAKE], [AC_CHECK_PROG(have_cmake,cmake,yes)])
+        AC_PROG_CMAKE
+        if test x"${have_cmake}" != x"yes"; then
+            AC_MSG_ERROR([please install 'cmake'])
         fi
+        AC_DEFUN([AC_PROG_GIT], [AC_CHECK_PROG(have_git,git,yes)])
+        AC_PROG_GIT
+        if test x"${have_git}" != x"yes"; then
+            AC_MSG_ERROR([please install 'git'])
+        fi
+        AC_MSG_RESULT([installing TileDB via building locally...])
+        src/tools/buildTileDB.sh
+    else
+        AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
+        AC_PROG_CURL
+        if test x"${have_curl}" != x"yes"; then
+            AC_MSG_ERROR([please install 'curl'])
+        fi
+        AC_MSG_RESULT([downloading TileDB library...])
+
+        if test x"${on_macos}" = x"yes"; then
+            AC_MSG_RESULT([installing TileDB for macOS...])
+            TARBALL=tiledb-macos-shared.tar.gz
+        else
+            AC_MSG_RESULT([installing TileDB...])
+            #cd src && tools/installTileDB.sh && cd -
+            TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
+        fi
+        cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
 
         AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
         AC_MSG_RESULT([using inst/tiledb/{lib,include}])

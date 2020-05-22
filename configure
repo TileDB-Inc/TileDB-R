@@ -655,7 +655,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -729,7 +728,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -982,15 +980,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1128,7 +1117,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1281,7 +1270,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -2930,11 +2918,11 @@ if test "${enable_building+set}" = set; then :
   enableval=$enable_building;
 fi
 
-	      #[building="${enable_building}"
-	      # AC_MSG_RESULT([Enabled chosen])],
-	      #[building="${enable_building}"],
-	      # AC_MSG_RESULT([Enabled NOT chosen])],
-	      #)
+          #[building="${enable_building}"
+          # AC_MSG_RESULT([Enabled chosen])],
+          #[building="${enable_building}"],
+          # AC_MSG_RESULT([Enabled NOT chosen])],
+          #)
 
 ## Allow --with-tiledb if given (though system location is found too)
 
@@ -3261,16 +3249,12 @@ fi
 #have_tiledb="no"
 #enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
-    if test x"${on_macos}" = x"yes"; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB... -- TBD for macOS" >&5
-$as_echo "installing TileDB... -- TBD for macOS" >&6; }
-    else
-        osrel=`src/tools/getOsRelease.sh`
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: running on ${osrel}" >&5
+    osrel=`src/tools/getOsRelease.sh`
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: running on ${osrel}" >&5
 $as_echo "running on ${osrel}" >&6; }
-	if test x"${enable_building}" = x"yes"; then
+    if test x"${enable_building}" = x"yes"; then
 
-            # Extract the first word of "cmake", so it can be a program name with args.
+        # Extract the first word of "cmake", so it can be a program name with args.
 set dummy cmake; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
@@ -3307,11 +3291,11 @@ $as_echo "no" >&6; }
 fi
 
 
-            if test x"${have_cmake}" != x"yes"; then
-                as_fn_error $? "please install 'cmake'" "$LINENO" 5
-            fi
+        if test x"${have_cmake}" != x"yes"; then
+            as_fn_error $? "please install 'cmake'" "$LINENO" 5
+        fi
 
-            # Extract the first word of "git", so it can be a program name with args.
+        # Extract the first word of "git", so it can be a program name with args.
 set dummy git; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
@@ -3348,15 +3332,15 @@ $as_echo "no" >&6; }
 fi
 
 
-            if test x"${have_git}" != x"yes"; then
-                as_fn_error $? "please install 'git'" "$LINENO" 5
-            fi
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB via building locally..." >&5
+        if test x"${have_git}" != x"yes"; then
+            as_fn_error $? "please install 'git'" "$LINENO" 5
+        fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB via building locally..." >&5
 $as_echo "installing TileDB via building locally..." >&6; }
-	    src/tools/buildTileDB.sh
-	else
+        src/tools/buildTileDB.sh
+    else
 
-	    # Extract the first word of "curl", so it can be a program name with args.
+        # Extract the first word of "curl", so it can be a program name with args.
 set dummy curl; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
@@ -3393,13 +3377,23 @@ $as_echo "no" >&6; }
 fi
 
 
-	    if test x"${have_curl}" != x"yes"; then
-	           as_fn_error $? "please install 'curl'" "$LINENO" 5
-	    fi
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
-$as_echo "downloading TileDB library..." >&6; }
-            cd inst && ../src/tools/fetchTileDB.sh && cd ..
+        if test x"${have_curl}" != x"yes"; then
+            as_fn_error $? "please install 'curl'" "$LINENO" 5
         fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
+$as_echo "downloading TileDB library..." >&6; }
+
+        if test x"${on_macos}" = x"yes"; then
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for macOS..." >&5
+$as_echo "installing TileDB for macOS..." >&6; }
+            TARBALL=tiledb-macos-shared.tar.gz
+        else
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB..." >&5
+$as_echo "installing TileDB..." >&6; }
+            #cd src && tools/installTileDB.sh && cd -
+            TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
+        fi
+        cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
 
         TILEDB_INCLUDE="-Itiledb-inst/include"
 
