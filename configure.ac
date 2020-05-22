@@ -100,7 +100,7 @@ if test x"${have_tiledb}" = x"no"; then
             AC_MSG_RESULT([installing TileDB for macOS...])
             TARBALL=tiledb-macos-shared.tar.gz
         else
-            AC_MSG_RESULT([installing TileDB...])
+            AC_MSG_RESULT([installing TileDB for linux...])
             #cd src && tools/installTileDB.sh && cd -
             TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
         fi
