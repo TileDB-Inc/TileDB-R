@@ -1,4 +1,4 @@
-#!/usr/bin/Rscript
+#!/usr/bin/env Rscript
 
 library(rhub)
 
@@ -8,13 +8,15 @@ selected <- c("debian-clang-devel",
               "fedora-clang-devel",
               "fedora-gcc-devel",
               "ubuntu-gcc-devel",
-              "ubuntu-gcc-release")
+              "ubuntu-gcc-release",
+              "macos-highsierra-release",
+              "macos-highsierra-release-cran")
 
-check(".", platform = selected, email = "edd@debian.org")
+check(".", platform = selected, email = geOption("email", "edd@debian.org"))
 
 
 ## just FYI on 2020-05-20 platform() returns
-##
+##q
 ## R> rhub::platforms()
 ## debian-clang-devel:
 ##   Debian Linux, R-devel, clang, ISO-8859-15 locale

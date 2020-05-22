@@ -7,3 +7,10 @@ PKG_CPPFLAGS =	-I../inst/include/ @TILEDB_INCLUDE@
 ## We also need the TileDB library
 #PKG_LIBS = @TILEDB_LIBS@ -Wl,-rpath,@TILEDB_RPATH@/tiledb/lib
 PKG_LIBS = @TILEDB_LIBS@ @TILEDB_RPATH@
+
+all: $(SHLIB)
+	@if command -v install_name_tool; then \
+	echo "updating rpath on macOS..."; \
+	install_name_tool -change libz.1.dylib @rpath/libz.1.dylib ../inst/tiledb/lib/libtiledb.dylib; \
+	install_name_tool -add_rpath @loader_path/../tiledb/lib tiledb.so; \
+	fi
