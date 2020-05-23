@@ -621,13 +621,13 @@ ac_includes_default="\
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 TILEDB_RPATH
+TILEDB_LIBS
+TILEDB_INCLUDE
 have_curl
 have_git
 have_cmake
 EGREP
 GREP
-TILEDB_LIBS
-TILEDB_INCLUDE
 CXXCPP
 OBJEXT
 EXEEXT
@@ -2911,25 +2911,12 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
-## Default values
-if test x"${uname}" = x"Darwin"; then :
-  on_macos="yes"
-             TILEDB_RPATH="-Wl,-rpath,/usr/local/lib"
-else
-  on_macos="no"
-             TILEDB_RPATH=""
-fi
-TILEDB_INCLUDE=""
-
-TILEDB_LIBS="-ltiledb"
-
-
 ## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
 uname=`uname`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: running on ${uname} (${on_macos})..." >&5
-$as_echo "running on ${uname} (${on_macos})..." >&6; }
+#AC_MSG_RESULT([running on ${uname} (${on_macos})...])
 
 ## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
+## (and sets by autoconf standards the 'enable_building' variable to 'yes' or 'no')
 # Check whether --enable-building was given.
 if test "${enable_building+set}" = set; then :
   enableval=$enable_building;
@@ -2942,6 +2929,7 @@ fi
           #)
 
 ## Allow --with-tiledb if given (though system location is found too)
+## (and sets by autconf standards the 'with_tiledb' variable
 
 # Check whether --with-tiledb was given.
 if test "${with_tiledb+set}" = set; then :
@@ -3266,11 +3254,6 @@ fi
 ## On Solaris can only build from source
 if test x"${uname}" = x"SunOS"; then
      enable_building="yes"
-     echo "Yo we are on SunOS"
-fi
-
-if test x"${uname}" = x"Linux"; then
-     echo "Yo we are on Linux"
 fi
 
 ## to test one can force some selections here
@@ -3415,7 +3398,7 @@ fi
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
 $as_echo "downloading TileDB library..." >&6; }
 
-            if test x"${on_macos}" = x"yes"; then
+            if test x"${uname}" = x"Darwin"; then
                 { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for macOS..." >&5
 $as_echo "installing TileDB for macOS..." >&6; }
                 TARBALL=tiledb-macos-shared.tar.gz

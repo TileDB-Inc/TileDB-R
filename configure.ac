@@ -13,15 +13,6 @@ AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
 
-## Default values
-AS_IF([test x"${uname}" = x"Darwin"],
-            [on_macos="yes"
-             TILEDB_RPATH="-Wl,-rpath,/usr/local/lib"],
-            [on_macos="no"
-             TILEDB_RPATH=""])
-AC_SUBST([TILEDB_INCLUDE], "")
-AC_SUBST([TILEDB_LIBS], "-ltiledb")
-
 ## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
 uname=`uname`
 #AC_MSG_RESULT([running on ${uname} (${on_macos})...])
@@ -113,7 +104,7 @@ if test x"${have_tiledb}" = x"no"; then
             fi
             AC_MSG_RESULT([downloading TileDB library...])
 
-            if test x"${on_macos}" = x"yes"; then
+            if test x"${uname}" = x"Darwin"; then
                 AC_MSG_RESULT([installing TileDB for macOS...])
                 TARBALL=tiledb-macos-shared.tar.gz
             else
