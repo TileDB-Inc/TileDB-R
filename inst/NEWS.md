@@ -1,6 +1,6 @@
 # Ongoing
 
-* This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.0)
+* This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.2)
 
 ## Improvements
 
@@ -11,6 +11,8 @@
 - Data.frame support has been extended further and made more robust (#119)
 
 - The Description: in `DESCRIPTION` has been refreshed (#120)
+
+- Builds on Linux and macOS can now use a pre-built TileDB library (#121, #122)
 
 # 0.6.0
 
