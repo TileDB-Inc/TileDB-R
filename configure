@@ -655,6 +655,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -728,6 +729,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -980,6 +982,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1117,7 +1128,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1270,6 +1281,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -2900,7 +2912,7 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
 ## Default values
-if test $(uname) == "Darwin"; then :
+if test x"${uname}" = x"Darwin"; then :
   on_macos="yes"
              TILEDB_RPATH="-Wl,-rpath,/usr/local/lib"
 else
@@ -2912,6 +2924,11 @@ TILEDB_INCLUDE=""
 TILEDB_LIBS="-ltiledb"
 
 
+## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
+uname=`uname`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: running on ${uname} (${on_macos})..." >&5
+$as_echo "running on ${uname} (${on_macos})..." >&6; }
+
 ## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
 # Check whether --enable-building was given.
 if test "${enable_building+set}" = set; then :
@@ -2920,8 +2937,8 @@ fi
 
           #[building="${enable_building}"
           # AC_MSG_RESULT([Enabled chosen])],
-          #[building="${enable_building}"],
-          # AC_MSG_RESULT([Enabled NOT chosen])],
+          #[building="${enable_building}"
+          # AC_MSG_RESULT([Enabled NOT chosen])]
           #)
 
 ## Allow --with-tiledb if given (though system location is found too)
@@ -2935,6 +2952,7 @@ fi
 
 #echo "enable_building: ${enable_building}"
 #echo "with_tiledb: ${with_tiledb}"
+
 ## Sanity check
 if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
     as_fn_error $? "Conflicting choice of preinstalled TileDB and enabling building TileDB." "$LINENO" 5
@@ -3245,13 +3263,22 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
-## to test one can force some selection here
+## On Solaris can only build from source
+if test x"${uname}" = x"SunOS"; then
+     enable_building="yes"
+     echo "Yo we are on SunOS"
+fi
+
+if test x"${uname}" = x"Linux"; then
+     echo "Yo we are on Linux"
+fi
+
+## to test one can force some selections here
 #have_tiledb="no"
 #enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
-    osrel=`src/tools/getOsRelease.sh`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: running on ${osrel}" >&5
-$as_echo "running on ${osrel}" >&6; }
+
+    ## case one: build is selected (or forced) so try building TileDB
     if test x"${enable_building}" = x"yes"; then
 
         # Extract the first word of "cmake", so it can be a program name with args.
@@ -3338,9 +3365,14 @@ fi
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB via building locally..." >&5
 $as_echo "installing TileDB via building locally..." >&6; }
         src/tools/buildTileDB.sh
-    else
 
-        # Extract the first word of "curl", so it can be a program name with args.
+    ## case two: download considered
+    ##   - on macOS or Linux a 'fast and slim' build with external library
+    ##   - otherwise error
+    else
+        if test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
+
+            # Extract the first word of "curl", so it can be a program name with args.
 set dummy curl; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
@@ -3377,39 +3409,45 @@ $as_echo "no" >&6; }
 fi
 
 
-        if test x"${have_curl}" != x"yes"; then
-            as_fn_error $? "please install 'curl'" "$LINENO" 5
-        fi
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
+            if test x"${have_curl}" != x"yes"; then
+                as_fn_error $? "please install 'curl'" "$LINENO" 5
+            fi
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
 $as_echo "downloading TileDB library..." >&6; }
 
-        if test x"${on_macos}" = x"yes"; then
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for macOS..." >&5
+            if test x"${on_macos}" = x"yes"; then
+                { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for macOS..." >&5
 $as_echo "installing TileDB for macOS..." >&6; }
-            TARBALL=tiledb-macos-shared.tar.gz
+                TARBALL=tiledb-macos-shared.tar.gz
+            else
+                osrel=`src/tools/getOsRelease.sh`
+                { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for ${osrel} Linux..." >&5
+$as_echo "installing TileDB for ${osrel} Linux..." >&6; }
+                TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
+            fi
+            cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
+
+        ## default case: be unhappy
         else
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB..." >&5
-$as_echo "installing TileDB..." >&6; }
-            #cd src && tools/installTileDB.sh && cd -
-            TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
+            as_fn_error $? "currently unsupported system ${uname}" "$LINENO" 5
         fi
-        cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
 
-        TILEDB_INCLUDE="-Itiledb-inst/include"
-
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: using inst/tiledb/{lib,include}" >&5
-$as_echo "using inst/tiledb/{lib,include}" >&6; }
-        RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
-        TILEDB_INCLUDE="-I../inst/tiledb/include"
-
-        TILEDB_LIBS="-ltiledb -L../inst/tiledb/lib"
-
-        TILEDB_RPATH="${RPATH}"
-
-
-        CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
-        LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
     fi
+
+    #AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using inst/tiledb/{lib,include}" >&5
+$as_echo "using inst/tiledb/{lib,include}" >&6; }
+    RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
+    TILEDB_INCLUDE="-I../inst/tiledb/include"
+
+    TILEDB_LIBS="-ltiledb -L../inst/tiledb/lib"
+
+    TILEDB_RPATH="${RPATH}"
+
+
+    CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
+    LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
+
 fi
 
 ac_config_files="$ac_config_files src/Makevars"
