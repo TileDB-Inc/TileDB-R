@@ -13,6 +13,11 @@ AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
 
+## Default values suitable for system install, overridde as needed below
+AC_SUBST([TILEDB_INCLUDE], "")
+AC_SUBST([TILEDB_LIBS], "-ltiledb")
+AC_SUBST([TILEDB_RPATH], "")
+
 ## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
 uname=`uname`
 #AC_MSG_RESULT([running on ${uname} (${on_macos})...])

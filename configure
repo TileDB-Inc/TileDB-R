@@ -620,14 +620,14 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-TILEDB_RPATH
-TILEDB_LIBS
-TILEDB_INCLUDE
 have_curl
 have_git
 have_cmake
 EGREP
 GREP
+TILEDB_RPATH
+TILEDB_LIBS
+TILEDB_INCLUDE
 CXXCPP
 OBJEXT
 EXEEXT
@@ -2909,6 +2909,14 @@ ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+
+## Default values suitable for system install, overridde as needed below
+TILEDB_INCLUDE=""
+
+TILEDB_LIBS="-ltiledb"
+
+TILEDB_RPATH=""
 
 
 ## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
