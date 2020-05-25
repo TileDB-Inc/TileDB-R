@@ -37,7 +37,7 @@ cd build
 ../tiledb-src/bootstrap --force-build-all-deps --enable-serialization
 ## NB: temporarily disabling and s3
 #../tiledb-src/bootstrap --force-build-all-deps
-make -j 4
+make -j 2
 make -C tiledb install
 cd ..
 
