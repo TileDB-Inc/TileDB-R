@@ -109,12 +109,11 @@ if test x"${have_tiledb}" = x"no"; then
             fi
             AC_MSG_RESULT([downloading TileDB library...])
 
+            osrel=`src/tools/getOsRelease.sh`
+            AC_MSG_RESULT([installing TileDB for ${osrel} ...])
             if test x"${uname}" = x"Darwin"; then
-                AC_MSG_RESULT([installing TileDB for macOS...])
                 TARBALL=tiledb-macos-shared.tar.gz
             else
-                osrel=`src/tools/getOsRelease.sh`
-                AC_MSG_RESULT([installing TileDB for ${osrel} Linux...])
                 TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
             fi
             cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..

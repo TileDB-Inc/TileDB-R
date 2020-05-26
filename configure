@@ -3406,14 +3406,12 @@ fi
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
 $as_echo "downloading TileDB library..." >&6; }
 
+            osrel=`src/tools/getOsRelease.sh`
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for ${osrel} ..." >&5
+$as_echo "installing TileDB for ${osrel} ..." >&6; }
             if test x"${uname}" = x"Darwin"; then
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for macOS..." >&5
-$as_echo "installing TileDB for macOS..." >&6; }
                 TARBALL=tiledb-macos-shared.tar.gz
             else
-                osrel=`src/tools/getOsRelease.sh`
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for ${osrel} Linux..." >&5
-$as_echo "installing TileDB for ${osrel} Linux..." >&6; }
                 TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
             fi
             cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
