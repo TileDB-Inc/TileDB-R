@@ -1527,6 +1527,11 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
   } else if (typestr == "FLOAT64") {
     auto p = array->non_empty_domain<double>(name);
     return NumericVector::create(p.first, p.second);
+  } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_MS") {
+    // type_check() from exception.h gets invoked and wants an int64_t
+    auto p = array->non_empty_domain<int64_t>(name);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeInteger64(v);
   } else {
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
@@ -1547,6 +1552,11 @@ NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> ar
     std::vector<int64_t> v{p.first, p.second};
     return makeNanotime(v);
   } else if (typestr == "INT64") {
+    auto p = array->non_empty_domain<int64_t>(idx);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeInteger64(v);
+  } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_MS") {
+    // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
     return makeInteger64(v);
@@ -2117,6 +2127,7 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
     double scalefactor = 1.0;
     if (dtype == "DATETIME_MS") {
       scalefactor = 1e3;
+      //scalefactor = 1.0;
     } else if (dtype == "DATETIME_US") {
       scalefactor = 1e6;
     }

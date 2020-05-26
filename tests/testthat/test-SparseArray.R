@@ -1,29 +1,21 @@
 library(tiledb)
 context("tiledb::SparseArray")
 
-#
-# test_that("Can read / write simple 1D sparse vector", {
-#   tmp <- tempfile()
-#   setup({
-#     unlink_and_create(tmp)
-#   })
-#
-#   ctx <- tiledb_ctx()
-#   d1  <- tiledb_dim(ctx, domain = c(1L, 10L))
-#   dom <- tiledb_domain(ctx, c(d1))
-#   atr <- tiledb_attr(ctx)
-#   sch <- tiledb_array_schema(ctx, dom, c(atr), sparse = TRUE)
-#
-#   arr <- tiledb::SparseArray(ctx, sch, tmp)
-#   expect_true(is.sparse(arr))
-#
-#   arr <- tiledb::SparseArray.load(ctx, tmp)
-#   expect_true(is.sparse(arr))
-#
-#   teardown(
-#     unlink(tmp, recursive = TRUE)
-#   )
-# })
+
+test_that("Can read / write simple 1D sparse vector", {
+  dir.create(tmp <- tempfile())
+
+  d1  <- tiledb_dim("d1", domain = c(1L, 10L))
+  dom <- tiledb_domain(c(d1))
+  atr <- tiledb_attr(type="INT32")
+  sch <- tiledb_array_schema(dom, c(atr), sparse = TRUE)
+
+  res <- tiledb_array_create(tmp, sch)
+  arr <- tiledb_sparse(tmp)
+  expect_true(tiledb::is.sparse(arr))
+
+  unlink(tmp, recursive = TRUE)
+})
 
 test_that("test tiledb_subarray read for sparse array", {
   dir.create(tmp <- tempfile())

@@ -3,7 +3,9 @@
 
 #' An S4 class for a TileDB Array
 #'
-#' This class is experimental.
+#' This class aims to eventually replace \code{\link{tiledb_dense}}
+#' and \code{\link{tiledb_sparse}} provided equivalent functionality
+#' based on refactored implementation utilising newer TileDB features.
 #'
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription
@@ -89,7 +91,7 @@ setMethod("show",
      ,"  is.sparse     = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
      ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
      ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
-                            else paste(object@attrs, sep=","), "\n"
+                            else paste(object@attrs, collapse=","), "\n"
      ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
     , sep="")
 })
@@ -144,6 +146,16 @@ setMethod("[", "tiledb_array",
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
+
+  if (length(x@attrs) != 0) {
+    ind <- match(x@attrs, attrnames)
+    if (length(ind) == 0) {
+      stop("Only non-existing columns selected.", call.=FALSE)
+    }
+    attrnames <- attrnames[ind]
+    attrtypes <- attrtypes[ind]
+    attrvarnum <- attrvarnum[ind]
+  }
 
   allnames <- c(dimnames, attrnames)
   alltypes <- c(dimtypes, attrtypes)
@@ -251,6 +263,15 @@ setMethod("[", "tiledb_array",
   ## convert list into data.frame (cheaply) and subset
   res <- data.frame(reslist)[1:resrv,]
   colnames(res) <- allnames
+
+  ## reduce output if extended is false
+  if (!x@extended) {
+    res <- res[, attrnames]
+  }
+
+  if (!x@as.data.frame) {
+    res <- as.list(res)
+  }
 
   invisible(res)
 })
@@ -375,4 +396,122 @@ setMethod("[<-", "tiledb_array",
 
   }
   invisible(x)
+})
+
+
+## -- as.data.frame accessor (generic in DenseArray.R)
+
+#' Retrieve data.frame return toggle
+#'
+#' A \code{tiledb_array} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods returns the selection value.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether \code{data.frame} return is selected
+#' @export
+setMethod("return.data.frame",
+          signature = "tiledb_array",
+          function(object) object@as.data.frame)
+
+
+## -- as.data.frame setter (generic in DenseArray.R)
+
+#' Set data.frame return toggle
+#'
+#' A \code{tiledb_array} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame}. This methods sets the selection value.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("return.data.frame",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@as.data.frame <- value
+  validObject(x)
+  x
+})
+
+
+
+## -- attrs (generic in Attributes.R and DenseArray.R)
+
+#' Retrieve attributes from \code{tiledb_array} object
+#'
+#' By default, all attributes will be selected. But if a subset of attribute
+#' names is assigned to the internal slot \code{attrs}, then only those attributes
+#' will be queried.  This methods accesses the slot.
+#' @param object A \code{tiledb_array} object
+#' @return An empty character vector if no attributes have been selected or else
+#' a vector with attributes.
+#' @importFrom methods validObject
+#' @export
+setMethod("attrs",
+          signature = "tiledb_array",
+          function(object) object@attrs)
+
+#' Selects attributes for the given TileDB array
+#'
+#' @param x A \code{tiledb_array} object
+#' @param value A character vector with attributes
+#' @return The modified \code{tiledb_array} object
+#' @export
+setReplaceMethod("attrs",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  nm <- names(attrs(schema(x)))
+  if (length(nm) == 0) {                # none set so far
+    x@attrs <- value
+  } else {
+    pm <- pmatch(value, nm)
+    if (any(is.na(pm))) {
+      stop("Multiple partial matches ambiguous: ",
+           paste(value[which(is.na(pm))], collapse=","), call.=FALSE)
+    }
+    x@attrs <- nm[pm]
+  }
+  validObject(x)
+  x
+})
+
+
+## -- extended accessor
+
+#' @rdname extended-tiledb_array-method
+#' @export
+setGeneric("extended", function(object) standardGeneric("extended"))
+
+#' @rdname extended-set-tiledb_array-method
+#' @export
+setGeneric("extended<-", function(x, value) standardGeneric("extended<-"))
+
+#' Retrieve data.frame extended returns columns toggle
+#'
+#' A \code{tiledb_array} object can be returned as \code{data.frame}. This methods
+#' returns the selection value for \sQuote{extended} format including row (and column,
+#' if present) indices.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether an \code{extended} return is selected
+#' @export
+setMethod("extended",
+          signature = "tiledb_array",
+          function(object) object@extended)
+
+
+## -- extended setter (generic in DenseArray.R)
+
+#' Set data.frame extended return columns toggle
+#'
+#' A \code{tiledb_array} object can be returned as \code{data.frame}. This methods
+#' set the selection value for \sQuote{extended} format including row (and column,
+#' if present) indices.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("extended",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@extended <- value
+  validObject(x)
+  x
 })
