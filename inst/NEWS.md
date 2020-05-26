@@ -8,11 +8,11 @@
 
 - If needed, the build system now builds TileDB and its required component (#118)
 
-- Data.frame support has been extended further and made more robust (#119)
+- Data.frame support has been extended further and made more robust (#119, #123)
 
 - The Description: in `DESCRIPTION` has been refreshed (#120)
 
-- Builds on Linux and macOS can now use a pre-built TileDB library (#121, #122)
+- Builds on Linux and macOS can use a pre-built TileDB library (#121, #122, #124)
 
 # 0.6.0
 
