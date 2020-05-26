@@ -9,17 +9,21 @@ cd src
 
 if [ ! -f tiledb.tar.gz ]; then
     echo "Downloading...."
-    curl -s -k -L -o tiledb.tar.gz https://github.com/TileDB-Inc/TileDB/archive/2.0.1.tar.gz
+    curl -s -k -L -o tiledb.tar.gz https://github.com/TileDB-Inc/TileDB/archive/2.0.2.tar.gz
 fi
 
 if [ ! -d tiledb-src ]; then
-    #if test $(uname) == "Darwin"; then
-    #    tar -xf tiledb.tar.gz
-    #    mv Tile* tiledb-src
-    #else
-    mkdir tiledb-src
-    tar xaf tiledb.tar.gz -C tiledb-src --strip-components 1
-    #fi
+    uname=`uname`
+    if test x"${uname}" = x"Darwin" -o x"${uname}" = x"SunOS"; then
+        gunzip tiledb.tar.gz
+        tar -xf tiledb.tar
+        mv Tile* tiledb-src
+        rm tiledb.tar
+    else
+        mkdir tiledb-src
+        tar xaf tiledb.tar.gz -C tiledb-src --strip-components 1
+        rm tiledb.tar.gz
+    fi
 fi
 
 ## Clean-up just in case
@@ -32,8 +36,8 @@ mkdir build
 cd build
 ../tiledb-src/bootstrap --force-build-all-deps --enable-serialization
 ## NB: temporarily disabling and s3
-#../tiledb-src/bootstrap --force-build-all-deps 
-make -j 4
+#../tiledb-src/bootstrap --force-build-all-deps
+make -j 2
 make -C tiledb install
 cd ..
 
@@ -46,4 +50,3 @@ cp -ax tiledb-src/dist/* ../tiledb/
 if [ ! -f .keep_build_dirs ]; then
     rm -rf build tiledb-src
 fi
-

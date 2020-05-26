@@ -13,26 +13,28 @@ AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
 
-## Default values
-AS_IF([test $(uname) == "Darwin"],
-            [on_macos="yes"
-             TILEDB_RPATH="-Wl,-rpath,/usr/local/lib"],
-            [on_macos="no"
-             TILEDB_RPATH=""])
+## Default values suitable for system install, overridde as needed below
 AC_SUBST([TILEDB_INCLUDE], "")
 AC_SUBST([TILEDB_LIBS], "-ltiledb")
+AC_SUBST([TILEDB_RPATH], "")
+
+## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
+uname=`uname`
+#AC_MSG_RESULT([running on ${uname} (${on_macos})...])
 
 ## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
+## (and sets by autoconf standards the 'enable_building' variable to 'yes' or 'no')
 AC_ARG_ENABLE([building],
           AC_HELP_STRING([--enable-building],
                          [build TileDB library locally instead of downloading prebuilt]))
           #[building="${enable_building}"
           # AC_MSG_RESULT([Enabled chosen])],
-          #[building="${enable_building}"],
-          # AC_MSG_RESULT([Enabled NOT chosen])],
+          #[building="${enable_building}"
+          # AC_MSG_RESULT([Enabled NOT chosen])]
           #)
 
 ## Allow --with-tiledb if given (though system location is found too)
+## (and sets by autconf standards the 'with_tiledb' variable
 AC_ARG_WITH([tiledb],
             AC_HELP_STRING([--with-tiledb=PREFIX],
                        [path to installed built of TileDB]),
@@ -42,6 +44,7 @@ AC_ARG_WITH([tiledb],
             [])
 #echo "enable_building: ${enable_building}"
 #echo "with_tiledb: ${with_tiledb}"
+
 ## Sanity check
 if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
     AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling building TileDB.])
@@ -69,12 +72,17 @@ else
                                        [have_tiledb="no"; AC_MSG_RESULT(no, need to install TileDB)])
 fi
 
-## to test one can force some selection here
+## On Solaris can only build from source
+if test x"${uname}" = x"SunOS"; then
+     enable_building="yes"
+fi
+
+## to test one can force some selections here
 #have_tiledb="no"
 #enable_building="yes"
 if test x"${have_tiledb}" = x"no"; then
-    osrel=`src/tools/getOsRelease.sh`
-    AC_MSG_RESULT([running on ${osrel}])
+
+    ## case one: build is selected (or forced) so try building TileDB
     if test x"${enable_building}" = x"yes"; then
         AC_DEFUN([AC_PROG_CMAKE], [AC_CHECK_PROG(have_cmake,cmake,yes)])
         AC_PROG_CMAKE
@@ -88,34 +96,45 @@ if test x"${have_tiledb}" = x"no"; then
         fi
         AC_MSG_RESULT([installing TileDB via building locally...])
         src/tools/buildTileDB.sh
+
+    ## case two: download considered
+    ##   - on macOS or Linux a 'fast and slim' build with external library
+    ##   - otherwise error
     else
-        AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
-        AC_PROG_CURL
-        if test x"${have_curl}" != x"yes"; then
-            AC_MSG_ERROR([please install 'curl'])
-        fi
-        AC_MSG_RESULT([downloading TileDB library...])
+        if test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
+            AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
+            AC_PROG_CURL
+            if test x"${have_curl}" != x"yes"; then
+                AC_MSG_ERROR([please install 'curl'])
+            fi
+            AC_MSG_RESULT([downloading TileDB library...])
 
-        if test x"${on_macos}" = x"yes"; then
-            AC_MSG_RESULT([installing TileDB for macOS...])
-            TARBALL=tiledb-macos-shared.tar.gz
+            osrel=`src/tools/getOsRelease.sh`
+            AC_MSG_RESULT([installing TileDB for ${osrel} ...])
+            if test x"${uname}" = x"Darwin"; then
+                TARBALL=tiledb-macos-shared.tar.gz
+            else
+                TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
+            fi
+            cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
+
+        ## default case: be unhappy
         else
-            AC_MSG_RESULT([installing TileDB for linux...])
-            #cd src && tools/installTileDB.sh && cd -
-            TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
+            AC_MSG_ERROR([currently unsupported system ${uname}])
         fi
-        cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
 
-        AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
-        AC_MSG_RESULT([using inst/tiledb/{lib,include}])
-        RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
-        AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
-        AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
-        AC_SUBST([TILEDB_RPATH], "${RPATH}")
-
-        CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
-        LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
     fi
+
+    #AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
+    AC_MSG_RESULT([using inst/tiledb/{lib,include}])
+    RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
+    AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
+    AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
+    AC_SUBST([TILEDB_RPATH], "${RPATH}")
+
+    CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
+    LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
+
 fi
 
 AC_CONFIG_FILES([src/Makevars])
