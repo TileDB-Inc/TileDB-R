@@ -13,10 +13,30 @@ AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
 
-## Default values suitable for system install, overridde as needed below
-AC_SUBST([TILEDB_INCLUDE], "")
-AC_SUBST([TILEDB_LIBS], "-ltiledb")
-AC_SUBST([TILEDB_RPATH], "")
+## Can we use pkg-config?
+AC_PATH_PROG(have_pkg_config, pkg-config, no)
+## If yes, also check for whether pkg-config knows tiledb
+if test x"${have_pkg_config}" != x"no"; then
+    AC_MSG_CHECKING([pkg-config knows TileDB])
+    if pkg-config --exists tiledb; then
+        AC_MSG_RESULT([yes])
+        tiledb_include=$(pkg-config --cflags tiledb)
+        tiledb_libs=$(pkg-config --libs tiledb)
+        AC_SUBST([TILEDB_INCLUDE], "${tiledb_include}")
+        AC_SUBST([TILEDB_LIBS],    "${tiledb_libs}")
+        AC_SUBST([TILEDB_RPATH],   "")
+    else
+        AC_MSG_RESULT([no])
+        have_pkg_config="no"
+    fi
+fi
+## Otherwise use fallback values
+if test x"${have_pkg_config}" = x"no"; then
+    ## Default values suitable for system install, overridde as needed below
+    AC_SUBST([TILEDB_INCLUDE], "")
+    AC_SUBST([TILEDB_LIBS], "-ltiledb")
+    AC_SUBST([TILEDB_RPATH], "")
+fi
 
 ## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
 uname=`uname`
