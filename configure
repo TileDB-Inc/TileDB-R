@@ -2958,7 +2958,7 @@ fi
 if test x"${have_pkg_config}" != x"no"; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config knows TileDB" >&5
 $as_echo_n "checking pkg-config knows TileDB... " >&6; }
-    if pkg-config --exists aatiledb; then
+    if pkg-config --exists tiledb; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
         tiledb_include=$(pkg-config --cflags tiledb)
