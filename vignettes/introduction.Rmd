@@ -16,10 +16,12 @@ vignette: |
 
 # Getting started
 
-Assuming the TileDB R package is installed, it can loaded via `library(tiledb)`. 
+Assuming the TileDB R package is installed, it can loaded via `library(tiledb)`. Installation itself is 
+currently supported on Linux and macOS.
 
 In the following examples, the URIs describing arrays point to local file system object. When TileDB 
-has been built with S3 support, and with proper AWS credentials in the usual
+has been built with S3 support, and with proper AWS credentials in the usual environment variables, URIs
+such as `s3://some/data/bucket` can be used where as local file would be used.
 
 # Dense Arrays 
 
