@@ -20,7 +20,8 @@ SystemRequirements: cmake, curl, git
 OS_type: unix
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
-Suggests: testthat
+Suggests: testthat, rmarkdown, knitr, BiocStyle
+VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Encoding: UTF-8
