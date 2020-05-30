@@ -3477,11 +3477,11 @@ $as_echo "downloading TileDB library..." >&6; }
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for ${osrel} ..." >&5
 $as_echo "installing TileDB for ${osrel} ..." >&6; }
             if test x"${uname}" = x"Darwin"; then
-                TARBALL=tiledb-macos-shared.tar.gz
+                os="macos"
             else
-                TARBALL=tiledb-ubuntu-16.04-shared.tar.gz
+                os="linux"
             fi
-            cd inst && ../src/tools/fetchTileDB.sh "${TARBALL}" && cd ..
+            cd inst && ../src/tools/fetchTileDB.sh "${os}" && cd ..
 
         ## default case: be unhappy
         else
