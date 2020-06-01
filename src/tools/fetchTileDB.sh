@@ -32,8 +32,8 @@ downloadurl="https://github.com/TileDB-Inc/TileDB/releases/download/${ver}/${sou
 
 ## Download if need be
 if [ ! -f "${tarball}" ]; then
-    echo "Curling '${downloadurl}' into '${tarball}'"
-    curl -k -L -o ${tarball} ${downloadurl}
+    echo "downloading '${downloadurl}' as '${tarball}'"
+    curl -s -k -L -o ${tarball} ${downloadurl}
 fi
 
 ## Clean-up just in case
