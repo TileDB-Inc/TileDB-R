@@ -5,7 +5,7 @@ package: tiledb
 output:
   BiocStyle::html_document
 abstract: |
-  This vignette describe first steps with TileDB such as reading and 
+  This vignette describe first steps with TileDB such as reading and
   writing of sparse and dense arrays.
 vignette: |
   %\VignetteIndexEntry{Introduction to TileDB}
@@ -16,18 +16,23 @@ vignette: |
 
 # Getting started
 
-Assuming the TileDB R package is installed, it can loaded via `library(tiledb)`. Installation itself is 
+Assuming the TileDB R package is installed, it can loaded via `library(tiledb)`. Installation itself is
 currently supported on Linux and macOS.
 
-In the following examples, the URIs describing arrays point to local file system object. When TileDB 
+Additional documentation for the TileDB R package is available via the `help()` function from within
+R as well as via the [package documentation](https://tiledb-inc.github.io/TileDB-R/) and an
+[introductory notebook](https://tiledb-inc.github.io/TileDB-R/documentation.nb.html). Documentation
+about TileDB itself is [also available](https://docs.tiledb.com/main/).
+
+In the following examples, the URIs describing arrays point to local file system object. When TileDB
 has been built with S3 support, and with proper AWS credentials in the usual environment variables, URIs
 such as `s3://some/data/bucket` can be used where as local file would be used.
 
-# Dense Arrays 
+# Dense Arrays
 
 ## Basic Reading of Dense Arrays
 
-We can consider the file [`ex_1.R`](../inst/ex_1.R) in the examples directory. It is a simple yet complete example extending `quickstart_dense.R` by adding a second attribute. 
+We can consider the file [`ex_1.R`](../inst/ex_1.R) in the examples directory. It is a simple yet complete example extending `quickstart_dense.R` by adding a second attribute.
 
 *Read 1-D*
 
@@ -38,16 +43,16 @@ Extracts column 2 and rows 1 to 2 from A, returning a list object as there are m
          [,1]
     [1,]   11
     [2,]   12
-    
+
     $b
          [,1]
     [1,]  111
     [2,]  112
-    
+
     $c
          [,1]
-    [1,] "k" 
-    [2,] "l" 
+    [1,] "k"
+    [2,] "l"
 
 Subset the returned list via `[[var]]` or `$var`.  Numeric index also works.
 
@@ -64,7 +69,7 @@ The two-dimensional indexing retains a matrix structure, but this can be overrid
 
     R> A[1:2, 2, drop=TRUE]$a
     [1] 11 12
-    R> 
+    R>
 
 The result is now a vector of the attribute type.
 
@@ -79,21 +84,21 @@ This works analogously.  But not selecting an attribute we now get a list of mat
     [2,]   27   37
     [3,]   28   38
     [4,]   29   39
-    
+
     $b
          [,1] [,2]
     [1,]  126  136
     [2,]  127  137
     [3,]  128  138
     [4,]  129  139
-    
+
     $c
          [,1]    [,2]
-    [1,] "z"     "H" 
-    [2,] "brown" "I" 
-    [3,] "fox"   "J" 
-    [4,] "A"     "K" 
-    
+    [1,] "z"     "H"
+    [2,] "brown" "I"
+    [3,] "fox"   "J"
+    [4,] "A"     "K"
+
 ## Read 2-D with attribute selection
 
 We can restrict the selection to a subset of attributes when opening the array.
@@ -106,16 +111,16 @@ We can restrict the selection to a subset of attributes when opening the array.
     [2,]  117  127  137
     [3,]  118  128  138
     [4,]  119  129  139
-    
+
     $c
          [,1]    [,2] [,3]
-    [1,] "p"  "z"     "H" 
-    [2,] "q"  "brown" "I" 
-    [3,] "r"  "fox"   "J" 
-    [4,] "s"  "A"     "K" 
+    [1,] "p"  "z"     "H"
+    [2,] "q"  "brown" "I"
+    [3,] "r"  "fox"   "J"
+    [4,] "s"  "A"     "K"
 
 
-We can also ask for data.frame objects by setting `as.data.frame=TRUE` when opening the 
+We can also ask for data.frame objects by setting `as.data.frame=TRUE` when opening the
 array.
 
     R> A[6:9, 3:4]
@@ -129,18 +134,18 @@ array.
     7 38 138     J
     8 39 139     K
 
-This scheme can be generalized to variable cells, or cells where N>1, as we can expand each 
+This scheme can be generalized to variable cells, or cells where N>1, as we can expand each
 (atomistic) value over corresponding row and column indices.
 
-The column types correspond to the attribute typed in the array schema, subject to the constraint mentioned 
-above on R types.  (The char comes in as a factor variable as is still the R 3.6.* default which is about 
+The column types correspond to the attribute typed in the array schema, subject to the constraint mentioned
+above on R types.  (The char comes in as a factor variable as is still the R 3.6.* default which is about
 to change. We can also override, users can too.)
 
     R> sapply(A[6:9, 3:4], "class")
-            a         b         c      rows      cols 
-    "integer" "numeric"  "factor" "integer" "integer" 
+            a         b         c      rows      cols
+    "integer" "numeric"  "factor" "integer" "integer"
 
-Consistent with the `data.frame` semantics, *now* requesting a named column *reduces to a vector* as 
+Consistent with the `data.frame` semantics, *now* requesting a named column *reduces to a vector* as
 this happens at the R side:
 
     R> A[1:3, 2:5]$b
@@ -170,7 +175,7 @@ The attribute selection works with `as.data.frame=TRUE` as well:
 
 *Simple Examples*
 
-Basic reading returns the coordinates and any attributes.  The following examples use the array created by 
+Basic reading returns the coordinates and any attributes.  The following examples use the array created by
 the [quickstart_sparse](https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc)
 example.
 
@@ -178,10 +183,10 @@ example.
     R> A[]
     $coords
     [1] 1 1 2 3 2 4
-    
+
     $a
     [1] 1 3 2
-    
+
 
 We can also request a data.frame object, either when opening or by changing this object characteric on the fly:
 
@@ -239,4 +244,3 @@ required floating point value).
     1 101 2020-01-05 2020-01-01 03:03:07.548390 1577858460
     2 102 2020-01-10 2020-01-02 21:02:19.748134 1577858520
     3 103 2020-01-11 2020-01-02 18:24:33.844293 1577858580
-
