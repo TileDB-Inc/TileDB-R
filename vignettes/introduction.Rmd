@@ -221,11 +221,11 @@ Reads can select rows and or colums:
 
 Attributes can be selected similarly.
 
-*Date and Time Attributes*
+## Date(time) Attributes
 
-Similar to the dense array case described earlier, the file
-[`ex_2.R`](../inst/examples/ex_2.R) illustrates some basic operations on sparse arrays. It also shows date and
-datetime types instead of just integer and double precision floats.
+Similar to the dense array case described earlier, the file [`ex_2.R`](../inst/examples/ex_2.R)
+illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of
+just integer and double precision floats.
 
     R> A <- tiledb_sparse(uri = uri, as.data.frame = TRUE)
     R> A[1577858580:1577858700]   # POSIX time seconds
@@ -234,9 +234,9 @@ datetime types instead of just integer and double precision floats.
     2 4 104 2020-01-15 2020-01-05 02:28:36.215681 1577858640
     3 5 105 2020-01-19 2020-01-05 00:44:04.805775 1577858700
 
-The row coordinate is currently a floating point representation of the underlying time type.  We can both select
-attributes (here we excluded the “a” column) and select rows by time (as the time stampt get converted to the
-required floating point value).
+The row coordinate is currently a floating point representation of the underlying time type.  We can
+both select attributes (here we excluded the “a” column) and select rows by time (as the time stampt
+get converted to the required floating point value).
 
     R> attrs(A) <- c("b", "d", "e")
     R> A[as.POSIXct("2020-01-01 00:01:00"):as.POSIXct("2020-01-01 00:03:00")]
@@ -244,3 +244,18 @@ required floating point value).
     1 101 2020-01-05 2020-01-01 03:03:07.548390 1577858460
     2 102 2020-01-10 2020-01-02 21:02:19.748134 1577858520
     3 103 2020-01-11 2020-01-02 18:24:33.844293 1577858580
+
+More extended examples are available showing indexing by date(time) as well as character dimension.
+
+# Additional Information
+
+The TileDB R package is documented via R help functions (_e.g._ `help("tiledb_sparse")` shows
+information for the `tiledb_sparse()` function) as well as via a [website regrouping all
+documentation](https://tiledb-inc.github.io/TileDB-R/).  An extended
+[notebook](https://tiledb-inc.github.io/TileDB-R/documentation.nb.html) is available, as are a
+numb
+[examples/](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples) directory.
+
+TileDB itself has extensive [installation](https://docs.tiledb.com/developer/installation),
+[quickstart](https://docs.tiledb.com/developer/quickstart), and [overall
+documentation](https://docs.tiledb.com/developer/) as well as a [support forum](https://forum.tiledb.com/).
