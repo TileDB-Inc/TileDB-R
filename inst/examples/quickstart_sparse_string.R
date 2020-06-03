@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 ##
-## cf quickstart_sparse_string
+## cf quickstart_sparse_string.cc
 ##
 ## When run, this program will create a 2D sparse array with one dimension a
 ## string type, and the other an integer. This models closely what a dataframe
