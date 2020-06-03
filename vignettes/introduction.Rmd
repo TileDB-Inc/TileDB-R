@@ -1,7 +1,6 @@
 ---
 title: "First Steps with TileDB"
 author: "TileDB Inc."
-package: tiledb
 output:
   BiocStyle::html_document
 abstract: |
@@ -16,23 +15,30 @@ vignette: |
 
 # Getting started
 
-Assuming the TileDB R package is installed, it can loaded via `library(tiledb)`. Installation itself is
-currently supported on Linux and macOS.
+Once the TileDB R package is installed, it can be loaded via `library(tiledb)`. Installation is
+supported on Linux and macOS.
 
-Additional documentation for the TileDB R package is available via the `help()` function from within
-R as well as via the [package documentation](https://tiledb-inc.github.io/TileDB-R/) and an
-[introductory notebook](https://tiledb-inc.github.io/TileDB-R/documentation.nb.html). Documentation
-about TileDB itself is [also available](https://docs.tiledb.com/main/).
+Documentation for the TileDB R package is available via the `help()` function from within R as well
+as via the [package documentation](https://tiledb-inc.github.io/TileDB-R/) and an [introductory
+notebook](https://tiledb-inc.github.io/TileDB-R/documentation.nb.html). Documentation about TileDB
+itself is [also available](https://docs.tiledb.com/main/).
+
+Several "quickstart" examples that are discussed on the website are available in the
+[examples](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/) directory. This
+vignette discusses similar examples.
 
 In the following examples, the URIs describing arrays point to local file system object. When TileDB
-has been built with S3 support, and with proper AWS credentials in the usual environment variables, URIs
-such as `s3://some/data/bucket` can be used where as local file would be used.
+has been built with S3 support, and with proper AWS credentials in the usual environment variables,
+URIs such as `s3://some/data/bucket` can be used where a local file would be used. See the script
+[examples/ex_S3.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_S3.R) for an
+example.
 
 # Dense Arrays
 
 ## Basic Reading of Dense Arrays
 
-We can consider the file [`ex_1.R`](../inst/ex_1.R) in the examples directory. It is a simple yet complete example extending `quickstart_dense.R` by adding a second attribute.
+We can consider the file [`ex_1.R`](../inst/ex_1.R) in the examples directory. It is a simple yet
+complete example extending `quickstart_dense.R` by adding a second attribute.
 
 *Read 1-D*
 
@@ -65,7 +71,8 @@ Subset the returned list via `[[var]]` or `$var`.  Numeric index also works.
     [1,]   11
     [2,]   12
 
-The two-dimensional indexing retains a matrix structure, but this can be overridden by setting `drop=TRUE` which works for either example.
+The two-dimensional indexing retains a matrix structure, but this can be overridden by setting
+`drop=TRUE` which works for either example.
 
     R> A[1:2, 2, drop=TRUE]$a
     [1] 11 12
@@ -137,9 +144,9 @@ array.
 This scheme can be generalized to variable cells, or cells where N>1, as we can expand each
 (atomistic) value over corresponding row and column indices.
 
-The column types correspond to the attribute typed in the array schema, subject to the constraint mentioned
-above on R types.  (The char comes in as a factor variable as is still the R 3.6.* default which is about
-to change. We can also override, users can too.)
+The column types correspond to the attribute typed in the array schema, subject to the constraint
+mentioned above on R types.  (The char comes in as a factor variable as is still the R 3.6.* default
+which is about to change. We can also override, users can too.)
 
     R> sapply(A[6:9, 3:4], "class")
             a         b         c      rows      cols
@@ -175,8 +182,9 @@ The attribute selection works with `as.data.frame=TRUE` as well:
 
 *Simple Examples*
 
-Basic reading returns the coordinates and any attributes.  The following examples use the array created by
-the [quickstart_sparse](https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc)
+Basic reading returns the coordinates and any attributes.  The following examples use the array
+created by the
+[quickstart_sparse](https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc)
 example.
 
     R> A <- tiledb_sparse(uri = uri)
