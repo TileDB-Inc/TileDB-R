@@ -353,7 +353,7 @@ tiledb_array_schema_set_allows_dups <- function(x, allows_dups) {
   stopifnot(is(x, "tiledb_array_schema"))
   stopifnot(is.sparse(x))
   stopifnot(is.logical(allows_dups))
-  tiledb:::libtiledb_array_schema_set_allows_dups(x@ptr, allows_dups)
+  libtiledb_array_schema_set_allows_dups(x@ptr, allows_dups)
   invisible(allows_dups)
 }
 
@@ -366,5 +366,5 @@ tiledb_array_schema_set_allows_dups <- function(x, allows_dups) {
 tiledb_array_schema_get_allows_dups <- function(x) {
   stopifnot(is(x, "tiledb_array_schema"))
   stopifnot(is.sparse(x))
-  return(tiledb:::libtiledb_array_schema_get_allows_dups(x@ptr))
+  return(libtiledb_array_schema_get_allows_dups(x@ptr))
 }

@@ -115,3 +115,15 @@ test_that("tiledb_array_schema created with encryption",  {
 
   unlink(uri, recursive=TRUE)
 })
+
+test_that("tiledb_array_schema dups setter/getter",  {
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+  sch <- tiledb_array_schema(dom,
+                             attrs = c(tiledb_attr("a", type = "INT32")),
+                             sparse = TRUE)
+  expect_false(tiledb_array_schema_get_allows_dups(sch))
+
+  tiledb_array_schema_set_allows_dups(sch, TRUE)
+  expect_true(tiledb_array_schema_get_allows_dups(sch))
+})
