@@ -341,3 +341,30 @@ setMethod("tiledb_ndim", "tiledb_array_schema",
 #'
 #' @export
 dim.tiledb_array_schema <- function(x) dim(tiledb::domain(x))
+
+#' Sets toggle whether the array schema allows duplicate values or not.
+#' This is only valid for sparse arrays.
+#'
+#' @param x tiledb_array_schema
+#' @param allows_dups logical value
+#' @return the logical value, invisibly
+#' @export
+tiledb_array_schema_set_allows_dups <- function(x, allows_dups) {
+  stopifnot(is(x, "tiledb_array_schema"))
+  stopifnot(is.sparse(x))
+  stopifnot(is.logical(allows_dups))
+  tiledb:::libtiledb_array_schema_set_allows_dups(x@ptr, allows_dups)
+  invisible(allows_dups)
+}
+
+#' Returns logical value whether the array schema allows duplicate values or not.
+#' This is only valid for sparse arrays.
+#'
+#' @param x tiledb_array_schema
+#' @return the logical value
+#' @export
+tiledb_array_schema_get_allows_dups <- function(x) {
+  stopifnot(is(x, "tiledb_array_schema"))
+  stopifnot(is.sparse(x))
+  return(tiledb:::libtiledb_array_schema_get_allows_dups(x@ptr))
+}
