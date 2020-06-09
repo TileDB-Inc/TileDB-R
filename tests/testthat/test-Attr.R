@@ -49,7 +49,7 @@ test_that("tiledb_attr set ncells", {
 })
 
 test_that("tiledb_attr set fill", {
-  skip_if(tiledb_version(TRUE) < "2.0.3")
+  skip_if(tiledb_version(TRUE) < "2.1.0")
 
   ## test for default
   dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))

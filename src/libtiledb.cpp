@@ -1139,6 +1139,7 @@ void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
 //[[Rcpp::export]]
 void libtiledb_attribute_set_fill_value_with_type(XPtr<tiledb::Attribute> attr,
                                                   SEXP val, std::string typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,1,0)
   if (typestr == "INT32") {
     IntegerVector v(val);
     if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
@@ -1150,11 +1151,15 @@ void libtiledb_attribute_set_fill_value_with_type(XPtr<tiledb::Attribute> attr,
   } else {
     Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
   }
+#else
+  Rcpp::stop("libtiledb_attribute_set_fill_value_with_type only available with TileDB 2.1.0 or later");
+#endif
 }
 
 //[[Rcpp::export]]
 SEXP libtiledb_attribute_get_fill_value_with_type(XPtr<tiledb::Attribute> attr,
                                                   std::string typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,1,0)
   uint64_t size = 1;
   const void* valptr;
   attr->get_fill_value(&valptr, &size);
@@ -1170,6 +1175,10 @@ SEXP libtiledb_attribute_get_fill_value_with_type(XPtr<tiledb::Attribute> attr,
   } else {
     Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
   }
+#else
+  Rcpp::stop("libtiledb_attribute_get_fill_value_with_type only available with TileDB 2.1.0 or later");
+  return R_NilValue; // not reached
+#endif
 }
 
 /**
