@@ -68,7 +68,7 @@ test_that("tiledb_attr set fill", {
   ## test for value set
   dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))
   attr <- tiledb_attr("a", type = "INT32")
-  tiledb:::libtiledb_attribute_set_fill_value_with_type(attr@ptr, 42L, "INT32")
+  tiledb:::libtiledb_attribute_set_fill_value(attr@ptr, 42L)
   sch <- tiledb_array_schema(dom, attr)
   uri <- tempfile()
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -78,7 +78,7 @@ test_that("tiledb_attr set fill", {
   ## when value has been set, expect value
   expect_equal(val, array(rep(42L, 4)))
 
-  expect_equal(tiledb:::libtiledb_attribute_get_fill_value_with_type(attr@ptr, "INT32"), 42L)
+  expect_equal(tiledb:::libtiledb_attribute_get_fill_value(attr@ptr), 42L)
 
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 })
