@@ -342,20 +342,19 @@ setMethod("tiledb_ndim", "tiledb_array_schema",
 #' @export
 dim.tiledb_array_schema <- function(x) dim(tiledb::domain(x))
 
-#' Sets toggle whether the array schema allows duplicate values or not.
-#' This is only valid for sparse arrays.
-#'
-#' @param x tiledb_array_schema
-#' @param allows_dups logical value
-#' @return the logical value, invisibly
+# ' Sets toggle whether the array schema allows duplicate values or not.
+# ' This is only valid for sparse arrays.
+# '
+# ' @param x tiledb_array_schema
+# ' @param allows_dups logical value
+# ' @return the logical value, invisibly
+# ' @export
+
+
+
+#' @rdname allows_dups-tiledb_array_schema-method
 #' @export
-tiledb_array_schema_set_allows_dups <- function(x, allows_dups) {
-  stopifnot(is(x, "tiledb_array_schema"))
-  stopifnot(is.sparse(x))
-  stopifnot(is.logical(allows_dups))
-  libtiledb_array_schema_set_allows_dups(x@ptr, allows_dups)
-  invisible(allows_dups)
-}
+setGeneric("allows_dups", function(x) standardGeneric("allows_dups"))
 
 #' Returns logical value whether the array schema allows duplicate values or not.
 #' This is only valid for sparse arrays.
@@ -363,8 +362,26 @@ tiledb_array_schema_set_allows_dups <- function(x, allows_dups) {
 #' @param x tiledb_array_schema
 #' @return the logical value
 #' @export
-tiledb_array_schema_get_allows_dups <- function(x) {
-  stopifnot(is(x, "tiledb_array_schema"))
+setMethod("allows_dups",
+          signature = "tiledb_array_schema",
+          function(x) {
   stopifnot(is.sparse(x))
-  return(libtiledb_array_schema_get_allows_dups(x@ptr))
-}
+  libtiledb_array_schema_get_allows_dups(x@ptr)
+})
+
+#' @rdname allows_dups-set-tiledb_array_schema-method
+#' @export
+setGeneric("allows_dups<-", function(x, value) standardGeneric("allows_dups<-"))
+
+#' Sets toggle whether the array schema allows duplicate values or not.
+#' This is only valid for sparse arrays.
+#'
+#' @param x tiledb_array_schema
+#' @param value logical value
+#' @return the tiledb_array_schema object
+#' @export
+setMethod("allows_dups<-", signature = "tiledb_array_schema",
+          function(x, value) {
+  libtiledb_array_schema_set_allows_dups(x@ptr, value)
+  x
+})

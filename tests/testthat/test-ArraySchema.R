@@ -122,8 +122,11 @@ test_that("tiledb_array_schema dups setter/getter",  {
   sch <- tiledb_array_schema(dom,
                              attrs = c(tiledb_attr("a", type = "INT32")),
                              sparse = TRUE)
-  expect_false(tiledb_array_schema_get_allows_dups(sch))
 
-  tiledb_array_schema_set_allows_dups(sch, TRUE)
-  expect_true(tiledb_array_schema_get_allows_dups(sch))
+  ## false by default
+  expect_false(allows_dups(sch))
+
+  ## true once set to true
+  allows_dups(sch) <- TRUE
+  expect_true(allows_dups(sch))
 })
