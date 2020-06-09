@@ -117,6 +117,7 @@ test_that("tiledb_array_schema created with encryption",  {
 })
 
 test_that("tiledb_array_schema dups setter/getter",  {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
                                 tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
   sch <- tiledb_array_schema(dom,
