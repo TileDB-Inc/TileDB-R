@@ -177,6 +177,14 @@ libtiledb_attribute_dump <- function(attr) {
     invisible(.Call(`_tiledb_libtiledb_attribute_dump`, attr))
 }
 
+libtiledb_attribute_set_fill_value_with_type <- function(attr, val, typestr) {
+    invisible(.Call(`_tiledb_libtiledb_attribute_set_fill_value_with_type`, attr, val, typestr))
+}
+
+libtiledb_attribute_get_fill_value_with_type <- function(attr, typestr) {
+    .Call(`_tiledb_libtiledb_attribute_get_fill_value_with_type`, attr, typestr)
+}
+
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, sparse = FALSE) {
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, sparse)
 }

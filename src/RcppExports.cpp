@@ -508,6 +508,30 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_attribute_set_fill_value_with_type
+void libtiledb_attribute_set_fill_value_with_type(XPtr<tiledb::Attribute> attr, SEXP val, std::string typestr);
+RcppExport SEXP _tiledb_libtiledb_attribute_set_fill_value_with_type(SEXP attrSEXP, SEXP valSEXP, SEXP typestrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type val(valSEXP);
+    Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
+    libtiledb_attribute_set_fill_value_with_type(attr, val, typestr);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_attribute_get_fill_value_with_type
+SEXP libtiledb_attribute_get_fill_value_with_type(XPtr<tiledb::Attribute> attr, std::string typestr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_fill_value_with_type(SEXP attrSEXP, SEXP typestrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_fill_value_with_type(attr, typestr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_schema
 XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order, Nullable<XPtr<tiledb::FilterList>> coords_filter_list, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list, bool sparse);
 RcppExport SEXP _tiledb_libtiledb_array_schema(SEXP ctxSEXP, SEXP domainSEXP, SEXP attributesSEXP, SEXP cell_orderSEXP, SEXP tile_orderSEXP, SEXP coords_filter_listSEXP, SEXP offsets_filter_listSEXP, SEXP sparseSEXP) {
@@ -1902,6 +1926,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_attribute_set_cell_val_num", (DL_FUNC) &_tiledb_libtiledb_attribute_set_cell_val_num, 2},
     {"_tiledb_libtiledb_attribute_is_variable_sized", (DL_FUNC) &_tiledb_libtiledb_attribute_is_variable_sized, 1},
     {"_tiledb_libtiledb_attribute_dump", (DL_FUNC) &_tiledb_libtiledb_attribute_dump, 1},
+    {"_tiledb_libtiledb_attribute_set_fill_value_with_type", (DL_FUNC) &_tiledb_libtiledb_attribute_set_fill_value_with_type, 3},
+    {"_tiledb_libtiledb_attribute_get_fill_value_with_type", (DL_FUNC) &_tiledb_libtiledb_attribute_get_fill_value_with_type, 2},
     {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 8},
     {"_tiledb_libtiledb_array_schema_create", (DL_FUNC) &_tiledb_libtiledb_array_schema_create, 2},
     {"_tiledb_libtiledb_array_schema_load", (DL_FUNC) &_tiledb_libtiledb_array_schema_load, 2},

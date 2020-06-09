@@ -1136,6 +1136,41 @@ void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
   attr->dump();
 }
 
+//[[Rcpp::export]]
+void libtiledb_attribute_set_fill_value_with_type(XPtr<tiledb::Attribute> attr,
+                                                  SEXP val, std::string typestr) {
+  if (typestr == "INT32") {
+    IntegerVector v(val);
+    if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
+    attr->set_fill_value((void*) &(v[0]), static_cast<uint64_t>(sizeof(int32_t)));
+  } else if (typestr == "FLOAT64") {
+    NumericVector v(val);
+    if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
+    attr->set_fill_value((void*) &(v[0]), static_cast<uint64_t>(sizeof(double)));
+  } else {
+    Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
+  }
+}
+
+//[[Rcpp::export]]
+SEXP libtiledb_attribute_get_fill_value_with_type(XPtr<tiledb::Attribute> attr,
+                                                  std::string typestr) {
+  uint64_t size = 1;
+  const void* valptr;
+  attr->get_fill_value(&valptr, &size);
+  if (size < 1) {
+    Rcpp::stop("Incorrect size value '%lu' returned from fill getter.", size);
+  }
+  if (typestr == "INT32") {
+    int32_t v = *(const int32_t*)valptr;
+    return wrap(v);
+  } else if (typestr == "FLOAT64") {
+    double v = *(const double*)valptr;
+    return wrap(v);
+  } else {
+    Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
+  }
+}
 
 /**
  * TileDB Array Schema
