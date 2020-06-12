@@ -12,7 +12,7 @@ selected <- c("debian-clang-devel",
               "macos-highsierra-release",
               "macos-highsierra-release-cran")
 
-check(".", platform = selected, email = geOption("email", "edd@debian.org"))
+check(".", platform = selected, email = getOption("email", "edd@debian.org"))
 
 
 ## just FYI on 2020-05-20 platform() returns

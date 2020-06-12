@@ -1,14 +1,10 @@
 #!/bin/sh
 
-if [ $# -lt 1 ]; then
-    echo "Usage: fetchTileDB.sh tarfile"
+if [ $# -ne 1 ] || { [ "$1" != "linux" ] && [ "$1" != "macos" ]; }; then
+    echo "Usage: fetchTileDB.sh (linux|macos)"
     exit 1
 fi
-
-repo=https://tiledb-inc.github.io/tiledb-linux-library
-tarball="$1"
-
-#test -f /etc/os-release && echo "** On " && cat /etc/os-release
+os="${1}"
 
 if [ ! -f NEWS.md ]; then
     echo "This script should run from the inst/ directory."
@@ -16,9 +12,28 @@ if [ ! -f NEWS.md ]; then
     exit 1
 fi
 
+## source repo: the latest TileDB release
+## which redirects to latest tagged release
+repo=https://github.com/TileDB-Inc/TileDB/releases/latest
+tarball="tiledb.tar.gz"
+
+## use curl to download the release, follow redirects, and scan
+## the sed expression should result in two tarballs such as
+##   tiledb-linux-2.0.3-cf03c60.tar.gz
+##   tiledb-macos-2.0.3-cf03c60.tar.gz
+## where version and sha will vary
+sourcetgz=$(curl -Ls ${repo} | sed -n -e 's/.*<span.*>\(tiledb-.*tar.gz\).*/\1/p' | grep "${os}")
+
+## need to also extract release version ... because github
+ver=$(echo "${sourcetgz}" | cut -d- -f3)
+
+## construct actual url
+downloadurl="https://github.com/TileDB-Inc/TileDB/releases/download/${ver}/${sourcetgz}"
+
 ## Download if need be
-if [ ! -f ${tarball} ]; then
-    curl -s -k -L -O ${repo}/${tarball}
+if [ ! -f "${tarball}" ]; then
+    echo "downloading '${downloadurl}' as '${tarball}'"
+    curl -s -k -L -o ${tarball} ${downloadurl}
 fi
 
 ## Clean-up just in case
