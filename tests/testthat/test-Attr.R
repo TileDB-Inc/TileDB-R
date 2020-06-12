@@ -47,3 +47,38 @@ test_that("tiledb_attr set ncells", {
   tiledb:::libtiledb_attribute_set_cell_val_num(attrs@ptr, NA_integer_)
   expect_true(is.na(tiledb::cell_val_num(attrs)))
 })
+
+test_that("tiledb_attr set fill", {
+  skip_if(tiledb_version(TRUE) < "2.1.0")
+
+  ## test for default
+  dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))
+  attr <- tiledb_attr("a", type = "INT32")
+  sch <- tiledb_array_schema(dom, attr)
+
+  uri <- tempfile()
+  if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+  tiledb_array_create(uri, sch)
+
+  arr <- tiledb_dense(uri)
+  val <- arr[]
+  ## when no value has been set, expect NA
+  expect_equal(val, array(rep(NA_integer_, 4)))
+
+  ## test for value set
+  dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))
+  attr <- tiledb_attr("a", type = "INT32")
+  tiledb:::libtiledb_attribute_set_fill_value(attr@ptr, 42L)
+  sch <- tiledb_array_schema(dom, attr)
+  uri <- tempfile()
+  if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+  tiledb_array_create(uri, sch)
+  arr <- tiledb_dense(uri)
+  val <- arr[]
+  ## when value has been set, expect value
+  expect_equal(val, array(rep(42L, 4)))
+
+  expect_equal(tiledb:::libtiledb_attribute_get_fill_value(attr@ptr), 42L)
+
+  if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+})
