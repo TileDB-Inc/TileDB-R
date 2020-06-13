@@ -1,0 +1,269 @@
+---
+title: "First Steps with TileDB"
+author: "TileDB Inc."
+output:
+  BiocStyle::html_document
+abstract: |
+  This vignette describe first steps with TileDB such as reading and
+  writing of sparse and dense arrays.
+vignette: |
+  %\VignetteIndexEntry{Introduction to TileDB}
+  %\VignettePackage{tiledb}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Getting started
+
+Once the TileDB R package is installed, it can be loaded via `library(tiledb)`. Installation is
+supported on Linux and macOS.
+
+Documentation for the TileDB R package is available via the `help()` function from within R as well
+as via the [package documentation](https://tiledb-inc.github.io/TileDB-R/) and an [introductory
+notebook](https://tiledb-inc.github.io/TileDB-R/documentation.nb.html). Documentation about TileDB
+itself is [also available](https://docs.tiledb.com/main/).
+
+Several "quickstart" examples that are discussed on the website are available in the
+[examples](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/) directory. This
+vignette discusses similar examples.
+
+In the following examples, the URIs describing arrays point to local file system object. When TileDB
+has been built with S3 support, and with proper AWS credentials in the usual environment variables,
+URIs such as `s3://some/data/bucket` can be used where a local file would be used. See the script
+[examples/ex_S3.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_S3.R) for an
+example.
+
+# Dense Arrays
+
+## Basic Reading of Dense Arrays
+
+We can consider the file [`ex_1.R`](../inst/ex_1.R) in the examples directory. It is a simple yet
+complete example extending `quickstart_dense.R` by adding a second attribute.
+
+*Read 1-D*
+
+Extracts column 2 and rows 1 to 2 from A, returning a list object as there are multiple attributes.
+
+    R> A[1:2, 2]
+    $a
+         [,1]
+    [1,]   11
+    [2,]   12
+
+    $b
+         [,1]
+    [1,]  111
+    [2,]  112
+
+    $c
+         [,1]
+    [1,] "k"
+    [2,] "l"
+
+Subset the returned list via `[[var]]` or `$var`.  Numeric index also works.
+
+    R> A[1:2, 2][["a"]]
+         [,1]
+    [1,]   11
+    [2,]   12
+    R> A[1:2, 2]$a
+         [,1]
+    [1,]   11
+    [2,]   12
+
+The two-dimensional indexing retains a matrix structure, but this can be overridden by setting
+`drop=TRUE` which works for either example.
+
+    R> A[1:2, 2, drop=TRUE]$a
+    [1] 11 12
+    R>
+
+The result is now a vector of the attribute type.
+
+*Read 2-D*
+
+This works analogously.  But not selecting an attribute we now get a list of matrices.
+
+    R> A[6:9, 3:4]
+    $a
+         [,1] [,2]
+    [1,]   26   36
+    [2,]   27   37
+    [3,]   28   38
+    [4,]   29   39
+
+    $b
+         [,1] [,2]
+    [1,]  126  136
+    [2,]  127  137
+    [3,]  128  138
+    [4,]  129  139
+
+    $c
+         [,1]    [,2]
+    [1,] "z"     "H"
+    [2,] "brown" "I"
+    [3,] "fox"   "J"
+    [4,] "A"     "K"
+
+## Read 2-D with attribute selection
+
+We can restrict the selection to a subset of attributes when opening the array.
+
+    R> A <- tiledb_dense(uri = uri, attrs = c("b","c"))
+    R> A[6:9, 2:4]
+    $b
+         [,1] [,2] [,3]
+    [1,]  116  126  136
+    [2,]  117  127  137
+    [3,]  118  128  138
+    [4,]  119  129  139
+
+    $c
+         [,1]    [,2] [,3]
+    [1,] "p"  "z"     "H"
+    [2,] "q"  "brown" "I"
+    [3,] "r"  "fox"   "J"
+    [4,] "s"  "A"     "K"
+
+
+We can also ask for data.frame objects by setting `as.data.frame=TRUE` when opening the
+array.
+
+    R> A[6:9, 3:4]
+       a   b     c
+    1 26 126     z
+    2 27 127 brown
+    3 28 128   fox
+    4 29 129     A
+    5 36 136     H
+    6 37 137     I
+    7 38 138     J
+    8 39 139     K
+
+This scheme can be generalized to variable cells, or cells where N>1, as we can expand each
+(atomistic) value over corresponding row and column indices.
+
+The column types correspond to the attribute typed in the array schema, subject to the constraint
+mentioned above on R types.  (The char comes in as a factor variable as is still the R 3.6.* default
+which is about to change. We can also override, users can too.)
+
+    R> sapply(A[6:9, 3:4], "class")
+            a         b         c      rows      cols
+    "integer" "numeric"  "factor" "integer" "integer"
+
+Consistent with the `data.frame` semantics, *now* requesting a named column *reduces to a vector* as
+this happens at the R side:
+
+    R> A[1:3, 2:5]$b
+    [1] 111 112 113 121 122 123 131 132 133 141 142 143
+
+The attribute selection works with `as.data.frame=TRUE` as well:
+
+    R> A <- tiledb_dense(uri = uri, as.data.frame = TRUE, attrs = c("b","c"))
+    R> A[6:9, 2:4]
+         b     c
+    1  116     p
+    2  117     q
+    3  118     r
+    4  119     s
+    5  126     z
+    6  127 brown
+    7  128   fox
+    8  129     A
+    9  136     H
+    10 137     I
+    11 138     J
+    12 139     K
+
+# Sparse Arrays
+
+## Basic Reading and Writing of Sparse Arrays
+
+*Simple Examples*
+
+Basic reading returns the coordinates and any attributes.  The following examples use the array
+created by the
+[quickstart_sparse](https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc)
+example.
+
+    R> A <- tiledb_sparse(uri = uri)
+    R> A[]
+    $coords
+    [1] 1 1 2 3 2 4
+
+    $a
+    [1] 1 3 2
+
+
+We can also request a data.frame object, either when opening or by changing this object characteric on the fly:
+
+    R> return.data.frame(A) <- TRUE
+    R> A[]
+      a rows cols
+    1 1    1    1
+    2 3    2    3
+    3 2    2    4
+
+For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can overridden.
+
+Assignment works similarly:
+
+    R> A[4,2] <- 42L
+    R> A[]
+       a rows cols
+    1  1    1    1
+    2 42    4    2
+    3  3    2    3
+    4  2    2    4
+
+Reads can select rows and or colums:
+
+    R> A[2,]
+      a rows cols
+    1 3    2    3
+    2 2    2    4
+    R> A[,2]
+       a rows cols
+    1 42    4    2
+
+Attributes can be selected similarly.
+
+## Date(time) Attributes
+
+Similar to the dense array case described earlier, the file [`ex_2.R`](../inst/examples/ex_2.R)
+illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of
+just integer and double precision floats.
+
+    R> A <- tiledb_sparse(uri = uri, as.data.frame = TRUE)
+    R> A[1577858580:1577858700]   # POSIX time seconds
+      a   b          d                          e       rows
+    1 3 103 2020-01-11 2020-01-02 18:24:33.844293 1577858580
+    2 4 104 2020-01-15 2020-01-05 02:28:36.215681 1577858640
+    3 5 105 2020-01-19 2020-01-05 00:44:04.805775 1577858700
+
+The row coordinate is currently a floating point representation of the underlying time type.  We can
+both select attributes (here we excluded the “a” column) and select rows by time (as the time stampt
+get converted to the required floating point value).
+
+    R> attrs(A) <- c("b", "d", "e")
+    R> A[as.POSIXct("2020-01-01 00:01:00"):as.POSIXct("2020-01-01 00:03:00")]
+        b          d                          e       rows
+    1 101 2020-01-05 2020-01-01 03:03:07.548390 1577858460
+    2 102 2020-01-10 2020-01-02 21:02:19.748134 1577858520
+    3 103 2020-01-11 2020-01-02 18:24:33.844293 1577858580
+
+More extended examples are available showing indexing by date(time) as well as character dimension.
+
+# Additional Information
+
+The TileDB R package is documented via R help functions (_e.g._ `help("tiledb_sparse")` shows
+information for the `tiledb_sparse()` function) as well as via a [website regrouping all
+documentation](https://tiledb-inc.github.io/TileDB-R/).  An extended
+[notebook](https://tiledb-inc.github.io/TileDB-R/documentation.nb.html) is available, as are a
+numb
+[examples/](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples) directory.
+
+TileDB itself has extensive [installation](https://docs.tiledb.com/developer/installation),
+[quickstart](https://docs.tiledb.com/developer/quickstart), and [overall
+documentation](https://docs.tiledb.com/developer/) as well as a [support forum](https://forum.tiledb.com/).
