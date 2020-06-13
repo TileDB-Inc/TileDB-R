@@ -17,8 +17,9 @@ API](https://docs.tiledb.com/main/).
 
 ## Installation
 
-TileDB needs to be installed first (from a package or from source)
-for the TileDB R package to build and link correctly.
+TileDB needs to be present, and can to be installed first (from a package or from source)
+for the TileDB R package to build and link correctly. For macOS and Linux, a precompiled
+shared library is used during the installation of this R package.
 
 As the TileDB R package has not been published on [CRAN](https://cran.r-project.org/), it must be
 installed from source.
@@ -33,7 +34,7 @@ The most recent released version can be installed from
     > library(tiledb)
     > tiledb_version()
     major minor patch
-        2     0     0
+        2     0     5
     > help(package=tiledb)
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
@@ -46,10 +47,10 @@ of TileDB, but should also build against the newest development version.
 
 ## Quick Links
 
-- [Installation](https://docs.tiledb.com/developer/installation)
-- [Quickstart](https://docs.tiledb.com/developer/quickstart)
-- [Reference Docs](https://tiledb-inc.github.io/TileDB-R/)
-- [Support](https://forum.tiledb.com/)
+- [TileDB Installation](https://docs.tiledb.com/developer/installation)
+- [TileDB Quickstart](https://docs.tiledb.com/developer/quickstart)
+- [TileDB R Reference Docs](https://tiledb-inc.github.io/TileDB-R/)
+- [TileDB Support](https://forum.tiledb.com/)
 
 ## Copyright
 
