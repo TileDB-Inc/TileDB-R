@@ -23,8 +23,8 @@ jobs:
 env:
   global:
     - DOCKER_OPTS="--rm -ti -v $(pwd):/mnt -w /mnt"
-      R_BLD_OPTS="--no-build-vignettes --no-manual"
-      R_CHK_OPTS="--no-vignettes --no-manual"
+      R_BLD_OPTS="--no-manual"
+      R_CHK_OPTS="--no-manual"
 
 before_install:
   - docker pull ${DOCKER_CNTR}
