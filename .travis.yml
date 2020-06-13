@@ -13,14 +13,12 @@ jobs:
       env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:dev"
     - name: 1.7.7
       env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:1.7.7"
-    #- name: 2.0.0
-    #  env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:2.0.0"
-    - name: 2.0.1
-      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:2.0.1"
-    - name: 2.0.2
-      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:2.0.2"
     - name: 2.0.3
       env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:2.0.3"
+    - name: 2.0.4
+      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:2.0.4"
+    - name: 2.0.5
+      env: DOCKER_CNTR="eddelbuettel/rocker-tiledb:2.0.5"
 
 env:
   global:
