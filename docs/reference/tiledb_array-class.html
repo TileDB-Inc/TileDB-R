@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="An S4 class for a TileDB Array — tiledb_array-class" />
-<meta property="og:description" content="This class is experimental." />
+<meta property="og:description" content="This class aims to eventually replace tiledb_dense
+and tiledb_sparse provided equivalent functionality
+based on refactored implementation utilising newer TileDB features." />
 
 
 
@@ -72,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -86,6 +88,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/introduction.html">First Steps with TileDB</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -109,12 +123,14 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>An S4 class for a TileDB Array</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/tiledb_array.R'><code>R/tiledb_array.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/TileDBArray.R'><code>R/TileDBArray.R</code></a></small>
     <div class="hidden name"><code>tiledb_array-class.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This class is experimental.</p>
+    <p>This class aims to eventually replace <code><a href='tiledb_dense.html'>tiledb_dense</a></code>
+and <code><a href='tiledb_sparse.html'>tiledb_sparse</a></code> provided equivalent functionality
+based on refactored implementation utilising newer TileDB features.</p>
     </div>
 
 
@@ -151,7 +167,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by TileDB R.</p>
+  <p>Developed by Dirk Eddelbuettel.</p>
 </div>
 
 <div class="pkgdown">

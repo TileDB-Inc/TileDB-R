@@ -30,6 +30,7 @@ reference:
 - title: ArraySchema
   contents:
   - starts_with("tiledb_array_schema")
+  - starts_with("allows_dups")
   - matches("r_to_tiledb_type")
 - title: Attribute
   contents:

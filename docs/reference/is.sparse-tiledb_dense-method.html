@@ -6,18 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>#' Reopens a TileDB array an opened tiledb array
-#'
-#' Reopening an array is useful when the array got updated after it got opened
-#' and the tiledb array object got created. To sync-up with the updates,
-#' the user must either close the array and open again,
-#' or just use tiledb_reopen(array) which can be faster because
-#' only metdata regarding updates has to be loaded.
-#'
-#' @param object tileb array object
-#' @return the reopened array object
-#' @export
-setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.sparse,tiledb_dense-method • tiledb</title>
+<title>Returns true is if the array or array_schema is sparse — is.sparse,tiledb_dense-method • tiledb</title>
 
 
 <!-- jquery -->
@@ -50,23 +39,8 @@ setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.spa
 
 
 
-<meta property="og:title" content="#' Reopens a TileDB array an opened tiledb array
-#'
-#' Reopening an array is useful when the array got updated after it got opened
-#' and the tiledb array object got created. To sync-up with the updates,
-#' the user must either close the array and open again,
-#' or just use tiledb_reopen(array) which can be faster because
-#' only metdata regarding updates has to be loaded.
-#'
-#' @param object tileb array object
-#' @return the reopened array object
-#' @export
-setGeneric("reopen", function(object, ...) standardGeneric("reopen")) — is.sparse,tiledb_dense-method" />
-<meta property="og:description" content="#' @export
-setMethod(&quot;reopen&quot;, &quot;tiledb_dense&quot;, function(object) 
-libtiledb_array_reopen(object@ptr)
-return(object)
-)" />
+<meta property="og:title" content="Returns true is if the array or array_schema is sparse — is.sparse,tiledb_dense-method" />
+<meta property="og:description" content="Returns true is if the array or array_schema is sparse" />
 
 
 
@@ -98,7 +72,7 @@ return(object)
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -112,6 +86,18 @@ return(object)
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/introduction.html">First Steps with TileDB</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -134,28 +120,13 @@ return(object)
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>#' Reopens a TileDB array an opened tiledb array
-#'
-#' Reopening an array is useful when the array got updated after it got opened
-#' and the tiledb array object got created. To sync-up with the updates,
-#' the user must either close the array and open again,
-#' or just use tiledb_reopen(array) which can be faster because
-#' only metdata regarding updates has to be loaded.
-#'
-#' @param object tileb array object
-#' @return the reopened array object
-#' @export
-setGeneric("reopen", function(object, ...) standardGeneric("reopen"))</h1>
+    <h1>Returns true is if the array or array_schema is sparse</h1>
     <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/DenseArray.R'><code>R/DenseArray.R</code></a></small>
     <div class="hidden name"><code>is.sparse-tiledb_dense-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>#' @export
-setMethod("reopen", "tiledb_dense", function(object) 
-libtiledb_array_reopen(object@ptr)
-return(object)
-)</p>
+    <p>Returns true is if the array or array_schema is sparse</p>
     </div>
 
     <pre class="usage"><span class='co'># S4 method for tiledb_dense</span>
@@ -173,18 +144,6 @@ return(object)
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>FALSE</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>#' Closes a tiledb array object
-#'
-#' @param conn tiledb array object
-#' @return returns the closed array object
-close.tiledb_dense &lt;- function(conn, ...)  
-stopifnot(is(conn, "tiledb_dense"))
-libtiledb_array_close(conn@ptr)
-return(conn);
-
-Returns true is if the array or array_schema is sparse</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -197,7 +156,7 @@ Returns true is if the array or array_schema is sparse</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by TileDB R.</p>
+  <p>Developed by Dirk Eddelbuettel.</p>
 </div>
 
 <div class="pkgdown">
