@@ -30,15 +30,14 @@ vignette discusses similar examples.
 In the following examples, the URIs describing arrays point to local file system object. When TileDB
 has been built with S3 support, and with proper AWS credentials in the usual environment variables,
 URIs such as `s3://some/data/bucket` can be used where a local file would be used. See the script
-[examples/ex_S3.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_S3.R) for an
-example.
+[examples/ex_S3.R][ex_s3] for an example.
 
 # Dense Arrays
 
 ## Basic Reading of Dense Arrays
 
-We can consider the file [`ex_1.R`](../inst/ex_1.R) in the examples directory. It is a simple yet
-complete example extending `quickstart_dense.R` by adding a second attribute.
+We can consider the file [`ex_1.R`][ex_1] in the examples directory. It is a simple yet
+complete example extending [`quickstart_dense.R`][qs_dense] by adding a second attribute.
 
 *Read 1-D*
 
@@ -183,9 +182,7 @@ The attribute selection works with `as.data.frame=TRUE` as well:
 *Simple Examples*
 
 Basic reading returns the coordinates and any attributes.  The following examples use the array
-created by the
-[quickstart_sparse](https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc)
-example.
+created by the [quickstart_sparse][qs_sparse] example.
 
     R> A <- tiledb_sparse(uri = uri)
     R> A[]
@@ -196,7 +193,7 @@ example.
     [1] 1 3 2
 
 
-We can also request a data.frame object, either when opening or by changing this object characteric on the fly:
+We can also request a data.frame object, either when opening or by changing this object characteristic on the fly:
 
     R> return.data.frame(A) <- TRUE
     R> A[]
@@ -205,7 +202,7 @@ We can also request a data.frame object, either when opening or by changing this
     2 3    2    3
     3 2    2    4
 
-For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can overridden.
+For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can be overridden.
 
 Assignment works similarly:
 
@@ -217,7 +214,7 @@ Assignment works similarly:
     3  3    2    3
     4  2    2    4
 
-Reads can select rows and or colums:
+Reads can select rows and or columns:
 
     R> A[2,]
       a rows cols
@@ -231,7 +228,7 @@ Attributes can be selected similarly.
 
 ## Date(time) Attributes
 
-Similar to the dense array case described earlier, the file [`ex_2.R`](../inst/examples/ex_2.R)
+Similar to the dense array case described earlier, the file [`ex_2.R`][ex_2]
 illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of
 just integer and double precision floats.
 
@@ -243,7 +240,7 @@ just integer and double precision floats.
     3 5 105 2020-01-19 2020-01-05 00:44:04.805775 1577858700
 
 The row coordinate is currently a floating point representation of the underlying time type.  We can
-both select attributes (here we excluded the “a” column) and select rows by time (as the time stampt
+both select attributes (here we excluded the “a” column) and select rows by time (as the time stamps
 get converted to the required floating point value).
 
     R> attrs(A) <- c("b", "d", "e")
@@ -267,3 +264,10 @@ numb
 TileDB itself has extensive [installation](https://docs.tiledb.com/developer/installation),
 [quickstart](https://docs.tiledb.com/developer/quickstart), and [overall
 documentation](https://docs.tiledb.com/developer/) as well as a [support forum](https://forum.tiledb.com/).
+
+[ex_1]: https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R
+[ex_2]: https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_2.R
+[ex_s3]: https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_S3.R
+
+[qs_dense]: https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/quickstart_dense.R
+[qs_sparse]: https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc
