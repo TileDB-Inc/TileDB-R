@@ -44,6 +44,7 @@ setClass("tiledb_array",
                       as.data.frame = "logical",
                       attrs = "character",
                       extended = "logical",
+                      selected_ranges = "list",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -67,6 +68,7 @@ tiledb_array <- function(uri,
                         as.data.frame = FALSE,
                         attrs = character(),
                         extended = TRUE,
+                        selected_ranges = list(),
                         ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -90,6 +92,7 @@ tiledb_array <- function(uri,
       as.data.frame = as.data.frame,
       attrs = attrs,
       extended = extended,
+      selected_ranges = selected_ranges,
       ptr = array_xptr)
 }
 
@@ -149,10 +152,6 @@ setMethod("[", "tiledb_array",
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
 
-  ## keep unevaluated substitute expressions, creates a language object we can subset
-  is <- substitute(i)
-  js <- substitute(j)
-
   ctx <- x@ctx
   uri <- x@uri
   sel <- x@attrs
@@ -201,33 +200,57 @@ setMethod("[", "tiledb_array",
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
 
-  ## set range(s) on first dimension
-  if (is.null(is)) {
+  ## set default range(s) on first dimension if nothing is specified
+  if (is.null(i) &&
+      (length(x@selected_ranges) == 0 ||
+       (length(x@selected_ranges) >= 1 && is.null(x@selected_ranges[[1]])))) {
     qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                   nonemptydom[[1]][1], nonemptydom[[1]][2])
-  } else {
-    if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
-    if (length(is) == 1) stop("No content to parse in row argument.")
-    for (i in 2:length(is)) {
-      el <- is[[i]]
+  }
+  ## if we have is, use it
+  if (!is.null(i)) {
+    ##if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
+    if (length(i) == 0) stop("No content to parse in row argument.")
+    for (i in 1:length(i)) {
+      el <- i[[i]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     min(eval(el)), max(eval(el)))
     }
   }
 
-  ## set range(s) on  second dimension
-  if (is.null(js)) {
+  ## set range(s) on second dimension
+  if (is.null(j) &&
+      (length(x@selected_ranges) == 0 ||
+       (length(x@selected_ranges) >= 2 && is.null(x@selected_ranges[[2]])))) {
     if (length(nonemptydom) == 2) {
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                     nonemptydom[[2]][1], nonemptydom[[2]][2])
     }
-  } else {
-    if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
-    if (length(js) == 1) stop("No content to parse in col argument.")
-    for (i in 2:length(js)) {
-      el <- js[[i]]
+  }
+  ## if we have js, use it
+  if (!is.null(j)) {
+    #if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
+    if (length(j) == 0) stop("No content to parse in col argument.")
+    for (i in 1:length(j)) {
+      el <- j[[i]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                     min(eval(el)), max(eval(el)))
+    }
+  }
+
+  ## if ranges selected, use those
+  if (length(x@selected_ranges) > 0) {
+    if (length(x@selected_ranges) >= 1 && !is.null(x@selected_ranges[[1]])) {
+      m <- x@selected_ranges[[1]]
+      for (i in seq_len(nrow(m))) {
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], m[i,1], m[i,2])
+      }
+    }
+    if (length(x@selected_ranges) >= 2 && !is.null(x@selected_ranges[[2]])) {
+      m <- x@selected_ranges[[2]]
+      for (i in seq_len(nrow(m))) {
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], m[i,1], m[i,2])
+      }
     }
   }
 
