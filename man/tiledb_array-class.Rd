@@ -24,6 +24,9 @@ based on refactored implementation utilising newer TileDB features.
 
 \item{\code{extended}}{A logical value}
 
+\item{\code{selected_ranges}}{An optional list with matrices where each matrix i
+describes the (min,max) pair of ranges for dimension i}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 

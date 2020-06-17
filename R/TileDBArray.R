@@ -35,6 +35,8 @@
 #' @slot as.data.frame A logical value
 #' @slot attrs A character vector
 #' @slot extended A logical value
+#' @slot selected_ranges An optional list with matrices where each matrix i
+#' describes the (min,max) pair of ranges for dimension i
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -59,6 +61,8 @@ setClass("tiledb_array",
 #' empty implying all are selected
 #' @param extended optional logical switch selecting wide \sQuote{data.frame}
 #' format, defaults to "TRUE"
+#' @param selected_ranges An optional list with matrices where each matrix i
+#' describes the (min,max) pair of ranges for dimension i
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_sparse array object
 #' @export

@@ -11,6 +11,7 @@ tiledb_array(
   as.data.frame = FALSE,
   attrs = character(),
   extended = TRUE,
+  selected_ranges = list(),
   ctx = tiledb_get_context()
 )
 }
@@ -28,6 +29,9 @@ empty implying all are selected}
 
 \item{extended}{optional logical switch selecting wide \sQuote{data.frame}
 format, defaults to "TRUE"}
+
+\item{selected_ranges}{An optional list with matrices where each matrix i
+describes the (min,max) pair of ranges for dimension i}
 
 \item{ctx}{tiledb_ctx (optional)}
 }
