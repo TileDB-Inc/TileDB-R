@@ -274,3 +274,62 @@ test_that("test range selection on reading", {
   unlink(tmpuri, recursive = TRUE)
 
 })
+
+test_that("test range selection edge cases", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  d1  <- tiledb_dim("d1", domain = c(1L, 10L))
+  d2  <- tiledb_dim("d2", domain = c(1L, 10L))
+  dom <- tiledb_domain(c(d1, d2))
+  val <- tiledb_attr("val", type = "FLOAT64")
+  sch <- tiledb_array_schema(dom, c(val), sparse=TRUE)
+  tiledb_array_create(tmp, sch)
+
+  x <- tiledb_array(uri = tmp)
+  df <- data.frame(d1=integer(0), d2=integer(0), val=numeric(0))
+  x[] <- df
+
+  val <- x[]
+  expect_equal(nrow(val), 0L)
+
+  x[] <- data.frame(d1=1, d2=1, val=1)
+  selected_ranges(x) <- list(cbind(2,2), cbind(2,2))
+  val <- x[]
+  expect_equal(nrow(val), 0L)
+
+  unlink(tmp, recursive = TRUE)
+})
+
+test_that("test range selection edge cases sparse", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  d1  <- tiledb_dim("d1", domain = c(1, 100))
+  d2  <- tiledb_dim("d2", domain = c(1, 100))
+  dom <- tiledb_domain(c(d1, d2))
+  val <- tiledb_attr("val", type = "FLOAT64")
+  sch <- tiledb_array_schema(dom, val, sparse=TRUE)
+  tiledb_array_create(tmp, sch)
+
+  x <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+
+  set.seed(100)
+  df <- data.frame(d1=sample(100, 10, replace=TRUE),
+                   d2=sample(100, 10, replace=TRUE),
+                   val=1:10)
+  x[] <- df
+  selected_ranges(x) <- list(cbind(10,10), cbind(10,100))
+  val <- x[]
+  expect_equal(nrow(val), 0L)
+
+  selected_ranges(x) <- list(cbind(1,21), cbind(10,100))
+  val <- x[]
+  expect_equal(nrow(val), 1L)
+
+  unlink(tmp, recursive = TRUE)
+})
