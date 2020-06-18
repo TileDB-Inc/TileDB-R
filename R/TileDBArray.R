@@ -205,9 +205,8 @@ setMethod("[", "tiledb_array",
       (length(x@selected_ranges) == 0 ||
        (length(x@selected_ranges) >= 1 && is.null(x@selected_ranges[[1]])))) {
     ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
-    domdim <- domain(dimensions(dom)[[1]])
-    if (nonemptydom[[1]][1] != nonemptydom[[1]][2] ||
-        nonemptydom[[1]][1] > domdim[1])
+    #domdim <- domain(dimensions(dom)[[1]])
+    if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) # || nonemptydom[[1]][1] > domdim[1])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     nonemptydom[[1]][1], nonemptydom[[1]][2])
   }
@@ -228,10 +227,9 @@ setMethod("[", "tiledb_array",
        (length(x@selected_ranges) >= 2 && is.null(x@selected_ranges[[2]])))) {
     if (length(nonemptydom) == 2) {
       ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
-      domdim <- domain(dimensions(dom)[[2]])
-      if (nonemptydom[[2]][1] != nonemptydom[[2]][2] ||
-          nonemptydom[[2]][1] > domdim[1])
-        if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) # || nonemptydom[[1]][1] >
+      #domdim <- domain(dimensions(dom)[[2]])
+      if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) # || nonemptydom[[2]][1] > domdim[1])
+        if (nonemptydom[[2]][1] != nonemptydom[[2]][2])
           qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                         nonemptydom[[2]][1], nonemptydom[[2]][2])
     }
