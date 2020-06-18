@@ -271,7 +271,7 @@ setMethod("[", "tiledb_array",
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(ressizes)
-  if (resrv == 0) {
+  if (resrv < 4) {                      # TODO: This shuld be zero when empty
     #message("Empty result set.")
     return(invisible(data.frame()))
   }
