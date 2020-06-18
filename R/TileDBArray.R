@@ -214,8 +214,8 @@ setMethod("[", "tiledb_array",
   if (!is.null(i)) {
     ##if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
     if (length(i) == 0) stop("No content to parse in row argument.")
-    for (i in 1:length(i)) {
-      el <- i[[i]]
+    for (ii in 1:length(i)) {
+      el <- i[[ii]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     min(eval(el)), max(eval(el)))
     }
@@ -238,8 +238,8 @@ setMethod("[", "tiledb_array",
   if (!is.null(j)) {
     #if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
     if (length(j) == 0) stop("No content to parse in col argument.")
-    for (i in 1:length(j)) {
-      el <- j[[i]]
+    for (ii in 1:length(j)) {
+      el <- j[[ii]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                     min(eval(el)), max(eval(el)))
     }
