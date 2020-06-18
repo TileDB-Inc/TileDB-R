@@ -271,10 +271,6 @@ setMethod("[", "tiledb_array",
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(ressizes)
-  if (resrv < 4) {                      # TODO: This shuld be zero when empty
-    #message("Empty result set.")
-    return(invisible(data.frame()))
-  }
 
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
@@ -320,7 +316,7 @@ setMethod("[", "tiledb_array",
                     MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
 
   ## convert list into data.frame (cheaply) and subset
-  res <- data.frame(reslist)[1:resrv,]
+  res <- data.frame(reslist)[seq_len(resrv),]
   colnames(res) <- allnames
 
   ## reduce output if extended is false
