@@ -235,38 +235,38 @@ test_that("test range selection on reading", {
   x <- tiledb_array(uri = tmpuri, as.data.frame=TRUE)
 
   ## intersection: 2 and 8 ... from 1 to 2 and 7 to 9, and 2 and 8
-  x@selected_ranges <- list(matrix(c(1,2,7,9),2,byrow=TRUE),
-                            matrix(c(2,2,8,8),2,byrow=TRUE))
+  selected_ranges(x) <- list(matrix(c(1,2,7,9),2,byrow=TRUE),
+                             matrix(c(2,2,8,8),2,byrow=TRUE))
   val <- x[]
   expect_equal(nrow(val), 2)
   expect_equal(val[,"d1"], c(2L,8L))
   expect_equal(val[,"d2"], c(2L,8L))
 
   ## intersection: 2 and 3
-  x@selected_ranges <- list(matrix(c(1,3),1,byrow=TRUE),
-                            matrix(c(2,3),1,byrow=TRUE))
+  selected_ranges(x) <- list(matrix(c(1,3),1,byrow=TRUE),
+                             matrix(c(2,3),1,byrow=TRUE))
   val <- x[]
   expect_equal(nrow(val), 2)
   expect_equal(val[,"d1"], c(2L,3L))
   expect_equal(val[,"d2"], c(2L,3L))
 
   ## NULL in pos 1 and range 2 to 4
-  x@selected_ranges <- list(NULL,
-                            matrix(c(2,4),1,byrow=TRUE))
+  selected_ranges(x) <- list(NULL,
+                             matrix(c(2,4),1,byrow=TRUE))
   val <- x[]
   expect_equal(nrow(val), 3)
   expect_equal(val[,"d1"], c(2L,3L,4L))
   expect_equal(val[,"d2"], c(2L,3L,4L))
 
   ## NULL in pos 2 and range 2 to 4
-  x@selected_ranges <- list(matrix(c(2,4),1,byrow=TRUE), NULL)
+  selected_ranges(x) <- list(matrix(c(2,4),1,byrow=TRUE), NULL)
   val <- x[]
   expect_equal(nrow(val), 3)
   expect_equal(val[,"d1"], c(2L,3L,4L))
   expect_equal(val[,"d2"], c(2L,3L,4L))
 
   ## all ten
-  x@selected_ranges <- list()
+  selected_ranges(x) <- list()
   val <- x[]
   expect_equal(nrow(val), 10)
   expect_equal(val[,"d1"], val[,"d2"])
