@@ -564,3 +564,45 @@ setReplaceMethod("extended",
   validObject(x)
   x
 })
+
+
+## -- selected_ranges accessor
+
+#' @rdname selected_ranges-tiledb_array-method
+#' @export
+setGeneric("selected_ranges", function(object) standardGeneric("selected_ranges"))
+
+#' @rdname selected_ranges-set-tiledb_array-method
+#' @export
+setGeneric("selected_ranges<-", function(x, value) standardGeneric("selected_ranges<-"))
+
+#' Retrieve selected_ranges values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods returns the selection value for \sQuote{selected_ranges}
+#' and returns a list (with one element per dimension) of two-column matrices where
+#' each row describes one pair of minimum and maximum values.
+#' @param object A \code{tiledb_array} object
+#' @return A list which can contain a matrix for each dimension
+#' @export
+setMethod("selected_ranges", signature = "tiledb_array",
+          function(object) object@selected_ranges)
+
+#' Set selected_ranges return values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods sets the selection value for \sQuote{selected_ranges}
+#' which is a list (with one element per dimension) of two-column matrices where
+#' each row describes one pair of minimum and maximum values.
+#' @param x A \code{tiledb_array} object
+#' @param value A list of two-column matrices where each list element \sQuote{i}
+#' corresponds to the dimension attribute \sQuote{i}. The matrices can contain rows
+#' where each row contains the minimum and maximum value of a range.
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("selected_ranges", signature = "tiledb_array",
+                 function(x, value) {
+  x@selected_ranges <- value
+  validObject(x)
+  x
+})
