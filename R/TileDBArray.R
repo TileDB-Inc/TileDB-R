@@ -271,9 +271,24 @@ setMethod("[", "tiledb_array",
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(ressizes)
+
   if (resrv == 0) {
-    #message("Empty result set.")
-    return(invisible(data.frame()))
+    res <- vector("list", length(allnames))
+    names(res) <- allnames
+    for (i in seq_along(res)) {
+      if (grepl("^INT", alltypes[i])) {
+        typefun <- integer 
+      } else if (grepl("^FLOAT", alltypes[i])) {
+          typefun <- double
+      } else {
+          typefun <- character
+      }
+      res[[i]] <- typefun()
+    } 
+    if (x@as.data.frame) {
+      res <- do.call(data.frame, c(res, list(check.names=FALSE, stringsAsFactors=FALSE)))
+    }
+    return(invisible(res))
   }
 
   ## allocate and set buffers
