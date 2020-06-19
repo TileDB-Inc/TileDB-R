@@ -282,7 +282,7 @@ setMethod("[", "tiledb_array",
         if (type=="DATETIME_DAY") {
           empty <- as.Date(character(0))
         } else if (type=="DATETIME_NS") {
-          empty <- as(numeric(0), "nanotime")
+          empty <- nanotime(character(0))
         } else {
           empty <- as.POSIXct(character(0))
         }
