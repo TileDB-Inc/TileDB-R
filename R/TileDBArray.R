@@ -270,11 +270,7 @@ setMethod("[", "tiledb_array",
   }
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-  resrv <- max(ressizes)
-
-  ## allocate some space for correct handling of zero-length outputs
-  has_zero <- resrv==0
-  resrv <- max(1, resrv)
+  resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
 
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
@@ -318,10 +314,6 @@ setMethod("[", "tiledb_array",
   }
   reslist <- mapply(getResult, buflist, allnames, allvarnum,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-
-  if (has_zero) {
-    resrv <- 0
-  }
 
   ## convert list into data.frame (cheaply) and subset
   res <- data.frame(reslist)[seq_len(resrv),]
