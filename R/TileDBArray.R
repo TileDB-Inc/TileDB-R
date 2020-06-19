@@ -276,14 +276,21 @@ setMethod("[", "tiledb_array",
     res <- vector("list", length(allnames))
     names(res) <- allnames
     for (i in seq_along(res)) {
-      if (grepl("^INT", alltypes[i])) {
-        typefun <- integer 
-      } else if (grepl("^FLOAT", alltypes[i])) {
-          typefun <- double
+      type <- tiledb_datatype_R_type(alltypes[i])
+      if (grepl("^DATETIME", type)) {
+        # Reverse mapping based on libtiledb_query_get_buffer_ptr.
+        if (type=="DATETIME_DAY") {
+          empty <- as.Date(character(0))
+        } else if (type=="DATETIME_NS") {
+          empty <- as(numeric(0), "nanotime")
+        } else {
+          empty <- as.POSIXct(character(0))
+        }
       } else {
-          typefun <- character
+        if (type=="any") type <- "integer" # placeholder
+        empty <- get(type, envir=baseenv(), inherits=FALSE)()
       }
-      res[[i]] <- typefun()
+      res[[i]] <- empty
     } 
     if (x@as.data.frame) {
       res <- do.call(data.frame, c(res, list(check.names=FALSE, stringsAsFactors=FALSE)))
