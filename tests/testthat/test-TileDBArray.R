@@ -288,7 +288,7 @@ test_that("test range selection edge cases", {
   sch <- tiledb_array_schema(dom, c(val), sparse=TRUE)
   tiledb_array_create(tmp, sch)
 
-  x <- tiledb_array(uri = tmp)
+  x <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   df <- data.frame(d1=integer(0), d2=integer(0), val=numeric(0))
   x[] <- df
 
