@@ -273,11 +273,7 @@ setMethod("[", "tiledb_array",
   }
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-  resrv <- max(ressizes)
-  if (resrv == 0) {
-    #message("Empty result set.")
-    return(invisible(data.frame()))
-  }
+  resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
 
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
@@ -291,10 +287,10 @@ setMethod("[", "tiledb_array",
       buf
     }
   }
+
   buflist <- mapply(getBuffer, allnames, alltypes, allvarnum,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                     SIMPLIFY=FALSE)
-
 
   ## fire off query and close array
   qryptr <- libtiledb_query_submit(qryptr)
