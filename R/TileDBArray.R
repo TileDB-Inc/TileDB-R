@@ -272,31 +272,9 @@ setMethod("[", "tiledb_array",
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(ressizes)
 
-  if (resrv == 0) {
-    res <- vector("list", length(allnames))
-    names(res) <- allnames
-    for (i in seq_along(res)) {
-      type <- tiledb_datatype_R_type(alltypes[i])
-      if (grepl("^DATETIME", type)) {
-        # Reverse mapping based on libtiledb_query_get_buffer_ptr.
-        if (type=="DATETIME_DAY") {
-          empty <- as.Date(character(0))
-        } else if (type=="DATETIME_NS") {
-          empty <- nanotime(character(0))
-        } else {
-          empty <- as.POSIXct(character(0))
-        }
-      } else {
-        if (type=="any") type <- "integer" # placeholder
-        empty <- get(type, envir=baseenv(), inherits=FALSE)()
-      }
-      res[[i]] <- empty
-    } 
-    if (x@as.data.frame) {
-      res <- do.call(data.frame, c(res, list(check.names=FALSE, stringsAsFactors=FALSE)))
-    }
-    return(invisible(res))
-  }
+  ## allocate some space for correct handling of zero-length outputs
+  has_zero <- resrv==0
+  resrv <- max(1, resrv)
 
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
@@ -310,10 +288,10 @@ setMethod("[", "tiledb_array",
       buf
     }
   }
+
   buflist <- mapply(getBuffer, allnames, alltypes, allvarnum,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                     SIMPLIFY=FALSE)
-
 
   ## fire off query and close array
   qryptr <- libtiledb_query_submit(qryptr)
@@ -340,6 +318,10 @@ setMethod("[", "tiledb_array",
   }
   reslist <- mapply(getResult, buflist, allnames, allvarnum,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
+
+  if (has_zero) {
+    resrv <- 0
+  }
 
   ## convert list into data.frame (cheaply) and subset
   res <- data.frame(reslist)[seq_len(resrv),]
