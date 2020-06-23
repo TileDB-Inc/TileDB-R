@@ -21,8 +21,6 @@
 #  SOFTWARE.
 
 
-## rethink dense vs sparse
-
 #' An S4 class for a TileDB Array
 #'
 #' This class aims to eventually replace \code{\link{tiledb_dense}}
@@ -119,15 +117,76 @@ setMethod("schema", "tiledb_array", function(object, ...) {
 setMethod("show", signature = "tiledb_array",
           definition = function (object) {
   cat("tiledb_array\n"
-     ,"  uri           = '", object@uri, "'\n"
-     ,"  is.sparse     = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
-     ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
-     ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
-                            else paste(object@attrs, collapse=","), "\n"
-     ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
-    , sep="")
+     ,"  uri              = '", object@uri, "'\n"
+     ,"  is.sparse        = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
+     ,"  as.data.frame    = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs            = ", if (length(object@attrs) == 0) "(none)"
+                               else paste(object@attrs, collapse=","), "\n"
+     ,"  selectecd_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, is.null)))
+                               else "(none)", "\n"
+     ,"  extended         = ", if (object@extended) "TRUE" else "FALSE"
+     ,"\n"
+     ,sep="")
 })
 
+setValidity("tiledb_array", function(object) {
+  msg <- NULL
+  valid <- TRUE
+
+  if (!is(object@ctx, "tiledb_ctx")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'ctx' slot does not contain a ctx object.")
+  }
+
+  if (!is.character(object@uri)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'uri' slot does not contain a character value.")
+  }
+
+  if (!is.logical(object@is.sparse)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'is.sparse' slot does not contain a logical value.")
+  }
+
+  if (!is.logical(object@as.data.frame)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'as.data.frame' slot does not contain a logical value.")
+  }
+
+  if (!is.character(object@attrs)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'attrs' slot does not contain a character vector.")
+  }
+
+  if (!is.logical(object@extended)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'extended' slot does not contain a logical value.")
+  }
+
+  if (!is.list(object@selected_ranges)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'selected_ranges' slot does not contain a list.")
+  } else {
+    for (i in (seq_len(length(object@selected_ranges)))) {
+      if (dim(object@selected_ranges) != 2) {
+        valid <- FALSE
+        msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not 2-d.", i))
+      }
+      if (ncol(object@selected_ranges) != 2) {
+        valid <- FALSE
+        msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not two column.", i))
+      }
+    }
+  }
+
+  if (!is(object@ptr, "externalptr")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
+  }
+
+  if (valid) TRUE else msg
+
+})
 
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
