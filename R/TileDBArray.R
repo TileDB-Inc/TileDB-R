@@ -168,13 +168,15 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'selected_ranges' slot does not contain a list.")
   } else {
     for (i in (seq_len(length(object@selected_ranges)))) {
-      if (dim(object@selected_ranges) != 2) {
-        valid <- FALSE
-        msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not 2-d.", i))
-      }
-      if (ncol(object@selected_ranges) != 2) {
-        valid <- FALSE
-        msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not two column.", i))
+      if (!is.null(object@selected_ranges[[i]])) {
+        if (length(dim(object@selected_ranges[[i]])) != 2) {
+          valid <- FALSE
+          msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not 2-d.", i))
+        }
+        if (ncol(object@selected_ranges[[i]]) != 2) {
+          valid <- FALSE
+          msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not two column.", i))
+        }
       }
     }
   }
