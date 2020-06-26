@@ -74,6 +74,10 @@ tiledb_dense <- function(uri,
       extended = extended, ptr = array_xptr)
 }
 
+#' Prints a tiledb_dense array object
+#'
+#' @param object A tiledb_dense array object
+#' @export
 setMethod("show",
           signature = "tiledb_dense",
           definition = function (object) {

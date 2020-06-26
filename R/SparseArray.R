@@ -425,7 +425,10 @@ setMethod("[<-", "tiledb_sparse",
             return(x)
           })
 
-
+#' Prints a tiledb_sparse array object
+#'
+#' @param object A tiledb_sparse array object
+#' @export
 setMethod("show",
           signature = "tiledb_sparse",
           definition = function (object) {

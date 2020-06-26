@@ -74,6 +74,10 @@ tiledb_attr <- function(name,
     new("tiledb_attr", ptr = ptr)
 }
 
+#' Prints an attribute object
+#'
+#' @param object An attribute object
+#' @export
 setMethod("show", "tiledb_attr",
           function(object) {
             libtiledb_attribute_dump(object@ptr)

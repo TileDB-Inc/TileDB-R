@@ -7,7 +7,7 @@
 \S4method{schema}{tiledb_array}(object, ...)
 }
 \arguments{
-\item{object}{sparse array object}
+\item{object}{tiledb array object}
 
 \item{...}{Extra parameter for function signature, currently unused}
 }

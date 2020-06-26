@@ -15,5 +15,4 @@ Prints the config object to STDOUT
 \examples{
 cfg <- tiledb_config()
 show(cfg)
-
 }

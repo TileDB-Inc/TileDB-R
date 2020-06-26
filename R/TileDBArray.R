@@ -95,7 +95,7 @@ tiledb_array <- function(uri,
 
 #' Return a schema from a tiledb_array object
 #'
-#' @param object sparse array object
+#' @param object tiledb array object
 #' @param ... Extra parameter for function signature, currently unused
 #' @return The scheme for the object
 setMethod("schema", "tiledb_array", function(object, ...) {
@@ -105,8 +105,11 @@ setMethod("schema", "tiledb_array", function(object, ...) {
   return(tiledb_array_schema.from_ptr(schema_xptr))
 })
 
-setMethod("show",
-          signature = "tiledb_array",
+#' Prints a tiledb_array object
+#'
+#' @param object A tiledb array object
+#' @export
+setMethod("show", signature = "tiledb_array",
           definition = function (object) {
   cat("tiledb_array\n"
      ,"  uri           = '", object@uri, "'\n"

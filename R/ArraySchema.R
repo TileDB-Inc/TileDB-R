@@ -129,6 +129,10 @@ tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {
   return(tiledb_array_schema(dom, c(val), ctx))
 }
 
+#' Prints an array schema object
+#'
+#' @param object An array_schema object
+#' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           function(object) {
             libtiledb_array_schema_dump(object@ptr)

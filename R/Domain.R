@@ -63,6 +63,10 @@ tiledb_domain <- function(dims, ctx = tiledb_get_context()) {
   return(new("tiledb_domain", ptr = ptr))
 }
 
+#' Prints an domain object
+#'
+#' @param object An domain object
+#' @export
 setMethod("show", "tiledb_domain",
           function(object) {
             return(libtiledb_domain_dump(object@ptr))
