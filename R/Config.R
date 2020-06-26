@@ -133,7 +133,7 @@ setMethod("[<-", "tiledb_config",
 #' @examples
 #' cfg <- tiledb_config()
 #' show(cfg)
-#'
+#' @export
 setMethod("show", signature(object = "tiledb_config"),
           function(object) {
             libtiledb_config_dump(object@ptr)
