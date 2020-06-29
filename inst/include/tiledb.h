@@ -1,8 +1,3 @@
-// compilation is very noise with the deprecation, we cannot use -Wno-deprecated-declarations
-// as CRAN flags it as a non-portable compiler option, and we cannot (easily) remove the code (yet)
-// so silencing it is for now
-#define TILEDB_DEPRECATED
-
 #include <tiledb/tiledb>
 #include "Rcpp.h"
 
