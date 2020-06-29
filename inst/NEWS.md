@@ -1,3 +1,11 @@
+# Ongoing
+
+* This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.5](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5)
+
+## Improvements
+
+- Range selection for tiledb_array objects can get/set matrices defining range (#132)
+
 # 0.7.0
 
 * This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.5](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5)
@@ -18,7 +26,7 @@
 
 - The pkg-config helper can be used when building from source (#126)
 
-- An introductory vignette was added (#129)
+- An introductory vignette was added (#129, #131)
 
 
 # 0.6.0

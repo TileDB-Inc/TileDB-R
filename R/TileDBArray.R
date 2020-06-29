@@ -21,8 +21,6 @@
 #  SOFTWARE.
 
 
-## rethink dense vs sparse
-
 #' An S4 class for a TileDB Array
 #'
 #' This class aims to eventually replace \code{\link{tiledb_dense}}
@@ -35,6 +33,8 @@
 #' @slot as.data.frame A logical value
 #' @slot attrs A character vector
 #' @slot extended A logical value
+#' @slot selected_ranges An optional list with matrices where each matrix i
+#' describes the (min,max) pair of ranges for dimension i
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -44,6 +44,7 @@ setClass("tiledb_array",
                       as.data.frame = "logical",
                       attrs = "character",
                       extended = "logical",
+                      selected_ranges = "list",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -58,6 +59,8 @@ setClass("tiledb_array",
 #' empty implying all are selected
 #' @param extended optional logical switch selecting wide \sQuote{data.frame}
 #' format, defaults to "TRUE"
+#' @param selected_ranges An optional list with matrices where each matrix i
+#' describes the (min,max) pair of ranges for dimension i
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_sparse array object
 #' @export
@@ -67,6 +70,7 @@ tiledb_array <- function(uri,
                         as.data.frame = FALSE,
                         attrs = character(),
                         extended = TRUE,
+                        selected_ranges = list(),
                         ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -90,6 +94,7 @@ tiledb_array <- function(uri,
       as.data.frame = as.data.frame,
       attrs = attrs,
       extended = extended,
+      selected_ranges = selected_ranges,
       ptr = array_xptr)
 }
 
@@ -112,15 +117,78 @@ setMethod("schema", "tiledb_array", function(object, ...) {
 setMethod("show", signature = "tiledb_array",
           definition = function (object) {
   cat("tiledb_array\n"
-     ,"  uri           = '", object@uri, "'\n"
-     ,"  is.sparse     = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
-     ,"  as.data.frame = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
-     ,"  attrs         = ", if (length(object@attrs) == 0) "(none)"
-                            else paste(object@attrs, collapse=","), "\n"
-     ,"  extended      = ", if (object@extended) "TRUE" else "FALSE", "\n"
-    , sep="")
+     ,"  uri             = '", object@uri, "'\n"
+     ,"  is.sparse       = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
+     ,"  as.data.frame   = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs           = ", if (length(object@attrs) == 0) "(none)"
+                               else paste(object@attrs, collapse=","), "\n"
+     ,"  selected_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, is.null)))
+                               else "(none)", "\n"
+     ,"  extended        = ", if (object@extended) "TRUE" else "FALSE"
+     ,"\n"
+     ,sep="")
 })
 
+setValidity("tiledb_array", function(object) {
+  msg <- NULL
+  valid <- TRUE
+
+  if (!is(object@ctx, "tiledb_ctx")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'ctx' slot does not contain a ctx object.")
+  }
+
+  if (!is.character(object@uri)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'uri' slot does not contain a character value.")
+  }
+
+  if (!is.logical(object@is.sparse)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'is.sparse' slot does not contain a logical value.")
+  }
+
+  if (!is.logical(object@as.data.frame)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'as.data.frame' slot does not contain a logical value.")
+  }
+
+  if (!is.character(object@attrs)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'attrs' slot does not contain a character vector.")
+  }
+
+  if (!is.logical(object@extended)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'extended' slot does not contain a logical value.")
+  }
+
+  if (!is.list(object@selected_ranges)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'selected_ranges' slot does not contain a list.")
+  } else {
+    for (i in (seq_len(length(object@selected_ranges)))) {
+      if (!is.null(object@selected_ranges[[i]])) {
+        if (length(dim(object@selected_ranges[[i]])) != 2) {
+          valid <- FALSE
+          msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not 2-d.", i))
+        }
+        if (ncol(object@selected_ranges[[i]]) != 2) {
+          valid <- FALSE
+          msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not two column.", i))
+        }
+      }
+    }
+  }
+
+  if (!is(object@ptr, "externalptr")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
+  }
+
+  if (valid) TRUE else msg
+
+})
 
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
@@ -148,10 +216,6 @@ setMethod("[", "tiledb_array",
   ## add defaults
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
-
-  ## keep unevaluated substitute expressions, creates a language object we can subset
-  is <- substitute(i)
-  js <- substitute(j)
 
   ctx <- x@ctx
   uri <- x@uri
@@ -197,37 +261,67 @@ setMethod("[", "tiledb_array",
     }
   }
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
-
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
 
-  ## set range(s) on first dimension
-  if (is.null(is)) {
-    qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
-                                                  nonemptydom[[1]][1], nonemptydom[[1]][2])
-  } else {
-    if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
-    if (length(is) == 1) stop("No content to parse in row argument.")
-    for (i in 2:length(is)) {
-      el <- is[[i]]
+  ## set default range(s) on first dimension if nothing is specified
+  if (is.null(i) &&
+      (length(x@selected_ranges) == 0 ||
+       (length(x@selected_ranges) >= 1 && is.null(x@selected_ranges[[1]])))) {
+    ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
+    #domdim <- domain(dimensions(dom)[[1]])
+    if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) # || nonemptydom[[1]][1] > domdim[1])
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
+                                                    nonemptydom[[1]][1], nonemptydom[[1]][2])
+  }
+  ## if we have is, use it
+  if (!is.null(i)) {
+    ##if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
+    if (length(i) == 0) stop("No content to parse in row argument.")
+    for (ii in 1:length(i)) {
+      el <- i[[ii]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     min(eval(el)), max(eval(el)))
     }
   }
 
-  ## set range(s) on  second dimension
-  if (is.null(js)) {
+  ## set range(s) on second dimension
+  if (is.null(j) &&
+      (length(x@selected_ranges) == 0 ||
+       (length(x@selected_ranges) >= 2 && is.null(x@selected_ranges[[2]])))) {
     if (length(nonemptydom) == 2) {
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
-                                                    nonemptydom[[2]][1], nonemptydom[[2]][2])
+      ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
+      #domdim <- domain(dimensions(dom)[[2]])
+      if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) # || nonemptydom[[2]][1] > domdim[1])
+        if (nonemptydom[[2]][1] != nonemptydom[[2]][2])
+          qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
+                                                        nonemptydom[[2]][1], nonemptydom[[2]][2])
     }
-  } else {
-    if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
-    if (length(js) == 1) stop("No content to parse in col argument.")
-    for (i in 2:length(js)) {
-      el <- js[[i]]
+  }
+  ## if we have js, use it
+  if (!is.null(j)) {
+    #if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
+    if (length(j) == 0) stop("No content to parse in col argument.")
+    for (ii in 1:length(j)) {
+      el <- j[[ii]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                     min(eval(el)), max(eval(el)))
+    }
+  }
+
+  ## if ranges selected, use those
+  if (length(x@selected_ranges) > 0) {
+    if (length(x@selected_ranges) >= 1 && !is.null(x@selected_ranges[[1]])) {
+      m <- x@selected_ranges[[1]]
+      for (i in seq_len(nrow(m))) {
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], m[i,1], m[i,2])
+      }
+    }
+    if (length(x@selected_ranges) >= 2 && !is.null(x@selected_ranges[[2]])) {
+      m <- x@selected_ranges[[2]]
+      for (i in seq_len(nrow(m))) {
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], m[i,1], m[i,2])
+      }
     }
   }
 
@@ -240,7 +334,7 @@ setMethod("[", "tiledb_array",
   }
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-  resrv <- max(ressizes)
+  resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
 
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
@@ -254,10 +348,10 @@ setMethod("[", "tiledb_array",
       buf
     }
   }
+
   buflist <- mapply(getBuffer, allnames, alltypes, allvarnum,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                     SIMPLIFY=FALSE)
-
 
   ## fire off query and close array
   qryptr <- libtiledb_query_submit(qryptr)
@@ -286,7 +380,7 @@ setMethod("[", "tiledb_array",
                     MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
 
   ## convert list into data.frame (cheaply) and subset
-  res <- data.frame(reslist)[1:resrv,]
+  res <- data.frame(reslist)[seq_len(resrv),]
   colnames(res) <- allnames
 
   ## reduce output if extended is false
@@ -338,6 +432,10 @@ setMethod("[<-", "tiledb_array",
           function(x, i, j, ..., value) {
   if (!is.data.frame(value)) {
     value <- as.data.frame(value)
+  }
+  if (nrow(value) == 0) {
+    #message("Cannot assign zero row objects to TileDB Array.")
+    return(x)
   }
 
   ## add defaults
@@ -537,6 +635,48 @@ setReplaceMethod("extended",
                  signature = "tiledb_array",
                  function(x, value) {
   x@extended <- value
+  validObject(x)
+  x
+})
+
+
+## -- selected_ranges accessor
+
+#' @rdname selected_ranges-tiledb_array-method
+#' @export
+setGeneric("selected_ranges", function(object) standardGeneric("selected_ranges"))
+
+#' @rdname selected_ranges-set-tiledb_array-method
+#' @export
+setGeneric("selected_ranges<-", function(x, value) standardGeneric("selected_ranges<-"))
+
+#' Retrieve selected_ranges values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods returns the selection value for \sQuote{selected_ranges}
+#' and returns a list (with one element per dimension) of two-column matrices where
+#' each row describes one pair of minimum and maximum values.
+#' @param object A \code{tiledb_array} object
+#' @return A list which can contain a matrix for each dimension
+#' @export
+setMethod("selected_ranges", signature = "tiledb_array",
+          function(object) object@selected_ranges)
+
+#' Set selected_ranges return values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods sets the selection value for \sQuote{selected_ranges}
+#' which is a list (with one element per dimension) of two-column matrices where
+#' each row describes one pair of minimum and maximum values.
+#' @param x A \code{tiledb_array} object
+#' @param value A list of two-column matrices where each list element \sQuote{i}
+#' corresponds to the dimension attribute \sQuote{i}. The matrices can contain rows
+#' where each row contains the minimum and maximum value of a range.
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("selected_ranges", signature = "tiledb_array",
+                 function(x, value) {
+  x@selected_ranges <- value
   validObject(x)
   x
 })
