@@ -117,14 +117,14 @@ setMethod("schema", "tiledb_array", function(object, ...) {
 setMethod("show", signature = "tiledb_array",
           definition = function (object) {
   cat("tiledb_array\n"
-     ,"  uri              = '", object@uri, "'\n"
-     ,"  is.sparse        = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
-     ,"  as.data.frame    = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
-     ,"  attrs            = ", if (length(object@attrs) == 0) "(none)"
+     ,"  uri             = '", object@uri, "'\n"
+     ,"  is.sparse       = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
+     ,"  as.data.frame   = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs           = ", if (length(object@attrs) == 0) "(none)"
                                else paste(object@attrs, collapse=","), "\n"
-     ,"  selectecd_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, is.null)))
+     ,"  selected_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, is.null)))
                                else "(none)", "\n"
-     ,"  extended         = ", if (object@extended) "TRUE" else "FALSE"
+     ,"  extended        = ", if (object@extended) "TRUE" else "FALSE"
      ,"\n"
      ,sep="")
 })
