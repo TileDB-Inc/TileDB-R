@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.7.0
+Version: 0.7.0.1
 Title: Sparse and Dense Multidimensional Array Storage Engine for Data Science
 Author: TileDB, Inc.
 Copyright: TileDB, Inc.
@@ -17,7 +17,8 @@ Description: The data science storage engine 'TileDB' introduces a
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
-SystemRequirements: cmake, curl, git
+SystemRequirements: cmake (used when TileDB is built from source), git (used when
+ TileDB is built from source), curl (used to download TileDB from GitHub)
 OS_type: unix
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
