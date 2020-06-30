@@ -37,7 +37,7 @@ using namespace Rcpp;
 // [[Rcpp::plugins(cpp11)]]
 
 
-// declaratons needed
+// declarations needed
 XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
 XPtr<tiledb::Domain> libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema);
 XPtr<tiledb::Attribute> libtiledb_array_schema_get_attribute_from_name(XPtr<tiledb::ArraySchema> schema, std::string name);
