@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R], [0.6.0])
+AC_INIT([TileDB-R], [0.7.0])
 
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
@@ -38,7 +38,10 @@ if test x"${have_pkg_config}" = x"no"; then
     AC_SUBST([TILEDB_RPATH], "")
 fi
 
-## Top-level system, recognising SunOS (Solaris), Darwin (macOS), Linux
+## Top-level system, possible values SunOS (Solaris), Darwin (macOS), Linux, ...
+## Note that SunOS is not currently building; we would welcome help from anyone
+## with access to such a system.
+## Various Linux distribution have been tested and work, as do various macOS releases
 uname=`uname`
 #AC_MSG_RESULT([running on ${uname} (${on_macos})...])
 
@@ -115,7 +118,7 @@ if test x"${have_tiledb}" = x"no"; then
             AC_MSG_ERROR([please install 'git'])
         fi
         AC_MSG_RESULT([installing TileDB via building locally...])
-        src/tools/buildTileDB.sh
+        tools/buildTileDB.sh
 
     ## case two: download considered
     ##   - on macOS or Linux a 'fast and slim' build with external library
@@ -129,14 +132,14 @@ if test x"${have_tiledb}" = x"no"; then
             fi
             AC_MSG_RESULT([downloading TileDB library...])
 
-            osrel=`src/tools/getOsRelease.sh`
+            osrel=`tools/getOsRelease.sh`
             AC_MSG_RESULT([installing TileDB for ${osrel} ...])
             if test x"${uname}" = x"Darwin"; then
                 os="macos"
             else
                 os="linux"
             fi
-            cd inst && ../src/tools/fetchTileDB.sh "${os}" && cd ..
+            cd inst && ../tools/fetchTileDB.sh "${os}" && cd ..
 
         ## default case: be unhappy
         else
