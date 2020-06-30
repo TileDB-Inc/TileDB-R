@@ -620,7 +620,6 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-have_curl
 have_git
 have_cmake
 EGREP
@@ -1997,6 +1996,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+## this has to come earlu to affect other queries involving R
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
     echo "could not determine R_HOME"
@@ -3330,9 +3330,11 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
 ## On Solaris can only build from source
-if test x"${uname}" = x"SunOS"; then
-     enable_building="yes"
-fi
+## But this does not currently work so we will bail out with error instead
+## This can be overridden by selecting --enable-building but is not default
+#if test x"${uname}" = x"SunOS"; then
+#     enable_building="yes"
+#fi
 
 ## to test one can force some selections here
 #have_tiledb="no"
@@ -3432,47 +3434,11 @@ $as_echo "installing TileDB via building locally..." >&6; }
     ##   - otherwise error
     else
         if test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
-
-            # Extract the first word of "curl", so it can be a program name with args.
-set dummy curl; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_have_curl+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$have_curl"; then
-  ac_cv_prog_have_curl="$have_curl" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_have_curl="yes"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-have_curl=$ac_cv_prog_have_curl
-if test -n "$have_curl"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_curl" >&5
-$as_echo "$have_curl" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-            if test x"${have_curl}" != x"yes"; then
-                as_fn_error $? "please install 'curl'" "$LINENO" 5
-            fi
+            #AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
+            #AC_PROG_CURL
+            #if test x"${have_curl}" != x"yes"; then
+            #    AC_MSG_ERROR([please install 'curl'])
+            #fi
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
 $as_echo "downloading TileDB library..." >&6; }
 

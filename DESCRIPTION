@@ -17,12 +17,11 @@ Description: The data science storage engine 'TileDB' introduces a
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
-SystemRequirements: cmake (used when TileDB is built from source), git (used when
- TileDB is built from source), curl (used to download TileDB from GitHub)
+SystemRequirements: cmake (only when TileDB source build selected)
 OS_type: unix
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
-Suggests: testthat, rmarkdown, knitr, BiocStyle
+Suggests: testthat, rmarkdown, knitr, BiocStyle, jsonlite
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0

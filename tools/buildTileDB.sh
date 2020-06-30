@@ -8,9 +8,10 @@ fi
 cd src
 
 if [ ! -f tiledb.tar.gz ]; then
-    url=$(curl -Ls https://github.com/TileDB-Inc/TileDB/releases/latest | sed -n -e 's/.*href=\"\(.*tar.gz\)".*/\1/p' | grep archive)
+    #url=$(curl -Ls https://github.com/TileDB-Inc/TileDB/releases/latest | sed -n -e 's/.*href=\"\(.*tar.gz\)".*/\1/p' | grep archive)
     echo "Downloading ${url} as tiledb.tar.gz ..."
-    curl -s -k -L -o tiledb.tar.gz "https://github.com/${url}"
+    #curl -s -k -L -o tiledb.tar.gz "https://github.com/${url}"
+    ./fetchTileDBSrc.R
 fi
 
 if [ ! -d tiledb-src ]; then
