@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.7.0.1
+Version: 0.7.0.3
 Title: Sparse and Dense Multidimensional Array Storage Engine for Data Science
 Author: TileDB, Inc.
 Copyright: TileDB, Inc.
@@ -21,7 +21,7 @@ SystemRequirements: cmake (only when TileDB source build selected)
 OS_type: unix
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
-Suggests: testthat, rmarkdown, knitr, BiocStyle, jsonlite
+Suggests: testthat, rmarkdown, knitr, BiocStyle, jsonlite, curl
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
