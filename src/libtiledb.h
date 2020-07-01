@@ -20,16 +20,11 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#include <tiledb/tiledb>
-
-#define STRICT_R_HEADERS
-#include <Rcpp.h>
+#ifndef __libtiledb_h__
+#define __libtiledb_h__
 
 // in inst/include so that Rcpp code generation can use the types for glue code
 #include <tiledb.h>
-
-#ifndef __libtiledb_h__
-#define __libtiledb_h__
 
 // Version
 Rcpp::NumericVector tiledb_version();
