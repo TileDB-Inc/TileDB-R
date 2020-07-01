@@ -26,7 +26,7 @@
 AC_PREREQ([2.69])
 AC_INIT([TileDB-R], [0.7.0])
 
-## this has to come earlu to affect other queries involving R
+## this has to come early to affect other queries involving R
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
     echo "could not determine R_HOME"
