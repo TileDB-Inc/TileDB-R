@@ -34,7 +34,7 @@ tarball="tiledb.tar.gz"
 if [ ! -f "${tarball}" ]; then
     echo "downloading '${tarball}'"
     #curl -s -k -L -o ${tarball} ${downloadurl}
-    Rscript ../tools/fetchTileDBLib.R ${os}
+    ${R_HOME}/bin/Rscript ../tools/fetchTileDBLib.R ${os}
 fi
 
 ## Clean-up just in case
