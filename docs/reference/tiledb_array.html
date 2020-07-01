@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -136,6 +136,7 @@
   <span class='kw'>as.data.frame</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>attrs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(),
   <span class='kw'>extended</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>selected_ranges</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
   <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span>()
 )</pre>
 
@@ -167,6 +168,11 @@ empty implying all are selected</p></td>
       <th>extended</th>
       <td><p>optional logical switch selecting wide &#8216;data.frame&#8217;
 format, defaults to "TRUE"</p></td>
+    </tr>
+    <tr>
+      <th>selected_ranges</th>
+      <td><p>An optional list with matrices where each matrix i
+describes the (min,max) pair of ranges for dimension i</p></td>
     </tr>
     <tr>
       <th>ctx</th>
