@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
 
       
 
-      </header><script src="introduction_files/header-attrs-2.2/header-attrs.js"></script><div class="row">
+      </header><script src="introduction_files/header-attrs-2.3/header-attrs.js"></script><script src="introduction_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>First Steps with TileDB</h1>
@@ -108,7 +108,7 @@
 <div id="basic-reading-of-dense-arrays" class="section level2">
 <h2 class="hasAnchor">
 <a href="#basic-reading-of-dense-arrays" class="anchor"></a>Basic Reading of Dense Arrays</h2>
-<p>We can consider the file <a href="../inst/ex_1.R"><code>ex_1.R</code></a> in the examples directory. It is a simple yet complete example extending <code>quickstart_dense.R</code> by adding a second attribute.</p>
+<p>We can consider the file <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R"><code>ex_1.R</code></a> in the examples directory. It is a simple yet complete example extending <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/quickstart_dense.R"><code>quickstart_dense.R</code></a> by adding a second attribute.</p>
 <p><em>Read 1-D</em></p>
 <p>Extracts column 2 and rows 1 to 2 from A, returning a list object as there are multiple attributes.</p>
 <pre><code>R&gt; A[1:2, 2]
@@ -235,14 +235,14 @@ $coords
 
 $a
 [1] 1 3 2</code></pre>
-<p>We can also request a data.frame object, either when opening or by changing this object characteric on the fly:</p>
+<p>We can also request a data.frame object, either when opening or by changing this object characteristic on the fly:</p>
 <pre><code>R&gt; return.data.frame(A) &lt;- TRUE
 R&gt; A[]
   a rows cols
 1 1    1    1
 2 3    2    3
 3 2    2    4</code></pre>
-<p>For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can overridden.</p>
+<p>For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can be overridden.</p>
 <p>Assignment works similarly:</p>
 <pre><code>R&gt; A[4,2] &lt;- 42L
 R&gt; A[]
@@ -251,7 +251,7 @@ R&gt; A[]
 2 42    4    2
 3  3    2    3
 4  2    2    4</code></pre>
-<p>Reads can select rows and or colums:</p>
+<p>Reads can select rows and or columns:</p>
 <pre><code>R&gt; A[2,]
   a rows cols
 1 3    2    3
@@ -264,14 +264,14 @@ R&gt; A[,2]
 <div id="datetime-attributes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#datetime-attributes" class="anchor"></a>Date(time) Attributes</h2>
-<p>Similar to the dense array case described earlier, the file <a href="../inst/examples/ex_2.R"><code>ex_2.R</code></a> illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of just integer and double precision floats.</p>
+<p>Similar to the dense array case described earlier, the file <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_2.R"><code>ex_2.R</code></a> illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of just integer and double precision floats.</p>
 <pre><code>R&gt; A &lt;- tiledb_sparse(uri = uri, as.data.frame = TRUE)
 R&gt; A[1577858580:1577858700]   # POSIX time seconds
   a   b          d                          e       rows
 1 3 103 2020-01-11 2020-01-02 18:24:33.844293 1577858580
 2 4 104 2020-01-15 2020-01-05 02:28:36.215681 1577858640
 3 5 105 2020-01-19 2020-01-05 00:44:04.805775 1577858700</code></pre>
-<p>The row coordinate is currently a floating point representation of the underlying time type. We can both select attributes (here we excluded the “a” column) and select rows by time (as the time stampt get converted to the required floating point value).</p>
+<p>The row coordinate is currently a floating point representation of the underlying time type. We can both select attributes (here we excluded the “a” column) and select rows by time (as the time stamps get converted to the required floating point value).</p>
 <pre><code>R&gt; attrs(A) &lt;- c("b", "d", "e")
 R&gt; A[as.POSIXct("2020-01-01 00:01:00"):as.POSIXct("2020-01-01 00:03:00")]
     b          d                          e       rows
