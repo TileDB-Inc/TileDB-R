@@ -3443,8 +3443,8 @@ $as_echo "installing TileDB via building locally..." >&6; }
 $as_echo "downloading TileDB library..." >&6; }
 
             osrel=`tools/getOsRelease.sh`
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for ${osrel} ..." >&5
-$as_echo "installing TileDB for ${osrel} ..." >&6; }
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: installing TileDB for ${osrel}..." >&5
+$as_echo "installing TileDB for ${osrel}..." >&6; }
             if test x"${uname}" = x"Darwin"; then
                 os="macos"
             else

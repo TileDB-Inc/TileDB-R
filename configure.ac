@@ -161,7 +161,7 @@ if test x"${have_tiledb}" = x"no"; then
             AC_MSG_RESULT([downloading TileDB library...])
 
             osrel=`tools/getOsRelease.sh`
-            AC_MSG_RESULT([installing TileDB for ${osrel} ...])
+            AC_MSG_RESULT([installing TileDB for ${osrel}...])
             if test x"${uname}" = x"Darwin"; then
                 os="macos"
             else
