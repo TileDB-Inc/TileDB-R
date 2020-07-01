@@ -1,10 +1,30 @@
 # Ongoing
 
+# 0.7.1
+
 * This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.5](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5)
 
 ## Improvements
 
 - Range selection for tiledb_array objects can get/set matrices defining range (#132)
+
+- The `show` methods are now consistently exported and documented (#134)
+
+- TileDB is listed as copyright owner in DESCRIPTION as well (#134)
+
+- The `selected_ranges` method for `tiledb_array` types was improved, and more tests were added (#135)
+
+- C++ source code was rearranged slightly with respect to possible API deprecations in the libary (#136)
+
+- A very simple example for using TileDB Cloud from R was added (#136)
+
+- The helper scripts for the package build are now in the `tools/` directory (#137)
+
+- The (optional) library download now relied on suggested R packages 'jsonlite' and 'curl' (#137)
+
+## Bug Fixes
+
+- A character conversion when retrieving array metadata resulting in an out-of-bounds reads has been corrected (#137)
 
 # 0.7.0
 

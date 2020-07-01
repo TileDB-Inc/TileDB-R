@@ -14,7 +14,7 @@ fi
 
 ## source repo: the latest TileDB release
 ## which redirects to latest tagged release
-repo=https://github.com/TileDB-Inc/TileDB/releases/latest
+#repo=https://github.com/TileDB-Inc/TileDB/releases/latest
 tarball="tiledb.tar.gz"
 
 ## use curl to download the release, follow redirects, and scan
@@ -22,18 +22,19 @@ tarball="tiledb.tar.gz"
 ##   tiledb-linux-2.0.3-cf03c60.tar.gz
 ##   tiledb-macos-2.0.3-cf03c60.tar.gz
 ## where version and sha will vary
-sourcetgz=$(curl -Ls ${repo} | sed -n -e 's/.*<span.*>\(tiledb-.*tar.gz\).*/\1/p' | grep "${os}")
+#sourcetgz=$(curl -Ls ${repo} | sed -n -e 's/.*<span.*>\(tiledb-.*tar.gz\).*/\1/p' | grep "${os}")
 
 ## need to also extract release version ... because github
-ver=$(echo "${sourcetgz}" | cut -d- -f3)
+#ver=$(echo "${sourcetgz}" | cut -d- -f3)
 
 ## construct actual url
-downloadurl="https://github.com/TileDB-Inc/TileDB/releases/download/${ver}/${sourcetgz}"
+#downloadurl="https://github.com/TileDB-Inc/TileDB/releases/download/${ver}/${sourcetgz}"
 
 ## Download if need be
 if [ ! -f "${tarball}" ]; then
-    echo "downloading '${downloadurl}' as '${tarball}'"
-    curl -s -k -L -o ${tarball} ${downloadurl}
+    echo "downloading '${tarball}'"
+    #curl -s -k -L -o ${tarball} ${downloadurl}
+    ${R_HOME}/bin/Rscript ../tools/fetchTileDBLib.R ${os}
 fi
 
 ## Clean-up just in case

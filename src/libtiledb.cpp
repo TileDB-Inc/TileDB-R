@@ -1725,9 +1725,7 @@ SEXP _metadata_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num, con
     for (size_t i=0; i<n; i++) vec[i] = static_cast<double>(fvec[i]);
     return(vec);
   } else if (v_type == TILEDB_CHAR || v_type == TILEDB_STRING_ASCII) {
-    Rcpp::CharacterVector vec(1);
-    std::string s(static_cast<const char*>(v));
-    s.resize(v_num);        // incoming char* not null terminated, ensures v_num bytes and terminate
+    std::string s(static_cast<const char*>(v), v_num);
     return(Rcpp::wrap(s));
   } else if (v_type == TILEDB_INT8) {
     Rcpp::LogicalVector vec(v_num);

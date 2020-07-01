@@ -1,4 +1,10 @@
+
+// sadly we need to define it here too to reach RcppExports.cpp
+#define TILEDB_DEPRECATED
+
 #include <tiledb/tiledb>
+
+#define STRICT_R_HEADERS
 #include "Rcpp.h"
 
 #ifndef __tiledb_h__

@@ -16,3 +16,4 @@
 ^GRTAGS
 ^GTAGS
 ^inst/tiledb
+^tools/bulkTestOnRHub.r
