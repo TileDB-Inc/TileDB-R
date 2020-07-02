@@ -1,6 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_dense")
+limitTileDBCores(2)
 
 unlink_and_create <- function(tmp) {
   if (dir.exists(tmp)) {

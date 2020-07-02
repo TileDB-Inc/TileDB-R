@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb::SparseArray")
+limitTileDBCores(2)
 
 
 test_that("Can read / write simple 1D sparse vector", {

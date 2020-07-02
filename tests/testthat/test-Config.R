@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb_config")
+limitTileDBCores(2)
 
 test_that("tiledb_config default constructor", {
   cfg <- tiledb_config()

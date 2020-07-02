@@ -1,6 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb::libtiledb")
+limitTileDBCores(2)
 
 test_that("version is valid", {
   ver <- tiledb_version()

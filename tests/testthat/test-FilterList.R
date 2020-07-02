@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb_filter_list")
+limitTileDBCores(2)
 
 test_that("tiledb_filter_list default constructor", {
   flt <- tiledb_filter_list()

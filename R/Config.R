@@ -204,3 +204,37 @@ as.data.frame.tiledb_config <- function(x, ...) {
   values <- as.vector(v)
   return(data.frame("parameter" = params, "value" = values, stringsAsFactors = FALSE))
 }
+
+#' Limit TileDB core use to a given number of cores
+#'
+#' By default, TileDB will use all available cores on a given machine. In multi-user or
+#' multi-process settings, one may want to reduce the number of core. This function will
+#' take a given number, or default to smaller of the \sQuote{Ncpus} options value or the
+#' \sQuote{"OMP_THREAD_LIMIT"} enviroment variable (or two as hard fallback).
+#' @param ncores Value of CPUs used, if missing the smaller of a fallback of two, the value of
+#' \sQuote{Ncpus} (if set) and the value of environment variable \sQuote{"OMP_THREAD_LIMIT"} is
+#' used.
+#' @param verbose Optional logical toggle; if set, a short message is displayed informing the
+#' user about the value set.
+#' @return The modified configuration object is returned invisibly. As a side-effect the
+#' updated config is also used to set the global context object.
+#' @importFrom stats na.omit
+#' @export
+limitTileDBCores <- function(ncores, verbose=FALSE) {
+  if (missing(ncores)) {
+    ## start with a simple fallback: 'Ncpus' (if set) or else 2
+    ncores <- getOption("Ncpus", 2L)
+    ## also consider OMP_THREAD_LIMIT (cf Writing R Extensions), gets NA if envvar unset
+    ompcores <- as.integer(Sys.getenv("OMP_THREAD_LIMIT"))
+    ## and then keep the smaller
+    ncores <- min(na.omit(c(ncores, ompcores)))
+  }
+  cfg <- tiledb_config()
+  cfg["sm.num_reader_threads"] <- ncores
+  cfg["sm.num_tbb_threads"] <- ncores
+  cfg["sm.num_writer_threads"] <- ncores
+  cfg["vfs.file.max_parallel_ops"] <- ncores
+  cfg["vfs.num_threads"] <- ncores
+  if (verbose) message("Limiting TileDB to ",ncores," cores. See ?limitTileDBCores.")
+  invisible(cfg)
+}
