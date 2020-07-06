@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb_metadata")
+limitTileDBCores(2)
 
 tmp <- tempfile()
 

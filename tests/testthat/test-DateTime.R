@@ -1,7 +1,7 @@
-
 library(testthat)
 library(tiledb)
 context("tiledb_date_time")
+limitTileDBCores(2)
 
 test_that("Can read / write a simple Date dense vector", {
   uri <- tempfile()

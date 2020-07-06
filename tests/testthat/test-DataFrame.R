@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb_dataframe")
+limitTileDBCores(2)
 
 test_that("tiledb_fromdataframe", {
   uri <- tempfile()

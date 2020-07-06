@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb_attr")
+limitTileDBCores(2)
 
 test_that("tiledb_attr constructor works", {
   a1 <- tiledb_attr(type = "FLOAT64")

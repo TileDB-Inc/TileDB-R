@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb::TileDBArray")
+limitTileDBCores(2)
 
 test_that("test tiledb_array read/write sparse array with heterogenous date domains", {
   skip_if(tiledb_version(TRUE) < "2.0.0")

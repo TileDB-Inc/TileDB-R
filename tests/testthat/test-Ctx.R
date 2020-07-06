@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb_ctx")
+limitTileDBCores(2)
 
 test_that("tiledb_ctx default constructor", {
   ctx <- tiledb_ctx()

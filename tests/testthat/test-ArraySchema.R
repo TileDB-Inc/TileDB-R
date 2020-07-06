@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
-
 context("tiledb_array_schema")
+limitTileDBCores(2)
 
 test_that("tiledb_array_schema default constructor works", {
   d1  <- tiledb_dim("d1", domain=c(1L, 100L))

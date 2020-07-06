@@ -1,5 +1,7 @@
+library(testthat)
 library(tiledb)
 context("tiledb_domain")
+limitTileDBCores(2)
 
 test_that("tiledb_domain basic constructor", {
   d1  <- tiledb_dim("d1", c(1L, 100L))
