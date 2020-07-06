@@ -608,7 +608,7 @@ test_that("low-level fixed-length write and read works", {
   qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
   qryptr <- tiledb:::libtiledb_query_submit(qryptr)
   expect_equal(tiledb:::libtiledb_query_status(qryptr), "COMPLETE")
-  print(v)         # unformed array, no coordinates
+  #print(v)         # unformed array, no coordinates
 
   expect_equal(v, c(30L, 40L, 50L, 60L, 70L, 80L, 110L, 120L, 130L, 140L, 150L, 160L))
   res <- tiledb:::libtiledb_array_close(arrptr)
