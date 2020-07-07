@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_dense")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 unlink_and_create <- function(tmp) {
   if (dir.exists(tmp)) {
@@ -1085,3 +1085,5 @@ test_that("low-level multi-range subarray read works", {
   tiledb:::libtiledb_array_close(arrptr)
   expect_equal(data[c(1:8,13:16)], v)
 })
+
+#tiledb:::resetCtx(ctx)

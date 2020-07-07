@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_config")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_config default constructor", {
   cfg <- tiledb_config()
@@ -63,3 +63,5 @@ test_that("tiledb_config set, get and unset", {
   tiledb:::libtiledb_config_unset(cfg@ptr, param) # resets, not unsets
   expect_equal(tiledb:::libtiledb_config_get(cfg@ptr, param)[[1]], origval)
 })
+
+#tiledb:::resetCtx(ctx)

@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_filter_list")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_filter_list default constructor", {
   flt <- tiledb_filter_list()
@@ -21,3 +21,5 @@ test_that("tiledb_filter_list can set and get max_chunk_size", {
   set_max_chunk_size(filter_list, 10)
   expect_equal(max_chunk_size(filter_list), 10)
 })
+
+#tiledb:::resetCtx(ctx)

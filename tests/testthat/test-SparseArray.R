@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb::SparseArray")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 
 test_that("Can read / write simple 1D sparse vector", {
@@ -144,3 +144,5 @@ test_that("test tiledb_subarray read/write for sparse array with list of coordin
 
   unlink(tmp, recursive = TRUE)
 })
+
+#tiledb:::resetCtx(ctx)
