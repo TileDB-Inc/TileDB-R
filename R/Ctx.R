@@ -30,6 +30,7 @@ setClass("tiledb_ctx",
 #' Retrieve a TileDB context object from the package cache
 #'
 #' @return A TileDB context object
+#' @export
 tiledb_get_context <- function() {
   ## return the ctx entry from the package environment (a lightweight hash)
   ctx <- .pkgenv[["ctx"]]
@@ -37,6 +38,10 @@ tiledb_get_context <- function() {
   ## if null, create a new context (which caches it too) and return it
   if (is.null(ctx)) {
     ctx <- tiledb_ctx(cached=FALSE)
+    ## if we wanted to _globally_ throttle we could do it here
+    ## but as a general rule we do _not_ want to, and prefer
+    ## throttling as an opt in we use in tests only
+    #cfg <- limitTileDBCores(verbose=TRUE)
   }
 
   ctx
@@ -99,7 +104,7 @@ tiledb_ctx <- function(config = NULL, cached = TRUE) {
 
   tiledb_set_context(ctx)
 
-  return(ctx)
+  invisible(ctx)
 }
 
 #' @rdname generics
