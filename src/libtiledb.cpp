@@ -2592,16 +2592,16 @@ R_xlen_t libtiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::string uri) {
 
 // [[Rcpp::export]]
 std::string libtiledb_vfs_move_file(XPtr<tiledb::VFS> vfs,
-                                 std::string old_uri,
-                                 std::string new_uri) {
+                                    std::string old_uri,
+                                    std::string new_uri) {
   vfs->move_file(old_uri, new_uri);
   return new_uri;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_vfs_move_dir(XPtr<tiledb::VFS> vfs,
-                                std::string old_uri,
-                                std::string new_uri) {
+                                   std::string old_uri,
+                                   std::string new_uri) {
   vfs->move_dir(old_uri, new_uri);
   return new_uri;
 }
