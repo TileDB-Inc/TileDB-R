@@ -231,11 +231,11 @@ test_that("basic dense vector read subarray works", {
 test_that("basic tiledb vfs constructor works", {
   #ctx <- tiledb:::libtiledb_ctx()
   ctx <- tiledb_get_context()@ptr
-  vfs <- tiledb:::tiledb_vfs(ctx)
+  vfs <- tiledb:::libtiledb_vfs(ctx)
   expect_is(vfs, "externalptr")
 
   config <- tiledb:::libtiledb_config(c(foo="bar"))
-  vfs <- tiledb:::tiledb_vfs(ctx, config)
+  vfs <- tiledb:::libtiledb_vfs(ctx, config)
   expect_is(vfs, "externalptr")
 })
 
@@ -244,11 +244,11 @@ test_that("basic vfs is_dir, is_file functionality works", {
 
   #ctx <- tiledb:::libtiledb_ctx()
   ctx <- tiledb_get_context()@ptr
-  vfs <- tiledb:::tiledb_vfs(ctx)
+  vfs <- tiledb:::libtiledb_vfs(ctx)
 
   # test dir
-  expect_true(tiledb:::tiledb_vfs_is_dir(vfs, tmp))
-  expect_false(tiledb:::tiledb_vfs_is_dir(vfs, "i don't exist"))
+  expect_true(tiledb:::libtiledb_vfs_is_dir(vfs, tmp))
+  expect_false(tiledb:::libtiledb_vfs_is_dir(vfs, "i don't exist"))
 
   test_file_path <- paste("file:/", tmp, "test_file", sep = "/")
   test_file <- file(test_file_path, "wb")
@@ -256,7 +256,7 @@ test_that("basic vfs is_dir, is_file functionality works", {
   close(test_file)
 
   # test file
-  expect_true(tiledb:::tiledb_vfs_is_file(vfs, test_file_path))
-  expect_false(tiledb:::tiledb_vfs_is_file(vfs, tmp))
+  expect_true(tiledb:::libtiledb_vfs_is_file(vfs, test_file_path))
+  expect_false(tiledb:::libtiledb_vfs_is_file(vfs, tmp))
   unlink(tmp, recursive = TRUE)
 })

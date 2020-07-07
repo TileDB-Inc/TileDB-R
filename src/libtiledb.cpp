@@ -2515,8 +2515,8 @@ DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx,
  * VFS functionality
  */
 // [[Rcpp::export]]
-XPtr<tiledb::VFS> tiledb_vfs(XPtr<tiledb::Context> ctx,
-                             Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
+XPtr<tiledb::VFS> libtiledb_vfs(XPtr<tiledb::Context> ctx,
+                                Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
   if (config.isNull()) {
     return XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get()));
   } else {
@@ -2526,63 +2526,63 @@ XPtr<tiledb::VFS> tiledb_vfs(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_create_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+std::string libtiledb_vfs_create_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
   vfs->create_bucket(uri);
   return uri;
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_remove_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+std::string libtiledb_vfs_remove_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
   vfs->remove_bucket(uri);
   return uri;
 }
 
 // [[Rcpp::export]]
-bool tiledb_vfs_is_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+bool libtiledb_vfs_is_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
   return vfs->is_bucket(uri);
 }
 
 // [[Rcpp::export]]
-bool tiledb_vfs_is_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+bool libtiledb_vfs_is_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
   return vfs->is_empty_bucket(uri);
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
+std::string libtiledb_vfs_empty_bucket(XPtr<tiledb::VFS> vfs, std::string uri) {
   vfs->empty_bucket(uri);
   return uri;
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_create_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
+std::string libtiledb_vfs_create_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
   vfs->create_dir(uri);
   return uri;
 }
 
 // [[Rcpp::export]]
-bool tiledb_vfs_is_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
+bool libtiledb_vfs_is_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
   return vfs->is_dir(uri);
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_remove_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
+std::string libtiledb_vfs_remove_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
   vfs->remove_dir(uri);
   return uri;
 }
 
 // [[Rcpp::export]]
-bool tiledb_vfs_is_file(XPtr<tiledb::VFS> vfs, std::string uri) {
+bool libtiledb_vfs_is_file(XPtr<tiledb::VFS> vfs, std::string uri) {
   return vfs->is_file(uri);
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_remove_file(XPtr<tiledb::VFS> vfs, std::string uri) {
+std::string libtiledb_vfs_remove_file(XPtr<tiledb::VFS> vfs, std::string uri) {
   vfs->remove_file(uri);
   return uri;
 }
 
 // [[Rcpp::export]]
-R_xlen_t tiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::string uri) {
+R_xlen_t libtiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::string uri) {
   uint64_t size = vfs->file_size(uri);
   if (size > std::numeric_limits<R_xlen_t>::max()) {
     Rcpp::stop("file size is greater than maximum R integer");
@@ -2591,7 +2591,7 @@ R_xlen_t tiledb_vfs_file_size(XPtr<tiledb::VFS> vfs, std::string uri) {
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_move_file(XPtr<tiledb::VFS> vfs,
+std::string libtiledb_vfs_move_file(XPtr<tiledb::VFS> vfs,
                                  std::string old_uri,
                                  std::string new_uri) {
   vfs->move_file(old_uri, new_uri);
@@ -2599,7 +2599,7 @@ std::string tiledb_vfs_move_file(XPtr<tiledb::VFS> vfs,
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_move_dir(XPtr<tiledb::VFS> vfs,
+std::string libtiledb_vfs_move_dir(XPtr<tiledb::VFS> vfs,
                                 std::string old_uri,
                                 std::string new_uri) {
   vfs->move_dir(old_uri, new_uri);
@@ -2607,7 +2607,7 @@ std::string tiledb_vfs_move_dir(XPtr<tiledb::VFS> vfs,
 }
 
 // [[Rcpp::export]]
-std::string tiledb_vfs_touch(XPtr<tiledb::VFS> vfs, std::string uri) {
+std::string libtiledb_vfs_touch(XPtr<tiledb::VFS> vfs, std::string uri) {
   vfs->touch(uri);
   return uri;
 }
