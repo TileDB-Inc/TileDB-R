@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_date_time")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("Can read / write a simple Date dense vector", {
   uri <- tempfile()
@@ -228,3 +228,5 @@ test_that("Can read / write simple DATETIME_NS sparse vectors", {
   }
 
 })
+
+#tiledb:::resetCtx(ctx)

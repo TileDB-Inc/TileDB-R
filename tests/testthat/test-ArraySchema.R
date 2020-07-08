@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_array_schema")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_array_schema default constructor works", {
   d1  <- tiledb_dim("d1", domain=c(1L, 100L))
@@ -131,3 +131,5 @@ test_that("tiledb_array_schema dups setter/getter",  {
   allows_dups(sch) <- TRUE
   expect_true(allows_dups(sch))
 })
+
+#tiledb:::resetCtx(ctx)

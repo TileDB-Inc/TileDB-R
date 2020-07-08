@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_attr")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_attr constructor works", {
   a1 <- tiledb_attr(type = "FLOAT64")
@@ -84,3 +84,5 @@ test_that("tiledb_attr set fill", {
 
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 })
+
+#tiledb:::resetCtx(ctx)

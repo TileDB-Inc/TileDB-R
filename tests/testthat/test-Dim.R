@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_dim")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_dim default constructor", {
   dim <- tiledb_dim("foo", c(1, 100))
@@ -79,3 +79,5 @@ test_that("tiledb_dim dim() method", {
   d <- tiledb_dim("", c(-1L, 100L))
   expect_equal(dim(d), 102L)
 })
+
+#tiledb:::resetCtx(ctx)

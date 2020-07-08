@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_metadata")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 tmp <- tempfile()
 
@@ -184,3 +184,5 @@ test_that("Can deleye by key", {
   ## should be two after we delete
   expect_equal(tiledb_num_metadata(arr), 2L)
 })
+
+#tiledb:::resetCtx(ctx)

@@ -561,64 +561,64 @@ libtiledb_object_walk <- function(ctx, uri, order, recursive = FALSE) {
     .Call(`_tiledb_libtiledb_object_walk`, ctx, uri, order, recursive)
 }
 
-tiledb_vfs <- function(ctx, config = NULL) {
-    .Call(`_tiledb_tiledb_vfs`, ctx, config)
+libtiledb_vfs <- function(ctx, config = NULL) {
+    .Call(`_tiledb_libtiledb_vfs`, ctx, config)
 }
 
-tiledb_vfs_create_bucket <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_create_bucket`, vfs, uri)
+libtiledb_vfs_create_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_create_bucket`, vfs, uri)
 }
 
-tiledb_vfs_remove_bucket <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_remove_bucket`, vfs, uri)
+libtiledb_vfs_remove_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_remove_bucket`, vfs, uri)
 }
 
-tiledb_vfs_is_bucket <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_is_bucket`, vfs, uri)
+libtiledb_vfs_is_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_is_bucket`, vfs, uri)
 }
 
-tiledb_vfs_is_empty_bucket <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_is_empty_bucket`, vfs, uri)
+libtiledb_vfs_is_empty_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_is_empty_bucket`, vfs, uri)
 }
 
-tiledb_vfs_empty_bucket <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_empty_bucket`, vfs, uri)
+libtiledb_vfs_empty_bucket <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_empty_bucket`, vfs, uri)
 }
 
-tiledb_vfs_create_dir <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_create_dir`, vfs, uri)
+libtiledb_vfs_create_dir <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_create_dir`, vfs, uri)
 }
 
-tiledb_vfs_is_dir <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_is_dir`, vfs, uri)
+libtiledb_vfs_is_dir <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_is_dir`, vfs, uri)
 }
 
-tiledb_vfs_remove_dir <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_remove_dir`, vfs, uri)
+libtiledb_vfs_remove_dir <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_remove_dir`, vfs, uri)
 }
 
-tiledb_vfs_is_file <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_is_file`, vfs, uri)
+libtiledb_vfs_is_file <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_is_file`, vfs, uri)
 }
 
-tiledb_vfs_remove_file <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_remove_file`, vfs, uri)
+libtiledb_vfs_remove_file <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_remove_file`, vfs, uri)
 }
 
-tiledb_vfs_file_size <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_file_size`, vfs, uri)
+libtiledb_vfs_file_size <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_file_size`, vfs, uri)
 }
 
-tiledb_vfs_move_file <- function(vfs, old_uri, new_uri) {
-    .Call(`_tiledb_tiledb_vfs_move_file`, vfs, old_uri, new_uri)
+libtiledb_vfs_move_file <- function(vfs, old_uri, new_uri) {
+    .Call(`_tiledb_libtiledb_vfs_move_file`, vfs, old_uri, new_uri)
 }
 
-tiledb_vfs_move_dir <- function(vfs, old_uri, new_uri) {
-    .Call(`_tiledb_tiledb_vfs_move_dir`, vfs, old_uri, new_uri)
+libtiledb_vfs_move_dir <- function(vfs, old_uri, new_uri) {
+    .Call(`_tiledb_libtiledb_vfs_move_dir`, vfs, old_uri, new_uri)
 }
 
-tiledb_vfs_touch <- function(vfs, uri) {
-    .Call(`_tiledb_tiledb_vfs_touch`, vfs, uri)
+libtiledb_vfs_touch <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_touch`, vfs, uri)
 }
 
 libtiledb_stats_enable <- function() {

@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_domain")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_domain basic constructor", {
   d1  <- tiledb_dim("d1", c(1L, 100L))
@@ -41,3 +41,5 @@ test_that("tiledb_domain dimensions works", {
   expect_equal(length(dims), 3L)
   expect_true(all(as.logical(lapply(dims, function(o) is(o, "tiledb_dim")))))
 })
+
+#tiledb:::resetCtx(ctx)

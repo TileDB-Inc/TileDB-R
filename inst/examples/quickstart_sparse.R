@@ -55,7 +55,7 @@ create_array <- function(array_name) {
     schema = tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
 
     # Create the (empty) array on disk.
-    tiledb_array_create(array_name, schema)
+    invisible( tiledb_array_create(array_name, schema) )
 }
 
 write_array <- function(array_name) {
@@ -68,16 +68,10 @@ write_array <- function(array_name) {
 }
 
 read_array <- function(array_name) {
-    # Open the array and read from it.
-    A <- tiledb_sparse(uri = array_name)
-    data <- A[1:2, 2:4]
-    coords <- data[["coords"]]
-    a_vals <- data[["a"]]
-    for (idx in seq_along(a_vals)) {
-        i <- coords[((idx - 1) * 2) + 1]
-        j <- coords[((idx - 1) * 2) + 2]
-        cat(sprintf("Cell (%d,%d) has data %d\n", i, j, a_vals[idx]))
-    }
+    # Open the array and read as a data.frame from it.
+    A <- tiledb_sparse(uri = array_name, as.data.frame=TRUE)
+    # Slice rows 1 and 2, and cols 2, 3 and 4
+    A[1:2, 2:4]
 }
 
 create_array(uri)

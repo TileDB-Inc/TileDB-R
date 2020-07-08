@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_dataframe")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_fromdataframe", {
   uri <- tempfile()
@@ -60,3 +60,5 @@ test_that("tiledb_date_datetime_types", {
 
   expect_equal(df, newdf)
 })
+
+#tiledb:::resetCtx(ctx)

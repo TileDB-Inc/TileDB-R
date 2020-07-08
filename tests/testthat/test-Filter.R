@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb_filter")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("tiledb_filter default constructor", {
   flt <- tiledb_filter()
@@ -58,3 +58,5 @@ test_that("tiledb_filter positive delta max window", {
   tiledb_filter_set_option(flt, "POSITIVE_DELTA_MAX_WINDOW", 10)
   expect_equal(tiledb_filter_get_option(flt, "POSITIVE_DELTA_MAX_WINDOW"), 10)
 })
+
+#tiledb:::resetCtx(ctx)

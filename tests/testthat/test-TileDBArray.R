@@ -1,7 +1,7 @@
 library(testthat)
 library(tiledb)
 context("tiledb::TileDBArray")
-limitTileDBCores(2)
+ctx <- tiledb_ctx(limitTileDBCores())
 
 test_that("test tiledb_array read/write sparse array with heterogenous date domains", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
@@ -335,3 +335,5 @@ test_that("test range selection edge cases sparse", {
 
   unlink(tmp, recursive = TRUE)
 })
+
+#tiledb:::resetCtx(ctx)
