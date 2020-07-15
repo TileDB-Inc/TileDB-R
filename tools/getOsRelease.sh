@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# cf https://unix.stackexchange.com/a/6348/10300
+# cf https://unix.stackexchange.com/a/6348/10300 plus minor mods
 
 if [ -f /etc/debian_version ]; then
     # Older Debian/Ubuntu/etc.
