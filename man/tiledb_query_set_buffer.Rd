@@ -14,7 +14,7 @@ tiledb_query_set_buffer(query, attr, buffer)
 \item{buffer}{A vector providing the query buffer}
 }
 \value{
-The modified query object, insivisibly
+The modified query object, invisisibly
 }
 \description{
 This function allocations query buffers directly from R vectors in case the types

@@ -16,7 +16,7 @@ tiledb_set_layout_type(
 "ROW_MAJOR", "COL_MAJOR", "GLOBAL_ORDER", "UNORDERED")}
 }
 \value{
-The modified query object, insivisibly
+The modified query object, invisibly
 }
 \description{
 Set TileDB Query layout

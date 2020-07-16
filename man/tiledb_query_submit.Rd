@@ -10,7 +10,7 @@ tiledb_query_submit(query)
 \item{query}{A TileDB Query object}
 }
 \value{
-The modified query object, insivisibly
+The modified query object, invisibly
 }
 \description{
 Submit TileDB Query

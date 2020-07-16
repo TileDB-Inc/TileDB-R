@@ -59,13 +59,31 @@ tiledb_query_type <- function(query) {
 #' @param query A TileDB Query object
 #' @param layout A character variable with the layout; must be one of
 #'   "ROW_MAJOR", "COL_MAJOR", "GLOBAL_ORDER", "UNORDERED")
-#' @return The modified query object, insivisibly
+#' @return The modified query object, invisibly
 #' @export
 tiledb_set_layout_type <- function(query, layout=c("ROW_MAJOR", "COL_MAJOR",
                                                    "GLOBAL_ORDER", "UNORDERED")) {
   layout <- match.arg(layout)
   stopifnot(query_object=is(query, "tiledb_query"))
   libtiledb_query_set_layout(query@ptr, layout)
+  invisible(query)
+}
+
+#' Set subarray for TileDB Query object
+#'
+#' @param query A TileDB Query object
+#' @param subarray A subarry vector object
+#' @param type An optional type as a character, if missing type is
+#'   inferred from the vector.
+#' @return The modified query object, invisibly
+#' @export
+tiledb_query_set_subarray <- function(query, vector, type) {
+  stopifnot(query_object=is(query, "tiledb_query"))
+  if (missing(type)) {
+    libtiledb_query_set_subarray(query@ptr, vector)
+  } else {
+    libtiledb_query_set_subarray_with_type(query@ptr, vector, type)
+  }
   invisible(query)
 }
 
@@ -76,7 +94,7 @@ tiledb_set_layout_type <- function(query, layout=c("ROW_MAJOR", "COL_MAJOR",
 #' @param query A TileDB Query object
 #' @param attr A character value containing the attribute
 #' @param buffer A vector providing the query buffer
-#' @return The modified query object, insivisibly
+#' @return The modified query object, invisisibly
 #' @export
 tiledb_query_set_buffer <- function(query, attr, buffer) {
   stopifnot(query_object=is(query, "tiledb_query"),
@@ -88,7 +106,7 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
 #' Submit TileDB Query
 #'
 #' @param query A TileDB Query object
-#' @return The modified query object, insivisibly
+#' @return The modified query object, invisibly
 #' @export
 #'
 tiledb_query_submit <- function(query) {
