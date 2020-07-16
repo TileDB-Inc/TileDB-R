@@ -77,12 +77,12 @@ tiledb_set_layout_type <- function(query, layout=c("ROW_MAJOR", "COL_MAJOR",
 #'   inferred from the vector.
 #' @return The modified query object, invisibly
 #' @export
-tiledb_query_set_subarray <- function(query, vector, type) {
+tiledb_query_set_subarray <- function(query, subarray, type) {
   stopifnot(query_object=is(query, "tiledb_query"))
   if (missing(type)) {
-    libtiledb_query_set_subarray(query@ptr, vector)
+    libtiledb_query_set_subarray(query@ptr, subarray)
   } else {
-    libtiledb_query_set_subarray_with_type(query@ptr, vector, type)
+    libtiledb_query_set_subarray_with_type(query@ptr, subarray, type)
   }
   invisible(query)
 }

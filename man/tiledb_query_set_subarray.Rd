@@ -4,15 +4,15 @@
 \alias{tiledb_query_set_subarray}
 \title{Set subarray for TileDB Query object}
 \usage{
-tiledb_query_set_subarray(query, vector, type)
+tiledb_query_set_subarray(query, subarray, type)
 }
 \arguments{
 \item{query}{A TileDB Query object}
 
+\item{subarray}{A subarry vector object}
+
 \item{type}{An optional type as a character, if missing type is
 inferred from the vector.}
-
-\item{subarray}{A subarry vector object}
 }
 \value{
 The modified query object, invisibly
