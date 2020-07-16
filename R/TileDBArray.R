@@ -122,7 +122,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  as.data.frame   = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
      ,"  attrs           = ", if (length(object@attrs) == 0) "(none)"
                                else paste(object@attrs, collapse=","), "\n"
-     ,"  selected_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, is.null)))
+     ,"  selected_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
                                else "(none)", "\n"
      ,"  extended        = ", if (object@extended) "TRUE" else "FALSE"
      ,"\n"
@@ -310,17 +310,11 @@ setMethod("[", "tiledb_array",
   }
 
   ## if ranges selected, use those
-  if (length(x@selected_ranges) > 0) {
-    if (length(x@selected_ranges) >= 1 && !is.null(x@selected_ranges[[1]])) {
-      m <- x@selected_ranges[[1]]
+  for (k in seq_len(length(x@selected_ranges))) {
+    if (!is.null(x@selected_ranges[[k]])) {
+      m <- x@selected_ranges[[k]]
       for (i in seq_len(nrow(m))) {
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], m[i,1], m[i,2])
-      }
-    }
-    if (length(x@selected_ranges) >= 2 && !is.null(x@selected_ranges[[2]])) {
-      m <- x@selected_ranges[[2]]
-      for (i in seq_len(nrow(m))) {
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], m[i,1], m[i,2])
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], m[i,1], m[i,2])
       }
     }
   }
