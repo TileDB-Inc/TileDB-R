@@ -336,4 +336,37 @@ test_that("test range selection edge cases sparse", {
   unlink(tmp, recursive = TRUE)
 })
 
-#tiledb:::resetCtx(ctx)
+
+test_that("test range selection for multiple dimensions", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("d2", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("d3", c(1L, 4L), 4L, "INT32"),
+                                tiledb_dim("d4", c(1L, 4L), 4L, "INT32")))
+  schema = tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "FLOAT64")), sparse = TRUE)
+  tiledb_array_create(tmp, schema)
+
+  I <- c(1L, 2L, 4L)
+  J <- c(1L, 2L, 3L)
+  K <- c(1L, 2L, 4L)
+  L <- c(1L, 2L, 3L)
+  data <- c(1.0, 2.1, 3.3)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A[] <- data.frame(d1=I, d2=J, d3=K, d4=L, a=data)
+
+  ## constrain to one row
+  matlist <- list(cbind(2,2), cbind(1,2), cbind(2,3), cbind(1,2))
+  selected_ranges(A) <- matlist
+  expect_equal(nrow(A[]), 1L)
+
+  ## constrain to two rows, use a NULL
+  matlist <- list(cbind(1,4), cbind(1,4), NULL, cbind(1,2))
+  selected_ranges(A) <- matlist
+  expect_equal(nrow(A[]), 2L)
+
+  unlink(tmp, recursive = TRUE)
+})
