@@ -1830,7 +1830,6 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
     NumericVector sub(subarray);
     query->set_subarray(sub.begin(), sub.length());
   } else if (typestr == "INT64" ||
-             typestr == "UINT64" ||
              typestr == "UINT32" ||
              typestr == "DATETIME_DAY" ||
              typestr == "DATETIME_HR"  ||
@@ -1843,6 +1842,12 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
     std::vector<int64_t> v(sub.length());
     for (int i=0; i<sub.length(); i++)
       v[i] = static_cast<int64_t>(sub[i]);
+    query->set_subarray(v);
+  } else if (typestr == "UINT64") {
+    NumericVector sub(subarray);
+    std::vector<uint64_t> v(sub.length());
+    for (int i=0; i<sub.length(); i++)
+      v[i] = static_cast<uint64_t>(sub[i]);
     query->set_subarray(v);
   } else {
     Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
@@ -2034,9 +2039,12 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
                                                    std::string domaintype,
                                                    R_xlen_t ncells) {
   XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
-  if (domaintype == "INT32" ||
-      domaintype == "UINT32") {
+  if (domaintype == "INT32"  || domaintype == "UINT32") {
      buf->size = sizeof(int32_t);
+  } else if (domaintype == "INT16"  || domaintype == "UINT16") {
+     buf->size = sizeof(int16_t);
+  } else if (domaintype == "INT8"   || domaintype == "UINT8") {
+     buf->size = sizeof(int8_t);
   } else if (domaintype == "INT64" ||
              domaintype == "UINT64" ||
              domaintype == "DATETIME_YEAR" ||
@@ -2184,6 +2192,15 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     std::vector<int64_t> vec(n);
     std::memcpy(vec.data(), buf->vec.data(), n*buf->size);
     return makeNanotime(vec);
+  } else if (dtype == "UINT8") {
+    size_t n = buf->ncells;
+    std::vector<uint8_t> uintvec(n);
+    std::memcpy(uintvec.data(), buf->vec.data(), n*buf->size);
+    Rcpp::IntegerVector out(buf->ncells);
+    for (size_t i=0; i<n; i++) {
+      out[i] = static_cast<int32_t>(uintvec[i]);
+    }
+    return out;
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());
   }
