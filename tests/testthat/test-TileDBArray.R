@@ -394,7 +394,7 @@ test_that("test int64 dimension for sparse arrays", {
   data <- c(1L, 2L, 3L)
   A[I,J] <- data
 
-  A <- tiledb_sparse(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:4]
   expect_equal(newdata[,"a"], c(3L, 2L))
   expect_equal(newdata[,"rows"], c(2L, 2L))
@@ -405,6 +405,72 @@ test_that("test int64 dimension for sparse arrays", {
   ## test for error on non integer64 arguments
   expect_error(tiledb_dim("rows", c(1L,4L), as.integer64(4), "INT64"))
   expect_error(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "INT64"))
+})
+
+test_that("test uint64 dimension for sparse arrays", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+  skip_if(!requireNamespace("bit64", quietly=TRUE))
+
+  suppressMessages(library(bit64))
+
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
+  ## We use
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", as.integer64(c(1,4)), as.integer64(4), "UINT64"),
+                                tiledb_dim("cols", as.integer64(c(1,4)), as.integer64(4), "UINT64")))
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
+  tiledb_array_create(uri = tmp, schema)
+
+  A <- tiledb_array(uri = tmp)
+
+  I <- as.integer64(c(1, 2, 2))
+  J <- as.integer64(c(1, 4, 3))
+  data <- c(1L, 2L, 3L)
+  A[I,J] <- data
+
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  newdata <- A[1:2, 2:4]
+  expect_equal(newdata[,"a"], c(3L, 2L))
+  expect_equal(newdata[,"rows"], c(2L, 2L))
+  expect_equal(newdata[,"cols"], c(3L, 4L))
+
+  unlink(tmp, recursive = TRUE)
+
+  ## test for error on non integer64 arguments
+  expect_error(tiledb_dim("rows", c(1L,4L), as.integer64(4), "UINT64"))
+  expect_error(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "UINT64"))
+})
+
+test_that("test uint32 dimension for sparse arrays", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+  skip_if(!requireNamespace("bit64", quietly=TRUE))
+  suppressMessages(library(bit64))
+
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT32"),
+                                tiledb_dim("cols", c(1L,4L), 4L, "UINT32")))
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
+  tiledb_array_create(uri = tmp, schema)
+
+  A <- tiledb_array(uri = tmp)
+
+  I <- c(1, 2, 2)
+  J <- c(1, 4, 3)
+  data <- c(1L, 2L, 3L)
+  A[I,J] <- data
+
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  newdata <- A[1:2, 2:4]
+  expect_equal(newdata[,"a"], c(3L, 2L))
+  expect_equal(newdata[,"rows"], c(2L, 2L))
+  expect_equal(newdata[,"cols"], c(3L, 4L))
+
+  unlink(tmp, recursive = TRUE)
 })
 
 test_that("test int16 dimension for sparse arrays", {
@@ -437,6 +503,36 @@ test_that("test int16 dimension for sparse arrays", {
   unlink(tmp, recursive = TRUE)
 })
 
+test_that("test uint16 dimension for sparse arrays", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+  skip_if(!requireNamespace("bit64", quietly=TRUE))
+  suppressMessages(library(bit64))
+
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT16"),
+                                tiledb_dim("cols", c(1L,4L), 4L, "UINT16")))
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
+  tiledb_array_create(uri = tmp, schema)
+
+  A <- tiledb_array(uri = tmp)
+
+  I <- c(1, 2, 2)
+  J <- c(1, 4, 3)
+  data <- c(1L, 2L, 3L)
+  A[I,J] <- data
+
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  newdata <- A[1:2, 2:4]
+  expect_equal(newdata[,"a"], c(3L, 2L))
+  expect_equal(newdata[,"rows"], c(2L, 2L))
+  expect_equal(newdata[,"cols"], c(3L, 4L))
+
+  unlink(tmp, recursive = TRUE)
+})
+
 test_that("test int8 dimension for sparse arrays", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
   skip_if(!requireNamespace("bit64", quietly=TRUE))
@@ -448,6 +544,36 @@ test_that("test int8 dimension for sparse arrays", {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT8"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "INT8")))
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
+  tiledb_array_create(uri = tmp, schema)
+
+  A <- tiledb_array(uri = tmp)
+
+  I <- c(1, 2, 2)
+  J <- c(1, 4, 3)
+  data <- c(1L, 2L, 3L)
+  A[I,J] <- data
+
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  newdata <- A[1:2, 2:4]
+  expect_equal(newdata[,"a"], c(3L, 2L))
+  expect_equal(newdata[,"rows"], c(2L, 2L))
+  expect_equal(newdata[,"cols"], c(3L, 4L))
+
+  unlink(tmp, recursive = TRUE)
+})
+
+test_that("test uint8 dimension for sparse arrays", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+  skip_if(!requireNamespace("bit64", quietly=TRUE))
+  suppressMessages(library(bit64))
+
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT8"),
+                                tiledb_dim("cols", c(1L,4L), 4L, "UINT8")))
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
 
