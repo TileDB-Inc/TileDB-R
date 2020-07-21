@@ -68,3 +68,22 @@ int64_t makeScalarInteger64(const double val) {
   memcpy(&newval, &val, sizeof(double));
   return newval;
 }
+
+// Create a int64_t vector from a NumericVector
+//
+std::vector<int64_t> getInt64Vector(Rcpp::NumericVector vec) {
+  size_t n = vec.size();
+  std::vector<int64_t> num(n);
+  std::memcpy(&(num[0]), &(vec[0]), n*sizeof(double));
+  return num;
+}
+
+// Check for integer64 type -- which for R 'S3' object means checking the attributes
+//
+bool isInteger64(Rcpp::NumericVector v) {
+  if (!v.hasAttribute("class")) {
+    return FALSE;
+  }
+  std::string s = v.attr("class");
+  return s == "integer64";
+}

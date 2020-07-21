@@ -42,9 +42,11 @@ Rcpp::CharacterVector tiledb_config_get(Rcpp::XPtr<tiledb::Config> xconfig,
 
 void tiledb_config_dump(Rcpp::XPtr<tiledb::Config> config);
 
-// Conversion helper
+// Conversion helpers
 Rcpp::NumericVector makeNanotime(const std::vector<int64_t>& vec);
 Rcpp::NumericVector makeInteger64(const std::vector<int64_t>& vec);
 int64_t makeScalarInteger64(const double val);
+std::vector<int64_t> getInt64Vector(Rcpp::NumericVector vec);
+bool isInteger64(Rcpp::NumericVector v);
 
 #endif
