@@ -476,8 +476,8 @@ setMethod("[<-", "tiledb_array",
 
   ## Case 2
   if (length(colnames(value)) == length(attrnames)) {
-    if (is.null(i)) stop("For sparse arrays a row index has to be supplied.")
-    if (is.null(j)) stop("For sparse arrays a column index has to be supplied.")
+    if (is.null(i)) stop("For arrays a row index has to be supplied.")
+    if (is.null(j)) stop("For arrays a column index has to be supplied.")
     #if (length(i) != nrow(value)) stop("Row index must have same number of observations as data")
     if (length(j) == 1) j <- rep(j, nrow(value))
     if (length(colnames(value)) == 1 && colnames(value) == "value") colnames(value) <- attrnames
