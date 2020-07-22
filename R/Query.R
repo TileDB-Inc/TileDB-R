@@ -89,8 +89,9 @@ tiledb_query_set_subarray <- function(query, subarray, type) {
 
 #' Set TileDB Query buffer
 #'
-#' This function allocations query buffers directly from R vectors in case the types
-#' match: `integer`, `double`, `logical`. For more general types see ...
+#' This function allocates query buffers directly from R vectors in
+#' case the types match: `integer`, `double`, `logical`. For more
+#' general types see \code{tiledb_query_buffer_alloc_ptr}.
 #' @param query A TileDB Query object
 #' @param attr A character value containing the attribute
 #' @param buffer A vector providing the query buffer
@@ -103,12 +104,110 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
   invisible(query)
 }
 
+## There are four function for vlc_buf_t -- variable length char buffer type
+##
+##   XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets,
+##                                                                int szdata)
+##    - allocates directly for reads given offset and data vector sizes
+##
+##   XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
+##                                                          std::string data)
+##    - creates / allocates for writes from given offsets and data vecroe
+##
+##   XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> query,
+##                                                           std::string attr,
+##                                                           XPtr<vlc_buf_t> bufptr)
+##     - sets a buffer to the query
+##
+##   CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
+##                                                       int32_t len=0, int32_t nchar=0)
+##     - retrieves a query buffer's content as Char matrix
+
+
+##   XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
+##                                                      std::string domaintype,
+##                                                      R_xlen_t ncells)
+##     - allocate ncells of type domaintype in query_buf_t (array unused)
+##
+##   XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
+##                                                      std::string dtype,
+##                                                      SEXP vec)
+##     - assign from type and vector into libtiledb_query_get_buffer_var_char
+##
+##   XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
+##                                                      std::string attr,
+##                                                      XPtr<query_buf_t> buf)
+##     - set buffer in query
+##
+##   RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf)
+##     - retrieve R object after query
+
+#' Allocate a Query buffer for a given type
+#'
+#' This function allocates a query buffer for the given data type.
+#' @param query A TileDB Query object
+#' @param datatype A character value containing the data type
+#' @param ncells A number of elements (not bytes)
+#' @return An external pointer to the allocated buffer object
+#' @export
+tiledb_query_buffer_alloc_ptr <- function(query, datatype, ncells) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            datatype_string=is.character(datatype))
+  bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
+}
+
+#' Allocate, populate and set a Query buffer for a given object of a given data type.
+#'
+#' This function allocates a query buffer for the given data object of the given
+#' type and assigns the object content to the buffer.
+#' @param query A TileDB Query object
+#' @param datatype A character value containing the data type
+#' @param object A vector object of the given type
+#' @return An external pointer to the allocated buffer object
+#' @export
+tiledb_query_create_buffer_ptr <- function(query, datatype, object) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            is_vector=is.vector(object),
+            datatype_string=is.character(datatype))
+  ncells <- length(object)
+  bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
+  bufptr <- libtiledb_query_buffer_assign_ptr(query@ptr, datatype, object)
+  bufptr
+}
+
+#' Assigns to a Query buffer for a given attribute
+#'
+#' This function assigns a given query buffer to a query.
+#' @param query A TileDB Query object
+#' @param attr A character value containing the attribute
+#' @param bufptr An external pointer with a query buffer
+#' @return The modified query object, invisibly
+#' @export
+tiledb_query_set_buffer_ptr <- function(query, attr, bufptr) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            attribute_string=is.character(attr),
+            bufptr=is(bufptr, "externalptr"))
+  libtiledb_query_set_buffer_ptr(query@ptr, attr, bufptr)
+  invisible(query)
+}
+
+#' Retrieve content from a Query buffer
+#'
+#' This function uses a query buffer and returns its content.
+#' @param bufptr An external pointer with a query buffer
+#' @return An R object as resulting from the query
+#' @export
+tiledb_query_get_buffer_ptr <- function(bufptr) {
+  stopifnot(bufptr=is(bufptr, "externalptr"))
+  libtiledb_query_get_buffer_ptr(bufptr)
+}
+
+
 #' Submit TileDB Query
 #'
 #' @param query A TileDB Query object
 #' @return The modified query object, invisibly
 #' @export
-#'
 tiledb_query_submit <- function(query) {
   stopifnot(query_object=is(query, "tiledb_query"))
   libtiledb_query_submit(query@ptr)

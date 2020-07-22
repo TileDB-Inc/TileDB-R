@@ -445,6 +445,7 @@ setMethod("[<-", "tiledb_array",
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
   dims <- tiledb::dimensions(dom)
+  ndims <- length(dims)
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
@@ -475,12 +476,13 @@ setMethod("[<-", "tiledb_array",
   }
 
   ## Case 2
-  if (length(colnames(value)) == length(attrnames)) {
+  if (ndims > 1 && length(colnames(value)) == length(attrnames)) {
     if (is.null(i)) stop("For arrays a row index has to be supplied.")
     if (is.null(j)) stop("For arrays a column index has to be supplied.")
     #if (length(i) != nrow(value)) stop("Row index must have same number of observations as data")
     if (length(j) == 1) j <- rep(j, nrow(value))
-    if (length(colnames(value)) == 1 && colnames(value) == "value") colnames(value) <- attrnames
+    ##if (length(colnames(value)) == 1 && colnames(value) == "value") colnames(value) <- attrnames
+    colnames(value) <- attrnames
     newvalue <- data.frame(i, j)
     colnames(newvalue) <- dimnames
     value <- cbind(newvalue, value)
@@ -488,6 +490,7 @@ setMethod("[<-", "tiledb_array",
 
   nc <- ncol(value)
   nr <- nrow(value)
+
   if (all.equal(sort(allnames),sort(colnames(value)))) {
     arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")

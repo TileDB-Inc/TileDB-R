@@ -14,6 +14,10 @@
 
 - More (signed and unsigned) integer types are supported as dimension types in sparse arrays (#143), as well as in dense arrays (#144) and as attributes (#144)
 
+## Bug Fixes
+
+- Conda builds no longer call `install_name_tool` (#133)
+
 
 # 0.7.1
 

@@ -17,6 +17,7 @@ tiledb_query_set_buffer(query, attr, buffer)
 The modified query object, invisisibly
 }
 \description{
-This function allocations query buffers directly from R vectors in case the types
-match: \code{integer}, \code{double}, \code{logical}. For more general types see ...
+This function allocates query buffers directly from R vectors in
+case the types match: \code{integer}, \code{double}, \code{logical}. For more
+general types see \code{tiledb_query_buffer_alloc_ptr}.
 }
