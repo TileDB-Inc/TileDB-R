@@ -1157,17 +1157,21 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
              attr_dtype == TILEDB_DATETIME_MS  ||
              attr_dtype == TILEDB_DATETIME_US  ||
              attr_dtype == TILEDB_DATETIME_NS) {
-    //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     attr->set_filter_list(*filter_list);
     return attr;
-  } else if (attr_dtype == TILEDB_INT64) {
-    //using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+  } else if (attr_dtype == TILEDB_INT64  ||
+             attr_dtype == TILEDB_UINT64 ||
+             attr_dtype == TILEDB_UINT32 ||
+             attr_dtype == TILEDB_INT16  ||
+             attr_dtype == TILEDB_UINT16 ||
+             attr_dtype == TILEDB_INT8   ||
+             attr_dtype == TILEDB_UINT8    ) {
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     attr->set_filter_list(*filter_list);
     return attr;
   } else {
-    Rcpp::stop("Only integer (INT32,INT64), logical (INT32), real (FLOAT64), "
+    Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT64), "
                "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
                "nanotime (DATETIME_NS) and character (CHAR) attributes "
                "are supported");
