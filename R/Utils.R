@@ -50,6 +50,7 @@ isNestedList <- function(l) {
   }
   return(FALSE)
 }
+
 ##' Look up TileDB type corresponding to the type of an R object
 ##'
 ##' Look up TileDB type corresponding to the type of an R object
