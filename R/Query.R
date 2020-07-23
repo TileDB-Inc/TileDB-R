@@ -251,6 +251,27 @@ tiledb_query_result_buffer_elements <- function(query, attr) {
 #' Set a range for a given query
 #'
 #' @param query A TileDB Query object
+#' @param schema A TileDB Schema object
+#' @param attr An character variable with a dimension or attribute name
+#' @param lowval The lower value of the range to be set for the query on this attribute
+#' @param highval The highre value of the range to be set for the query on this attribute
+#' @param stride An optional stride value for the range to be set for the query on this attribute
+#' @return The query object, invisibly
+#' @export
+tiledb_query_add_range <- function(query, schema, attr, lowval, highval, stride=NULL) {
+  stopifnot(schema_object=is(schema, "tiledb_array_schema"),
+            query_object=is(query, "tiledb_query"),
+            datatype_variable=is.character(attr))
+  names <- tiledb_schema_get_names(schema)
+  types <- tiledb_schema_get_types(schema)
+  idx <- which(names == attr)
+  query <- tiledb_query_add_range_with_type(query, idx-1, types[idx], lowval, highval, stride)
+  invisible(query)
+}
+
+#' Set a range for a given query
+#'
+#' @param query A TileDB Query object
 #' @param idx An integer index, zero based, of the attribute (including dimensions)
 #' @param lowval The lower value of the range to be set for the query on this attribute
 #' @param highval The highre value of the range to be set for the query on this attribute
