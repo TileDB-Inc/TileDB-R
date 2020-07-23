@@ -59,6 +59,33 @@ write_array_lowlevel <- function(uri) {
   invisible(NULL)
 }
 
+write_array_query <- function(uri) {
+  arr <- tiledb_array(uri)
+  qry <- tiledb_query(arr, "WRITE")
+  qry <- tiledb_query_set_layout_type(qry, "UNORDERED")
+
+  rows <- nanotime(1) + 0:9
+  rowptr <- tiledb_query_create_buffer_ptr(qry, domrowtype, rows)
+  qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowptr)
+
+  a1data <- seq(1,10)
+  a1ptr <- tiledb_query_create_buffer_ptr(qry, "INT32", a1data)
+  qry <- tiledb_query_set_buffer_ptr(qry, "a1", a1ptr)
+
+  d1data <- switch(attrowtype,
+                   DATETIME_DAY = as.Date("2020-01-01") + 0:9,
+                   DATETIME_SEC = as.POSIXct("2020-01-01 00:00:00") + 0:9,
+                   DATETIME_MS = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123,
+                   DATETIME_US = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123456)
+  d1ptr <- tiledb_query_create_buffer_ptr(qry, attrowtype, d1data)
+  qry <- tiledb_query_set_buffer_ptr(qry, "d1", d1ptr)
+
+  tiledb_query_submit(qry)
+  tiledb_query_finalize(qry)
+
+  invisible(NULL)
+}
+
 write_array <- function(uri) {
   rows <- nanotime(1) + 0:9
   a1data <- seq(1:10)
@@ -103,7 +130,31 @@ read_array_lowlevel <- function(uri) {
   rows <- tiledb:::libtiledb_query_get_buffer_ptr(bufptr0)
   d2r <- tiledb:::libtiledb_query_get_buffer_ptr(bufptr)
   print(data.frame(rows,d1r,d2r))
+}
 
+read_array_query <- function(uri) {
+  arr <- tiledb_array(uri)
+  qry <- tiledb_query(arr, "READ")
+
+  rowptr <- tiledb_query_buffer_alloc_ptr(qry, domrowtype, 6)
+  qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowptr)
+
+  a1ptr <- tiledb_query_buffer_alloc_ptr(qry, "INT32", 6)
+  qry <- tiledb_query_set_buffer_ptr(qry, "a1", a1ptr)
+
+  d1ptr <- tiledb_query_buffer_alloc_ptr(qry, attrowtype, 6)
+  qry <- tiledb_query_set_buffer_ptr(qry, "d1", d1ptr)
+
+  qry <- tiledb_query_add_range_with_type(qry, 0, domrowtype, as.integer64(4), as.integer64(7))
+
+  tiledb_query_submit(qry)
+  tiledb_query_finalize(qry)
+  n <- tiledb_query_result_buffer_elements(qry, "rows")
+
+  dat <- data.frame(rows=tiledb_query_get_buffer_ptr(rowptr),
+                    a1=tiledb_query_get_buffer_ptr(a1ptr),
+                    d1=tiledb_query_get_buffer_ptr(d1ptr))[1:n,]
+  print(dat)
 }
 
 read_array <- function(uri) {
@@ -119,6 +170,9 @@ set.seed(42)
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 create_array(uri)
 #write_array_lowlevel(uri)
-write_array(uri)
+write_array_query(uri)
+#write_array(uri)
+
 #read_array_lowlevel(uri)
-read_array(uri)
+read_array_query(uri)
+#ead_array(uri)
