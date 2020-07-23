@@ -1,6 +1,6 @@
 library(tiledb)
 
-## trying to mimick the simple variable length char domain unit tes
+## trying to mimick the simple variable length char domain unit test
 ## based the C++ API test
 
 ## Name of the array to create.
@@ -12,16 +12,14 @@ uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 create <- function(uri) {
     if (dir.exists(uri)) unlink(uri, recursive = TRUE)
 
-    ctx <- tiledb_ctx()
-    dim <- new("tiledb_dim", ptr = tiledb:::libtiledb_dim(ctx@ptr, "d", "ASCII", NULL, NULL))
-
+    #dim <- new("tiledb_dim", ptr = tiledb:::libtiledb_dim(ctx@ptr, "d", "ASCII", NULL, NULL))
+    dim <- tiledb_dim("d", NULL, NULL, "ASCII")
     dom <- tiledb_domain(dim)
-    #dom <- new("tiledb_domain", ptr=dim@ptr)
 
     a <- tiledb_attr("a", type = "INT32")
     sch <- tiledb_array_schema(dom, a, sparse = TRUE)
-    tiledb_array_create(uri, sch)
-    invisible(NULL)
+
+    invisible(tiledb_array_create(uri, sch))
 }
 
 write <- function(uri) {
@@ -30,41 +28,34 @@ write <- function(uri) {
     data <- "ccbbddddaa"
     offsets <- c(0L, 2L, 4L, 8L)
 
-    ctx <- tiledb_ctx()
-    arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uri, "WRITE")
-    qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
-    qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "UNORDERED")
-    #qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+    arr <- tiledb_array(uri = uri)
+    qry <- tiledb_query(arr, "WRITE")
+    qry <- tiledb_query_set_layout_type(qry, "UNORDERED")
+    qryptr <- qry@ptr
 
+    ## TODO var_char wrappers
     bufptr <- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
     qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "d", bufptr)
 
-    bufptr2 <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, "INT32", 4)
-    bufptr2 <-tiledb:::libtiledb_query_buffer_assign_ptr(bufptr2, "INT32", avals)
-    qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "a", bufptr2)
+    bufptr2 <- tiledb_query_create_buffer_ptr(qry, "INT32", avals)
+    qry <- tiledb_query_set_buffer_ptr(qry, "a", bufptr2)
 
-    qryptr <- tiledb:::libtiledb_query_submit(qryptr)
-    tiledb:::libtiledb_array_close(arrptr)
+    tiledb_query_submit(qry)
     invisible(NULL)
 }
 
 read <- function(uri) {
     arr <- tiledb_sparse(uri)
-    #print(schema(arr))
 
-    ctx <- tiledb_ctx()
-    arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uri, "READ")
-    print(tiledb:::libtiledb_array_nonempty_domain_var_from_name(arrptr, "d"))
+    arr <- tiledb_array(uri = uri)
+    qry <- tiledb_query(arr, "READ")
 
-    qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
-    qryptr <- tiledb:::libtiledb_query_add_range(qryptr, 0, "a", "ee")
+    qry <- tiledb_query_add_range(qry, schema(arr), "d", "a", "ee")
 
     bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc_direct(4, 10)
-    qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "d", bufptr)
-    qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
-    qryptr <- tiledb:::libtiledb_query_submit(qryptr)
+    qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qry@ptr, "d", bufptr)
 
-    tiledb:::libtiledb_array_close(arrptr)
+    qry <- tiledb_query_submit(qry)
 
     mat <- tiledb:::libtiledb_query_get_buffer_var_char(bufptr)
     print(mat)
