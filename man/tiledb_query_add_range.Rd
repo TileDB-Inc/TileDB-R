@@ -11,13 +11,13 @@ tiledb_query_add_range(query, schema, attr, lowval, highval, stride = NULL)
 
 \item{schema}{A TileDB Schema object}
 
-\item{attr}{An character variable with a dimension or attribute name}
+\item{attr}{An character variable with a dimension name for which the range is set}
 
-\item{lowval}{The lower value of the range to be set for the query on this attribute}
+\item{lowval}{The lower value of the range to be set}
 
-\item{highval}{The highre value of the range to be set for the query on this attribute}
+\item{highval}{The higher value of the range to be set}
 
-\item{stride}{An optional stride value for the range to be set for the query on this attribute}
+\item{stride}{An optional stride value for the range to be set}
 }
 \value{
 The query object, invisibly

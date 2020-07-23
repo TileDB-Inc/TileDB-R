@@ -16,13 +16,13 @@ tiledb_query_add_range_with_type(
 \arguments{
 \item{query}{A TileDB Query object}
 
-\item{idx}{An integer index, zero based, of the attribute (including dimensions)}
+\item{idx}{An integer index, zero based, of the dimensions}
 
-\item{lowval}{The lower value of the range to be set for the query on this attribute}
+\item{lowval}{The lower value of the range to be set}
 
-\item{highval}{The highre value of the range to be set for the query on this attribute}
+\item{highval}{The highre value of the range to be set}
 
-\item{stride}{An optional stride value for the range to be set for the query on this attribute}
+\item{stride}{An optional stride value for the range to be set}
 }
 \value{
 The query object, invisibly
