@@ -42,7 +42,7 @@ write_array <- function(uri) {
                  DATETIME_NS = nanotime(1) + 0:9,
                  INT32 = seq(1,10),
                  default = 1:10)
-  rowbufptr <-tiledb_query_create_buffer_ptr(qry, domrowtype, rows)
+  rowbufptr <- tiledb_query_create_buffer_ptr(qry, domrowtype, rows)
   qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowbufptr)
 
   coldata <- "aabbccccddeeffgghhiijj"
