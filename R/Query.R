@@ -38,7 +38,7 @@ tiledb_query <- function(array, type = c("READ", "WRITE"), ctx = tiledb_get_cont
   type <- match.arg(type)
   stopifnot(valid_array=is(array, "tiledb_array") ||
               is(array, "tiledb_dense") || is(array, "tiledb_sparse"))
-  arrary <- tiledb_array_open(array, type)
+  array <- tiledb_array_open(array, type)
   ptr <- libtiledb_query(ctx@ptr, array@ptr, type)
   query <- new("tiledb_query", ptr = ptr)
   invisible(query)
@@ -61,7 +61,7 @@ tiledb_query_type <- function(query) {
 #'   "ROW_MAJOR", "COL_MAJOR", "GLOBAL_ORDER", "UNORDERED")
 #' @return The modified query object, invisibly
 #' @export
-tiledb_set_layout_type <- function(query, layout=c("ROW_MAJOR", "COL_MAJOR",
+tiledb_query_set_layout_type <- function(query, layout=c("ROW_MAJOR", "COL_MAJOR",
                                                    "GLOBAL_ORDER", "UNORDERED")) {
   layout <- match.arg(layout)
   stopifnot(query_object=is(query, "tiledb_query"))
@@ -167,11 +167,11 @@ tiledb_query_buffer_alloc_ptr <- function(query, datatype, ncells) {
 #' @export
 tiledb_query_create_buffer_ptr <- function(query, datatype, object) {
   stopifnot(query_object=is(query, "tiledb_query"),
-            is_vector=is.vector(object),
+            #is_vector=is.vector(object),
             datatype_string=is.character(datatype))
   ncells <- length(object)
   bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
-  bufptr <- libtiledb_query_buffer_assign_ptr(query@ptr, datatype, object)
+  bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, datatype, object)
   bufptr
 }
 
@@ -246,4 +246,21 @@ tiledb_query_result_buffer_elements <- function(query, attr) {
   stopifnot(query_object=is(query, "tiledb_query"),
             attr_variable=is.character(attr))
   libtiledb_query_result_buffer_elements(query@ptr, attr)
+}
+
+#' Set a range for a given query
+#'
+#' @param query A TileDB Query object
+#' @param idx An integer index, zero based, of the attribute (including dimensions)
+#' @param lowval The lower value of the range to be set for the query on this attribute
+#' @param highval The highre value of the range to be set for the query on this attribute
+#' @param stride An optional stride value for the range to be set for the query on this attribute
+#' @return The query object, invisibly
+#' @export
+tiledb_query_add_range_with_type <- function(query, idx, datatype, lowval, highval, stride=NULL) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            datatype_variable=is.character(datatype))
+  query@ptr <- tiledb:::libtiledb_query_add_range_with_type(query@ptr, idx,
+                                                            datatype, lowval, highval, stride)
+  invisible(query)
 }
