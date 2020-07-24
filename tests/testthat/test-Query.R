@@ -54,6 +54,7 @@ test_that("tiledb_query layout", {
 })
 
 test_that("tiledb_query basic query", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
   tmp <- tempfile()
   dir.create(tmp)
   arr <- .createArray(tmp)
@@ -82,7 +83,7 @@ test_that("tiledb_query basic query", {
   unlink(tmp, recursive=TRUE)
 })
 
-test_that("tiledb_query datetime query", {
+test_that("tiledb_query alloc and range", {
   skip_if(tiledb_version(TRUE) < "2.0.0")
   skip_if(!requireNamespace("nanotime", quietly=TRUE))
   suppressMessages({
@@ -93,7 +94,6 @@ test_that("tiledb_query datetime query", {
   tmp <- tempfile()
   dir.create(tmp)
 
-  attrowtype <- "DATETIME_US"
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(0, 1e12), 1, type = "DATETIME_NS")))
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
                                                tiledb_attr("d1", type = "DATETIME_US")),
@@ -143,5 +143,7 @@ test_that("tiledb_query datetime query", {
                     a1=tiledb_query_get_buffer_ptr(a1ptr),
                     d1=tiledb_query_get_buffer_ptr(d1ptr))[1:n,]
 
-
+  expect_equal(dat$rows, rows[4:7])
+  expect_equal(dat$a1, a1data[4:7])
+  expect_equal(dat$d1, d1data[4:7])
 })
