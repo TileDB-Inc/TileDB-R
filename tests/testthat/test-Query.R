@@ -83,6 +83,7 @@ test_that("tiledb_query basic query", {
 })
 
 test_that("tiledb_query datetime query", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
   skip_if(!requireNamespace("nanotime", quietly=TRUE))
   suppressMessages({
     library(bit64)
