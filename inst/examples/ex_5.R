@@ -30,7 +30,7 @@ write <- function(uri) {
 
     arr <- tiledb_array(uri = uri)
     qry <- tiledb_query(arr, "WRITE")
-    qry <- tiledb_query_set_layout_type(qry, "UNORDERED")
+    qry <- tiledb_query_set_layout(qry, "UNORDERED")
     qryptr <- qry@ptr
 
     ## TODO var_char wrappers

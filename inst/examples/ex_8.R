@@ -35,7 +35,7 @@ create_array <- function(uri) {
 write_thrice_array <- function(uri) {
   arr <- tiledb_array(uri)
   qry <- tiledb_query(arr, "WRITE")
-  qry <- tiledb_query_set_layout_type(qry, "UNORDERED")
+  qry <- tiledb_query_set_layout(qry, "UNORDERED")
 
   for (i in 1:3) {
     rows <- switch(domrowtype,

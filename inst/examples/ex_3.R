@@ -62,7 +62,7 @@ write_array_lowlevel <- function(uri) {
 write_array_query <- function(uri) {
   arr <- tiledb_array(uri)
   qry <- tiledb_query(arr, "WRITE")
-  qry <- tiledb_query_set_layout_type(qry, "UNORDERED")
+  qry <- tiledb_query_set_layout(qry, "UNORDERED")
 
   rows <- nanotime(1) + 0:9
   rowptr <- tiledb_query_create_buffer_ptr(qry, domrowtype, rows)

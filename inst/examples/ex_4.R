@@ -33,7 +33,7 @@ write_array <- function(uri) {
 
   x <- tiledb_array(uri = uri)
   qry <- tiledb_query(x, "WRITE")
-  qry <- tiledb_query_set_layout_type(qry, "UNORDERED")
+  qry <- tiledb_query_set_layout(qry, "UNORDERED")
 
   qry <- tiledb_query_set_buffer(qry, "d1", d1)
   qry <- tiledb_query_set_buffer(qry, "d2", d2)

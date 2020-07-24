@@ -36,7 +36,7 @@ create_array <- function(uri) {
 write_array <- function(uri) {
   arr <- tiledb_array(uri)
   qry <- tiledb_query(arr, "WRITE")
-  qry <- tiledb_query_set_layout_type(qry, "UNORDERED")
+  qry <- tiledb_query_set_layout(qry, "UNORDERED")
 
   rows <- switch(domrowtype,
                  DATETIME_NS = nanotime(1) + 0:9,
