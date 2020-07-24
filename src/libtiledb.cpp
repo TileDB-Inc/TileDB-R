@@ -1934,6 +1934,12 @@ XPtr<tiledb::Query> libtiledb_query_set_layout(XPtr<tiledb::Query> query,
   return query;
 }
 
+// [[Rcpp::export]]
+std::string libtiledb_query_layout(XPtr<tiledb::Query> query) {
+  auto layout = query->query_layout();
+  return _tiledb_layout_to_string(layout);
+}
+
 // generalized version which switches
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> query,

@@ -61,12 +61,22 @@ tiledb_query_type <- function(query) {
 #'   "ROW_MAJOR", "COL_MAJOR", "GLOBAL_ORDER", "UNORDERED")
 #' @return The modified query object, invisibly
 #' @export
-tiledb_query_set_layout_type <- function(query, layout=c("ROW_MAJOR", "COL_MAJOR",
-                                                   "GLOBAL_ORDER", "UNORDERED")) {
+tiledb_query_set_layout <- function(query, layout=c("ROW_MAJOR", "COL_MAJOR",
+                                                    "GLOBAL_ORDER", "UNORDERED")) {
   layout <- match.arg(layout)
   stopifnot(query_object=is(query, "tiledb_query"))
   libtiledb_query_set_layout(query@ptr, layout)
   invisible(query)
+}
+
+#' Get TileDB Query layout
+#'
+#' @param query A TileDB Query object
+#' @return The TileDB Query layout as a string
+#' @export
+tiledb_query_get_layout <- function(query) {
+  stopifnot(query_object=is(query, "tiledb_query"))
+  libtiledb_query_layout(query@ptr)
 }
 
 #' Set subarray for TileDB Query object
@@ -104,6 +114,8 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
   invisible(query)
 }
 
+## TODO var char support
+##
 ## There are four function for vlc_buf_t -- variable length char buffer type
 ##
 ##   XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets,
@@ -124,23 +136,6 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
 ##     - retrieves a query buffer's content as Char matrix
 
 
-##   XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
-##                                                      std::string domaintype,
-##                                                      R_xlen_t ncells)
-##     - allocate ncells of type domaintype in query_buf_t (array unused)
-##
-##   XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
-##                                                      std::string dtype,
-##                                                      SEXP vec)
-##     - assign from type and vector into libtiledb_query_get_buffer_var_char
-##
-##   XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
-##                                                      std::string attr,
-##                                                      XPtr<query_buf_t> buf)
-##     - set buffer in query
-##
-##   RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf)
-##     - retrieve R object after query
 
 #' Allocate a Query buffer for a given type
 #'

@@ -8,11 +8,13 @@
 
 - The function `tiledb_get_context()` is now exported (#140)
 
-- A new S4 class `VFS` provides access to the virtual file system functionality (#140)
+- A new S4 class `tiledb_vfs` provides access to the virtual file system functionality (#140)
 
 - Functionality of `selected_ranges()` was extended (#142)
 
 - More (signed and unsigned) integer types are supported as dimension types in sparse arrays (#143), as well as in dense arrays (#144) and as attributes (#144)
+
+- A new S4 class `tiledb_query` offers access to the query object functionality in the underlying library (#145)
 
 ## Bug Fixes
 

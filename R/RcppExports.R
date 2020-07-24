@@ -433,6 +433,10 @@ libtiledb_query_set_layout <- function(query, layout) {
     .Call(`_tiledb_libtiledb_query_set_layout`, query, layout)
 }
 
+libtiledb_query_layout <- function(query) {
+    .Call(`_tiledb_libtiledb_query_layout`, query)
+}
+
 libtiledb_query_set_subarray_with_type <- function(query, subarray, typestr) {
     .Call(`_tiledb_libtiledb_query_set_subarray_with_type`, query, subarray, typestr)
 }

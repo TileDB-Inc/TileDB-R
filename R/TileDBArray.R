@@ -476,7 +476,7 @@ setMethod("[<-", "tiledb_array",
   }
 
   ## Case 2
-  if (ndims > 1 && length(colnames(value)) == length(attrnames)) {
+  if (length(colnames(value)) == length(attrnames)) {
     if (is.null(i)) stop("For arrays a row index has to be supplied.")
     if (is.null(j)) stop("For arrays a column index has to be supplied.")
     #if (length(i) != nrow(value)) stop("Row index must have same number of observations as data")
