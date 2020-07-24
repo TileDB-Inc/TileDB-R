@@ -147,3 +147,46 @@ test_that("tiledb_query alloc and range", {
   expect_equal(dat$a1, a1data[4:7])
   expect_equal(dat$d1, d1data[4:7])
 })
+
+test_that("tiledb_query subarray", {
+  skip_if(tiledb_version(TRUE) < "2.0.0")
+  tmp <- tempfile()
+  dir.create(tmp)
+
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 1L, type = "INT32")))
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("vals", type = "INT32")), sparse=FALSE)
+  tiledb_array_create(tmp, schema)
+
+  arr <- tiledb_array(tmp)
+  qry <- tiledb_query(arr, "WRITE")
+  qry <- tiledb_query_set_layout(qry, "ROW_MAJOR")
+
+  rows <- 1:10
+  qry <- tiledb_query_set_buffer(qry, "rows", rows)
+
+  vals <- seq(101,110)
+  qry <- tiledb_query_set_buffer(qry, "vals", vals)
+
+  tiledb_query_submit(qry)
+  tiledb_query_finalize(qry)
+  expect_equal(tiledb_query_status(qry), "COMPLETE")
+  tiledb_array_close(arr)
+
+  arr <- tiledb_array(tmp)
+  qry <- tiledb_query(arr, "READ")
+
+  rowdat <- integer(10)
+  qry <- tiledb_query_set_buffer(qry, "rows", rowdat)
+  valdat <- integer(10)
+  qry <- tiledb_query_set_buffer(qry, "vals", valdat)
+
+  qry <- tiledb_query_set_subarray(qry, c(4L,7L))
+  tiledb_query_submit(qry)
+  tiledb_query_finalize(qry)
+  expect_equal(tiledb_query_status(qry), "COMPLETE")
+
+  n <- tiledb_query_result_buffer_elements(qry, "rows")
+  expect_equal(n, 4L)
+  expect_equal(rowdat[1:n], rows[4:7])
+  expect_equal(valdat[1:n], vals[4:7])
+})
