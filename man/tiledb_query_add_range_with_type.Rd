@@ -18,6 +18,8 @@ tiledb_query_add_range_with_type(
 
 \item{idx}{An integer index, zero based, of the dimensions}
 
+\item{datatype}{A character value containing the data type}
+
 \item{lowval}{The lower value of the range to be set}
 
 \item{highval}{The highre value of the range to be set}

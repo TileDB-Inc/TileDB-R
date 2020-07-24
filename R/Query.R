@@ -273,6 +273,7 @@ tiledb_query_add_range <- function(query, schema, attr, lowval, highval, stride=
 #'
 #' @param query A TileDB Query object
 #' @param idx An integer index, zero based, of the dimensions
+#' @param datatype A character value containing the data type
 #' @param lowval The lower value of the range to be set
 #' @param highval The highre value of the range to be set
 #' @param stride An optional stride value for the range to be set
@@ -281,7 +282,6 @@ tiledb_query_add_range <- function(query, schema, attr, lowval, highval, stride=
 tiledb_query_add_range_with_type <- function(query, idx, datatype, lowval, highval, stride=NULL) {
   stopifnot(query_object=is(query, "tiledb_query"),
             datatype_variable=is.character(datatype))
-  query@ptr <- tiledb:::libtiledb_query_add_range_with_type(query@ptr, idx,
-                                                            datatype, lowval, highval, stride)
+  query@ptr <- libtiledb_query_add_range_with_type(query@ptr, idx, datatype, lowval, highval, stride)
   invisible(query)
 }
