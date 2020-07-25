@@ -27,74 +27,63 @@ create_array <- function(uri) {
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
                                                tiledb_attr("d1", type = attrowtype)),
                                 "ROW_MAJOR", "ROW_MAJOR", sparse=TRUE)
-  tiledb_array_create(uri, schema)
+  invisible(tiledb_array_create(uri, schema))
 }
 
 write_array <- function(uri) {
-  ctx <- tiledb_ctx()
-  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uri, "WRITE")
-  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
-  qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "UNORDERED")
+  arr <- tiledb_array(uri)
+  qry <- tiledb_query(arr, "WRITE")
+  qry <- tiledb_query_set_layout(qry, "UNORDERED")
 
   rows <- switch(domrowtype,
                  DATETIME_NS = nanotime(1) + 0:9,
                  default = 1:10)
-  rowbufptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domrowtype, 10)
-  rowbufptr <-tiledb:::libtiledb_query_buffer_assign_ptr(rowbufptr, domrowtype, rows)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "rows", rowbufptr)
+  rowbufptr <- tiledb_query_create_buffer_ptr(qry, domrowtype, rows)
+  qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowbufptr)
 
   cols <- seq(101,110)
-  colbufptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domcoltype, 10L)
-  colbufptr <-tiledb:::libtiledb_query_buffer_assign_ptr(colbufptr, domcoltype, cols)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "cols", colbufptr)
+  colbufptr <- tiledb_query_create_buffer_ptr(qry, domcoltype, cols)
+  qry <- tiledb_query_set_buffer_ptr(qry, "cols", colbufptr)
 
-  #data <- list(seq(1:10), ISOdatetime(2020,1,1,0,0,0) + 0:9)
   a1data <- seq(1:10)
+  buf1ptr <- tiledb_query_create_buffer_ptr(qry, "INT32", a1data)
+  qry <- tiledb_query_set_buffer_ptr(qry, "a1", buf1ptr)
+
   d1data <- switch(attrowtype,
                    DATETIME_DAY = as.Date("2020-01-01") + 0:9,
                    DATETIME_SEC = as.POSIXct("2020-01-01 00:00:00") + 0:9,
                    DATETIME_MS = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123,
                    DATETIME_US = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123456)
+  buf2ptr <- tiledb_query_create_buffer_ptr(qry, attrowtype, d1data)
+  qry <- tiledb_query_set_buffer_ptr(qry, "d1", buf2ptr)
 
-  buf1ptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, "INT32", 10)
-  buf1ptr <-tiledb:::libtiledb_query_buffer_assign_ptr(buf1ptr, "INT32", a1data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "a1", buf1ptr)
-
-  buf2ptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, attrowtype, 10)
-  buf2ptr <-tiledb:::libtiledb_query_buffer_assign_ptr(buf2ptr, attrowtype, d1data)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "d1", buf2ptr)
-
-  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
-  tiledb:::libtiledb_array_close(arrptr)
+  tiledb_query_submit(qry)
   invisible(NULL)
 }
 
 read_array <- function(uri) {
-  arr <- tiledb_sparse(uri)
+  arr <- tiledb_array(uri)
+  qry <- tiledb_query(arr, "READ")
+  sch <- schema(arr)
 
-  ctx <- tiledb_ctx()
-  arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uri, "READ")
-  qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
+  qry <- tiledb_query_add_range(qry, sch, "rows", as.integer64(2), as.integer64(7))
+  qry <- tiledb_query_add_range(qry, sch, "cols", 104L, 109L)
 
-  qryptr <- tiledb:::libtiledb_query_add_range_with_type(qryptr, 0, domrowtype, 2, 7)
-  qryptr <- tiledb:::libtiledb_query_add_range_with_type(qryptr, 1, domcoltype, 104L, 109L)
-
-  bufptr0 <- tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domrowtype, 10)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "rows", bufptr0)
-  bufptr1 <- tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domcoltype, 10)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "cols", bufptr1)
+  rowptr <- tiledb_query_buffer_alloc_ptr(qry, domrowtype, 10)
+  qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowptr)
+  colptr <- tiledb_query_buffer_alloc_ptr(qry, domcoltype, 10)
+  qry <- tiledb_query_set_buffer_ptr(qry, "cols", colptr)
 
   d1r <- vector(mode="integer", length=10) * NA_integer_
-  qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a1", d1r)
+  qry <- tiledb_query_set_buffer(qry, "a1", d1r)
 
-  bufptr <- tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, attrowtype, 10)
-  qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "d1", bufptr)
+  bufptr <- tiledb_query_buffer_alloc_ptr(qry, attrowtype, 10)
+  qry <- tiledb_query_set_buffer_ptr(qry, "d1", bufptr)
 
-  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
-  tiledb:::libtiledb_array_close(arrptr)
+  qry <- tiledb_query_submit(qry)
 
-  rows <- tiledb:::libtiledb_query_get_buffer_ptr(bufptr0)
-  cols <- tiledb:::libtiledb_query_get_buffer_ptr(bufptr1)
+  rows <- tiledb_query_get_buffer_ptr(rowptr)
+  cols <- tiledb_query_get_buffer_ptr(colptr)
   d2r <- tiledb:::libtiledb_query_get_buffer_ptr(bufptr)
   print(na.omit(data.frame(rows,cols,d1r,d2r)))
 
@@ -105,4 +94,3 @@ if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 create_array(uri)
 write_array(uri)
 read_array(uri)
-#read_array_df(uri)

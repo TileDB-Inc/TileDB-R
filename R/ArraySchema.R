@@ -389,3 +389,39 @@ setMethod("allows_dups<-", signature = "tiledb_array_schema",
   libtiledb_array_schema_set_allows_dups(x@ptr, value)
   x
 })
+
+##' Get all Dimension and Attribute Names
+##'
+##' @param sch A TileDB Schema object
+##' @return A character vector of dimension and attribute names
+##' @export
+tiledb_schema_get_names <- function(sch) {
+  stopifnot(schema_object=is(sch, "tiledb_array_schema"))
+  dom <- tiledb::domain(sch)
+  dims <- tiledb::dimensions(dom)
+  ndims <- length(dims)
+  dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
+
+  attrs <- tiledb::attrs(sch)
+  attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
+
+  allnames <- c(dimnames, attrnames)
+}
+
+##' Get all Dimension and Attribute Types
+##'
+##' @param sch A TileDB Schema object
+##' @return A character vector of dimension and attribute data types
+##' @export
+tiledb_schema_get_types <- function(sch) {
+  stopifnot(schema_object=is(sch, "tiledb_array_schema"))
+  dom <- tiledb::domain(sch)
+  dims <- tiledb::dimensions(dom)
+  ndims <- length(dims)
+  dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
+
+  attrs <- tiledb::attrs(sch)
+  attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
+
+  alltypes <- c(dimtypes, attrtypes)
+}

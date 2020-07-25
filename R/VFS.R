@@ -30,13 +30,13 @@ setClass("tiledb_vfs",
 #' Creates a `tiledb_vfs` object
 #'
 #' @param config (optonal) character vector of config parameter names, values
-#' @param ctx (optonal) A TileDB CTX object
+#' @param ctx (optonal) A TileDB Ctx object
 #' @return `tiledb_vfs` object
 #' @examples
 #' # default configuration
 #' vfs <- tiledb_vfs()
 #'
-#' @export tiledb_vfs
+#' @export
 tiledb_vfs <- function(config = NULL, ctx = tiledb_get_context()) {
 
   ## otherwise create a new ctx and cache it

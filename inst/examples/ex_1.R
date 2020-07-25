@@ -7,11 +7,11 @@ array_name <- "ex_1"
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 
 create_array <- function(uri) {
-    # Check if the array already exists.
-    if (tiledb_object_type(uri) == "ARRAY") {
-        message("Array already exists.")
-        return(invisible(NULL))
-    }
+  ## Check if the array already exists.
+  if (tiledb_object_type(uri) == "ARRAY") {
+    message("Array already exists.")
+    return(invisible(NULL))
+  }
 
   ## The array will be 10x5 with dimensions "rows" and "cols", with domains [1,10] and [1,5].
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 10L, "INT32"),

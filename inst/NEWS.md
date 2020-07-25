@@ -1,5 +1,26 @@
 # Ongoing
 
+* This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.6](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.6)
+
+## Improvements
+
+- A new function `limitTileDBCores()` controls resource use, it is being used in tests (#139)
+
+- The function `tiledb_get_context()` is now exported (#140)
+
+- A new S4 class `tiledb_vfs` provides access to the virtual file system functionality (#140)
+
+- Functionality of `selected_ranges()` was extended (#142)
+
+- More (signed and unsigned) integer types are supported as dimension types in sparse arrays (#143), as well as in dense arrays (#144) and as attributes (#144)
+
+- A new S4 class `tiledb_query` offers access to the query object functionality in the underlying library (#145)
+
+## Bug Fixes
+
+- Conda builds no longer call `install_name_tool` (#133)
+
+
 # 0.7.1
 
 * This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.5](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5)
@@ -25,6 +46,7 @@
 ## Bug Fixes
 
 - A character conversion when retrieving array metadata resulting in an out-of-bounds reads has been corrected (#137)
+
 
 # 0.7.0
 

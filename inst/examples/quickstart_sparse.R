@@ -74,6 +74,26 @@ read_array <- function(array_name) {
     A[1:2, 2:4]
 }
 
+read_via_query_object <- function(array_name) {
+  arr <- tiledb_array(uri)
+  qry <- tiledb_query(arr, "READ")
+
+  rows <- integer(8)
+  cols <- integer(8)
+  values <- integer(8)
+  tiledb_query_set_buffer(qry, "rows", rows)
+  tiledb_query_set_buffer(qry, "cols", cols)
+  tiledb_query_set_buffer(qry, "a", values)
+
+  tiledb_query_submit(qry)
+  tiledb_query_finalize(qry)
+  stopifnot(tiledb_query_status(qry)=="COMPLETE")
+
+  n <- tiledb_query_result_buffer_elements(qry, "a")
+  print(data.frame(rows=rows,cols=cols,a=values)[1:n,])
+}
+
 create_array(uri)
 write_array(uri)
 read_array(uri)
+read_via_query_object(uri)
