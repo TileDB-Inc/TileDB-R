@@ -99,6 +99,26 @@ if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
     AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling building TileDB.])
 fi
 
+## Allow --with-download if given (though system location is found too)
+## (and sets by autconf standards the 'with_download' variable
+AC_ARG_WITH([download],
+            AC_HELP_STRING([--with-download=PREFIX],
+                       [URL of TileDB library to download]),
+            [TILEDB_LIB_URL="${with_download}"],
+            [])
+echo "enable_building: ${enable_building}"
+echo "with_tiledb: ${with_tiledb}"
+echo "with_download: ${with_download}"
+
+## Sanity checks
+if test ! -z "${with_tiledb}" -a x"${with_download}" = x"yes"; then
+    AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling download of TileDB library.])
+fi
+if test ! -z "${with_download}" -a x"${enable_building}" = x"yes"; then
+    AC_MSG_ERROR([Conflicting choice of enabling download of TileDB and enabling building of TileDB.])
+fi
+AC_SUBST([TILEDB_LIB_URL], "${with_download}")
+
 ## Setup
 origCPPFLAGS="${CPPFLAGS}"
 origLDFLAGS="${LDFLAGS}"
@@ -188,5 +208,7 @@ if test x"${have_tiledb}" = x"no"; then
 
 fi
 
-AC_CONFIG_FILES([src/Makevars])
+AC_CONFIG_FILES([
+        src/Makevars
+        tools/fetchTileDBLib.R])
 AC_OUTPUT

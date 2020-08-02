@@ -624,6 +624,7 @@ have_git
 have_cmake
 EGREP
 GREP
+TILEDB_LIB_URL
 TILEDB_RPATH
 TILEDB_LIBS
 TILEDB_INCLUDE
@@ -680,6 +681,7 @@ ac_user_opts='
 enable_option_checking
 enable_building
 with_tiledb
+with_download
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1318,6 +1320,7 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-tiledb=PREFIX    path to installed built of TileDB
+  --with-download=PREFIX  URL of TileDB library to download
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -3024,6 +3027,28 @@ if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
     as_fn_error $? "Conflicting choice of preinstalled TileDB and enabling building TileDB." "$LINENO" 5
 fi
 
+## Allow --with-download if given (though system location is found too)
+## (and sets by autconf standards the 'with_download' variable
+
+# Check whether --with-download was given.
+if test "${with_download+set}" = set; then :
+  withval=$with_download; TILEDB_LIB_URL="${with_download}"
+fi
+
+echo "enable_building: ${enable_building}"
+echo "with_tiledb: ${with_tiledb}"
+echo "with_download: ${with_download}"
+
+## Sanity checks
+if test ! -z "${with_tiledb}" -a x"${with_download}" = x"yes"; then
+    as_fn_error $? "Conflicting choice of preinstalled TileDB and enabling download of TileDB library." "$LINENO" 5
+fi
+if test ! -z "${with_download}" -a x"${enable_building}" = x"yes"; then
+    as_fn_error $? "Conflicting choice of enabling download of TileDB and enabling building of TileDB." "$LINENO" 5
+fi
+TILEDB_LIB_URL="${with_download}"
+
+
 ## Setup
 origCPPFLAGS="${CPPFLAGS}"
 origLDFLAGS="${LDFLAGS}"
@@ -3475,7 +3500,7 @@ $as_echo "using inst/tiledb/{lib,include}" >&6; }
 
 fi
 
-ac_config_files="$ac_config_files src/Makevars"
+ac_config_files="$ac_config_files src/Makevars tools/fetchTileDBLib.R"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4183,6 +4208,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
+    "tools/fetchTileDBLib.R") CONFIG_FILES="$CONFIG_FILES tools/fetchTileDBLib.R" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
