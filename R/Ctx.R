@@ -69,6 +69,7 @@ setContext <- function(ctx) tiledb_set_context(ctx)
 #' @param cached (optional) logical switch to force new creation
 #' @return `tiledb_ctx` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' # default configuration
 #' ctx <- tiledb_ctx()
 #'
@@ -118,6 +119,7 @@ setGeneric("config", function(object, ...) {
 #' @param object tiledb_ctx object
 #' @return `tiledb_config` object associated with the `tiledb_ctx` instance
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 #' cfg <- config(ctx)
 #' cfg["sm.tile_cache_size"]
@@ -142,6 +144,7 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #' @param scheme URI string scheme ("file", "hdfs", "s3")
 #' @return TRUE if tiledb backend is supported, FALSE otherwise
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' tiledb_is_supported_fs("file")
 #' tiledb_is_supported_fs("s3")
 #'
@@ -156,6 +159,7 @@ tiledb_is_supported_fs <- function(scheme, object = tiledb_get_context()) {
 #' @param key string
 #' @param value string
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 #' cfg <- tiledb_ctx_set_tag(ctx, "tag", "value")
 #'

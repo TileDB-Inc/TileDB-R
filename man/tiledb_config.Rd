@@ -16,6 +16,7 @@ tiledb_config(config = NA_character_)
 Creates a \code{tiledb_config} object
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 cfg <- tiledb_config()
 cfg["sm.tile_cache_size"]
 

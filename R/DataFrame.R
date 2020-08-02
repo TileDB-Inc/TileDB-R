@@ -37,6 +37,7 @@
 ##' @param uri A character variable with an Array URI.
 ##' @return Null, invisibly.
 ##' @examples
+##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 ##' uri <- tempfile()
 ##' ## turn factor into character
 ##' irisdf <- within(iris, Species <- as.character(Species))

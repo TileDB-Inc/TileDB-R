@@ -18,6 +18,7 @@ tiledb_ctx(config = NULL, cached = TRUE)
 Creates a \code{tiledb_ctx} object
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 # default configuration
 ctx <- tiledb_ctx()
 

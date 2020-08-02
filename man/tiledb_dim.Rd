@@ -28,6 +28,7 @@ type \code{integer} or \code{double} (i.e. \code{numeric}). For type,
 Contructs a \code{tiledb_dim} object
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 tiledb_dim(name = "d1", domain = c(1L, 10L), tile = 5L, type = "INT32")
 
 }

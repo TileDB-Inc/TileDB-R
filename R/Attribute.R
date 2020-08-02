@@ -44,6 +44,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' flt <- tiledb_filter_list(list(tiledb_filter("GZIP")))
 #' attr <- tiledb_attr(name = "a1", type = "INT32",
 #'                     filter_list = flt)
@@ -93,6 +94,7 @@ setGeneric("name", function(object) standardGeneric("name"))
 #' @param object `tiledb_attr` object
 #' @return string name, empty string if the attribute is anonymous
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' a1 <- tiledb_attr("a1", type = "INT32")
 #' name(a1)
 #'
@@ -131,6 +133,7 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #' @param object tiledb_attr
 #' @return a tiledb_filter_list object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' attr <- tiledb_attr(type = "INT32", filter_list=tiledb_filter_list(list(tiledb_filter("ZSTD"))))
 #' filter_list(attr)
 #'
@@ -150,6 +153,7 @@ setGeneric("cell_val_num", function(object) standardGeneric("cell_val_num"))
 #' @param object `tiledb_attr` object
 #' @return integer number of cells
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' a1 <- tiledb_attr("a1", type = "FLOAT64", ncells = 1)
 #' cell_val_num(a1)
 #'
@@ -166,6 +170,7 @@ setMethod("cell_val_num", signature(object = "tiledb_attr"),
 #' @param object `tiledb_attr` object
 #' @return TRUE or FALSE
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' a1 <- tiledb_attr("a1", type = "FLOAT64")
 #' is.anonymous(a1)
 #'

@@ -18,6 +18,7 @@ tiledb_vfs(config = NULL, ctx = tiledb_get_context())
 Creates a \code{tiledb_vfs} object
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 # default configuration
 vfs <- tiledb_vfs()
 

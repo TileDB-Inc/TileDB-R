@@ -18,6 +18,7 @@ a \code{package_version} object
 The version of the libtiledb library
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 tiledb_version()
 tiledb_version(compact = TRUE)
 }

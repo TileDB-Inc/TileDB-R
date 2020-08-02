@@ -18,6 +18,7 @@ a character vector of config parameter names, values
 Convert a \code{tiledb_config} object to a R vector
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 cfg <- tiledb_config()
 as.vector(cfg)
 

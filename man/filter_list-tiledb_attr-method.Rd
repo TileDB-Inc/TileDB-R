@@ -16,6 +16,7 @@ a tiledb_filter_list object
 Returns the \code{tiledb_filter_list} object associated with the given \code{tiledb_attr}
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 attr <- tiledb_attr(type = "INT32", filter_list=tiledb_filter_list(list(tiledb_filter("ZSTD"))))
 filter_list(attr)
 

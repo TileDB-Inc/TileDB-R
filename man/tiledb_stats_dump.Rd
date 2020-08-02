@@ -13,6 +13,7 @@ tiledb_stats_dump(path)
 Dump stats to file
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 pth <- tempfile()
 tiledb_stats_dump(pth)
 cat(readLines(pth)[1:10], sep = "\n")

@@ -39,6 +39,7 @@ tiledb_stats_disable <- function() {
 #' @param path to stats file
 #' @concept stats
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' pth <- tempfile()
 #' tiledb_stats_dump(pth)
 #' cat(readLines(pth)[1:10], sep = "\n")

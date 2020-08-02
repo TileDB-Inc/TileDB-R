@@ -16,6 +16,7 @@ a scalar tile extent
 Return the \code{tiledb_dim} tile extent
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 d1 <- tiledb_dim("d1", domain = c(5L, 10L), tile = 2L)
 tile(d1)
 

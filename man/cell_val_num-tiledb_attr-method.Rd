@@ -16,6 +16,7 @@ integer number of cells
 Return the number of scalar values per attribute cell
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 a1 <- tiledb_attr("a1", type = "FLOAT64", ncells = 1)
 cell_val_num(a1)
 

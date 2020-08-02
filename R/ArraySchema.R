@@ -45,6 +45,7 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param offsets_filter_list (optional)
 #' @param ctx tiledb_ctx object (optional)
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' schema <- tiledb_array_schema(
 #'               dom = tiledb_domain(
 #'                         dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
@@ -146,6 +147,7 @@ setGeneric("domain", function(object, ...) standardGeneric("domain"))
 #'
 #' @param object tiledb_array_schema
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
 #' domain(sch)
@@ -166,6 +168,7 @@ setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 #' @param object tiledb_array_schema
 #' @return a list of tiledb_dim objects
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
 #'                                    tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
@@ -188,6 +191,7 @@ setGeneric("attrs", function(object, idx, ...) standardGeneric("attrs"))
 #' @param ... Extra parameter for method signature, currently unused.
 #' @return a list of tiledb_attr objects
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
 #'                                                tiledb_attr("a2", type = "FLOAT64")))
@@ -214,6 +218,7 @@ setMethod("attrs", signature("tiledb_array_schema"),
 #' @param ... Extra parameter for method signature, currently unused.
 #' @return a `tiledb_attr` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
 #'                                                tiledb_attr("a2", type = "FLOAT64")))
@@ -235,6 +240,7 @@ setMethod("attrs", signature("tiledb_array_schema", "character"),
 #' @param ... Extra parameter for method signature, currently unused.
 #' @return a `tiledb_attr` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
 #'                                                tiledb_attr("a2", type = "FLOAT64")))
@@ -319,6 +325,7 @@ setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 #' @param object tiledb_array_schema
 #' @return integer number of dimensions
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
 #'                                                tiledb_attr("a2", type = "FLOAT64")))
@@ -338,6 +345,7 @@ setMethod("tiledb_ndim", "tiledb_array_schema",
 #' @param x tiledb_array_schema
 #' @return a dimension vector
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
 #'                                                tiledb_attr("a2", type = "FLOAT64")))

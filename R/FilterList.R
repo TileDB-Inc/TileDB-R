@@ -39,6 +39,7 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return tiledb_filter_list object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' flt <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 #' filter_list <- tiledb_filter_list(c(flt))
@@ -73,6 +74,7 @@ setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_ma
 #' @param object tiledb_filter_list
 #' @param value string
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' flt <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 #' filter_list <- tiledb_filter_list(c(flt))
@@ -92,6 +94,7 @@ setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
 #' @param object tiledb_filter_list
 #' @return integer max_chunk_size
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' flt <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 #' filter_list <- tiledb_filter_list(c(flt))
@@ -112,6 +115,7 @@ setGeneric("nfilters", function(object) standardGeneric("nfilters"))
 #' @param object tiledb_filter_list
 #' @return integer number of filters
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' flt <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 #' filter_list <- tiledb_filter_list(c(flt))
@@ -133,6 +137,7 @@ setMethod("nfilters", signature(object = "tiledb_filter_list"),
 #' @param drop Optional logical switch to drop dimensions, default false.
 #' @return object tiledb_filter
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' flt <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 #' filter_list <- tiledb_filter_list(c(flt))

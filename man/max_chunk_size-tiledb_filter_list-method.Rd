@@ -16,6 +16,7 @@ integer max_chunk_size
 Returns the filter_list's max_chunk_size
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 flt <- tiledb_filter("ZSTD")
 tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 filter_list <- tiledb_filter_list(c(flt))

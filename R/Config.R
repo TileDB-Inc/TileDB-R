@@ -40,6 +40,7 @@ tiledb_config.from_ptr <- function(ptr) {
 #' @param config (optonal) character vector of config parameter names, values
 #' @return `tiledb_config` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
 #'
@@ -70,6 +71,7 @@ tiledb_config <- function(config = NA_character_) {
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return a config string value if parameter exists, else NA
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
 #' cfg["does_not_exist"]
@@ -97,6 +99,7 @@ setMethod("[", "tiledb_config",
 #' @param value value to set, will be converted into a stringa
 #' @return updated `tiledb_config` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
 #'
@@ -131,6 +134,7 @@ setMethod("[<-", "tiledb_config",
 #'
 #' @param object `tiledb_config` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' cfg <- tiledb_config()
 #' show(cfg)
 #' @export
@@ -145,6 +149,7 @@ setMethod("show", signature(object = "tiledb_config"),
 #' @param path The path to config file to be created
 #' @return path to created config file
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' tmp <- tempfile()
 #' cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 #' pth <- tiledb_config_save(cfg, tmp)
@@ -162,6 +167,7 @@ tiledb_config_save <- function(config, path) {
 #'
 #' @param path path to the config file
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' tmp <- tempfile()
 #' cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 #' pth <- tiledb_config_save(cfg, tmp)
@@ -181,6 +187,7 @@ tiledb_config_load <- function(path) {
 #' @param mode Character value `"any"`, currently unused
 #' @return a character vector of config parameter names, values
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' cfg <- tiledb_config()
 #' as.vector(cfg)
 #'
