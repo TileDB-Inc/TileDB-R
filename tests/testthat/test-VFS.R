@@ -37,7 +37,7 @@ test_that("tiledb_vfs create / test / remove file", {
   expect_true(tiledb_vfs_is_file(vfs, uri))
 
   ## check via VFS
-  expect_equal(tiledb_vfs_file_size(vfs, uri), 0L)
+  expect_equal(tiledb_vfs_file_size(vfs, uri), 0)
 
   newuri <- tempfile()
   expect_equal(tiledb_vfs_move_file(vfs, uri, newuri), newuri)

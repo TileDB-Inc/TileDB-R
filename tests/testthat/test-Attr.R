@@ -65,7 +65,9 @@ test_that("tiledb_attr set fill", {
   arr <- tiledb_dense(uri)
   val <- arr[]
   ## when no value has been set, expect NA
-  expect_equal(val, array(rep(NA_integer_, 4)))
+  #expect_equal(val, array(rep(NA, 4)))
+  expect_true(length(val) == 4)
+  expect_true(all(is.na(val)))
 
   ## test for value set
   dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))
@@ -78,9 +80,9 @@ test_that("tiledb_attr set fill", {
   arr <- tiledb_dense(uri)
   val <- arr[]
   ## when value has been set, expect value
-  expect_equal(val, array(rep(42L, 4)))
+  expect_equal(val, array(rep(42, 4)))
 
-  expect_equal(tiledb:::libtiledb_attribute_get_fill_value(attr@ptr), 42L)
+  expect_equal(tiledb:::libtiledb_attribute_get_fill_value(attr@ptr), 42)
 
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 })

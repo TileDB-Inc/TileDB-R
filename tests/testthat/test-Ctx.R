@@ -11,7 +11,6 @@ test_that("tiledb_ctx default constructor", {
 test_that("tiledb_ctx constructor with tiledb_config", {
   ## function passes fine in isolation, but in context of unit tests
   ## and (maybe because other Ctx objects were created?) it croaks
-  skip("this")
   cfg <- tiledb_config(c(foo = "bar"))
   ctx <- tiledb_ctx(cfg)
   expect_is(ctx, "tiledb_ctx")
@@ -22,7 +21,6 @@ test_that("tiledb_ctx constructor with tiledb_config", {
 test_that("tiledb_ctx constructor with named vector config", {
   ## function passes fine in isolation, but in context of unit tests
   ## and (maybe because other Ctx objects were created?) it croaks
-  skip("this")
   ctx <- tiledb_ctx(c(foo = "bar"))
   expect_is(ctx, "tiledb_ctx")
   cfg <- tiledb::config(ctx)

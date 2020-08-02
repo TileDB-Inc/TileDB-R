@@ -16,7 +16,7 @@ test_that("tiledb_config named vector constructor", {
 test_that("tiledb_config errors upon invalid vector argument", {
   expect_error(tiledb_config("foo"))
   # all values must have a non-empty name
-  expect_error(tiled_config(foo = "foo", "bar"))
+  expect_error(tiledb_config(foo = "foo", "bar"))
   expect_error(tiledb_config(1))
   expect_error(tiledb_config(c(foo = 1)))
 })

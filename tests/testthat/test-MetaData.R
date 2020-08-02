@@ -56,7 +56,6 @@ teardown({
 })
 
 
-
 test_that("Can check presence of metadata", {
   arr <- unlink_and_create_ptr(tmp)
 
@@ -76,8 +75,7 @@ test_that("Can retrieve count of metadata", {
   arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
 
   expect_error(tiledb_num_metadata(NULL))
-  expect_equal(tiledb_num_metadata(arr), 2L)
-
+  expect_equal(tiledb_num_metadata(arr), 2)
   unlink(tmp, recursive = TRUE, force = TRUE)
 })
 
@@ -156,7 +154,7 @@ test_that("Can get all", {
   arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
 
   res <- tiledb_get_all_metadata(arr)
-  expect_equal(length(res), 2L)
+  expect_equal(length(res), 2)
   expect_true("vec" %in% names(res))
   expect_true("txt" %in% names(res))
 })
@@ -167,14 +165,14 @@ test_that("Can deleye by key", {
   arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
 
   ## should be two before we add
-  expect_equal(tiledb_num_metadata(arr), 2L)
+  expect_equal(tiledb_num_metadata(arr), 2)
 
   close_and_reopen(arr, "WRITE")
   expect_true(tiledb_put_metadata(arr, "foo", "the quick brown fox"))
 
   close_and_reopen(arr, "READ")
   ## should be three after we add
-  expect_equal(tiledb_num_metadata(arr), 3L)
+  expect_equal(tiledb_num_metadata(arr), 3)
 
   close_and_reopen(arr, "WRITE")
   expect_true(tiledb_delete_metadata(arr, "foo"))
@@ -182,7 +180,7 @@ test_that("Can deleye by key", {
   close_and_reopen(arr, "READ")
 
   ## should be two after we delete
-  expect_equal(tiledb_num_metadata(arr), 2L)
+  expect_equal(tiledb_num_metadata(arr), 2)
 })
 
 #tiledb:::resetCtx(ctx)
