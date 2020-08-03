@@ -16,6 +16,7 @@ string name, empty string if the attribute is anonymous
 Return the \code{tiledb_attr} name
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 a1 <- tiledb_attr("a1", type = "INT32")
 name(a1)
 

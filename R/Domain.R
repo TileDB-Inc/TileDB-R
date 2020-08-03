@@ -42,6 +42,7 @@ tiledb_domain.from_ptr <- function(ptr) {
 #' @param dims list() of tiledb_dim objects
 #' @return tiledb_domain
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
 #'                               tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 #' @importFrom methods slot
@@ -78,6 +79,7 @@ setMethod("show", "tiledb_domain",
 #' @param object tiledb_domain
 #' @return a list of tiledb_dim
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
 #'                               tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 #' dimensions(dom)
@@ -96,6 +98,7 @@ setMethod("dimensions", "tiledb_domain",
 #' @param object tiledb_domain
 #' @return tiledb_domain type string
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32")))
 #' datatype(dom)
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
@@ -116,6 +119,7 @@ setMethod("datatype", "tiledb_domain",
 #' @param object tiledb_domain
 #' @return integer number of dimensions
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
 #' tiledb_ndim(dom)
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64"),
@@ -137,6 +141,7 @@ setGeneric("is.integral", function(object) standardGeneric("is.integral"))
 #' @param object tiledb_domain
 #' @return TRUE if the domain is an integral domain, else FALSE
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32")))
 #' is.integral(dom)
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))
@@ -157,6 +162,7 @@ setMethod("is.integral", "tiledb_domain",
 #' @param x tiledb_domain
 #' @return dimension vector
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
 #'                               tiledb_dim("d2", c(1L, 100L), type = "INT32")))
 #' dim(dom)

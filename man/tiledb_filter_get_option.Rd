@@ -18,6 +18,7 @@ Integer value
 Returns the filter's option
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 c <- tiledb_filter("ZSTD")
 tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
 tiledb_filter_get_option(c, "COMPRESSION_LEVEL")

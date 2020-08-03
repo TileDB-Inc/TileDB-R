@@ -18,6 +18,7 @@ tiledb_domain
 All \code{tiledb_dim} must be of the same TileDB type.
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
                               tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 }

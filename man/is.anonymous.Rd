@@ -19,6 +19,7 @@ TRUE or FALSE
 A TileDB attribute is anonymous if no name/label is defined
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 a1 <- tiledb_attr("a1", type = "FLOAT64")
 is.anonymous(a1)
 

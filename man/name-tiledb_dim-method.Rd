@@ -16,6 +16,7 @@ string name, empty string if the dimension is anonymous
 Return the \code{tiledb_dim} name
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 d1 <- tiledb_dim("d1", c(1L, 10L))
 name(d1)
 

@@ -35,6 +35,7 @@ Valid compression options vary depending on the filter used,
 consult the TileDB docs for more information.
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 tiledb_filter("ZSTD")
 
 }

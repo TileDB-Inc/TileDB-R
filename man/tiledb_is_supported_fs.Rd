@@ -26,6 +26,7 @@ Ex:
 }
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 tiledb_is_supported_fs("file")
 tiledb_is_supported_fs("s3")
 

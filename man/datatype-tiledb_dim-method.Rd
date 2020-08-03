@@ -16,6 +16,7 @@ tiledb datatype string
 Return the \code{tiledb_dim} datatype
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 d1 <- tiledb_dim("d1", domain = c(5L, 10L), tile = 2L, type = "INT32")
 datatype(d1)
 

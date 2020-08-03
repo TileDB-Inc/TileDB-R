@@ -48,6 +48,7 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' tiledb_dim(name = "d1", domain = c(1L, 10L), tile = 5L, type = "INT32")
 #'
 #' @importFrom methods new
@@ -93,6 +94,7 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
 #' @param object `tiledb_dim` object
 #' @return string name, empty string if the dimension is anonymous
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' d1 <- tiledb_dim("d1", c(1L, 10L))
 #' name(d1)
 #'
@@ -110,6 +112,7 @@ setMethod("name", signature(object = "tiledb_dim"),
 #' @param object `tiledb_dim` object
 #' @return a vector of (lb, ub) inclusive domain of the dimension
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' d1 <- tiledb_dim("d1", domain = c(5L, 10L))
 #' domain(d1)
 #'
@@ -128,6 +131,7 @@ setGeneric("tile", function(object) standardGeneric("tile"))
 #' @param object `tiledb_dim` object
 #' @return a scalar tile extent
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' d1 <- tiledb_dim("d1", domain = c(5L, 10L), tile = 2L)
 #' tile(d1)
 #'
@@ -142,6 +146,7 @@ setMethod("tile", signature(object = "tiledb_dim"),
 #' @param object tiledb_dim object
 #' @return tiledb datatype string
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' d1 <- tiledb_dim("d1", domain = c(5L, 10L), tile = 2L, type = "INT32")
 #' datatype(d1)
 #'
@@ -156,6 +161,7 @@ setMethod("datatype", signature(object = "tiledb_dim"),
 #' @param object tiledb_ndim object
 #' @return 1L
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' d1 <- tiledb_dim("d1", c(1L, 10L), 10L)
 #' tiledb_ndim(d1)
 #'
@@ -172,6 +178,7 @@ setMethod("tiledb_ndim", "tiledb_dim",
 #' @param object `tiledb_dim` object
 #' @return TRUE or FALSE
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' d1 <- tiledb_dim("d1", c(1L, 10L), 10L)
 #' is.anonymous(d1)
 #'
@@ -189,6 +196,7 @@ is.anonymous.tiledb_dim <- function(object) {
 #' @param x `tiledb_dim` object
 #' @return a vector of the tile_dim domain type, of the dim domain dimension (extent)
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' d1 <- tiledb_dim("d1", c(1L, 10L), 5L)
 #' dim(d1)
 #'

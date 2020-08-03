@@ -37,6 +37,7 @@ This function may still still change; the current implementation should be
 considered as an initial draft.
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 \dontrun{
 uri <- "quickstart_sparse"      ## as created by the other example
 arr <- tiledb_array(uri)        ## open array

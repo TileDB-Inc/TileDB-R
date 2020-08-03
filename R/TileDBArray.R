@@ -408,6 +408,7 @@ setMethod("[", "tiledb_array",
 #' @param value The value being assigned
 #' @return The modified object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' \dontrun{
 #' uri <- "quickstart_sparse"      ## as created by the other example
 #' arr <- tiledb_array(uri)        ## open array

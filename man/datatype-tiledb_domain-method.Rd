@@ -16,6 +16,7 @@ tiledb_domain type string
 Returns tiledb_domain TileDB type string
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32")))
 datatype(dom)
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(0.5, 100.0), type = "FLOAT64")))

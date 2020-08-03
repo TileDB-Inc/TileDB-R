@@ -27,6 +27,7 @@
 #' @return An named int vector c(major, minor, patch), or if select,
 #' a \code{package_version} object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' tiledb_version()
 #' tiledb_version(compact = TRUE)
 #' @export

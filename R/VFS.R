@@ -33,6 +33,7 @@ setClass("tiledb_vfs",
 #' @param ctx (optonal) A TileDB Ctx object
 #' @return `tiledb_vfs` object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' # default configuration
 #' vfs <- tiledb_vfs()
 #'
@@ -86,6 +87,7 @@ tiledb_vfs_remove_bucket <- function(vfs, uri) {
 #' @return A boolean value indicating if it is a valid bucket
 #' @export
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' \dontrun{
 #' cfg <- tiledb_config()
 #' cfg["vfs.s3.region"] <- "us-west-1"
@@ -106,6 +108,7 @@ tiledb_vfs_is_bucket <- function(vfs, uri) {
 #' @return A boolean value indicating if it is an empty bucket
 #' @export
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' \dontrun{
 #' cfg <- tiledb_config()
 #' cfg["vfs.s3.region"] <- "us-west-1"

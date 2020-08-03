@@ -28,6 +28,7 @@ a config string value if parameter exists, else NA
 Gets a config parameter value
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 cfg <- tiledb_config()
 cfg["sm.tile_cache_size"]
 cfg["does_not_exist"]

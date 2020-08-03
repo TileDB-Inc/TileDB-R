@@ -54,6 +54,7 @@ tiledb_filter.from_ptr <- function(ptr) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return tiledb_filter object
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' tiledb_filter("ZSTD")
 #'
 #' @export tiledb_filter
@@ -72,6 +73,7 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
 #' @param object tiledb_filter
 #' @return TileDB filter type string
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_type(c)
 #'
@@ -87,6 +89,7 @@ tiledb_filter_type <- function(object) {
 #' @param option string
 #' @param value int
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
 #' tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
@@ -102,6 +105,7 @@ tiledb_filter_set_option <- function(object, option, value) {
 #' @param option string
 #' @return Integer value
 #' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
 #' tiledb_filter_get_option(c, "COMPRESSION_LEVEL")

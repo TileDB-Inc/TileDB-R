@@ -36,6 +36,7 @@ tiledb_array_schema(
 Constructs a \code{tiledb_array_schema} object
 }
 \examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 schema <- tiledb_array_schema(
               dom = tiledb_domain(
                         dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
