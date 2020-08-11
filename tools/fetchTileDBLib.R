@@ -11,22 +11,9 @@ if (!argv[1] %in% c("macos", "linux")) {
   q()
 }
 
-if (requireNamespace("jsonlite", quietly=TRUE) == FALSE) {
-  message("Need 'jsonlite' package to download library for ", argv[1])
-  q()
-}
+os <- argv[1]
+#base <- "https://dirk.eddelbuettel.com/tldbdl/default/"
+base <- "https://eddelbuettel.github.io/tldbdl/default"
 
-res <- jsonlite::fromJSON("https://api.github.com/repos/TileDB-Inc/TileDB/releases/latest")
-urls <- res$assets$browser_download_url
-
-ind <- grep(argv[1], urls)
-if (length(ind) == 0) {
-  message("No matching file for OS ", argv[1])
-  q()
-}
-if (length(ind) > 1) {
-  message("More than one matching file for ", argv[1])
-  q()
-}
-
-download.file(urls[ind], "tiledb.tar.gz", quiet=TRUE)
+url <- file.path(base, os, paste0("tiledb-", os, ".tar.gz"))
+download.file(url, "tiledb.tar.gz", quiet=TRUE)

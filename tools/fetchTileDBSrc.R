@@ -1,10 +1,8 @@
 #!/usr/bin/Rscript
 
-if (requireNamespace("jsonlite", quietly=TRUE) == FALSE) {
-  message("Need 'jsonlite' package to download sources.")
-  q()
-}
+os <- "src"
+#base <- "https://dirk.eddelbuettel.com/tldbdl/default/"
+base <- "https://eddelbuettel.github.io/tldbdl/default"
 
-res <- jsonlite::fromJSON("https://api.github.com/repos/TileDB-Inc/TileDB/releases/latest")
-url <- res$tarball_url
+url <- file.path(base, os, paste0("tiledb-", os, ".tar.gz"))
 download.file(url, "tiledb.tar.gz", quiet=TRUE)
