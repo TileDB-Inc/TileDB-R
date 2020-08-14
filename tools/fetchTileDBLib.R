@@ -18,8 +18,9 @@ if (requireNamespace("jsonlite", quietly=TRUE) == FALSE) {
 
 res <- jsonlite::fromJSON("https://api.github.com/repos/TileDB-Inc/TileDB/releases/latest")
 urls <- res$assets$browser_download_url
+tgt <- paste0(argv[1], ".*without_tbb")
 
-ind <- grep(argv[1], urls)
+ind <- grep(tgt, urls)
 if (length(ind) == 0) {
   message("No matching file for OS ", argv[1])
   q()
