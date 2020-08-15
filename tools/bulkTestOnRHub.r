@@ -2,6 +2,9 @@
 
 library(rhub)
 
+argv <- commandArgs(trailingOnly=TRUE)
+tgt <- if (length(argv) >= 0) argv[1] else "."
+
 selected <- c("debian-clang-devel",
               "debian-gcc-devel",
               "debian-gcc-release",
@@ -12,7 +15,7 @@ selected <- c("debian-clang-devel",
               "macos-highsierra-release",
               "macos-highsierra-release-cran")
 
-check(".", platform = selected, email = getOption("email", "edd@debian.org"))
+check(tgt, platform = selected, email = getOption("email", "edd@debian.org"))
 
 
 ## just FYI on 2020-05-20 platform() returns

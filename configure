@@ -1319,8 +1319,8 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-tiledb=PREFIX    path to installed built of TileDB
-  --with-download=PREFIX  URL of TileDB library to download
+  --with-tiledb=PATH      path to installed built of TileDB
+  --with-download=URL     URL of TileDB library to download
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -3010,7 +3010,7 @@ fi
           #)
 
 ## Allow --with-tiledb if given (though system location is found too)
-## (and sets by autconf standards the 'with_tiledb' variable
+## (and sets by autconf standards the 'with_tiledb' variable)
 
 # Check whether --with-tiledb was given.
 if test "${with_tiledb+set}" = set; then :
@@ -3028,16 +3028,13 @@ if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
 fi
 
 ## Allow --with-download if given (though system location is found too)
-## (and sets by autconf standards the 'with_download' variable
+## (and sets by autconf standards the 'with_download' variable)
 
 # Check whether --with-download was given.
 if test "${with_download+set}" = set; then :
   withval=$with_download; TILEDB_LIB_URL="${with_download}"
 fi
 
-echo "enable_building: ${enable_building}"
-echo "with_tiledb: ${with_tiledb}"
-echo "with_download: ${with_download}"
 
 ## Sanity checks
 if test ! -z "${with_tiledb}" -a x"${with_download}" = x"yes"; then
@@ -3455,15 +3452,20 @@ $as_echo "installing TileDB via building locally..." >&6; }
         tools/buildTileDB.sh
 
     ## case two: download considered
-    ##   - on macOS or Linux a 'fast and slim' build with external library
+    ##   - on macOS or Linux a 'fast and slim' build with external (pinned) library
+    ##   - but if a download URL given, use it
     ##   - otherwise error
     else
-        if test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
-            #AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
-            #AC_PROG_CURL
-            #if test x"${have_curl}" != x"yes"; then
-            #    AC_MSG_ERROR([please install 'curl'])
-            #fi
+        ## download URL given by user
+        if test x"${TILEDB_LIB_URL}" != x; then
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading given TileDB library..." >&5
+$as_echo "downloading given TileDB library..." >&6; }
+            ## we use the source download which takes this argument if one given
+            ## and downloads as the same file name
+            #tools/fetchTileDBSrc.R ${TILEDB_LIB_URL}
+            cd inst && ../tools/fetchTileDB.sh url ${TILEDB_LIB_URL} && cd ..
+
+        elif test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading TileDB library..." >&5
 $as_echo "downloading TileDB library..." >&6; }
 
@@ -3500,7 +3502,7 @@ $as_echo "using inst/tiledb/{lib,include}" >&6; }
 
 fi
 
-ac_config_files="$ac_config_files src/Makevars tools/fetchTileDBLib.R"
+ac_config_files="$ac_config_files src/Makevars"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4208,7 +4210,6 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
-    "tools/fetchTileDBLib.R") CONFIG_FILES="$CONFIG_FILES tools/fetchTileDBLib.R" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
