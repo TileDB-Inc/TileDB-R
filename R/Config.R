@@ -238,7 +238,7 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
   }
   cfg <- tiledb_config()
   cfg["sm.num_reader_threads"] <- ncores
-  cfg["sm.num_tbb_threads"] <- ncores
+  #cfg["sm.num_tbb_threads"] <- ncores
   cfg["sm.num_writer_threads"] <- ncores
   cfg["vfs.file.max_parallel_ops"] <- ncores
   cfg["vfs.num_threads"] <- ncores
