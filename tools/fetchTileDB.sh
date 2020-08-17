@@ -1,10 +1,15 @@
 #!/bin/sh
 
-if [ $# -ne 1 ] || { [ "$1" != "linux" ] && [ "$1" != "macos" ]; }; then
-    echo "Usage: fetchTileDB.sh (linux|macos)"
+if [ $# -lt 1 ] || { [ "$1" != "linux" ] && [ "$1" != "macos" ] && [ "$1" != "url" ]; }; then
+    echo "Usage: fetchTileDB.sh (linux|macos|url)"
     exit 1
 fi
 os="${1}"
+
+if [ $# -ge 2 ]; then
+    url="${2}"
+    ## url="" automatic in case of 'else'
+fi
 
 if [ ! -f NEWS.md ]; then
     echo "This script should run from the inst/ directory."
@@ -12,29 +17,16 @@ if [ ! -f NEWS.md ]; then
     exit 1
 fi
 
-## source repo: the latest TileDB release
-## which redirects to latest tagged release
-#repo=https://github.com/TileDB-Inc/TileDB/releases/latest
 tarball="tiledb.tar.gz"
-
-## use curl to download the release, follow redirects, and scan
-## the sed expression should result in two tarballs such as
-##   tiledb-linux-2.0.3-cf03c60.tar.gz
-##   tiledb-macos-2.0.3-cf03c60.tar.gz
-## where version and sha will vary
-#sourcetgz=$(curl -Ls ${repo} | sed -n -e 's/.*<span.*>\(tiledb-.*tar.gz\).*/\1/p' | grep "${os}")
-
-## need to also extract release version ... because github
-#ver=$(echo "${sourcetgz}" | cut -d- -f3)
-
-## construct actual url
-#downloadurl="https://github.com/TileDB-Inc/TileDB/releases/download/${ver}/${sourcetgz}"
 
 ## Download if need be
 if [ ! -f "${tarball}" ]; then
-    echo "downloading '${tarball}'"
-    #curl -s -k -L -o ${tarball} ${downloadurl}
-    ${R_HOME}/bin/Rscript ../tools/fetchTileDBLib.R ${os}
+    ##echo "downloading '${tarball}'"
+    ## CRAN wants us permit different R binaries via different PATHs
+    if [ x"${R_HOME}" = x ]; then
+        R_HOME=`R RHOME`
+    fi
+    ${R_HOME}/bin/Rscript ../tools/fetchTileDBLib.R ${os} ${url}
 fi
 
 ## Clean-up just in case

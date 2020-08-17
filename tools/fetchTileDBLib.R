@@ -2,32 +2,25 @@
 
 argv <- commandArgs(trailingOnly=TRUE)
 if (length(argv) == 0) {
-  message("Requires one argument: macos|linux")
+  message("Requires either one argument (macos|linux) or two (url downloadurl)")
   q()
 }
 
-if (!argv[1] %in% c("macos", "linux")) {
-  message("Requires one argument: macos|linux")
+osarg <- argv[1]
+if (!osarg %in% c("macos", "linux", "url")) {
+  message("Requires first argument: macos|linux|url")
   q()
 }
-
-if (requireNamespace("jsonlite", quietly=TRUE) == FALSE) {
-  message("Need 'jsonlite' package to download library for ", argv[1])
+if (osarg == "url" && length(argv) <= 1) {
+  message("First argument 'url' requires second argument with actual url")
   q()
 }
+urlarg <- argv[2]
 
-res <- jsonlite::fromJSON("https://api.github.com/repos/TileDB-Inc/TileDB/releases/latest")
-urls <- res$assets$browser_download_url
-tgt <- paste0(argv[1], ".*without_tbb")
-
-ind <- grep(tgt, urls)
-if (length(ind) == 0) {
-  message("No matching file for OS ", argv[1])
-  q()
-}
-if (length(ind) > 1) {
-  message("More than one matching file for ", argv[1])
-  q()
-}
-
-download.file(urls[ind], "tiledb.tar.gz", quiet=TRUE)
+baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
+dlurl <- switch(osarg,
+                linux = file.path(baseurl,"2.0.8/tiledb-linux-2.0.8-db41376-without_tbb.tar.gz"),
+                macos = file.path(baseurl,"2.0.8/tiledb-macos-2.0.8-db41376-without_tbb.tar.gz"),
+                url = urlarg)
+cat("downloading", dlurl, "\n")
+download.file(dlurl, "tiledb.tar.gz", quiet=TRUE)

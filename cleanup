@@ -1,4 +1,4 @@
 #!/bin/sh
 
-rm -f  src/Makevars src/*.o src/*.so config.log config.status inst/tiledb-*.tar.gz tools/fetchTileDBLib.R
+rm -f  src/Makevars src/*.o src/*.so config.log config.status inst/tiledb-*.tar.gz
 rm -rf tiledb.Rcheck autom4te.cache inst/tiledb/ tiledb/
