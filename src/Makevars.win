@@ -1,7 +1,19 @@
-## We need C++11 to use TileDB's C++ API
 CXX_STD = CXX11
+VERSION = 2.0.8
+RWINLIB=../windows/tiledb-$(VERSION)
 
-### We need the libtiledb library
-PKG_CPPFLAGS =	-I../inst/include/
-TILEDB_LIBS = -ltiledb
-PKG_LIBS = $(TILEDB_LIBS)
+PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -DTILEDB_STATIC_DEFINE
+PKG_LIBS = \
+	-L$(RWINLIB)/lib$(subst gcc,,$(COMPILED_BY))$(R_ARCH) \
+	-L$(RWINLIB)/lib$(R_ARCH) \
+	-ltiledbstatic -lbz2 -lzstd -llz4 -lz \
+	-laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common \
+	-lShlwapi -lBcrypt -lRpcrt4 -lWininet -lWinhttp -lws2_32 -lVersion -lUserenv
+
+all: clean winlibs
+
+winlibs:
+	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" "../tools/winlibs.R" $(VERSION)
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)

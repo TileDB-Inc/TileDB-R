@@ -18,7 +18,6 @@ License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
 SystemRequirements: cmake (only when TileDB source build selected), git (only when TileDB source build selected)
-OS_type: unix
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
 Suggests: tinytest, rmarkdown, knitr, BiocStyle, curl, bit64
