@@ -1,0 +1,6 @@
+steps:
+  - bash: |
+      echo 'options(repos = "$(CRAN)", Ncpus = 4)' > ~/.Rprofile
+      echo '.libPaths(c("$(R_LIBS_USER)", .libPaths()))' >> ~/.Rprofile
+      mkdir -p $(R_LIBS_USER)
+    displayName: 'Set up user library'

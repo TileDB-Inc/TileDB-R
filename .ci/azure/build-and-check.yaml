@@ -1,0 +1,5 @@
+steps:
+  - bash: |
+      R CMD build --no-build-vignettes --no-manual .
+      R CMD check --no-manual --no-vignettes tiledb_*.tar.gz
+    displayName: 'Run check'
