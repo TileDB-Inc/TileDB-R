@@ -3462,7 +3462,6 @@ $as_echo "installing TileDB via building locally..." >&6; }
 $as_echo "downloading given TileDB library..." >&6; }
             ## we use the source download which takes this argument if one given
             ## and downloads as the same file name
-            #tools/fetchTileDBSrc.R ${TILEDB_LIB_URL}
             cd inst && ../tools/fetchTileDB.sh url ${TILEDB_LIB_URL} && cd ..
 
         elif test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
