@@ -50,7 +50,7 @@ read_array <- function(txt="", subarr=NULL) {
   #--bad  bufptr <- tiledb_query_alloc_buffer_ptr_var(32, 128)
   query <- tiledb_query_set_buffer_ptr_var(query, "a1", bufptr)
   query <- tiledb_query_submit(query)
-  print(tiledb:::libtiledb_query_get_buffer_var_char(bufptr), quote=FALSE)
+  print(tiledb_query_get_buffer_char(bufptr), quote=FALSE)
 }
 
 write_subarray <- function() {

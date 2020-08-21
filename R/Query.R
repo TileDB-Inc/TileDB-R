@@ -235,6 +235,20 @@ tiledb_query_get_buffer_ptr <- function(bufptr) {
   libtiledb_query_get_buffer_ptr(bufptr)
 }
 
+#' Retrieve content from a Query character buffer
+#'
+#' This function uses a query buffer for a character attribute
+#' or dimension and returns its content.
+#' @param bufptr An external pointer with a query buffer
+#' @param szoffset An optional argument for the length of the internal offsets vector
+#' @param szstr An optional argument for the length of the internal string
+#' @return An R object as resulting from the query
+#' @export
+tiledb_query_get_buffer_char <- function(bufptr, szoffset=0, szstr=0) {
+  stopifnot(bufptr=is(bufptr, "externalptr"))
+  libtiledb_query_get_buffer_var_char(bufptr, szoffset, szstr)
+}
+
 
 #' Submit TileDB Query
 #'
