@@ -45,10 +45,9 @@ write_array <- function(uri) {
   rowbufptr <- tiledb_query_create_buffer_ptr(qry, domrowtype, rows)
   qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowbufptr)
 
-  coldata <- "aabbccccddeeffgghhiijj"
-  coloffsets <- c(0L, 2L, 4L, 8L, 10L, 12L, 14L, 16L, 18L, 20L)
-  colbufptr <- tiledb:::libtiledb_query_buffer_var_char_create(coloffsets, coldata)
-  qry@ptr <- tiledb:::libtiledb_query_set_buffer_var_char(qry@ptr, "cols", colbufptr)
+  cols <- c("aa", "bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "jj")
+  colbufptr <- tiledb_query_create_buffer_ptr_char(qry, cols)
+  qry <- tiledb_query_set_buffer_ptr_char(qry, "cols", colbufptr)
 
   a1data <- seq(1:10)
   d1data <- switch(attrowtype,

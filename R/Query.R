@@ -166,7 +166,7 @@ tiledb_query_alloc_buffer_ptr_char_subarray <- function(array, attr, subarray=NU
 #' @param bufptr An external pointer with a query buffer
 #' @return The modified query object, invisibly
 #' @export
-tiledb_query_set_buffer_ptr_var <- function(query, attr, bufptr) {
+tiledb_query_set_buffer_ptr_char <- function(query, attr, bufptr) {
   stopifnot(query_object=is(query, "tiledb_query"),
             attribute_string=is.character(attr),
             bufptr=is(bufptr, "externalptr"))

@@ -47,7 +47,7 @@ write_thrice_array <- function(uri) {
 
     cols <- c("aa", "bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "jj")
     colbufptr <- tiledb_query_create_buffer_ptr_char(qry, cols)
-    query <- tiledb_query_set_buffer_ptr_var(qry, "cols", colbufptr)
+    query <- tiledb_query_set_buffer_ptr_char(qry, "cols", colbufptr)
 
     a1data <- (i-1)*10 + seq(1:10)
     d1data <- switch(attrowtype,
@@ -81,7 +81,7 @@ read_array <- function(uri) {
   qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowptr)
 
   colptr <- tiledb_query_alloc_buffer_ptr_char(nrow, 90)
-  qry <- tiledb_query_set_buffer_ptr_var(qry, "cols", colptr)
+  qry <- tiledb_query_set_buffer_ptr_char(qry, "cols", colptr)
   qry <- tiledb_query_add_range(qry, sch, "cols", "aa", "zz")
 
   a1r <- vector(mode="integer", length=nrow) * NA_integer_

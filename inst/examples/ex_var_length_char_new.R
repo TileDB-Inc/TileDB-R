@@ -30,7 +30,7 @@ write_array <- function() {
   array <- tiledb_dense(array_name, "WRITE")
   query <- tiledb_query(array, "WRITE")
   bufptr <- tiledb_query_create_buffer_ptr_char(query, datavec)
-  query <- tiledb_query_set_buffer_ptr_var(query, "a1", bufptr)
+  query <- tiledb_query_set_buffer_ptr_char(query, "a1", bufptr)
   query <- tiledb_query_submit(query)
   tiledb_array_close(array)
   invisible(NULL)
@@ -47,8 +47,7 @@ read_array <- function(txt="", subarr=NULL) {
   }
   query <- tiledb_query_set_subarray(query, subarr)
   bufptr <- tiledb_query_alloc_buffer_ptr_char_subarray(array, "a1", subarr)
-  #--bad  bufptr <- tiledb_query_alloc_buffer_ptr_var(32, 128)
-  query <- tiledb_query_set_buffer_ptr_var(query, "a1", bufptr)
+  query <- tiledb_query_set_buffer_ptr_char(query, "a1", bufptr)
   query <- tiledb_query_submit(query)
   print(tiledb_query_get_buffer_char(bufptr), quote=FALSE)
 }
@@ -61,7 +60,7 @@ write_subarray <- function() {
   query <- tiledb_query(array, "WRITE")
   query <- tiledb_query_set_subarray(query, subarr)
   bufptr <- tiledb_query_create_buffer_ptr_char(query, datavec)
-  query <- tiledb_query_set_buffer_ptr_var(query, "a1", bufptr)
+  query <- tiledb_query_set_buffer_ptr_char(query, "a1", bufptr)
   query <- tiledb_query_submit(query)
   tiledb_array_close(array)
   invisible(NULL)
