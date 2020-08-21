@@ -2,7 +2,7 @@
 % Please edit documentation in R/Query.R
 \name{tiledb_query_create_buffer_ptr}
 \alias{tiledb_query_create_buffer_ptr}
-\title{Allocate, populate and set a Query buffer for a given object of a given data type.}
+\title{Allocate and populate a Query buffer for a given object of a given data type.}
 \usage{
 tiledb_query_create_buffer_ptr(query, datatype, object)
 }
