@@ -1,0 +1,37 @@
+# Evolved from starter pipeline via r-azure-pipelines repo
+
+# no trigger to so always run
+
+variables:
+- name: CRAN
+  value: 'https://cloud.r-project.org'
+- name: R_LIBS_USER
+  value: '$(Agent.BuildDirectory)/R/library'
+- name: _R_CHECK_FORCE_SUGGESTS_
+  value: false
+- name: MAKEFLAGS
+  value: '--jobs=4'
+
+jobs:
+  - job: 'Linux'
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      - script: sudo apt-get update && sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
+        displayName: 'Install system requirements'
+      - template: azure/set-up-library.yaml
+      - template: azure/install-dependencies.yaml
+      - template: azure/build-and-check.yaml
+
+  - job: 'macOS'
+    pool:
+      vmImage: 'macOS-latest'
+    steps:
+      - script: |
+          curl -fLo /tmp/R.pkg "$(CRAN)/bin/macosx/R-latest.pkg"
+          sudo installer -pkg "/tmp/R.pkg" -target /
+          rm /tmp/R.pkg
+        displayName: 'Install R on macOS'
+      - template: azure/set-up-library.yaml
+      - template: azure/install-dependencies.yaml
+      - template: azure/build-and-check.yaml
