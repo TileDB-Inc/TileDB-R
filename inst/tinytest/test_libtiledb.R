@@ -262,7 +262,9 @@ writeChar(c("foo", "bar", "baz"), test_file)
 close(test_file)
 
 ## test file
-expect_true(tiledb:::libtiledb_vfs_is_file(vfs, test_file_path))
+if(.Platform$OS.type != "windows") {
+  expect_true(tiledb:::libtiledb_vfs_is_file(vfs, test_file_path))
+}
 expect_false(tiledb:::libtiledb_vfs_is_file(vfs, tmp))
 unlink(tmp, recursive = TRUE)
 #})

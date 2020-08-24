@@ -17,3 +17,7 @@
 ^GTAGS
 ^inst/tiledb
 ^tools/bulkTestOnRHub.r
+^windows
+^\.ci
+^\.github
+
