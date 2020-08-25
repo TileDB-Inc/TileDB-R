@@ -19,8 +19,9 @@ Creates a TileDB group object at given uri path
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontrun{
 pth <- tempdir()
 tiledb_group_create(pth)
 tiledb_object_type(pth)
-
+}
 }
