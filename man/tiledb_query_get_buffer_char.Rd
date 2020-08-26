@@ -4,14 +4,14 @@
 \alias{tiledb_query_get_buffer_char}
 \title{Retrieve content from a Query character buffer}
 \usage{
-tiledb_query_get_buffer_char(bufptr, szoffset = 0, szstr = 0)
+tiledb_query_get_buffer_char(bufptr, sizeoffsets = 0, sizestring = 0)
 }
 \arguments{
 \item{bufptr}{An external pointer with a query buffer}
 
-\item{szoffset}{An optional argument for the length of the internal offsets vector}
+\item{sizeoffsets}{An optional argument for the length of the internal offsets vector}
 
-\item{szstr}{An optional argument for the length of the internal string}
+\item{sizestring}{An optional argument for the length of the internal string}
 }
 \value{
 An R object as resulting from the query

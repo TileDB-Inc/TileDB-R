@@ -8,8 +8,8 @@ tiledb_query_alloc_buffer_ptr_char_subarray(
   array,
   attr,
   subarray = NULL,
-  szoff = 0,
-  szdat = 0
+  sizeoffsets = 0,
+  sizedata = 0
 )
 }
 \arguments{
@@ -19,9 +19,9 @@ tiledb_query_alloc_buffer_ptr_char_subarray(
 
 \item{subarray}{A vector of length four describing the subarray required for dense arrays}
 
-\item{szoff}{An optional value of the size of the offsets vector}
+\item{sizeoffsets}{An optional value of the size of the offsets vector}
 
-\item{szdat}{An optional value of the size of the data string}
+\item{sizedata}{An optional value of the size of the data string}
 }
 \value{
 An external pointer to the allocated buffer object

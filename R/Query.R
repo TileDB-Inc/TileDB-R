@@ -147,15 +147,16 @@ tiledb_query_alloc_buffer_ptr_char <- function(sizeoffsets, sizedata) {
 #' @param array A TileDB Array object
 #' @param attr A character value containing the attribute
 #' @param subarray A vector of length four describing the subarray required for dense arrays
-#' @param szoff An optional value of the size of the offsets vector
-#' @param szdat An optional value of the size of the data string
+#' @param sizeoffsets An optional value of the size of the offsets vector
+#' @param sizedata An optional value of the size of the data string
 #' @return An external pointer to the allocated buffer object
 #' @export
-tiledb_query_alloc_buffer_ptr_char_subarray <- function(array, attr, subarray=NULL, szoff=0, szdat=0) {
+tiledb_query_alloc_buffer_ptr_char_subarray <- function(array, attr, subarray=NULL,
+                                                        sizeoffsets=0, sizedata=0) {
   stopifnot(array_ptr=is(array@ptr, "externalptr"),
             is_vector=is.vector(subarray),
             attribute_string=is.character(attr))
-  bufptr <- libtiledb_query_buffer_var_char_alloc(array@ptr, subarray, attr, szoff, szdat)
+  bufptr <- libtiledb_query_buffer_var_char_alloc(array@ptr, subarray, attr, sizeoffsets, sizedata)
   bufptr
 }
 
@@ -240,13 +241,13 @@ tiledb_query_get_buffer_ptr <- function(bufptr) {
 #' This function uses a query buffer for a character attribute
 #' or dimension and returns its content.
 #' @param bufptr An external pointer with a query buffer
-#' @param szoffset An optional argument for the length of the internal offsets vector
-#' @param szstr An optional argument for the length of the internal string
+#' @param sizeoffsets An optional argument for the length of the internal offsets vector
+#' @param sizestring An optional argument for the length of the internal string
 #' @return An R object as resulting from the query
 #' @export
-tiledb_query_get_buffer_char <- function(bufptr, szoffset=0, szstr=0) {
+tiledb_query_get_buffer_char <- function(bufptr, sizeoffsets=0, sizestring=0) {
   stopifnot(bufptr=is(bufptr, "externalptr"))
-  libtiledb_query_get_buffer_var_char(bufptr, szoffset, szstr)
+  libtiledb_query_get_buffer_var_char(bufptr, sizeoffsets, sizestring)
 }
 
 
