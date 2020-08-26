@@ -1,6 +1,11 @@
 library(tinytest)
 library(tiledb)
 
+isWindows <- Sys.info()[["sysname"]] == "Windows"
+isRelease <- TRUE #length(unclass(utils::packageVersion("anytime"))[[1]]) == 3
+
+if (isWindows && isRelease) exit_file("skip this")
+
 ctx <- tiledb_ctx(limitTileDBCores())
 
 #test_that("Can read / write simple 1D sparse vector", {

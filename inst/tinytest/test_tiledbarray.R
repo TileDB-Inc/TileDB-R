@@ -1,6 +1,11 @@
 library(tinytest)
 library(tiledb)
 
+isWindows <- Sys.info()[["sysname"]] == "Windows"
+isRelease <- TRUE #length(unclass(utils::packageVersion("anytime"))[[1]]) == 3
+
+if (isWindows && isRelease) exit_file("skip this")
+
 ctx <- tiledb_ctx(limitTileDBCores())
 
 if (tiledb_version(TRUE) < "2.0.0") exit_file("TileDB Array types required TileDB 2.0.* or greater")
