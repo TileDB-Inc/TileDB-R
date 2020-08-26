@@ -45,10 +45,9 @@ write_thrice_array <- function(uri) {
     rowbufptr <- tiledb_query_create_buffer_ptr(qry, domrowtype, rows)
     qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowbufptr)
 
-    coldata <- "aabbccddeeffgghhiijj"
-    coloffsets <- c(0L, 2L, 4L, 6L, 8L, 10L, 12L, 14L, 16L, 18L)
-    colbufptr <- tiledb:::libtiledb_query_buffer_var_char_create(coloffsets, coldata)
-    qry@ptr <- tiledb:::libtiledb_query_set_buffer_var_char(qry@ptr, "cols", colbufptr)
+    cols <- c("aa", "bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "jj")
+    colbufptr <- tiledb_query_create_buffer_ptr_char(qry, cols)
+    query <- tiledb_query_set_buffer_ptr_char(qry, "cols", colbufptr)
 
     a1data <- (i-1)*10 + seq(1:10)
     d1data <- switch(attrowtype,
@@ -73,8 +72,6 @@ read_array <- function(uri) {
   sch <- schema(arr)
   qry <- tiledb_query(arr, "READ")
 
-  arrptr <- arr@ptr
-  qryptr <- qry@ptr
   ## important: we currently cannot retrieve more than nrow
   ## (though this maybe be a constraint we impose)
   #nrow <- 8
@@ -83,8 +80,8 @@ read_array <- function(uri) {
   rowptr <- tiledb_query_buffer_alloc_ptr(qry, domrowtype, nrow)
   qry <- tiledb_query_set_buffer_ptr(qry, "rows", rowptr)
 
-  colptr <- tiledb:::libtiledb_query_buffer_var_char_alloc_direct(nrow, 90)
-  qry@ptr <- tiledb:::libtiledb_query_set_buffer_var_char(qry@ptr, "cols", colptr)
+  colptr <- tiledb_query_alloc_buffer_ptr_char(nrow, 90)
+  qry <- tiledb_query_set_buffer_ptr_char(qry, "cols", colptr)
   qry <- tiledb_query_add_range(qry, sch, "cols", "aa", "zz")
 
   a1r <- vector(mode="integer", length=nrow) * NA_integer_
@@ -93,12 +90,12 @@ read_array <- function(uri) {
   d1ptr <- tiledb_query_buffer_alloc_ptr(qry, attrowtype, nrow)
   qry <- tiledb_query_set_buffer_ptr(qry, "d1", d1ptr)
 
-  qryptr <- tiledb:::libtiledb_query_submit(qryptr)
-  tiledb:::libtiledb_array_close(arrptr)
+  qry <- tiledb_query_submit(qry)
+  tiledb_array_close(arr)
 
-  rows <- tiledb:::libtiledb_query_get_buffer_ptr(rowptr)
-  cols <- tiledb:::libtiledb_query_get_buffer_var_char(colptr)
-  d1r <- tiledb:::libtiledb_query_get_buffer_ptr(d1ptr)
+  rows <- tiledb_query_get_buffer_ptr(rowptr)
+  cols <- tiledb_query_get_buffer_char(colptr)
+  d1r <- tiledb_query_get_buffer_ptr(d1ptr)
   print(data.frame(rows,cols,a1r,d1r))
 }
 

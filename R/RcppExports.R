@@ -453,6 +453,10 @@ libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata) {
     .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata)
 }
 
+convertStringVectorIntoOffsetsAndString <- function(vec, offsets) {
+    .Call(`_tiledb_convertStringVectorIntoOffsetsAndString`, vec, offsets)
+}
+
 libtiledb_query_buffer_var_char_create <- function(intoffsets, data) {
     .Call(`_tiledb_libtiledb_query_buffer_var_char_create`, intoffsets, data)
 }
