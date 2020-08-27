@@ -1,6 +1,9 @@
 library(tinytest)
 library(tiledb)
 
+isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
+if (isOldWindows) exit_file("skip this file on old Windows releases")
+
 ctx <- tiledb_ctx(limitTileDBCores())
 
 #test_that("Can read / write a simple Date dense vector", {
@@ -40,7 +43,8 @@ arr <- tiledb_dense(uri)
 arr[] <- datetimes
 
 arr2 <- tiledb_dense(uri)
-expect_equal(trunc(datetimes), arr2[])
+## different tzone behavior between r-release and r-devel so comparing numerically
+expect_equal(as.numeric(trunc(datetimes)), as.numeric(arr2[]))
 
 unlink(uri, recursive=TRUE)
 
@@ -155,7 +159,8 @@ arr <- tiledb_sparse(uri)
 arr[1:60] <- datetimes
 
 arr2 <- tiledb_sparse(uri)
-expect_equal(trunc(datetimes), arr2[]$dat)
+## different tzone behavior between r-release and r-devel so comparing numerically
+expect_equal(as.numeric(trunc(datetimes)), as.numeric(arr2[]$dat))
 
 unlink(uri, recursive=TRUE)
 

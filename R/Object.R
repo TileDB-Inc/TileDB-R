@@ -37,10 +37,11 @@ check_object_arguments <- function(uri, ctx = tiledb_get_context()) {
 #' @return uri of created group
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontrun{
 #' pth <- tempdir()
 #' tiledb_group_create(pth)
 #' tiledb_object_type(pth)
-#'
+#' }
 #'@export
 tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
   check_object_arguments(uri, ctx)

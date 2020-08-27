@@ -27,11 +27,13 @@
 #'
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontrun{
 #' pth <- tempdir()
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
 #' tiledb_array_create(pth, sch)
 #' tiledb_object_type(pth)
+#' }
 #'
 #' @export
 tiledb_array_create <- function(uri, schema) {
