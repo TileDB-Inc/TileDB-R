@@ -1,8 +1,7 @@
 library(tinytest)
 library(tiledb)
 
-isWindows <- Sys.info()[["sysname"]] == "Windows"
-isRelease <- TRUE #length(unclass(utils::packageVersion("anytime"))[[1]]) == 3
+isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
@@ -96,7 +95,7 @@ expect_error(tiledb:::libtiledb_array_schema_set_capacity(sch@ptr, -10))
 
 
 #test_that("tiledb_array_schema created with encryption",  {
-if (!(isWindows && isRelease)) {
+if (!(isOldWindows)) {
   dir.create(uri <- tempfile())
   key <- "0123456789abcdeF0123456789abcdeF"
 

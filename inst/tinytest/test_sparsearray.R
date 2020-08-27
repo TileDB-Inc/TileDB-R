@@ -1,10 +1,8 @@
 library(tinytest)
 library(tiledb)
 
-isWindows <- Sys.info()[["sysname"]] == "Windows"
-isRelease <- TRUE #length(unclass(utils::packageVersion("anytime"))[[1]]) == 3
-
-if (isWindows && isRelease) exit_file("skip this")
+isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
+if (isOldWindows) exit_file("skip this file on old Windows releases")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
