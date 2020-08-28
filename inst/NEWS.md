@@ -1,5 +1,3 @@
-# Ongoing
-
 # 0.8.0
 
 * This release of the R package supports [TileDB 2.0.8](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8), but has
@@ -17,7 +15,7 @@
 
 - More (signed and unsigned) integer types are supported as dimension types in sparse arrays (#143), as well as in dense arrays (#144) and as attributes (#144)
 
-- A new S4 class `tiledb_query` offers access to the query object functionality in the underlying library (#145)
+- A new S4 class `tiledb_query` offers access to the query object functionality in the underlying library (#145, #161)
 
 - Examples are running with a lowered thread count setting per CRAN Policies (#152)
 
@@ -28,8 +26,6 @@
 - Compile-time configuration was refactored and changes (#158)
 
 - Windows builds are now possible also using TileDB Embedded build 2.0.8 (#159, #164)
-
-- The `query_object` can now be used with variable-length character columns (#161)
 
 - Continuous integration now uses Azure for macOS and Linux (#160) and GitHub Actions for Windows (#162,#165)
 
