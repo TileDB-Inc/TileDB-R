@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -146,7 +146,8 @@
     <p>tiledb datatype string</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span>(<span class='st'>"d1"</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5L</span>, <span class='fl'>10L</span>), <span class='kw'>tile</span> <span class='kw'>=</span> <span class='fl'>2L</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>)
+    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
+<span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span>(<span class='st'>"d1"</span>, <span class='kw'>domain</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5L</span>, <span class='fl'>10L</span>), <span class='kw'>tile</span> <span class='kw'>=</span> <span class='fl'>2L</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>)
 <span class='fu'><a href='generics.html'>datatype</a></span>(<span class='no'>d1</span>)</div><div class='output co'>#&gt; [1] "INT32"</div><div class='input'>
 </div></pre>
   </div>

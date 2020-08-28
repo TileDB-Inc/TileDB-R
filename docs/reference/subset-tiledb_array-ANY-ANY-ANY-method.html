@@ -73,7 +73,7 @@ something that can be coerced to a data.frame, to a tiledb array." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -171,7 +171,8 @@ provided approrpiate column names.</p>
 considered as an initial draft.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='no'>uri</span> <span class='kw'>&lt;-</span> <span class='st'>"quickstart_sparse"</span>      <span class='co'>## as created by the other example</span>
 <span class='no'>arr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_array.html'>tiledb_array</a></span>(<span class='no'>uri</span>)        <span class='co'>## open array</span>
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='no'>arr</span>[]                     <span class='co'>## read current content</span>

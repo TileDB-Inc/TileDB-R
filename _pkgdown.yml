@@ -32,6 +32,9 @@ reference:
   - starts_with("tiledb_array_schema")
   - starts_with("allows_dups")
   - matches("r_to_tiledb_type")
+  - matches("tiledb_schema_get_names")
+  - matches("tiledb_schema_get_types")
+  - matches("tiledb_schema_set_names")
 - title: Attribute
   contents:
   - starts_with("tiledb_attr")
@@ -57,6 +60,10 @@ reference:
   - starts_with("dim")
   - ends_with("tiledb_dim-method")
   - ends_with("tiledb_dim")
+- title: Query
+  desc: query object functions
+  contents:
+  - starts_with("tiledb_query")
 - title: Group
   contents:
   - starts_with("tiledb_group")
@@ -73,6 +80,10 @@ reference:
   desc:  performance stat collection functions
   contents:
   - starts_with("tiledb_stats")
+- title: VFS
+  desc: virtual file system functions
+  contents:
+  - starts_with("tiledb_vfs")
 - title: DataFrame
   desc:  data.frame functionality functions
   contents:
@@ -85,3 +96,4 @@ reference:
   contents:
   - starts_with("tiledb_version")
   - matches("tiledb-package")
+  - matches("limitTileDBCores")
