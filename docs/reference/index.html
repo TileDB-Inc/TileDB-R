@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -665,6 +665,18 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="r_to_tiledb_type.html">r_to_tiledb_type()</a></code> </p>
         </td>
         <td><p>Look up TileDB type corresponding to the type of an R object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_schema_get_names.html">tiledb_schema_get_names()</a></code> </p>
+        </td>
+        <td><p>Get all Dimension and Attribute Names</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_schema_get_types.html">tiledb_schema_get_types()</a></code> </p>
+        </td>
+        <td><p>Get all Dimension and Attribute Types</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -1094,6 +1106,151 @@ This is only valid for sparse arrays.</p></td>
     </tbody><tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-query" class="hasAnchor"><a href="#section-query" class="anchor"></a>Query</h2>
+          <p class="section-desc"><p>query object functions</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_query-class.html">tiledb_query-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB Query object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query.html">tiledb_query()</a></code> </p>
+        </td>
+        <td><p>Creates a 'tiledb_query' object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_add_range.html">tiledb_query_add_range()</a></code> </p>
+        </td>
+        <td><p>Set a range for a given query</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_add_range_with_type.html">tiledb_query_add_range_with_type()</a></code> </p>
+        </td>
+        <td><p>Set a range for a given query</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_alloc_buffer_ptr_char.html">tiledb_query_alloc_buffer_ptr_char()</a></code> </p>
+        </td>
+        <td><p>Allocate a Query buffer for reading a character attribute</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_alloc_buffer_ptr_char_subarray.html">tiledb_query_alloc_buffer_ptr_char_subarray()</a></code> </p>
+        </td>
+        <td><p>Allocate a Query buffer for reading a character attribute using a subarray</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_buffer_alloc_ptr.html">tiledb_query_buffer_alloc_ptr()</a></code> </p>
+        </td>
+        <td><p>Allocate a Query buffer for a given type</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_create_buffer_ptr.html">tiledb_query_create_buffer_ptr()</a></code> </p>
+        </td>
+        <td><p>Allocate and populate a Query buffer for a given object of a given data type.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_create_buffer_ptr_char.html">tiledb_query_create_buffer_ptr_char()</a></code> </p>
+        </td>
+        <td><p>Allocate and populate a Query buffer for writing the given char vector</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_finalize.html">tiledb_query_finalize()</a></code> </p>
+        </td>
+        <td><p>Finalize TileDB Query</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_buffer_char.html">tiledb_query_get_buffer_char()</a></code> </p>
+        </td>
+        <td><p>Retrieve content from a Query character buffer</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_buffer_ptr.html">tiledb_query_get_buffer_ptr()</a></code> </p>
+        </td>
+        <td><p>Retrieve content from a Query buffer</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_layout.html">tiledb_query_get_layout()</a></code> </p>
+        </td>
+        <td><p>Get TileDB Query layout</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_result_buffer_elements.html">tiledb_query_result_buffer_elements()</a></code> </p>
+        </td>
+        <td><p>Get TileDB Query result buffer elements</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_set_buffer.html">tiledb_query_set_buffer()</a></code> </p>
+        </td>
+        <td><p>Set TileDB Query buffer</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_set_buffer_ptr.html">tiledb_query_set_buffer_ptr()</a></code> </p>
+        </td>
+        <td><p>Assigns to a Query buffer for a given attribute</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_set_buffer_ptr_char.html">tiledb_query_set_buffer_ptr_char()</a></code> </p>
+        </td>
+        <td><p>Assign a buffer to a Query attribute</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_set_layout.html">tiledb_query_set_layout()</a></code> </p>
+        </td>
+        <td><p>Set TileDB Query layout</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_set_subarray.html">tiledb_query_set_subarray()</a></code> </p>
+        </td>
+        <td><p>Set subarray for TileDB Query object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_status.html">tiledb_query_status()</a></code> </p>
+        </td>
+        <td><p>Get TileDB Query status</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_submit.html">tiledb_query_submit()</a></code> </p>
+        </td>
+        <td><p>Submit TileDB Query</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_type.html">tiledb_query_type()</a></code> </p>
+        </td>
+        <td><p>Return TileDB Query type</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-group" class="hasAnchor"><a href="#section-group" class="anchor"></a>Group</h2>
           <p class="section-desc"></p>
         </th>
@@ -1254,6 +1411,115 @@ This is only valid for sparse arrays.</p></td>
     </tbody><tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-vfs" class="hasAnchor"><a href="#section-vfs" class="anchor"></a>VFS</h2>
+          <p class="section-desc"><p>virtual file system functions</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs-class.html">tiledb_vfs-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB VFS object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs.html">tiledb_vfs()</a></code> </p>
+        </td>
+        <td><p>Creates a <code>tiledb_vfs</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_create_bucket.html">tiledb_vfs_create_bucket()</a></code> </p>
+        </td>
+        <td><p>Create a VFS Bucket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_create_dir.html">tiledb_vfs_create_dir()</a></code> </p>
+        </td>
+        <td><p>Create a VFS Directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_empty_bucket.html">tiledb_vfs_empty_bucket()</a></code> </p>
+        </td>
+        <td><p>Empty a VFS Bucket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_file_size.html">tiledb_vfs_file_size()</a></code> </p>
+        </td>
+        <td><p>Return VFS File Size</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_is_bucket.html">tiledb_vfs_is_bucket()</a></code> </p>
+        </td>
+        <td><p>Check for VFS Bucket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_is_dir.html">tiledb_vfs_is_dir()</a></code> </p>
+        </td>
+        <td><p>Test for VFS Directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_is_empty_bucket.html">tiledb_vfs_is_empty_bucket()</a></code> </p>
+        </td>
+        <td><p>Check for empty VFS Bucket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_is_file.html">tiledb_vfs_is_file()</a></code> </p>
+        </td>
+        <td><p>Test for VFS File</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_move_dir.html">tiledb_vfs_move_dir()</a></code> </p>
+        </td>
+        <td><p>Move (or rename) a VFS Directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_move_file.html">tiledb_vfs_move_file()</a></code> </p>
+        </td>
+        <td><p>Move (or rename) a VFS File</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_remove_bucket.html">tiledb_vfs_remove_bucket()</a></code> </p>
+        </td>
+        <td><p>Remove a VFS Bucket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_remove_dir.html">tiledb_vfs_remove_dir()</a></code> </p>
+        </td>
+        <td><p>Remove a VFS Directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_remove_file.html">tiledb_vfs_remove_file()</a></code> </p>
+        </td>
+        <td><p>Remove a VFS File</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_touch.html">tiledb_vfs_touch()</a></code> </p>
+        </td>
+        <td><p>Touch a VFS URI Resource</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-dataframe" class="hasAnchor"><a href="#section-dataframe" class="anchor"></a>DataFrame</h2>
           <p class="section-desc"><p>data.frame functionality functions</p></p>
         </th>
@@ -1342,6 +1608,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb-package.html">tiledb-package</a></code> </p>
         </td>
         <td><p>tiledb - Interface to the TileDB Storage Manager API</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="limitTileDBCores.html">limitTileDBCores()</a></code> </p>
+        </td>
+        <td><p>Limit TileDB core use to a given number of cores</p></td>
       </tr>
     </tbody>
     </table>

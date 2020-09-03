@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R], [0.7.1])
+AC_INIT([TileDB-R], [0.8.0])
 
 ## this has to come early to affect other queries involving R
 : ${R_HOME=`R RHOME`}

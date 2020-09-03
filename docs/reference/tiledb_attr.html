@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -168,7 +168,8 @@ that this is a <em>required</em> parameter.</p></td>
     <p><code>tiledb_dim</code> object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"GZIP"</span>)))
+    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
+<span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"GZIP"</span>)))
 <span class='no'>attr</span> <span class='kw'>&lt;-</span> <span class='fu'>tiledb_attr</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"a1"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>,
                     <span class='kw'>filter_list</span> <span class='kw'>=</span> <span class='no'>flt</span>)
 <span class='no'>attr</span></div></pre>

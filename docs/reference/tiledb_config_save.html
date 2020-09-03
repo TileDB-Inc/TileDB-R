@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -149,7 +149,8 @@
     <p>path to created config file</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>()
+    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
+<span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>()
 <span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"sm.tile_cache_size"</span> <span class='kw'>=</span> <span class='st'>"10"</span>))
 <span class='no'>pth</span> <span class='kw'>&lt;-</span> <span class='fu'>tiledb_config_save</span>(<span class='no'>cfg</span>, <span class='no'>tmp</span>)
 
@@ -160,6 +161,7 @@
 #&gt; sm.check_coord_dups true
 #&gt; sm.check_coord_oob true
 #&gt; sm.check_global_order true
+#&gt; sm.compute_concurrency_level 12
 #&gt; sm.consolidation.amplification 1.0
 #&gt; sm.consolidation.buffer_size 50000000
 #&gt; sm.consolidation.mode fragments
@@ -169,13 +171,12 @@
 #&gt; sm.consolidation.steps 4294967295
 #&gt; sm.dedup_coords false
 #&gt; sm.enable_signal_handlers true
+#&gt; sm.io_concurrency_level 12
 #&gt; sm.memory_budget 5368709120
 #&gt; sm.memory_budget_var 10737418240
-#&gt; sm.num_async_threads 1
-#&gt; sm.num_reader_threads 12
 #&gt; sm.num_tbb_threads -1
-#&gt; sm.num_writer_threads 12
 #&gt; sm.skip_checksum_validation false
+#&gt; sm.sub_partitioner_memory_budget 0
 #&gt; sm.tile_cache_size 10
 #&gt; sm.vacuum.mode fragments
 #&gt; vfs.azure.block_list_block_size 5242880
@@ -184,13 +185,14 @@
 #&gt; vfs.azure.use_https true
 #&gt; vfs.file.enable_filelocks true
 #&gt; vfs.file.max_parallel_ops 12
+#&gt; vfs.file.posix_directory_permissions 755
+#&gt; vfs.file.posix_file_permissions 644
 #&gt; vfs.gcs.max_parallel_ops 12
 #&gt; vfs.gcs.multi_part_size 5242880
 #&gt; vfs.gcs.use_multi_part_upload true
 #&gt; vfs.min_batch_gap 512000
 #&gt; vfs.min_batch_size 20971520
 #&gt; vfs.min_parallel_size 10485760
-#&gt; vfs.num_threads 12
 #&gt; vfs.s3.connect_max_tries 5
 #&gt; vfs.s3.connect_scale_factor 25
 #&gt; vfs.s3.connect_timeout_ms 3000
@@ -198,7 +200,7 @@
 #&gt; vfs.s3.max_parallel_ops 12
 #&gt; vfs.s3.multipart_part_size 5242880
 #&gt; vfs.s3.proxy_port 0
-#&gt; vfs.s3.proxy_scheme https
+#&gt; vfs.s3.proxy_scheme http
 #&gt; vfs.s3.region us-east-1
 #&gt; vfs.s3.request_timeout_ms 3000
 #&gt; vfs.s3.scheme https

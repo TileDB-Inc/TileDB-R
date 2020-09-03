@@ -24,7 +24,7 @@ notebook](https://tiledb-inc.github.io/TileDB-R/documentation.nb.html). Document
 itself is [also available](https://docs.tiledb.com/main/).
 
 Several "quickstart" examples that are discussed on the website are available in the
-[examples](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/) directory. This
+[examples](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples) directory. This
 vignette discusses similar examples.
 
 In the following examples, the URIs describing arrays point to local file system object. When TileDB
