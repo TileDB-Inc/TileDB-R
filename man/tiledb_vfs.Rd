@@ -7,9 +7,9 @@
 tiledb_vfs(config = NULL, ctx = tiledb_get_context())
 }
 \arguments{
-\item{config}{(optonal) character vector of config parameter names, values}
+\item{config}{(optional) character vector of config parameter names, values}
 
-\item{ctx}{(optonal) A TileDB Ctx object}
+\item{ctx}{(optional) A TileDB Ctx object}
 }
 \value{
 \code{tiledb_vfs} object

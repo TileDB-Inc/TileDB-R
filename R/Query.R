@@ -31,7 +31,7 @@ setClass("tiledb_query",
 #'
 #' @param array A TileDB Array object
 #' @param type A character value that must be one of 'READ' or 'WRITE'
-#' @param ctx (optonal) A TileDB Ctx object
+#' @param ctx (optional) A TileDB Ctx object
 #' @return 'tiledb_query' object
 #' @export tiledb_query
 tiledb_query <- function(array, type = c("READ", "WRITE"), ctx = tiledb_get_context()) {

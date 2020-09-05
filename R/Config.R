@@ -37,7 +37,7 @@ tiledb_config.from_ptr <- function(ptr) {
 
 #' Creates a `tiledb_config` object
 #'
-#' @param config (optonal) character vector of config parameter names, values
+#' @param config (optional) character vector of config parameter names, values
 #' @return `tiledb_config` object
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
