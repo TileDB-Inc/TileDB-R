@@ -1850,6 +1850,11 @@ bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
       array->put_metadata(key.c_str(), TILEDB_INT8, ints.size(), ints.data());
       break;
     }
+    case RAWSXP: {
+      Rcpp::RawVector v(obj);
+      array->put_metadata(key.c_str(), TILEDB_CHAR, v.size(), v.begin());
+      break;
+    }
     default: {
       Rcpp::stop("No support (yet) for type '%d'.", TYPEOF(obj));
       break; // not reached
@@ -1896,7 +1901,11 @@ SEXP _metadata_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num, con
     size_t n = static_cast<size_t>(v_num);
     for (size_t i=0; i<n; i++) vec[i] = static_cast<double>(fvec[i]);
     return(vec);
-  } else if (v_type == TILEDB_CHAR || v_type == TILEDB_STRING_ASCII) {
+  } else if (v_type == TILEDB_CHAR) {
+    Rcpp::RawVector vec(v_num);
+    std::memcpy(vec.begin(), v, v_num*sizeof(char));
+    return(vec);
+  } else if (v_type == TILEDB_STRING_ASCII) {
     std::string s(static_cast<const char*>(v), v_num);
     return(Rcpp::wrap(s));
   } else if (v_type == TILEDB_INT8) {
