@@ -11,7 +11,7 @@ tiledb_query(array, type = c("READ", "WRITE"), ctx = tiledb_get_context())
 
 \item{type}{A character value that must be one of 'READ' or 'WRITE'}
 
-\item{ctx}{(optonal) A TileDB Ctx object}
+\item{ctx}{(optional) A TileDB Ctx object}
 }
 \value{
 'tiledb_query' object

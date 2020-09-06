@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/azure-devops/build/tiledb-inc/836549eb-f74a-4986-a18f-7fbba6bbb5f0/24/master?label=Azure%20Pipelines&logo=azure-pipelines&style=flat-square)](https://dev.azure.com/TileDB-Inc/CI/_build/latest?definitionId=24&branchName=master)
 ![R-CMD-check](https://github.com/TileDB-Inc/TileDB-R/workflows/R-CMD-check/badge.svg)
+[![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
 
 # TileDB-R
 
@@ -18,12 +19,16 @@ API](https://docs.tiledb.com/main/).
 
 ## Installation
 
-TileDB Embedded needs to be present, and can to be installed first (from a package or from source)
-for the TileDB R package to build and link correctly. If no system installation is found, a
-precompiled shared library is used during the installation of this R package.
+TileDB Embedded needs to be present, and can be installed first (from a package or from source) for
+the TileDB R package to build and link correctly. Alternatively, if no system installation is found,
+a precompiled shared library is used during the installation of this R package.
 
-As the TileDB R package has not been published on [CRAN](https://cran.r-project.org/), it must be
-installed from source.
+The TileDB R package has been published on [CRAN](https://cran.r-project.org/) and be
+installed directly via
+
+    > install.packages("tiledb")
+
+as usual.
 
 The most recent released version can be installed from
 [Github](https://github.com/TileDB-Inc/TileDB-R) using the package

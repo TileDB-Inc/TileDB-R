@@ -65,7 +65,7 @@ setContext <- function(ctx) tiledb_set_context(ctx)
 
 #' Creates a `tiledb_ctx` object
 #'
-#' @param config (optonal) character vector of config parameter names, values
+#' @param config (optional) character vector of config parameter names, values
 #' @param cached (optional) logical switch to force new creation
 #' @return `tiledb_ctx` object
 #' @examples

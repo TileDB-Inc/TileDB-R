@@ -7,7 +7,7 @@
 tiledb_ctx(config = NULL, cached = TRUE)
 }
 \arguments{
-\item{config}{(optonal) character vector of config parameter names, values}
+\item{config}{(optional) character vector of config parameter names, values}
 
 \item{cached}{(optional) logical switch to force new creation}
 }

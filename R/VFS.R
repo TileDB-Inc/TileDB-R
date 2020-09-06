@@ -29,8 +29,8 @@ setClass("tiledb_vfs",
 
 #' Creates a `tiledb_vfs` object
 #'
-#' @param config (optonal) character vector of config parameter names, values
-#' @param ctx (optonal) A TileDB Ctx object
+#' @param config (optional) character vector of config parameter names, values
+#' @param ctx (optional) A TileDB Ctx object
 #' @return `tiledb_vfs` object
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
