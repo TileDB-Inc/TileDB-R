@@ -7,7 +7,7 @@
 tiledb_config(config = NA_character_)
 }
 \arguments{
-\item{config}{(optonal) character vector of config parameter names, values}
+\item{config}{(optional) character vector of config parameter names, values}
 }
 \value{
 \code{tiledb_config} object
