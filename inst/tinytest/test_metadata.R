@@ -128,6 +128,12 @@ expect_true(tiledb_put_metadata(arr, "char", vec))
 close_and_reopen(arr, "READ")
 expect_equal(tiledb_get_metadata(arr, "char"), vec)
 
+vec <- c(0x10, 0x20, 0x30, 0x40, 0x80)
+close_and_reopen(arr, "WRITE")
+expect_true(tiledb_put_metadata(arr, "raw", vec))
+close_and_reopen(arr, "READ")
+expect_equal(tiledb_get_metadata(arr, "raw"), vec)
+
 vec <- c(TRUE, FALSE, TRUE)
 close_and_reopen(arr, "WRITE")
 expect_true(tiledb_put_metadata(arr, "lvec", vec))
