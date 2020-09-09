@@ -21,8 +21,8 @@ unlink_and_create_simple <- function(tmp) {
 
   arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
 
-  tiledb:::libtiledb_array_close(arr@ptr)
-  tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "WRITE")
+  tiledb_array_close(arr)
+  tiledb_array_open(arr, "WRITE")
 
   ## write one record directly to (text) URI
   tiledb_put_metadata(arr, "vec", c(1.1, 2.2, 3.3))
@@ -32,21 +32,21 @@ unlink_and_create_simple <- function(tmp) {
 
 unlink_and_create_ptr <- function(tmp) {
   arr <- unlink_and_create_simple(tmp)
-  tiledb:::libtiledb_array_close(arr@ptr)
+  tiledb_array_close(arr)
 
   ## write one record via ptr
-  arrW <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "WRITE")
-  tiledb:::libtiledb_array_put_metadata(arrW, "txt", "the quick brown fox")
-  tiledb:::libtiledb_array_close(arrW)
+  arr <- tiledb_array_open(arr, "WRITE")
+  tiledb_put_metadata(arr, "txt", "the quick brown fox")
+  tiledb_array_close(arr)
 
-  arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
+  arr <- tiledb_array_open(arr, "READ")
   ##return(arrR)
   arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
 }
 
 close_and_reopen <- function(arr, txt) {
-  res <- tiledb:::libtiledb_array_close(arr@ptr)
-  res <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, txt)
+  res <- tiledb_array_close(arr)
+  res <- tiledb_array_open(arr, txt)
 }
 
 ## infrastructure
@@ -62,7 +62,7 @@ close_and_reopen <- function(arr, txt) {
 #test_that("Can check presence of metadata", {
 arr <- unlink_and_create_ptr(tmp)
 
-arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
+arr <- tiledb_array_open(arr, "READ")
 
 expect_error(tiledb_has_metadata(NULL, ""))
 expect_false(tiledb_has_metadata(arr, ""))
@@ -75,7 +75,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #test_that("Can retrieve count of metadata", {
 arr <- unlink_and_create_ptr(tmp)
 
-arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
+arr <- tiledb_array_open(arr, "READ")
 
 expect_error(tiledb_num_metadata(NULL))
 expect_equal(tiledb_num_metadata(arr), 2)
@@ -85,7 +85,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #test_that("Can get metadata", {
 arr <- unlink_and_create_ptr(tmp)
 
-arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
+arr <- tiledb_array_open(arr, "READ")
 
 expect_error(tiledb_get_metadata(NULL, ""))
 expect_equal(tiledb_get_metadata(arr, ""), NULL)
@@ -97,13 +97,13 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #test_that("Can put metadata", {
 arr <- unlink_and_create_ptr(tmp)
 
-tiledb:::libtiledb_array_close(arr@ptr)
-arrW <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "WRITE")
+tiledb_array_close(arr)
+arr <- tiledb_array_open(arr, "WRITE")
 
 expect_true(tiledb_put_metadata(arr, "foo", "the quick brown fox"))
 expect_error(tiledb_put_metadata(arr, "foo", list(a=c(1,2,3), b=c("a", "b"))))
 
-tiledb:::libtiledb_array_close(arr@ptr)
+tiledb_array_close(arr)
 
 unlink(tmp, recursive = TRUE, force = TRUE)
 #})
@@ -140,7 +140,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #test_that("Can get by index", {
 arr <- unlink_and_create_ptr(tmp)
 
-arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
+arr <- tiledb_array_open(arr, "READ")
 
 expect_error(tiledb:::libtiledb_get_metadata_from_index(NULL, ""))
 expect_error(tiledb:::libtiledb_get_metadata_from_index(arr@ptr, -1))
@@ -154,7 +154,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #test_that("Can get all", {
 arr <- unlink_and_create_ptr(tmp)
 
-arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
+arr <- tiledb_array_open(arr, "READ")
 
 res <- tiledb_get_all_metadata(arr)
 expect_equal(length(res), 2)
@@ -165,7 +165,7 @@ expect_true("txt" %in% names(res))
 #test_that("Can delete by key", {
 arr <- unlink_and_create_ptr(tmp)
 
-arrR <- tiledb:::libtiledb_array_open_with_ptr(arr@ptr, "READ")
+arrR <- tiledb_array_open(arr, "READ")
 
 ## should be two before we add
 expect_equal(tiledb_num_metadata(arr), 2)

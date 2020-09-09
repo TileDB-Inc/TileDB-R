@@ -20,9 +20,13 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
+.isArray <- function(arr) {
+  is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array")
+}
 
-.isArray <- function(arr) is(arr, "tiledb_sparse") || is(arr, "tiledb_dense")
-.assertArray <- function(arr) stopifnot(is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
+.assertArray <- function(arr) {
+  stopifnot(is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array"))
+}
 
 ##' Test if TileDB Array has Metadata
 ##'
@@ -32,8 +36,8 @@
 ##'   metdata of the given array
 ##' @export
 tiledb_has_metadata <- function(arr, key) {
-  if (!is(arr, "tiledb_sparse") && !is(arr, "tiledb_dense")) {
-    stop("Argument must be a TileDB (dense or sparse) array.", call.=FALSE)
+  if (!.isArray(arr)) {
+    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
   }
 
   ## Now deal with (default) case of an array object
@@ -52,8 +56,8 @@ tiledb_has_metadata <- function(arr, key) {
 ##' @return A integer variable with the number of Metadata objects
 ##' @export
 tiledb_num_metadata <- function(arr) {
-  if (!is(arr, "tiledb_sparse") && !is(arr, "tiledb_dense")) {
-    stop("Argument must be a TileDB (dense or sparse) array.", call.=FALSE)
+  if (!.isArray(arr)) {
+    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
   }
 
   ## Now deal with (default) case of an array object
@@ -74,8 +78,8 @@ tiledb_num_metadata <- function(arr) {
 ##' or \sQuote{NULL} if none found.
 ##' @export
 tiledb_get_metadata <- function(arr, key) {
-  if (!is(arr, "tiledb_sparse") && !is(arr, "tiledb_dense")) {
-    stop("Argument must be a TileDB (dense or sparse) array.", call.=FALSE)
+  if (!.isArray(arr)) {
+    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
   }
 
   ## Now deal with (default) case of an array object
@@ -99,8 +103,8 @@ tiledb_get_metadata <- function(arr, key) {
 ##' @return A boolean value indicating success
 ##' @export
 tiledb_put_metadata <- function(arr, key, val) {
-  if (!is(arr, "tiledb_sparse") && !is(arr, "tiledb_dense")) {
-    stop("Argument must be a TileDB (dense or sparse) array.", call.=FALSE)
+  if (!.isArray(arr)) {
+    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
   }
 
   ## Now deal with (default) case of an array object
@@ -120,8 +124,8 @@ tiledb_put_metadata <- function(arr, key, val) {
 ##' @return A object stored in the Metadata under the given key
 ##' @export
 tiledb_get_all_metadata <- function(arr) {
-  if (!is(arr, "tiledb_sparse") && !is(arr, "tiledb_dense")) {
-    stop("Argument must be a TileDB (dense or sparse) array.", call.=FALSE)
+  if (!.isArray(arr)) {
+    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
   }
 
   ## Now deal with (default) case of an array object
@@ -159,8 +163,8 @@ print.tiledb_metadata <- function(x, width=NULL, ...) {
 ##' @return A boolean indicating success
 ##' @export
 tiledb_delete_metadata <- function(arr, key) {
-  if (!is(arr, "tiledb_sparse") && !is(arr, "tiledb_dense")) {
-    stop("ctx argument must be a TileDB (dense or sparse) array.", call.=FALSE)
+  if (!.isArray(arr)) {
+    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
   }
 
   ## Now deal with (default) case of an array object
