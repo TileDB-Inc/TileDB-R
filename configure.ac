@@ -26,6 +26,8 @@
 AC_PREREQ([2.69])
 AC_INIT([TileDB-R], [0.8.0])
 
+## -- Part 1: Setup -------------------------------------------------------------
+##
 ## this has to come early to affect other queries involving R
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
@@ -70,7 +72,11 @@ fi
 ## Various Linux distribution have been tested and work, as do various macOS releases
 uname=`uname`
 #AC_MSG_RESULT([running on ${uname} (${on_macos})...])
+## Also look at hardware platform aka 'machine' description
+machine=`uname -m`
 
+## -- Part 2: User preferences --------------------------------------------------
+##
 ## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
 ## (and sets by autoconf standards the 'enable_building' variable to 'yes' or 'no')
 AC_ARG_ENABLE([building],
@@ -122,6 +128,8 @@ origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
+## -- Part 3: Check for TileDB --------------------------------------------------
+##
 ## Check for TileDB -- either just probing the header, or by compilations (~ 1 second)
 checkTileDBViaHeader="yes"
 
@@ -138,13 +146,8 @@ else
                                        [have_tiledb="no"; AC_MSG_RESULT(no, need to install TileDB)])
 fi
 
-## On Solaris can only build from source
-## But this does not currently work so we will bail out with error instead
-## This can be overridden by selecting --enable-building but is not default
-#if test x"${uname}" = x"SunOS"; then
-#     enable_building="yes"
-#fi
-
+## -- Part 4: Branch on Setup and Choices ---------------------------------------
+##
 ## to test one can force some selections here
 #have_tiledb="no"
 #enable_building="yes"
@@ -169,6 +172,7 @@ if test x"${have_tiledb}" = x"no"; then
     ##   - on macOS or Linux a 'fast and slim' build with external (pinned) library
     ##   - but if a download URL given, use it
     ##   - otherwise error
+    ##   - but also check we're on x86_64 before downloading
     else
         ## download URL given by user
         if test x"${TILEDB_LIB_URL}" != x; then
@@ -177,7 +181,7 @@ if test x"${have_tiledb}" = x"no"; then
             ## and downloads as the same file name
             cd inst && ../tools/fetchTileDB.sh url ${TILEDB_LIB_URL} && cd ..
 
-        elif test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
+        elif test x"${machine}" = x"x86_64" && test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
             AC_MSG_RESULT([downloading TileDB library...])
 
             osrel=`tools/getOsRelease.sh`
@@ -191,7 +195,7 @@ if test x"${have_tiledb}" = x"no"; then
 
         ## default case: be unhappy
         else
-            AC_MSG_ERROR([currently unsupported system ${uname}])
+            AC_MSG_ERROR([currently unsupported system ${uname} on ${machine}])
         fi
 
     fi
