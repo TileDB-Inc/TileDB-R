@@ -17,7 +17,7 @@ if (osarg == "url" && length(argv) <= 1) {
 }
 urlarg <- argv[2]
 
-ver <- "2.1.0-rc5"
+ver <- "2.1.0"
 sha <- "1073faa"
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
 dlurl <- switch(osarg,
