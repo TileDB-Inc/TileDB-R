@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructs a <code>tiledb_filter_list</code> object — tiledb_filter_list • tiledb</title>
+<title>Constructs a tiledb_filter_list object — tiledb_filter_list • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Constructs a <code>tiledb_filter_list</code> object — tiledb_filter_list" />
+<meta property="og:title" content="Constructs a tiledb_filter_list object — tiledb_filter_list" />
 <meta property="og:description" content="Constructs a tiledb_filter_list object" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@
     <p>Constructs a <code>tiledb_filter_list</code> object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_filter_list</span>(<span class='kw'>filters</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(), <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span>())</pre>
+    <pre class="usage"><span class='fu'>tiledb_filter_list</span><span class='op'>(</span>filters <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>, ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,13 +149,14 @@
     <p>tiledb_filter_list object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
-<span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>)
-<span class='fu'><a href='tiledb_filter_set_option.html'>tiledb_filter_set_option</a></span>(<span class='no'>flt</span>, <span class='st'>"COMPRESSION_LEVEL"</span>, <span class='fl'>5</span>)
-<span class='no'>filter_list</span> <span class='kw'>&lt;-</span> <span class='fu'>tiledb_filter_list</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>flt</span>))
-<span class='no'>filter_list</span></div><div class='output co'>#&gt; An object of class "tiledb_filter_list"
+    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>flt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span><span class='op'>(</span><span class='st'>"ZSTD"</span><span class='op'>)</span>
+<span class='fu'><a href='tiledb_filter_set_option.html'>tiledb_filter_set_option</a></span><span class='op'>(</span><span class='va'>flt</span>, <span class='st'>"COMPRESSION_LEVEL"</span>, <span class='fl'>5</span><span class='op'>)</span>
+<span class='va'>filter_list</span> <span class='op'>&lt;-</span> <span class='fu'>tiledb_filter_list</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>flt</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>filter_list</span>
+</div><div class='output co'>#&gt; An object of class "tiledb_filter_list"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x5588dfaf2400&gt;
+#&gt; &lt;pointer: 0x55fa575f2130&gt;
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
@@ -173,7 +174,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

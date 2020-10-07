@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code> — filter_list,tiledb_attr-method • tiledb</title>
+<title>Returns the tiledb_filter_list object associated with the given tiledb_attr — filter_list,tiledb_attr-method • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code> — filter_list,tiledb_attr-method" />
+<meta property="og:title" content="Returns the tiledb_filter_list object associated with the given tiledb_attr — filter_list,tiledb_attr-method" />
 <meta property="og:description" content="Returns the tiledb_filter_list object associated with the given tiledb_attr" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for tiledb_attr</span>
-<span class='fu'><a href='generics.html'>filter_list</a></span>(<span class='no'>object</span>)</pre>
+<span class='fu'><a href='domain.html'>filter_list</a></span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,11 +146,12 @@
     <p>a tiledb_filter_list object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
-<span class='no'>attr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>, <span class='kw'>filter_list</span><span class='kw'>=</span><span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"ZSTD"</span>))))
-<span class='fu'><a href='generics.html'>filter_list</a></span>(<span class='no'>attr</span>)</div><div class='output co'>#&gt; An object of class "tiledb_filter_list"
+    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>attr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"INT32"</span>, filter_list<span class='op'>=</span><span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span><span class='op'>(</span><span class='st'>"ZSTD"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='domain.html'>filter_list</a></span><span class='op'>(</span><span class='va'>attr</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; An object of class "tiledb_filter_list"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x5588dd31ea60&gt;
+#&gt; &lt;pointer: 0x55fa558965f0&gt;
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
@@ -168,7 +169,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

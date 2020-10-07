@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
   <div class="contents col-md-9">
 
 
-<p><a href="https://dev.azure.com/TileDB-Inc/CI/_build/latest?definitionId=24&amp;branchName=master"><img src="https://img.shields.io/azure-devops/build/tiledb-inc/836549eb-f74a-4986-a18f-7fbba6bbb5f0/24/master?label=Azure%20Pipelines&amp;logo=azure-pipelines&amp;style=flat-square" alt="Build Status"></a> <img src="https://github.com/TileDB-Inc/TileDB-R/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></p>
+<p><a href="https://dev.azure.com/TileDB-Inc/CI/_build/latest?definitionId=24&amp;branchName=master"><img src="https://img.shields.io/azure-devops/build/tiledb-inc/836549eb-f74a-4986-a18f-7fbba6bbb5f0/24/master?label=Azure%20Pipelines&amp;logo=azure-pipelines&amp;style=flat-square" alt="Build Status"></a> <img src="https://github.com/TileDB-Inc/TileDB-R/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"><a href="https://cran.r-project.org/package=tiledb"><img src="https://www.r-pkg.org/badges/version/tiledb" alt="CRAN"></a></p>
 <div id="tiledb-r" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#tiledb-r" class="anchor"></a>TileDB-R</h1></div>
@@ -102,30 +102,32 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>TileDB Embedded needs to be present, and can to be installed first (from a package or from source) for the TileDB R package to build and link correctly. If no system installation is found, a precompiled shared library is used during the installation of this R package.</p>
-<p>As the TileDB R package has not been published on <a href="https://cran.r-project.org/">CRAN</a>, it must be installed from source.</p>
+<p>TileDB Embedded needs to be present, and can be installed first (from a package or from source) for the TileDB R package to build and link correctly. Alternatively, if no system installation is found, a precompiled shared library is used during the installation of this R package.</p>
+<p>The TileDB R package has been published on <a href="https://cran.r-project.org/">CRAN</a> and be installed directly via</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(<span class="st">"tiledb"</span>)</span></code></pre></div>
+<p>as usual.</p>
 <p>The most recent released version can be installed from <a href="https://github.com/TileDB-Inc/TileDB-R">Github</a> using the package <a href="https://cran.r-project.org/package=remotes">remotes</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">"remotes"</span>,<span class="dt">quietly=</span><span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">"remotes"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>...</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(tiledb)</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">tiledb_version</span>()</span>
-<span id="cb1-6"><a href="#cb1-6"></a>major minor patch</span>
-<span id="cb1-7"><a href="#cb1-7"></a>    <span class="dv">2</span>     <span class="dv">0</span>     <span class="dv">8</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">help</span>(<span class="dt">package=</span>tiledb)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">"remotes"</span>,<span class="dt">quietly=</span><span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">"remotes"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>...</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(tiledb)</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">tiledb_version</span>()</span>
+<span id="cb2-6"><a href="#cb2-6"></a>major minor patch</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="dv">2</span>     <span class="dv">0</span>     <span class="dv">8</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">help</span>(<span class="dt">package=</span>tiledb)</span></code></pre></div>
 <p>If the TileDB library is installed in a custom location, you need to pass the explicit path:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>,</span>
-<span id="cb2-2"><a href="#cb2-2"></a>      <span class="dt">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>      <span class="dt">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"</span>)</span></code></pre></div>
 <p>Note that the TileDB R package is developed and tested against the latest stable (<code>v2.0.x</code>) version of TileDB, but should also build against the newest development version.</p>
 </div>
 <div id="quick-links" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quick-links" class="anchor"></a>Quick Links</h2>
 <ul>
-<li><a href="https://docs.tiledb.com/developer/installation">TileDB Installation</a></li>
-<li><a href="https://docs.tiledb.com/developer/quickstart">TileDB Quickstart</a></li>
-<li><a href="https://tiledb-inc.github.io/TileDB-R/">TileDB R Reference Docs</a></li>
-<li><a href="https://forum.tiledb.com/">TileDB Support</a></li>
+<li><a href="https://docs.tiledb.com/main/solutions/tiledb-embedded/installation/quick-install">TileDB Installation</a></li>
+<li><a href="https://tiledb-inc.github.io/TileDB-R/">TileDB R Package Docs</a></li>
+<li><a href="https://docs.tiledb.com/main/solutions/tiledb-embedded/api-usage">Full documentation for all APIs and integrations</a></li>
+<li><a href="https://forum.tiledb.com/">TileDB Support Forum</a></li>
 </ul>
 </div>
 <div id="copyright" class="section level2">
@@ -184,7 +186,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
