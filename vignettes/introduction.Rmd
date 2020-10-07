@@ -262,8 +262,7 @@ numb
 [examples/](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples) directory.
 
 TileDB itself has extensive [installation](https://docs.tiledb.com/developer/installation),
-[quickstart](https://docs.tiledb.com/developer/quickstart), and [overall
-documentation](https://docs.tiledb.com/developer/) as well as a [support forum](https://forum.tiledb.com/).
+and [overall documentation](https://docs.tiledb.com/developer/) as well as a [support forum](https://forum.tiledb.com/).
 
 [ex_1]: https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R
 [ex_2]: https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_2.R

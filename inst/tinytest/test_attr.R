@@ -3,6 +3,8 @@ library(tiledb)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
+isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
+
 #test_that("tiledb_attr constructor works", {
 a1 <- tiledb_attr(type = "FLOAT64")
 expect_true(is(a1, "tiledb_attr"))
@@ -50,8 +52,9 @@ tiledb:::libtiledb_attribute_set_cell_val_num(attrs@ptr, NA_integer_)
 expect_true(is.na(tiledb::cell_val_num(attrs)))
 #})
 
-t#est_that("tiledb_attr set fill", {
+#test_that("tiledb_attr set fill", {
 if (tiledb_version(TRUE) < "2.1.0") exit_file("Needs TileDB 2.1.* or later")
+if (isOldWindows) exit_file("skip remainder of this file on old Windows releases")
 
 ## test for default
 dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))
