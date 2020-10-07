@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convert a <code>tiledb_config</code> object to a R data.frame — as.data.frame.tiledb_config • tiledb</title>
+<title>Convert a tiledb_config object to a R data.frame — as.data.frame.tiledb_config • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Convert a <code>tiledb_config</code> object to a R data.frame — as.data.frame.tiledb_config" />
+<meta property="og:title" content="Convert a tiledb_config object to a R data.frame — as.data.frame.tiledb_config" />
 <meta property="og:description" content="Convert a tiledb_config object to a R data.frame" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for tiledb_config</span>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,8 +150,9 @@
     <p>a data.frame wth parameter, value columns</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span>()
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>cfg</span>)</div><div class='output co'>#&gt;                               parameter                  value
+    <pre class="examples"><div class='input'><span class='va'>cfg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>cfg</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                               parameter                  value
 #&gt; 1                 config.env_var_prefix                TILEDB_
 #&gt; 2                  rest.http_compressor                    any
 #&gt; 3                   rest.server_address https://api.tiledb.com
@@ -198,29 +199,31 @@
 #&gt; 44                    vfs.min_batch_gap                 512000
 #&gt; 45                   vfs.min_batch_size               20971520
 #&gt; 46                vfs.min_parallel_size               10485760
-#&gt; 47             vfs.s3.aws_access_key_id                       
-#&gt; 48         vfs.s3.aws_secret_access_key                       
-#&gt; 49             vfs.s3.aws_session_token                       
-#&gt; 50                       vfs.s3.ca_file                       
-#&gt; 51                       vfs.s3.ca_path                       
-#&gt; 52             vfs.s3.connect_max_tries                      5
-#&gt; 53          vfs.s3.connect_scale_factor                     25
-#&gt; 54            vfs.s3.connect_timeout_ms                   3000
-#&gt; 55             vfs.s3.endpoint_override                       
-#&gt; 56                 vfs.s3.logging_level                    Off
-#&gt; 57              vfs.s3.max_parallel_ops                     12
-#&gt; 58           vfs.s3.multipart_part_size                5242880
-#&gt; 59                    vfs.s3.proxy_host                       
-#&gt; 60                vfs.s3.proxy_password                       
-#&gt; 61                    vfs.s3.proxy_port                      0
-#&gt; 62                  vfs.s3.proxy_scheme                   http
-#&gt; 63                vfs.s3.proxy_username                       
-#&gt; 64                        vfs.s3.region              us-east-1
-#&gt; 65            vfs.s3.request_timeout_ms                   3000
-#&gt; 66                        vfs.s3.scheme                  https
-#&gt; 67          vfs.s3.use_multipart_upload                   true
-#&gt; 68        vfs.s3.use_virtual_addressing                   true
-#&gt; 69                    vfs.s3.verify_ssl                   true</div><div class='input'>
+#&gt; 47            vfs.read_ahead_cache_size               10485760
+#&gt; 48                  vfs.read_ahead_size                 102400
+#&gt; 49             vfs.s3.aws_access_key_id                       
+#&gt; 50         vfs.s3.aws_secret_access_key                       
+#&gt; 51             vfs.s3.aws_session_token                       
+#&gt; 52                       vfs.s3.ca_file                       
+#&gt; 53                       vfs.s3.ca_path                       
+#&gt; 54             vfs.s3.connect_max_tries                      5
+#&gt; 55          vfs.s3.connect_scale_factor                     25
+#&gt; 56            vfs.s3.connect_timeout_ms                   3000
+#&gt; 57             vfs.s3.endpoint_override                       
+#&gt; 58                 vfs.s3.logging_level                    Off
+#&gt; 59              vfs.s3.max_parallel_ops                     12
+#&gt; 60           vfs.s3.multipart_part_size                5242880
+#&gt; 61                    vfs.s3.proxy_host                       
+#&gt; 62                vfs.s3.proxy_password                       
+#&gt; 63                    vfs.s3.proxy_port                      0
+#&gt; 64                  vfs.s3.proxy_scheme                   http
+#&gt; 65                vfs.s3.proxy_username                       
+#&gt; 66                        vfs.s3.region              us-east-1
+#&gt; 67            vfs.s3.request_timeout_ms                   3000
+#&gt; 68                        vfs.s3.scheme                  https
+#&gt; 69          vfs.s3.use_multipart_upload                   true
+#&gt; 70        vfs.s3.use_virtual_addressing                   true
+#&gt; 71                    vfs.s3.verify_ssl                   true</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -237,7 +240,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

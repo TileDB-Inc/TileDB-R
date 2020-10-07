@@ -1,3 +1,23 @@
+# Ongoing
+
+
+# 0.8.1
+
+* This release of the R package supports [TileDB 2.1.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.0), but has also been tested against the previous release [TileDB 2.0.8](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8).
+
+## Improvements
+
+* R-based metadata accessors have been extended to also support `tiledb_array` arrays (#169)
+
+* `configure` now also checks the hardware platform before attempting a download of a prebuilt library (#170)
+
+* `SystemRequirements:` in the `DESCRIPTION` file has been expanded (#170)
+
+## Bug Fixes
+
+* A typo in the manual page source, copied three more times, has been corrected (#167)
+
+
 # 0.8.0
 
 * This release of the R package supports [TileDB 2.0.8](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8), but has

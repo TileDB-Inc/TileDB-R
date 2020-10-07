@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contructs a <code>tiledb_attr</code> object — tiledb_attr • tiledb</title>
+<title>Contructs a tiledb_attr object — tiledb_attr • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Contructs a <code>tiledb_attr</code> object — tiledb_attr" />
+<meta property="og:title" content="Contructs a tiledb_attr object — tiledb_attr" />
 <meta property="og:description" content="Contructs a tiledb_attr object" />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -129,13 +129,13 @@
     <p>Contructs a <code>tiledb_attr</code> object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_attr</span>(
-  <span class='no'>name</span>,
-  <span class='no'>type</span>,
-  <span class='kw'>filter_list</span> <span class='kw'>=</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(),
-  <span class='kw'>ncells</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>tiledb_attr</span><span class='op'>(</span>
+  <span class='va'>name</span>,
+  <span class='va'>type</span>,
+  filter_list <span class='op'>=</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  ncells <span class='op'>=</span> <span class='fl'>1</span>,
+  ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,11 +168,13 @@ that this is a <em>required</em> parameter.</p></td>
     <p><code>tiledb_dim</code> object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
-<span class='no'>flt</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span>(<span class='st'>"GZIP"</span>)))
-<span class='no'>attr</span> <span class='kw'>&lt;-</span> <span class='fu'>tiledb_attr</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"a1"</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"INT32"</span>,
-                    <span class='kw'>filter_list</span> <span class='kw'>=</span> <span class='no'>flt</span>)
-<span class='no'>attr</span></div></pre>
+    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>flt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='tiledb_filter.html'>tiledb_filter</a></span><span class='op'>(</span><span class='st'>"GZIP"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>attr</span> <span class='op'>&lt;-</span> <span class='fu'>tiledb_attr</span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"a1"</span>, type <span class='op'>=</span> <span class='st'>"INT32"</span>,
+                    filter_list <span class='op'>=</span> <span class='va'>flt</span><span class='op'>)</span>
+<span class='va'>attr</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -188,7 +190,7 @@ that this is a <em>required</em> parameter.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

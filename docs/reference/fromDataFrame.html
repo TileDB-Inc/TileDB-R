@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a TileDB Dense Array from a given <code>data.frame</code> Object — fromDataFrame • tiledb</title>
+<title>Create a TileDB Dense Array from a given data.frame Object — fromDataFrame • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Create a TileDB Dense Array from a given <code>data.frame</code> Object — fromDataFrame" />
+<meta property="og:title" content="Create a TileDB Dense Array from a given data.frame Object — fromDataFrame" />
 <meta property="og:description" content="The supplied data.frame object is (currently) limited to integer,
 numeric, or character columns." />
 
@@ -73,7 +73,7 @@ numeric, or character columns." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@ numeric, or character columns." />
 numeric, or character columns.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fromDataFrame</span>(<span class='no'>obj</span>, <span class='no'>uri</span>)</pre>
+    <pre class="usage"><span class='fu'>fromDataFrame</span><span class='op'>(</span><span class='va'>obj</span>, <span class='va'>uri</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,16 +156,17 @@ the <code>data.frame</code>.  Each attribute will be a single column.</p>
 <p>At present, factor variable are converted to character.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>uri</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>()
+    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>uri</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='co'>## turn factor into character</span>
-<span class='no'>irisdf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span>(<span class='no'>iris</span>, <span class='no'>Species</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='no'>Species</span>))
-<span class='fu'>fromDataFrame</span>(<span class='no'>irisdf</span>, <span class='no'>uri</span>)
-<span class='no'>arr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_dense.html'>tiledb_dense</a></span>(<span class='no'>uri</span>, <span class='kw'>as.data.frame</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='no'>newdf</span> <span class='kw'>&lt;-</span> <span class='no'>arr</span>[]
-<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span>(<span class='no'>iris</span>, <span class='no'>newdf</span>)
-}</div></pre>
+<span class='va'>irisdf</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>Species</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>Species</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>fromDataFrame</span><span class='op'>(</span><span class='va'>irisdf</span>, <span class='va'>uri</span><span class='op'>)</span>
+<span class='va'>arr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_dense.html'>tiledb_dense</a></span><span class='op'>(</span><span class='va'>uri</span>, as.data.frame<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>newdf</span> <span class='op'>&lt;-</span> <span class='va'>arr</span><span class='op'>[</span><span class='op'>]</span>
+<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>newdf</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -181,7 +182,7 @@ the <code>data.frame</code>.  Each attribute will be a single column.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

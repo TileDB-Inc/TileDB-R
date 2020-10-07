@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructs a <code>tiledb_filter</code> object — tiledb_filter • tiledb</title>
+<title>Constructs a tiledb_filter object — tiledb_filter • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Constructs a <code>tiledb_filter</code> object — tiledb_filter" />
+<meta property="og:title" content="Constructs a tiledb_filter object — tiledb_filter" />
 <meta property="og:description" content="Available filters:
 &quot;NONE&quot;
 &quot;GZIP&quot;
@@ -85,7 +85,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -155,7 +155,7 @@
 
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_filter</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"NONE"</span>, <span class='kw'>ctx</span> <span class='kw'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span>())</pre>
+    <pre class="usage"><span class='fu'>tiledb_filter</span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"NONE"</span>, ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -179,10 +179,11 @@
 consult the TileDB docs for more information.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
-<span class='fu'>tiledb_filter</span>(<span class='st'>"ZSTD"</span>)</div><div class='output co'>#&gt; An object of class "tiledb_filter"
+    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>tiledb_filter</span><span class='op'>(</span><span class='st'>"ZSTD"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; An object of class "tiledb_filter"
 #&gt; Slot "ptr":
-#&gt; &lt;pointer: 0x5588df7c0720&gt;
+#&gt; &lt;pointer: 0x55fa524dcf30&gt;
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
@@ -200,7 +201,7 @@ consult the TileDB docs for more information.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

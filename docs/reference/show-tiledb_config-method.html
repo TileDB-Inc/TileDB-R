@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S4 method for tiledb_config</span>
-<span class='fu'>show</span>(<span class='no'>object</span>)</pre>
+<span class='fu'>show</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,9 +143,10 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ctx</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span>(<span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span>())
-<span class='no'>cfg</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span>()
-<span class='fu'>show</span>(<span class='no'>cfg</span>)</div><div class='output co'>#&gt; Config settings:
+    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>cfg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>show</span><span class='op'>(</span><span class='va'>cfg</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Config settings:
 #&gt; "config.env_var_prefix" : "TILEDB_"
 #&gt; "rest.http_compressor" : "any"
 #&gt; "rest.server_address" : "https://api.tiledb.com"
@@ -192,6 +193,8 @@
 #&gt; "vfs.min_batch_gap" : "512000"
 #&gt; "vfs.min_batch_size" : "20971520"
 #&gt; "vfs.min_parallel_size" : "10485760"
+#&gt; "vfs.read_ahead_cache_size" : "10485760"
+#&gt; "vfs.read_ahead_size" : "102400"
 #&gt; "vfs.s3.aws_access_key_id" : ""
 #&gt; "vfs.s3.aws_secret_access_key" : ""
 #&gt; "vfs.s3.aws_session_token" : ""
@@ -230,7 +233,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

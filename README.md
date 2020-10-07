@@ -53,10 +53,11 @@ of TileDB, but should also build against the newest development version.
 
 ## Quick Links
 
-- [TileDB Installation](https://docs.tiledb.com/developer/installation)
-- [TileDB Quickstart](https://docs.tiledb.com/developer/quickstart)
-- [TileDB R Reference Docs](https://tiledb-inc.github.io/TileDB-R/)
-- [TileDB Support](https://forum.tiledb.com/)
+- [TileDB Installation](https://docs.tiledb.com/main/solutions/tiledb-embedded/installation/quick-install)
+- [TileDB R Package Docs](https://tiledb-inc.github.io/TileDB-R/)
+- [Full documentation for all APIs and integrations](https://docs.tiledb.com/main/solutions/tiledb-embedded/api-usage)
+- [TileDB Support Forum](https://forum.tiledb.com/)
+
 
 ## Copyright
 
