@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.8.0
+Version: 0.8.1
 Title: Sparse and Dense Multidimensional Array Storage Engine for Data Science
 Author: TileDB, Inc.
 Copyright: TileDB, Inc.
