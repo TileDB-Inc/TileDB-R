@@ -1892,6 +1892,15 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_stats_reset
+void libtiledb_stats_reset();
+RcppExport SEXP _tiledb_libtiledb_stats_reset() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    libtiledb_stats_reset();
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_stats_dump
 void libtiledb_stats_dump(std::string path);
 RcppExport SEXP _tiledb_libtiledb_stats_dump(SEXP pathSEXP) {
@@ -2063,6 +2072,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_vfs_touch", (DL_FUNC) &_tiledb_libtiledb_vfs_touch, 2},
     {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
+    {"_tiledb_libtiledb_stats_reset", (DL_FUNC) &_tiledb_libtiledb_stats_reset, 0},
     {"_tiledb_libtiledb_stats_dump", (DL_FUNC) &_tiledb_libtiledb_stats_dump, 1},
     {NULL, NULL, 0}
 };
