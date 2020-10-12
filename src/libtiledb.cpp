@@ -2961,6 +2961,11 @@ void libtiledb_stats_disable() {
 }
 
 // [[Rcpp::export]]
+void libtiledb_stats_reset() {
+  tiledb::Stats::reset();
+}
+
+// [[Rcpp::export]]
 void libtiledb_stats_dump(std::string path = "") {
   if (path == "") {
     tiledb::Stats::dump();

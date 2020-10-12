@@ -24,14 +24,21 @@
 #' @concept stats
 #' @export
 tiledb_stats_enable <- function() {
-  libtiledb_stats_enable();
+  libtiledb_stats_enable()
 }
 
 #' Disable stats counters
 #' @concept stats
 #' @export
 tiledb_stats_disable <- function() {
-  libtiledb_stats_disable();
+  libtiledb_stats_disable()
+}
+
+#' Reset stats counters
+#' @concept stats
+#' @export
+tiledb_stats_reset <- function() {
+  libtiledb_stats_reset()
 }
 
 #' Dump stats to file
@@ -47,4 +54,10 @@ tiledb_stats_disable <- function() {
 #' @export
 tiledb_stats_dump <- function(path) {
   libtiledb_stats_dump(path)
+}
+
+#' @rdname tiledb_stats_dump
+#' @export
+tiledb_stats_print <- function() {
+  libtiledb_stats_dump("")
 }
