@@ -1,5 +1,13 @@
 # Ongoing
 
+* This release of the R package builds against [TileDB 2.1.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.0), but has also been tested against previous releases such as [TileDB 2.0.8](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8).
+
+## Improvements
+
+## Bug Fixes
+
+* The `tiledb_stats_reset()` function is now exported, and `tiledb_stats_print()` has been re-added as a wrapper to `tiledb_stats_dump()` (#174)
+
 
 # 0.8.1
 

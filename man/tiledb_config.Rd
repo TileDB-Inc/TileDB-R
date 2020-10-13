@@ -13,7 +13,12 @@ tiledb_config(config = NA_character_)
 \code{tiledb_config} object
 }
 \description{
-Creates a \code{tiledb_config} object
+Note that for actually setting persistent values, the (altered) config
+object needs to used to create (or update) the \code{tiledb_ctx} object. Similarly,
+to check whether values are set, one should use the \code{config} method
+of the of the \code{tiledb_ctx} object. Examples for this are
+\code{ctx <- tiledb_ctx(limitTileDBCores())} to use updated configuration values to
+create a context object, and \code{cfg <- config(ctx)} to retrieve it.
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}

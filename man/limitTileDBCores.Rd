@@ -15,12 +15,17 @@ used.}
 user about the value set.}
 }
 \value{
-The modified configuration object is returned invisibly. As a side-effect the
-updated config is also used to set the global context object.
+The modified configuration object is returned invisibly.
 }
 \description{
 By default, TileDB will use all available cores on a given machine. In multi-user or
 multi-process settings, one may want to reduce the number of core. This function will
 take a given number, or default to smaller of the \sQuote{Ncpus} options value or the
 \sQuote{"OMP_THREAD_LIMIT"} enviroment variable (or two as hard fallback).
+}
+\details{
+As this function returns a config object, its intended use is as argument to the context
+creating functions: \code{ctx <- tiledb_ctx(limitTileDBCores())}. To check that the values
+are set (or at a later point, still set) the config object should be retrieved via the
+corresponding method and this \code{ctx} object: \code{cfg <- config(ctx)}.
 }
