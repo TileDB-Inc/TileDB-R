@@ -37,6 +37,12 @@ tiledb_config.from_ptr <- function(ptr) {
 
 #' Creates a `tiledb_config` object
 #'
+#' Note that for actually setting persistent values, the (altered) config
+#' object needs to used to create (or update) the \code{tiledb_ctx} object. Similarly,
+#' to check whether values are set, one should use the \code{config} method
+#' of the of the \code{tiledb_ctx} object. Examples for this are
+#' \code{ctx <- tiledb_ctx(limitTileDBCores())} to use updated configuration values to
+#' create a context object, and \code{cfg <- config(ctx)} to retrieve it.
 #' @param config (optional) character vector of config parameter names, values
 #' @return `tiledb_config` object
 #' @examples
@@ -79,17 +85,15 @@ tiledb_config <- function(config = NA_character_) {
 #' @aliases [,tiledb_config-method
 #' @aliases [,tiledb_config,ANY,tiledb_config-method
 #' @aliases [,tiledb_config,ANY,ANY,tiledb_config-method
-setMethod("[", "tiledb_config",
-          function(x, i, j, ..., drop=FALSE) {
-            if (!is.character(i)) {
-              stop("tiledb_config subscript must be of type 'character'")
-            }
-            if (!missing(j)) {
-              stop("incorrect number of subscripts")
-            }
-            tryCatch(libtiledb_config_get(x@ptr, i),
-                     error = function(e) NA)
-          })
+setMethod("[", "tiledb_config", function(x, i, j, ..., drop=FALSE) {
+  if (!is.character(i)) {
+    stop("tiledb_config subscript must be of type 'character'")
+  }
+  if (!missing(j)) {
+    stop("incorrect number of subscripts")
+  }
+  tryCatch(libtiledb_config_get(x@ptr, i), error = function(e) NA)
+})
 
 #' Sets a config parameter value
 #'
@@ -111,24 +115,23 @@ setMethod("[", "tiledb_config",
 #' @aliases [<-,tiledb_config-method
 #' @aliases [<-,tiledb_config,ANY,tiledb_config-method
 #' @aliases [<-,tiledb_config,ANY,ANY,tiledb_config-method
-setMethod("[<-", "tiledb_config",
-          function(x, i, j, value) {
-            if (!is.character(i)) {
-              stop("tiledb_config subscript must be of type 'character'")
-            } else if (!missing(j)) {
-              stop("incorrect number of subscripts")
-            } else if (!is.character(value)) {
-              if (is.double(value) || is.integer(value)) {
-                value <- as.character(value)
-              } else if (is.logical(value)) {
-                value <- if (isTRUE(value)) "true" else "false"
-              } else {
-                stop("tiledb_config parameter value must be a 'character', 'double', 'integer' or 'logical'")
-              }
-            }
-            libtiledb_config_set(x@ptr, i, value)
-            x
-          })
+setMethod("[<-", "tiledb_config", function(x, i, j, value) {
+  if (!is.character(i)) {
+    stop("tiledb_config subscript must be of type 'character'")
+  } else if (!missing(j)) {
+    stop("incorrect number of subscripts")
+  } else if (!is.character(value)) {
+    if (is.double(value) || is.integer(value)) {
+      value <- as.character(value)
+    } else if (is.logical(value)) {
+      value <- if (isTRUE(value)) "true" else "false"
+    } else {
+      stop("tiledb_config parameter value must be a 'character', 'double', 'integer' or 'logical'")
+    }
+  }
+  libtiledb_config_set(x@ptr, i, value)
+  x
+})
 
 #' Prints the config object to STDOUT
 #'
@@ -138,10 +141,9 @@ setMethod("[<-", "tiledb_config",
 #' cfg <- tiledb_config()
 #' show(cfg)
 #' @export
-setMethod("show", signature(object = "tiledb_config"),
-          function(object) {
-            libtiledb_config_dump(object@ptr)
-          })
+setMethod("show", signature(object = "tiledb_config"), function(object) {
+  libtiledb_config_dump(object@ptr)
+})
 
 #' Save a `tiledb_config` object ot a local text file
 #'
@@ -218,13 +220,17 @@ as.data.frame.tiledb_config <- function(x, ...) {
 #' multi-process settings, one may want to reduce the number of core. This function will
 #' take a given number, or default to smaller of the \sQuote{Ncpus} options value or the
 #' \sQuote{"OMP_THREAD_LIMIT"} enviroment variable (or two as hard fallback).
+#'
+#' As this function returns a config object, its intended use is as argument to the context
+#' creating functions: \code{ctx <- tiledb_ctx(limitTileDBCores())}. To check that the values
+#' are set (or at a later point, still set) the config object should be retrieved via the
+#' corresponding method and this \code{ctx} object: \code{cfg <- config(ctx)}.
 #' @param ncores Value of CPUs used, if missing the smaller of a fallback of two, the value of
 #' \sQuote{Ncpus} (if set) and the value of environment variable \sQuote{"OMP_THREAD_LIMIT"} is
 #' used.
 #' @param verbose Optional logical toggle; if set, a short message is displayed informing the
 #' user about the value set.
-#' @return The modified configuration object is returned invisibly. As a side-effect the
-#' updated config is also used to set the global context object.
+#' @return The modified configuration object is returned invisibly.
 #' @importFrom stats na.omit
 #' @export
 limitTileDBCores <- function(ncores, verbose=FALSE) {
@@ -237,11 +243,16 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
     ncores <- min(na.omit(c(ncores, ompcores)))
   }
   cfg <- tiledb_config()
-  cfg["sm.num_reader_threads"] <- ncores
-  #cfg["sm.num_tbb_threads"] <- ncores
-  cfg["sm.num_writer_threads"] <- ncores
-  cfg["vfs.file.max_parallel_ops"] <- ncores
-  cfg["vfs.num_threads"] <- ncores
+  if (tiledb_version(TRUE) >= "2.1.0") {
+    cfg["sm.compute_concurrency_level"] <- ncores
+    cfg["sm.io_concurrency_level"] <- ncores
+  } else {
+    cfg["sm.num_reader_threads"] <- ncores
+    ##cfg["sm.num_tbb_threads"] <- ncores
+    cfg["sm.num_writer_threads"] <- ncores
+    cfg["vfs.file.max_parallel_ops"] <- ncores
+    cfg["vfs.num_threads"] <- ncores
+  }
   if (verbose) message("Limiting TileDB to ",ncores," cores. See ?limitTileDBCores.")
   invisible(cfg)
 }
