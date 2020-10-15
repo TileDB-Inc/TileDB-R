@@ -25,6 +25,14 @@ dlurl <- switch(osarg,
                 macos = file.path(baseurl,sprintf("%s/tiledb-macos-%s-%s-full.tar.gz", ver, ver, sha)),
                 url = urlarg)
 
+ver <- "2.1"
+sha <- "9161cf2"
+baseurl <- "http://dirk.eddelbuettel.com/tmp/tiledb/"
+dlurl <- switch(osarg,
+                linux = file.path(baseurl,sprintf("tiledb-linux.tar.gz", ver, ver, sha)),
+                macos = file.path(baseurl,sprintf("tiledb-macos.tar.gz", ver, ver, sha)),
+                url = urlarg)
+
 cat("downloading", dlurl, "\n")
 op <- options()
 options(timeout=60)
