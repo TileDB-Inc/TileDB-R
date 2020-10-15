@@ -4,4 +4,7 @@
 url <- "https://github.com/TileDB-Inc/TileDB/archive/2.1.0.tar.gz"
 
 cat("Downloading ", url, "\n")
+op <- options()
+options(timeout=60)
 download.file(url, "tiledb.tar.gz", quiet=TRUE)
+options(op)
