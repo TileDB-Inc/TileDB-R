@@ -1,6 +1,9 @@
 # Ongoing
 
-* This release of the R package builds against [TileDB 2.1.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.0), but has also been tested against previous releases such as [TileDB 2.0.8](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8).
+
+# 0.8.2
+
+* This release of the R package builds against [TileDB 2.1.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.1), but has also been tested against previous releases as well as the development version.
 
 ## Improvements
 
@@ -9,6 +12,10 @@
 * The `tiledb_stats_reset()` function is now exported, and `tiledb_stats_print()` has been re-added as a wrapper to `tiledb_stats_dump()` (#174)
 
 * Configuration options for compute and input/output concurrency set only the new TileDB 2.1 configuration options; documentation on how to checking values has been expanded. (#175)
+
+* The `download.file()` use now (re-)sets the timeout to the standard value to accomodate uses where a lower value may be set such as some CRAN builders (#176)
+
+* Build scripts have been updated for use of TileDB 2.1.1 on Windows, macOS and Linux (when no system library is found) (#178)
 
 
 # 0.8.1

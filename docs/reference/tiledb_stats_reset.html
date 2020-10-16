@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Constructs a tiledb_sparse object backed by a persisted tiledb array uri — tiledb_sparse • tiledb</title>
+<title>Reset stats counters — tiledb_stats_reset • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Constructs a tiledb_sparse object backed by a persisted tiledb array uri — tiledb_sparse" />
-<meta property="og:description" content="tiledb_sparse returns a list of coordinates and attributes vectors for reads" />
+<meta property="og:title" content="Reset stats counters — tiledb_stats_reset" />
+<meta property="og:description" content="Reset stats counters" />
 
 
 
@@ -120,58 +120,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Constructs a tiledb_sparse object backed by a persisted tiledb array uri</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/SparseArray.R'><code>R/SparseArray.R</code></a></small>
-    <div class="hidden name"><code>tiledb_sparse.Rd</code></div>
+    <h1>Reset stats counters</h1>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Stats.R'><code>R/Stats.R</code></a></small>
+    <div class="hidden name"><code>tiledb_stats_reset.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>tiledb_sparse returns a list of coordinates and attributes vectors for reads</p>
+    <p>Reset stats counters</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_sparse</span><span class='op'>(</span>
-  <span class='va'>uri</span>,
-  query_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"READ"</span>, <span class='st'>"WRITE"</span><span class='op'>)</span>,
-  as.data.frame <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  attrs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
-  extended <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>tiledb_stats_reset</span><span class='op'>(</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>uri</th>
-      <td><p>uri path to the tiledb dense array</p></td>
-    </tr>
-    <tr>
-      <th>query_type</th>
-      <td><p>optionally loads the array in "READ" or "WRITE" only modes.</p></td>
-    </tr>
-    <tr>
-      <th>as.data.frame</th>
-      <td><p>optional logical switch, defaults to "FALSE"</p></td>
-    </tr>
-    <tr>
-      <th>attrs</th>
-      <td><p>optional character vector to select attributes, default is
-empty implying all are selected</p></td>
-    </tr>
-    <tr>
-      <th>extended</th>
-      <td><p>optional logical switch selecting wide &#8216;data.frame&#8217;
-format, defaults to "TRUE"</p></td>
-    </tr>
-    <tr>
-      <th>ctx</th>
-      <td><p>tiledb_ctx (optional)</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>tiledb_sparse array object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -75,7 +75,7 @@ take a given number, or default to smaller of the &amp;#8216;Ncpus&amp;#8217; op
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
       </span>
     </div>
 
@@ -155,8 +155,13 @@ user about the value set.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The modified configuration object is returned invisibly. As a side-effect the
-updated config is also used to set the global context object.</p>
+    <p>The modified configuration object is returned invisibly.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>As this function returns a config object, its intended use is as argument to the context
+creating functions: <code>ctx &lt;- tiledb_ctx(limitTileDBCores())</code>. To check that the values
+are set (or at a later point, still set) the config object should be retrieved via the
+corresponding method and this <code>ctx</code> object: <code>cfg &lt;- config(ctx)</code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
