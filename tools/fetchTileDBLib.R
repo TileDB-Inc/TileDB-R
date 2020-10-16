@@ -17,14 +17,13 @@ if (osarg == "url" && length(argv) <= 1) {
 }
 urlarg <- argv[2]
 
-ver <- "2.1.0"
-sha <- "1073faa"
+ver <- "2.1.1"
+sha <- "db11399"
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
 dlurl <- switch(osarg,
                 linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-full.tar.gz", ver, ver, sha)),
                 macos = file.path(baseurl,sprintf("%s/tiledb-macos-%s-%s-full.tar.gz", ver, ver, sha)),
                 url = urlarg)
-
 cat("downloading", dlurl, "\n")
 op <- options()
 options(timeout=60)
