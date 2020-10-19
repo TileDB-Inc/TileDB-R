@@ -28,6 +28,10 @@
 #' @slot attrs A character vector
 #' @slot extended A logical value
 #' @slot ptr External pointer to the underlying implementation
+#' @section Planned Deprecation:
+#' We plan to deprecate the \code{tiledb_dense} array type in a future release. While exact
+#' timelines have not been finalised, it is advised to the \code{tiledb_array} for both
+#' \emph{dense} and \emph{sparse} arrays going forward.
 #' @exportClass tiledb_dense
 setClass("tiledb_dense",
          slots = list(ctx = "tiledb_ctx",
@@ -39,6 +43,10 @@ setClass("tiledb_dense",
 
 #' Constructs a tiledb_dense object backed by a persisted tiledb array uri
 #'
+#' @section Planned Deprecation:
+#' We plan to deprecate the \code{tiledb_dense} array type in a future release. While exact
+#' timelines have not been finalised, it is advised to the \code{tiledb_array} for both
+#' \emph{dense} and \emph{sparse} arrays going forward.
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"

@@ -62,7 +62,7 @@ setClass("tiledb_array",
 #' @param selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
 #' @param ctx tiledb_ctx (optional)
-#' @return tiledb_sparse array object
+#' @return tiledb_array object
 #' @export
 tiledb_array <- function(uri,
                         query_type = c("READ", "WRITE"),

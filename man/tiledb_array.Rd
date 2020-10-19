@@ -36,7 +36,7 @@ describes the (min,max) pair of ranges for dimension i}
 \item{ctx}{tiledb_ctx (optional)}
 }
 \value{
-tiledb_sparse array object
+tiledb_array object
 }
 \description{
 tiledb_array returns a new object. This class is experimental.

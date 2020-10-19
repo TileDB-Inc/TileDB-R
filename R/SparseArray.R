@@ -28,6 +28,10 @@
 #' @slot attrs A character vector
 #' @slot extended A logical value
 #' @slot ptr External pointer to the underlying implementation
+#' @section Planned Deprecation:
+#' We plan to deprecate the \code{tiledb_sparse} array type in a future release. While exact
+#' timelines have not been finalised, it is advised to the \code{tiledb_array} for both
+#' \emph{dense} and \emph{sparse} arrays going forward.
 #' @exportClass tiledb_sparse
 setClass("tiledb_sparse",
          slots = list(ctx = "tiledb_ctx",
@@ -41,6 +45,10 @@ setClass("tiledb_sparse",
 #'
 #' tiledb_sparse returns a list of coordinates and attributes vectors for reads
 #'
+#' @section Planned Deprecation:
+#' We plan to deprecate the \code{tiledb_sparse} array type in a future release. While exact
+#' timelines have not been finalised, it is advised to the \code{tiledb_array} for both
+#' \emph{dense} and \emph{sparse} arrays going forward.
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
