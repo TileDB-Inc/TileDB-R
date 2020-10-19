@@ -462,7 +462,7 @@ setMethod("[<-", "tiledb_array",
 
   ## we will recognize two standard cases
   ##  1) arr[]    <- value    where value contains two columns with the dimnames
-  ##  2) arr[i,j] <- value    where contains just the attrnames
+  ##  2) arr[i,j] <- value    where value contains just the attribute names
   ## There is more to do here but it is a start
 
   ## Case 1
@@ -477,7 +477,7 @@ setMethod("[<-", "tiledb_array",
   }
 
   ## Case 2
-  if (length(colnames(value)) == length(attrnames)) {
+  if (length(colnames(value)) == length(attrnames)) { # FIXME: need to check for array or matrix arg?
     if (is.null(i)) stop("For arrays a row index has to be supplied.")
     if (is.null(j)) stop("For arrays a column index has to be supplied.")
     #if (length(i) != nrow(value)) stop("Row index must have same number of observations as data")
@@ -489,13 +489,31 @@ setMethod("[<-", "tiledb_array",
     value <- cbind(newvalue, value)
   }
 
+  ## Case 3: dense, length attributes == 1, i and j NULL
+  ##         e.g. the quickstart_dense example where the RHS may be a matrix or data.frame
+  ##         also need to guard against data.frame object which already have 'rows' and 'cols'
+  if (isFALSE(sparse) && is.null(i) && is.null(j) && length(attrnames) == 1) {
+    d <- dim(value)
+    if ((d[2] > 1) &&
+        (inherits(value, "data.frame") || inherits(value, "matrix")) &&
+        !any(grepl("rows", colnames(value))) &&
+        !any(grepl("cols", colnames(value)))    ) {
+      ## turn the 2-d RHS in 1-d and align the names for the test that follows
+      ## in effect, we just rewrite the query for the user
+      value <- data.frame(x=as.matrix(value)[seq(1, d[1]*d[2])])
+      colnames(value) <- attrnames
+      allnames <- attrnames
+    }
+  }
+
   nc <- ncol(value)
   nr <- nrow(value)
 
   if (all.equal(sort(allnames),sort(colnames(value)))) {
     arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
-    qryptr <- libtiledb_query_set_layout(qryptr, "UNORDERED")
+    qryptr <- libtiledb_query_set_layout(qryptr,
+                                         if(sparse) "UNORDERED" else "ROW_MAJOR")
 
     buflist <- vector(mode="list", length=nc)
     for (i in 1:nc) {
