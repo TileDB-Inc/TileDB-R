@@ -102,7 +102,7 @@ write_array <- function(uri) {
 }
 
 read_array_lowlevel <- function(uri) {
-  arr <- tiledb_sparse(uri)
+  arr <- tiledb_array(uri)
 
   ctx <- tiledb_ctx()
   arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uri, "READ")

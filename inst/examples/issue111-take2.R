@@ -14,9 +14,6 @@ schema <- tiledb_array_schema(dom,
 tiledb_array_create(uri, schema)
 
 data <- array(1:25, dim = c(5,5))
-## Open the array and write to it.
-#A <- tiledb_sparse(uri = uri)
-
 
 ## Open the array to write to it.
 A <- tiledb_array(uri = uri)
