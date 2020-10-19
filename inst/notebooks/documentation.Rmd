@@ -15,7 +15,7 @@ When you save the notebook, an HTML file containing the code and output will be 
 
 # Prelimaries
 
-We will the two basic examples for a dense and sparse array simply to create
+We will show two initial and basic examples for a dense and sparse array simply to create
 array data on disk to refer to later in examples that follow.
 
 ```{r runexamples}
@@ -50,7 +50,7 @@ write_array <- function(array_name) {
                     c(3L, 7L, 11L, 15L),
                     c(4L, 8L, 12L, 16L)), dim = c(4,4))
     # Open the array and write to it.
-    A <- tiledb_dense(uri = array_name)
+    A <- tiledb_array(uri = array_name)
     A[] <- data
 }
 
@@ -659,7 +659,7 @@ print(mat, quote=FALSE)
 ```{r nonempty}
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
 # returns a list object
-reslist <- tiledb:::libtiledb_array_nonempty_domain(arrptr)
+reslist <- tiledb:::libtiledb_array_get_non_empty_domain(arrptr)
 tiledb:::libtiledb_array_close(arrptr)
 ```
 
