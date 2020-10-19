@@ -13,12 +13,12 @@ tiledb_array_create(uri, schema)
 
 data <- array(1:25, dim = c(5,5))
 ## Open the array and write to it.
-A <- tiledb_dense(uri = uri)
+A <- tiledb_array(uri = uri)
 A[] <- data
 
 
 ## Open the array and read from it.
-A <- tiledb_dense(uri = uri)
+A <- tiledb_array(uri = uri)
 
 ## All the data
 alldata <- A[]

@@ -504,10 +504,9 @@ setMethod("[<-", "tiledb_array",
       colnames(value) <- attrnames
       allnames <- attrnames
     }
-  }
 
   ## Case 4: dense, list on RHS e.g. the ex_1.R example
-  if (isFALSE(sparse) && is.null(i) && is.null(j) && length(value) == length(attrnames)) {
+  } else if (isFALSE(sparse) && is.null(i) && is.null(j) && length(value) == length(attrnames)) {
     nl <- length(value)
     for (i in seq_len(nl)) {
       d <- dim(value[[i]])
