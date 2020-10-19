@@ -38,7 +38,7 @@ write_array <- function(uri) {
 
 read_array <- function(uri) {
   ## Open the array and read from it.
-  A <- tiledb_dense(uri = uri)
+  A <- tiledb_array(uri = uri)
   data <- A[6:9, 2:4]
   show(data)
 
@@ -47,21 +47,21 @@ read_array <- function(uri) {
 }
 
 read_as_df <- function(uri) {
-  A <- tiledb_dense(uri = uri, as.data.frame = TRUE)
+  A <- tiledb_array(uri = uri, as.data.frame = TRUE)
   data <- A[3:7, 2:4]
   show(data)
 }
 
 read_array_subset <- function(uri) {
   ## Open the array and read from it.
-  A <- tiledb_dense(uri = uri, attrs = c("b","c"))
+  A <- tiledb_array(uri = uri, attrs = c("b","c"))
   data <- A[6:9, 2:4]
   show(data)
 }
 
 open_read_change_read <- function(uri) {
   ## Open the array and read from it.
-  A <- tiledb_dense(uri = uri)
+  A <- tiledb_array(uri = uri)
   data <- A[6:9, 2:4]
   show(data)
 
@@ -77,7 +77,7 @@ open_read_change_read <- function(uri) {
 }
 
 simple_ex <- function(uri) {
-  arr <- tiledb_dense(uri, as.data.frame = TRUE)
+  arr <- tiledb_array(uri, as.data.frame = TRUE)
   show(arr[7:9, 2:3])
 }
 
