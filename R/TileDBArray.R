@@ -425,12 +425,12 @@ setMethod("[", "tiledb_array",
 #' @aliases [<-,tiledb_array,ANY,ANY,tiledb_array-method
 setMethod("[<-", "tiledb_array",
           function(x, i, j, ..., value) {
-  if (!is.data.frame(value)) {
+  if (!is.data.frame(value) && !(is.list(value) && length(value) > 1)) {
     value <- as.data.frame(value)
-  }
-  if (nrow(value) == 0) {
-    #message("Cannot assign zero row objects to TileDB Array.")
-    return(x)
+    if (nrow(value) == 0) {
+      message("Cannot assign zero row objects to TileDB Array.")
+      return(x)
+    }
   }
 
   ## add defaults
@@ -506,10 +506,22 @@ setMethod("[<-", "tiledb_array",
     }
   }
 
-  nc <- ncol(value)
-  nr <- nrow(value)
+  ## Case 4: dense, list on RHS e.g. the ex_1.R example
+  if (isFALSE(sparse) && is.null(i) && is.null(j) && length(value) == length(attrnames)) {
+    nl <- length(value)
+    for (i in seq_len(nl)) {
+      d <- dim(value[[i]])
+      value[[i]] <- as.matrix(value[[i]])[seq(1, d[1]*d[2])]
+    }
+    names(value) <- attrnames
+    allnames <- attrnames
+    alltypes <- attrtypes
+  }
 
-  if (all.equal(sort(allnames),sort(colnames(value)))) {
+  nc <- if (is.list(value)) length(value) else ncol(value)
+  nm <- if (is.list(value)) names(value) else colnames(value)
+
+  if (all.equal(sort(allnames),sort(nm))) {
     arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
     qryptr <- libtiledb_query_set_layout(qryptr,
@@ -524,6 +536,7 @@ setMethod("[<-", "tiledb_array",
         buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, allnames[i], buflist[[i]])
       } else {
+        nr <- NROW(value[[i]])
         buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
         buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])
