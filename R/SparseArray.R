@@ -71,7 +71,7 @@ tiledb_sparse <- function(uri,
   } else if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar")
   }
-
+  .Deprecated("tiledb_array")
   array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
   if (!libtiledb_array_schema_sparse(schema_xptr)) {
