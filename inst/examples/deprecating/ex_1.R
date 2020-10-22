@@ -9,8 +9,8 @@ uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 create_array <- function(uri) {
   ## Check if the array already exists.
   if (tiledb_object_type(uri) == "ARRAY") {
-      message("Array already exists, removing to create new one.")
-      tiledb_vfs_remove_dir(tiledb_vfs(), uri)
+    message("Array already exists.")
+    return(invisible(NULL))
   }
 
   ## The array will be 10x5 with dimensions "rows" and "cols", with domains [1,10] and [1,5].
@@ -32,13 +32,13 @@ write_array <- function(uri) {
                array(as.double(seq(101,by=0.5,length=50)), dim = c(10,5)),
                array(c(letters[1:26], "brown", "fox", LETTERS[1:22]), dim = c(10,5)))
   ## Open the array and write to it.
-  A <- tiledb_array(uri = uri)
+  A <- tiledb_dense(uri = uri)
   A[] <- data
 }
 
 read_array <- function(uri) {
   ## Open the array and read from it.
-  A <- tiledb_array(uri = uri)
+  A <- tiledb_dense(uri = uri)
   data <- A[6:9, 2:4]
   show(data)
 
@@ -47,21 +47,21 @@ read_array <- function(uri) {
 }
 
 read_as_df <- function(uri) {
-  A <- tiledb_array(uri = uri, as.data.frame = TRUE)
+  A <- tiledb_dense(uri = uri, as.data.frame = TRUE)
   data <- A[3:7, 2:4]
   show(data)
 }
 
 read_array_subset <- function(uri) {
   ## Open the array and read from it.
-  A <- tiledb_array(uri = uri, attrs = c("b","c"))
+  A <- tiledb_dense(uri = uri, attrs = c("b","c"))
   data <- A[6:9, 2:4]
   show(data)
 }
 
 open_read_change_read <- function(uri) {
   ## Open the array and read from it.
-  A <- tiledb_array(uri = uri)
+  A <- tiledb_dense(uri = uri)
   data <- A[6:9, 2:4]
   show(data)
 
@@ -77,7 +77,7 @@ open_read_change_read <- function(uri) {
 }
 
 simple_ex <- function(uri) {
-  arr <- tiledb_array(uri, as.data.frame = TRUE)
+  arr <- tiledb_dense(uri, as.data.frame = TRUE)
   show(arr[7:9, 2:3])
 }
 

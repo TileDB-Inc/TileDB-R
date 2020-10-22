@@ -62,7 +62,7 @@ setClass("tiledb_array",
 #' @param selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
 #' @param ctx tiledb_ctx (optional)
-#' @return tiledb_sparse array object
+#' @return tiledb_array object
 #' @export
 tiledb_array <- function(uri,
                         query_type = c("READ", "WRITE"),
@@ -425,12 +425,12 @@ setMethod("[", "tiledb_array",
 #' @aliases [<-,tiledb_array,ANY,ANY,tiledb_array-method
 setMethod("[<-", "tiledb_array",
           function(x, i, j, ..., value) {
-  if (!is.data.frame(value)) {
+  if (!is.data.frame(value) && !(is.list(value) && length(value) > 1)) {
     value <- as.data.frame(value)
-  }
-  if (nrow(value) == 0) {
-    #message("Cannot assign zero row objects to TileDB Array.")
-    return(x)
+    if (nrow(value) == 0) {
+      message("Cannot assign zero row objects to TileDB Array.")
+      return(x)
+    }
   }
 
   ## add defaults
@@ -462,7 +462,7 @@ setMethod("[<-", "tiledb_array",
 
   ## we will recognize two standard cases
   ##  1) arr[]    <- value    where value contains two columns with the dimnames
-  ##  2) arr[i,j] <- value    where contains just the attrnames
+  ##  2) arr[i,j] <- value    where value contains just the attribute names
   ## There is more to do here but it is a start
 
   ## Case 1
@@ -477,7 +477,7 @@ setMethod("[<-", "tiledb_array",
   }
 
   ## Case 2
-  if (length(colnames(value)) == length(attrnames)) {
+  if (length(colnames(value)) == length(attrnames)) { # FIXME: need to check for array or matrix arg?
     if (is.null(i)) stop("For arrays a row index has to be supplied.")
     if (is.null(j)) stop("For arrays a column index has to be supplied.")
     #if (length(i) != nrow(value)) stop("Row index must have same number of observations as data")
@@ -489,13 +489,42 @@ setMethod("[<-", "tiledb_array",
     value <- cbind(newvalue, value)
   }
 
-  nc <- ncol(value)
-  nr <- nrow(value)
+  ## Case 3: dense, length attributes == 1, i and j NULL
+  ##         e.g. the quickstart_dense example where the RHS may be a matrix or data.frame
+  ##         also need to guard against data.frame object which already have 'rows' and 'cols'
+  if (isFALSE(sparse) && is.null(i) && is.null(j) && length(attrnames) == 1) {
+    d <- dim(value)
+    if ((d[2] > 1) &&
+        (inherits(value, "data.frame") || inherits(value, "matrix")) &&
+        !any(grepl("rows", colnames(value))) &&
+        !any(grepl("cols", colnames(value)))    ) {
+      ## turn the 2-d RHS in 1-d and align the names for the test that follows
+      ## in effect, we just rewrite the query for the user
+      value <- data.frame(x=as.matrix(value)[seq(1, d[1]*d[2])])
+      colnames(value) <- attrnames
+      allnames <- attrnames
+    }
 
-  if (all.equal(sort(allnames),sort(colnames(value)))) {
+  ## Case 4: dense, list on RHS e.g. the ex_1.R example
+  } else if (isFALSE(sparse) && is.null(i) && is.null(j) && length(value) == length(attrnames)) {
+    nl <- length(value)
+    for (i in seq_len(nl)) {
+      d <- dim(value[[i]])
+      value[[i]] <- as.matrix(value[[i]])[seq(1, d[1]*d[2])]
+    }
+    names(value) <- attrnames
+    allnames <- attrnames
+    alltypes <- attrtypes
+  }
+
+  nc <- if (is.list(value)) length(value) else ncol(value)
+  nm <- if (is.list(value)) names(value) else colnames(value)
+
+  if (all.equal(sort(allnames),sort(nm))) {
     arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
-    qryptr <- libtiledb_query_set_layout(qryptr, "UNORDERED")
+    qryptr <- libtiledb_query_set_layout(qryptr,
+                                         if(sparse) "UNORDERED" else "ROW_MAJOR")
 
     buflist <- vector(mode="list", length=nc)
     for (i in 1:nc) {
@@ -506,6 +535,7 @@ setMethod("[<-", "tiledb_array",
         buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, allnames[i], buflist[[i]])
       } else {
+        nr <- NROW(value[[i]])
         buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
         buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])

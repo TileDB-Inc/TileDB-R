@@ -23,7 +23,7 @@ create <- function(uri) {
 }
 
 write <- function(uri) {
-    x <- tiledb_sparse(uri)
+    x <- tiledb_array(uri)
     avals <- c(3L, 2L, 1L, 4L)
     data <- "ccbbddddaa"
     offsets <- c(0L, 2L, 4L, 8L)
@@ -45,7 +45,7 @@ write <- function(uri) {
 }
 
 read <- function(uri) {
-    arr <- tiledb_sparse(uri)
+    arr <- tiledb_array(uri)
 
     arr <- tiledb_array(uri = uri)
     qry <- tiledb_query(arr, "READ")

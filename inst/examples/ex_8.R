@@ -68,7 +68,7 @@ write_thrice_array <- function(uri) {
 }
 
 read_array <- function(uri) {
-  arr <- tiledb_sparse(uri)
+  arr <- tiledb_array(uri)
   sch <- schema(arr)
   qry <- tiledb_query(arr, "READ")
 

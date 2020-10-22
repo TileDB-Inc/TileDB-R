@@ -23,3 +23,10 @@ An S4 class for a TileDB dense array
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 
+\section{Planned Deprecation}{
+
+We plan to deprecate the \code{tiledb_dense} array type in a future release. While exact
+timelines have not been finalised, it is advised to the \code{tiledb_array} for both
+\emph{dense} and \emph{sparse} arrays going forward.
+}
+

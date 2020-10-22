@@ -1,4 +1,4 @@
-# quickstart_sparse.R
+# quickstart_dense.R
 #
 # LICENSE
 #
@@ -29,49 +29,50 @@
 # This is a part of the TileDB quickstart tutorial:
 #   https://docs.tiledb.io/en/latest/quickstart.html
 #
-# When run, this program will create a simple 2D sparse array, write some data
+# When run, this program will create a simple 2D dense array, write some data
 # to it, and read a slice of the data back.
 #
 
 library(tiledb)
 
 # Name of the array to create.
-array_name <- "quickstart_sparse"
+array_name <- "quickstart_dense"
 ## Path is either current directory, or a local config value is found
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 
-create_array <- function(array_name) {
+create_array <- function(uri) {
     # Check if the array already exists.
-    if (tiledb_object_type(array_name) == "ARRAY") {
-        message("Array already exists, removing to create new one.")
-        tiledb_vfs_remove_dir(tiledb_vfs(), array_name)
+    if (tiledb_object_type(uri) == "ARRAY") {
+        message("Array already exists.")
+        return(invisible(NULL))
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
     dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
                                   tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
 
-   # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    schema = tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
+    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
+    schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
 
     # Create the (empty) array on disk.
-    invisible( tiledb_array_create(array_name, schema) )
+    tiledb_array_create(uri, schema)
 }
 
-write_array <- function(array_name) {
-    I <- c(1, 2, 2)
-    J <- c(1, 4, 3)
-    data <- c(1L, 2L, 3L)
+write_array <- function(uri) {
+    data <- array(c(c(1L, 5L, 9L, 13L),
+                    c(2L, 6L, 10L, 14L),
+                    c(3L, 7L, 11L, 15L),
+                    c(4L, 8L, 12L, 16L)), dim = c(4,4))
     # Open the array and write to it.
-    A <- tiledb_array(uri = array_name)
-    A[I, J] <- data
+    A <- tiledb_dense(uri = uri)
+    A[] <- data
 }
 
-read_array <- function(array_name) {
-    # Open the array and read as a data.frame from it.
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE)
-    # Slice rows 1 and 2, and cols 2, 3 and 4
-    A[1:2, 2:4]
+read_array <- function(uri) {
+    # Open the array and read from it.
+    A <- tiledb_dense(uri = uri)
+    data <- A[1:2, 2:4]
+    show(data)
 }
 
 read_via_query_object <- function(array_name) {
@@ -84,6 +85,7 @@ read_via_query_object <- function(array_name) {
   tiledb_query_set_buffer(qry, "rows", rows)
   tiledb_query_set_buffer(qry, "cols", cols)
   tiledb_query_set_buffer(qry, "a", values)
+  tiledb_query_set_subarray(qry, c(1L, 2L, 2L, 4L))
 
   tiledb_query_submit(qry)
   tiledb_query_finalize(qry)

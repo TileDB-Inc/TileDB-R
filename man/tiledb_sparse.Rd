@@ -34,3 +34,10 @@ tiledb_sparse array object
 \description{
 tiledb_sparse returns a list of coordinates and attributes vectors for reads
 }
+\section{Planned Deprecation}{
+
+We plan to deprecate the \code{tiledb_sparse} array type in a future release. While exact
+timelines have not been finalised, it is advised to the \code{tiledb_array} for both
+\emph{dense} and \emph{sparse} arrays going forward.
+}
+

@@ -27,7 +27,7 @@ write_array <- function() {
   datavec <- c("a","bb", "ccc", "dd", "eee", "f", "g", "hhh",
                "i", "jjj", "kk", "l", "m", "n", "oo", "p")
 
-  array <- tiledb_dense(array_name, "WRITE")
+  array <- tiledb_array(array_name, "WRITE")
   query <- tiledb_query(array, "WRITE")
   bufptr <- tiledb_query_create_buffer_ptr_char(query, datavec)
   query <- tiledb_query_set_buffer_ptr_char(query, "a1", bufptr)
@@ -39,7 +39,7 @@ write_array <- function() {
 read_array <- function(txt="", subarr=NULL) {
   cat("\nReading", txt, "\n")
   ctx <- tiledb_ctx()
-  array <- tiledb_dense(array_name, "READ")
+  array <- tiledb_array(array_name, "READ")
   query <- tiledb_query(array, "READ")
   if (is.null(subarr)) {
     d <- dim(schema(array))
@@ -56,7 +56,7 @@ write_subarray <- function() {
   datavec <- c("K", "LLL", "MM", "N")
   subarr <- c(2L,3L, 2L,3L)
 
-  array <- tiledb_dense(array_name, "WRITE")
+  array <- tiledb_array(array_name, "WRITE")
   query <- tiledb_query(array, "WRITE")
   query <- tiledb_query_set_subarray(query, subarr)
   bufptr <- tiledb_query_create_buffer_ptr_char(query, datavec)

@@ -34,3 +34,10 @@ tiledb_dense array object
 \description{
 Constructs a tiledb_dense object backed by a persisted tiledb array uri
 }
+\section{Planned Deprecation}{
+
+We plan to deprecate the \code{tiledb_dense} array type in a future release. While exact
+timelines have not been finalised, it is advised to the \code{tiledb_array} for both
+\emph{dense} and \emph{sparse} arrays going forward.
+}
+

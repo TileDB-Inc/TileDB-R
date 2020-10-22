@@ -1,3 +1,4 @@
+
 # quickstart_dense.R
 #
 # LICENSE
@@ -43,8 +44,8 @@ uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
 create_array <- function(uri) {
     # Check if the array already exists.
     if (tiledb_object_type(uri) == "ARRAY") {
-        message("Array already exists.")
-        return(invisible(NULL))
+        message("Array already exists, removing to create new one.")
+        tiledb_vfs_remove_dir(tiledb_vfs(), uri)
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
@@ -58,20 +59,45 @@ create_array <- function(uri) {
     tiledb_array_create(uri, schema)
 }
 
-write_array <- function(uri) {
+write_arrayBORKED <- function(uri) {
+    ## equivalent to matrix(1:16, 4, 4, byrow=TRUE)
     data <- array(c(c(1L, 5L, 9L, 13L),
                     c(2L, 6L, 10L, 14L),
                     c(3L, 7L, 11L, 15L),
                     c(4L, 8L, 12L, 16L)), dim = c(4,4))
     # Open the array and write to it.
-    A <- tiledb_dense(uri = uri)
+    A <- tiledb_array(uri = uri)
     A[] <- data
+}
+
+write_array_via_query <- function(uri) {
+    data <- 1:16
+    arr <- tiledb_array(uri = uri)
+    qry <- tiledb_query(arr, "WRITE")
+    #qry <- tiledb_query_set_layout(qry, "ROW_MAJOR") # also default, transpose if COL_MAJOR
+    qry <- tiledb_query_set_buffer(qry, "a", data)
+    qry <- tiledb_query_submit(qry)
+    qry <- tiledb_query_finalize(qry)
+    stopifnot(tiledb_query_status(qry)=="COMPLETE")
+}
+
+write_array_via_query_piped <- function(uri) {
+    stopifnot(requireNamespace("magrittr", quietly=TRUE))
+    library(magrittr)
+    data <- 1:16
+    qry <- tiledb_array(uri = uri) %>% tiledb_query("WRITE")
+    qry %>%
+        tiledb_query_set_layout("ROW_MAJOR") %>%  # also default, transpose if COL_MAJOR
+        tiledb_query_set_buffer("a", data) %>%
+        tiledb_query_submit() %>%
+        tiledb_query_finalize()
+    stopifnot(tiledb_query_status(qry)=="COMPLETE")
 }
 
 read_array <- function(uri) {
     # Open the array and read from it.
-    A <- tiledb_dense(uri = uri)
-    data <- A[1:2, 2:4]
+    A <- tiledb_array(uri = uri)
+    data <- A[] #A[1:2, 2:4]
     show(data)
 }
 
@@ -96,6 +122,8 @@ read_via_query_object <- function(array_name) {
 }
 
 create_array(uri)
-write_array(uri)
+write_arrayBORKED(uri)
+write_array_via_query(uri)
+write_array_via_query_piped(uri)
 read_array(uri)
 read_via_query_object(uri)
