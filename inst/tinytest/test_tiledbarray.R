@@ -214,7 +214,6 @@ unlink(tmpuri, recursive = TRUE)
 options(op)
 #})
 
-
 #test_that("test range selection on reading", {
 
 set.seed(100)
@@ -364,6 +363,7 @@ unlink(tmp, recursive = TRUE)
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
+
   tmp <- tempfile()
   dir.create(tmp)
 
@@ -382,7 +382,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   A[I,J] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
-  newdata <- A[1:2, 2:4]
+  newdata <- A[as.integer64(1:2), as.integer64(2:4)]
   expect_equal(newdata[,"a"], c(3L, 2L))
   expect_equal(newdata[,"rows"], c(2L, 2L))
   expect_equal(newdata[,"cols"], c(3L, 4L))
@@ -416,7 +416,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   A[I,J] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
-  newdata <- A[1:2, 2:4]
+  newdata <- A[as.integer64(1:2), as.integer64(2:4)]
   expect_equal(newdata[,"a"], c(3L, 2L))
   expect_equal(newdata[,"rows"], c(2L, 2L))
   expect_equal(newdata[,"cols"], c(3L, 4L))
@@ -774,7 +774,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
-  newdata <- A[1:2, 2:3]
+  newdata <- A[as.integer64(1:2), as.integer64(2:3)]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
   expect_equal(newdata[,"cols"], c(2L, 3L, 2L, 3L))
@@ -805,7 +805,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
-  newdata <- A[1:2, 2:3]
+  newdata <- A[as.integer64(1:2), as.integer64(2:3)]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
   expect_equal(newdata[,"cols"], c(2L, 3L, 2L, 3L))
