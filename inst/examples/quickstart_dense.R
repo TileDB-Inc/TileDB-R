@@ -59,7 +59,7 @@ create_array <- function(uri) {
     tiledb_array_create(uri, schema)
 }
 
-write_arrayBORKED <- function(uri) {
+write_array <- function(uri) {
     ## equivalent to matrix(1:16, 4, 4, byrow=TRUE)
     data <- array(c(c(1L, 5L, 9L, 13L),
                     c(2L, 6L, 10L, 14L),
@@ -122,7 +122,7 @@ read_via_query_object <- function(array_name) {
 }
 
 create_array(uri)
-write_arrayBORKED(uri)
+write_array(uri)
 write_array_via_query(uri)
 write_array_via_query_piped(uri)
 read_array(uri)

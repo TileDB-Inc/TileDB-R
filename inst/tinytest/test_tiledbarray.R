@@ -326,7 +326,6 @@ expect_equal(nrow(val), 1L)
 unlink(tmp, recursive = TRUE)
 #})
 
-
 #test_that("test range selection for multiple dimensions", {
 tmp <- tempfile()
 dir.create(tmp)
@@ -591,7 +590,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=rep(1:4,each=4), cols=rep(1:4,4), a=data)
   ## or with indices
-  A[rep(1:4,each=4), rep(1:4,4)] <- data
+  #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:3]
@@ -621,7 +620,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=rep(1:4,each=4), cols=rep(1:4,4), a=data)
   ## or with indices
-  A[rep(1:4,each=4), rep(1:4,4)] <- data
+  #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:3]
@@ -651,7 +650,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=rep(1:4,each=4), cols=rep(1:4,4), a=data)
   ## or with indices
-  A[rep(1:4,each=4), rep(1:4,4)] <- data
+  #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:3]
@@ -681,7 +680,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=rep(1:4,each=4), cols=rep(1:4,4), a=data)
   ## or with indices
-  A[rep(1:4,each=4), rep(1:4,4)] <- data
+  #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:3]
@@ -711,7 +710,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=rep(1:4,each=4), cols=rep(1:4,4), a=data)
   ## or with indices
-  A[rep(1:4,each=4), rep(1:4,4)] <- data
+  #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:3]
@@ -741,7 +740,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=rep(1:4,each=4), cols=rep(1:4,4), a=data)
   ## or with indices
-  A[rep(1:4,each=4), rep(1:4,4)] <- data
+  #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:3]
@@ -771,7 +770,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=as.integer64(rep(1:4,each=4)), cols=as.integer64(rep(1:4,4)), a=data)
   ## or with indices
-  A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
+  #A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[as.integer64(1:2), as.integer64(2:3)]
@@ -802,7 +801,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## can write as data.frame
   A[] <- data.frame(rows=as.integer64(rep(1:4,each=4)), cols=as.integer64(rep(1:4,4)), a=data)
   ## or with indices
-  A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
+  #A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[as.integer64(1:2), as.integer64(2:3)]
@@ -852,7 +851,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
                     cols=rep(1:4,4),
                     data)
   ## or with indices
-  A[rep(1:4,each=4), rep(1:4,4)] <- data
+  #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[1:2, 2:3]

@@ -477,7 +477,7 @@ setMethod("[<-", "tiledb_array",
   }
 
   ## Case 2
-  if (length(colnames(value)) == length(attrnames)) { # FIXME: need to check for array or matrix arg?
+  if (sparse && length(colnames(value)) == length(attrnames)) { # FIXME: need to check for array or matrix arg?
     if (is.null(i)) stop("For arrays a row index has to be supplied.")
     if (is.null(j)) stop("For arrays a column index has to be supplied.")
     #if (length(i) != nrow(value)) stop("Row index must have same number of observations as data")
@@ -492,7 +492,9 @@ setMethod("[<-", "tiledb_array",
   ## Case 3: dense, length attributes == 1, i and j NULL
   ##         e.g. the quickstart_dense example where the RHS may be a matrix or data.frame
   ##         also need to guard against data.frame object which already have 'rows' and 'cols'
-  if (isFALSE(sparse) && is.null(i) && is.null(j) && length(attrnames) == 1) {
+  if (isFALSE(sparse) &&
+      ##is.null(i) && is.null(j) &&
+      length(attrnames) == 1) {
     d <- dim(value)
     if ((d[2] > 1) &&
         (inherits(value, "data.frame") || inherits(value, "matrix")) &&
@@ -506,11 +508,15 @@ setMethod("[<-", "tiledb_array",
     }
 
   ## Case 4: dense, list on RHS e.g. the ex_1.R example
-  } else if (isFALSE(sparse) && is.null(i) && is.null(j) && length(value) == length(attrnames)) {
-    nl <- length(value)
-    for (i in seq_len(nl)) {
-      d <- dim(value[[i]])
-      value[[i]] <- as.matrix(value[[i]])[seq(1, d[1]*d[2])]
+  } else if (isFALSE(sparse) &&
+             ##is.null(i) && is.null(j) &&
+             length(value) == length(attrnames)) {
+    if (!inherits(value, "data.frame")) {
+      nl <- length(value)
+      for (i in seq_len(nl)) {
+        d <- dim(value[[i]])
+        value[[i]] <- as.matrix(value[[i]])[seq(1, d[1]*d[2])]
+      }
     }
     names(value) <- attrnames
     allnames <- attrnames

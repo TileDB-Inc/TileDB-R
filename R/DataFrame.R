@@ -90,7 +90,6 @@ fromDataFrame <- function(obj, uri, sparse=TRUE) {
 
   schema <- tiledb_array_schema(dom, attrs = attributes, sparse=sparse)
   tiledb_array_create(uri, schema)
-  #cat("Schema written and array created.\n")
 
   df <- tiledb_array(uri)
   if (sparse) obj <- cbind(data.frame(rows=seq(1,dims[1])), obj)
