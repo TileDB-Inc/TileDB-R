@@ -93,7 +93,8 @@ fromDataFrame <- function(obj, uri, sparse=TRUE) {
   #cat("Schema written and array created.\n")
 
   df <- tiledb_array(uri)
-  df[] <- cbind(data.frame(rows=seq(1,dims[1])), obj)
+  if (sparse) obj <- cbind(data.frame(rows=seq(1,dims[1])), obj)
+  df[] <- obj
   invisible(NULL)
 }
 
