@@ -2,25 +2,29 @@
 % Please edit documentation in R/DataFrame.R
 \name{fromDataFrame}
 \alias{fromDataFrame}
-\title{Create a TileDB Dense Array from a given \code{data.frame} Object}
+\title{Create a TileDB dense or sparse array from a given \code{data.frame} Object}
 \usage{
-fromDataFrame(obj, uri)
+fromDataFrame(obj, uri, sparse = TRUE)
 }
 \arguments{
 \item{obj}{A \code{data.frame} object.}
 
 \item{uri}{A character variable with an Array URI.}
+
+\item{sparse}{A logical switch to select sparse (the default) or dense}
 }
 \value{
 Null, invisibly.
 }
 \description{
 The supplied \code{data.frame} object is (currently) limited to integer,
-numeric, or character columns.
+numeric, or character. In addition, three datetime columns are supported
+with the R representations of \code{Date}, \code{POSIXct} and \code{nanotime}.
 }
 \details{
-The create (Dense) Array will have as many attributes as there are columns in
-the \code{data.frame}.  Each attribute will be a single column.
+The created (dense or sparse) array will have as many attributes as there
+are columns in the \code{data.frame}.  Each attribute will be a single column.
+For a sparse array, one or more columns have to be designated as dimenions.
 
 At present, factor variable are converted to character.
 }
@@ -31,7 +35,7 @@ uri <- tempfile()
 ## turn factor into character
 irisdf <- within(iris, Species <- as.character(Species))
 fromDataFrame(irisdf, uri)
-arr <- tiledb_dense(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as.data.frame=TRUE, sparse=FALSE)
 newdf <- arr[]
 all.equal(iris, newdf)
 }

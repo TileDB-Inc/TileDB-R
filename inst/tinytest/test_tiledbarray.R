@@ -80,9 +80,9 @@ dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
 dir.create(tmpuri <- tempfile())
 fromDataFrame(dat[,-1], tmpuri)
 
-arr <- tiledb_dense(tmpuri, as.data.frame=TRUE)
+arr <- tiledb_array(tmpuri, as.data.frame=TRUE)
 newdat <- arr[]
-expect_equal(dat[,-1], newdat)
+expect_equal(dat[,-1], newdat[,-1])
 
 unlink(tmpuri, recursive = TRUE)
 options(op)

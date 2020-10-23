@@ -13,29 +13,29 @@ irisdf <- within(iris, Species <- as.character(Species))
 
 fromDataFrame(irisdf, uri)
 
-arr <- tiledb_dense(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
 newdf <- arr[]
 if (getRversion() >= '4.0.0') newdf$Species <- as.factor(newdf$Species)
-expect_equal(iris, newdf)
-expect_equal(dim(irisdf), dim(newdf))
+expect_equal(iris, newdf[,-1])
+expect_equal(dim(irisdf), dim(newdf[,-1]))
 
 ## result comes back as factor by default
 newdf <- within(newdf, Species <- as.character(Species))
-expect_equal(irisdf, newdf)
+expect_equal(irisdf, newdf[,-1])
 
 
 ## test attrs subselection
-arr <- tiledb_dense(uri, as.data.frame=TRUE,
+arr <- tiledb_array(uri, as.data.frame=TRUE,
                     attrs = c("Petal.Length", "Petal.Width"))
 newdf <- arr[]
-expect_equal(iris[, c("Petal.Length", "Petal.Width")], newdf)
+expect_equal(iris[, c("Petal.Length", "Petal.Width")], newdf[,-1])
 
 
 ## test list
-arr <- tiledb_dense(uri)
+arr <- tiledb_array(uri)
 res <- arr[]
 expect_equal(class(res), "list")
-expect_equal(length(res), 5)
+expect_equal(length(res), 6)            # plus one for 'rows'
 #})
 
 #test_that("tiledb_date_datetime_types", {
@@ -54,11 +54,11 @@ df <- data.frame(char=c("abc", "def", "g", "hijk"),
 
 fromDataFrame(df, uri)
 
-arr <- tiledb_dense(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
 newdf <- arr[]
 
 ## result comes back as factor by default
 newdf <- within(newdf, char <- as.character(char))
 
-expect_equal(df, newdf)
+expect_equal(df, newdf[,-1])
 #})

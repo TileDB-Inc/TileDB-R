@@ -23,18 +23,21 @@
 
 ## helper functions for data frame, roughly modeled on what python has
 
-##' Create a TileDB Dense Array from a given \code{data.frame} Object
+##' Create a TileDB dense or sparse array from a given \code{data.frame} Object
 ##'
 ##' The supplied \code{data.frame} object is (currently) limited to integer,
-##' numeric, or character columns.
+##' numeric, or character. In addition, three datetime columns are supported
+##' with the R representations of \code{Date}, \code{POSIXct} and \code{nanotime}.
 ##'
-##' The create (Dense) Array will have as many attributes as there are columns in
-##' the \code{data.frame}.  Each attribute will be a single column.
+##' The created (dense or sparse) array will have as many attributes as there
+##' are columns in the \code{data.frame}.  Each attribute will be a single column.
+##' For a sparse array, one or more columns have to be designated as dimenions.
 ##'
 ##' At present, factor variable are converted to character.
 ##'
 ##' @param obj A \code{data.frame} object.
 ##' @param uri A character variable with an Array URI.
+##' @param sparse A logical switch to select sparse (the default) or dense
 ##' @return Null, invisibly.
 ##' @examples
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -43,12 +46,12 @@
 ##' ## turn factor into character
 ##' irisdf <- within(iris, Species <- as.character(Species))
 ##' fromDataFrame(irisdf, uri)
-##' arr <- tiledb_dense(uri, as.data.frame=TRUE)
+##' arr <- tiledb_array(uri, as.data.frame=TRUE, sparse=FALSE)
 ##' newdf <- arr[]
 ##' all.equal(iris, newdf)
 ##' }
 ##' @export
-fromDataFrame <- function(obj, uri) {
+fromDataFrame <- function(obj, uri, sparse=TRUE) {
   dims <- dim(obj)
 
   dom <- tiledb_domain(dims = tiledb_dim(name = "rows",
@@ -85,12 +88,12 @@ fromDataFrame <- function(obj, uri) {
   }
   attributes <- sapply(seq_len(dims[2]), makeAttr)
 
-  schema <- tiledb_array_schema(dom, attrs = attributes)
+  schema <- tiledb_array_schema(dom, attrs = attributes, sparse=sparse)
   tiledb_array_create(uri, schema)
   #cat("Schema written and array created.\n")
 
-  df <- tiledb_dense(uri)
-  df[] <- obj
+  df <- tiledb_array(uri)
+  df[] <- cbind(data.frame(rows=seq(1,dims[1])), obj)
   invisible(NULL)
 }
 
@@ -98,7 +101,7 @@ fromDataFrame <- function(obj, uri) {
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
   fromDataFrame(obj, uri)
 
-  df <- tiledb_dense(uri, as.data.frame=TRUE)
+  df <- tiledb_array(uri, as.data.frame=TRUE)
   df[]
 }
 
@@ -126,7 +129,7 @@ fromDataFrame <- function(obj, uri) {
   }
   fromDataFrame(bkdf, uri)
 
-  arr <- tiledb_dense(uri, as.data.frame = TRUE)
+  arr <- tiledb_array(uri, as.data.frame = TRUE)
   newdf <- arr[]
   invisible(newdf)
 }
@@ -139,7 +142,7 @@ fromDataFrame <- function(obj, uri) {
   fromDataFrame(df, uri)
   cat("Data written\n")
 
-  arr <- tiledb_dense(uri, as.data.frame = TRUE)
+  arr <- tiledb_array(uri, as.data.frame = TRUE)
   newdf <- arr[]
   invisible(newdf)
 }
