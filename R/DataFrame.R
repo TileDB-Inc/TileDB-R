@@ -38,6 +38,8 @@
 ##' @param obj A \code{data.frame} object.
 ##' @param uri A character variable with an Array URI.
 ##' @param sparse A logical switch to select sparse (the default) or dense
+##' @param filter A character variable, defaults to \sQuote{NONE}, for one or more
+##' filter to be applied to each attribute.
 ##' @return Null, invisibly.
 ##' @examples
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -51,13 +53,14 @@
 ##' all.equal(iris, newdf)
 ##' }
 ##' @export
-fromDataFrame <- function(obj, uri, sparse=TRUE) {
+fromDataFrame <- function(obj, uri, sparse=TRUE, filter="NONE") {
   dims <- dim(obj)
 
   dom <- tiledb_domain(dims = tiledb_dim(name = "rows",
                                          domain = c(1L, dims[1]),
                                          tile = min(10000L, dims[1]),
                                          type = "INT32"))
+
 
   ## turn factor columns in char columns
   factcols <- grep("factor", sapply(obj, class))
@@ -66,6 +69,9 @@ fromDataFrame <- function(obj, uri, sparse=TRUE) {
   }
 
   charcols <- grep("character", sapply(obj, class))
+
+  ## 'NONE' is a permitted filter
+  filterlist <- tiledb_filter_list(tiledb_filter(filter))
 
   makeAttr <- function(ind) {
     col <- obj[,ind]
@@ -84,7 +90,10 @@ fromDataFrame <- function(obj, uri, sparse=TRUE) {
       tp <- "DATETIME_NS"
     else
       stop("Currently unsupported type: ", cl)
-    tiledb_attr(colnames(obj)[ind], type=tp, ncells=ifelse(tp=="CHAR",NA_integer_,1))
+    tiledb_attr(colnames(obj)[ind],
+                type = tp,
+                ncells = ifelse(tp=="CHAR",NA_integer_,1),
+                filter_list = filterlist)
   }
   attributes <- sapply(seq_len(dims[2]), makeAttr)
 

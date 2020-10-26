@@ -4,7 +4,7 @@
 \alias{fromDataFrame}
 \title{Create a TileDB dense or sparse array from a given \code{data.frame} Object}
 \usage{
-fromDataFrame(obj, uri, sparse = TRUE)
+fromDataFrame(obj, uri, sparse = TRUE, filter = "NONE")
 }
 \arguments{
 \item{obj}{A \code{data.frame} object.}
@@ -12,6 +12,9 @@ fromDataFrame(obj, uri, sparse = TRUE)
 \item{uri}{A character variable with an Array URI.}
 
 \item{sparse}{A logical switch to select sparse (the default) or dense}
+
+\item{filter}{A character variable, defaults to \sQuote{NONE}, for one or more
+filter to be applied to each attribute.}
 }
 \value{
 Null, invisibly.
