@@ -4,7 +4,18 @@
 \alias{fromDataFrame}
 \title{Create a TileDB dense or sparse array from a given \code{data.frame} Object}
 \usage{
-fromDataFrame(obj, uri, sparse = TRUE, filter = "NONE")
+fromDataFrame(
+  obj,
+  uri,
+  sparse = TRUE,
+  allows_dups = TRUE,
+  cell_order = "COL_MAJOR",
+  tile_order = "COL_MAJOR",
+  filter = "NONE",
+  capacity = 1000L,
+  tile_domain,
+  tile_extent
+)
 }
 \arguments{
 \item{obj}{A \code{data.frame} object.}
@@ -13,8 +24,26 @@ fromDataFrame(obj, uri, sparse = TRUE, filter = "NONE")
 
 \item{sparse}{A logical switch to select sparse (the default) or dense}
 
-\item{filter}{A character variable, defaults to \sQuote{NONE}, for one or more
+\item{allows_dups}{A logical switch to select if duplicate values
+are allowed or not, default is \sQuote{TRUE}.}
+
+\item{cell_order}{A character variable with one of the TileDB cell order values,
+default is \dQuote{COL_MAJOR}.}
+
+\item{tile_order}{A character variable with one of the TileDB tile order values,
+default is \dQuote{COL_MAJOR}.}
+
+\item{filter}{A character variable, defaults to \sQuote{NONE}, for a
 filter to be applied to each attribute.}
+
+\item{capacity}{A integer value with the schema capacity, default is 1000.}
+
+\item{tile_domain}{An integer vector of size two specifying the integer domain of the row
+dimension; if missing the row dimension of the \code{obj} is used.}
+
+\item{tile_extent}{An integer value for the tile extent of the row dimensions;
+if missing the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
+cannot exceed the tile domain.}
 }
 \value{
 Null, invisibly.

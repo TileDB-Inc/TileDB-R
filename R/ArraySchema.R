@@ -43,6 +43,7 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param sparse (default FALSE)
 #' @param coords_filter_list (optional)
 #' @param offsets_filter_list (optional)
+#' @param capacity (optional)
 #' @param ctx tiledb_ctx object (optional)
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -64,6 +65,7 @@ tiledb_array_schema <- function(domain,
                                 sparse = FALSE,
                                 coords_filter_list = NULL,
                                 offsets_filter_list = NULL,
+                                capacity = 10000L,
                                 ctx = tiledb_get_context()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
@@ -104,6 +106,7 @@ tiledb_array_schema <- function(domain,
   }
   ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order,
                                 coords_filter_list_ptr, offsets_filter_list_ptr, sparse)
+  libtiledb_array_schema_set_capacity(ptr, capacity)
   return(new("tiledb_array_schema", ptr = ptr))
 }
 

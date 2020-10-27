@@ -38,8 +38,20 @@
 ##' @param obj A \code{data.frame} object.
 ##' @param uri A character variable with an Array URI.
 ##' @param sparse A logical switch to select sparse (the default) or dense
-##' @param filter A character variable, defaults to \sQuote{NONE}, for one or more
+##' @param allows_dups A logical switch to select if duplicate values
+##' are allowed or not, default is \sQuote{TRUE}.
+##' @param cell_order A character variable with one of the TileDB cell order values,
+##' default is \dQuote{COL_MAJOR}.
+##' @param tile_order A character variable with one of the TileDB tile order values,
+##' default is \dQuote{COL_MAJOR}.
+##' @param filter A character variable, defaults to \sQuote{NONE}, for a
 ##' filter to be applied to each attribute.
+##' @param capacity A integer value with the schema capacity, default is 1000.
+##' @param tile_domain An integer vector of size two specifying the integer domain of the row
+##' dimension; if missing the row dimension of the \code{obj} is used.
+##' @param tile_extent An integer value for the tile extent of the row dimensions;
+##' if missing the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
+##' cannot exceed the tile domain.
 ##' @return Null, invisibly.
 ##' @examples
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -53,14 +65,19 @@
 ##' all.equal(iris, newdf)
 ##' }
 ##' @export
-fromDataFrame <- function(obj, uri, sparse=TRUE, filter="NONE") {
+fromDataFrame <- function(obj, uri, sparse=TRUE, allows_dups=TRUE,
+                          cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="NONE",
+                          capacity = 1000L, tile_domain, tile_extent) {
+
   dims <- dim(obj)
 
-  dom <- tiledb_domain(dims = tiledb_dim(name = "rows",
-                                         domain = c(1L, dims[1]),
-                                         tile = min(10000L, dims[1]),
-                                         type = "INT32"))
+  if (missing(tile_domain)) tile_domain <- c(1L, dims[1])
+  if (missing(tile_extent)) tile_extent <- dims[1]
 
+  dom <- tiledb_domain(dims = tiledb_dim(name = "rows",
+                                         domain = tile_domain,
+                                         tile = tile_extent,
+                                         type = "INT32"))
 
   ## turn factor columns in char columns
   factcols <- grep("factor", sapply(obj, class))
@@ -97,8 +114,12 @@ fromDataFrame <- function(obj, uri, sparse=TRUE, filter="NONE") {
   }
   attributes <- sapply(seq_len(dims[2]), makeAttr)
 
-  schema <- tiledb_array_schema(dom, attrs = attributes, sparse=sparse)
+  schema <- tiledb_array_schema(dom, attrs = attributes,
+                                cell_order = cell_order, tile_order = tile_order,
+                                sparse=sparse, capacity=capacity)
   tiledb_array_create(uri, schema)
+
+  allows_dups(schema) <- allows_dups
 
   df <- tiledb_array(uri)
   if (sparse) obj <- cbind(data.frame(rows=seq(1,dims[1])), obj)
