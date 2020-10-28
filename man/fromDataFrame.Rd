@@ -56,7 +56,7 @@ with the R representations of \code{Date}, \code{POSIXct} and \code{nanotime}.
 \details{
 The created (dense or sparse) array will have as many attributes as there
 are columns in the \code{data.frame}.  Each attribute will be a single column.
-For a sparse array, one or more columns have to be designated as dimenions.
+For a sparse array, one or more columns have to be designated as dimensions.
 
 At present, factor variable are converted to character.
 }
