@@ -2613,8 +2613,8 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "INT64") {
-    int64_t start = static_cast<int64_t>(as<double>(starts));
-    int64_t end = static_cast<int64_t>(as<double>(ends));
+    int64_t start = makeScalarInteger64(as<double>(starts));
+    int64_t end = makeScalarInteger64(as<double>(ends));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
@@ -2622,8 +2622,8 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "UINT64") {
-    uint64_t start = static_cast<uint64_t>(as<double>(starts));
-    uint64_t end = static_cast<uint64_t>(as<double>(ends));
+    uint64_t start = static_cast<uint64_t>(makeScalarInteger64(as<double>(starts)));
+    uint64_t end = static_cast<uint64_t>(makeScalarInteger64(as<double>(ends)));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {

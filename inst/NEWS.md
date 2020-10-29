@@ -1,11 +1,15 @@
 # Ongoing
 
+## Improvements
+
+* The older implementations `tiledb_dense` and `tiledb_sparse` are now marked as deprecated in favor of `tiledb_array`. No removal date is set or planned yet, but it is recommended to migrate new code. (#180)
+
+* Updated the underlying TileDB library to use TileDB 2.1.2 on macOS and Linux (when no system library is found) (#181)
+
 
 # 0.8.2
 
 * This release of the R package builds against [TileDB 2.1.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.1), but has also been tested against previous releases as well as the development version.
-
-## Improvements
 
 ## Bug Fixes
 

@@ -2,25 +2,61 @@
 % Please edit documentation in R/DataFrame.R
 \name{fromDataFrame}
 \alias{fromDataFrame}
-\title{Create a TileDB Dense Array from a given \code{data.frame} Object}
+\title{Create a TileDB dense or sparse array from a given \code{data.frame} Object}
 \usage{
-fromDataFrame(obj, uri)
+fromDataFrame(
+  obj,
+  uri,
+  sparse = TRUE,
+  allows_dups = TRUE,
+  cell_order = "COL_MAJOR",
+  tile_order = "COL_MAJOR",
+  filter = "NONE",
+  capacity = 1000L,
+  tile_domain,
+  tile_extent
+)
 }
 \arguments{
 \item{obj}{A \code{data.frame} object.}
 
 \item{uri}{A character variable with an Array URI.}
+
+\item{sparse}{A logical switch to select sparse (the default) or dense}
+
+\item{allows_dups}{A logical switch to select if duplicate values
+are allowed or not, default is \sQuote{TRUE}.}
+
+\item{cell_order}{A character variable with one of the TileDB cell order values,
+default is \dQuote{COL_MAJOR}.}
+
+\item{tile_order}{A character variable with one of the TileDB tile order values,
+default is \dQuote{COL_MAJOR}.}
+
+\item{filter}{A character variable, defaults to \sQuote{NONE}, for a
+filter to be applied to each attribute.}
+
+\item{capacity}{A integer value with the schema capacity, default is 1000.}
+
+\item{tile_domain}{An integer vector of size two specifying the integer domain of the row
+dimension; if missing the row dimension of the \code{obj} is used.}
+
+\item{tile_extent}{An integer value for the tile extent of the row dimensions;
+if missing the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
+cannot exceed the tile domain.}
 }
 \value{
 Null, invisibly.
 }
 \description{
 The supplied \code{data.frame} object is (currently) limited to integer,
-numeric, or character columns.
+numeric, or character. In addition, three datetime columns are supported
+with the R representations of \code{Date}, \code{POSIXct} and \code{nanotime}.
 }
 \details{
-The create (Dense) Array will have as many attributes as there are columns in
-the \code{data.frame}.  Each attribute will be a single column.
+The created (dense or sparse) array will have as many attributes as there
+are columns in the \code{data.frame}.  Each attribute will be a single column.
+For a sparse array, one or more columns have to be designated as dimensions.
 
 At present, factor variable are converted to character.
 }
@@ -31,7 +67,7 @@ uri <- tempfile()
 ## turn factor into character
 irisdf <- within(iris, Species <- as.character(Species))
 fromDataFrame(irisdf, uri)
-arr <- tiledb_dense(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as.data.frame=TRUE, sparse=FALSE)
 newdf <- arr[]
 all.equal(iris, newdf)
 }
