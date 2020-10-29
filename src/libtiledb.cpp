@@ -210,8 +210,10 @@ const char* _tiledb_layout_to_string(tiledb_layout_t layout) {
       return "GLOBAL_ORDER";
     case TILEDB_UNORDERED:
       return "UNORDERED";
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     case TILEDB_HILBERT:
       return "HILBERT";
+#endif
     default:
       Rcpp::stop("unknown tiledb_layout_t (%d)", layout);
   }
@@ -226,8 +228,10 @@ tiledb_layout_t _string_to_tiledb_layout(std::string lstr) {
     return TILEDB_GLOBAL_ORDER;
   } else if (lstr == "UNORDERED") {
     return TILEDB_UNORDERED;
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
   } else if (lstr == "HILBERT") {
     return TILEDB_HILBERT;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB layout '%s' ", lstr.c_str());
   }
