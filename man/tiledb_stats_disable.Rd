@@ -2,11 +2,10 @@
 % Please edit documentation in R/Stats.R
 \name{tiledb_stats_disable}
 \alias{tiledb_stats_disable}
-\title{Disable stats counters}
+\title{Disable internal TileDB statistics counters}
 \usage{
 tiledb_stats_disable()
 }
 \description{
-Disable stats counters
+This function ends the collection of internal statistics.
 }
-\concept{stats}

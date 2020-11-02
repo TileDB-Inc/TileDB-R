@@ -645,3 +645,11 @@ libtiledb_stats_dump <- function(path = "") {
     invisible(.Call(`_tiledb_libtiledb_stats_dump`, path))
 }
 
+libtiledb_stats_raw_dump <- function(path = "") {
+    invisible(.Call(`_tiledb_libtiledb_stats_raw_dump`, path))
+}
+
+libtiledb_stats_raw_get <- function() {
+    .Call(`_tiledb_libtiledb_stats_raw_get`)
+}
+

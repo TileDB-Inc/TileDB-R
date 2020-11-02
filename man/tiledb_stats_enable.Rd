@@ -2,11 +2,10 @@
 % Please edit documentation in R/Stats.R
 \name{tiledb_stats_enable}
 \alias{tiledb_stats_enable}
-\title{Enable stats counters}
+\title{Enable internal TileDB statistics counters}
 \usage{
 tiledb_stats_enable()
 }
 \description{
-Enable stats counters
+This function starts the collection of internal statistics.
 }
-\concept{stats}

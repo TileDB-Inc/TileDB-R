@@ -2,11 +2,10 @@
 % Please edit documentation in R/Stats.R
 \name{tiledb_stats_reset}
 \alias{tiledb_stats_reset}
-\title{Reset stats counters}
+\title{Reset internal TileDB statistics counters}
 \usage{
 tiledb_stats_reset()
 }
 \description{
-Reset stats counters
+This function resets the counters for internal statistics.
 }
-\concept{stats}
