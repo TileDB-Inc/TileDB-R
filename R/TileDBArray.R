@@ -131,7 +131,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  selected_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
                                else "(none)", "\n"
      ,"  extended        = ", if (object@extended) "TRUE" else "FALSE" ,"\n"
-     ,"  query_layout    = '", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "'\n"
+     ,"  query_layout    = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
      ,sep="")
 })
 
