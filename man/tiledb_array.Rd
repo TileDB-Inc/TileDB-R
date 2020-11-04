@@ -12,6 +12,7 @@ tiledb_array(
   attrs = character(),
   extended = TRUE,
   selected_ranges = list(),
+  query_layout = character(),
   ctx = tiledb_get_context()
 )
 }
@@ -30,8 +31,11 @@ empty implying all are selected}
 \item{extended}{optional logical switch selecting wide \sQuote{data.frame}
 format, defaults to "TRUE"}
 
-\item{selected_ranges}{An optional list with matrices where each matrix i
+\item{selected_ranges}{optional A list with matrices where each matrix i
 describes the (min,max) pair of ranges for dimension i}
+
+\item{query_layout}{optional A value for the TileDB query layout, defaults to
+an empty character variable indicating no special layout is set}
 
 \item{ctx}{tiledb_ctx (optional)}
 }

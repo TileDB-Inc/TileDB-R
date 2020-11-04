@@ -35,6 +35,7 @@
 #' @slot extended A logical value
 #' @slot selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
+#' @slot query_layout An optional character value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -45,6 +46,7 @@ setClass("tiledb_array",
                       attrs = "character",
                       extended = "logical",
                       selected_ranges = "list",
+                      query_layout = "character",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -59,8 +61,10 @@ setClass("tiledb_array",
 #' empty implying all are selected
 #' @param extended optional logical switch selecting wide \sQuote{data.frame}
 #' format, defaults to "TRUE"
-#' @param selected_ranges An optional list with matrices where each matrix i
+#' @param selected_ranges optional A list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
+#' @param query_layout optional A value for the TileDB query layout, defaults to
+#' an empty character variable indicating no special layout is set
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object
 #' @export
@@ -71,6 +75,7 @@ tiledb_array <- function(uri,
                         attrs = character(),
                         extended = TRUE,
                         selected_ranges = list(),
+                        query_layout = character(),
                         ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -95,6 +100,7 @@ tiledb_array <- function(uri,
       attrs = attrs,
       extended = extended,
       selected_ranges = selected_ranges,
+      query_layout = query_layout,
       ptr = array_xptr)
 }
 
@@ -124,8 +130,8 @@ setMethod("show", signature = "tiledb_array",
                                else paste(object@attrs, collapse=","), "\n"
      ,"  selected_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
                                else "(none)", "\n"
-     ,"  extended        = ", if (object@extended) "TRUE" else "FALSE"
-     ,"\n"
+     ,"  extended        = ", if (object@extended) "TRUE" else "FALSE" ,"\n"
+     ,"  query_layout    = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
      ,sep="")
 })
 
@@ -181,6 +187,11 @@ setValidity("tiledb_array", function(object) {
     }
   }
 
+  if (!is.character(object@query_layout)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'query_layout' slot does not contain a character value.")
+  }
+
   if (!is(object@ptr, "externalptr")) {
     valid <- FALSE
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
@@ -222,6 +233,7 @@ setMethod("[", "tiledb_array",
   sel <- x@attrs
   sch <- tiledb::schema(x)
   dom <- tiledb::domain(sch)
+  layout <- x@query_layout
 
   libtiledb_array_open_with_ptr(x@ptr, "READ")
   on.exit(libtiledb_array_close(x@ptr))
@@ -263,6 +275,7 @@ setMethod("[", "tiledb_array",
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
+  if (length(layout) > 0) libtiledb_query_set_layout(qryptr, layout)
 
   ## set default range(s) on first dimension if nothing is specified
   if (is.null(i) &&
@@ -298,6 +311,7 @@ setMethod("[", "tiledb_array",
                                                         nonemptydom[[2]][1], nonemptydom[[2]][2])
     }
   }
+
   ## if we have js, use it
   if (!is.null(j)) {
     #if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
@@ -442,6 +456,7 @@ setMethod("[<-", "tiledb_array",
   sel <- x@attrs
   sch <- tiledb::schema(x)
   dom <- tiledb::domain(sch)
+  layout <- x@query_layout
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
@@ -530,7 +545,8 @@ setMethod("[<-", "tiledb_array",
     arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
     qryptr <- libtiledb_query_set_layout(qryptr,
-                                         if(sparse) "UNORDERED" else "ROW_MAJOR")
+                                         if (length(layout) > 0) layout
+                                         else { if (sparse) "UNORDERED" else "ROW_MAJOR" })
 
     buflist <- vector(mode="list", length=nc)
     for (i in 1:nc) {
@@ -711,6 +727,45 @@ setMethod("selected_ranges", signature = "tiledb_array",
 setReplaceMethod("selected_ranges", signature = "tiledb_array",
                  function(x, value) {
   x@selected_ranges <- value
+  validObject(x)
+  x
+})
+
+
+
+## -- query_layout accessor
+
+#' @rdname query_layout-tiledb_array-method
+#' @export
+setGeneric("query_layout", function(object) standardGeneric("query_layout"))
+
+#' @rdname query_layout-set-tiledb_array-method
+#' @export
+setGeneric("query_layout<-", function(x, value) standardGeneric("query_layout<-"))
+
+#' Retrieve query_layout values for the array
+#'
+#' A \code{tiledb_array} object can have a corresponding query with a given layout
+#' given layout. This methods returns the selection value for \sQuote{query_layout}
+#' as a character value.
+#' @param object A \code{tiledb_array} object
+#' @return A character value describing the query layout
+#' @export
+setMethod("query_layout", signature = "tiledb_array", function(object) object@query_layout)
+
+#' Set query_layout return values for the array
+#'
+#' A \code{tiledb_array} object can have an associated query with a specific layout.
+#' This methods sets the selection value for \sQuote{query_layout} from a character
+#' value.
+#' @param x A \code{tiledb_array} object
+#'
+#' @param value A character variable for the query layout. Permitted values are
+#' \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or \dQuote{UNORDERD}.
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("query_layout", signature = "tiledb_array", function(x, value) {
+  x@query_layout <- value
   validObject(x)
   x
 })
