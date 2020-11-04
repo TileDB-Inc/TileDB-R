@@ -32,16 +32,16 @@ create_array <- function(uri) {
 }
 
 write_array <- function(uri) {
-  data <- list(seq(1:10),
-               as.double(seq(101,110)),
+  data <- list(rows = ISOdatetime(2020,1,1,0,0,0) + (1:10),
+               cols = rep(1L, 10),
+               a = seq(1:10),
+               b = as.double(seq(101,110)),
                ##c(letters[1:26], "brown", "fox", LETTERS[1:22])[1:10],
-               as.Date("2020-01-01") + cumsum(runif(10)*5),
-               ISOdatetime(2020,1,1,6,0,0) + cumsum(rnorm(10) * 1e5))
+               d = as.Date("2020-01-01") + cumsum(runif(10)*5),
+               e = ISOdatetime(2020,1,1,6,0,0) + cumsum(rnorm(10) * 1e5))
   ## Open the array and write to it.
   A <- tiledb_array(uri = uri)
-  rows <- ISOdatetime(2020,1,1,0,0,0) + (1:10)
-  cols <- rep(1L, 10)
-  A[rows,cols] <- data
+  A[] <- data
 }
 
 read_array <- function(uri) {
