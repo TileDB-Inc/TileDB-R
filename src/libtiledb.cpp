@@ -2979,3 +2979,25 @@ void libtiledb_stats_dump(std::string path = "") {
     fclose(fptr);
   }
 }
+
+// [[Rcpp::export]]
+void libtiledb_stats_raw_dump(std::string path = "") {
+  if (path == "") {
+    tiledb::Stats::raw_dump();
+  } else {
+    FILE* fptr = nullptr;
+    fptr = fopen(path.c_str(), "w");
+    if (fptr == nullptr) {
+      Rcpp::stop("error opening stats dump file for writing");
+    }
+    tiledb::Stats::raw_dump(fptr);
+    fclose(fptr);
+  }
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_stats_raw_get() {
+  std::string result;
+  tiledb::Stats::raw_dump(&result);
+  return result;
+}
