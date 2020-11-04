@@ -13,8 +13,7 @@ query_layout(x) <- value
 \item{x}{A \code{tiledb_array} object}
 
 \item{value}{A character variable for the query layout. Permitted values are
-\dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, \dQuote{UNORDERD}
-or \dQuote{HILBERT}.}
+\dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or \dQuote{UNORDERD}.}
 }
 \value{
 The modified \code{tiledb_array} array object

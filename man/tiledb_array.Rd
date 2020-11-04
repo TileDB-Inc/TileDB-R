@@ -35,7 +35,7 @@ format, defaults to "TRUE"}
 describes the (min,max) pair of ranges for dimension i}
 
 \item{query_layout}{optional A value for the TileDB query layout, defaults to
-\dQuote{ROW_MAJOR} for dense arrays and \dQuote{UNORDERED} for sparse arrays.}
+an empty character variable indicating no special layout is set}
 
 \item{ctx}{tiledb_ctx (optional)}
 }

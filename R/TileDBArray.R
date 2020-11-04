@@ -35,7 +35,7 @@
 #' @slot extended A logical value
 #' @slot selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
-#' @slot query_layout A optional character value
+#' @slot query_layout An optional character value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -761,8 +761,7 @@ setMethod("query_layout", signature = "tiledb_array", function(object) object@qu
 #' @param x A \code{tiledb_array} object
 #'
 #' @param value A character variable for the query layout. Permitted values are
-#' \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, \dQuote{UNORDERD}
-#' or \dQuote{HILBERT}.
+#' \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or \dQuote{UNORDERD}.
 #' @return The modified \code{tiledb_array} array object
 #' @export
 setReplaceMethod("query_layout", signature = "tiledb_array", function(x, value) {
