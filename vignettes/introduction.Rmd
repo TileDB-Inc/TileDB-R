@@ -51,10 +51,10 @@ some point in the future.
 *Read 1-D*
 
 The first example extracts rows 1 to 2 and column 2 from an array. It also limits the selection to
-just one attribute (via `attrs`), asks for the return to be `data.frame` (instead of a simpler list)
+just one attribute (via `attrs`), asks for the return to be a `data.frame` (instead of a simpler list)
 and for the (row and column, if present as here) indices to not be printed (via `extended=FALSE`).
 
-    R> A <- tiledb_array(uri = uri, attrs = "b", , as.data.frame=TRUE, extended=FALSE))
+    R> A <- tiledb_array(uri = uri, attrs = "b", as.data.frame=TRUE, extended=FALSE))
     R> A[1:2,2]
     [1] 101.5 104.0
     R>
