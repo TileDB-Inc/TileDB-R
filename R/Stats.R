@@ -69,32 +69,39 @@ tiledb_stats_print <- function() {
 
 #' Dumps internal TileDB statistics as JSON to file
 #'
+#' This function requires TileDB Embedded 2.0.3 or later.
 #' @param path Character variable with path to stats file;
 #' if the empty string is passed then the result is displayed on stdout.
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' pth <- tempfile()
-#' tiledb_stats_raw_dump(pth)
-#' cat(readLines(pth)[1:10], sep = "\n")
-#'
+#' if (tiledb_version(TRUE) >= "2.0.3") {
+#'   pth <- tempfile()
+#'   tiledb_stats_raw_dump(pth)
+#'   cat(readLines(pth)[1:10], sep = "\n")
+#' }
 #' @export
 tiledb_stats_raw_dump <- function(path) {
+  if (tiledb_version(TRUE) < "2.0.3") warning("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
   libtiledb_stats_raw_dump(path)
 }
 
 #' Print internal TileDB statistics as JSON
 #'
 #' This function is a convenience wrapper for \code{tiledb_stats_raw_dump}.
+#' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_print <- function() {
+  if (tiledb_version(TRUE) < "2.0.3") stop("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
   libtiledb_stats_raw_dump("")
 }
 
 #' Gets internal TileDB statistics as JSON string
 #'
 #' This function is a convenience wrapper for \code{tiledb_stats_raw_dump}
-#' and returns the result as a JSON string
+#' and returns the result as a JSON string.
+#' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_get <- function() {
+  if (tiledb_version(TRUE) < "2.0.3") stop("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
   libtiledb_stats_raw_get()
 }

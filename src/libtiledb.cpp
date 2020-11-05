@@ -2990,6 +2990,9 @@ void libtiledb_stats_dump(std::string path = "") {
 
 // [[Rcpp::export]]
 void libtiledb_stats_raw_dump(std::string path = "") {
+#if TILEDB_VERSION < TileDB_Version(2,0,3)
+  Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
+#else
   if (path == "") {
     tiledb::Stats::raw_dump();
   } else {
@@ -3001,11 +3004,17 @@ void libtiledb_stats_raw_dump(std::string path = "") {
     tiledb::Stats::raw_dump(fptr);
     fclose(fptr);
   }
+#endif
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_stats_raw_get() {
+#if TILEDB_VERSION < TileDB_Version(2,0,3)
+  Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
+  return(std::string());//not reached
+#else
   std::string result;
   tiledb::Stats::raw_dump(&result);
   return result;
+#endif
 }
