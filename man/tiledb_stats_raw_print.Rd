@@ -8,4 +8,5 @@ tiledb_stats_raw_print()
 }
 \description{
 This function is a convenience wrapper for \code{tiledb_stats_raw_dump}.
+It required TileDB Embedded 2.0.3 or later.
 }

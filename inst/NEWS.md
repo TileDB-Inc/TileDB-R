@@ -6,6 +6,14 @@
 
 * Updated the underlying TileDB library to use TileDB 2.1.2 on macOS and Linux (when no system library is found) (#181)
 
+* There is extended support for array creation directly from DataFrame objects. (#182)
+
+* Internal TileDB performance statistics can now be exported 'raw' in JSON format. (#183)
+
+* The vignette was updated with respect to the preferred used of `tiledb_array`. (#184)
+
+* The Hilbert cell layout added recently to TileDB Embbeded is supported. (#185)
+
 
 # 0.8.2
 

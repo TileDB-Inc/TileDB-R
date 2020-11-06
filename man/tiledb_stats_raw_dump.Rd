@@ -11,12 +11,13 @@ tiledb_stats_raw_dump(path)
 if the empty string is passed then the result is displayed on stdout.}
 }
 \description{
-Dumps internal TileDB statistics as JSON to file
+This function requires TileDB Embedded 2.0.3 or later.
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-pth <- tempfile()
-tiledb_stats_raw_dump(pth)
-cat(readLines(pth)[1:10], sep = "\n")
-
+if (tiledb_version(TRUE) >= "2.0.3") {
+  pth <- tempfile()
+  tiledb_stats_raw_dump(pth)
+  cat(readLines(pth)[1:10], sep = "\n")
+}
 }
