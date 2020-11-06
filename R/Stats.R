@@ -81,7 +81,7 @@ tiledb_stats_print <- function() {
 #' }
 #' @export
 tiledb_stats_raw_dump <- function(path) {
-  if (tiledb_version(TRUE) < "2.0.3") warning("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
+  if (tiledb_version(TRUE) < "2.0.3") stop("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
   libtiledb_stats_raw_dump(path)
 }
 
