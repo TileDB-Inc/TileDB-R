@@ -4,12 +4,12 @@
 \alias{tiledb_vfs_is_bucket}
 \title{Check for VFS Bucket}
 \usage{
-tiledb_vfs_is_bucket(vfs, uri)
+tiledb_vfs_is_bucket(uri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{vfs}{TileDB VFS object}
-
 \item{uri}{Character variable with a URI describing a cloud bucket}
+
+\item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
 A boolean value indicating if it is a valid bucket

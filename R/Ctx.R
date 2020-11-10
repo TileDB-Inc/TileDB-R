@@ -53,11 +53,13 @@ getContext <- function() tiledb_get_context()
 #' Store a TileDB context object in the package cache
 #'
 #' @param ctx A TileDB context object
-#' @return A TileDB context object
+#' @return NULL, invisibly. The function is invoked for the side-effect of
+#' storing the VFS object.
 #' @export
 tiledb_set_context <- function(ctx) {
   ## set the ctx entry from the package environment (a lightweight hash)
   .pkgenv[["ctx"]] <- ctx
+  invisible(NULL)
 }
 
 # provided old renamed context for continuity/compatibility

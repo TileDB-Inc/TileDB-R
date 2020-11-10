@@ -4,12 +4,12 @@
 \alias{tiledb_vfs_remove_file}
 \title{Remove a VFS File}
 \usage{
-tiledb_vfs_remove_file(vfs, uri)
+tiledb_vfs_remove_file(uri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{vfs}{TileDB VFS object}
-
 \item{uri}{Character variable with a URI describing a file path}
+
+\item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
 The uri value of the removed file

@@ -4,14 +4,14 @@
 \alias{tiledb_vfs_move_file}
 \title{Move (or rename) a VFS File}
 \usage{
-tiledb_vfs_move_file(vfs, olduri, newuri)
+tiledb_vfs_move_file(olduri, newuri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{vfs}{TileDB VFS object}
-
 \item{olduri}{Character variable with an existing URI describing a file path}
 
 \item{newuri}{Character variable with a new desired URI file path}
+
+\item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
 The newuri value of the moved file
