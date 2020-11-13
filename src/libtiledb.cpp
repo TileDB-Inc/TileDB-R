@@ -545,12 +545,14 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       dtype != TILEDB_FLOAT32 &&
       dtype != TILEDB_FLOAT64 &&
       dtype != TILEDB_DATETIME_DAY &&
+      dtype != TILEDB_DATETIME_HR &&
+      dtype != TILEDB_DATETIME_MIN &&
       dtype != TILEDB_DATETIME_SEC &&
       dtype != TILEDB_DATETIME_MS &&
       dtype != TILEDB_DATETIME_US &&
       dtype != TILEDB_DATETIME_NS &&
       dtype != TILEDB_STRING_ASCII) {
-    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT{32,64}), DATETIME_{DAY,SEC,MS,US,NS}, DATETIME_STRING_ACII domains supported");
+    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT{32,64}), DATETIME_{DAY,HR,MIN,SEC,MS,US,NS}, STRING_ACII domains supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (dtype == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
@@ -721,6 +723,8 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     return ptr;
 
   } else if (dtype == TILEDB_DATETIME_DAY ||
+             dtype == TILEDB_DATETIME_HR  ||
+             dtype == TILEDB_DATETIME_MIN ||
              dtype == TILEDB_DATETIME_SEC ||
              dtype == TILEDB_DATETIME_MS  ||
              dtype == TILEDB_DATETIME_US  ||
@@ -1751,11 +1755,7 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
                                                              std::string name,
                                                              std::string typestr) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  if (typestr == "DATETIME_NS") {
-    auto p = array->non_empty_domain<int64_t>(name);
-    std::vector<int64_t> v{p.first, p.second};
-    return makeNanotime(v);
-  } else if (typestr == "INT64") {
+  if (typestr == "INT64") {
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
     return makeInteger64(v);
@@ -1787,11 +1787,20 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
   } else if (typestr == "FLOAT32") {
     auto p = array->non_empty_domain<float>(name);
     return NumericVector::create(p.first, p.second);
-  } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_SEC" || typestr == "DATETIME_MS") {
+  } else if (typestr == "DATETIME_DAY" ||
+             typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS"  ||
+             typestr == "DATETIME_US") {
     // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
     return makeInteger64(v);
+  } else if (typestr == "DATETIME_NS") {
+    auto p = array->non_empty_domain<int64_t>(name);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeNanotime(v);
   } else {
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
@@ -2323,7 +2332,9 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
     std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
   } else if (dtype == "DATETIME_MS" ||
              dtype == "DATETIME_US" ||
-             dtype == "DATETIME_SEC") {
+             dtype == "DATETIME_SEC"||
+             dtype == "DATETIME_MIN"||
+             dtype == "DATETIME_HR"   ) {
     NumericVector v(vec);
     int n = buf->ncells;
     double scalefactor = 1.0;
@@ -2450,8 +2461,12 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
-  } else if (dtype == "DATETIME_DAY" || dtype == "DATETIME_SEC" ||
-             dtype == "DATETIME_US" || dtype == "DATETIME_MS") {
+  } else if (dtype == "DATETIME_DAY" ||
+             dtype == "DATETIME_HR" ||
+             dtype == "DATETIME_MIN" ||
+             dtype == "DATETIME_SEC" ||
+             dtype == "DATETIME_US" ||
+             dtype == "DATETIME_MS") {
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
     std::memcpy(tt.data(), buf->vec.data(), n*buf->size);

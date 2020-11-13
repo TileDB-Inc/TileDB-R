@@ -26,11 +26,14 @@ dimtypes <- c("ASCII",  		# Variable length string
               "FLOAT32",		# 32-bit floating point
               "FLOAT64",		# 64-bit floating point
               "DATETIME_DAY",   # date
+              "DATETIME_HR",    # hour
+              "DATETIME_MIN",   # minute
               "DATETIME_SEC",   # second
               "DATETIME_MS",    # millisecond
+              "DATETIME_US",    # microsecond
               "DATETIME_NS"     # nanosecond
               )
-
+dimtypes <- tail(dimtypes,7)
 for (dtype in dimtypes) {
     cat("Creating", dtype, "... ")
     if (tiledb_vfs_is_dir(uri)) {
@@ -51,13 +54,18 @@ for (dtype in dimtypes) {
                   "FLOAT32" =,
                   "FLOAT64" = c(1, 1000),
                   "DATETIME_DAY" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_HR" = c(as.POSIXct("2000-01-01 00:00:00"),
+                                     as.POSIXct("2030-12-31 23:00:59")),
+                  "DATETIME_MIN" = c(as.POSIXct("2000-01-01 00:00:00"),
+                                     as.POSIXct("2030-12-31 23:59:00")),
                   "DATETIME_SEC" = c(as.POSIXct("2000-01-01 00:00:00"),
                                      as.POSIXct("2030-12-31 23:59:59")),
                   "DATETIME_MS"  =,
+                  "DATETIME_US"  =,
                   "DATETIME_NS"  = c(1, 1e18)
                   )
 
-    if (dtype %in% c("DATETIME_MS", "DATETIME_NS"))
+    if (dtype %in% c("DATETIME_MS", "DATETIME_US", "DATETIME_NS"))
         tile <- 1000
     else
         tile <- dom[1]                      # fallback
@@ -83,8 +91,12 @@ for (dtype in dimtypes) {
                    "FLOAT32" =,
                    "FLOAT64" = as.numeric(1:3),
                    "DATETIME_DAY" = as.Date("2020-01-01") + 0:2,
+                   "DATETIME_HR"  = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
+                   "DATETIME_MIN" = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
                    "DATETIME_SEC" = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
                    "DATETIME_MS"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.001,3),
+                   ## POSIXct can do a bit less than 1 microsec so we set it to 2 on purpose
+                   "DATETIME_US"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.000002,3),
                    "DATETIME_NS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9
                    )
     avec <- 10^(1:3)
@@ -96,7 +108,7 @@ for (dtype in dimtypes) {
     cat("reading ... ")
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
-
+print(readdata)
     cat("checking ... ")
     stopifnot(all.equal(data, readdata))
     #print(arr2[])
