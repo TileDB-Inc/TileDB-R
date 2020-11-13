@@ -17,15 +17,15 @@ expect_true(is(vfs, "tiledb_vfs"))
 vfs <- tiledb_vfs()
 uri <- tempfile()
 
-expect_equal(tiledb_vfs_create_dir(vfs, uri), uri)
+expect_equal(tiledb_vfs_create_dir(uri), uri)
 ## check directly
 expect_true(dir.exists(uri))
 ## check via VFS
-expect_true(tiledb_vfs_is_dir(vfs, uri))
+expect_true(tiledb_vfs_is_dir(uri))
 
 newuri <- tempfile()
-expect_equal(tiledb_vfs_move_dir(vfs, uri, newuri), newuri)
-expect_equal(tiledb_vfs_remove_dir(vfs, newuri), newuri)
+expect_equal(tiledb_vfs_move_dir(uri, newuri), newuri)
+expect_equal(tiledb_vfs_remove_dir(newuri), newuri)
 expect_false(dir.exists(newuri))
 #})
 
@@ -33,16 +33,23 @@ expect_false(dir.exists(newuri))
 vfs <- tiledb_vfs()
 uri <- tempfile()
 
-expect_equal(tiledb_vfs_touch(vfs, uri), uri)
-expect_true(tiledb_vfs_is_file(vfs, uri))
+expect_equal(tiledb_vfs_touch(uri), uri)
+expect_true(tiledb_vfs_is_file(uri))
 
 ## check via VFS
-expect_true(tiledb_vfs_is_file(vfs, uri))
+expect_true(tiledb_vfs_is_file(uri))
 
 ## check via VFS
-expect_equal(tiledb_vfs_file_size(vfs, uri), 0)
+expect_equal(tiledb_vfs_file_size(uri), 0)
 
 newuri <- tempfile()
+expect_equal(tiledb_vfs_move_file(uri, newuri), newuri)
+expect_equal(tiledb_vfs_remove_file(newuri), newuri)
+expect_false(file.exists(newuri))
+
+## same with old interface
+newuri <- tempfile()
+expect_equal(tiledb_vfs_touch(vfs, uri), uri)
 expect_equal(tiledb_vfs_move_file(vfs, uri, newuri), newuri)
 expect_equal(tiledb_vfs_remove_file(vfs, newuri), newuri)
 expect_false(file.exists(newuri))

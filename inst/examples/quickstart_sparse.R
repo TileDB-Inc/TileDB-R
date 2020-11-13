@@ -44,7 +44,7 @@ create_array <- function(array_name) {
     # Check if the array already exists.
     if (tiledb_object_type(array_name) == "ARRAY") {
         message("Array already exists, removing to create new one.")
-        tiledb_vfs_remove_dir(tiledb_vfs(), array_name)
+        tiledb_vfs_remove_dir(array_name)
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].

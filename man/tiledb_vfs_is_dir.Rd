@@ -4,12 +4,12 @@
 \alias{tiledb_vfs_is_dir}
 \title{Test for VFS Directory}
 \usage{
-tiledb_vfs_is_dir(vfs, uri)
+tiledb_vfs_is_dir(uri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{vfs}{TileDB VFS object}
-
 \item{uri}{Character variable with a URI describing a diretory path}
+
+\item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
 A boolean value indicating if it is a directory

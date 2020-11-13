@@ -4,12 +4,12 @@
 \alias{tiledb_vfs_create_dir}
 \title{Create a VFS Directory}
 \usage{
-tiledb_vfs_create_dir(vfs, uri)
+tiledb_vfs_create_dir(uri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{vfs}{TileDB VFS object}
-
 \item{uri}{Character variable with a URI describing a diretory path}
+
+\item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
 The uri value of the created directory

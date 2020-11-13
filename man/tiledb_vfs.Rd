@@ -12,7 +12,7 @@ tiledb_vfs(config = NULL, ctx = tiledb_get_context())
 \item{ctx}{(optional) A TileDB Ctx object}
 }
 \value{
-\code{tiledb_vfs} object
+The \code{tiledb_vfs} object
 }
 \description{
 Creates a \code{tiledb_vfs} object

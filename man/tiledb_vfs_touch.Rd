@@ -4,12 +4,12 @@
 \alias{tiledb_vfs_touch}
 \title{Touch a VFS URI Resource}
 \usage{
-tiledb_vfs_touch(vfs, uri)
+tiledb_vfs_touch(uri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{vfs}{TileDB VFS object}
-
 \item{uri}{Character variable with a URI describing a bucket, file or directory}
+
+\item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
 The uri value

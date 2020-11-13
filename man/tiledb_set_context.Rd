@@ -10,7 +10,8 @@ tiledb_set_context(ctx)
 \item{ctx}{A TileDB context object}
 }
 \value{
-A TileDB context object
+NULL, invisibly. The function is invoked for the side-effect of
+storing the VFS object.
 }
 \description{
 Store a TileDB context object in the package cache

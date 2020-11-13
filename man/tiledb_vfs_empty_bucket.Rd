@@ -4,12 +4,12 @@
 \alias{tiledb_vfs_empty_bucket}
 \title{Empty a VFS Bucket}
 \usage{
-tiledb_vfs_empty_bucket(vfs, uri)
+tiledb_vfs_empty_bucket(uri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{vfs}{TileDB VFS object}
-
 \item{uri}{Character variable with a URI describing a cloud bucket}
+
+\item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
 The URI value that was emptied
