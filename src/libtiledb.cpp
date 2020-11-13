@@ -542,6 +542,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       dtype != TILEDB_UINT16 &&
       dtype != TILEDB_UINT32 &&
       dtype != TILEDB_UINT64 &&
+      dtype != TILEDB_FLOAT32 &&
       dtype != TILEDB_FLOAT64 &&
       dtype != TILEDB_DATETIME_DAY &&
       dtype != TILEDB_DATETIME_SEC &&
@@ -549,7 +550,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       dtype != TILEDB_DATETIME_US &&
       dtype != TILEDB_DATETIME_NS &&
       dtype != TILEDB_STRING_ASCII) {
-    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT64), DATETIME_{SEC,MS,US,NS}, DATETIME_STRING_ACII domains supported");
+    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT{32,64}), DATETIME_{DAY,SEC,MS,US,NS}, DATETIME_STRING_ACII domains supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (dtype == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
@@ -682,6 +683,23 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     uint64_t extent = static_cast<uint64_t>(makeScalarInteger64(ext[0]));
     auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype, domain, &extent));
     auto ptr = XPtr<tiledb::Dimension>(dim, false);
+    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    return ptr;
+
+  } else if (dtype == TILEDB_FLOAT32) {
+    using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
+    auto domain_vec = as<NumericVector>(domain);
+    if (domain_vec.length() != 2) {
+      Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
+    }
+    auto tile_extent_vec = as<NumericVector>(tile_extent);
+    if (tile_extent_vec.length() != 1) {
+      Rcpp::stop("tile_extent must be a scalar");
+    }
+    std::array<Dtype, 2> _domain = {static_cast<float>(domain_vec[0]), static_cast<float>(domain_vec[1])};
+    std::array<Dtype, 1> _tile_extent = {static_cast<float>(tile_extent_vec[0])};
+    auto d = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+    auto ptr = XPtr<tiledb::Dimension>(d, false);
     registerXptrFinalizer(ptr, libtiledb_dimension_delete);
     return ptr;
 
@@ -1766,7 +1784,10 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
   } else if (typestr == "FLOAT64") {
     auto p = array->non_empty_domain<double>(name);
     return NumericVector::create(p.first, p.second);
-  } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_MS") {
+  } else if (typestr == "FLOAT32") {
+    auto p = array->non_empty_domain<float>(name);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_SEC" || typestr == "DATETIME_MS") {
     // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
@@ -2378,6 +2399,14 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
       x[i] = static_cast<uint8_t>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+  } else if (dtype == "FLOAT32") {
+    NumericVector v(vec);
+    auto n = v.length();
+    std::vector<float> x(n);
+    for (auto i=0; i<n; i++) {
+      x[i] = static_cast<float>(v[i]);
+    }
+    std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
   } else {
     Rcpp::stop("Assignment to '%s' currently unsupported.", dtype.c_str());
   }
@@ -2708,6 +2737,15 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       Rcpp::stop("Non-emoty stride for string not supported yet.");
     }
 #endif
+  } else if (typestr == "FLOAT32") {
+    float start = as<float>(starts);
+    float end = as<float>(ends);
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      float stride = as<float>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
   } else {
     Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
   }
