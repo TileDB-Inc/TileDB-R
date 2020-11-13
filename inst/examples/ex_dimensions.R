@@ -34,7 +34,10 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_SEC",   # second
               "DATETIME_MS",    # millisecond
               "DATETIME_US",    # microsecond
-              "DATETIME_NS"     # nanosecond
+              "DATETIME_NS",    # nanosecond
+              "DATETIME_PS",    # picosecond
+              "DATETIME_FS",    # femtosecond
+              "DATETIME_AS"     # attosecond
               )
 
 for (dtype in dimtypes) {
@@ -67,10 +70,14 @@ for (dtype in dimtypes) {
                   "DATETIME_MS"    =,
                   "DATETIME_US"    =,
                   "DATETIME_NS"    = c(as.nanotime("1970-01-01T00:00:00.000000000+00:00"),
-                                     as.nanotime("2030-12-31T23:59:59.999999999+00:00"))
+                                       as.nanotime("2030-12-31T23:59:59.999999999+00:00")),
+                  "DATETIME_PS"    =,
+                  "DATETIME_FS"    =,
+                  "DATETIME_AS"    = c(as.integer64(1), as.integer64(1e18))
                   )
 
-    if (dtype %in% c("DATETIME_MS", "DATETIME_US", "DATETIME_NS"))
+    if (dtype %in% c("DATETIME_MS", "DATETIME_US", "DATETIME_NS",
+                     "DATETIME_PS", "DATETIME_FS", "DATETIME_AS"))
         tile <- 1000
     else
         tile <- dom[1]                      # fallback
@@ -106,7 +113,10 @@ for (dtype in dimtypes) {
                    "DATETIME_MS"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.001,3),
                    ## POSIXct can do a bit less than 1 microsec so we set it to 2 on purpose
                    "DATETIME_US"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.000002,3),
-                   "DATETIME_NS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9
+                   "DATETIME_NS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9,
+                   "DATETIME_PS"  =,
+                   "DATETIME_FS"  =,
+                   "DATETIME_AS"  = as.integer64(1e12 + 0:2)
                    )
     avec <- 10^(1:3)
     data <- data.frame(row = dvec, attr = avec)

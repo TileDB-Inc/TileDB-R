@@ -68,6 +68,7 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
                           "DATETIME_YEAR","DATETIME_MONTH","DATETIME_WEEK","DATETIME_DAY",
                           "DATETIME_HR", "DATETIME_MIN", "DATETIME_SEC",
                           "DATETIME_MS", "DATETIME_US", "DATETIME_NS",
+                          "DATETIME_PS", "DATETIME_FS", "DATETIME_AS",
                           "ASCII")) {
     stop("type argument must be '(U)INT{8,16,32,64}' or 'FLOAT{32,64}' or a supported 'DATETIME_*' type.", call.=FALSE)
   }
@@ -76,7 +77,10 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
       stop("domain must be an integer or double vector of length 2")
     }
   }
-  if (inherits(domain, "nanotime")) {   # not integer64 as we want the conversion only for datetimes
+  if (inherits(domain, "nanotime") ||   # not integer64 as we want the conversion only for datetimes
+      type %in% c("DATETIME_PS",        # but also for high precision times we cannot fit into NS
+                  "DATETIME_FS",
+                  "DATETIME_AS")) {
       w <- getOption("warn")            # store warning levels
       options("warn" = -1)              # suppress warnings
       domain <- as.numeric(domain)      # for this lossy conversion
