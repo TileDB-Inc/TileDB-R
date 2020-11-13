@@ -544,6 +544,9 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       dtype != TILEDB_UINT64 &&
       dtype != TILEDB_FLOAT32 &&
       dtype != TILEDB_FLOAT64 &&
+      dtype != TILEDB_DATETIME_YEAR &&
+      dtype != TILEDB_DATETIME_MONTH &&
+      dtype != TILEDB_DATETIME_WEEK &&
       dtype != TILEDB_DATETIME_DAY &&
       dtype != TILEDB_DATETIME_HR &&
       dtype != TILEDB_DATETIME_MIN &&
@@ -552,7 +555,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       dtype != TILEDB_DATETIME_US &&
       dtype != TILEDB_DATETIME_NS &&
       dtype != TILEDB_STRING_ASCII) {
-    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT{32,64}), DATETIME_{DAY,HR,MIN,SEC,MS,US,NS}, STRING_ACII domains supported");
+    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT{32,64}), DATETIME_{YEAR,MONTH,WEEK,DAY,HR,MIN,SEC,MS,US,NS}, STRING_ACII domains supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (dtype == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
@@ -722,7 +725,10 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     registerXptrFinalizer(ptr, libtiledb_dimension_delete);
     return ptr;
 
-  } else if (dtype == TILEDB_DATETIME_DAY ||
+  } else if (dtype == TILEDB_DATETIME_YEAR ||
+             dtype == TILEDB_DATETIME_MONTH ||
+             dtype == TILEDB_DATETIME_WEEK ||
+             dtype == TILEDB_DATETIME_DAY ||
              dtype == TILEDB_DATETIME_HR  ||
              dtype == TILEDB_DATETIME_MIN ||
              dtype == TILEDB_DATETIME_SEC ||
@@ -1225,7 +1231,10 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     }
     attr->set_cell_val_num(num);
     return attr;
-  } else if (attr_dtype == TILEDB_DATETIME_DAY ||
+  } else if (attr_dtype == TILEDB_DATETIME_YEAR ||
+             attr_dtype == TILEDB_DATETIME_MONTH ||
+             attr_dtype == TILEDB_DATETIME_WEEK ||
+             attr_dtype == TILEDB_DATETIME_DAY ||
              attr_dtype == TILEDB_DATETIME_SEC ||
              attr_dtype == TILEDB_DATETIME_MS  ||
              attr_dtype == TILEDB_DATETIME_US  ||
@@ -1787,7 +1796,10 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
   } else if (typestr == "FLOAT32") {
     auto p = array->non_empty_domain<float>(name);
     return NumericVector::create(p.first, p.second);
-  } else if (typestr == "DATETIME_DAY" ||
+  } else if (typestr == "DATETIME_YEAR" ||
+             typestr == "DATETIME_MONTH" ||
+             typestr == "DATETIME_WEEK" ||
+             typestr == "DATETIME_DAY" ||
              typestr == "DATETIME_HR"  ||
              typestr == "DATETIME_MIN" ||
              typestr == "DATETIME_SEC" ||
@@ -2047,6 +2059,9 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
     query->set_subarray(sub.begin(), sub.length());
   } else if (typestr == "INT64" ||
              typestr == "UINT32" ||
+             typestr == "DATETIME_YEAR" ||
+             typestr == "DATETIME_MONTH" ||
+             typestr == "DATETIME_WEEK" ||
              typestr == "DATETIME_DAY" ||
              typestr == "DATETIME_HR"  ||
              typestr == "DATETIME_MIN" ||
@@ -2322,7 +2337,10 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
   } else if (dtype == "FLOAT64") {
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
-  } else if (dtype == "DATETIME_DAY") {
+  } else if (dtype == "DATETIME_YEAR" ||
+             dtype == "DATETIME_MONTH" ||
+             dtype == "DATETIME_WEEK" ||
+             dtype == "DATETIME_DAY") {
     NumericVector v(vec);
     int n = buf->ncells;
     std::vector<int64_t> tt(n);
@@ -2461,7 +2479,10 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
-  } else if (dtype == "DATETIME_DAY" ||
+  } else if (dtype == "DATETIME_YEAR" ||
+             dtype == "DATETIME_MONTH" ||
+             dtype == "DATETIME_WEEK" ||
+             dtype == "DATETIME_DAY" ||
              dtype == "DATETIME_HR" ||
              dtype == "DATETIME_MIN" ||
              dtype == "DATETIME_SEC" ||
@@ -2481,7 +2502,10 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
       dd[i] = static_cast<double>(tt[i] / scalefactor);
       //Rprintf("getting date: %ld -> %f (%f)\n", tt[i], dd[i], scalefactor);
     }
-    if (dtype == "DATETIME_DAY") {
+    if (dtype == "DATETIME_YEAR" ||
+        dtype == "DATETIME_MONTH" ||
+        dtype == "DATETIME_WEEK" ||
+        dtype == "DATETIME_DAY") {
       dd.attr("class") = "Date";
     } else {
       // an R thing: POSIXct (represented as a double) and
@@ -2727,7 +2751,10 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       uint8_t stride = as<uint16_t>(strides);
       query->add_range(uidx, start, end, stride);
     }
-  } else if (typestr == "DATETIME_DAY" ||
+  } else if (typestr == "DATETIME_YEAR" ||
+             typestr == "DATETIME_MONTH" ||
+             typestr == "DATETIME_WEEK" ||
+             typestr == "DATETIME_DAY" ||
              typestr == "DATETIME_HR"  ||
              typestr == "DATETIME_MIN" ||
              typestr == "DATETIME_SEC" ||

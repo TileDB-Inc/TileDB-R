@@ -25,6 +25,9 @@ dimtypes <- c("ASCII",  		# Variable length string
               "UINT64", 		# 64-bit unsigned integer
               "FLOAT32",		# 32-bit floating point
               "FLOAT64",		# 64-bit floating point
+              "DATETIME_YEAR",  # year
+              "DATETIME_MONTH", # month
+              "DATETIME_WEEK",  # week
               "DATETIME_DAY",   # date
               "DATETIME_HR",    # hour
               "DATETIME_MIN",   # minute
@@ -33,7 +36,7 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_US",    # microsecond
               "DATETIME_NS"     # nanosecond
               )
-dimtypes <- tail(dimtypes,7)
+dimtypes <- tail(dimtypes,10)
 for (dtype in dimtypes) {
     cat("Creating", dtype, "... ")
     if (tiledb_vfs_is_dir(uri)) {
@@ -53,6 +56,9 @@ for (dtype in dimtypes) {
                   "UINT64"  = c(as.integer64(1), as.integer64(1000)),
                   "FLOAT32" =,
                   "FLOAT64" = c(1, 1000),
+                  "DATETIME_YEAR" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_MONTH" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_WEEK" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
                   "DATETIME_DAY" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
                   "DATETIME_HR" = c(as.POSIXct("2000-01-01 00:00:00"),
                                      as.POSIXct("2030-12-31 23:00:59")),
@@ -90,6 +96,10 @@ for (dtype in dimtypes) {
                    "UINT64"  = as.integer64(1:3),
                    "FLOAT32" =,
                    "FLOAT64" = as.numeric(1:3),
+                   "DATETIME_YEAR" = c(as.Date("2020-01-01"), as.Date("2021-01-01"), as.Date("2022-01-01")),
+                   "DATETIME_MONTH" = c(as.Date("2020-01-01"), as.Date("2020-02-01"), as.Date("2020-03-01")),
+
+                   "DATETIME_WEEK" = c(as.Date("2020-01-01"), as.Date("2020-01-08"), as.Date("2020-01-15")),
                    "DATETIME_DAY" = as.Date("2020-01-01") + 0:2,
                    "DATETIME_HR"  = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
                    "DATETIME_MIN" = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
@@ -108,7 +118,8 @@ for (dtype in dimtypes) {
     cat("reading ... ")
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
-print(readdata)
+    cat("(",format(readdata[1,1]), ",", format(readdata[2,1]), ",", format(readdata[3,1]), ") ", sep="")
+
     cat("checking ... ")
     stopifnot(all.equal(data, readdata))
     #print(arr2[])
