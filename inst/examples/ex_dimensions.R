@@ -1,97 +1,19 @@
-library(tinytest)
-library(tiledb)
-
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
-ctx <- tiledb_ctx(limitTileDBCores())
-
-#test_that("tiledb_dim default constructor", {
-dim <- tiledb_dim("foo", c(1, 100))
-expect_true(is(dim, "tiledb_dim"))
-#})
-
-#test_that("tiledb_dim throws an error on missing constructor argument", {
-expect_error(tiledb_dim("foo"))
-#})
-
-#test_that("tiledb_dim throws an error on invalid domain", {
-expect_error(tiledb_dim("foo", c(100L, 1L), type = "INT32"))
-#})
-
-#test_that("tiledb_dim throws an error on invalid type", {
-expect_error(tiledb_dim("foo", c(1, 100), type = "INVALID"))
-#})
-
-#test_that("tiledb_dim default type is double", {
-dim <- tiledb_dim("foo", c(1, 100))
-expect_equal(tiledb::datatype(dim), "FLOAT64")
-#})
-
-#test_that("tiledb_dim default type is the domain type", {
-dim <- tiledb_dim("foo", c(1.0, 100.0))
-expect_equal(tiledb::datatype(dim), "FLOAT64")
-
-dim <- tiledb_dim("foo", c(1L, 100L))
-expect_equal(tiledb::datatype(dim), "INT32")
-#})
-
-#test_that("tiledb_dim name", {
-dim <- tiledb_dim("foo", c(1L, 100L))
-expect_equal(tiledb::name(dim), "foo")
-
-dim <- tiledb_dim("", c(1L, 100L))
-expect_equal(tiledb::name(dim), "")
-#})
-
-#test_that("tiledb_dim tile should equal constructor", {
-dim <- tiledb_dim("foo", c(1L, 100L), tile=10L, type="INT32")
-expect_equal(tiledb::tile(dim), 10L)
-#})
-
-#test_that("tiledb_dim default tile extent should span the whole domain", {
-
-dim <- tiledb_dim("foo", c(1L, 100L), type = "INT32")
-expect_equal(tiledb::tile(dim), 100L)
-
-dim <- tiledb_dim("foo", c(1L, 1L), type = "INT32")
-expect_equal(tiledb::tile(dim), 1L)
-
-dim <- tiledb_dim("foo", c(1.1, 11.9), type = "FLOAT64")
-expect_equal(tiledb::tile(dim), 11.9 - 1.1)
-#})
-
-#test_that("tiledb_dim empty name is anonymous", {
-
-dim <- tiledb_dim("", c(1L, 100L))
-expect_true(is.anonymous(dim))
-
-dim <- tiledb_dim("foo", c(1L, 100L))
-expect_false(is.anonymous(dim))
-#})
-
-#test_that("tiledb_dim tiledb::datatype()", {
-dim <- tiledb_dim("", c(1L, 100L), type = "INT32")
-expect_equal(tiledb::datatype(dim), "INT32")
-
-dim <- tiledb_dim("", c(1, 100), type = "FLOAT64")
-expect_equal(tiledb::datatype(dim), "FLOAT64")
-#})
-
-t#est_that("tiledb_dim dim() method", {
-d <- tiledb_dim("", c(-1L, 100L))
-expect_equal(dim(d), 102L)
-#})
-
-
-## test permissible types for dimension objects -- cf inst/examples/ex_dimensions.R
 ## quick check of various dimension types
+
 suppressMessages({
+  library(tiledb)
   library(nanotime)
   library(bit64)
 })
+
 atttype <- "INT32"
-uri <- tempfile()
+
+## Name of the array to create.
+array_name <- "ex_dimemsions"
+## Path is either current directory, or a local config value is found
+uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
+library(tiledb)
+
 dimtypes <- c("ASCII",  		# Variable length string
               "INT8",   		# 8-bit integer
               "UINT8",  		# 8-bit unsigned integer
@@ -117,10 +39,14 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_FS",    # femtosecond
               "DATETIME_AS"     # attosecond
               )
+
 for (dtype in dimtypes) {
+    cat("Creating", dtype, "... ")
     if (tiledb_vfs_is_dir(uri)) {
+        #message("Removing existing uri")
         tiledb_vfs_remove_dir(uri)
     }
+
     dom <- switch(dtype,
                   "ASCII"          = NULL,
                   "INT8"           =,
@@ -161,7 +87,9 @@ for (dtype in dimtypes) {
     schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
     tiledb_array_create(uri, schema)
 
+
     arr <- tiledb_array(uri, as.data.frame=TRUE)
+
     dvec <- switch(dtype,
                    "ASCII"   = LETTERS[1:3],
                    "INT8"    =,
@@ -192,9 +120,17 @@ for (dtype in dimtypes) {
                    )
     avec <- 10^(1:3)
     data <- data.frame(row = dvec, attr = avec)
+
+    cat("writing ... ")
     arr[] <- data
 
+    cat("reading ... ")
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
-    expect_true(all.equal(data, readdata))
+    cat("(",format(readdata[1,1]), ",", format(readdata[2,1]), ",", format(readdata[3,1]), ") ", sep="")
+
+    cat("checking ... ")
+    stopifnot(all.equal(data, readdata))
+    #print(arr2[])
+    cat("done.\n")
 }
