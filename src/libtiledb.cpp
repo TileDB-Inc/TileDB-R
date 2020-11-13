@@ -2330,7 +2330,6 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
                                                     std::string dtype,
                                                     SEXP vec) {
-  //double scalefactor = (dtype == "DATETIME_MS" ? 1e-3 : 1.0);
   if (dtype == "INT32") {
     IntegerVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);

@@ -76,6 +76,12 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
       stop("domain must be an integer or double vector of length 2")
     }
   }
+  if (inherits(domain, "nanotime")) {   # not integer64 as we want the conversion only for datetimes
+      w <- getOption("warn")            # store warning levels
+      options("warn" = -1)              # suppress warnings
+      domain <- as.numeric(domain)      # for this lossy conversion
+      options("warn" = w)               # restore warning levels
+  }
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
   }

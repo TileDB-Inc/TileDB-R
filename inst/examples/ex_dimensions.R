@@ -36,7 +36,7 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_US",    # microsecond
               "DATETIME_NS"     # nanosecond
               )
-dimtypes <- tail(dimtypes,10)
+
 for (dtype in dimtypes) {
     cat("Creating", dtype, "... ")
     if (tiledb_vfs_is_dir(uri)) {
@@ -45,30 +45,29 @@ for (dtype in dimtypes) {
     }
 
     dom <- switch(dtype,
-                  "ASCII"   = NULL,
-                  "INT8"    =,
-                  "UINT8"   =,
-                  "INT16"   =,
-                  "UINT16"  =,
-                  "UINT32"  =,
-                  "INT32"   = c(1L, 100L),
-                  "INT64"   =,
-                  "UINT64"  = c(as.integer64(1), as.integer64(1000)),
-                  "FLOAT32" =,
-                  "FLOAT64" = c(1, 1000),
-                  "DATETIME_YEAR" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "ASCII"          = NULL,
+                  "INT8"           =,
+                  "UINT8"          =,
+                  "INT16"          =,
+                  "UINT16"         =,
+                  "UINT32"         =,
+                  "INT32"          = c(1L, 100L),
+                  "INT64"          =,
+                  "UINT64"         = c(as.integer64(1), as.integer64(1000)),
+                  "FLOAT32"        =,
+                  "FLOAT64"        = c(1, 1000),
+                  "DATETIME_YEAR"  = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
                   "DATETIME_MONTH" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
-                  "DATETIME_WEEK" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
-                  "DATETIME_DAY" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
-                  "DATETIME_HR" = c(as.POSIXct("2000-01-01 00:00:00"),
-                                     as.POSIXct("2030-12-31 23:00:59")),
-                  "DATETIME_MIN" = c(as.POSIXct("2000-01-01 00:00:00"),
-                                     as.POSIXct("2030-12-31 23:59:00")),
-                  "DATETIME_SEC" = c(as.POSIXct("2000-01-01 00:00:00"),
-                                     as.POSIXct("2030-12-31 23:59:59")),
-                  "DATETIME_MS"  =,
-                  "DATETIME_US"  =,
-                  "DATETIME_NS"  = c(1, 1e18)
+                  "DATETIME_WEEK"  = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_DAY"   = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_HR"    =,
+                  "DATETIME_MIN"   =,
+                  "DATETIME_SEC"   = c(as.POSIXct("2000-01-01 00:00:00"),
+                                       as.POSIXct("2030-12-31 23:00:59")),
+                  "DATETIME_MS"    =,
+                  "DATETIME_US"    =,
+                  "DATETIME_NS"    = c(as.nanotime("1970-01-01T00:00:00.000000000+00:00"),
+                                     as.nanotime("2030-12-31T23:59:59.999999999+00:00"))
                   )
 
     if (dtype %in% c("DATETIME_MS", "DATETIME_US", "DATETIME_NS"))
