@@ -2069,20 +2069,26 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
     query->set_subarray(sub.begin(), sub.length());
   } else if (typestr == "INT64" ||
              typestr == "UINT32" ||
-             typestr == "DATETIME_YEAR" ||
-             typestr == "DATETIME_MONTH" ||
-             typestr == "DATETIME_WEEK" ||
-             typestr == "DATETIME_DAY" ||
-             typestr == "DATETIME_HR"  ||
-             typestr == "DATETIME_MIN" ||
-             typestr == "DATETIME_SEC" ||
-             typestr == "DATETIME_MS" ||
-             typestr == "DATETIME_US" ||
              typestr == "DATETIME_NS") {
     NumericVector sub(subarray);
     std::vector<int64_t> v(sub.length());
     for (int i=0; i<sub.length(); i++)
       v[i] = static_cast<int64_t>(sub[i]);
+    query->set_subarray(v);
+  } else if (typestr == "DATETIME_YEAR"  ||
+             typestr == "DATETIME_MONTH" ||
+             typestr == "DATETIME_WEEK"  ||
+             typestr == "DATETIME_DAY") {
+    DateVector sub(subarray);
+    std::vector<int64_t> v = dates_to_int64(sub, _string_to_tiledb_datatype(typestr));
+    query->set_subarray(v);
+  } else if (typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS"  ||
+             typestr == "DATETIME_US") {
+    DatetimeVector sub(subarray);
+    std::vector<int64_t> v = datetimes_to_int64(sub, _string_to_tiledb_datatype(typestr));
     query->set_subarray(v);
   } else if (typestr == "UINT64") {
     NumericVector sub(subarray);
@@ -2350,33 +2356,31 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
              dtype == "DATETIME_MONTH" ||
              dtype == "DATETIME_WEEK" ||
              dtype == "DATETIME_DAY") {
-    NumericVector v(vec);
-    int n = buf->ncells;
-    std::vector<int64_t> tt(n);
-    for (int i=0; i<n; i++) {
-      tt[i] = static_cast<int64_t>(v[i]);
-    }
-    std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
+    DateVector v(vec);
+    std::vector<int64_t> tt = dates_to_int64(v, _string_to_tiledb_datatype(dtype));
+    std::memcpy(buf->vec.data(), tt.data(), buf->ncells * buf->size);
   } else if (dtype == "DATETIME_MS" ||
              dtype == "DATETIME_US" ||
              dtype == "DATETIME_SEC"||
              dtype == "DATETIME_MIN"||
              dtype == "DATETIME_HR"   ) {
-    NumericVector v(vec);
-    int n = buf->ncells;
-    double scalefactor = 1.0;
-    if (dtype == "DATETIME_MS") {
-      scalefactor = 1e3;
-      //scalefactor = 1.0;
-    } else if (dtype == "DATETIME_US") {
-      scalefactor = 1e6;
-    }
-    std::vector<int64_t> tt(n);
-    for (int i=0; i<n; i++) {
-      tt[i] = static_cast<int64_t>(v[i] * scalefactor);
-      //Rprintf("setting date: %f -> %ld %s \n", v[i], tt[i], dtype.c_str());
-    }
-    std::memcpy(buf->vec.data(), tt.data(), n*buf->size);
+    // NumericVector v(vec);
+    // int n = buf->ncells;
+    // double scalefactor = 1.0;
+    // if (dtype == "DATETIME_MS") {
+    //   scalefactor = 1e3;
+    //   //scalefactor = 1.0;
+    // } else if (dtype == "DATETIME_US") {
+    //   scalefactor = 1e6;
+    // }
+    // std::vector<int64_t> tt(n);
+    // for (int i=0; i<n; i++) {
+    //   tt[i] = static_cast<int64_t>(v[i] * scalefactor);
+    //   //Rprintf("setting date: %f -> %ld %s \n", v[i], tt[i], dtype.c_str());
+    // }
+    DatetimeVector v(vec);
+    std::vector<int64_t> tt = datetimes_to_int64(v, _string_to_tiledb_datatype(dtype));
+    std::memcpy(buf->vec.data(), tt.data(), buf->ncells * buf->size);
   } else if (dtype == "DATETIME_NS" ||
              dtype == "DATETIME_PS" ||
              dtype == "DATETIME_FS" ||
@@ -2497,37 +2501,37 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
   } else if (dtype == "DATETIME_YEAR" ||
              dtype == "DATETIME_MONTH" ||
              dtype == "DATETIME_WEEK" ||
-             dtype == "DATETIME_DAY" ||
-             dtype == "DATETIME_HR" ||
+             dtype == "DATETIME_DAY") {
+    std::vector<int64_t> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    DateVector dv = int64_to_dates(v, _string_to_tiledb_datatype(dtype));
+    return dv;
+  } else if (dtype == "DATETIME_HR" ||
              dtype == "DATETIME_MIN" ||
              dtype == "DATETIME_SEC" ||
              dtype == "DATETIME_MS" ||
              dtype == "DATETIME_US") {
-    int n = buf->ncells;
-    std::vector<int64_t> tt(n);
-    std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-    NumericVector dd(n);
-    double scalefactor = 1.0; // FIXME = _domain_datatype_time_scale_factor(buf->dtype);
-    if (dtype == "DATETIME_MS") {
-      scalefactor = 1e3;
-    } else if (dtype == "DATETIME_US") {
-      scalefactor = 1e6;
-    }
-    for (int i=0; i<n; i++) {
-      dd[i] = static_cast<double>(tt[i] / scalefactor);
-      //Rprintf("getting date: %ld -> %f (%f)\n", tt[i], dd[i], scalefactor);
-    }
-    if (dtype == "DATETIME_YEAR" ||
-        dtype == "DATETIME_MONTH" ||
-        dtype == "DATETIME_WEEK" ||
-        dtype == "DATETIME_DAY") {
-      dd.attr("class") = "Date";
-    } else {
-      // an R thing: POSIXct (represented as a double) and
-      // POSIXlt (a list) both inherit from POSIXt
-      dd.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
-    }
-    return dd;
+    // int n = buf->ncells;
+    // std::vector<int64_t> tt(n);
+    // std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
+    // NumericVector dd(n);
+    // double scalefactor = 1.0; // FIXME = _domain_datatype_time_scale_factor(buf->dtype);
+    // if (dtype == "DATETIME_MS") {
+    //   scalefactor = 1e3;
+    // } else if (dtype == "DATETIME_US") {
+    //   scalefactor = 1e6;
+    // }
+    // for (int i=0; i<n; i++) {
+    //   dd[i] = static_cast<double>(tt[i] / scalefactor);
+    //   //Rprintf("getting date: %ld -> %f (%f)\n", tt[i], dd[i], scalefactor);
+    // }
+    // // an R thing: POSIXct (represented as a double) and
+    // // POSIXlt (a list) both inherit from POSIXt
+    // dd.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
+    std::vector<int64_t> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    DatetimeVector dv = int64_to_datetimes(v, _string_to_tiledb_datatype(dtype));
+    return dv;
   } else if (dtype == "DATETIME_NS") {
     int n = buf->ncells;
     std::vector<int64_t> vec(n);

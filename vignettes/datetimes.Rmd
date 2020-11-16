@@ -1,0 +1,54 @@
+---
+title: "TileDB Dimensions: Date and Datetime Support"
+output:
+  minidown::mini_document:
+    framework: water
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE,
+                      class.output = NULL,
+                      class.message = NULL,
+                      class.warning = NULL,
+                      class.error = NULL)
+```
+
+
+## Overview
+
+TileDB supports a wide range of date and time types as shown in the [documention for Datetimes](https://docs.tiledb.com/main/solutions/tiledb-embedded/internal-mechanics/datetimes).
+
+The supported range of dates and times correspond to the dates and times supported by the Python extension *numpy* and [described in its documentation](https://numpy.org/doc/stable/reference/arrays.datetime.html).
+
+```{python pyex1}
+import numpy as np
+import datetime
+
+day = "1971-02-03 04:05:06"    # third day of second month of first year past epoch
+
+[np.datetime64(day, 'Y').astype('int64'),    # extract year, month, ... as an int64
+np.datetime64(day, 'M').astype('int64'),  
+np.datetime64(day, 'D').astype('int64'),
+np.datetime64(day, 'h').astype('int64'),
+np.datetime64(day, 'm').astype('int64'),
+np.datetime64(day, 's').astype('int64')]
+```
+
+R has date and datetime support built-in.  The `Date` supports dates using an integer count since the epoch, and matches the `D` value from the previous example.  Similarly, the  'compact' `POSIXct` representation of a `Datetime` uses the number of seconds since the epoch and corresponds to the `s` value from the previous example.
+
+
+```{r rex1}
+as.Date(398, origin="1970-01-01")  # conversion from numeric input requires 'origin'
+as.POSIXct(34401906, origin="1970-01-01", tz="UTC", usetz=TRUE)
+```
+
+
+R can reconstruct dates and times from the *numpy* representation using the epoch as a 'base' date along with time period calculations, for example by using the *lubridate* package.
+
+```{r rex2}
+suppressMessages(library(lubridate))
+ymd("1970-01-01") +  c(years(1), months(13), days(398))
+ymd_hms("1970-01-01 00:00:00") + c(hours(9556), minutes(573365))
+```
+
+Note that the is result is correct to the given precision: adding one year to the epoch gets us a date in 1971 (here the first one). Similarly, adding thirteen months gets us to the correct month but not yet date. A day can only be fully recovered via the 'days' period, here 398.
