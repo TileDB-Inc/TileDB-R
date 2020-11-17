@@ -15,15 +15,19 @@ knitr::opts_chunk$set(collapse = TRUE,
                       class.output = NULL,
                       class.message = NULL,
                       class.warning = NULL,
-                      class.error = NULL)
+                      class.error = NULL,
+                      python.reticulate = FALSE)  # to not depend on reticulate
+Sys.setenv("TZ"="UTC")
 ```
 
 
 ## Overview
 
-TileDB supports a wide range of date and time types as shown in the [documention for Datetimes](https://docs.tiledb.com/main/solutions/tiledb-embedded/internal-mechanics/datetimes).
+TileDB supports a wide range of date and time types as shown in the [documention for
+Datetimes][doc_datetimes].
 
-The supported range of dates and times correspond to the dates and times supported by the Python extension *numpy* and [described in its documentation](https://numpy.org/doc/stable/reference/arrays.datetime.html).
+The supported range of dates and times correspond to the dates and times supported by the Python
+extension *numpy*, and is described [in its documentation][numpy_datetime].
 
 ```{python pyex1}
 import numpy as np
@@ -39,7 +43,10 @@ np.datetime64(day, 'm').astype('int64'),
 np.datetime64(day, 's').astype('int64')]
 ```
 
-R has date and datetime support built-in.  The `Date` supports dates using an integer count since the epoch, and matches the `D` value from the previous example.  Similarly, the  'compact' `POSIXct` representation of a `Datetime` uses the number of seconds since the epoch and corresponds to the `s` value from the previous example.
+R has date and datetime support built-in.  The `Date` supports dates using an integer count since
+the epoch, and matches the `D` value from the previous example.  Similarly, the 'compact' `POSIXct`
+representation of a `Datetime` uses the number of seconds since the epoch and corresponds to the `s`
+value from the previous example.
 
 
 ```{r rex1}
@@ -48,12 +55,240 @@ as.POSIXct(34401906, origin="1970-01-01", tz="UTC", usetz=TRUE)
 ```
 
 
-R can reconstruct dates and times from the *numpy* representation using the epoch as a 'base' date along with time period calculations, for example by using the *lubridate* package.
+R can reconstruct dates and times from the *numpy* representation using the epoch as a 'base' date
+along with time period calculations. This can be done using base R (adding to `Date` or `POSIXct`
+objects), by using the *lubridate* package for a number of intermediate formats and by using the
+*nanotime* package for higher-resolution periods and intervals.
 
-```{r rex2}
-suppressMessages(library(lubridate))
-ymd("1970-01-01") +  c(years(1), months(13), days(398))
-ymd_hms("1970-01-01 00:00:00") + c(hours(9556), minutes(573365))
+<!-- no showing the example to not for a Suggests: on package lubridate-->
+<!-- ` ` `{r rex2}-->
+<!--suppressMessages(library(lubridate))-->
+<!--ymd("1970-01-01") +  c(years(1), months(13), days(398))-->
+<!--ymd_hms("1970-01-01 00:00:00") + c(hours(9556), minutes(573365))-->
+<!--` ` `-->
+
+<!-- Note that the is result is correct to the given precision: adding one year to the epoch gets us a
+date in 1971 (here the first one). Similarly, adding thirteen months gets us to the correct month
+but not yet date. A day can only be fully recovered via the 'days' period, here 398.
+-->
+
+
+## Python and R Interoperability
+
+### Coarsest: Year
+
+#### Python
+
+```{python pyex2}
+import numpy as np
+import sys
+import os
+import tiledb
+uri = "/tmp/tiledb/dt_year"
+dom = tiledb.Domain(tiledb.Dim(name="rows",
+                               domain=(np.datetime64('2001-01-01'), np.datetime64('2030-12-31')),
+                               tile=np.timedelta64(10, 'D'),
+                               dtype=np.datetime64('', 'D')))
+schema = tiledb.ArraySchema(domain=dom,
+                            sparse=True,
+                            attrs=[tiledb.Attr(name="a", dtype=np.int32)])
+if (os.path.isdir(uri)):
+    tiledb.VFS().remove_dir(uri)
+tiledb.SparseArray.create(uri, schema)
+
+with tiledb.SparseArray(uri, mode='w') as A:
+    I = [np.datetime64('2001-01-01'),np.datetime64('2002-01-01'),np.datetime64('2003-01-01')]
+    data = np.array(([1,2,3]))
+    A[I] = data
+
+#print("Done")
 ```
 
-Note that the is result is correct to the given precision: adding one year to the epoch gets us a date in 1971 (here the first one). Similarly, adding thirteen months gets us to the correct month but not yet date. A day can only be fully recovered via the 'days' period, here 398.
+#### R
+
+```{r rex2}
+library(tiledb)
+uri <- "/tmp/tiledb/dt_year"
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr[]
+```
+
+
+
+### Day
+
+#### Python
+
+```{python pyex3}
+import numpy as np
+import sys
+import os
+import tiledb
+uri = "/tmp/tiledb/dt_day"
+dom = tiledb.Domain(tiledb.Dim(name="rows",
+                               domain=(np.datetime64('2001-01-01'), np.datetime64('2030-12-31')),
+                               tile=np.timedelta64(10, 'D'),
+                               dtype=np.datetime64('', 'D')))
+schema = tiledb.ArraySchema(domain=dom,
+                            sparse=True,
+                            attrs=[tiledb.Attr(name="a", dtype=np.int32)])
+if (os.path.isdir(uri)):
+    tiledb.VFS().remove_dir(uri)
+tiledb.SparseArray.create(uri, schema)
+
+with tiledb.SparseArray(uri, mode='w') as A:
+    I = [np.datetime64('2001-01-01'),np.datetime64('2001-01-02'),np.datetime64('2001-01-03')]
+    data = np.array(([1,2,3]))
+    A[I] = data
+
+#print("Done")
+```
+
+#### R
+
+```{r rex3}
+library(tiledb)
+uri <- "/tmp/tiledb/dt_day"
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr[]
+```
+
+
+
+### Minute
+
+#### Python
+
+```{python pyex4}
+import numpy as np
+import sys
+import os
+import tiledb
+uri = "/tmp/tiledb/dt_min"
+dom = tiledb.Domain(tiledb.Dim(name="rows",
+                               domain=(np.datetime64('2001-01-01'), np.datetime64('2030-12-31')),
+                               tile=np.timedelta64(10, 'm'),
+                               dtype=np.datetime64('', 'm')))
+schema = tiledb.ArraySchema(domain=dom,
+                            sparse=True,
+                            attrs=[tiledb.Attr(name="a", dtype=np.int32)])
+if (os.path.isdir(uri)):
+    tiledb.VFS().remove_dir(uri)
+tiledb.SparseArray.create(uri, schema)
+
+with tiledb.SparseArray(uri, mode='w') as A:
+    I = [np.datetime64('2001-01-01 00:00'),
+         np.datetime64('2001-01-02 00:01'),
+         np.datetime64('2001-01-03 00:02')]
+    data = np.array(([1,2,3]))
+    A[I] = data
+
+#print("Done")
+```
+
+#### R
+
+```{r rex4}
+library(tiledb)
+uri <- "/tmp/tiledb/dt_min"
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr[]
+```
+
+
+
+
+
+### Millisecond
+
+#### Python
+
+```{python pyex5}
+import numpy as np
+import sys
+import os
+import tiledb
+uri = "/tmp/tiledb/dt_ms"
+dom = tiledb.Domain(tiledb.Dim(name="rows",
+                               domain=(np.datetime64('1969-01-01'), np.datetime64('2030-12-31')),
+                               tile=np.timedelta64(10, 'ms'),
+                               dtype=np.datetime64('', 'ms')))
+schema = tiledb.ArraySchema(domain=dom,
+                            sparse=True,
+                            attrs=[tiledb.Attr(name="a", dtype=np.int32)])
+if (os.path.isdir(uri)):
+    tiledb.VFS().remove_dir(uri)
+tiledb.SparseArray.create(uri, schema)
+
+with tiledb.SparseArray(uri, mode='w') as A:
+    I = [np.datetime64('1970-01-01 00:00:01.001'),
+         np.datetime64('1970-01-01 00:00:02.002'),
+         np.datetime64('1970-01-01 00:00:03.003')]
+    data = np.array(([1,2,3]))
+    A[I] = data
+
+#print("Done")
+```
+
+#### R
+
+```{r rex5}
+library(tiledb)
+uri <- "/tmp/tiledb/dt_ms"
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr[]
+#int(as.numeric(arr[,1]))
+```
+
+
+
+
+### Nanosecond
+
+#### Python
+
+```{python pyex6}
+import numpy as np
+import sys
+import os
+import tiledb
+uri = "/tmp/tiledb/dt_ns"
+dom = tiledb.Domain(tiledb.Dim(name="rows",
+                               domain=(np.datetime64('1969-01-01'), np.datetime64('2030-12-31')),
+                               tile=np.timedelta64(10, 'ns'),
+                               dtype=np.datetime64('', 'ns')))
+schema = tiledb.ArraySchema(domain=dom,
+                            sparse=True,
+                            attrs=[tiledb.Attr(name="a", dtype=np.int32)])
+if (os.path.isdir(uri)):
+    tiledb.VFS().remove_dir(uri)
+tiledb.SparseArray.create(uri, schema)
+
+with tiledb.SparseArray(uri, mode='w') as A:
+    I = [np.datetime64('1970-01-01 00:00:00.000000001'),
+         np.datetime64('1980-01-01 00:00:00.000000002'),
+         np.datetime64('1990-01-01 00:00:00.000000003'),
+         np.datetime64('2000-01-01 00:00:00.000000004'),
+         np.datetime64('2010-01-01 00:00:00.000000005'),
+         np.datetime64('2020-01-01 00:00:00.000000006')]
+    data = np.array(([1,2,3,4,5,6]))
+    A[I] = data
+
+#print(I)
+```
+
+#### R
+
+```{r rex6}
+library(tiledb)
+uri <- "/tmp/tiledb/dt_ns"
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr[]
+#int(as.numeric(arr[,1]))
+```
+
+
+
+
+[doc_datetimes]: https://docs.tiledb.com/main/solutions/tiledb-embedded/internal-mechanics/datetimes
+[numpy_datetime]: https://numpy.org/doc/stable/reference/arrays.datetime.html
