@@ -1245,7 +1245,10 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
              attr_dtype == TILEDB_DATETIME_SEC ||
              attr_dtype == TILEDB_DATETIME_MS  ||
              attr_dtype == TILEDB_DATETIME_US  ||
-             attr_dtype == TILEDB_DATETIME_NS) {
+             attr_dtype == TILEDB_DATETIME_NS  ||
+             attr_dtype == TILEDB_DATETIME_PS  ||
+             attr_dtype == TILEDB_DATETIME_FS  ||
+             attr_dtype == TILEDB_DATETIME_AS) {
     auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
     attr->set_filter_list(*filter_list);
     registerXptrFinalizer(attr, libtiledb_attribute_delete);
@@ -2381,14 +2384,17 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
     DatetimeVector v(vec);
     std::vector<int64_t> tt = datetimes_to_int64(v, _string_to_tiledb_datatype(dtype));
     std::memcpy(buf->vec.data(), tt.data(), buf->ncells * buf->size);
-  } else if (dtype == "DATETIME_NS" ||
-             dtype == "DATETIME_PS" ||
-             dtype == "DATETIME_FS" ||
-             dtype == "DATETIME_AS") {
+  } else if (dtype == "DATETIME_NS") {
     // nanosecond time uses the nanotime package which uses the bit64 package
     // to store the int64_t 'payload' on 64-bit double, so memcpy does the trick
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+  } else if (dtype == "DATETIME_PS" ||
+             dtype == "DATETIME_FS" ||
+             dtype == "DATETIME_AS") {
+    NumericVector v(vec);
+    std::vector<int64_t> tt = subnano_to_int64(v, _string_to_tiledb_datatype(dtype));
+    std::memcpy(buf->vec.data(), tt.data(), buf->ncells * buf->size);
   } else if (dtype == "INT64") {
     // integer64 from the bit64 package uses doubles, see nanosecond
     NumericVector v(vec);
@@ -2491,13 +2497,21 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     std::vector<uint64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
-  } else if (dtype == "INT64" ||
-             dtype == "DATETIME_FS" ||
-             dtype == "DATETIME_PS" ||
-             dtype == "DATETIME_AS") {
+  } else if (dtype == "INT64") {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
+  } else if (dtype == "DATETIME_FS" ||
+             dtype == "DATETIME_PS" ||
+             dtype == "DATETIME_AS") {
+    //std::vector<int64_t> v(buf->ncells);
+    //std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    //return Rcpp::wrap(v);
+
+    std::vector<int64_t> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    Rcpp::NumericVector dv = int64_to_subnano(v, _string_to_tiledb_datatype(dtype));
+    return dv;
   } else if (dtype == "DATETIME_YEAR" ||
              dtype == "DATETIME_MONTH" ||
              dtype == "DATETIME_WEEK" ||

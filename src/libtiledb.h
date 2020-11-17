@@ -54,6 +54,8 @@ std::vector<int64_t> dates_to_int64(Rcpp::DateVector dv, tiledb_datatype_t dtype
 Rcpp::DateVector int64_to_dates(std::vector<int64_t>, tiledb_datatype_t dtype);
 std::vector<int64_t> datetimes_to_int64(Rcpp::DatetimeVector dv, tiledb_datatype_t dtype);
 Rcpp::DatetimeVector int64_to_datetimes(std::vector<int64_t> iv, tiledb_datatype_t dtype);
+std::vector<int64_t> subnano_to_int64(NumericVector nv, tiledb_datatype_t dtype);
+Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t dtype);
 
 
 #endif

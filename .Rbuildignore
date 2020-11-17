@@ -20,4 +20,4 @@
 ^windows
 ^\.ci
 ^\.github
-
+vignettes/datetimes.Rmd

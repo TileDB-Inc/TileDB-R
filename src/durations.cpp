@@ -1,5 +1,7 @@
 #include <tiledb.h>
 
+Rcpp::NumericVector makeNanotime(const std::vector<int64_t>& vec); // in utilities.cpp
+
 std::vector<int64_t> dates_to_int64(Rcpp::DateVector dv, tiledb_datatype_t dtype) {
   size_t n = dv.size();
   std::vector<int64_t> iv(n);
@@ -105,4 +107,52 @@ Rcpp::DatetimeVector int64_to_datetimes(std::vector<int64_t> iv, tiledb_datatype
     }
   }
   return dv;
+}
+
+std::vector<int64_t> subnano_to_int64(NumericVector nv, tiledb_datatype_t dtype) {
+  size_t n = nv.size();
+  std::vector<int64_t> iv(n);
+  memcpy(iv.data(), &(nv[0]), n*sizeof(double));
+  for (size_t i=0; i<n; i++) {
+    switch (dtype) {
+    case TILEDB_DATETIME_NS:
+      // nothing to do for int64 as nanotime is already the basecase
+      break;
+    case TILEDB_DATETIME_PS:
+      iv[i] = iv[i] * 1e3;
+      break;
+    case TILEDB_DATETIME_FS:
+      iv[i] = iv[i] * 1e6;
+      break;
+    case TILEDB_DATETIME_AS:
+      iv[i] = iv[i] * 1e9;
+      break;
+    default:
+      Rcpp::stop("Inapplicable conversion tiledb_datatype_t (%d) for subnano to int64 conversion", dtype);
+    }
+  }
+  return iv;
+}
+
+Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t dtype) {
+  int n = iv.size();
+  for (int i=0; i<n; i++) {
+    switch (dtype) {
+    case TILEDB_DATETIME_NS:
+      // nothing to do for int64 as nanotime is already the basecase
+      break;
+    case TILEDB_DATETIME_PS:
+      iv[i] = iv[i] / 1e3;
+      break;
+    case TILEDB_DATETIME_FS:
+      iv[i] = iv[i] / 1e6;
+      break;
+    case TILEDB_DATETIME_AS:
+      iv[i] = iv[i] / 1e9;
+      break;
+    default:
+      Rcpp::stop("Inapplicable conversion tiledb_datatype_t (%d) for int64 to subnano conversion", dtype);
+    }
+  }
+  return makeNanotime(iv);
 }

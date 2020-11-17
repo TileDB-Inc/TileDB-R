@@ -3,6 +3,11 @@ title: "TileDB Dimensions: Date and Datetime Support"
 output:
   minidown::mini_document:
     framework: water
+vignette: |
+  %\VignetteIndexEntry{Dates and Datetimes in TileDB}
+  %\VignettePackage{tiledb}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r include=FALSE}
@@ -27,7 +32,7 @@ import datetime
 day = "1971-02-03 04:05:06"    # third day of second month of first year past epoch
 
 [np.datetime64(day, 'Y').astype('int64'),    # extract year, month, ... as an int64
-np.datetime64(day, 'M').astype('int64'),  
+np.datetime64(day, 'M').astype('int64'),
 np.datetime64(day, 'D').astype('int64'),
 np.datetime64(day, 'h').astype('int64'),
 np.datetime64(day, 'm').astype('int64'),
