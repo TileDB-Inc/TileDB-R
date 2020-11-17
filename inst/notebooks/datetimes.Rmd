@@ -3,11 +3,6 @@ title: "TileDB Dimensions: Date and Datetime Support"
 output:
   minidown::mini_document:
     framework: water
-vignette: |
-  %\VignetteIndexEntry{Dates and Datetimes in TileDB}
-  %\VignettePackage{tiledb}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r include=FALSE}
