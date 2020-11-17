@@ -16,7 +16,7 @@ vignette: |
 # Getting started
 
 Once the TileDB R package is installed, it can be loaded via `library(tiledb)`. Installation is
-supported for Windows, Linux and macOS via the [official CRAN package][cran_tileb], on Linux and
+supported for Windows, Linux and macOS via the [official CRAN package][cran_tiledb], on Linux and
 macOS via [the conda package](https://anaconda.org/conda-forge/r-tiledb) as well as from source.
 
 Documentation for the TileDB R package is available via the `help()` function from within R as well
