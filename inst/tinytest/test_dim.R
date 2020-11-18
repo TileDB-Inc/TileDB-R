@@ -202,4 +202,16 @@ for (dtype in dimtypes) {
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
     expect_true(all.equal(data, readdata))
+
+    if (grepl("^DATETIME", dtype)) {
+        ## check for default date(time) type
+        expect_false(class(readdata) == "integer64")
+        expect_false(datetimes_as_int64(arr2))
+
+        ## set it to TRUE, and test again
+        datetimes_as_int64(arr2) <- TRUE
+        expect_true(datetimes_as_int64(arr2))
+        expect_true(class(arr2[][,"row"]) == "integer64")
+    }
+
 }
