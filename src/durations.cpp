@@ -156,3 +156,22 @@ Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t 
   }
   return makeNanotime(iv);
 }
+
+// Check whether a column datatype is date or datetime
+//
+bool is_datetime_column(const tiledb_datatype_t dtype) {
+  return (dtype == TILEDB_DATETIME_YEAR)
+    || (dtype == TILEDB_DATETIME_MONTH)
+    || (dtype == TILEDB_DATETIME_WEEK)
+    || (dtype == TILEDB_DATETIME_DAY)
+    || (dtype == TILEDB_DATETIME_HR)
+    || (dtype == TILEDB_DATETIME_MIN)
+    || (dtype == TILEDB_DATETIME_SEC)
+    || (dtype == TILEDB_DATETIME_MS)
+    || (dtype == TILEDB_DATETIME_US)
+    || (dtype == TILEDB_DATETIME_NS)
+    || (dtype == TILEDB_DATETIME_PS)
+    || (dtype == TILEDB_DATETIME_FS)
+    || (dtype == TILEDB_DATETIME_AS)
+    ;
+}

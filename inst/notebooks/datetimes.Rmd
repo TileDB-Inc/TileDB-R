@@ -327,6 +327,29 @@ arr[]
 ```
 
 
+## Use integer64 Directly
+
+Sometimes we may want to access the date or datetimes value in their native
+`integer64` format. To do so, we set a toggle when opening the array as shown in the following
+example which uses the array from the preceding example (at resolution of nanosecond).
+
+```{r rex7}
+library(tiledb)
+uri <- "/tmp/tiledb/dt_ns"
+arr <- tiledb_array(uri, as.data.frame=TRUE, datetimes_as_int64=TRUE)
+arr[]
+```
+
+We can also write `integer64` types. The following example adds two extra rows:
+
+```{r rex8}
+library(tiledb)
+uri <- "/tmp/tiledb/dt_ns"
+arr <- tiledb_array(uri, as.data.frame=TRUE, datetimes_as_int64=TRUE)
+arr[] <- data.frame( rows=bit64::as.integer64(2:3), a=102:103)
+arr[]
+```
+
 
 
 [doc_datetimes]: https://docs.tiledb.com/main/solutions/tiledb-embedded/internal-mechanics/datetimes

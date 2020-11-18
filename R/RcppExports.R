@@ -489,16 +489,16 @@ libtiledb_query_buffer_alloc_ptr <- function(array, domaintype, ncells) {
     .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, array, domaintype, ncells)
 }
 
-libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec) {
-    .Call(`_tiledb_libtiledb_query_buffer_assign_ptr`, buf, dtype, vec)
+libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec, asint64 = FALSE) {
+    .Call(`_tiledb_libtiledb_query_buffer_assign_ptr`, buf, dtype, vec, asint64)
 }
 
 libtiledb_query_set_buffer_ptr <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_set_buffer_ptr`, query, attr, buf)
 }
 
-libtiledb_query_get_buffer_ptr <- function(buf) {
-    .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf)
+libtiledb_query_get_buffer_ptr <- function(buf, asint64 = FALSE) {
+    .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf, asint64)
 }
 
 libtiledb_query_submit <- function(query) {

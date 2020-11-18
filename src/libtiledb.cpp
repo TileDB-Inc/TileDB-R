@@ -2346,13 +2346,17 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
 }
 
 // [[Rcpp::export]]
-XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
-                                                    std::string dtype,
-                                                    SEXP vec) {
+XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::string dtype,
+                                                    SEXP vec, bool asint64 = false) {
   if (dtype == "INT32") {
     IntegerVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
   } else if (dtype == "FLOAT64") {
+    NumericVector v(vec);
+    std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+  } else if (dtype == "INT64" ||
+             (asint64 && is_datetime_column(buf->dtype))) {
+    // integer64 from the bit64 package uses doubles, see nanosecond
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
   } else if (dtype == "DATETIME_YEAR" ||
@@ -2395,10 +2399,6 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf,
     NumericVector v(vec);
     std::vector<int64_t> tt = subnano_to_int64(v, _string_to_tiledb_datatype(dtype));
     std::memcpy(buf->vec.data(), tt.data(), buf->ncells * buf->size);
-  } else if (dtype == "INT64") {
-    // integer64 from the bit64 package uses doubles, see nanosecond
-    NumericVector v(vec);
-    std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
   } else if (dtype == "UINT64") {
     // integer64 from the bit64 package uses doubles, see nanosecond
     NumericVector v(vec);
@@ -2473,7 +2473,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
-RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
+RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
   //Rcpp::Rcout << "dtype: " << dtype << std::endl;
   //Rcpp::Rcout << "useRType: " << (useRType ? "yes" : "no") << std::endl;
@@ -2501,13 +2501,16 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf) {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     return Rcpp::wrap(v);
+  } else if (asint64 && is_datetime_column(buf->dtype)) {
+    std::vector<int64_t> v(buf->ncells);
+    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    return makeInteger64(v);
   } else if (dtype == "DATETIME_FS" ||
              dtype == "DATETIME_PS" ||
              dtype == "DATETIME_AS") {
     //std::vector<int64_t> v(buf->ncells);
     //std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     //return Rcpp::wrap(v);
-
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     Rcpp::NumericVector dv = int64_to_subnano(v, _string_to_tiledb_datatype(dtype));

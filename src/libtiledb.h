@@ -48,6 +48,7 @@ Rcpp::NumericVector makeInteger64(const std::vector<int64_t>& vec);
 int64_t makeScalarInteger64(const double val);
 std::vector<int64_t> getInt64Vector(Rcpp::NumericVector vec);
 bool isInteger64(Rcpp::NumericVector v);
+bool is_datetime_column(const tiledb_datatype_t dtype);
 
 // duration helpers
 std::vector<int64_t> dates_to_int64(Rcpp::DateVector dv, tiledb_datatype_t dtype);
@@ -56,6 +57,7 @@ std::vector<int64_t> datetimes_to_int64(Rcpp::DatetimeVector dv, tiledb_datatype
 Rcpp::DatetimeVector int64_to_datetimes(std::vector<int64_t> iv, tiledb_datatype_t dtype);
 std::vector<int64_t> subnano_to_int64(NumericVector nv, tiledb_datatype_t dtype);
 Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t dtype);
+
 
 
 #endif

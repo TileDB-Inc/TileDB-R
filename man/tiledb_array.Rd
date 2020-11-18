@@ -13,6 +13,7 @@ tiledb_array(
   extended = TRUE,
   selected_ranges = list(),
   query_layout = character(),
+  datetimes_as_int64 = FALSE,
   ctx = tiledb_get_context()
 )
 }
@@ -36,6 +37,10 @@ describes the (min,max) pair of ranges for dimension i}
 
 \item{query_layout}{optional A value for the TileDB query layout, defaults to
 an empty character variable indicating no special layout is set}
+
+\item{datetimes_as_int64}{optional A logical value selecting date and datetime value
+representation as \sQuote{raw} \code{integer64} and not as \code{Date},
+\code{POSIXct} or \code{nanotime} objects.}
 
 \item{ctx}{tiledb_ctx (optional)}
 }
