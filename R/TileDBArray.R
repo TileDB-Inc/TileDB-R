@@ -785,3 +785,49 @@ setReplaceMethod("query_layout", signature = "tiledb_array", function(x, value) 
   validObject(x)
   x
 })
+
+
+
+## -- datetimes_as_int64 accessor
+
+#' @rdname datetimes_as_int64-tiledb_array-method
+#' @export
+setGeneric("datetimes_as_int64", function(object) standardGeneric("datetimes_as_int64"))
+
+#' @rdname datetimes_as_int64-set-tiledb_array-method
+#' @export
+setGeneric("datetimes_as_int64<-", function(x, value) standardGeneric("datetimes_as_int64<-"))
+
+#' Retrieve datetimes_as_int64 toggle
+#'
+#' A \code{tiledb_array} object mayb contain date and datetime objects. While their internal
+#' representation is generally shielded from the user, it can useful to access them as the
+#' \sQuote{native} format which is an \code{integer64}. This function retrieves the current
+#' value of the selection variable, which has a default of \code{FALSE}.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether \code{datetimes_as_int64} is selected
+#' @export
+setMethod("datetimes_as_int64",
+          signature = "tiledb_array",
+          function(object) object@datetimes_as_int64)
+
+
+## -- datetimes_as_int64 setter (generic in DenseArray.R)
+
+#' Set datetimes_as_int64 toggle
+#'
+#' A \code{tiledb_array} object mayb contain date and datetime objects. While their internal
+#' representation is generally shielded from the user, it can useful to access them as the
+#' \sQuote{native} format which is an \code{integer64}. This function set the current
+#' value of the selection variable, which has a default of \code{FALSE}.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("datetimes_as_int64",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@datetimes_as_int64 <- value
+  validObject(x)
+  x
+})
