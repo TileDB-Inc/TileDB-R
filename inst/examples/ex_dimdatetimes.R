@@ -29,7 +29,6 @@ dimtypes <- c("DATETIME_YEAR",  # year
               "DATETIME_FS",    # femtosecond
               "DATETIME_AS"     # attosecond
               )
-dimtypes <- tail(dimtypes,5)
 
 for (dtype in dimtypes) {
     cat("Creating", dtype, "... ")

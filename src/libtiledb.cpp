@@ -1242,6 +1242,8 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
              attr_dtype == TILEDB_DATETIME_MONTH ||
              attr_dtype == TILEDB_DATETIME_WEEK ||
              attr_dtype == TILEDB_DATETIME_DAY ||
+             attr_dtype == TILEDB_DATETIME_HR ||
+             attr_dtype == TILEDB_DATETIME_MIN ||
              attr_dtype == TILEDB_DATETIME_SEC ||
              attr_dtype == TILEDB_DATETIME_MS  ||
              attr_dtype == TILEDB_DATETIME_US  ||
@@ -1265,6 +1267,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     registerXptrFinalizer(attr, libtiledb_attribute_delete);
     return attr;
   } else {
+    Rcpp::Rcout << type << std::endl;
     Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT64), "
                "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
                "nanotime (DATETIME_NS) and character (CHAR) attributes "
