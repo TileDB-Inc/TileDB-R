@@ -82,11 +82,11 @@ for (dtype in dimtypes) {
     data <- data.frame(row = dvec, attr = avec)
     cat("writing ... ")
     arr[] <- data
-#print(data)
+
     cat("reading ... ")
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
-#print(readdata)
+
     cat("(",format(readdata[1,1]), ",", format(readdata[2,1]), ",", format(readdata[3,1]), ") ", sep="")
 
     cat("checking ... ")

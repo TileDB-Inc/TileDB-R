@@ -747,7 +747,6 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     }
     int64_t domain[] = {domain_vec[0], domain_vec[1]};
     int64_t extent = Rcpp::as<int64_t>(tile_extent);
-    //Rcpp::Rcout << domain[0] << "," << domain[1] << ";" << extent << std::endl;
     auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype, domain, &extent));
     auto ptr = XPtr<tiledb::Dimension>(dim, false);
     registerXptrFinalizer(ptr, libtiledb_dimension_delete);
@@ -2171,7 +2170,6 @@ std::string convertStringVectorIntoOffsetsAndString(Rcpp::CharacterVector vec,
     std::string s(vec[i]);
     offsets[i] = cumlen;
     data += s;
-    //Rcpp::Rcout << "s: " << s << " cumlen: " << cumlen << std::endl;
     cumlen += s.length();
   }
   return data;
@@ -2374,20 +2372,6 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
              dtype == "DATETIME_SEC"||
              dtype == "DATETIME_MIN"||
              dtype == "DATETIME_HR"   ) {
-    // NumericVector v(vec);
-    // int n = buf->ncells;
-    // double scalefactor = 1.0;
-    // if (dtype == "DATETIME_MS") {
-    //   scalefactor = 1e3;
-    //   //scalefactor = 1.0;
-    // } else if (dtype == "DATETIME_US") {
-    //   scalefactor = 1e6;
-    // }
-    // std::vector<int64_t> tt(n);
-    // for (int i=0; i<n; i++) {
-    //   tt[i] = static_cast<int64_t>(v[i] * scalefactor);
-    //   //Rprintf("setting date: %f -> %ld %s \n", v[i], tt[i], dtype.c_str());
-    // }
     DatetimeVector v(vec);
     std::vector<int64_t> tt = datetimes_to_int64(v, _string_to_tiledb_datatype(dtype));
     std::memcpy(buf->vec.data(), tt.data(), buf->ncells * buf->size);
@@ -2478,8 +2462,6 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
-  //Rcpp::Rcout << "dtype: " << dtype << std::endl;
-  //Rcpp::Rcout << "useRType: " << (useRType ? "yes" : "no") << std::endl;
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
@@ -2511,9 +2493,6 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
   } else if (dtype == "DATETIME_FS" ||
              dtype == "DATETIME_PS" ||
              dtype == "DATETIME_AS") {
-    //std::vector<int64_t> v(buf->ncells);
-    //std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    //return Rcpp::wrap(v);
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     Rcpp::NumericVector dv = int64_to_subnano(v, _string_to_tiledb_datatype(dtype));
@@ -2531,23 +2510,6 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
              dtype == "DATETIME_SEC" ||
              dtype == "DATETIME_MS" ||
              dtype == "DATETIME_US") {
-    // int n = buf->ncells;
-    // std::vector<int64_t> tt(n);
-    // std::memcpy(tt.data(), buf->vec.data(), n*buf->size);
-    // NumericVector dd(n);
-    // double scalefactor = 1.0; // FIXME = _domain_datatype_time_scale_factor(buf->dtype);
-    // if (dtype == "DATETIME_MS") {
-    //   scalefactor = 1e3;
-    // } else if (dtype == "DATETIME_US") {
-    //   scalefactor = 1e6;
-    // }
-    // for (int i=0; i<n; i++) {
-    //   dd[i] = static_cast<double>(tt[i] / scalefactor);
-    //   //Rprintf("getting date: %ld -> %f (%f)\n", tt[i], dd[i], scalefactor);
-    // }
-    // // an R thing: POSIXct (represented as a double) and
-    // // POSIXlt (a list) both inherit from POSIXt
-    // dd.attr("class") = Rcpp::CharacterVector::create("POSIXct", "POSIXt");
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     DatetimeVector dv = int64_to_datetimes(v, _string_to_tiledb_datatype(dtype));

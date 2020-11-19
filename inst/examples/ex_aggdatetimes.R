@@ -13,13 +13,7 @@ intmax <- .Machine$integer.max         # shorthand
 array_name <- "ex_aggdatetimes"
 ## Path is either current directory, or a local config value is found
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
-library(tiledb)
-
-
-if (tiledb_vfs_is_dir(uri)) {
-  ##message("Removing existing uri")
-  res <- tiledb_vfs_remove_dir(uri)
-}
+if (tiledb_vfs_is_dir(uri)) res <- tiledb_vfs_remove_dir(uri)
 
 tile <- 1000L
 domain <- tiledb_domain(tiledb_dim("row", c(-intmax,intmax), tile, dimtype))
