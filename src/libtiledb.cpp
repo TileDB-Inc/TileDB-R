@@ -1596,8 +1596,9 @@ void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
 }
 
 // [[Rcpp::export]]
-void libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
+bool libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
   schema->check();   // throws, rather than returning bool
+  return true;
 }
 
 

@@ -914,13 +914,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_schema_check
-void libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema);
+bool libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_libtiledb_array_schema_check(SEXP schemaSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
-    libtiledb_array_schema_check(schema);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_check(schema));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_array_create

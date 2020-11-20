@@ -3,7 +3,7 @@
 \name{capacity}
 \alias{capacity}
 \alias{capacity,tiledb_array_schema-method}
-\title{Get Tile Data Capacity}
+\title{Retrieve schema capacity (for sparse fragments)}
 \usage{
 capacity(object)
 

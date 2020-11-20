@@ -437,7 +437,7 @@ tiledb_schema_get_types <- function(sch) {
   alltypes <- c(dimtypes, attrtypes)
 }
 
-##' -- Get and Set Tile Capacity (for Sparse Fragments)
+# -- get and set tile capacity
 
 #' @rdname capacity-tiledb_array_schema-method
 #' @export
@@ -470,3 +470,21 @@ setReplaceMethod("capacity",
   libtiledb_array_schema_set_capacity(x@ptr, value)
   x
 })
+
+
+##' -- Schema Correctness
+
+#' @rdname check-tiledb_array_schema-method
+#' @export
+setGeneric("check", function(object) standardGeneric("check"))
+
+#' Check the schema for correctness
+#'
+#' Returns the \code{tiledb_array} schema for correctness
+#' @param object An \code{array_schema} object
+#' @return The boolean value \code{TRUE} is returned for a correct
+#' schema; for an incorrect schema an error condition is triggered.
+#' @export
+setMethod("check",
+          signature = "tiledb_array_schema",
+          function(object) libtiledb_array_schema_check(object@ptr))

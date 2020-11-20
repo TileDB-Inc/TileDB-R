@@ -314,7 +314,7 @@ libtiledb_array_schema_dump <- function(schema) {
 }
 
 libtiledb_array_schema_check <- function(schema) {
-    invisible(.Call(`_tiledb_libtiledb_array_schema_check`, schema))
+    .Call(`_tiledb_libtiledb_array_schema_check`, schema)
 }
 
 libtiledb_array_create <- function(uri, schema) {
