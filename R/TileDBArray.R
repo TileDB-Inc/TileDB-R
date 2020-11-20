@@ -800,7 +800,7 @@ setGeneric("datetimes_as_int64<-", function(x, value) standardGeneric("datetimes
 
 #' Retrieve datetimes_as_int64 toggle
 #'
-#' A \code{tiledb_array} object mayb contain date and datetime objects. While their internal
+#' A \code{tiledb_array} object may contain date and datetime objects. While their internal
 #' representation is generally shielded from the user, it can useful to access them as the
 #' \sQuote{native} format which is an \code{integer64}. This function retrieves the current
 #' value of the selection variable, which has a default of \code{FALSE}.
@@ -816,7 +816,7 @@ setMethod("datetimes_as_int64",
 
 #' Set datetimes_as_int64 toggle
 #'
-#' A \code{tiledb_array} object mayb contain date and datetime objects. While their internal
+#' A \code{tiledb_array} object may contain date and datetime objects. While their internal
 #' representation is generally shielded from the user, it can useful to access them as the
 #' \sQuote{native} format which is an \code{integer64}. This function set the current
 #' value of the selection variable, which has a default of \code{FALSE}.

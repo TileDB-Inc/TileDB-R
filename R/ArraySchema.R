@@ -436,3 +436,37 @@ tiledb_schema_get_types <- function(sch) {
 
   alltypes <- c(dimtypes, attrtypes)
 }
+
+##' -- Get and Set Tile Capacity (for Sparse Fragments)
+
+#' @rdname capacity-tiledb_array_schema-method
+#' @export
+setGeneric("capacity", function(object) standardGeneric("capacity"))
+
+#' @rdname capacity-set-tiledb_array_schema-method
+#' @export
+setGeneric("capacity<-", function(x, value) standardGeneric("capacity<-"))
+
+#' Retrieve schema capacity (for sparse fragments)
+#'
+#' Returns the \code{tiledb_array} schema tile capacity for sparse fragments.
+#' @param object An \code{array_schema} object
+#' @return The tile capacity value
+#' @export
+setMethod("capacity",
+          signature = "tiledb_array_schema",
+          function(object) libtiledb_array_schema_get_capacity(object@ptr))
+
+#' Sets the schema capacity (for sparse fragments)
+#'
+#' Sets the \code{tiledb_array} schema tile capacity for sparse fragments.
+#' @param x An \code{array_schema} object
+#' @param value An integer or numeric value for the new tile capacity
+#' @return The modified \code{array_schema} object
+#' @export
+setReplaceMethod("capacity",
+          signature = "tiledb_array_schema",
+          function(x, value) {
+  libtiledb_array_schema_set_capacity(x@ptr, value)
+  x
+})
