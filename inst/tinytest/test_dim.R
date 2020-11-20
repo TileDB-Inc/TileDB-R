@@ -83,6 +83,7 @@ d <- tiledb_dim("", c(-1L, 100L))
 expect_equal(dim(d), 102L)
 #})
 
+if (tiledb_version(TRUE) < "2.1.0") exit_file("Needs TileDB 2.1.* or later")
 
 ## test permissible types for dimension objects -- cf inst/examples/ex_dimensions.R
 ## quick check of various dimension types
@@ -91,6 +92,7 @@ suppressMessages({
   library(bit64)
 })
 atttype <- "INT32"
+intmax <- .Machine$integer.max         # shorthand
 uri <- tempfile()
 dimtypes <- c("ASCII",  		# Variable length string
               "INT8",   		# 8-bit integer
@@ -117,6 +119,7 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_FS",    # femtosecond
               "DATETIME_AS"     # attosecond
               )
+
 for (dtype in dimtypes) {
     if (tiledb_vfs_is_dir(uri)) {
         tiledb_vfs_remove_dir(uri)
@@ -124,37 +127,39 @@ for (dtype in dimtypes) {
     dom <- switch(dtype,
                   "ASCII"          = NULL,
                   "INT8"           =,
-                  "UINT8"          =,
+                  "UINT8"          = c(1L, 100L),
                   "INT16"          =,
                   "UINT16"         =,
                   "UINT32"         =,
-                  "INT32"          = c(1L, 100L),
+                  "INT32"          = c(1L, 10000L),
                   "INT64"          =,
                   "UINT64"         = c(as.integer64(1), as.integer64(1000)),
                   "FLOAT32"        =,
                   "FLOAT64"        = c(1, 1000),
-                  "DATETIME_YEAR"  = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
-                  "DATETIME_MONTH" = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
-                  "DATETIME_WEEK"  = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
-                  "DATETIME_DAY"   = c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_YEAR"  =, #c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_MONTH" =, #c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_WEEK"  =, #c(as.Date("2000-01-01"), as.Date("2030-12-31")),
+                  "DATETIME_DAY"   = c(-intmax, intmax),#c(as.Date("2000-01-01"), as.Date("2030-12-31")),
                   "DATETIME_HR"    =,
                   "DATETIME_MIN"   =,
-                  "DATETIME_SEC"   = c(as.POSIXct("2000-01-01 00:00:00"),
-                                       as.POSIXct("2030-12-31 23:00:59")),
+                  "DATETIME_SEC"   =,
                   "DATETIME_MS"    =,
                   "DATETIME_US"    =,
-                  "DATETIME_NS"    = c(as.nanotime("1970-01-01T00:00:00.000000000+00:00"),
-                                       as.nanotime("2030-12-31T23:59:59.999999999+00:00")),
+                  "DATETIME_NS"    =,
                   "DATETIME_PS"    =,
                   "DATETIME_FS"    =,
-                  "DATETIME_AS"    = c(as.integer64(1), as.integer64(1e18))
+                  "DATETIME_AS"    = c(-5e18, 5e18)
                   )
 
-    if (dtype %in% c("DATETIME_MS", "DATETIME_US", "DATETIME_NS",
-                     "DATETIME_PS", "DATETIME_FS", "DATETIME_AS"))
-        tile <- 1000
-    else
-        tile <- dom[1]                      # fallback
+    tile <- switch(dtype,
+                   "ASCII" = NULL,
+                   "UINT8" = ,
+                   "INT8"  = 100L,
+                   "INT32" = ,
+                   "UINT32" = 1000L,
+                   "UINT64" =,
+                   "INT64" = as.integer64(1000),
+                   1000)                    # default is 1000
 
     domain <- tiledb_domain(tiledb_dim("row", dom, tile, dtype))
     attrib <- tiledb_attr("attr", type = "INT32")
@@ -185,10 +190,10 @@ for (dtype in dimtypes) {
                    "DATETIME_MS"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.001,3),
                    ## POSIXct can do a bit less than 1 microsec so we set it to 2 on purpose
                    "DATETIME_US"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.000002,3),
-                   "DATETIME_NS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9,
+                   "DATETIME_NS"  =,
                    "DATETIME_PS"  =,
                    "DATETIME_FS"  =,
-                   "DATETIME_AS"  = as.integer64(1e12 + 0:2)
+                   "DATETIME_AS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9
                    )
     avec <- 10^(1:3)
     data <- data.frame(row = dvec, attr = avec)
@@ -197,4 +202,16 @@ for (dtype in dimtypes) {
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
     expect_true(all.equal(data, readdata))
+
+    if (grepl("^DATETIME", dtype)) {
+        ## check for default date(time) type
+        expect_false(class(readdata) == "integer64")
+        expect_false(datetimes_as_int64(arr2))
+
+        ## set it to TRUE, and test again
+        datetimes_as_int64(arr2) <- TRUE
+        expect_true(datetimes_as_int64(arr2))
+        expect_true(class(arr2[][,"row"]) == "integer64")
+    }
+
 }

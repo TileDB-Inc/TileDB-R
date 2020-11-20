@@ -36,6 +36,7 @@
 #' @slot selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
 #' @slot query_layout An optional character value
+#' @slot datetimes_as_int64 A logical value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -47,6 +48,7 @@ setClass("tiledb_array",
                       extended = "logical",
                       selected_ranges = "list",
                       query_layout = "character",
+                      datetimes_as_int64 = "logical",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -65,6 +67,9 @@ setClass("tiledb_array",
 #' describes the (min,max) pair of ranges for dimension i
 #' @param query_layout optional A value for the TileDB query layout, defaults to
 #' an empty character variable indicating no special layout is set
+#' @param datetimes_as_int64 optional A logical value selecting date and datetime value
+#' representation as \sQuote{raw} \code{integer64} and not as \code{Date},
+#' \code{POSIXct} or \code{nanotime} objects.
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object
 #' @export
@@ -76,6 +81,7 @@ tiledb_array <- function(uri,
                         extended = TRUE,
                         selected_ranges = list(),
                         query_layout = character(),
+                        datetimes_as_int64 = FALSE,
                         ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -101,6 +107,7 @@ tiledb_array <- function(uri,
       extended = extended,
       selected_ranges = selected_ranges,
       query_layout = query_layout,
+      datetimes_as_int64 = datetimes_as_int64,
       ptr = array_xptr)
 }
 
@@ -123,15 +130,16 @@ setMethod("schema", "tiledb_array", function(object, ...) {
 setMethod("show", signature = "tiledb_array",
           definition = function (object) {
   cat("tiledb_array\n"
-     ,"  uri             = '", object@uri, "'\n"
-     ,"  is.sparse       = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
-     ,"  as.data.frame   = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
-     ,"  attrs           = ", if (length(object@attrs) == 0) "(none)"
+     ,"  uri                = '", object@uri, "'\n"
+     ,"  is.sparse          = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
+     ,"  as.data.frame      = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs              = ", if (length(object@attrs) == 0) "(none)"
                                else paste(object@attrs, collapse=","), "\n"
-     ,"  selected_ranges = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
+     ,"  selected_ranges    = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
                                else "(none)", "\n"
-     ,"  extended        = ", if (object@extended) "TRUE" else "FALSE" ,"\n"
-     ,"  query_layout    = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
+     ,"  extended           = ", if (object@extended) "TRUE" else "FALSE" ,"\n"
+     ,"  query_layout       = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
+     ,"  datetimes_as_int64 = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
      ,sep="")
 })
 
@@ -192,6 +200,11 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'query_layout' slot does not contain a character value.")
   }
 
+  if (!is.logical(object@datetimes_as_int64)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'datetimes_as_int64' slot does not contain a logical value.")
+  }
+
   if (!is(object@ptr, "externalptr")) {
     valid <- FALSE
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
@@ -234,6 +247,7 @@ setMethod("[", "tiledb_array",
   sch <- tiledb::schema(x)
   dom <- tiledb::domain(sch)
   layout <- x@query_layout
+  asint64 <- x@datetimes_as_int64
 
   libtiledb_array_open_with_ptr(x@ptr, "READ")
   on.exit(libtiledb_array_close(x@ptr))
@@ -381,7 +395,7 @@ setMethod("[", "tiledb_array",
       sz <- libtiledb_query_result_buffer_elements(qryptr, name)
       libtiledb_query_get_buffer_var_char(buf, resrv, sz)[,1]
     } else {
-      libtiledb_query_get_buffer_ptr(buf)
+      libtiledb_query_get_buffer_ptr(buf, asint64)
     }
   }
   reslist <- mapply(getResult, buflist, allnames, allvarnum,
@@ -457,6 +471,7 @@ setMethod("[<-", "tiledb_array",
   sch <- tiledb::schema(x)
   dom <- tiledb::domain(sch)
   layout <- x@query_layout
+  asint64 <- x@datetimes_as_int64
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
@@ -559,7 +574,8 @@ setMethod("[<-", "tiledb_array",
       } else {
         nr <- NROW(value[[i]])
         buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
-        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]])
+        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i],
+                                                          value[[i]], asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, allnames[i], buflist[[i]])
       }
     }
@@ -766,6 +782,52 @@ setMethod("query_layout", signature = "tiledb_array", function(object) object@qu
 #' @export
 setReplaceMethod("query_layout", signature = "tiledb_array", function(x, value) {
   x@query_layout <- value
+  validObject(x)
+  x
+})
+
+
+
+## -- datetimes_as_int64 accessor
+
+#' @rdname datetimes_as_int64-tiledb_array-method
+#' @export
+setGeneric("datetimes_as_int64", function(object) standardGeneric("datetimes_as_int64"))
+
+#' @rdname datetimes_as_int64-set-tiledb_array-method
+#' @export
+setGeneric("datetimes_as_int64<-", function(x, value) standardGeneric("datetimes_as_int64<-"))
+
+#' Retrieve datetimes_as_int64 toggle
+#'
+#' A \code{tiledb_array} object mayb contain date and datetime objects. While their internal
+#' representation is generally shielded from the user, it can useful to access them as the
+#' \sQuote{native} format which is an \code{integer64}. This function retrieves the current
+#' value of the selection variable, which has a default of \code{FALSE}.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether \code{datetimes_as_int64} is selected
+#' @export
+setMethod("datetimes_as_int64",
+          signature = "tiledb_array",
+          function(object) object@datetimes_as_int64)
+
+
+## -- datetimes_as_int64 setter (generic in DenseArray.R)
+
+#' Set datetimes_as_int64 toggle
+#'
+#' A \code{tiledb_array} object mayb contain date and datetime objects. While their internal
+#' representation is generally shielded from the user, it can useful to access them as the
+#' \sQuote{native} format which is an \code{integer64}. This function set the current
+#' value of the selection variable, which has a default of \code{FALSE}.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("datetimes_as_int64",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@datetimes_as_int64 <- value
   validObject(x)
   x
 })
