@@ -1179,6 +1179,18 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_array_vacuum
+void libtiledb_array_vacuum(XPtr<tiledb::Context> ctx, std::string uri, Nullable<XPtr<tiledb::Config>> cfgptr);
+RcppExport SEXP _tiledb_libtiledb_array_vacuum(SEXP ctxSEXP, SEXP uriSEXP, SEXP cfgptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::Config>> >::type cfgptr(cfgptrSEXP);
+    libtiledb_array_vacuum(ctx, uri, cfgptr);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_array_put_metadata
 bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array, std::string key, SEXP obj);
 RcppExport SEXP _tiledb_libtiledb_array_put_metadata(SEXP arraySEXP, SEXP keySEXP, SEXP objSEXP) {
@@ -2036,6 +2048,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_get_non_empty_domain_from_name", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain_from_name, 3},
     {"_tiledb_libtiledb_array_non_empty_domain_from_index", (DL_FUNC) &_tiledb_libtiledb_array_non_empty_domain_from_index, 3},
     {"_tiledb_libtiledb_array_consolidate", (DL_FUNC) &_tiledb_libtiledb_array_consolidate, 3},
+    {"_tiledb_libtiledb_array_vacuum", (DL_FUNC) &_tiledb_libtiledb_array_vacuum, 3},
     {"_tiledb_libtiledb_array_put_metadata", (DL_FUNC) &_tiledb_libtiledb_array_put_metadata, 3},
     {"_tiledb_libtiledb_array_get_metadata_num", (DL_FUNC) &_tiledb_libtiledb_array_get_metadata_num, 1},
     {"_tiledb_libtiledb_array_get_metadata_from_index", (DL_FUNC) &_tiledb_libtiledb_array_get_metadata_from_index, 2},

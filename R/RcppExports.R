@@ -401,6 +401,10 @@ libtiledb_array_consolidate <- function(ctx, uri, cfgptr = NULL) {
     invisible(.Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri, cfgptr))
 }
 
+libtiledb_array_vacuum <- function(ctx, uri, cfgptr = NULL) {
+    invisible(.Call(`_tiledb_libtiledb_array_vacuum`, ctx, uri, cfgptr))
+}
+
 libtiledb_array_put_metadata <- function(array, key, obj) {
     .Call(`_tiledb_libtiledb_array_put_metadata`, array, key, obj)
 }

@@ -835,16 +835,32 @@ setReplaceMethod("datetimes_as_int64",
 
 ## -- consolitate wrapper
 
-#' Consolidate Fragments of a TileDB Array
+#' Consolidate fragments of a TileDB Array
 #'
 #' This function invokes a consolidation operation. Parameters can be set via
 #' an option configuration object.
 #' @param uri A character value with the URI of a TileDB Array
 #' @param cfg An optional TileDB Configuration object
 #' @param ctx An option TileDB Context object
-#' @return The Array URI is return as a character value
+#' @return \code{NULL} is returned invisibly
 #' @export
 array_consolidate <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
+  libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri,
+                              # C++ code has Nullable and can instantiate but needs S4 XPtr
+                              cfg = if (is.null(cfg)) cfg else cfg@ptr)
+}
+
+#' After consolidation, remove consilidated fragments of a TileDB Array
+#'
+#' This function can remove fragments following a consolidation step. Note that vacuuming
+#' should \emph{not} be run if one intends to use the TileDB \emph{time-traveling} feature
+#' of opening arrays at particular timestamps
+#' @param uri A character value with the URI of a TileDB Array
+#' @param cfg An optional TileDB Configuration object
+#' @param ctx An option TileDB Context object
+#' @return \code{NULL} is returned invisibly
+#' @export
+array_vacuum <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
   libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri,
                               # C++ code has Nullable and can instantiate but needs S4 XPtr
                               cfg = if (is.null(cfg)) cfg else cfg@ptr)

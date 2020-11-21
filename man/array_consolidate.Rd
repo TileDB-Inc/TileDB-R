@@ -2,7 +2,7 @@
 % Please edit documentation in R/TileDBArray.R
 \name{array_consolidate}
 \alias{array_consolidate}
-\title{Consolidate Fragments of a TileDB Array}
+\title{Consolidate fragments of a TileDB Array}
 \usage{
 array_consolidate(uri, cfg = NULL, ctx = tiledb_get_context())
 }
@@ -14,7 +14,7 @@ array_consolidate(uri, cfg = NULL, ctx = tiledb_get_context())
 \item{ctx}{An option TileDB Context object}
 }
 \value{
-The Array URI is return as a character value
+\code{NULL} is returned invisibly
 }
 \description{
 This function invokes a consolidation operation. Parameters can be set via

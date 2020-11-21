@@ -1881,6 +1881,20 @@ void libtiledb_array_consolidate(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
+void libtiledb_array_vacuum(XPtr<tiledb::Context> ctx,
+                            std::string uri,
+                            Nullable<XPtr<tiledb::Config>> cfgptr = R_NilValue) {
+
+  if (cfgptr.isNotNull()) {
+    XPtr<tiledb::Config> cfg(cfgptr);
+    tiledb::Array::vacuum(*ctx.get(), uri, cfg);
+  } else {
+    tiledb::Array::vacuum(*ctx.get(), uri);
+  }
+}
+
+
+// [[Rcpp::export]]
 bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
                                   std::string key, SEXP obj) {
 
