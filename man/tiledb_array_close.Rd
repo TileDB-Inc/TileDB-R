@@ -7,7 +7,7 @@
 tiledb_array_close(arr)
 }
 \arguments{
-\item{arr}{A TileDB Array object as for example returned by \code{tiledb_dense()}}
+\item{arr}{A TileDB Array object as for example returned by \code{tiledb_array()}}
 }
 \value{
 The TileDB Array object but closed

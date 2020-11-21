@@ -47,7 +47,7 @@ tiledb_array_create <- function(uri, schema) {
 
 ##' Open a TileDB Array
 ##'
-##' @param arr A TileDB Array object as for example returned by `tiledb_dense()`
+##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
 ##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
 ##' @return The TileDB Array object but opened for reading or writing
 ##' @export
@@ -60,7 +60,7 @@ tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
 
 ##' Close a TileDB Array
 ##'
-##' @param arr A TileDB Array object as for example returned by `tiledb_dense()`
+##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
 ##' @return The TileDB Array object but closed
 ##' @export
 tiledb_array_close <- function(arr) {
