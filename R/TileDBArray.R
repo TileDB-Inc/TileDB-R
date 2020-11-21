@@ -831,3 +831,21 @@ setReplaceMethod("datetimes_as_int64",
   validObject(x)
   x
 })
+
+
+## -- consolitate wrapper
+
+#' Consolidate Fragments of a TileDB Array
+#'
+#' This function invokes a consolidation operation. Parameters can be set via
+#' an option configuration object.
+#' @param uri A character value with the URI of a TileDB Array
+#' @param cfg An optional TileDB Configuration object
+#' @param ctx An option TileDB Context object
+#' @return The Array URI is return as a character value
+#' @export
+array_consolidate <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
+  libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri,
+                              # C++ code has Nullable and can instantiate but needs S4 XPtr
+                              cfg = if (is.null(cfg)) cfg else cfg@ptr)
+}
