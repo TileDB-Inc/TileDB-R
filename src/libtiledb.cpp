@@ -2635,6 +2635,16 @@ std::string libtiledb_query_get_fragment_uri(XPtr<tiledb::Query> query, int idx)
 }
 
 // [[Rcpp::export]]
+Rcpp::DatetimeVector libtiledb_query_get_fragment_timestamp_range(XPtr<tiledb::Query> query, int idx) {
+  if (query->query_type() != TILEDB_WRITE) {
+    Rcpp::stop("Fragment URI only applicable to 'write' queries.");
+  }
+  uint32_t uidx = static_cast<uint32_t>(idx);
+  std::pair<uint64_t, uint64_t> range = query->fragment_timestamp_range(uidx);
+  return Rcpp::DatetimeVector::create(range.first/1000.0, range.second/1000.0);
+}
+
+// [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iidx,
                                               SEXP starts, SEXP ends,
                                               SEXP strides = R_NilValue) {

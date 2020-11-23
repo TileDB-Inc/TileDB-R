@@ -529,6 +529,10 @@ libtiledb_query_get_fragment_uri <- function(query, idx) {
     .Call(`_tiledb_libtiledb_query_get_fragment_uri`, query, idx)
 }
 
+libtiledb_query_get_fragment_timestamp_range <- function(query, idx) {
+    .Call(`_tiledb_libtiledb_query_get_fragment_timestamp_range`, query, idx)
+}
+
 libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
     .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
 }

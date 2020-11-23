@@ -847,7 +847,7 @@ setReplaceMethod("datetimes_as_int64",
 array_consolidate <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
   libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri,
                               # C++ code has Nullable and can instantiate but needs S4 XPtr
-                              cfg = if (is.null(cfg)) cfg else cfg@ptr)
+                              cfgptr = if (is.null(cfg)) cfg else cfg@ptr)
 }
 
 #' After consolidation, remove consilidated fragments of a TileDB Array
@@ -863,5 +863,5 @@ array_consolidate <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
 array_vacuum <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
   libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri,
                               # C++ code has Nullable and can instantiate but needs S4 XPtr
-                              cfg = if (is.null(cfg)) cfg else cfg@ptr)
+                              cfgptr = if (is.null(cfg)) cfg else cfg@ptr)
 }

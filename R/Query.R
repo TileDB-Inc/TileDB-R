@@ -333,3 +333,42 @@ tiledb_query_add_range_with_type <- function(query, idx, datatype, lowval, highv
   query@ptr <- libtiledb_query_add_range_with_type(query@ptr, idx, datatype, lowval, highval, stride)
   invisible(query)
 }
+
+
+#' Retrieve the Number of Fragments for Query
+#'
+#' This function is only applicable to \sQuote{WRITE} queries.
+#' @param query A TileDB Query object
+#' @return An integer with the number of fragments for the given query
+#' @export
+tiledb_query_get_fragment_num <- function(query) {
+  stopifnot(query_object=is(query, "tiledb_query"))
+  libtiledb_query_get_fragment_num(query@ptr)
+}
+
+#' Retrieve the URI for a given Query Fragment
+#'
+#' This function is only applicable to \sQuote{WRITE} queries.
+#' @param query A TileDB Query object
+#' @param idx An integer (or numeric) index ranging from zero to the number of fragments minus 1
+#' @return An character value with the fragment URI
+#' @export
+tiledb_query_get_fragment_uri <- function(query, idx) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            idx_numeric=is.numeric(idx))
+  libtiledb_query_get_fragment_uri(query@ptr, idx)
+}
+
+#' Retrieve the timestamp range for a given Query Fragment
+#'
+#' This function is only applicable to \sQuote{WRITE} queries. The time resolution in
+#' TileDB is millseconds since the epoch so an R \code{Datetime} vector is returned.
+#' @param query A TileDB Query object
+#' @param idx An integer (or numeric) index ranging from zero to the number of fragments minus 1
+#' @return A two-element datetime vector with the start and end time of the fragment write.
+#' @export
+tiledb_query_get_fragment_timestamp_range <- function(query, idx) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            idx_numeric=is.numeric(idx))
+  libtiledb_query_get_fragment_uri(query@ptr, idx)
+}
