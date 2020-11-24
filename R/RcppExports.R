@@ -125,6 +125,14 @@ libtiledb_domain_get_ndim <- function(domain) {
     .Call(`_tiledb_libtiledb_domain_get_ndim`, domain)
 }
 
+libtiledb_domain_get_dimension_from_index <- function(dom, idx) {
+    .Call(`_tiledb_libtiledb_domain_get_dimension_from_index`, dom, idx)
+}
+
+libtiledb_domain_get_dimension_from_name <- function(dom, name) {
+    .Call(`_tiledb_libtiledb_domain_get_dimension_from_name`, dom, name)
+}
+
 libtiledb_domain_get_dimensions <- function(domain) {
     .Call(`_tiledb_libtiledb_domain_get_dimensions`, domain)
 }

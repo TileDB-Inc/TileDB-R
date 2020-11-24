@@ -1058,6 +1058,23 @@ int libtiledb_domain_get_ndim(XPtr<tiledb::Domain> domain) {
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::Dimension> libtiledb_domain_get_dimension_from_index(XPtr<tiledb::Domain> dom, int idx) {
+  auto dim = dom->dimension(idx);
+  auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(dim), false);
+  registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+  return ptr;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Dimension> libtiledb_domain_get_dimension_from_name(XPtr<tiledb::Domain> dom,
+                                                                 std::string name) {
+  auto dim = dom->dimension(name.c_str());
+  auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(dim), false);
+  registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+  return ptr;
+}
+
+// [[Rcpp::export]]
 List libtiledb_domain_get_dimensions(XPtr<tiledb::Domain> domain) {
   List dimensions;
   for (auto& dim : domain->dimensions()) {

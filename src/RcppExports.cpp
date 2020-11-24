@@ -375,6 +375,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_domain_get_dimension_from_index
+XPtr<tiledb::Dimension> libtiledb_domain_get_dimension_from_index(XPtr<tiledb::Domain> dom, int idx);
+RcppExport SEXP _tiledb_libtiledb_domain_get_dimension_from_index(SEXP domSEXP, SEXP idxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Domain> >::type dom(domSEXP);
+    Rcpp::traits::input_parameter< int >::type idx(idxSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_domain_get_dimension_from_index(dom, idx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_domain_get_dimension_from_name
+XPtr<tiledb::Dimension> libtiledb_domain_get_dimension_from_name(XPtr<tiledb::Domain> dom, std::string name);
+RcppExport SEXP _tiledb_libtiledb_domain_get_dimension_from_name(SEXP domSEXP, SEXP nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Domain> >::type dom(domSEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_domain_get_dimension_from_name(dom, name));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_domain_get_dimensions
 List libtiledb_domain_get_dimensions(XPtr<tiledb::Domain> domain);
 RcppExport SEXP _tiledb_libtiledb_domain_get_dimensions(SEXP domainSEXP) {
@@ -1991,6 +2015,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_domain", (DL_FUNC) &_tiledb_libtiledb_domain, 2},
     {"_tiledb_libtiledb_domain_get_type", (DL_FUNC) &_tiledb_libtiledb_domain_get_type, 1},
     {"_tiledb_libtiledb_domain_get_ndim", (DL_FUNC) &_tiledb_libtiledb_domain_get_ndim, 1},
+    {"_tiledb_libtiledb_domain_get_dimension_from_index", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimension_from_index, 2},
+    {"_tiledb_libtiledb_domain_get_dimension_from_name", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimension_from_name, 2},
     {"_tiledb_libtiledb_domain_get_dimensions", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimensions, 1},
     {"_tiledb_libtiledb_domain_dump", (DL_FUNC) &_tiledb_libtiledb_domain_dump, 1},
     {"_tiledb_libtiledb_filter", (DL_FUNC) &_tiledb_libtiledb_filter, 2},
