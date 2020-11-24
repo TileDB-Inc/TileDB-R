@@ -45,12 +45,12 @@ data <- data.frame(row = dvec,
                    hr    = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
                    min   = as.POSIXct("2020-01-01 00:00:00") + (0:2)*60,
                    sec   = as.POSIXct("2020-01-01 00:00:00") + (0:2),
-                   ms    = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.001,3),
-                   us    = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.000002,3),
-                   ns    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9,
-                   ps    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9,
-                   fs    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9,
-                   as    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9
+                   ms    = as.POSIXct("1970-01-01 00:00:00") + (0:2)*0.001,
+                   us    = as.POSIXct("1970-01-01 00:00:00") + (0:2)*0.000001,
+                   ns    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2),
+                   ps    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2),
+                   fs    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2),
+                   as    = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)
                    )
 
 cat("writing ... ")
@@ -63,10 +63,10 @@ readdata <- arr2[]
 cat("checking ... ")
 stopifnot(all.equal(data, readdata))
 
-cat("done.\n")
-#print(readdata)
+cat("done.\n\n")
+print(readdata)
 
-cat("As int64:\n")
+cat("\nAs int64:\n")
 datetimes_as_int64(arr2) <- TRUE
 readdata2 <- arr2[]
 print(readdata2)

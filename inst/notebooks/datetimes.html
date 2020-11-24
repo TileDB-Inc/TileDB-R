@@ -418,8 +418,8 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_year&quot;</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;D&#39;</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;D&#39;</span>)))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;Y&#39;</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;Y&#39;</span>)))</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
@@ -441,7 +441,14 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">##         rows a</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 2001-01-01 1</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 2002-01-01 2</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 2003-01-01 3</span></span></code></pre></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 2003-01-01 3</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">## we can also look at &#39;raw&#39; int64 values:</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">datetimes_as_int64</span>(arr) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>arr[]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   rows a</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 1   31 1</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2   32 2</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 3   33 3</span></span></code></pre></div>
 </section>
 </section>
 <section id="day" class="level3">
