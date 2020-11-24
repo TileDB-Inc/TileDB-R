@@ -8,6 +8,8 @@ tiledb_domain_get_dimension_from_name(domain, name)
 }
 \arguments{
 \item{domain}{TileDB Domain object}
+
+\item{name}{A character variable with a dimension name}
 }
 \value{
 TileDB Dimension object

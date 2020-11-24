@@ -137,6 +137,10 @@ libtiledb_domain_get_dimensions <- function(domain) {
     .Call(`_tiledb_libtiledb_domain_get_dimensions`, domain)
 }
 
+libtiledb_domain_has_dimension <- function(domain, name) {
+    .Call(`_tiledb_libtiledb_domain_has_dimension`, domain, name)
+}
+
 libtiledb_domain_dump <- function(domain) {
     invisible(.Call(`_tiledb_libtiledb_domain_dump`, domain))
 }

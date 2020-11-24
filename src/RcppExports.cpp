@@ -410,6 +410,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_domain_has_dimension
+bool libtiledb_domain_has_dimension(XPtr<tiledb::Domain> domain, std::string name);
+RcppExport SEXP _tiledb_libtiledb_domain_has_dimension(SEXP domainSEXP, SEXP nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Domain> >::type domain(domainSEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_domain_has_dimension(domain, name));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_domain_dump
 void libtiledb_domain_dump(XPtr<tiledb::Domain> domain);
 RcppExport SEXP _tiledb_libtiledb_domain_dump(SEXP domainSEXP) {
@@ -2018,6 +2030,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_domain_get_dimension_from_index", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimension_from_index, 2},
     {"_tiledb_libtiledb_domain_get_dimension_from_name", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimension_from_name, 2},
     {"_tiledb_libtiledb_domain_get_dimensions", (DL_FUNC) &_tiledb_libtiledb_domain_get_dimensions, 1},
+    {"_tiledb_libtiledb_domain_has_dimension", (DL_FUNC) &_tiledb_libtiledb_domain_has_dimension, 2},
     {"_tiledb_libtiledb_domain_dump", (DL_FUNC) &_tiledb_libtiledb_domain_dump, 1},
     {"_tiledb_libtiledb_filter", (DL_FUNC) &_tiledb_libtiledb_filter, 2},
     {"_tiledb_libtiledb_filter_get_type", (DL_FUNC) &_tiledb_libtiledb_filter_get_type, 1},

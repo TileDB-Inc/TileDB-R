@@ -44,3 +44,12 @@ dims <- tiledb::dimensions(dom)
 expect_equal(length(dims), 3L)
 expect_true(all(as.logical(lapply(dims, function(o) is(o, "tiledb_dim")))))
 #})
+
+## more domain accessor tests
+expect_equal(tiledb_ndim(dom), 3L)
+expect_equal(tiledb_domain_get_dimension_from_index(dom, 0), d1)
+expect_error(tiledb_domain_get_dimension_from_index(dom, 3)) # only three present
+expect_equal(tiledb_domain_get_dimension_from_name(dom, "d2"), d2)
+expect_error(tiledb_domain_get_dimension_from_name(dom, "doesnotexist")) # not present
+expect_true(tiledb_domain_has_dimension(dom, "d3"))
+expect_false(tiledb_domain_has_dimension(dom, "doesnotexist"))

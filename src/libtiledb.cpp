@@ -1084,6 +1084,11 @@ List libtiledb_domain_get_dimensions(XPtr<tiledb::Domain> domain) {
 }
 
 // [[Rcpp::export]]
+bool libtiledb_domain_has_dimension(XPtr<tiledb::Domain> domain, std::string name) {
+  return domain->has_dimension(name.c_str());
+}
+
+// [[Rcpp::export]]
 void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   domain->dump();
 }

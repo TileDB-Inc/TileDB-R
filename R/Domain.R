@@ -177,6 +177,7 @@ dim.tiledb_domain <- function(x) {
 }
 
 #' Returns a Dimension indicated by index for the given TileDB Domain
+#'
 #' @param domain TileDB Domain object
 #' @param idx Integer index of the selected dimension
 #' @return TileDB Dimension object
@@ -188,12 +189,25 @@ tiledb_domain_get_dimension_from_index <- function(domain, idx) {
 }
 
 #' Returns a Dimension indicated by name for the given TileDB Domain
+#'
 #' @param domain TileDB Domain object
-#' @param name
+#' @param name A character variable with a dimension name
 #' @return TileDB Dimension object
 #' @export
 tiledb_domain_get_dimension_from_name <- function(domain, name) {
   stopifnot(domain_argument=is(domain, "tiledb_domain"),
             name_argument=is.character(name))
   return(new("tiledb_dim", ptr=libtiledb_domain_get_dimension_from_name(domain@ptr, name)))
+}
+
+#' Check a domain for a given dimension name
+#'
+#' @param domain A domain of a TileDB Array schema
+#' @param name A character variable with a dimension name
+#' @return A boolean value indicating if the dimension exists in the domain
+#' @export
+tiledb_domain_has_dimension <- function(domain, name) {
+  stopifnot(domain_argument=is(domain, "tiledb_domain"),
+            name_argument=is.character(name))
+  libtiledb_domain_has_dimension(domain@ptr, name)
 }
