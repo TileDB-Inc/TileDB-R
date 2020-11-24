@@ -3,7 +3,7 @@
 \name{check}
 \alias{check}
 \alias{check,tiledb_array_schema-method}
-\title{-- Schema Correctness}
+\title{Check the schema for correctness}
 \usage{
 check(object)
 

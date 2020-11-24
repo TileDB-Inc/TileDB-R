@@ -465,14 +465,14 @@ setMethod("capacity",
 #' @return The modified \code{array_schema} object
 #' @export
 setReplaceMethod("capacity",
-          signature = "tiledb_array_schema",
-          function(x, value) {
+                 signature = "tiledb_array_schema",
+                 function(x, value) {
   libtiledb_array_schema_set_capacity(x@ptr, value)
   x
 })
 
 
-##' -- Schema Correctness
+# -- Schema Correctness
 
 #' @rdname check-tiledb_array_schema-method
 #' @export
@@ -488,3 +488,19 @@ setGeneric("check", function(object) standardGeneric("check"))
 setMethod("check",
           signature = "tiledb_array_schema",
           function(object) libtiledb_array_schema_check(object@ptr))
+
+
+## -- convenience accessor `has_attribute` -- a little redundant as we already retrieve
+##    all names and can check the returned set but a direct caller is a little lighter
+
+#' Check a schema for a given attribute name
+#'
+#' @param schema A schema for a TileDB Array
+#' @param attr A character variable with an attribute name
+#' @return A boolean value indicating if the attribute exists in the schema
+#' @export
+has_attribute <- function(schema, attr) {
+  stopifnot(schema_argument=is(schema, "tiledb_array_schema"),
+            attr_argument=is.character(attr))
+  libtiledb_array_schema_has_attribute(schema@ptr, attr)
+}
