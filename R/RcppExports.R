@@ -521,6 +521,10 @@ libtiledb_query_submit <- function(query) {
     .Call(`_tiledb_libtiledb_query_submit`, query)
 }
 
+libtiledb_query_submit_async <- function(query) {
+    .Call(`_tiledb_libtiledb_query_submit_async`, query)
+}
+
 libtiledb_query_finalize <- function(query) {
     .Call(`_tiledb_libtiledb_query_finalize`, query)
 }

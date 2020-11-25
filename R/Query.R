@@ -253,12 +253,27 @@ tiledb_query_get_buffer_char <- function(bufptr, sizeoffsets=0, sizestring=0) {
 
 #' Submit TileDB Query
 #'
+#' Note that the query object may need to be finalized
+#' via \code{tiledb_query_finalize}.
 #' @param query A TileDB Query object
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_submit <- function(query) {
   stopifnot(query_object=is(query, "tiledb_query"))
   libtiledb_query_submit(query@ptr)
+  invisible(query)
+}
+
+#' Submit TileDB Query asynchronously without a callback returning immediately
+#'
+#' Note that the query object may need to be finalized
+#' via \code{tiledb_query_finalize}.
+#' @param query A TileDB Query object
+#' @return The modified query object, invisibly
+#' @export
+tiledb_query_submit_async <- function(query) {
+  stopifnot(query_object=is(query, "tiledb_query"))
+  libtiledb_query_submit_async(query@ptr)
   invisible(query)
 }
 
@@ -371,4 +386,39 @@ tiledb_query_get_fragment_timestamp_range <- function(query, idx) {
   stopifnot(query_object=is(query, "tiledb_query"),
             idx_numeric=is.numeric(idx))
   libtiledb_query_get_fragment_uri(query@ptr, idx)
+}
+
+
+#' Retrieve the estimated result size for a query and attribute
+#'
+#' When reading from sparse arrays, one cannot know beforehand how big the
+#' result will be (unless one actually executes the query). This function
+#' offers a way to get the estimated result size for the given attribute.
+#' As TileDB does not actually execute the query, getting the estimated
+#' result is very fast.
+#' @param query A TileDB Query object
+#' @param name A variable with an attribute name
+#' @return An estimate of the query result size
+#' @export
+tiledb_query_get_est_result_size <- function(query, name) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            name_argument=is.character(name))
+  libtiledb_query_get_est_result_size(query@ptr, name)
+}
+
+#' Retrieve the estimated result size for a query and variable-sized attribute
+#'
+#' When reading variable-length attributes from either dense or sparse arrays,
+#' one cannot know beforehand how big the result will be (unless one actually
+#' executes the query). This function offers a way to get the estimated result
+#' size for the given attribute. As TileDB does not actually execute the query,
+#' getting the estimated result is very fast.
+#' @param query A TileDB Query object
+#' @param name A variable with an attribute name
+#' @return An estimate of the query result size
+#' @export
+tiledb_query_get_est_result_size_var <- function(query, name) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            name_argument=is.character(name))
+  libtiledb_query_get_est_result_size_var(query@ptr, name)
 }

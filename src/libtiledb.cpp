@@ -1180,6 +1180,7 @@ void libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter
   return;
 }
 
+
 /**
  * TileDB Filter List
  */
@@ -2601,6 +2602,12 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {
   query->submit();
+  return query;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_submit_async(XPtr<tiledb::Query> query) {
+  query->submit_async();
   return query;
 }
 
