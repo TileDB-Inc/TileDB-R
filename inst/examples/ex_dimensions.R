@@ -12,7 +12,6 @@ atttype <- "INT32"
 array_name <- "ex_dimemsions"
 ## Path is either current directory, or a local config value is found
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
-library(tiledb)
 
 dimtypes <- c("ASCII",  		# Variable length string
               "INT8",   		# 8-bit integer

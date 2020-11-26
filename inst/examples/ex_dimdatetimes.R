@@ -13,7 +13,6 @@ intmax <- .Machine$integer.max         # shorthand
 array_name <- "ex_dimdatetimes"
 ## Path is either current directory, or a local config value is found
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
-library(tiledb)
 
 dimtypes <- c("DATETIME_YEAR",  # year
               "DATETIME_MONTH", # month
