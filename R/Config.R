@@ -264,7 +264,7 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
 #' @return The modified TileDB Config object
 #' @export
 tiledb_config_unset <- function(config, param) {
-  stopifnot(config_object=is(query, "tiledb_config"),
+  stopifnot(config_object=is(config, "tiledb_config"),
             param_argument=is.character(param))
   libtiledb_config_unset(config@ptr, param)
 }

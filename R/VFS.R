@@ -368,3 +368,87 @@ tiledb_set_vfs <- function(vfs) {
   .pkgenv[["vfs"]] <- vfs
   invisible(NULL)
 }
+
+#' Open a TileDB VFS Filehandle for reading or writing
+#'
+#' @param binfile A character variable describing the (binary) file to be opened
+#' @param mode A character variable with value \sQuote{READ}, \sQuote{WRITE}
+#' or \sQuote{APPEND}
+#' @param vfs A TileDB VFS object; default is to use a cached value.
+#' @param ctx (optional) A TileDB Ctx object
+#' @return A TileDB VFS Filehandle object (as an external pointer)
+#' @export
+tiledb_vfs_open <- function(binfile, mode = c("READ", "WRITE", "APPEND"),
+                            vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
+  mode <- match.arg(mode)
+  stopifnot(binfile_argument=is.character(binfile),
+            vfs_argument=is(vfs, "tiledb_vfs"),
+            ctx_argument=is(ctx, "tiledb_ctx"))
+  libtiledb_vfs_open(ctx@ptr, vfs@ptr, binfile, mode)
+}
+
+#' Close a TileDB VFS Filehandle
+#'
+#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param ctx (optional) A TileDB Ctx object
+#' @return The result of the close operation is returned.
+#' @export
+tiledb_vfs_close <- function(fh, ctx = tiledb_get_context()) {
+  stopifnot(fh_argument=is(fh, "externalptr"),
+            ctx_argument=is(ctx, "tiledb_ctx"))
+  libtiledb_vfs_close(ctx@ptr, fh)
+}
+
+#' Sync a TileDB VFS Filehandle
+#'
+#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param ctx (optional) A TileDB Ctx object
+#' @return The result of the sync operation is returned.
+#' @export
+tiledb_vfs_sync <- function(fh, ctx = tiledb_get_context()) {
+  stopifnot(fh_argument=is(fh, "externalptr"),
+            ctx_argument=is(ctx, "tiledb_ctx"))
+  libtiledb_vfs_sync(ctx@ptr, fh)
+}
+
+#' Write to a TileDB VFS Filehandle
+#'
+#' This interface currently defaults to using an integer vector. This is suitable for R objects
+ #' as the raw vector result from serialization can be mapped easily to an integer vector. It is
+#' also possible to \code{memcpy} to the contiguous memory of an integer vector should other
+#' (non-R) data be transferred.
+#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param vec An integer vector of content to be written
+#' @param ctx (optional) A TileDB Ctx object
+#' @return The result of the write operation is returned.
+#' @export
+tiledb_vfs_write <- function(fh, vec, ctx = tiledb_get_context()) {
+  stopifnot(fh_argument=is(fh, "externalptr"),
+            vec_argument=is.integer(vec),
+            ctx_argument=is(ctx, "tiledb_ctx"))
+  libtiledb_vfs_write(ctx@ptr, fh, vec)
+}
+
+#' Read from a TileDB VFS Filehandle
+#'
+#' This interface currently defaults to reading an integer vector. This is suitable for R objects
+#' as a raw vector used for (de)serialization can be mapped easily to an integer vector. It is
+#' also possible to \code{memcpy} to the contiguous memory of an integer vector should other
+#' (non-R) data be transferred.
+#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param offset A scalar integer64 value with the byte offset from the beginning of the file
+#' with a of zero.
+#' @param nbytes A scalar integer64 value with the number of bytes to be read.
+#' @param ctx (optional) A TileDB Ctx object
+#' @return The binary file content is returned as an integer vector.
+#' @export
+tiledb_vfs_read <- function(fh, offset, nbytes, ctx = tiledb_get_context()) {
+  if (!requireNamespace("bit64", quietly=TRUE)) stop("The 'bit64' package is needed.")
+  if (missing(offset)) offset <- bit64::as.integer64(0)
+  if (missing(nbytes)) stop("nbytes currently a required parameter")
+  stopifnot(fh_argument=is(fh, "externalptr"),
+            offset_argument=is(offset, "integer64"),
+            nbytes_argument=is(nbytes, "integer64"),
+            ctx_argument=is(ctx, "tiledb_ctx"))
+  libtiledb_vfs_read(ctx@ptr, fh, offset, nbytes)
+}

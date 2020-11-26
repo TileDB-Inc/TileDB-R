@@ -23,8 +23,8 @@ tiledb_vfs_mode_t _string_to_tiledb_vfs_mode_t(std::string modestr) {
 }
 
 // [[Rcpp::export]]
-Rcpp::XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb::VFS> vfsxp,
-                                        std::string uri, std::string mode) {
+XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb::VFS> vfsxp,
+                                  std::string uri, std::string mode) {
    std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
    std::shared_ptr<tiledb_vfs_t> vfs = vfsxp.get()->ptr();
    tiledb_vfs_fh_t *fh = nullptr;
@@ -36,13 +36,13 @@ Rcpp::XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb
 }
 
 // [[Rcpp::export]]
-void libtiledb_vfs_close(XPtr<tiledb::Context> ctxxp, Rcpp::XPtr<vfs_fh_t> fh) {
+void libtiledb_vfs_close(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh) {
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
   tiledb_vfs_close(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh));
 }
 
 // [[Rcpp::export]]
-void libtiledb_vfs_write(XPtr<tiledb::Context> ctxxp, Rcpp::XPtr<vfs_fh_t> fh,
+void libtiledb_vfs_write(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh,
                          Rcpp::IntegerVector vec) {
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
   tiledb_vfs_write(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh),
@@ -50,7 +50,7 @@ void libtiledb_vfs_write(XPtr<tiledb::Context> ctxxp, Rcpp::XPtr<vfs_fh_t> fh,
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector libtiledb_vfs_read(XPtr<tiledb::Context> ctxxp, Rcpp::XPtr<vfs_fh_t> fh,
+Rcpp::IntegerVector libtiledb_vfs_read(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh,
                                        double offset, double nbytes) {
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
   std::int64_t offs = makeScalarInteger64(offset);
@@ -61,7 +61,7 @@ Rcpp::IntegerVector libtiledb_vfs_read(XPtr<tiledb::Context> ctxxp, Rcpp::XPtr<v
 }
 
 // [[Rcpp::export]]
-void libtiledb_vfs_sync(XPtr<tiledb::Context> ctxxp, Rcpp::XPtr<vfs_fh_t> fh) {
+void libtiledb_vfs_sync(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh) {
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
   tiledb_vfs_sync(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh));
 }

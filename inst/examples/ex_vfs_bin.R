@@ -27,5 +27,20 @@ low_level <- function() {
   invisible()
 }
 
-low_level()
+higher_level <- function() {
+  fhbuf <- tiledb_vfs_open(uri, "WRITE")
+  payload <- as.integer(serialize(list(int=153L, string="abcde"), NULL))
+  tiledb_vfs_write(fhbuf, payload)
+  tiledb_vfs_sync(fhbuf)
+  tiledb_vfs_close(fhbuf)
+
+  fhbuf <- tiledb_vfs_open(uri, "READ")
+  vec <- tiledb_vfs_read(fhbuf, as.integer64(0), as.integer64(122*4))
+  tiledb_vfs_close(fhbuf)
+  print(str(unserialize(as.raw(vec))))
+  invisible()
+}
+
+#low_level()
+higher_level()
 cat("Done.\n")
