@@ -151,6 +151,17 @@ extern "C" {
         }
     }
 
+    inline void libtiledb_vfs_fh_delete(SEXP sexp) {
+        XPtr<vfs_fh_t> buf(sexp);
+        vfs_fh_t* ptr = buf.get();
+        if (ptr != nullptr) {
+            tiledb_vfs_fh_t *fh = static_cast<tiledb_vfs_fh_t*>(ptr->fh);
+            tiledb_vfs_fh_free(&fh);
+            delete ptr;
+            ptr = nullptr;
+        }
+    }
+
 }
 
 #endif

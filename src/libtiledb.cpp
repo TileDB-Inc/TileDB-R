@@ -3113,7 +3113,8 @@ XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb::VFS>
    tiledb_vfs_fh_t *fh = nullptr;
    tiledb_vfs_mode_t vfsmode = _string_to_tiledb_vfs_mode_t(mode);
    tiledb_vfs_open(ctx.get(), vfs.get(), uri.c_str(), vfsmode, &fh);
-   XPtr<vfs_fh_t> ptr = XPtr<vfs_fh_t>(new vfs_fh_t);
+   XPtr<vfs_fh_t> ptr = XPtr<vfs_fh_t>(new vfs_fh_t, false);
+   registerXptrFinalizer(ptr, libtiledb_vfs_fh_delete);
    ptr->fh = static_cast<void*>(fh);
    return ptr;
 }
