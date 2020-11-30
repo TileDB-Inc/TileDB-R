@@ -1190,16 +1190,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_array_non_empty_domain_from_index
-NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> array, int32_t idx, std::string typestr);
-RcppExport SEXP _tiledb_libtiledb_array_non_empty_domain_from_index(SEXP arraySEXP, SEXP idxSEXP, SEXP typestrSEXP) {
+// libtiledb_array_get_non_empty_domain_from_index
+NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array> array, int32_t idx, std::string typestr);
+RcppExport SEXP _tiledb_libtiledb_array_get_non_empty_domain_from_index(SEXP arraySEXP, SEXP idxSEXP, SEXP typestrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< int32_t >::type idx(idxSEXP);
     Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_non_empty_domain_from_index(array, idx, typestr));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_get_non_empty_domain_from_index(array, idx, typestr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2170,7 +2170,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_get_non_empty_domain_var_from_name", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain_var_from_name, 2},
     {"_tiledb_libtiledb_array_get_non_empty_domain_var_from_index", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain_var_from_index, 3},
     {"_tiledb_libtiledb_array_get_non_empty_domain_from_name", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain_from_name, 3},
-    {"_tiledb_libtiledb_array_non_empty_domain_from_index", (DL_FUNC) &_tiledb_libtiledb_array_non_empty_domain_from_index, 3},
+    {"_tiledb_libtiledb_array_get_non_empty_domain_from_index", (DL_FUNC) &_tiledb_libtiledb_array_get_non_empty_domain_from_index, 3},
     {"_tiledb_libtiledb_array_consolidate", (DL_FUNC) &_tiledb_libtiledb_array_consolidate, 3},
     {"_tiledb_libtiledb_array_vacuum", (DL_FUNC) &_tiledb_libtiledb_array_vacuum, 3},
     {"_tiledb_libtiledb_array_put_metadata", (DL_FUNC) &_tiledb_libtiledb_array_put_metadata, 3},

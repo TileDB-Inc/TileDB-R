@@ -1791,7 +1791,7 @@ CharacterVector libtiledb_array_get_non_empty_domain_var_from_name(XPtr<tiledb::
 // [[Rcpp::export]]
 CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb::Array> array,
                                                                     int32_t idx,
-                                                                    std::string typestr) {
+                                                                    std::string typestr = "ASCII") {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
   //auto domain = array->schema().domain();
   if (typestr == "ASCII") {
@@ -1875,9 +1875,9 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
 
 
 // [[Rcpp::export]]
-NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> array,
-                                                          int32_t idx,
-                                                          std::string typestr) {
+NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array> array,
+                                                              int32_t idx,
+                                                              std::string typestr) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
   if (typestr == "DATETIME_NS") {
     auto p = array->non_empty_domain<int64_t>(idx);
@@ -1887,6 +1887,9 @@ NumericVector libtiledb_array_non_empty_domain_from_index(XPtr<tiledb::Array> ar
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
     return makeInteger64(v);
+  } else if (typestr == "INT32") {
+    auto p = array->non_empty_domain<int32_t>(idx);
+    return NumericVector::create(p.first, p.second);
   } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_MS") {
     // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(idx);

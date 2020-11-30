@@ -904,3 +904,58 @@ array_vacuum <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
                               # C++ code has Nullable and can instantiate but needs S4 XPtr
                               cfgptr = if (is.null(cfg)) cfg else cfg@ptr)
 }
+
+#' Get the non-empty domain from a TileDB Array by index
+#'
+#' This functions works for both fixed- and variable-sized dimensions and switches
+#' internally.
+#' @param arr A TileDB Array
+#' @param idx An integer index between one the number of dimensions
+#' @return A two-element object is returned describing the domain of selected
+#' dimension; it will either be a numeric vector in case of a fixed-size
+#' fixed-sized dimensions, or a characer vector for a variable-sized one.
+#' @export
+tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
+  stopifnot(arr_argument=is(arr, "tiledb_array"),
+            idx_argument=is.numeric(idx),
+            idx_nonnegative=idx > 0)
+
+  arr <- tiledb_array_close(arr)
+  arr <- tiledb_array_open(arr, "READ")
+  sch <- schema(arr)
+  dom <- domain(sch)
+  dims <- dimensions(dom)
+  dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
+  dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
+
+  if (is.na(dimvarnum[idx]))
+    libtiledb_array_get_non_empty_domain_var_from_index(arr@ptr, idx-1)
+  else
+    libtiledb_array_get_non_empty_domain_from_index(arr@ptr, idx-1, dimtypes[idx])
+
+}
+
+#' Get the non-empty domain from a TileDB Array by name
+#'
+#' This functions works for both fixed- and variable-sized dimensions and switches
+#' internally.
+#' @param arr A TileDB Array
+#' @param name An character variable with a dimension name
+#' @return A two-element object is returned describing the domain of selected
+#' dimension; it will either be a numeric vector in case of a fixed-size
+#' fixed-sized dimensions, or a characer vector for a variable-sized one.
+#' @export
+tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
+  stopifnot(arr_argument=is(arr, "tiledb_array"),
+            name_argument=is.character(name))
+
+  sch <- schema(arr)
+  dom <- domain(sch)
+  dims <- dimensions(dom)
+  dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
+
+  idx <- match(name, dimnames)
+  if (is.na(idx)) stop("Argument '", name, "' not among domain names for array.", call.=FALSE)
+
+  tiledb_array_get_non_empty_domain_from_index(arr, idx)
+}
