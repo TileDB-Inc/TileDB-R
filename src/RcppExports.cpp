@@ -100,68 +100,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_vfs_open
-XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb::VFS> vfsxp, std::string uri, std::string mode);
-RcppExport SEXP _tiledb_libtiledb_vfs_open(SEXP ctxxpSEXP, SEXP vfsxpSEXP, SEXP uriSEXP, SEXP modeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
-    Rcpp::traits::input_parameter< XPtr<tiledb::VFS> >::type vfsxp(vfsxpSEXP);
-    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mode(modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_open(ctxxp, vfsxp, uri, mode));
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_vfs_close
-void libtiledb_vfs_close(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh);
-RcppExport SEXP _tiledb_libtiledb_vfs_close(SEXP ctxxpSEXP, SEXP fhSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
-    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
-    libtiledb_vfs_close(ctxxp, fh);
-    return R_NilValue;
-END_RCPP
-}
-// libtiledb_vfs_write
-void libtiledb_vfs_write(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh, Rcpp::IntegerVector vec);
-RcppExport SEXP _tiledb_libtiledb_vfs_write(SEXP ctxxpSEXP, SEXP fhSEXP, SEXP vecSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
-    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type vec(vecSEXP);
-    libtiledb_vfs_write(ctxxp, fh, vec);
-    return R_NilValue;
-END_RCPP
-}
-// libtiledb_vfs_read
-Rcpp::IntegerVector libtiledb_vfs_read(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh, double offset, double nbytes);
-RcppExport SEXP _tiledb_libtiledb_vfs_read(SEXP ctxxpSEXP, SEXP fhSEXP, SEXP offsetSEXP, SEXP nbytesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
-    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
-    Rcpp::traits::input_parameter< double >::type offset(offsetSEXP);
-    Rcpp::traits::input_parameter< double >::type nbytes(nbytesSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_read(ctxxp, fh, offset, nbytes));
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_vfs_sync
-void libtiledb_vfs_sync(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh);
-RcppExport SEXP _tiledb_libtiledb_vfs_sync(SEXP ctxxpSEXP, SEXP fhSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
-    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
-    libtiledb_vfs_sync(ctxxp, fh);
-    return R_NilValue;
-END_RCPP
-}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -2010,6 +1948,68 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_vfs_open
+XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb::VFS> vfsxp, std::string uri, std::string mode);
+RcppExport SEXP _tiledb_libtiledb_vfs_open(SEXP ctxxpSEXP, SEXP vfsxpSEXP, SEXP uriSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::VFS> >::type vfsxp(vfsxpSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_open(ctxxp, vfsxp, uri, mode));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_vfs_close
+void libtiledb_vfs_close(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh);
+RcppExport SEXP _tiledb_libtiledb_vfs_close(SEXP ctxxpSEXP, SEXP fhSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
+    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
+    libtiledb_vfs_close(ctxxp, fh);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_vfs_write
+void libtiledb_vfs_write(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh, Rcpp::IntegerVector vec);
+RcppExport SEXP _tiledb_libtiledb_vfs_write(SEXP ctxxpSEXP, SEXP fhSEXP, SEXP vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
+    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type vec(vecSEXP);
+    libtiledb_vfs_write(ctxxp, fh, vec);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_vfs_read
+Rcpp::IntegerVector libtiledb_vfs_read(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh, double offset, double nbytes);
+RcppExport SEXP _tiledb_libtiledb_vfs_read(SEXP ctxxpSEXP, SEXP fhSEXP, SEXP offsetSEXP, SEXP nbytesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
+    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
+    Rcpp::traits::input_parameter< double >::type offset(offsetSEXP);
+    Rcpp::traits::input_parameter< double >::type nbytes(nbytesSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_read(ctxxp, fh, offset, nbytes));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_vfs_sync
+void libtiledb_vfs_sync(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh);
+RcppExport SEXP _tiledb_libtiledb_vfs_sync(SEXP ctxxpSEXP, SEXP fhSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctxxp(ctxxpSEXP);
+    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fh(fhSEXP);
+    libtiledb_vfs_sync(ctxxp, fh);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_stats_enable
 void libtiledb_stats_enable();
 RcppExport SEXP _tiledb_libtiledb_stats_enable() {
@@ -2076,11 +2076,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_max_buffer_elements_with_type", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_with_type, 4},
     {"_tiledb_libtiledb_array_max_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements, 3},
     {"_tiledb_libtiledb_array_max_buffer_elements_vec", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_vec, 3},
-    {"_tiledb_libtiledb_vfs_open", (DL_FUNC) &_tiledb_libtiledb_vfs_open, 4},
-    {"_tiledb_libtiledb_vfs_close", (DL_FUNC) &_tiledb_libtiledb_vfs_close, 2},
-    {"_tiledb_libtiledb_vfs_write", (DL_FUNC) &_tiledb_libtiledb_vfs_write, 3},
-    {"_tiledb_libtiledb_vfs_read", (DL_FUNC) &_tiledb_libtiledb_vfs_read, 4},
-    {"_tiledb_libtiledb_vfs_sync", (DL_FUNC) &_tiledb_libtiledb_vfs_sync, 2},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
@@ -2237,6 +2232,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_vfs_move_file", (DL_FUNC) &_tiledb_libtiledb_vfs_move_file, 3},
     {"_tiledb_libtiledb_vfs_move_dir", (DL_FUNC) &_tiledb_libtiledb_vfs_move_dir, 3},
     {"_tiledb_libtiledb_vfs_touch", (DL_FUNC) &_tiledb_libtiledb_vfs_touch, 2},
+    {"_tiledb_libtiledb_vfs_open", (DL_FUNC) &_tiledb_libtiledb_vfs_open, 4},
+    {"_tiledb_libtiledb_vfs_close", (DL_FUNC) &_tiledb_libtiledb_vfs_close, 2},
+    {"_tiledb_libtiledb_vfs_write", (DL_FUNC) &_tiledb_libtiledb_vfs_write, 3},
+    {"_tiledb_libtiledb_vfs_read", (DL_FUNC) &_tiledb_libtiledb_vfs_read, 4},
+    {"_tiledb_libtiledb_vfs_sync", (DL_FUNC) &_tiledb_libtiledb_vfs_sync, 2},
     {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
     {"_tiledb_libtiledb_stats_reset", (DL_FUNC) &_tiledb_libtiledb_stats_reset, 0},

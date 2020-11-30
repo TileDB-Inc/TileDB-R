@@ -29,26 +29,6 @@ libtiledb_array_max_buffer_elements_vec <- function(array, subarray, attribute) 
     .Call(`_tiledb_libtiledb_array_max_buffer_elements_vec`, array, subarray, attribute)
 }
 
-libtiledb_vfs_open <- function(ctxxp, vfsxp, uri, mode) {
-    .Call(`_tiledb_libtiledb_vfs_open`, ctxxp, vfsxp, uri, mode)
-}
-
-libtiledb_vfs_close <- function(ctxxp, fh) {
-    invisible(.Call(`_tiledb_libtiledb_vfs_close`, ctxxp, fh))
-}
-
-libtiledb_vfs_write <- function(ctxxp, fh, vec) {
-    invisible(.Call(`_tiledb_libtiledb_vfs_write`, ctxxp, fh, vec))
-}
-
-libtiledb_vfs_read <- function(ctxxp, fh, offset, nbytes) {
-    .Call(`_tiledb_libtiledb_vfs_read`, ctxxp, fh, offset, nbytes)
-}
-
-libtiledb_vfs_sync <- function(ctxxp, fh) {
-    invisible(.Call(`_tiledb_libtiledb_vfs_sync`, ctxxp, fh))
-}
-
 tiledb_datatype_R_type <- function(datatype) {
     .Call(`_tiledb_tiledb_datatype_R_type`, datatype)
 }
@@ -417,7 +397,7 @@ libtiledb_array_get_non_empty_domain_var_from_name <- function(array, name) {
     .Call(`_tiledb_libtiledb_array_get_non_empty_domain_var_from_name`, array, name)
 }
 
-libtiledb_array_get_non_empty_domain_var_from_index <- function(array, idx, typestr) {
+libtiledb_array_get_non_empty_domain_var_from_index <- function(array, idx, typestr = "ASCII") {
     .Call(`_tiledb_libtiledb_array_get_non_empty_domain_var_from_index`, array, idx, typestr)
 }
 
@@ -671,6 +651,26 @@ libtiledb_vfs_move_dir <- function(vfs, old_uri, new_uri) {
 
 libtiledb_vfs_touch <- function(vfs, uri) {
     .Call(`_tiledb_libtiledb_vfs_touch`, vfs, uri)
+}
+
+libtiledb_vfs_open <- function(ctxxp, vfsxp, uri, mode) {
+    .Call(`_tiledb_libtiledb_vfs_open`, ctxxp, vfsxp, uri, mode)
+}
+
+libtiledb_vfs_close <- function(ctxxp, fh) {
+    invisible(.Call(`_tiledb_libtiledb_vfs_close`, ctxxp, fh))
+}
+
+libtiledb_vfs_write <- function(ctxxp, fh, vec) {
+    invisible(.Call(`_tiledb_libtiledb_vfs_write`, ctxxp, fh, vec))
+}
+
+libtiledb_vfs_read <- function(ctxxp, fh, offset, nbytes) {
+    .Call(`_tiledb_libtiledb_vfs_read`, ctxxp, fh, offset, nbytes)
+}
+
+libtiledb_vfs_sync <- function(ctxxp, fh) {
+    invisible(.Call(`_tiledb_libtiledb_vfs_sync`, ctxxp, fh))
 }
 
 libtiledb_stats_enable <- function() {

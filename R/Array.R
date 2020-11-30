@@ -70,6 +70,26 @@ tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
   arr
 }
 
+##' Open a TileDB Array at Timestamp
+##'
+##' @param arr A TileDB Array object as for example returned by \code{tiledb_array()}
+##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
+##' @param timestamp A Datetime object that will be converted to millisecond granularity
+##' @return The TileDB Array object but opened for reading or writing
+##' @export
+tiledb_array_open_at <- function(arr, type=c("READ","WRITE"), timestamp) {
+  stopifnot(timestamp_argument=inherits(timestamp, "POSIXct"))
+  type <- match.arg(type)
+  ctx <- tiledb_get_context()
+  if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
+    arr@ptr <- libtiledb_array_open_at_with_key(ctx@ptr, arr@uri, type, arr@encryption_key, timestamp)
+  } else {
+    arr@ptr <- libtiledb_array_open_at(ctx@ptr, arr@uri, type, timestamp)
+  }
+  arr
+}
+
+
 ##' Close a TileDB Array
 ##'
 ##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
