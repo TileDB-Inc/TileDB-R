@@ -221,7 +221,27 @@ tiledb_attribute_get_fill_value <- function(attr) {
 #' @export
 tiledb_attribute_set_fill_value <- function(attr, value) {
   stopifnot(attr_object=is(attr, "tiledb_attr"),
-            value_type=is.integer(value) || is.numeric(value))
+            value_type=is.integer(value) || is.numeric(value) || is.character(value))
   libtiledb_attribute_set_fill_value(attr@ptr, value)
   invisible()
+}
+
+#' Check whether TileDB Attribute is variable-sized
+#'
+#' @param attr A TileDB Attribute object
+#' @return A boolean value indicating variable-size or not
+#' @export
+tiledb_attribute_is_variable_sized <- function(attr) {
+  stopifnot(attr_object=is(attr, "tiledb_attr"))
+  libtiledb_attribute_is_variable_sized(attr@ptr)
+}
+
+#' Get the TileDB Attribute cell size
+#'
+#' @param attr A TileDB Attribute object
+#' @return A numeric value with the cell size
+#' @export
+tiledb_attribute_get_cell_size <- function(attr) {
+  stopifnot(attr_object=is(attr, "tiledb_attr"))
+  libtiledb_attribute_get_cell_size(attr@ptr)
 }

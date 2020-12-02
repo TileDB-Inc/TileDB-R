@@ -1394,7 +1394,7 @@ void libtiledb_attribute_set_fill_value(XPtr<tiledb::Attribute> attr, SEXP val) 
     NumericVector v(val);
     if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
     attr->set_fill_value((void*) &(v[0]), static_cast<uint64_t>(sizeof(double)));
-  } else if (dtype == TILEDB_STRING_ASCII) {
+  } else if (dtype == TILEDB_STRING_ASCII || dtype == TILEDB_CHAR) {
     CharacterVector v(val);
     if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
     std::string s(v[0]);
@@ -1421,7 +1421,7 @@ SEXP libtiledb_attribute_get_fill_value(XPtr<tiledb::Attribute> attr) {
   } else if (dtype == TILEDB_FLOAT64) {
     double v = *(const double*)valptr;
     return wrap(v);
-  } else if (dtype == TILEDB_STRING_ASCII) {
+  } else if (dtype == TILEDB_STRING_ASCII || dtype == TILEDB_CHAR) {
     std::string s(static_cast<const char*>(valptr), static_cast<size_t>(size));
     return wrap(s);
   } else {
