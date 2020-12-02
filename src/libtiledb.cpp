@@ -405,9 +405,9 @@ const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
   auto ver = tiledb::version();
-  return NumericVector::create(_["major"]=std::get<0>(ver),
-                               _["minor"]=std::get<1>(ver),
-                               _["patch"]=std::get<2>(ver));
+  return NumericVector::create(Named("major") = std::get<0>(ver),
+                               Named("minor") = std::get<1>(ver),
+                               Named("patch") = std::get<2>(ver));
 }
 
 
@@ -2937,16 +2937,15 @@ double libtiledb_query_get_range_num(XPtr<tiledb::Query> query, int dim_idx) {
 IntegerVector libtiledb_query_get_range(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
   std::array<int32_t, 3> rng = query->range<int32_t>(static_cast<unsigned int>(dim_idx),
                                                      static_cast<unsigned int>(rng_idx));
-  return IntegerVector::create(std::get<0>(rng),	// start
-                               std::get<1>(rng),  // end
-                               std::get<2>(rng)); // stride
+  return IntegerVector::create(rng[0], 	// start
+                               rng[1],  // end
+                               rng[2]); // stride
 }
 
 // [[Rcpp::export]]
 CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
   std::array<std::string, 2> rng = query->range(static_cast<unsigned int>(dim_idx), static_cast<uint64_t>(rng_idx));
-  return CharacterVector::create(std::get<0>(rng),	 // start
-                                 std::get<1>(rng));  // end
+  return CharacterVector::create(rng[0], rng[1]);	 // start and end
 }
 
 /**
