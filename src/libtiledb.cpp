@@ -1028,6 +1028,18 @@ int libtiledb_dim_get_cell_val_num(XPtr<tiledb::Dimension> dim) {
 #endif
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::FilterList> libtiledb_dimension_get_filter_list(XPtr<tiledb::Dimension> dim) {
+  return XPtr<tiledb::FilterList>(new tiledb::FilterList(dim->filter_list()));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Dimension> libtiledb_dimension_set_filter_list(XPtr<tiledb::Dimension> dim,
+                                                            XPtr<tiledb::FilterList> filter_list) {
+  dim->set_filter_list(*filter_list);
+  return dim;
+}
+
 
 /**
  * TileDB Domain
@@ -1236,6 +1248,8 @@ XPtr<tiledb::Filter> libtiledb_filter_list_get_filter_from_index(XPtr<tiledb::Fi
   return XPtr<tiledb::Filter>(new tiledb::Filter(filterList->filter(filter_index)));
 }
 
+
+
 /**
  * TileDB Attribute
  */
@@ -1331,6 +1345,12 @@ XPtr<tiledb::FilterList> libtiledb_attribute_get_filter_list(XPtr<tiledb::Attrib
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::Attribute> libtiledb_attribute_set_filter_list(XPtr<tiledb::Attribute> attr, XPtr<tiledb::FilterList> filter_list) {
+  attr->set_filter_list(*filter_list);
+  return attr;
+}
+
+// [[Rcpp::export]]
 int libtiledb_attribute_get_cell_val_num(XPtr<tiledb::Attribute> attr) {
   unsigned int ncells = attr->cell_val_num();
   if (ncells == TILEDB_VAR_NUM) {
@@ -1374,6 +1394,11 @@ void libtiledb_attribute_set_fill_value(XPtr<tiledb::Attribute> attr, SEXP val) 
     NumericVector v(val);
     if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
     attr->set_fill_value((void*) &(v[0]), static_cast<uint64_t>(sizeof(double)));
+  } else if (dtype == TILEDB_STRING_ASCII) {
+    CharacterVector v(val);
+    if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
+    std::string s(v[0]);
+    attr->set_fill_value((void*) s.c_str(), static_cast<uint64_t>(s.size()));
   } else {
     std::string typestr = _tiledb_datatype_to_string(dtype);
     Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
@@ -1396,6 +1421,9 @@ SEXP libtiledb_attribute_get_fill_value(XPtr<tiledb::Attribute> attr) {
   } else if (dtype == TILEDB_FLOAT64) {
     double v = *(const double*)valptr;
     return wrap(v);
+  } else if (dtype == TILEDB_STRING_ASCII) {
+    std::string s(static_cast<const char*>(valptr), static_cast<size_t>(size));
+    return wrap(s);
   } else {
     std::string typestr = _tiledb_datatype_to_string(dtype);
     Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
@@ -1581,14 +1609,33 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_allows_dups(XPtr<tiledb::Ar
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::FilterList> libtiledb_array_schema_get_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::FilterList>
+libtiledb_array_schema_get_coords_filter_list(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->coords_filter_list()));
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::FilterList> libtiledb_array_schema_offsets_filter_list(XPtr<tiledb::ArraySchema> schema) {
+XPtr<tiledb::ArraySchema>
+libtiledb_array_schema_set_coords_filter_list(XPtr<tiledb::ArraySchema> schema,
+                                              XPtr<tiledb::FilterList> fltlst) {
+  schema->set_coords_filter_list(*fltlst);
+  return schema;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::FilterList>
+libtiledb_array_schema_get_offsets_filter_list(XPtr<tiledb::ArraySchema> schema) {
   return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->offsets_filter_list()));
 }
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema>
+libtiledb_array_schema_set_offsets_filter_list(XPtr<tiledb::ArraySchema> schema,
+                                               XPtr<tiledb::FilterList> fltlst) {
+  schema->set_offsets_filter_list(*fltlst);
+  return schema;
+}
+
 
 // [[Rcpp::export]]
 int libtiledb_array_schema_get_attribute_num(XPtr<tiledb::ArraySchema> schema) {
@@ -2877,6 +2924,29 @@ R_xlen_t libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::str
 NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query, std::string attr) {
   std::pair<uint64_t, uint64_t> est = query->est_result_size_var(attr);
   return NumericVector::create(static_cast<R_xlen_t>(est.first), static_cast<R_xlen_t>(est.second));
+}
+
+// [[Rcpp::export]]
+double libtiledb_query_get_range_num(XPtr<tiledb::Query> query, int dim_idx) {
+
+  uint64_t range_num = query->range_num(static_cast<unsigned int>(dim_idx));
+  return static_cast<double>(range_num);
+}
+
+// [[Rcpp::export]]
+IntegerVector libtiledb_query_get_range(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
+  std::array<int32_t, 3> rng = query->range<int32_t>(static_cast<unsigned int>(dim_idx),
+                                                     static_cast<unsigned int>(rng_idx));
+  return IntegerVector::create(std::get<0>(rng),	// start
+                               std::get<1>(rng),  // end
+                               std::get<2>(rng)); // stride
+}
+
+// [[Rcpp::export]]
+CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
+  std::array<std::string, 2> rng = query->range(static_cast<unsigned int>(dim_idx), static_cast<uint64_t>(rng_idx));
+  return CharacterVector::create(std::get<0>(rng),	 // start
+                                 std::get<1>(rng));  // end
 }
 
 /**

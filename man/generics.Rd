@@ -8,6 +8,7 @@
 \alias{cell_order}
 \alias{tile_order}
 \alias{filter_list}
+\alias{filter_list<-}
 \alias{is.sparse}
 \alias{tiledb_ndim}
 \alias{name}
@@ -34,6 +35,8 @@ cell_order(object, ...)
 tile_order(object, ...)
 
 filter_list(object, ...)
+
+filter_list(x) <- value
 
 is.sparse(object, ...)
 
@@ -65,6 +68,8 @@ nfilters(object)
 \item{...}{Variable argument}
 
 \item{idx}{An index argument}
+
+\item{x}{A TileDB Object}
 
 \item{value}{A value to be assigned}
 }

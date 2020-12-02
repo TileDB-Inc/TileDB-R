@@ -422,3 +422,46 @@ tiledb_query_get_est_result_size_var <- function(query, name) {
             name_argument=is.character(name))
   libtiledb_query_get_est_result_size_var(query@ptr, name)
 }
+
+#' Retrieve the number of ranges for a query dimension
+#'
+#' @param query A TileDB Query object
+#' @param idx An integer index selecting the dimension
+#' @return An integer with the number of query range for the
+#' given dimensions
+#' @export
+tiledb_query_get_range_num <- function(query, idx) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            idx_argument=is.numeric(idx))
+  libtiledb_query_get_range_num(query@ptr, idx-1)
+}
+
+#' Retrieve the query range for a query dimension and range index
+#'
+#' @param query A TileDB Query object
+#' @param dimidx An integer index selecting the dimension
+#' @param rngidx An integer index selection the given range for the dimension
+#' @return An integer vector with elements start, end and stride for the query
+#' range for the given dimension and range index
+#' @export
+tiledb_query_get_range <- function(query, dimidx, rngidx) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            dimidx_argument=is.numeric(dimidx),
+            rngidx_argument=is.numeric(rngidx))
+  libtiledb_query_get_range(query@ptr, dimidx-1, rngidx-1)
+}
+
+#' Retrieve the query range for a variable-sized query dimension and range index
+#'
+#' @param query A TileDB Query object
+#' @param dimidx An integer index selecting the dimension
+#' @param rngidx An integer index selection the given range for the dimension
+#' @return An string vector with elements start and end for the query
+#' range for the given dimension and range index
+#' @export
+tiledb_query_get_range <- function(query, dimidx, rngidx) {
+  stopifnot(query_object=is(query, "tiledb_query"),
+            dimidx_argument=is.numeric(dimidx),
+            rngidx_argument=is.numeric(rngidx))
+  libtiledb_query_get_range_var(query@ptr, dimidx-1, rngidx-1)
+}

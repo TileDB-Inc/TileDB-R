@@ -2,18 +2,18 @@
 % Please edit documentation in R/Attribute.R
 \name{filter_list,tiledb_attr-method}
 \alias{filter_list,tiledb_attr-method}
-\title{Returns the \code{tiledb_filter_list} object associated with the given \code{tiledb_attr}}
+\title{Returns the TileDB Filter List object associated with the given TileDB Attribute}
 \usage{
 \S4method{filter_list}{tiledb_attr}(object)
 }
 \arguments{
-\item{object}{tiledb_attr}
+\item{object}{TileDB Attribute}
 }
 \value{
 a tiledb_filter_list object
 }
 \description{
-Returns the \code{tiledb_filter_list} object associated with the given \code{tiledb_attr}
+Returns the TileDB Filter List object associated with the given TileDB Attribute
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}

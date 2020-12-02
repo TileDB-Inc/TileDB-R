@@ -113,6 +113,14 @@ libtiledb_dim_get_cell_val_num <- function(dim) {
     .Call(`_tiledb_libtiledb_dim_get_cell_val_num`, dim)
 }
 
+libtiledb_dimension_get_filter_list <- function(dim) {
+    .Call(`_tiledb_libtiledb_dimension_get_filter_list`, dim)
+}
+
+libtiledb_dimension_set_filter_list <- function(dim, filter_list) {
+    .Call(`_tiledb_libtiledb_dimension_set_filter_list`, dim, filter_list)
+}
+
 libtiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_libtiledb_domain`, ctx, dims)
 }
@@ -199,6 +207,10 @@ libtiledb_attribute_get_cell_size <- function(attr) {
 
 libtiledb_attribute_get_filter_list <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_filter_list`, attr)
+}
+
+libtiledb_attribute_set_filter_list <- function(attr, filter_list) {
+    .Call(`_tiledb_libtiledb_attribute_set_filter_list`, attr, filter_list)
 }
 
 libtiledb_attribute_get_cell_val_num <- function(attr) {
@@ -297,8 +309,16 @@ libtiledb_array_schema_get_coords_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_coords_filter_list`, schema)
 }
 
-libtiledb_array_schema_offsets_filter_list <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_offsets_filter_list`, schema)
+libtiledb_array_schema_set_coords_filter_list <- function(schema, fltlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_coords_filter_list`, schema, fltlst)
+}
+
+libtiledb_array_schema_get_offsets_filter_list <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_offsets_filter_list`, schema)
+}
+
+libtiledb_array_schema_set_offsets_filter_list <- function(schema, fltlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_offsets_filter_list`, schema, fltlst)
 }
 
 libtiledb_array_schema_get_attribute_num <- function(schema) {
@@ -563,6 +583,18 @@ libtiledb_query_get_est_result_size <- function(query, attr) {
 
 libtiledb_query_get_est_result_size_var <- function(query, attr) {
     .Call(`_tiledb_libtiledb_query_get_est_result_size_var`, query, attr)
+}
+
+libtiledb_query_get_range_num <- function(query, dim_idx) {
+    .Call(`_tiledb_libtiledb_query_get_range_num`, query, dim_idx)
+}
+
+libtiledb_query_get_range <- function(query, dim_idx, rng_idx) {
+    .Call(`_tiledb_libtiledb_query_get_range`, query, dim_idx, rng_idx)
+}
+
+libtiledb_query_get_range_var <- function(query, dim_idx, rng_idx) {
+    .Call(`_tiledb_libtiledb_query_get_range_var`, query, dim_idx, rng_idx)
 }
 
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {
