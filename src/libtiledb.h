@@ -24,7 +24,7 @@
 #define __libtiledb_h__
 
 // in inst/include so that Rcpp code generation can use the types for glue code
-#include <tiledb.h>
+#include "tiledb.h"
 
 // Version
 Rcpp::NumericVector tiledb_version();

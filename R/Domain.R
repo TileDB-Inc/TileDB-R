@@ -93,7 +93,7 @@ setMethod("dimensions", "tiledb_domain",
             return(lapply(dim_ptrs, tiledb_dim.from_ptr))
           })
 
-#' Returns tiledb_domain TileDB type string
+#' Returns the tiledb_domain TileDB type string
 #'
 #' @param object tiledb_domain
 #' @return tiledb_domain type string
@@ -170,8 +170,44 @@ setMethod("is.integral", "tiledb_domain",
 #' @export
 dim.tiledb_domain <- function(x) {
   dtype <- datatype(x)
-  if (isTRUE(any(sapply(dtype, match, c("FLOAT32","FLOAT32"))))) {
+  if (isTRUE(any(sapply(dtype, match, c("FLOAT32","FLOAT64"))))) {
     stop("dim() is only defined for integral domains")
   }
   return(vapply(dimensions(x), dim, integer(1L)))
+}
+
+#' Returns a Dimension indicated by index for the given TileDB Domain
+#'
+#' @param domain TileDB Domain object
+#' @param idx Integer index of the selected dimension
+#' @return TileDB Dimension object
+#' @export
+tiledb_domain_get_dimension_from_index <- function(domain, idx) {
+  stopifnot(domain_argument=is(domain, "tiledb_domain"),
+            idx_argument=is.numeric(idx))
+  return(new("tiledb_dim", ptr=libtiledb_domain_get_dimension_from_index(domain@ptr, idx)))
+}
+
+#' Returns a Dimension indicated by name for the given TileDB Domain
+#'
+#' @param domain TileDB Domain object
+#' @param name A character variable with a dimension name
+#' @return TileDB Dimension object
+#' @export
+tiledb_domain_get_dimension_from_name <- function(domain, name) {
+  stopifnot(domain_argument=is(domain, "tiledb_domain"),
+            name_argument=is.character(name))
+  return(new("tiledb_dim", ptr=libtiledb_domain_get_dimension_from_name(domain@ptr, name)))
+}
+
+#' Check a domain for a given dimension name
+#'
+#' @param domain A domain of a TileDB Array schema
+#' @param name A character variable with a dimension name
+#' @return A boolean value indicating if the dimension exists in the domain
+#' @export
+tiledb_domain_has_dimension <- function(domain, name) {
+  stopifnot(domain_argument=is(domain, "tiledb_domain"),
+            name_argument=is.character(name))
+  libtiledb_domain_has_dimension(domain@ptr, name)
 }

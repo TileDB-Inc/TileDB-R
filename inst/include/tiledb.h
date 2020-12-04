@@ -58,5 +58,11 @@ struct query_buffer {
 };
 typedef struct query_buffer query_buf_t;
 
+// C++ compiler complains about missing delete functionality when we use tiledb_vfs_fh_t directly
+struct vfs_fh {
+   void *fh;
+};
+typedef struct vfs_fh vfs_fh_t;
+
 
 #endif // __tiledb_h__

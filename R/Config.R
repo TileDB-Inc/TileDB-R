@@ -256,3 +256,15 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
   if (verbose) message("Limiting TileDB to ",ncores," cores. See ?limitTileDBCores.")
   invisible(cfg)
 }
+
+#' Unset a TileDB Config parameter to its default value
+#'
+#' @param config A TileDB Config object
+#' @param param A character variable with the parameter name
+#' @return The modified TileDB Config object
+#' @export
+tiledb_config_unset <- function(config, param) {
+  stopifnot(config_object=is(config, "tiledb_config"),
+            param_argument=is.character(param))
+  libtiledb_config_unset(config@ptr, param)
+}

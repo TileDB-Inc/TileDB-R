@@ -221,3 +221,29 @@ dim.tiledb_dim <- function(x) {
   dom <- domain(x)
   return(dom[2L] - dom[1L] + 1L)
 }
+
+
+## Generic in ArraySchema.R
+
+#' Returns the TileDB Filter List object associated with the given TileDB Dimension
+#'
+#' @param object TileDB_Dimension
+#' @return A TileDB_filter_list object
+#' @export
+setMethod("filter_list", "tiledb_dim", function(object) {
+  ptr <- libtiledb_dimension_get_filter_list(object@ptr)
+  return(tiledb_filter_list.from_ptr(ptr))
+})
+
+## Generic in ArraySchema.R
+
+#' Sets the TileDB Filter List for the TileDB Dimension object
+#'
+#' @param x TileDB Dimension
+#' @param value TileDB Filter List
+#' @return The modified TileDB Dimension object
+#' @export
+setReplaceMethod("filter_list", "tiledb_dim", function(x, value) {
+  x@ptr <- libtiledb_dimension_set_filter_list(x@ptr, value@ptr)
+  x
+})

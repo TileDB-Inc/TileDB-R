@@ -128,9 +128,11 @@ setMethod("datatype", signature(object = "tiledb_attr"),
             libtiledb_attribute_get_type(object@ptr)
           })
 
-#' Returns the `tiledb_filter_list` object associated with the given `tiledb_attr`
+## Generic in ArraySchema.R
+
+#' Returns the TileDB Filter List object associated with the given TileDB Attribute
 #'
-#' @param object tiledb_attr
+#' @param object TileDB Attribute
 #' @return a tiledb_filter_list object
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -138,11 +140,24 @@ setMethod("datatype", signature(object = "tiledb_attr"),
 #' filter_list(attr)
 #'
 #' @export
-setMethod("filter_list", "tiledb_attr",
-          function(object) {
-            ptr <- libtiledb_attribute_get_filter_list(object@ptr)
-            return(tiledb_filter_list.from_ptr(ptr))
-          })
+setMethod("filter_list", "tiledb_attr", function(object) {
+  ptr <- libtiledb_attribute_get_filter_list(object@ptr)
+  return(tiledb_filter_list.from_ptr(ptr))
+})
+
+## Generic in ArraySchema.R
+
+#' Sets the TileDB Filter List for the TileDB Attribute object
+#'
+#' @param x TileDB Attribute
+#' @param value TileDB Filter List
+#' @return The modified TileDB Attribute object
+#' @export
+setReplaceMethod("filter_list", "tiledb_attr", function(x, value) {
+  x@ptr <- libtiledb_attribute_set_filter_list(x@ptr, value@ptr)
+  x
+})
+
 
 #' @rdname generics
 #' @export
@@ -185,4 +200,48 @@ is.anonymous <- function(object) UseMethod("is.anonymous", object)
 is.anonymous.tiledb_attr <- function(object) {
   name <- libtiledb_attribute_get_name(object@ptr)
   nchar(name) == 0
+}
+
+
+#' Get the fill value for a TileDB Attribute
+#'
+#' @param attr A TileDB Attribute object
+#' @return The fill value for the attribute
+#' @export
+tiledb_attribute_get_fill_value <- function(attr) {
+  stopifnot(attr_object=is(attr, "tiledb_attr"))
+  libtiledb_attribute_get_fill_value(attr@ptr)
+}
+
+#' Set the fill value for a TileDB Attribute
+#'
+#' @param attr A TileDB Attribute object
+#' @param value A fill value
+#' @return \code{NULL} is returned invisibly
+#' @export
+tiledb_attribute_set_fill_value <- function(attr, value) {
+  stopifnot(attr_object=is(attr, "tiledb_attr"),
+            value_type=is.integer(value) || is.numeric(value) || is.character(value))
+  libtiledb_attribute_set_fill_value(attr@ptr, value)
+  invisible()
+}
+
+#' Check whether TileDB Attribute is variable-sized
+#'
+#' @param attr A TileDB Attribute object
+#' @return A boolean value indicating variable-size or not
+#' @export
+tiledb_attribute_is_variable_sized <- function(attr) {
+  stopifnot(attr_object=is(attr, "tiledb_attr"))
+  libtiledb_attribute_is_variable_sized(attr@ptr)
+}
+
+#' Get the TileDB Attribute cell size
+#'
+#' @param attr A TileDB Attribute object
+#' @return A numeric value with the cell size
+#' @export
+tiledb_attribute_get_cell_size <- function(attr) {
+  stopifnot(attr_object=is(attr, "tiledb_attr"))
+  libtiledb_attribute_get_cell_size(attr@ptr)
 }

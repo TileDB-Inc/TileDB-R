@@ -24,6 +24,8 @@
 #'
 #' @param uri URI specifying path to create the TileDB array object
 #' @param schema tiledb_array_schema object
+#' @param encryption_key optional A character value with an AES-256 encryption key
+#' in case the array should be encryption.
 #'
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -36,31 +38,61 @@
 #' }
 #'
 #' @export
-tiledb_array_create <- function(uri, schema) {
+tiledb_array_create <- function(uri, schema, encryption_key) {
   if (missing(uri) || !is.scalar(uri, "character")) {
     stop("argument uri must be a string scalar")
   } else if (missing(schema) || !is(schema, "tiledb_array_schema")) {
     stop("argument schema must a tiledb_array_schema")
   }
-  return(libtiledb_array_create(uri, schema@ptr))
+  if (missing(encryption_key)) {
+    return(libtiledb_array_create(uri, schema@ptr))
+  } else {
+    return(libtiledb_array_create_with_key(uri, schema@ptr, encryption_key))
+  }
 }
 
 ##' Open a TileDB Array
 ##'
-##' @param arr A TileDB Array object as for example returned by `tiledb_dense()`
+##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
 ##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
 ##' @return The TileDB Array object but opened for reading or writing
+##' @importFrom methods .hasSlot
 ##' @export
 tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
   type <- match.arg(type)
 
-  arr@ptr <- libtiledb_array_open_with_ptr(arr@ptr, type)
+  if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
+    ctx <- tiledb_get_context()
+    arr@ptr <- libtiledb_array_open_with_key(ctx@ptr, arr@uri, type, arr@encryption_key)
+  } else {
+    arr@ptr <- libtiledb_array_open_with_ptr(arr@ptr, type)
+  }
   arr
 }
 
+##' Open a TileDB Array at Timestamp
+##'
+##' @param arr A TileDB Array object as for example returned by \code{tiledb_array()}
+##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
+##' @param timestamp A Datetime object that will be converted to millisecond granularity
+##' @return The TileDB Array object but opened for reading or writing
+##' @export
+tiledb_array_open_at <- function(arr, type=c("READ","WRITE"), timestamp) {
+  stopifnot(timestamp_argument=inherits(timestamp, "POSIXct"))
+  type <- match.arg(type)
+  ctx <- tiledb_get_context()
+  if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
+    arr@ptr <- libtiledb_array_open_at_with_key(ctx@ptr, arr@uri, type, arr@encryption_key, timestamp)
+  } else {
+    arr@ptr <- libtiledb_array_open_at(ctx@ptr, arr@uri, type, timestamp)
+  }
+  arr
+}
+
+
 ##' Close a TileDB Array
 ##'
-##' @param arr A TileDB Array object as for example returned by `tiledb_dense()`
+##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
 ##' @return The TileDB Array object but closed
 ##' @export
 tiledb_array_close <- function(arr) {

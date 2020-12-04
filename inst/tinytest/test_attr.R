@@ -75,17 +75,26 @@ expect_true(all(is.na(val)))
 ## test for value set
 dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))
 attr <- tiledb_attr("a", type = "INT32")
-tiledb:::libtiledb_attribute_set_fill_value(attr@ptr, 42L)
+tiledb_attribute_set_fill_value(attr, 42L)
 sch <- tiledb_array_schema(dom, attr)
 uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 tiledb_array_create(uri, sch)
 arr <- tiledb_dense(uri)
 val <- arr[]
-## when value has been set, expect value
+## when fill value has been set, expect value
 expect_equal(val, array(rep(42, 4)))
+expect_equal(tiledb_attribute_get_fill_value(attr), 42)
 
-expect_equal(tiledb:::libtiledb_attribute_get_fill_value(attr@ptr), 42)
+attr <- tiledb_attr("b", type = "CHAR", ncells = NA)
+tiledb_attribute_set_fill_value(attr, "abc")
+sch <- tiledb_array_schema(dom, attr)
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+tiledb_array_create(uri, sch)
+#arr <- tiledb_dense(uri)
+#val <- arr[]
+expect_equal(tiledb_attribute_get_fill_value(attr), "abc")
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 #})

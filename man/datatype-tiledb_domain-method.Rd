@@ -2,7 +2,7 @@
 % Please edit documentation in R/Domain.R
 \name{datatype,tiledb_domain-method}
 \alias{datatype,tiledb_domain-method}
-\title{Returns tiledb_domain TileDB type string}
+\title{Returns the tiledb_domain TileDB type string}
 \usage{
 \S4method{datatype}{tiledb_domain}(object)
 }
@@ -13,7 +13,7 @@
 tiledb_domain type string
 }
 \description{
-Returns tiledb_domain TileDB type string
+Returns the tiledb_domain TileDB type string
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}

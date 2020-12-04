@@ -16,7 +16,7 @@ datetimes_as_int64(object)
 A logical value indicating whether \code{datetimes_as_int64} is selected
 }
 \description{
-A \code{tiledb_array} object mayb contain date and datetime objects. While their internal
+A \code{tiledb_array} object may contain date and datetime objects. While their internal
 representation is generally shielded from the user, it can useful to access them as the
 \sQuote{native} format which is an \code{integer64}. This function retrieves the current
 value of the selection variable, which has a default of \code{FALSE}.

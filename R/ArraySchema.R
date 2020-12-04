@@ -292,18 +292,56 @@ setMethod("tile_order", "tiledb_array_schema",
 #' @export
 setGeneric("filter_list", function(object, ...) standardGeneric("filter_list"))
 
+#' @rdname generics
+#' @param x A TileDB Object
+#' @export
+setGeneric("filter_list<-", function(x, value) standardGeneric("filter_list<-"))
+
 #' Returns the offsets and coordinate filter_lists associated with the `tiledb_array_schema`
 #'
 #' @param object tiledb_array_schema
 #' @return a list of tiledb_filter_list objects
 #' @export
-setMethod("filter_list", "tiledb_array_schema",
-          function(object) {
-            coords_ptr <- libtiledb_array_schema_get_coords_filter_list(object@ptr)
-            offsets_ptr <- libtiledb_array_schema_offsets_filter_list(object@ptr)
-            return(c(coords = tiledb_filter_list.from_ptr(coords_ptr),
-                     offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
-          })
+setMethod("filter_list", "tiledb_array_schema", function(object) {
+  coords_ptr <- libtiledb_array_schema_get_coords_filter_list(object@ptr)
+  offsets_ptr <- libtiledb_array_schema_get_offsets_filter_list(object@ptr)
+  return(c(coords = tiledb_filter_list.from_ptr(coords_ptr),
+           offsets = tiledb_filter_list.from_ptr(offsets_ptr)))
+})
+
+# ' Set the Filter List for a TileDB Schema
+# '
+# ' @param x A TileDB Array Scheme
+# ' @param value A TileDB Filter List
+# ' @return The modified Array Schema object
+# ' @ export
+#setReplaceMethod("filter_list", "tiledb_array_schema", function(x, value) {
+#  x@ptr <- libtiledb_array_schema_set_coords_filter_list(x@ptr, value@ptr)
+#  x
+#})
+## -- need to provide setter for offsets and coords
+
+#' Set a Filter List for Coordinate of a TileDB Schema
+#'
+#' @param sch A TileDB Array Schema object
+#' @param fl A TileDB Filter List object
+#' @return The modified Array Schema object
+#' @export
+tiledb_array_schema_set_coords_filter_list <- function(sch, fl) {
+  sch@ptr <- libtiledb_array_schema_set_coords_filter_list(sch@ptr, fl@ptr)
+  sch
+}
+
+#' Set a Filter List for Variable-Sized Offsets of a TileDB Schema
+#'
+#' @param sch A TileDB Array Schema object
+#' @param fl A TileDB Filter List object
+#' @return The modified Array Schema object
+#' @export
+tiledb_array_schema_set_offsets_filter_list <- function(sch, fl) {
+  sch@ptr <- libtiledb_array_schema_set_offsets_filter_list(sch@ptr, fl@ptr)
+  sch
+}
 
 #' @rdname generics
 #' @export
@@ -435,4 +473,72 @@ tiledb_schema_get_types <- function(sch) {
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
 
   alltypes <- c(dimtypes, attrtypes)
+}
+
+# -- get and set tile capacity
+
+#' @rdname capacity-tiledb_array_schema-method
+#' @export
+setGeneric("capacity", function(object) standardGeneric("capacity"))
+
+#' @rdname capacity-set-tiledb_array_schema-method
+#' @export
+setGeneric("capacity<-", function(x, value) standardGeneric("capacity<-"))
+
+#' Retrieve schema capacity (for sparse fragments)
+#'
+#' Returns the \code{tiledb_array} schema tile capacity for sparse fragments.
+#' @param object An \code{array_schema} object
+#' @return The tile capacity value
+#' @export
+setMethod("capacity",
+          signature = "tiledb_array_schema",
+          function(object) libtiledb_array_schema_get_capacity(object@ptr))
+
+#' Sets the schema capacity (for sparse fragments)
+#'
+#' Sets the \code{tiledb_array} schema tile capacity for sparse fragments.
+#' @param x An \code{array_schema} object
+#' @param value An integer or numeric value for the new tile capacity
+#' @return The modified \code{array_schema} object
+#' @export
+setReplaceMethod("capacity",
+                 signature = "tiledb_array_schema",
+                 function(x, value) {
+  libtiledb_array_schema_set_capacity(x@ptr, value)
+  x
+})
+
+
+# -- Schema Correctness
+
+#' @rdname check-tiledb_array_schema-method
+#' @export
+setGeneric("check", function(object) standardGeneric("check"))
+
+#' Check the schema for correctness
+#'
+#' Returns the \code{tiledb_array} schema for correctness
+#' @param object An \code{array_schema} object
+#' @return The boolean value \code{TRUE} is returned for a correct
+#' schema; for an incorrect schema an error condition is triggered.
+#' @export
+setMethod("check",
+          signature = "tiledb_array_schema",
+          function(object) libtiledb_array_schema_check(object@ptr))
+
+
+## -- convenience accessor `has_attribute` -- a little redundant as we already retrieve
+##    all names and can check the returned set but a direct caller is a little lighter
+
+#' Check a schema for a given attribute name
+#'
+#' @param schema A schema for a TileDB Array
+#' @param attr A character variable with an attribute name
+#' @return A boolean value indicating if the attribute exists in the schema
+#' @export
+has_attribute <- function(schema, attr) {
+  stopifnot(schema_argument=is(schema, "tiledb_array_schema"),
+            attr_argument=is.character(attr))
+  libtiledb_array_schema_has_attribute(schema@ptr, attr)
 }

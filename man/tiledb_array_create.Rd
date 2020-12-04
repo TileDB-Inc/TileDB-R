@@ -4,12 +4,15 @@
 \alias{tiledb_array_create}
 \title{Creates a new TileDB array given an input schema.}
 \usage{
-tiledb_array_create(uri, schema)
+tiledb_array_create(uri, schema, encryption_key)
 }
 \arguments{
 \item{uri}{URI specifying path to create the TileDB array object}
 
 \item{schema}{tiledb_array_schema object}
+
+\item{encryption_key}{optional A character value with an AES-256 encryption key
+in case the array should be encryption.}
 }
 \description{
 Creates a new TileDB array given an input schema.

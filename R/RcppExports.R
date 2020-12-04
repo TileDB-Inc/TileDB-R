@@ -113,6 +113,14 @@ libtiledb_dim_get_cell_val_num <- function(dim) {
     .Call(`_tiledb_libtiledb_dim_get_cell_val_num`, dim)
 }
 
+libtiledb_dimension_get_filter_list <- function(dim) {
+    .Call(`_tiledb_libtiledb_dimension_get_filter_list`, dim)
+}
+
+libtiledb_dimension_set_filter_list <- function(dim, filter_list) {
+    .Call(`_tiledb_libtiledb_dimension_set_filter_list`, dim, filter_list)
+}
+
 libtiledb_domain <- function(ctx, dims) {
     .Call(`_tiledb_libtiledb_domain`, ctx, dims)
 }
@@ -125,8 +133,20 @@ libtiledb_domain_get_ndim <- function(domain) {
     .Call(`_tiledb_libtiledb_domain_get_ndim`, domain)
 }
 
+libtiledb_domain_get_dimension_from_index <- function(dom, idx) {
+    .Call(`_tiledb_libtiledb_domain_get_dimension_from_index`, dom, idx)
+}
+
+libtiledb_domain_get_dimension_from_name <- function(dom, name) {
+    .Call(`_tiledb_libtiledb_domain_get_dimension_from_name`, dom, name)
+}
+
 libtiledb_domain_get_dimensions <- function(domain) {
     .Call(`_tiledb_libtiledb_domain_get_dimensions`, domain)
+}
+
+libtiledb_domain_has_dimension <- function(domain, name) {
+    .Call(`_tiledb_libtiledb_domain_has_dimension`, domain, name)
 }
 
 libtiledb_domain_dump <- function(domain) {
@@ -187,6 +207,10 @@ libtiledb_attribute_get_cell_size <- function(attr) {
 
 libtiledb_attribute_get_filter_list <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_filter_list`, attr)
+}
+
+libtiledb_attribute_set_filter_list <- function(attr, filter_list) {
+    .Call(`_tiledb_libtiledb_attribute_set_filter_list`, attr, filter_list)
 }
 
 libtiledb_attribute_get_cell_val_num <- function(attr) {
@@ -285,8 +309,16 @@ libtiledb_array_schema_get_coords_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_coords_filter_list`, schema)
 }
 
-libtiledb_array_schema_offsets_filter_list <- function(schema) {
-    .Call(`_tiledb_libtiledb_array_schema_offsets_filter_list`, schema)
+libtiledb_array_schema_set_coords_filter_list <- function(schema, fltlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_coords_filter_list`, schema, fltlst)
+}
+
+libtiledb_array_schema_get_offsets_filter_list <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_offsets_filter_list`, schema)
+}
+
+libtiledb_array_schema_set_offsets_filter_list <- function(schema, fltlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_offsets_filter_list`, schema, fltlst)
 }
 
 libtiledb_array_schema_get_attribute_num <- function(schema) {
@@ -314,7 +346,7 @@ libtiledb_array_schema_dump <- function(schema) {
 }
 
 libtiledb_array_schema_check <- function(schema) {
-    invisible(.Call(`_tiledb_libtiledb_array_schema_check`, schema))
+    .Call(`_tiledb_libtiledb_array_schema_check`, schema)
 }
 
 libtiledb_array_create <- function(uri, schema) {
@@ -385,7 +417,7 @@ libtiledb_array_get_non_empty_domain_var_from_name <- function(array, name) {
     .Call(`_tiledb_libtiledb_array_get_non_empty_domain_var_from_name`, array, name)
 }
 
-libtiledb_array_get_non_empty_domain_var_from_index <- function(array, idx, typestr) {
+libtiledb_array_get_non_empty_domain_var_from_index <- function(array, idx, typestr = "ASCII") {
     .Call(`_tiledb_libtiledb_array_get_non_empty_domain_var_from_index`, array, idx, typestr)
 }
 
@@ -393,12 +425,16 @@ libtiledb_array_get_non_empty_domain_from_name <- function(array, name, typestr)
     .Call(`_tiledb_libtiledb_array_get_non_empty_domain_from_name`, array, name, typestr)
 }
 
-libtiledb_array_non_empty_domain_from_index <- function(array, idx, typestr) {
-    .Call(`_tiledb_libtiledb_array_non_empty_domain_from_index`, array, idx, typestr)
+libtiledb_array_get_non_empty_domain_from_index <- function(array, idx, typestr) {
+    .Call(`_tiledb_libtiledb_array_get_non_empty_domain_from_index`, array, idx, typestr)
 }
 
 libtiledb_array_consolidate <- function(ctx, uri, cfgptr = NULL) {
     invisible(.Call(`_tiledb_libtiledb_array_consolidate`, ctx, uri, cfgptr))
+}
+
+libtiledb_array_vacuum <- function(ctx, uri, cfgptr = NULL) {
+    invisible(.Call(`_tiledb_libtiledb_array_vacuum`, ctx, uri, cfgptr))
 }
 
 libtiledb_array_put_metadata <- function(array, key, obj) {
@@ -505,6 +541,10 @@ libtiledb_query_submit <- function(query) {
     .Call(`_tiledb_libtiledb_query_submit`, query)
 }
 
+libtiledb_query_submit_async <- function(query) {
+    .Call(`_tiledb_libtiledb_query_submit_async`, query)
+}
+
 libtiledb_query_finalize <- function(query) {
     .Call(`_tiledb_libtiledb_query_finalize`, query)
 }
@@ -525,6 +565,10 @@ libtiledb_query_get_fragment_uri <- function(query, idx) {
     .Call(`_tiledb_libtiledb_query_get_fragment_uri`, query, idx)
 }
 
+libtiledb_query_get_fragment_timestamp_range <- function(query, idx) {
+    .Call(`_tiledb_libtiledb_query_get_fragment_timestamp_range`, query, idx)
+}
+
 libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
     .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
 }
@@ -539,6 +583,18 @@ libtiledb_query_get_est_result_size <- function(query, attr) {
 
 libtiledb_query_get_est_result_size_var <- function(query, attr) {
     .Call(`_tiledb_libtiledb_query_get_est_result_size_var`, query, attr)
+}
+
+libtiledb_query_get_range_num <- function(query, dim_idx) {
+    .Call(`_tiledb_libtiledb_query_get_range_num`, query, dim_idx)
+}
+
+libtiledb_query_get_range <- function(query, dim_idx, rng_idx) {
+    .Call(`_tiledb_libtiledb_query_get_range`, query, dim_idx, rng_idx)
+}
+
+libtiledb_query_get_range_var <- function(query, dim_idx, rng_idx) {
+    .Call(`_tiledb_libtiledb_query_get_range_var`, query, dim_idx, rng_idx)
 }
 
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {
@@ -627,6 +683,26 @@ libtiledb_vfs_move_dir <- function(vfs, old_uri, new_uri) {
 
 libtiledb_vfs_touch <- function(vfs, uri) {
     .Call(`_tiledb_libtiledb_vfs_touch`, vfs, uri)
+}
+
+libtiledb_vfs_open <- function(ctxxp, vfsxp, uri, mode) {
+    .Call(`_tiledb_libtiledb_vfs_open`, ctxxp, vfsxp, uri, mode)
+}
+
+libtiledb_vfs_close <- function(ctxxp, fh) {
+    invisible(.Call(`_tiledb_libtiledb_vfs_close`, ctxxp, fh))
+}
+
+libtiledb_vfs_write <- function(ctxxp, fh, vec) {
+    invisible(.Call(`_tiledb_libtiledb_vfs_write`, ctxxp, fh, vec))
+}
+
+libtiledb_vfs_read <- function(ctxxp, fh, offset, nbytes) {
+    .Call(`_tiledb_libtiledb_vfs_read`, ctxxp, fh, offset, nbytes)
+}
+
+libtiledb_vfs_sync <- function(ctxxp, fh) {
+    invisible(.Call(`_tiledb_libtiledb_vfs_sync`, ctxxp, fh))
 }
 
 libtiledb_stats_enable <- function() {

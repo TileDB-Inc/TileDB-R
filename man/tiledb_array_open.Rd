@@ -7,7 +7,7 @@
 tiledb_array_open(arr, type = c("READ", "WRITE"))
 }
 \arguments{
-\item{arr}{A TileDB Array object as for example returned by \code{tiledb_dense()}}
+\item{arr}{A TileDB Array object as for example returned by \code{tiledb_array()}}
 
 \item{type}{A character value that must be either \sQuote{READ} or \sQuote{WRITE}}
 }

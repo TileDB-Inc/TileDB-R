@@ -13,5 +13,6 @@ tiledb_query_submit(query)
 The modified query object, invisibly
 }
 \description{
-Submit TileDB Query
+Note that the query object may need to be finalized
+via \code{tiledb_query_finalize}.
 }
