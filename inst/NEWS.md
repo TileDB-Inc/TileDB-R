@@ -8,12 +8,19 @@
 
 * There is extended support for array creation directly from DataFrame objects. (#182)
 
-* Internal TileDB performance statistics can now be exported 'raw' in JSON format. (#183)
+* Internal TileDB performance statistics can now be exported 'raw' in JSON format (for TileDB versions greater than 2.0.3). (#183, #186)
 
 * The vignette was updated with respect to the preferred used of `tiledb_array`. (#184)
 
 * The Hilbert cell layout added recently to TileDB Embbeded is supported. (#185)
 
+* Virtual File System functions now use the default VFS object which allows for a simpler interface (#187)
+
+* TileDB Array Dimension support has been extended to more data types (#188)
+
+* Datetime support for Dimensions and Attributes has been extended (#189)
+
+* The API coverage has been increased alongside an update of the documentation (#190)
 
 # 0.8.2
 
