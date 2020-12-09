@@ -2922,8 +2922,13 @@ R_xlen_t libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::str
 
 // [[Rcpp::export]]
 NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query, std::string attr) {
+#if TILEDB_VERSION < TileDB_Version(2,2,0)
   std::pair<uint64_t, uint64_t> est = query->est_result_size_var(attr);
   return NumericVector::create(static_cast<R_xlen_t>(est.first), static_cast<R_xlen_t>(est.second));
+#else
+  std::array<uint64_t, 2> est = query->est_result_size_var(attr);
+  return NumericVector::create(static_cast<R_xlen_t>(est[0]), static_cast<R_xlen_t>(est[1]));
+#endif
 }
 
 // [[Rcpp::export]]
