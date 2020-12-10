@@ -140,6 +140,27 @@ setMethod("schema", "tiledb_array", function(object, ...) {
   return(tiledb_array_schema.from_ptr(schema_xptr))
 })
 
+## unexported helper function to deal with ... args / enckey in next method
+.array_schema_load <- function(ctxptr, uri, enckey=character()) {
+  if (length(enckey) > 0) {
+    schema_xptr <- libtiledb_array_schema_load_with_key(ctxptr, uri, enckey)
+  }  else {
+    schema_xptr <- libtiledb_array_schema_load(ctxptr, uri)
+  }
+}
+
+#' Return a schema from a URI character value
+#'
+#' @param object A character variable with a URI
+#' @param ... Extra parameters such as \sQuote{enckey}, the encryption key
+#' @return The scheme for the object
+setMethod("schema", "character", function(object, ...) {
+  ctx <- tiledb_get_context()
+  schema_xptr <- .array_schema_load(ctx@ptr, object, ...)
+  return(tiledb_array_schema.from_ptr(schema_xptr))
+})
+
+
 #' Prints a tiledb_array object
 #'
 #' @param object A tiledb array object
