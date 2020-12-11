@@ -24,9 +24,14 @@
 #include <Rcpp.h>
 
 #include <tiledb.h>
+#include "tiledb_version.h"
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
 #include <arrowio>
+#endif
 #include "finalizers.h"
 
+
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
 // two finalizers used if we use XPtr
 extern "C" {
 
@@ -50,8 +55,7 @@ extern "C" {
 
 }
 
-// borrowed from arrow R package
-// licensed under Apache-2.0
+// borrowed from arrow R package (licensed under Apache-2.0) and slightly extended
 template <typename T>
 struct Pointer {
     Pointer() : ptr_(new T()) {}
@@ -59,6 +63,7 @@ struct Pointer {
     inline operator SEXP() const { return Rf_ScalarReal(static_cast<double>(reinterpret_cast<uintptr_t>(ptr_)));  }
     inline operator T*()   const { return ptr_; }
     inline void finalize()       { delete ptr_; }
+    inline T* get()        const { return ptr_; }
     T* ptr_;
 };
 
@@ -87,6 +92,8 @@ Rcpp::List query_export_buffer_xptr(XPtr<tiledb::Query> queryxp, std::string nam
     return Rcpp::List::create(Rcpp::Named("array") = arrptr,
                               Rcpp::Named("schema") = schptr);
 }
+#endif
+
 
 //' Export Query Buffer to Pair of Arrow IO Pointers
 //'
@@ -99,14 +106,21 @@ Rcpp::List query_export_buffer_xptr(XPtr<tiledb::Query> queryxp, std::string nam
 //' @export
 // [[Rcpp::export]]
 Rcpp::NumericVector tiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     std::shared_ptr<tiledb::Query> query(queryxp.get());
     tiledb::arrow::ArrowAdapter adapter(query);
 
     auto arrptr = allocate_arrow_array();
     auto schptr = allocate_arrow_schema();
-    adapter.export_buffer(name.c_str(), static_cast<void*>(arrptr.ptr_), static_cast<void*>(schptr.ptr_));
+    adapter.export_buffer(name.c_str(),
+                          static_cast<void*>(arrptr.get()),
+                          static_cast<void*>(schptr.get()));
 
     // use same trick as arrow as send the pointer as a double converted to SEXP
     return Rcpp::NumericVector::create(Rcpp::as<double>(arrptr),
                                        Rcpp::as<double>(schptr));
+#else
+    Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
+    return Rcpp::NumericVector::create(0, 0); // not reached
+#endif
 }
