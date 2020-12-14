@@ -7,15 +7,15 @@
 
 using namespace Rcpp;
 
-// tiledb_query_export_buffer
-Rcpp::NumericVector tiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name);
-RcppExport SEXP _tiledb_tiledb_query_export_buffer(SEXP queryxpSEXP, SEXP nameSEXP) {
+// libtiledb_query_export_buffer
+Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name);
+RcppExport SEXP _tiledb_libtiledb_query_export_buffer(SEXP queryxpSEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type queryxp(queryxpSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(tiledb_query_export_buffer(queryxp, name));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_export_buffer(queryxp, name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2178,7 +2178,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tiledb_tiledb_query_export_buffer", (DL_FUNC) &_tiledb_tiledb_query_export_buffer, 2},
+    {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 2},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
     {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 5},
     {"_tiledb_libtiledb_query_buffer_var_vec_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_alloc, 5},

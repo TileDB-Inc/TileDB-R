@@ -94,18 +94,8 @@ Rcpp::List query_export_buffer_xptr(XPtr<tiledb::Query> queryxp, std::string nam
 }
 #endif
 
-
-//' Export Query Buffer to Pair of Arrow IO Pointers
-//'
-//' This function exports the name buffer from \sQuote{READ} query
-//' to two Arrow C pointers.
-//' @param queryxp An external pointer object to TileDB Query object
-//' @param name A character variable identifying the buffer
-//' @return A two-element numeric vector where the two elements are
-//' pointer to the Arrow array and schema
-//' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector tiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name) {
+Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     std::shared_ptr<tiledb::Query> query(queryxp.get());
     tiledb::arrow::ArrowAdapter adapter(query);
