@@ -28,32 +28,7 @@
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
 #include <arrowio>
 #endif
-#include "finalizers.h"
 
-
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
-// two finalizers used if we use XPtr
-extern "C" {
-
-    inline void libtiledb_arrowarray_delete(SEXP sexp) {
-        XPtr<ArrowArray> arr(sexp);
-        ArrowArray* ptr = arr.get();
-        if (ptr != nullptr) {
-            delete ptr;
-            ptr = nullptr;
-        }
-    }
-
-    inline void libtiledb_arrowschema_delete(SEXP sexp) {
-        XPtr<ArrowSchema> attr(sexp);
-        ArrowSchema* ptr = attr.get();
-        if (ptr != nullptr) {
-            delete ptr;
-            ptr = nullptr;
-        }
-    }
-
-}
 
 // borrowed from arrow R package (licensed under Apache-2.0) and slightly extended
 template <typename T>
@@ -67,32 +42,30 @@ struct Pointer {
     T* ptr_;
 };
 
+// these functions are local to this compilation unit as is the defintion of Pointer
 Pointer<ArrowArray> allocate_arrow_array()   { return {}; }
 Pointer<ArrowSchema> allocate_arrow_schema() { return {}; }
 void delete_arrow_array(Pointer<ArrowArray> ptr)   { ptr.finalize(); }
 void delete_arrow_schema(Pointer<ArrowSchema> ptr) { ptr.finalize(); }
 
+// [[Rcpp::export(.allocate_arrow_array_as_double)]]
+double allocate_arrow_array_as_double() { return Rcpp::as<double>(allocate_arrow_array()); }
 
-// ' First pass version exports XPtrs
-//
-// ' @ export
-// [ [ Rcpp::export ] ]
-Rcpp::List query_export_buffer_xptr(XPtr<tiledb::Query> queryxp, std::string name) {
-    std::shared_ptr<tiledb::Query> query(queryxp.get());
-    tiledb::arrow::ArrowAdapter adapter(query);
-    Rcpp::Rcout << "Name is " << name << std::endl;
+// [[Rcpp::export(.allocate_arrow_schema_as_double)]]
+double allocate_arrow_schema_as_double() { return Rcpp::as<double>(allocate_arrow_schema()); }
 
-    auto arrptr = Rcpp::XPtr<ArrowArray>(new ArrowArray, false);
-    registerXptrFinalizer(arrptr, libtiledb_arrowarray_delete);
-    auto schptr = Rcpp::XPtr<ArrowSchema>(new ArrowSchema, false);
-    registerXptrFinalizer(schptr, libtiledb_arrowarray_delete);
-
-    adapter.export_buffer(name.c_str(), arrptr.get(), schptr.get());
-
-    return Rcpp::List::create(Rcpp::Named("array") = arrptr,
-                              Rcpp::Named("schema") = schptr);
+// [[Rcpp::export(.delete_arrow_array_from_double)]]
+void delete_arrow_array_from_double(double dbl) {
+    Pointer<ArrowArray> ptr(Rcpp::wrap(dbl));
+    delete_arrow_array(ptr);
 }
-#endif
+
+// [[Rcpp::export(.delete_arrow_schema_from_double)]]
+void delete_arrow_schema_from_double(double dbl) {
+    Pointer<ArrowSchema> ptr(Rcpp::wrap(dbl));
+    delete_arrow_schema(ptr);
+}
+
 
 // [[Rcpp::export]]
 Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name) {
@@ -100,7 +73,7 @@ Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, s
     std::shared_ptr<tiledb::Query> query(queryxp.get());
     tiledb::arrow::ArrowAdapter adapter(query);
 
-    auto arrptr = allocate_arrow_array();
+    auto arrptr = allocate_arrow_array(); 	// TODO: manage outside and pass in?
     auto schptr = allocate_arrow_schema();
     adapter.export_buffer(name.c_str(),
                           static_cast<void*>(arrptr.get()),
@@ -113,4 +86,22 @@ Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, s
     Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
     return Rcpp::NumericVector::create(0, 0); // not reached
 #endif
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Query> queryxp, std::string name,
+                                                  Rcpp::NumericVector arrowpointers) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    std::shared_ptr<tiledb::Query> query(queryxp.get());
+    tiledb::arrow::ArrowAdapter adapter(query);
+
+    Pointer<ArrowArray> arrptr(Rcpp::wrap(arrowpointers[0]));
+    Pointer<ArrowSchema> schptr(Rcpp::wrap(arrowpointers[1]));
+    adapter.import_buffer(name.c_str(),
+                          static_cast<void*>(arrptr.get()),
+                          static_cast<void*>(schptr.get()));
+#else
+    Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
+#endif
+    return(queryxp);
 }

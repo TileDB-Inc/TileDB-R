@@ -7,15 +7,15 @@
 tiledb_query_export_buffer(query, name)
 }
 \arguments{
-\item{query}{An external pointer object to TileDB Query object}
+\item{query}{A TileDB Query object}
 
 \item{name}{A character variable identifying the buffer}
 }
 \value{
 A two-element numeric vector where the two elements are
-pointer to the Arrow array and schema
+pointers to the Arrow array and schema
 }
 \description{
-This function exports the name buffer from \sQuote{READ} query
+This function exports the named buffer from a \sQuote{READ} query
 to two Arrow C pointers.
 }
