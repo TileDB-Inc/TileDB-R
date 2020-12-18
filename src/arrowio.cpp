@@ -42,28 +42,46 @@ struct Pointer {
     T* ptr_;
 };
 
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
 // these functions are local to this compilation unit as is the defintion of Pointer
 Pointer<ArrowArray> allocate_arrow_array()   { return {}; }
 Pointer<ArrowSchema> allocate_arrow_schema() { return {}; }
 void delete_arrow_array(Pointer<ArrowArray> ptr)   { ptr.finalize(); }
 void delete_arrow_schema(Pointer<ArrowSchema> ptr) { ptr.finalize(); }
+#endif
 
 // [[Rcpp::export(.allocate_arrow_array_as_double)]]
-double allocate_arrow_array_as_double() { return Rcpp::as<double>(allocate_arrow_array()); }
+double allocate_arrow_array_as_double() {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    return Rcpp::as<double>(allocate_arrow_array());
+#else
+    return NA_REAL;
+#endif
+}
 
 // [[Rcpp::export(.allocate_arrow_schema_as_double)]]
-double allocate_arrow_schema_as_double() { return Rcpp::as<double>(allocate_arrow_schema()); }
+double allocate_arrow_schema_as_double() {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    return Rcpp::as<double>(allocate_arrow_schema());
+#else
+    return NA_REAL;
+#endif
+}
 
 // [[Rcpp::export(.delete_arrow_array_from_double)]]
 void delete_arrow_array_from_double(double dbl) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     Pointer<ArrowArray> ptr(Rcpp::wrap(dbl));
     delete_arrow_array(ptr);
+#endif
 }
 
 // [[Rcpp::export(.delete_arrow_schema_from_double)]]
 void delete_arrow_schema_from_double(double dbl) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     Pointer<ArrowSchema> ptr(Rcpp::wrap(dbl));
     delete_arrow_schema(ptr);
+#endif
 }
 
 
