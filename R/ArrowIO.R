@@ -30,6 +30,6 @@ tiledb_query_import_buffer <- function(query, name, arrowpointers) {
               `name argument` = is.character(name),
               `arrow pointers` = is.numeric(arrowpointers),
               `length of arrow pointers vectors` = length(arrowpointers)==2)
-    qry@ptr <- libtiledb_query_import_buffer(query@ptr, name, arrowpointers)
-    qry
+    query@ptr <- libtiledb_query_import_buffer(query@ptr, name, arrowpointers)
+    query
 }
