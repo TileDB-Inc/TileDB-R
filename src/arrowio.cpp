@@ -88,7 +88,10 @@ void delete_arrow_schema_from_double(double dbl) {
 // [[Rcpp::export]]
 Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    std::shared_ptr<tiledb::Query> query(queryxp.get());
+    auto query = std::shared_ptr<tiledb::Query>(queryxp.get(),
+                                                // with an 'empty' deleter to not destroy xptr
+                                                [](tiledb::Query* p){});
+
     tiledb::arrow::ArrowAdapter adapter(query);
 
     auto arrptr = allocate_arrow_array(); 	// TODO: manage outside and pass in?
@@ -110,7 +113,9 @@ Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, s
 XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Query> queryxp, std::string name,
                                                   Rcpp::NumericVector arrowpointers) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    std::shared_ptr<tiledb::Query> query(queryxp.get());
+    auto query = std::shared_ptr<tiledb::Query>(queryxp.get(),
+                                                // with an 'empty' deleter to not destroy xptr
+                                                [](tiledb::Query* p){});
     tiledb::arrow::ArrowAdapter adapter(query);
 
     Pointer<ArrowArray> arrptr(Rcpp::wrap(arrowpointers[0]));
