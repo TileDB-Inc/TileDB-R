@@ -13,7 +13,6 @@
 \alias{tiledb_ndim}
 \alias{name}
 \alias{datatype}
-\alias{cell_val_num}
 \alias{config}
 \alias{schema}
 \alias{tile}
@@ -45,8 +44,6 @@ tiledb_ndim(object, ...)
 name(object)
 
 datatype(object)
-
-cell_val_num(object)
 
 config(object, ...)
 
