@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>TileDB R Notebook</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style>
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+  <link href="data:text/css,%40charset%20%22UTF%2D8%22%3Bbody%7Bfont%2Dfamily%3Asystem%2Dui%2C%2Dapple%2Dsystem%2CBlinkMacSystemFont%2CSegoe%20UI%2CRoboto%2COxygen%2CUbuntu%2CCantarell%2CFira%20Sans%2CDroid%20Sans%2CHelvetica%20Neue%2Csans%2Dserif%3Bline%2Dheight%3A1%2E4%3Bmax%2Dwidth%3A800px%3Bmargin%3A20px%20auto%3Bpadding%3A0%2010px%3Bcolor%3A%23363636%3Bbackground%3A%23fff%3Btext%2Drendering%3AoptimizeLegibility%7Dbutton%2Cinput%2Ctextarea%7Btransition%3Abackground%2Dcolor%20%2E1s%20linear%2Cborder%2Dcolor%20%2E1s%20linear%2Ccolor%20%2E1s%20linear%2Cbox%2Dshadow%20%2E1s%20linear%2Ctransform%20%2E1s%20ease%7Dh1%7Bfont%2Dsize%3A2%2E2em%3Bmargin%2Dtop%3A0%7Dh1%2Ch2%2Ch3%2Ch4%2Ch5%2Ch6%7Bmargin%2Dbottom%3A12px%7Dh1%2Ch2%2Ch3%2Ch4%2Ch5%2Ch6%2Cstrong%7Bcolor%3A%23000%7Db%2Ch1%2Ch2%2Ch3%2Ch4%2Ch5%2Ch6%2Cstrong%2Cth%7Bfont%2Dweight%3A600%7Dblockquote%7Bborder%2Dleft%3A4px%20solid%20rgba%280%2C150%2C191%2C%2E67%29%3Bmargin%3A1%2E5em%200%3Bpadding%3A%2E5em%201em%3Bfont%2Dstyle%3Aitalic%7Dblockquote%3Efooter%7Bmargin%2Dtop%3A10px%3Bfont%2Dstyle%3Anormal%7Daddress%2Cblockquote%20cite%7Bfont%2Dstyle%3Anormal%7Da%5Bhref%5E%3Dmailto%5D%3Abefore%7Bcontent%3A%22%F0%9F%93%A7%20%22%7Da%5Bhref%5E%3Dtel%5D%3Abefore%7Bcontent%3A%22%F0%9F%93%9E%20%22%7Da%5Bhref%5E%3Dsms%5D%3Abefore%7Bcontent%3A%22%F0%9F%92%AC%20%22%7Dbutton%2Cinput%5Btype%3Dbutton%5D%2Cinput%5Btype%3Dcheckbox%5D%2Cinput%5Btype%3Dsubmit%5D%7Bcursor%3Apointer%7Dinput%3Anot%28%5Btype%3Dcheckbox%5D%29%3Anot%28%5Btype%3Dradio%5D%29%2Cselect%7Bdisplay%3Ablock%7Dbutton%2Cinput%2Cselect%2Ctextarea%7Bcolor%3A%23000%3Bbackground%2Dcolor%3A%23efefef%3Bfont%2Dfamily%3Ainherit%3Bfont%2Dsize%3Ainherit%3Bmargin%2Dright%3A6px%3Bmargin%2Dbottom%3A6px%3Bpadding%3A10px%3Bborder%3Anone%3Bborder%2Dradius%3A6px%3Boutline%3Anone%7Dbutton%2Cinput%3Anot%28%5Btype%3Dcheckbox%5D%29%3Anot%28%5Btype%3Dradio%5D%29%2Cselect%2Ctextarea%7B%2Dwebkit%2Dappearance%3Anone%7Dtextarea%7Bmargin%2Dright%3A0%3Bwidth%3A100%25%3Bbox%2Dsizing%3Aborder%2Dbox%3Bresize%3Avertical%7Dbutton%2Cinput%5Btype%3Dbutton%5D%2Cinput%5Btype%3Dsubmit%5D%7Bpadding%2Dright%3A30px%3Bpadding%2Dleft%3A30px%7Dbutton%3Ahover%2Cinput%5Btype%3Dbutton%5D%3Ahover%2Cinput%5Btype%3Dsubmit%5D%3Ahover%7Bbackground%3A%23ddd%7Dbutton%3Afocus%2Cinput%3Afocus%2Cselect%3Afocus%2Ctextarea%3Afocus%7Bbox%2Dshadow%3A0%200%200%202px%20rgba%280%2C150%2C191%2C%2E67%29%7Dbutton%3Aactive%2Cinput%5Btype%3Dbutton%5D%3Aactive%2Cinput%5Btype%3Dcheckbox%5D%3Aactive%2Cinput%5Btype%3Dradio%5D%3Aactive%2Cinput%5Btype%3Dsubmit%5D%3Aactive%7Btransform%3AtranslateY%282px%29%7Dbutton%3Adisabled%2Cinput%3Adisabled%2Cselect%3Adisabled%2Ctextarea%3Adisabled%7Bcursor%3Anot%2Dallowed%3Bopacity%3A%2E5%7D%3A%3A%2Dwebkit%2Dinput%2Dplaceholder%7Bcolor%3A%23949494%7D%3A%2Dms%2Dinput%2Dplaceholder%7Bcolor%3A%23949494%7D%3A%3A%2Dms%2Dinput%2Dplaceholder%7Bcolor%3A%23949494%7D%3A%3Aplaceholder%7Bcolor%3A%23949494%7Da%7Btext%2Ddecoration%3Anone%3Bcolor%3A%230076d1%7Da%3Ahover%7Btext%2Ddecoration%3Aunderline%7Dcode%2Ckbd%7Bbackground%3A%23efefef%3Bcolor%3A%23000%3Bpadding%3A5px%3Bborder%2Dradius%3A6px%7Dpre%3Ecode%7Bpadding%3A10px%3Bdisplay%3Ablock%3Boverflow%2Dx%3Aauto%7Dimg%7Bmax%2Dwidth%3A100%25%7Dhr%7Bborder%3Anone%3Bborder%2Dtop%3A1px%20solid%20%23dbdbdb%7Dtable%7Bborder%2Dcollapse%3Acollapse%3Bmargin%2Dbottom%3A10px%3Bwidth%3A100%25%7Dtd%2Cth%7Bpadding%3A6px%3Btext%2Dalign%3Aleft%7Dth%7Bborder%2Dbottom%3A1px%20solid%20%23dbdbdb%7Dtbody%20tr%3Anth%2Dchild%282n%29%7Bbackground%2Dcolor%3A%23efefef%7D%3A%3A%2Dwebkit%2Dscrollbar%7Bheight%3A10px%3Bwidth%3A10px%7D%3A%3A%2Dwebkit%2Dscrollbar%2Dtrack%7Bbackground%3A%23efefef%3Bborder%2Dradius%3A6px%7D%3A%3A%2Dwebkit%2Dscrollbar%2Dthumb%7Bbackground%3A%23d5d5d5%3Bborder%2Dradius%3A6px%7D%3A%3A%2Dwebkit%2Dscrollbar%2Dthumb%3Ahover%7Bbackground%3A%23c4c4c4%7D%0A%0A" rel="stylesheet" />
+  <link href="data:text/css,%0Acode%20%7B%0Apadding%3A%202px%3B%0Aborder%2Dradius%3A%20unset%3B%0A%7D%0A%0Apre%20%7B%0Abackground%2Dcolor%3A%20unset%3B%0Aborder%3A%20solid%20%23aaa%201px%3B%0Apadding%3A%208px%3B%0A%7D%0Apre%2EnumberSource%20%7B%0Amargin%3A%200%3B%0Apadding%2Dleft%3A%200%3B%0A%7D%0Adiv%2EsourceCode%20%7B%0Aoverflow%3A%20visible%3B%0A%7D%0Apre%2C%20pre%2EsourceCode%20%7B%0Aoverflow%2Dx%3A%20auto%3B%0A%7D%0Apre%3Ecode%20%7B%0Awhite%2Dspace%3A%20pre%3B%0Aoverflow%3A%20visible%3B%0Abackground%2Dcolor%3A%20unset%3B%0Apadding%3A%200%3B%0A%7D%0Apre%2EsourceCode%2EnumberSource%20%7B%0Aoverflow%2Dx%3A%20visible%3B%0A%7D%0Apre%2EsourceCode%2EnumberSource%3Ecode%20%7B%0Awhite%2Dspace%3A%20pre%2Dwrap%0A%7D%0Apre%2EsourceCode%2EnumberSource%3Ecode%3Espan%20%7B%0Aleft%3A%208px%3B%0Atext%2Dindent%3A%20%2D4%2E6em%3B%0A%7D%0A%0A%2Echunk%2Dsummary%20%7B%0Atext%2Dalign%3A%20right%3B%0A%7D%0A%2Echunk%2Dsummary%2Bpre%2C%0A%2Echunk%2Dsummary%2Bdiv%2EsourceCode%20%7B%0Amargin%2Dtop%3A%202px%3B%0A%7D%0A%0Anav%20%3E%20ul%20%7B%0Aborder%3A%20%2E0625rem%20solid%20%23444%3B%0Aborder%2Dradius%3A%204px%3B%0Amargin%3A%205px%3B%0Apadding%3A%205px%3B%0A%7D%0Anav%20ul%20%7B%0Alist%2Dstyle%2Dtype%3A%20none%3B%0Apadding%2Dinline%2Dstart%3A%201rem%3B%0A%7D%0Anav%20ul%20li%20%7B%0Apadding%3A%200%3B%0A%7D%0Anav%20ul%20ul%20%7B%0Amargin%2Dtop%3A%200%3B%0Amargin%2Dbottom%3A%200%3B%0Apadding%2Dtop%3A%200%3B%0Apadding%2Dbottom%3A%200%3B%0A%7D%0Anav%20code%20%7B%0Abackground%2Dcolor%3A%20unset%3B%0Acolor%3A%20unset%3B%0A%7D%0A" rel="stylesheet" />
+  <link href="data:text/css,%2Etooltip%20%7B%0Aposition%3A%20relative%3B%0Adisplay%3A%20inline%2Dblock%3B%0A%7D%0A%2Etooltip%3Abefore%2C%20%2Etooltip%3Aafter%20%7B%0Aposition%3A%20absolute%3B%0Aopacity%3A%200%3B%0Aclip%3A%20rect%280%200%200%200%29%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%28100%25%29%3B%0Aclip%2Dpath%3A%20inset%28100%25%29%3B%0Atransition%3A%20all%200%2E3s%3B%0Az%2Dindex%3A%201010%3B%0Aleft%3A%2050%25%3B%0A%7D%0A%2Etooltip%3Anot%28%2Ebottom%29%3Abefore%2C%20%2Etooltip%3Anot%28%2Ebottom%29%3Aafter%20%7B%0Abottom%3A%2075%25%3B%0A%7D%0A%2Etooltip%2Ebottom%3Abefore%2C%20%2Etooltip%2Ebottom%3Aafter%20%7B%0Atop%3A%2075%25%3B%0A%7D%0A%2Etooltip%3Ahover%3Abefore%2C%20%2Etooltip%3Ahover%3Aafter%2C%20%2Etooltip%3Afocus%3Abefore%2C%20%2Etooltip%3Afocus%3Aafter%20%7B%0Aopacity%3A%201%3B%0Aclip%3A%20auto%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%280%25%29%3B%0Aclip%2Dpath%3A%20inset%280%25%29%3B%0A%7D%0A%2Etooltip%3Abefore%20%7B%0Acontent%3A%20%27%27%3B%0Abackground%3A%20transparent%3B%0Aborder%3A%200%2E5rem%20solid%20transparent%3B%0Aleft%3A%20calc%2850%25%20%2D%200%2E5rem%29%3B%0A%7D%0A%2Etooltip%3Anot%28%2Ebottom%29%3Abefore%20%7B%0Aborder%2Dtop%2Dcolor%3A%20%23212121%3B%0A%7D%0A%2Etooltip%2Ebottom%3Abefore%20%7B%0Aborder%2Dbottom%2Dcolor%3A%20%23212121%3B%0A%7D%0A%2Etooltip%3Aafter%20%7B%0Acontent%3A%20attr%28aria%2Dlabel%29%3B%0Acolor%3A%20%23fafafa%3B%0Abackground%3A%20%23212121%3B%0Aborder%2Dradius%3A%200%2E125rem%3B%0Apadding%3A%200%2E5rem%3B%0Awhite%2Dspace%3A%20nowrap%3B%0Atransform%3A%20translateX%28%2D50%25%29%3B%0A%7D%0A%2Etooltip%3Anot%28%2Ebottom%29%3Aafter%20%7B%0Amargin%2Dbottom%3A%201rem%3B%0A%7D%0A%2Etooltip%2Ebottom%3Aafter%20%7B%0Amargin%2Dtop%3A%201rem%3B%0A%7D%0A" rel="stylesheet" />
+  <link href="data:text/css,%0A%2Ecollapse%20%7B%0Awidth%3A%20calc%28100%25%20%2D%201rem%29%3B%0Aopacity%3A%201%3B%0Adisplay%3A%20flex%3B%0Aflex%2Ddirection%3A%20column%3B%0Amargin%3A%200%2E5rem%3B%0Aborder%2Dradius%3A%200%2E125rem%3B%0A%7D%0A%2Ecollapse%20%3E%20%5Btype%3D%22radio%22%5D%2C%20%2Ecollapse%20%3E%20%5Btype%3D%22checkbox%22%5D%20%7B%0Aheight%3A%201px%3B%0Awidth%3A%201px%3B%0Amargin%3A%20%2D1px%3B%0Aoverflow%3A%20hidden%3B%0Aposition%3A%20absolute%3B%0Aclip%3A%20rect%280%200%200%200%29%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%28100%25%29%3B%0Aclip%2Dpath%3A%20inset%28100%25%29%3B%0A%7D%0A%2Ecollapse%20%3E%20label%20%7B%0Aflex%2Dgrow%3A%201%3B%0Adisplay%3A%20inline%2Dblock%3B%0Aheight%3A%201%2E5rem%3B%0Acursor%3A%20pointer%3B%0Atransition%3A%20background%200%2E3s%3B%0Acolor%3A%20%23212121%3B%0Abackground%3A%20%23e8e8e8%3B%0Aborder%3A%200%2E0625rem%20solid%20%23ddd%3B%0Apadding%3A%200%2E75rem%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Ahover%2C%20%2Ecollapse%20%3E%20label%3Afocus%20%7B%0Abackground%3A%20%23f0f0f0%3B%0A%7D%0A%2Ecollapse%20%3E%20label%20%2B%20div%20%7B%0Aflex%2Dbasis%3A%20auto%3B%0Aheight%3A%201px%3B%0Awidth%3A%201px%3B%0Amargin%3A%20%2D1px%3B%0Aoverflow%3A%20hidden%3B%0Aposition%3A%20absolute%3B%0Aclip%3A%20rect%280%200%200%200%29%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%28100%25%29%3B%0Aclip%2Dpath%3A%20inset%28100%25%29%3B%0Atransition%3A%20max%2Dheight%200%2E3s%3B%0Amax%2Dheight%3A%201px%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%20%2B%20label%20%7B%0Abackground%3A%20%23ececec%3B%0Aborder%2Dbottom%2Dcolor%3A%20%23ececec%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%20%2B%20label%20%2B%20div%20%7B%0Abox%2Dsizing%3A%20border%2Dbox%3B%0Aposition%3A%20relative%3B%0Awidth%3A%20100%25%3B%0Aheight%3A%20auto%3B%0Aoverflow%3A%20auto%3B%0Amargin%3A%200%3B%0Aborder%3A%200%2E0625rem%20solid%20%23ddd%3B%0Aborder%2Dtop%3A%200%3B%0Apadding%3A%200%2E5rem%3B%0Aclip%3A%20auto%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%280%25%29%3B%0Aclip%2Dpath%3A%20inset%280%25%29%3B%0Amax%2Dheight%3A%20400px%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Anot%28%3Afirst%2Dof%2Dtype%29%20%7B%0Aborder%2Dtop%3A%200%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Afirst%2Dof%2Dtype%20%7B%0Aborder%2Dradius%3A%200%2E125rem%200%2E125rem%200%200%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Alast%2Dof%2Dtype%3Anot%28%3Afirst%2Dof%2Dtype%29%20%7B%0Aborder%2Dradius%3A%200%200%200%2E125rem%200%2E125rem%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Alast%2Dof%2Dtype%3Afirst%2Dof%2Dtype%20%7B%0Aborder%2Dradius%3A%200%2E125rem%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%3Alast%2Dof%2Dtype%3Anot%28%3Afirst%2Dof%2Dtype%29%20%2B%20label%20%7B%0Aborder%2Dradius%3A%200%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%3Alast%2Dof%2Dtype%20%2B%20label%20%2B%20div%20%7B%0Aborder%2Dradius%3A%200%200%200%2E125rem%200%2E125rem%3B%0A%7D%0A" rel="stylesheet" />
+  <link href="data:text/css,%40media%20screen%20and%20%28max%2Dwidth%3A%20900px%29%20%7B%0Aheader%2C%20nav%2C%20article%20%7B%0Apadding%3A%200%203rem%3B%0A%7D%0A%7D%0A" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous" data-external="1">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous" data-external="1"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);" data-external="1"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ],
+        displayMode: true
+      });
+    });
+  </script>
+</head>
+<body>
+<main>
+<header id="title-block-header">
+<h1 class="title">TileDB R Notebook</h1>
+</header>
+<article>
+<section id="prelimaries" class="level1">
+<h1>Prelimaries</h1>
+<p>We will show two initial and basic examples for a dense and sparse array simply to create array data on disk to refer to later in examples that follow.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>tdir <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>uridense <span class="ot">&lt;-</span> <span class="fu">file.path</span>(tdir, <span class="st">&quot;dense&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>uridensefix <span class="ot">&lt;-</span> <span class="fu">file.path</span>(tdir, <span class="st">&quot;densefix&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>uridensevar <span class="ot">&lt;-</span> <span class="fu">file.path</span>(tdir, <span class="st">&quot;densevar&quot;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>create_array <span class="ot">&lt;-</span> <span class="cf">function</span>(array_name) {</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the array already exists.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">tiledb_object_type</span>(array_name) <span class="sc">==</span> <span class="st">&quot;ARRAY&quot;</span>) {</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="st">&quot;Array already exists.&quot;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The array will be 4x4 with dimensions &quot;rows&quot; and &quot;cols&quot;, with domain [1,4].</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    dom <span class="ot">&lt;-</span> <span class="fu">tiledb_domain</span>(<span class="at">dims =</span> <span class="fu">c</span>(<span class="fu">tiledb_dim</span>(<span class="st">&quot;rows&quot;</span>, <span class="fu">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">tiledb_dim</span>(<span class="st">&quot;cols&quot;</span>, <span class="fu">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>)))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The array will be dense with a single attribute &quot;a&quot; so each (i,j) cell can store an integer.</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    schema <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, <span class="at">attrs =</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;a&quot;</span>, <span class="at">type =</span> <span class="st">&quot;INT32&quot;</span>))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the (empty) array on disk, and return the path invisibly</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">invisible</span>(<span class="fu">tiledb_array_create</span>(array_name, schema))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>write_array <span class="ot">&lt;-</span> <span class="cf">function</span>(array_name) {</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="fu">c</span>(1L, 5L, 9L, 13L),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">c</span>(2L, 6L, 10L, 14L),</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">c</span>(3L, 7L, 11L, 15L),</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">c</span>(4L, 8L, 12L, 16L)), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Open the array and write to it.</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="at">uri =</span> array_name)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    A[] <span class="ot">&lt;-</span> data</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">create_array</span>(uridense)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">write_array</span>(uridense)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>urisparse <span class="ot">&lt;-</span> <span class="fu">file.path</span>(tdir, <span class="st">&quot;sparse&quot;</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>create_array <span class="ot">&lt;-</span> <span class="cf">function</span>(array_name) {</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the array already exists.</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">tiledb_object_type</span>(array_name) <span class="sc">==</span> <span class="st">&quot;ARRAY&quot;</span>) {</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        <span class="fu">message</span>(<span class="st">&quot;Array already exists.&quot;</span>)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="fu">invisible</span>(<span class="cn">NULL</span>))</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The array will be 4x4 with dimensions &quot;rows&quot; and &quot;cols&quot;, with domain [1,4].</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    dom <span class="ot">&lt;-</span> <span class="fu">tiledb_domain</span>(<span class="at">dims =</span> <span class="fu">c</span>(<span class="fu">tiledb_dim</span>(<span class="st">&quot;rows&quot;</span>, <span class="fu">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>),</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">tiledb_dim</span>(<span class="st">&quot;cols&quot;</span>, <span class="fu">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>)))</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The array will be dense with a single attribute &quot;a&quot; so each (i,j) cell can store an integer.</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    schema <span class="ot">=</span> <span class="fu">tiledb_array_schema</span>(dom, <span class="at">attrs=</span><span class="fu">tiledb_attr</span>(<span class="st">&quot;a&quot;</span>, <span class="at">type =</span> <span class="st">&quot;INT32&quot;</span>), <span class="at">sparse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the (empty) array on disk, and return the path invisibly.</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">invisible</span>(<span class="fu">tiledb_array_create</span>(array_name, schema))</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>write_array <span class="ot">&lt;-</span> <span class="cf">function</span>(array_name) {</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    I <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    J <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">3</span>)</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">c</span>(1L, 2L, 3L)</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Open the array and write to it.</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="at">uri =</span> array_name)</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    A[I, J] <span class="ot">&lt;-</span> data</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="fu">create_array</span>(urisparse)</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="fu">write_array</span>(urisparse)</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>close_and_reopen <span class="ot">&lt;-</span> <span class="cf">function</span>(arr, txt) {</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arr<span class="sc">@</span>ptr)</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open_with_ptr</span>(arr<span class="sc">@</span>ptr, txt)</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</section>
+<section id="api-usage" class="level1">
+<h1>API Usage</h1>
+<section id="creating-arrays" class="level2">
+<h2>Creating Arrays</h2>
+<section id="create-dimension" class="level3">
+<h3>Create Dimension</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create dimension</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dim <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;dim1&quot;</span>, <span class="fu">c</span>(1L, 4L), 2L, <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># String dimenions: no values for domain and extent</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>strdim <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;dim2&quot;</span>, <span class="cn">NULL</span>, <span class="cn">NULL</span>, <span class="st">&quot;ASCII&quot;</span>)</span></code></pre></div>
+</section>
+<section id="create-array-domain" class="level3">
+<h3>Create Array Domain</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  .. create dimensions `dim1`, `dim2`</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>dim1 <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;dim1&quot;</span>, <span class="fu">c</span>(1L, 4L), 2L, <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>dim2 <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;dim2&quot;</span>, <span class="fu">c</span>(1L, 2L), 2L, <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create domain with two dimensions</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># In C++: domain.add_dimensions(dim1).add_dimension(dim2)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>dom <span class="ot">&lt;-</span> <span class="fu">tiledb_domain</span>(<span class="at">dims =</span> <span class="fu">c</span>(dim1, dim2))</span></code></pre></div>
+</section>
+<section id="creating-attributes" class="level3">
+<h3>Creating Attributes</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create attribute</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>attr <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="at">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create attribute</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>attr <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;a1&quot;</span>, <span class="at">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Access cell value via generic or functions</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cell_val_num</span>(attr) </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_attribute_get_cell_val_num</span>(attr)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Attribute value counts can be set via a generic method and a direct method</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cell_val_num</span>(attr) <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_attribute_set_cell_val_num</span>(attr, <span class="dv">3</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="do">## set char attribute to variable length which is encoded as a NA</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cell_val_num</span>(attr) <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_attribute_set_cell_val_num</span>(attr, <span class="cn">NA</span>)</span></code></pre></div>
+<section id="setting-a-compressor" class="level4">
+<h4>Setting a Compressor</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>comp <span class="ot">&lt;-</span> <span class="fu">tiledb_filter</span>(<span class="st">&quot;GZIP&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_filter_set_option</span>(comp,<span class="st">&quot;COMPRESSION_LEVEL&quot;</span>, <span class="dv">10</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a filter list with the compressor</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>filter_list <span class="ot">&lt;-</span> <span class="fu">tiledb_filter_list</span>(comp)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create attribute with the filter list</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>attr <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="at">filter_list =</span> filter_list)</span></code></pre></div>
+</section>
+<section id="setting-other-filters" class="level4">
+<h4>Setting Other Filters</h4>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create filters</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>f1 <span class="ot">&lt;-</span> <span class="fu">tiledb_filter</span>(<span class="st">&quot;BIT_WIDTH_REDUCTION&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fu">tiledb_filter</span>(<span class="st">&quot;ZSTD&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a filter list with the two filters</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>filter_list <span class="ot">&lt;-</span> <span class="fu">tiledb_filter_list</span>(<span class="fu">c</span>(f1,f2))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create attribute with the filter list</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>attr <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;attr&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="at">filter_list =</span> filter_list)</span></code></pre></div>
+</section>
+<section id="setting-the-tile-chunk-size" class="level4">
+<h4>Setting the Tile Chunk Size</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create filter list</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set_max_chunk_size</span>(filter_list, <span class="dv">10000</span>)</span></code></pre></div>
+</section>
+</section>
+<section id="creating-the-array-schema" class="level3">
+<h3>Creating the Array Schema</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create domain dom</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>attr1 <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;attr1&quot;</span>, <span class="st">&quot;INT32&quot;</span>, <span class="at">filter_list =</span> filter_list)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>attr2 <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;attr2&quot;</span>, <span class="st">&quot;FLOAT64&quot;</span>, <span class="at">filter_list =</span> filter_list)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dense array</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>schema <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, <span class="fu">c</span>(attr1, attr2), <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, create a sparse array</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># schema &lt;- tiledb_array_schema(dom, c(attr1, attr2), sparse = TRUE)</span></span></code></pre></div>
+<section id="setting-the-tile-and-cell-order" class="level4">
+<h4>Setting the Tile and Cell Order</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create domain dom</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create attributes attr1, attr2</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The tile and order can be &quot;ROW_MAJOR&quot; or &quot;COL_MAJOR&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>schema <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, <span class="fu">c</span>(attr1, attr2),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cell_order =</span> <span class="st">&quot;COL_MAJOR&quot;</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                              <span class="at">tile_order =</span> <span class="st">&quot;ROW_MAJOR&quot;</span>)</span></code></pre></div>
+</section>
+<section id="setting-the-data-tile-capacity" class="level4">
+<h4>Setting the Data Tile Capacity</h4>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set capacity</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">capacity</span>(schema) <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set capacity</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">capacity</span>(schema)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 100000</span></span></code></pre></div>
+</section>
+<section id="setting-coordinate-and-offset-filters" class="level4">
+<h4>Setting Coordinate and Offset Filters</h4>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create domain dom</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create attributes attr1, attr2</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create filter lists fl1, fl2, similar to attributes</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>f1 <span class="ot">&lt;-</span> <span class="fu">tiledb_filter</span>(<span class="st">&quot;BIT_WIDTH_REDUCTION&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fu">tiledb_filter</span>(<span class="st">&quot;ZSTD&quot;</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>fl1 <span class="ot">&lt;-</span> <span class="fu">tiledb_filter_list</span>(<span class="fu">c</span>(f1))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>fl2 <span class="ot">&lt;-</span> <span class="fu">tiledb_filter_list</span>(<span class="fu">c</span>(f2))</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the schema setting the coordinates and offsets filter lists</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>schema <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, <span class="fu">c</span>(attr1, attr2),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                              <span class="at">coords_filter_list =</span> fl1,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                              <span class="at">offsets_filter_list =</span> fl2)</span></code></pre></div>
+</section>
+<section id="checking-correctness" class="level4">
+<h4>Checking Correctness</h4>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check</span>(schema)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
+</section>
+</section>
+<section id="creating-the-array" class="level3">
+<h3>Creating the Array</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create array schema</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the array</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_create</span>(uridense, schema)</span></code></pre></div>
+</section>
+<section id="creating-encrypted-arrays" class="level3">
+<h3>Creating Encrypted Arrays</h3>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>encryption_key <span class="ot">&lt;-</span> <span class="st">&quot;0123456789abcdeF0123456789abcdeF&quot;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>uridensewkey <span class="ot">&lt;-</span> <span class="fu">file.path</span>(tdir, <span class="st">&quot;densewkey&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">dir.exists</span>(uridensewkey)) <span class="fu">unlink</span>(uridensewkey, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># shortcut: borrow schema from dense array; could create schema too</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>schema <span class="ot">&lt;-</span> <span class="fu">schema</span>(<span class="fu">tiledb_dense</span>(uridense))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: &#39;tiledb_dense&#39; is deprecated.</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Use &#39;tiledb_array&#39; instead.</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## See help(&quot;Deprecated&quot;)</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_create_with_key</span>(uridensewkey, schema<span class="sc">@</span>ptr, encryption_key)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;/tmp/RtmpAdu9n3/densewkey&quot;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">##TODO: R support</span></span></code></pre></div>
+</section>
+</section>
+<section id="writing-arrays" class="level2">
+<h2>Writing Arrays</h2>
+<section id="writing-in-dense-subarrays" class="level3">
+<h3>Writing in Dense Subarrays</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## prepare a larger 5 x 5 to embed into</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">tempfile</span>()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>d1  <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;d1&quot;</span>, <span class="at">domain =</span> <span class="fu">c</span>(1L, 5L))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>d2  <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;d2&quot;</span>, <span class="at">domain =</span> <span class="fu">c</span>(1L, 5L))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>dom <span class="ot">&lt;-</span> <span class="fu">tiledb_domain</span>(<span class="fu">c</span>(d1, d2))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>val <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="at">name=</span><span class="st">&quot;val&quot;</span>, <span class="at">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>sch <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, <span class="fu">c</span>(val))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_create</span>(tmp, sch)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">as.integer</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>)<span class="sc">*</span><span class="dv">100</span>), <span class="dv">5</span>, <span class="dv">5</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_dense</span>(tmp, <span class="at">as.data.frame=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>arr[] <span class="ot">&lt;-</span> dat</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare a 2x3 dense array</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrary to Python, R by default stores arrays in col-major order</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span>  <span class="fu">array</span>(<span class="fu">c</span>(1L, 4L, 2L, 5L, 3L, 6L), <span class="at">dim=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare the [1,2] x [2,4] subarray to write to</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>I <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>J <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the array and write the data to it</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">tiledb_dense</span>(<span class="at">uri =</span> tmp)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>A[I, J] <span class="ot">&lt;-</span> data</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(tmp, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<section id="basic-writing-using-low-level-code" class="level4">
+<h4>Basic Writing using Low-Level Code</h4>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridense, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## data: simple (integer sequence) of 1:16 times 10</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">16</span> <span class="sc">*</span> 10L</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
+</section>
+</section>
+<section id="writing-sparse-cells" class="level3">
+<h3>Writing Sparse Cells</h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> urisparse</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(tmp, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>d1  <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;d1&quot;</span>, <span class="at">domain =</span> <span class="fu">c</span>(1L, 5L))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>d2  <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;d2&quot;</span>, <span class="at">domain =</span> <span class="fu">c</span>(1L, 5L))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>dom <span class="ot">&lt;-</span> <span class="fu">tiledb_domain</span>(<span class="fu">c</span>(d1, d2))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>val <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;val&quot;</span>, <span class="at">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>sch <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, val, <span class="at">sparse=</span><span class="cn">TRUE</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_create</span>(tmp, sch)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;/tmp/RtmpAdu9n3/sparse&quot;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare some data</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(3L, 4L, 1L, 2L)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>I <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>J <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the array and write the data to it</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">tiledb_sparse</span>(<span class="at">uri =</span> tmp)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: &#39;tiledb_sparse&#39; is deprecated.</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Use &#39;tiledb_array&#39; instead.</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="do">## See help(&quot;Deprecated&quot;)</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>A[I, J] <span class="ot">&lt;-</span> data</span></code></pre></div>
+</section>
+<section id="writing-encrypted-arrays" class="level3">
+<h3>Writing Encrypted Arrays</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open_with_key</span>(ctx<span class="sc">@</span>ptr, uridensewkey, <span class="st">&quot;WRITE&quot;</span>, encryption_key)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">## data: simple (integer sequence) of 1:16 times 10</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">16</span> <span class="sc">*</span> 10L</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> Higher-level R support</span></span></code></pre></div>
+</section>
+<section id="fixed-length-attributes" class="level3">
+<h3>Fixed-length Attributes</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">dir.exists</span>(uridensefix)) <span class="fu">unlink</span>(uridensefix, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>d1  <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;d1&quot;</span>, <span class="at">domain =</span> <span class="fu">c</span>(1L, 4L))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>d2  <span class="ot">&lt;-</span> <span class="fu">tiledb_dim</span>(<span class="st">&quot;d2&quot;</span>, <span class="at">domain =</span> <span class="fu">c</span>(1L, 4L))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>dom <span class="ot">&lt;-</span> <span class="fu">tiledb_domain</span>(<span class="fu">c</span>(d1, d2))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">32</span> <span class="sc">*</span> 10L</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>attr <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;a&quot;</span>, <span class="at">type =</span> <span class="fu">r_to_tiledb_type</span>(vec))</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="do">## set to two values per cell</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_attribute_set_cell_val_num</span>(attr<span class="sc">@</span>ptr, <span class="dv">2</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>sch <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, attr)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_create</span>(uridensefix, sch)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;/tmp/RtmpAdu9n3/densefix&quot;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridensefix, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co">#TODO Higher-level R support</span></span></code></pre></div>
+</section>
+<section id="var-length-attributes" class="level3">
+<h3>Var-length Attributes</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">dir.exists</span>(uridensevar)) <span class="fu">unlink</span>(uridensevar, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Define array</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">## The array will be 4x4 with dimensions &quot;rows&quot; and &quot;cols&quot;, with domain [1,4].</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>dom <span class="ot">&lt;-</span> <span class="fu">tiledb_domain</span>(<span class="at">dims =</span> <span class="fu">c</span>(<span class="fu">tiledb_dim</span>(<span class="st">&quot;rows&quot;</span>, <span class="fu">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">tiledb_dim</span>(<span class="st">&quot;cols&quot;</span>, <span class="fu">c</span>(1L, 4L), 4L, <span class="st">&quot;INT32&quot;</span>)))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>attr <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;a1&quot;</span>, <span class="at">type =</span> <span class="st">&quot;CHAR&quot;</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="do">## set to variable length</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_attribute_set_cell_val_num</span>(attr<span class="sc">@</span>ptr, <span class="cn">NA</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="do">## now set the schema</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>schptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_schema_create</span>(ctx<span class="sc">@</span>ptr, <span class="st">&quot;DENSE&quot;</span>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_schema_set_domain</span>(schptr, dom<span class="sc">@</span>ptr)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_schema_set_cell_order</span>(schptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_schema_set_tile_order</span>(schptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_schema_add_attribute</span>(schptr, attr<span class="sc">@</span>ptr)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Create the (empty) array on disk.</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_create</span>(uridensevar, schptr)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;/tmp/RtmpAdu9n3/densevar&quot;</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="st">&quot;abbcccddeeefghhhijjjkklmnoop&quot;</span>;</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>offsets <span class="ot">&lt;-</span> <span class="fu">c</span>(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridensevar, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>bufptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_buffer_var_char_create</span>(offsets, data)</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span>(qryptr, <span class="st">&quot;a1&quot;</span>, bufptr)</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;pointer: 0x556d53d74d90&gt;</span></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a><span class="co">#TODO Higher-level R support</span></span></code></pre></div>
+</section>
+<section id="getting-the-fragment-info" class="level3">
+<h3>Getting the Fragment Info</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## continuing from previous example on dense variable length array</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## (but this works of course with any array after a write is needed</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>numfrag <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_get_fragment_num</span>(qryptr)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>uritxt <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_get_fragment_uri</span>(qryptr, <span class="dv">0</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="do">##TODO Higher-level R support</span></span></code></pre></div>
+</section>
+</section>
+<section id="reading-arrays" class="level2">
+<h2>Reading Arrays</h2>
+<section id="reading-the-array-schema" class="level3">
+<h3>Reading the Array Schema</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>array_name <span class="ot">&lt;-</span> urisparse</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">tiledb_sparse</span>(<span class="at">uri =</span> array_name)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: &#39;tiledb_sparse&#39; is deprecated.</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Use &#39;tiledb_array&#39; instead.</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="do">## See help(&quot;Deprecated&quot;)</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># can also load dense</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>sch <span class="ot">&lt;-</span> <span class="fu">schema</span>(A)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># can also open encrypted arrays with key</span></span></code></pre></div>
+<section id="inspecting-the-array-schema" class="level4">
+<h4>Inspecting the array schema</h4>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>array_name <span class="ot">&lt;-</span> urisparse</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get array schema</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">tiledb_sparse</span>(<span class="at">uri =</span> array_name)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: &#39;tiledb_sparse&#39; is deprecated.</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Use &#39;tiledb_array&#39; instead.</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="do">## See help(&quot;Deprecated&quot;)</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># or use tiledb_dense(uri = array_name) for dense</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>schema <span class="ot">&lt;-</span> <span class="fu">schema</span>(A)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Get array type</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>sparse <span class="ot">&lt;-</span> <span class="fu">is.sparse</span>(schema)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Get tile capacity</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_schema_get_capacity</span>(sch<span class="sc">@</span>ptr)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 10000</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: R accessor for tile</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Get tile order</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>t_order <span class="ot">&lt;-</span> <span class="fu">tile_order</span>(schema)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Get cell order</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>c_order <span class="ot">&lt;-</span> <span class="fu">cell_order</span>(schema)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Get coordinates and offset filter list</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>reslist <span class="ot">&lt;-</span> <span class="fu">filter_list</span>(schema)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the array domain</span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>dom <span class="ot">&lt;-</span> <span class="fu">domain</span>(schema)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all attributes as list</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>attrs <span class="ot">&lt;-</span> <span class="fu">attrs</span>(schema)</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Get attribute from name</span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>attr <span class="ot">&lt;-</span> <span class="fu">attrs</span>(schema, <span class="st">&quot;attr&quot;</span>)</span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Dump the array schema in ASCII format to stdout</span></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(schema)</span></code></pre></div>
+</section>
+<section id="inspecting-domain" class="level4">
+<h4>Inspecting Domain</h4>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... get array schema</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ... get domain from schema</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>dom <span class="ot">&lt;-</span> <span class="fu">domain</span>(schema)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the domain datatype (i.e., the datatype of all dimensions)</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>type <span class="ot">&lt;-</span> <span class="fu">datatype</span>(dom)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get number of dimensions</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>dim_num <span class="ot">&lt;-</span> <span class="fu">dim</span>(dom)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all dimension</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>dims <span class="ot">&lt;-</span> <span class="fu">dimensions</span>(dom)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Dump the domain in ASCII format in the selected output</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(dom)</span></code></pre></div>
+</section>
+<section id="inspecting-dimensions" class="level4">
+<h4>Inspecting Dimensions</h4>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... get array schema</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ... get domain</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ... get dimension by index or name</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#FIXME</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get dimension name</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>dim_name <span class="ot">&lt;-</span> <span class="fu">name</span>(dim)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Get dimension datatype</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>dim_type <span class="ot">&lt;-</span> <span class="fu">datatype</span>(dim)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Get dimension domain</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>domain <span class="ot">&lt;-</span> <span class="fu">domain</span>(dim)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Get tile extent</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>tile_extent <span class="ot">&lt;-</span> <span class="fu">tile</span>(dim)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Dump the dimension in ASCII format in the selected output</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(dim)</span></code></pre></div>
+</section>
+<section id="inspecting-attributes" class="level4">
+<h4>Inspecting Attributes</h4>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... get array schema</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ... get attribute by index or name</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">is.null</span>(attr))</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get attribute name</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>attr_name <span class="ot">&lt;-</span> <span class="fu">name</span>(attr)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get attribute datatype</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>attr_type <span class="ot">&lt;-</span> <span class="fu">datatype</span>(attr)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Get filter list</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>filter_list <span class="ot">&lt;-</span> <span class="fu">filter_list</span>(attr)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if attribute is variable-length</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># variable length attribtues are not supported in R currently</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Get number of values per cell</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>num <span class="ot">&lt;-</span> <span class="fu">ncells</span>(attr)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Get cell size for this attribute</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>sz <span class="ot">&lt;-</span><span class="sc">-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_attribute_get_cell_val</span>(attr<span class="sc">@</span>ptr)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Dump the attribute in ASCII format in the selected output</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(attr)</span></code></pre></div>
+</section>
+<section id="inspecting-filters" class="level4">
+<h4>Inspecting Filters</h4>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fl <span class="ot">&lt;-</span> <span class="fu">tiledb_filter_list</span>()</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get number of filter</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_filter_list_get_nfilters</span>(fl<span class="sc">@</span>ptr)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get max chunk size</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_filter_list_get_max_chunk_size</span>(fl<span class="sc">@</span>ptr)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># get filter from index</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>ind <span class="ot">&lt;-</span> i</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_filter_list_get_filter_from_index</span>(fl<span class="sc">@</span>ptr, ind)</span></code></pre></div>
+</section>
+</section>
+<section id="basic-reading" class="level3">
+<h3>Basic Reading</h3>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a TileDB context</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Open a dense array</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">tiledb_dense</span>(<span class="at">uri =</span> uridense, <span class="at">ctx=</span>ctx)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: &#39;tiledb_dense&#39; is deprecated.</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Use &#39;tiledb_array&#39; instead.</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="do">## See help(&quot;Deprecated&quot;)</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Or, open a sparse array</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># A &lt;- tiledb_sparse(uri = &quot;&lt;array-uri&gt;&quot;, ctx=ctx)</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Slice only rows 1, 2 and cols 2, 3, 4</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> A[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(data)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="do">##      [,1] [,2] [,3]</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,]   20   30   40</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [2,]   60   70   80</span></span></code></pre></div>
+<section id="basic-reading-using-low-level-code" class="level4">
+<h4>Basic Reading using Low-Level Code</h4>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridense, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="do">## subarray of rows 1,2 and cols 2,3,4</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,2L, 2L,4L)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">6</span>)  <span class="co"># reserve space</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, v)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(v)         <span class="co"># unformed array, no coordinates</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 20 30 40 60 70 80</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
+</section>
+</section>
+<section id="variable-length-attributes" class="level3">
+<h3>Variable-length Attributes</h3>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridensevar, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>bufptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_buffer_var_char_alloc</span>(arrptr, subarr, <span class="st">&quot;a1&quot;</span>, <span class="dv">16</span>, <span class="dv">100</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span>(qryptr, <span class="st">&quot;a1&quot;</span>, bufptr)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;pointer: 0x556d50d11250&gt;</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_get_buffer_var_char</span>(bufptr)</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mat, <span class="at">quote=</span><span class="cn">FALSE</span>)</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="do">##      [,1] [,2] [,3] [,4]</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,] a    eee  i    m   </span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="do">## [2,] bb   f    jjj  n   </span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [3,] ccc  g    kk   oo  </span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [4,] dd   hhh  l    p</span></span></code></pre></div>
+</section>
+<section id="getting-the-non-empty-domain" class="level3">
+<h3>Getting the Non-empty Domain</h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridensevar, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># returns a list object</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>reslist <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_get_non_empty_domain</span>(arrptr)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;pointer: 0x556d56ae2570&gt;</span></span></code></pre></div>
+</section>
+<section id="reading-encrypted-arrays" class="level3">
+<h3>Reading Encrypted Arrays</h3>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open_with_key</span>(ctx<span class="sc">@</span>ptr, uridensewkey, <span class="st">&quot;READ&quot;</span>, encryption_key)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="do">## subarray of rows 1,2 and cols 2,3,4</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,2L, 2L,4L)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">6</span>)  <span class="co"># reserve space</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, v)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(v)         <span class="co"># unformed array, no coordinates</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 20 30 40 60 70 80</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span><span class="al">TODO</span><span class="do"> open at timestamp example</span></span></code></pre></div>
+</section>
+<section id="multi-range-subarrays" class="level3">
+<h3>Multi-range Subarrays</h3>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridense, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="do">## range of rows 1 and 2, and 4 for dim 1, all rows for dim 2</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_add_range</span>(qryptr, <span class="dv">0</span>, 1L, 2L)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_add_range</span>(qryptr, <span class="dv">0</span>, 4L, 4L)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_add_range</span>(qryptr, <span class="dv">1</span>, 1L, 4L)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">12</span>)  <span class="co"># reserve space</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, v)</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(v)         <span class="co"># unformed array, no coordinates</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1]  10  20  30  40  50  60  70  80 130 140 150 160</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
+</section>
+<section id="incomplete-queries" class="level3">
+<h3>Incomplete Queries</h3>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridense, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,4L, 1L,4L)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>vec <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">4</span>)  <span class="co"># reserve (insufficient) space</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, vec)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>finished <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> (<span class="sc">!</span>finished) {</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(vec)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  finished <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_status</span>(qryptr) <span class="sc">==</span> <span class="st">&quot;COMPLETE&quot;</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 10 20 30 40</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 50 60 70 80</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [1]  90 100 110 120</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 130 140 150 160</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
+</section>
+<section id="result-estimation" class="level3">
+<h3>Result Estimation</h3>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridensevar, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>estsz <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_get_est_result_size_var</span>(qryptr, <span class="st">&quot;a1&quot;</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>estsz</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 128  28</span></span></code></pre></div>
+</section>
+<section id="time-traveling" class="level3">
+<h3>Time Traveling</h3>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>tstamp <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>() <span class="sc">-</span> <span class="fl">1.0</span>; <span class="co"># one seconds ago (as the arrays created here are in temp.files)</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open_at</span>(ctx<span class="sc">@</span>ptr, uridense, <span class="st">&quot;READ&quot;</span>, tstamp)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,2L, 2L,4L)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query</span>(ctx<span class="sc">@</span>ptr, arrptr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_subarray</span>(qryptr, subarr)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_layout</span>(qryptr, <span class="st">&quot;ROW_MAJOR&quot;</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">integer</span>(<span class="dv">6</span>)  <span class="co"># reserve space</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer</span>(qryptr, <span class="st">&quot;a&quot;</span>, v)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>v</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] NA NA NA NA NA NA</span></span></code></pre></div>
+</section>
+</section>
+<section id="embedded-sql" class="level2">
+<h2>Embedded SQL</h2>
+</section>
+<section id="asynchronous-queries" class="level2">
+<h2>Asynchronous Queries</h2>
+</section>
+<section id="configuration" class="level2">
+<h2>Configuration</h2>
+</section>
+<section id="array-metadata" class="level2">
+<h2>Array Metadata</h2>
+<section id="writing-array-metadata" class="level3">
+<h3>Writing Array Metadata</h3>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_dense</span>(uridense)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: &#39;tiledb_dense&#39; is deprecated.</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Use &#39;tiledb_array&#39; instead.</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="do">## See help(&quot;Deprecated&quot;)</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">close_and_reopen</span>(arr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tiledb_put_metadata</span>(arr, <span class="st">&quot;aaa&quot;</span>, 100L)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tiledb_put_metadata</span>(arr, <span class="st">&quot;bb&quot;</span>, <span class="fu">c</span>(<span class="fl">1.1</span>, <span class="fl">2.2</span>))</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arr<span class="sc">@</span>ptr))</span></code></pre></div>
+</section>
+<section id="reading-array-metadata" class="level3">
+<h3>Reading Array Metadata</h3>
+<p>One can read by key:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">close_and_reopen</span>(arr, <span class="st">&quot;READ&quot;</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_get_metadata</span>(arr, <span class="st">&quot;aaa&quot;</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 100</span></span></code></pre></div>
+<p>Or one can retrieve all metadata at once:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>md <span class="ot">&lt;-</span> <span class="fu">tiledb_get_all_metadata</span>(arr)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(md)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="do">## aaa: 100</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="do">## bb:  1.1, 2.2</span></span></code></pre></div>
+</section>
+<section id="deleting-array-metadata" class="level3">
+<h3>Deleting Array Metadata</h3>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">close_and_reopen</span>(arr, <span class="st">&quot;WRITE&quot;</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tiledb_delete_metadata</span>(arr, <span class="st">&quot;aaa&quot;</span>)</span></code></pre></div>
+</section>
+</section>
+</section>
+</article>
+</main>
+</body>
+</html>
