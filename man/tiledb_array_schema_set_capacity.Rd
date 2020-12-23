@@ -3,11 +3,14 @@
 \name{capacity<-}
 \alias{capacity<-}
 \alias{capacity<-,tiledb_array_schema-method}
+\alias{tiledb_array_schema_set_capacity}
 \title{Sets the schema capacity (for sparse fragments)}
 \usage{
 capacity(x) <- value
 
 \S4method{capacity}{tiledb_array_schema}(x) <- value
+
+tiledb_array_schema_set_capacity(x, value)
 }
 \arguments{
 \item{x}{An \code{array_schema} object}

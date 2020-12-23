@@ -3,11 +3,14 @@
 \name{capacity}
 \alias{capacity}
 \alias{capacity,tiledb_array_schema-method}
+\alias{tiledb_array_schema_get_capacity}
 \title{Retrieve schema capacity (for sparse fragments)}
 \usage{
 capacity(object)
 
 \S4method{capacity}{tiledb_array_schema}(object)
+
+tiledb_array_schema_get_capacity(object)
 }
 \arguments{
 \item{object}{An \code{array_schema} object}

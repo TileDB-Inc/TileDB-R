@@ -153,6 +153,20 @@ cell_val_num(attr) <- NA
 tiledb_attribute_set_cell_val_num(attr, NA)
 ```
 
+#### Setting Fill Values
+
+```{r setfillvalues}
+# ... create int attribute attr
+attr <- tiledb_attr("a1", type = "INT32")
+# set fill value to 42L
+tiledb_attribute_set_fill_value(attr, 42L)
+
+# ... create variable-sized attributte attr
+attr <- tiledb_attr("attr", type = "CHAR")
+tiledb_attribute_set_cell_val_num(attr, 3)
+# set fill value to "..."
+tiledb_attribute_set_fill_value(attr, "...")
+```
 
 #### Setting a Compressor
 
@@ -222,9 +236,12 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 ```{r settilecapacity}
 # set capacity
 capacity(schema) <- 100000
+tiledb_array_schema_set_capacity(schema, 10000)
 
-# set capacity
+# get capacity
 capacity(schema)
+tiledb_array_schema_get_capacity(schema)
+
 ```
 
 #### Setting Coordinate and Offset Filters
