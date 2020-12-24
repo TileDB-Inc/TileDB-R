@@ -65,9 +65,17 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
   return(new("tiledb_filter_list", ptr = ptr))
 }
 
-#' @rdname generics
+#' @rdname tiledb_filter_list_set_max_chunk_size
 #' @export
 setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_max_chunk_size"))
+
+#' @rdname tiledb_filter_list_set_max_chunk_size
+#' @export
+setMethod("set_max_chunk_size",
+          signature(object = "tiledb_filter_list", value = "numeric"),
+          function(object, value) {
+  libtiledb_filter_list_set_max_chunk_size(object@ptr, value)
+})
 
 #' Set the filter_list's max_chunk_size
 #'
@@ -80,14 +88,19 @@ setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_ma
 #' filter_list <- tiledb_filter_list(c(flt))
 #' set_max_chunk_size(filter_list, 10)
 #' @export
-setMethod("set_max_chunk_size", signature(object = "tiledb_filter_list", value = "numeric"),
-          function(object, value) {
-            libtiledb_filter_list_set_max_chunk_size(object@ptr, value)
-          })
+tiledb_filter_list_set_max_chunk_size <- function(object, value) {
+  libtiledb_filter_list_set_max_chunk_size(object@ptr, value)
+}
 
-#' @rdname generics
+#' @rdname tiledb_filter_list_get_max_chunk_size
 #' @export
 setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
+
+#' @rdname tiledb_filter_list_get_max_chunk_size
+#' @export
+setMethod("max_chunk_size", signature(object = "tiledb_filter_list"), function(object) {
+  libtiledb_filter_list_get_max_chunk_size(object@ptr)
+})
 
 #' Returns the filter_list's max_chunk_size
 #'
@@ -101,10 +114,10 @@ setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
 #' max_chunk_size(filter_list)
 #'
 #' @export
-setMethod("max_chunk_size", signature(object = "tiledb_filter_list"),
-          function(object) {
-            libtiledb_filter_list_get_max_chunk_size(object@ptr)
-          })
+tiledb_filter_list_get_max_chunk_size <- function(object) {
+  libtiledb_filter_list_get_max_chunk_size(object@ptr)
+}
+
 
 #' @rdname generics
 #' @export

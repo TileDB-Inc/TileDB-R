@@ -104,7 +104,7 @@ close_and_reopen <- function(arr, txt) {
 
 ## Creating Arrays
 
-### Create Dimension
+### Creating Dimensions
 
 ```{r createdim}
 library(tiledb)
@@ -117,7 +117,7 @@ strdim <- tiledb_dim("dim2", NULL, NULL, "ASCII")
 ```
 
 
-### Create Array Domain
+### Creating the Array Domain
 
 ```{r creatarrdom}
 library(tiledb)
@@ -197,14 +197,6 @@ attr <- tiledb_attr("attr", "INT32", filter_list = filter_list)
 ```
 
 
-#### Setting the Tile Chunk Size
-
-```{r settilechunksize}
-# ... create filter list
-set_max_chunk_size(filter_list, 10000)
-```
-
-
 
 ### Creating the Array Schema
 
@@ -243,6 +235,54 @@ capacity(schema)
 tiledb_array_schema_get_capacity(schema)
 
 ```
+
+#### Allowing Duplicates
+
+```{r allowdupes}
+sch <- schema(urisparse)
+
+# get 'duplicates allowed?' status
+allows_dups(sch)
+tiledb_array_schema_get_allows_dups(sch)
+
+# set 'duplicates allowed?' status
+allows_dups(sch) <- TRUE
+tiledb_array_schema_set_allows_dups(sch, TRUE)
+```
+
+#### Checking Correctness
+
+```{r checkcorrect}
+check(sch)
+tiledb_array_schema_check(sch)
+```
+
+### Setting Filters
+
+#### Creating a Filter List
+
+```{r createfilterlist}
+# create a "GZIP" compression filter
+flt <- tiledb_filter("GZIP")
+# set the option 'COMPRESSION_LEVEL' to 10
+tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 10)
+
+# create a filter list with this filter
+fltlst <- tiledb_filter_list(flt)
+```
+
+
+#### Setting the Tile Chunk Size
+
+```{r settilechunksize}
+# ... create filter list
+set_max_chunk_size(filter_list, 10000)
+tiledb_filter_list_set_max_chunk_size(filter_list, 10000)
+
+max_chunk_size(filter_list)
+tiledb_filter_list_get_max_chunk_size(filter_list)
+```
+
 
 #### Setting Coordinate and Offset Filters
 

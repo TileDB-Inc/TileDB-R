@@ -17,8 +17,6 @@
 \alias{schema}
 \alias{tile}
 \alias{is.integral}
-\alias{set_max_chunk_size}
-\alias{max_chunk_size}
 \alias{nfilters}
 \alias{generics}
 \title{Generic Methods}
@@ -52,10 +50,6 @@ schema(object, ...)
 tile(object)
 
 is.integral(object)
-
-set_max_chunk_size(object, value)
-
-max_chunk_size(object)
 
 nfilters(object)
 }

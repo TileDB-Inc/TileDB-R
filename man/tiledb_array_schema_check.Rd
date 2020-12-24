@@ -3,11 +3,14 @@
 \name{check}
 \alias{check}
 \alias{check,tiledb_array_schema-method}
+\alias{tiledb_array_schema_check}
 \title{Check the schema for correctness}
 \usage{
 check(object)
 
 \S4method{check}{tiledb_array_schema}(object)
+
+tiledb_array_schema_check(object)
 }
 \arguments{
 \item{object}{An \code{array_schema} object}
