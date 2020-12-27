@@ -27,6 +27,7 @@ tdir <- tempdir()
 uridense <- file.path(tdir, "dense")
 uridensefix <- file.path(tdir, "densefix")
 uridensevar <- file.path(tdir, "densevar")
+uridensewkey <- file.path(tdir, "denseenc")
 
 create_array <- function(array_name) {
     # Check if the array already exists.
@@ -141,7 +142,7 @@ attr <- tiledb_attr("attr", type = "INT32")
 attr <- tiledb_attr("a1", type = "INT32")
 
 # Access cell value via generic or functions
-cell_val_num(attr) 
+cell_val_num(attr)
 tiledb_attribute_get_cell_val_num(attr)
 
 ## Attribute value counts can be set via a generic method and a direct method
@@ -169,6 +170,7 @@ tiledb_attribute_set_fill_value(attr, "...")
 ```
 
 #### Setting a Compressor
+<!-- #### ?? -->
 
 ```{r setcompr}
 comp <- tiledb_filter("GZIP")
@@ -183,6 +185,7 @@ attr <- tiledb_attr("attr", "INT32", filter_list = filter_list)
 
 
 #### Setting Other Filters
+<!-- #### ?? -->
 
 ```{r setfilr}
 # Create filters
@@ -272,6 +275,13 @@ fltlst <- tiledb_filter_list(flt)
 ```
 
 
+#### Other Filters
+
+```{r otherfilterlist, eval=FALSE}
+# create a filter list object with both
+fltlst <- tiledb_filter_list(c(flt1, flt2))
+```
+
 #### Setting the Tile Chunk Size
 
 ```{r settilechunksize}
@@ -283,8 +293,64 @@ max_chunk_size(filter_list)
 tiledb_filter_list_get_max_chunk_size(filter_list)
 ```
 
+#### Setting a Filter List for an Attribute
+
+```{r settingfilterlistforattribute}
+# create (or access) an attribute
+attr <- tiledb_attr("a", "INT32")
+
+# create a filter list
+flt1 <- tiledb_filter("BIT_WIDTH_REDUCTION")
+flt2 <- tiledb_filter("ZSTD")
+fltlst <- tiledb_filter_list(c(flt1, flt2))
+
+# set the filter list
+filter_list(attr) <- fltlst
+```
+
+#### Setting a Filter List for a Dimension
+
+```{r settingfilterlistfordim}
+d <- tiledb_dim("d", c(1L, 10L), 1L, "INT32")
+
+# create a filter list
+flt1 <- tiledb_filter("BIT_WIDTH_REDUCTION")
+flt2 <- tiledb_filter("ZSTD")
+fltlst <- tiledb_filter_list(c(flt1, flt2))
+
+# assign the filter list
+filter_list(d) <- fltlst
+```
+
+#### Setting a Filter List for All Dimensions
+
+```{r settingfilterlistalldims, eval=FALSE}
+# ... create (or retrieve) array schema sch
+# ... create filter list fl
+
+# assign filter list to schema
+tiledb_array_schema_set_coords_filter_list(sch, fl)
+
+# Alternatively create the schema and set the coordinates filter list
+sch <- tiledb_array_schema(dom, c(attr1, attr2), coords_filter_list = fl)
+```
+
+#### Setting a Filter List for Variable-Sized Value Offsets
+
+```{r settingfilterlistforvarsized, eval=FALSE}
+# ... create (or retrieve) array schema sch
+# ... create filter list fl
+
+# assign filter list to schema
+tiledb_array_schema_set_offsets_filter_list(sch, fl)
+
+# Create the schema setting the offsets filter list
+sch <- tiledb_array_schema(dom, c(attr1, attr2), offsets_filter_list = fl)
+```
+
 
 #### Setting Coordinate and Offset Filters
+<!-- #### ?? -->
 
 ```{r setcoordoffsetfilt}
 # ... create domain dom
@@ -302,11 +368,6 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 ```
 
 
-#### Checking Correctness
-
-```{r arrayschemacheck}
-check(schema)
-```
 
 
 
@@ -322,14 +383,12 @@ tiledb_array_create(uridense, schema)
 ### Creating Encrypted Arrays
 
 ```{r createwithkey}
+# assume previously created schema 'sch'
+# use encryption key
 encryption_key <- "0123456789abcdeF0123456789abcdeF"
-uridensewkey <- file.path(tdir, "densewkey")
-if (dir.exists(uridensewkey)) unlink(uridensewkey, recursive=TRUE)
 
-# shortcut: borrow schema from dense array; could create schema too
-schema <- schema(tiledb_dense(uridense))
-tiledb:::libtiledb_array_create_with_key(uridensewkey, schema@ptr, encryption_key)
-##TODO: R support
+# create encrypted array at 'uri' with schema 'sch'
+tiledb_array_create(uridensewkey, sch, encryption_key)
 ```
 
 
@@ -416,7 +475,7 @@ A[I, J] <- data
 
 ### Writing Encrypted Arrays
 
-```{r writingencryptedlowlevel}
+```{r writingencryptedlowlevel, eval=FALSE}
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uridensewkey, "WRITE", encryption_key)
 
