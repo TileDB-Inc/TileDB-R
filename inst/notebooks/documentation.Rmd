@@ -4,6 +4,7 @@ output:
   minidown::mini_document:
     framework: water
     toc: yes
+    toc_float: true
 ---
 
 ```{r include=FALSE}
