@@ -3,7 +3,7 @@ title: "TileDB R Notebook"
 output:
   minidown::mini_document:
     framework: water
-    toc: no
+    toc: yes
 ---
 
 ```{r include=FALSE}
@@ -467,30 +467,17 @@ I <- c(3, 4, 1, 2)
 J <- c(3, 4, 2, 1)
 
 # Open the array and write the data to it
-A <- tiledb_sparse(uri = tmp)
+A <- tiledb_array(uri = tmp)
 A[I, J] <- data
-
 ```
 
 
 ### Writing Encrypted Arrays
 
 ```{r writingencryptedlowlevel, eval=FALSE}
-ctx <- tiledb_ctx()
-arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uridensewkey, "WRITE", encryption_key)
-
-## data: simple (integer sequence) of 1:16 times 10
-vec <- 1:16 * 10L
-subarr <- c(1L,4L, 1L,4L)
-
-qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
-qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
-qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
-qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
-qryptr <- tiledb:::libtiledb_query_submit(qryptr)
-res <- tiledb:::libtiledb_array_close(arrptr)
-# TODO Higher-level R support
-
+# open for writing with corresponding encryption key
+A <- tiledb_array(uridensewkey, encryption_key = encryption_key)
+# access array as usual
 ```
 
 
@@ -570,45 +557,75 @@ tiledb:::libtiledb_array_close(arrptr)
 ```
 
 
+### Writing at a Timestamp
+
+```{r writeattimestamp, eval=FALSE}
+# 'at' uses Sys.time() from R in seconds, and shifts back 10 minutes
+at <- Sys.time() - 10*60
+
+# 'arr' is an already created array, could also be encrypted and carry key
+arr <- tiledb_array_open_at(arr, "WRITE", Sys.time() - 600)
+
+# arr is now open for writing, any suitable content can be written the usual way
+```
+
+
 ### Getting the Fragment Info
 
-```{r fragmentinfo}
-## continuing from previous example on dense variable length array
-## (but this works of course with any array after a write is needed
-numfrag <- tiledb:::libtiledb_query_get_fragment_num(qryptr)
-uritxt <- tiledb:::libtiledb_query_get_fragment_uri(qryptr, 0)
+```{r fragmentinfo, eval=FALSE}
+# continuing from previous example on dense variable length array
+# (but this works of course with any array after a write is needed
 
-##TODO Higher-level R support
+# Number of fragments
+numfrag <- tiledb_query_get_fragment_num(qry)
+
+# URI of given fragment, with 0 <= idx < numfrag
+uri <- tiledb_query_get_fragment_uri(qry, idx)
+
+# Timestamp range of given fragment, with 0 <= idx < numfrag
+tsrange <- tiledb_query_get_fragment_timestamp_range(qry, idx)
 ```
 
 ## Reading Arrays
 
 ### Reading the Array Schema
 
-```{r schemaload}
-array_name <- urisparse
-A <- tiledb_sparse(uri = array_name)
-# can also load dense
-sch <- schema(A)
-# can also open encrypted arrays with key
-```
-
 #### Inspecting the array schema
 
-```{r schemainspect}
-array_name <- urisparse
+```{r schemaload, eval=FALSE}
+# get a schema directly from storage, uri holds a valid array URI
+uri <- "<array_uri>"
+sch <- schema(uri)
 
-# Get array schema
-A <- tiledb_sparse(uri = array_name)
-# or use tiledb_dense(uri = array_name) for dense
+# get an encrypted scheme directory from storage, enc_key is the AES-256 key
+sch <- schema(uri, enc_key)
+
+# get a schema from an already openened array
+# using a sparse array example, works the same for dense arrays
+array_name <- urisparse
+A <- tiledb_array(uri = array_name, is.sparse = TRUE)
+sch <- schema(A)
+
+# one can also open encrypted arrays with key for AES-256 encryption
+# and all other options (for sparse arrays, data.frame objects...)
+key <- "0123456789abcdeF0123456789abcdeF"
+A <- tiledb_array(uri = array_name, encryption_key = key)
+sch <- schema(A)
+```
+
+
+
+```{r schemainspect}
+# Get array schema, this shows the sparse accessor
+# and it is similar for tiledb_dense()
+A <- tiledb_array(uri = urisparse, is.sparse = TRUE) 
 schema <- schema(A)
 
 # Get array type
 sparse <- is.sparse(schema)
 
 # Get tile capacity
-tiledb:::libtiledb_array_schema_get_capacity(sch@ptr)
-# TODO: R accessor for tile
+t_capacity <- capacity(schema)
 
 # Get tile order
 t_order <- tile_order(schema)
@@ -625,20 +642,22 @@ dom <- domain(schema)
 # Get all attributes as list
 attrs <- attrs(schema)
 
+# Check if given attribute exists
+has_attr <- has_attribute(schema, "attr")
+
 # Get attribute from name
 attr <- attrs(schema, "attr")
 
-# Dump the array schema in ASCII format to stdout
+# Dump the array schema in ASCII format in the selected output
 show(schema)
 ```
 
 
 #### Inspecting Domain
 
-```{r inspectdomain}
+```{r inspectdomain, eval=FALSE}
 # ... get array schema
 # ... get domain from schema
-dom <- domain(schema)
 
 # Get the domain datatype (i.e., the datatype of all dimensions)
 type <- datatype(dom)
@@ -648,6 +667,15 @@ dim_num <- dim(dom)
 
 # Get all dimension
 dims <- dimensions(dom)
+
+# Get dimension by index (0 <= i < dim_num)
+dim <- tiledb_domain_get_dimension_from_index(dom, 1)
+
+# Get dimension by name
+dim <- tiledb_domain_get_dimension_from_name(dom, "dimname")
+
+# Check dimension for name
+tiledb_domain_has_dimension(dom, "dimname")
 
 # Dump the domain in ASCII format in the selected output
 show(dom)
