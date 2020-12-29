@@ -326,7 +326,7 @@ setMethod("[", "tiledb_array",
     if (length(tstamp) > 0) {
       libtiledb_array_open_at(ctx@ptr, uri, "READ", tstamp)
     } else {
-      libtiledb_array_open(ctx@ptr, uri, "READ")
+      libtiledb_array_open_with_ptr(x@ptr, "READ")
     }
   }
   on.exit(libtiledb_array_close(x@ptr))
