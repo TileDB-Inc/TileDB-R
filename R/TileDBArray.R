@@ -318,15 +318,15 @@ setMethod("[", "tiledb_array",
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
-      libtiledb_array_open_at_with_key(ctx@ptr, uri, "READ", enckey, tstamp)
+      x@ptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "READ", enckey, tstamp)
     } else {
-      libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
+      x@ptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
     }
   } else {
     if (length(tstamp) > 0) {
-      libtiledb_array_open_at(ctx@ptr, uri, "READ", tstamp)
+      x@ptr <- libtiledb_array_open_at(ctx@ptr, uri, "READ", tstamp)
     } else {
-      libtiledb_array_open_with_ptr(x@ptr, "READ")
+      x@ptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
     }
   }
   on.exit(libtiledb_array_close(x@ptr))
