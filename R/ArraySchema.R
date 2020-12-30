@@ -405,9 +405,16 @@ dim.tiledb_array_schema <- function(x) dim(tiledb::domain(x))
 
 
 
-#' @rdname allows_dups-tiledb_array_schema-method
+#' @rdname tiledb_array_schema_get_allows_dups
 #' @export
 setGeneric("allows_dups", function(x) standardGeneric("allows_dups"))
+
+#' @rdname tiledb_array_schema_get_allows_dups
+#' @export
+setMethod("allows_dups", signature = "tiledb_array_schema", function(x) {
+  stopifnot(is.sparse(x))
+  libtiledb_array_schema_get_allows_dups(x@ptr)
+})
 
 #' Returns logical value whether the array schema allows duplicate values or not.
 #' This is only valid for sparse arrays.
@@ -415,16 +422,20 @@ setGeneric("allows_dups", function(x) standardGeneric("allows_dups"))
 #' @param x tiledb_array_schema
 #' @return the logical value
 #' @export
-setMethod("allows_dups",
-          signature = "tiledb_array_schema",
-          function(x) {
-  stopifnot(is.sparse(x))
+tiledb_array_schema_get_allows_dups <- function(x) {
   libtiledb_array_schema_get_allows_dups(x@ptr)
-})
+}
 
-#' @rdname allows_dups-set-tiledb_array_schema-method
+#' @rdname tiledb_array_schema_set_allows_dups
 #' @export
 setGeneric("allows_dups<-", function(x, value) standardGeneric("allows_dups<-"))
+
+#' @rdname tiledb_array_schema_set_allows_dups
+#' @export
+setMethod("allows_dups<-", signature = "tiledb_array_schema", function(x, value) {
+  libtiledb_array_schema_set_allows_dups(x@ptr, value)
+  x
+})
 
 #' Sets toggle whether the array schema allows duplicate values or not.
 #' This is only valid for sparse arrays.
@@ -433,11 +444,9 @@ setGeneric("allows_dups<-", function(x, value) standardGeneric("allows_dups<-"))
 #' @param value logical value
 #' @return the tiledb_array_schema object
 #' @export
-setMethod("allows_dups<-", signature = "tiledb_array_schema",
-          function(x, value) {
+tiledb_array_schema_set_allows_dups <- function(x, value) {
   libtiledb_array_schema_set_allows_dups(x@ptr, value)
-  x
-})
+}
 
 ##' Get all Dimension and Attribute Names
 ##'
@@ -477,13 +486,26 @@ tiledb_schema_get_types <- function(sch) {
 
 # -- get and set tile capacity
 
-#' @rdname capacity-tiledb_array_schema-method
+#' @rdname tiledb_array_schema_get_capacity
 #' @export
 setGeneric("capacity", function(object) standardGeneric("capacity"))
 
-#' @rdname capacity-set-tiledb_array_schema-method
+#' @rdname tiledb_array_schema_set_capacity
 #' @export
 setGeneric("capacity<-", function(x, value) standardGeneric("capacity<-"))
+
+#' @rdname tiledb_array_schema_get_capacity
+#' @export
+setMethod("capacity", signature = "tiledb_array_schema", function(object) {
+  libtiledb_array_schema_get_capacity(object@ptr)
+})
+
+#' @rdname tiledb_array_schema_set_capacity
+#' @export
+setReplaceMethod("capacity", signature = "tiledb_array_schema", function(x, value) {
+  libtiledb_array_schema_set_capacity(x@ptr, value)
+  x
+})
 
 #' Retrieve schema capacity (for sparse fragments)
 #'
@@ -491,9 +513,9 @@ setGeneric("capacity<-", function(x, value) standardGeneric("capacity<-"))
 #' @param object An \code{array_schema} object
 #' @return The tile capacity value
 #' @export
-setMethod("capacity",
-          signature = "tiledb_array_schema",
-          function(object) libtiledb_array_schema_get_capacity(object@ptr))
+tiledb_array_schema_get_capacity <- function(object) {
+  libtiledb_array_schema_get_capacity(object@ptr)
+}
 
 #' Sets the schema capacity (for sparse fragments)
 #'
@@ -502,19 +524,25 @@ setMethod("capacity",
 #' @param value An integer or numeric value for the new tile capacity
 #' @return The modified \code{array_schema} object
 #' @export
-setReplaceMethod("capacity",
-                 signature = "tiledb_array_schema",
-                 function(x, value) {
+tiledb_array_schema_set_capacity <- function(x, value) {
   libtiledb_array_schema_set_capacity(x@ptr, value)
   x
-})
+}
+
+
 
 
 # -- Schema Correctness
 
-#' @rdname check-tiledb_array_schema-method
+#' @rdname tiledb_array_schema_check
 #' @export
 setGeneric("check", function(object) standardGeneric("check"))
+
+#' @rdname tiledb_array_schema_check
+#' @export
+setMethod("check", signature = "tiledb_array_schema", function(object) {
+  libtiledb_array_schema_check(object@ptr)
+})
 
 #' Check the schema for correctness
 #'
@@ -523,10 +551,9 @@ setGeneric("check", function(object) standardGeneric("check"))
 #' @return The boolean value \code{TRUE} is returned for a correct
 #' schema; for an incorrect schema an error condition is triggered.
 #' @export
-setMethod("check",
-          signature = "tiledb_array_schema",
-          function(object) libtiledb_array_schema_check(object@ptr))
-
+tiledb_array_schema_check <- function(object) {
+  libtiledb_array_schema_check(object@ptr)
+}
 
 ## -- convenience accessor `has_attribute` -- a little redundant as we already retrieve
 ##    all names and can check the returned set but a direct caller is a little lighter

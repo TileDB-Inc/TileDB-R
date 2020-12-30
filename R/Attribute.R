@@ -159,9 +159,15 @@ setReplaceMethod("filter_list", "tiledb_attr", function(x, value) {
 })
 
 
-#' @rdname generics
+#' @rdname tiledb_attribute_get_cell_val_num
 #' @export
 setGeneric("cell_val_num", function(object) standardGeneric("cell_val_num"))
+
+#' @rdname tiledb_attribute_get_cell_val_num
+#' @export
+setMethod("cell_val_num", signature(object = "tiledb_attr"), function(object) {
+  libtiledb_attribute_get_cell_val_num(object@ptr)
+})
 
 #' Return the number of scalar values per attribute cell
 #'
@@ -171,12 +177,34 @@ setGeneric("cell_val_num", function(object) standardGeneric("cell_val_num"))
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' a1 <- tiledb_attr("a1", type = "FLOAT64", ncells = 1)
 #' cell_val_num(a1)
-#'
 #' @export
-setMethod("cell_val_num", signature(object = "tiledb_attr"),
-          function(object) {
-            libtiledb_attribute_get_cell_val_num(object@ptr)
-          })
+tiledb_attribute_get_cell_val_num <- function(object) {
+  libtiledb_attribute_get_cell_val_num(object@ptr)
+}
+
+
+
+#' @rdname tiledb_attribute_set_cell_val_num
+#' @export
+setGeneric("cell_val_num<-", function(x, value) standardGeneric("cell_val_num<-"))
+
+#' @rdname tiledb_attribute_set_cell_val_num
+#' @export
+setReplaceMethod("cell_val_num", signature("tiledb_attr"), function(x, value) {
+  libtiledb_attribute_set_cell_val_num(x@ptr, value)
+  x
+})
+
+#' Set the number of scalar values per attribute cell
+#'
+#' @param x A TileDB Attribute object
+#' @param value An integer value of number of cells
+#' @return The modified attribute is returned
+#' @export
+tiledb_attribute_set_cell_val_num <- function(x, value) {
+  libtiledb_attribute_set_cell_val_num(x@ptr, value)
+}
+
 
 #' Returns TRUE if the tiledb_dim is anonymous
 #'

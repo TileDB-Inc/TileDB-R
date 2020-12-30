@@ -13,13 +13,10 @@
 \alias{tiledb_ndim}
 \alias{name}
 \alias{datatype}
-\alias{cell_val_num}
 \alias{config}
 \alias{schema}
 \alias{tile}
 \alias{is.integral}
-\alias{set_max_chunk_size}
-\alias{max_chunk_size}
 \alias{nfilters}
 \alias{generics}
 \title{Generic Methods}
@@ -46,8 +43,6 @@ name(object)
 
 datatype(object)
 
-cell_val_num(object)
-
 config(object, ...)
 
 schema(object, ...)
@@ -55,10 +50,6 @@ schema(object, ...)
 tile(object)
 
 is.integral(object)
-
-set_max_chunk_size(object, value)
-
-max_chunk_size(object)
 
 nfilters(object)
 }

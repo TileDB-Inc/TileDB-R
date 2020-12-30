@@ -3,12 +3,15 @@
 \name{allows_dups<-}
 \alias{allows_dups<-}
 \alias{allows_dups<-,tiledb_array_schema-method}
+\alias{tiledb_array_schema_set_allows_dups}
 \title{Sets toggle whether the array schema allows duplicate values or not.
 This is only valid for sparse arrays.}
 \usage{
 allows_dups(x) <- value
 
 \S4method{allows_dups}{tiledb_array_schema}(x) <- value
+
+tiledb_array_schema_set_allows_dups(x, value)
 }
 \arguments{
 \item{x}{tiledb_array_schema}
