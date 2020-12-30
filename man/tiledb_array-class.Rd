@@ -33,7 +33,7 @@ describes the (min,max) pair of ranges for dimension i}
 
 \item{\code{encryption_key}}{A character value}
 
-\item{\code{timestamp}}{A POSIXct datimetime variable}
+\item{\code{timestamp}}{A POSIXct datetime variable}
 
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}

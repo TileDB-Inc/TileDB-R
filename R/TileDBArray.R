@@ -38,7 +38,7 @@
 #' @slot query_layout An optional character value
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
-#' @slot timestamp A POSIXct datimetime variable
+#' @slot timestamp A POSIXct datetime variable
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -76,7 +76,7 @@ setClass("tiledb_array",
 #' \code{POSIXct} or \code{nanotime} objects.
 #' @param encryption_key optional A character value with an AES-256 encryption key
 #' in case the array was written with encryption.
-#' @param timestamp optional A Datetime value determining where in time the array is
+#' @param timestamp optional A POSIXct Datetime value determining where in time the array is
 #' to be openened.
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object

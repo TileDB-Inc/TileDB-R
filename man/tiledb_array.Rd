@@ -47,7 +47,7 @@ representation as \sQuote{raw} \code{integer64} and not as \code{Date},
 \item{encryption_key}{optional A character value with an AES-256 encryption key
 in case the array was written with encryption.}
 
-\item{timestamp}{optional A Datetime value determining where in time the array is
+\item{timestamp}{optional A POSIXct Datetime value determining where in time the array is
 to be openened.}
 
 \item{ctx}{tiledb_ctx (optional)}
