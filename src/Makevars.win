@@ -1,5 +1,5 @@
 CXX_STD = CXX11
-VERSION = 2.1.4
+VERSION = 2.1.5
 RWINLIB=../windows/tiledb-$(VERSION)
 
 PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -DTILEDB_STATIC_DEFINE
