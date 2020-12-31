@@ -52,7 +52,7 @@ create_array <- function(array_name) {
                                   tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
 
    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
-    schema = tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
+    schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
 
     # Create the (empty) array on disk.
     invisible( tiledb_array_create(array_name, schema) )

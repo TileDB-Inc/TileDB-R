@@ -36,10 +36,9 @@
 library(tiledb)
 
 # Name of the array to create.
-array_name <- "quickstart_sparse_enc"
+array_name <- "quickstart_sparse_timetravel"
 ## Path is either current directory, or a local config value is found
 uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
-encryption_key <- "0123456789abcdeF0123456789abcdeF"
 
 create_array <- function(array_name) {
     # Check if the array already exists.
@@ -49,14 +48,14 @@ create_array <- function(array_name) {
     }
 
     # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
-    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
-                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 5L, "INT32"),
+                                  tiledb_dim("cols", c(1L, 10L), 5L, "INT32")))
 
    # The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
     schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
 
     # Create the (empty) array on disk.
-    invisible( tiledb_array_create(array_name, schema, encryption_key) )
+    invisible( tiledb_array_create(array_name, schema) )
 }
 
 write_array <- function(array_name) {
@@ -64,36 +63,53 @@ write_array <- function(array_name) {
     J <- c(1, 4, 3)
     data <- c(1L, 2L, 3L)
     # Open the array and write to it.
-    A <- tiledb_array(uri = array_name, encryption_key = encryption_key)
+    now1 <- Sys.time()
+    cat("Writing first record at", format(now1), "\n")
+    A <- tiledb_array(uri = array_name, timestamp=now1)
     A[I, J] <- data
+
+    cat("(...sleeping 1s ...)\n")
+    Sys.sleep(1)
+    now2 <- Sys.time()
+    I <- c(8, 6, 9)
+    J <- c(5, 7, 8)
+    data <- c(11L, 22L, 33L)
+    cat("Writing second record at", format(now2), "\n")
+    A <- tiledb_array(uri = array_name, timestamp=now2)
+    A[I, J] <- data
+
+    c(now1, now2)
 }
 
 read_array <- function(array_name) {
+    cat("\nReading everything:\n")
     # Open the array and read as a data.frame from it.
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, encryption_key = encryption_key)
-    # Slice rows 1 and 2, and cols 2, 3 and 4
-    A[1:2, 2:4]
+    A <- tiledb_array(uri = array_name, as.data.frame=TRUE)
+    A[]
 }
 
-read_via_query_object <- function(array_name) {
-  arr <- tiledb_array(uri, encryption_key = encryption_key)
-  qry <- tiledb_query(arr, "READ")
+read_array_at <- function(array_name, tstamps) {
+    ## Read before tstamp[1]
+    cat("\nOpening / reading 0.5s before first tstamp\n")
+    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[1] - 0.5)
+    print(A[])
 
-  rows <- integer(8)
-  cols <- integer(8)
-  values <- integer(8)
-  tiledb_query_set_buffer(qry, "rows", rows)
-  tiledb_query_set_buffer(qry, "cols", cols)
-  tiledb_query_set_buffer(qry, "a", values)
-  tiledb_query_submit(qry)
-  tiledb_query_finalize(qry)
-  stopifnot(tiledb_query_status(qry)=="COMPLETE")
+    cat("Opening / reading 0.5s after first tstamp\n")
+    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[1] + 0.5)
+    print(A[])
 
-  n <- tiledb_query_result_buffer_elements(qry, "a")
-  print(data.frame(rows=rows,cols=cols,a=values)[1:n,])
+    cat("Opening / reading 0.5s before second tstamp\n")
+    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[2] - 0.5)
+    print(A[])
+
+    cat("Opening / reading 0.5s after second tstamp\n")
+    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[2] + 0.5)
+    print(A[])
+
 }
+
 
 create_array(uri)
-write_array(uri)
+tstamps <- write_array(uri)
 read_array(uri)
-read_via_query_object(uri)
+read_array_at(uri, tstamps)

@@ -38,6 +38,7 @@
 #' @slot query_layout An optional character value
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
+#' @slot timestamp A POSIXct datetime variable
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -51,6 +52,7 @@ setClass("tiledb_array",
                       query_layout = "character",
                       datetimes_as_int64 = "logical",
                       encryption_key = "character",
+                      timestamp = "POSIXct",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -74,6 +76,8 @@ setClass("tiledb_array",
 #' \code{POSIXct} or \code{nanotime} objects.
 #' @param encryption_key optional A character value with an AES-256 encryption key
 #' in case the array was written with encryption.
+#' @param timestamp optional A POSIXct Datetime value determining where in time the array is
+#' to be openened.
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object
 #' @export
@@ -87,6 +91,7 @@ tiledb_array <- function(uri,
                          query_layout = character(),
                          datetimes_as_int64 = FALSE,
                          encryption_key = character(),
+                         timestamp = as.POSIXct(double()),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -97,9 +102,18 @@ tiledb_array <- function(uri,
   if (length(encryption_key) > 0) {
     if (!is.character(encryption_key))
       stop("if used, argument aes_key must be character", call. = FALSE)
-    array_xptr <- libtiledb_array_open_with_key(ctx@ptr, uri, query_type, encryption_key)
+    if (length(timestamp) > 0) {
+      array_xptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, query_type,
+                                                     encryption_key, timestamp)
+    } else {
+      array_xptr <- libtiledb_array_open_with_key(ctx@ptr, uri, query_type, encryption_key)
+    }
   } else {
-    array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
+    if (length(timestamp) > 0) {
+      array_xptr <- libtiledb_array_open_at(ctx@ptr, uri, query_type, timestamp)
+    } else {
+      array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
+    }
   }
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
   is_sparse_status <- libtiledb_array_schema_sparse(schema_xptr)
@@ -120,6 +134,7 @@ tiledb_array <- function(uri,
       query_layout = query_layout,
       datetimes_as_int64 = datetimes_as_int64,
       encryption_key = encryption_key,
+      timestamp = timestamp,
       ptr = array_xptr)
 }
 
@@ -179,6 +194,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  query_layout       = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
      ,"  datetimes_as_int64 = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
      ,"  encryption_key     = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
+     ,"  timestamp          = ", if (length(object@timestamp) == 0) "(none)" else format(object@timestamp), "\n"
      ,sep="")
 })
 
@@ -249,6 +265,11 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'encryption_key' slot does not contain a character vector.")
   }
 
+  if (!inherits(object@timestamp, "POSIXct")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'timestamp' slot does not contain a POSIXct value.")
+  }
+
   if (!is(object@ptr, "externalptr")) {
     valid <- FALSE
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
@@ -293,11 +314,20 @@ setMethod("[", "tiledb_array",
   layout <- x@query_layout
   asint64 <- x@datetimes_as_int64
   enckey <- x@encryption_key
+  tstamp <- x@timestamp
 
   if (length(enckey) > 0) {
-    libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
+    if (length(tstamp) > 0) {
+      x@ptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "READ", enckey, tstamp)
+    } else {
+      x@ptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
+    }
   } else {
-    libtiledb_array_open_with_ptr(x@ptr, "READ")
+    if (length(tstamp) > 0) {
+      x@ptr <- libtiledb_array_open_at(ctx@ptr, uri, "READ", tstamp)
+    } else {
+      x@ptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
+    }
   }
   on.exit(libtiledb_array_close(x@ptr))
 
@@ -327,9 +357,17 @@ setMethod("[", "tiledb_array",
 
 
   if (length(enckey) > 0) {
-    arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
+    if (length(tstamp) > 0) {
+      arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "READ", enckey, tstamp)
+    } else {
+      arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
+    }
   } else {
-    arrptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
+    if (length(tstamp) > 0) {
+      arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "READ", tstamp)
+    } else {
+      arrptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
+    }
   }
 
   ## helper function to sweep over names and types of domain
@@ -527,6 +565,7 @@ setMethod("[<-", "tiledb_array",
   layout <- x@query_layout
   asint64 <- x@datetimes_as_int64
   enckey <- x@encryption_key
+  tstamp <- x@timestamp
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
@@ -614,10 +653,20 @@ setMethod("[<-", "tiledb_array",
   if (all.equal(sort(allnames),sort(nm))) {
 
     if (length(enckey) > 0) {
-      arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", enckey)
+      if (length(tstamp) > 0) {
+        arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "WRITE", enckey, tstamp)
+      } else {
+        arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", enckey)
+      }
     } else {
-      arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
+      if (length(tstamp) > 0) {
+        arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "WRITE", tstamp)
+      } else {
+        arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
+      }
     }
+
+
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
     qryptr <- libtiledb_query_set_layout(qryptr,
                                          if (length(layout) > 0) layout
