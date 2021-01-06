@@ -4,7 +4,12 @@
 \alias{tiledb_query_import_buffer}
 \title{Import to Query Buffer from Pair of Arrow IO Pointers}
 \usage{
-tiledb_query_import_buffer(query, name, arrowpointers)
+tiledb_query_import_buffer(
+  query,
+  name,
+  arrowpointers,
+  ctx = tiledb_get_context()
+)
 }
 \arguments{
 \item{query}{A TileDB Query object}
@@ -13,6 +18,8 @@ tiledb_query_import_buffer(query, name, arrowpointers)
 
 \item{arrowpointers}{A two-element numeric vector with two pointers
 to an Arrow Array and Schema, respectively}
+
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 The update Query external pointer is returned
