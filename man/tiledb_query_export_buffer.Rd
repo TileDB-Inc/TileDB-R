@@ -4,12 +4,14 @@
 \alias{tiledb_query_export_buffer}
 \title{Export Query Buffer to Pair of Arrow IO Pointers}
 \usage{
-tiledb_query_export_buffer(query, name)
+tiledb_query_export_buffer(query, name, ctx = tiledb_get_context())
 }
 \arguments{
 \item{query}{A TileDB Query object}
 
 \item{name}{A character variable identifying the buffer}
+
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 A two-element numeric vector where the two elements are

@@ -48,27 +48,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_export_buffer
-Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name);
-RcppExport SEXP _tiledb_libtiledb_query_export_buffer(SEXP queryxpSEXP, SEXP nameSEXP) {
+Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name);
+RcppExport SEXP _tiledb_libtiledb_query_export_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type queryxp(queryxpSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_export_buffer(queryxp, name));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_export_buffer(ctx, query, name));
     return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_query_import_buffer
-XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Query> queryxp, std::string name, Rcpp::NumericVector arrowpointers);
-RcppExport SEXP _tiledb_libtiledb_query_import_buffer(SEXP queryxpSEXP, SEXP nameSEXP, SEXP arrowpointersSEXP) {
+XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name, Rcpp::NumericVector arrowpointers);
+RcppExport SEXP _tiledb_libtiledb_query_import_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP, SEXP arrowpointersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type queryxp(queryxpSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type arrowpointers(arrowpointersSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_import_buffer(queryxp, name, arrowpointers));
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_import_buffer(ctx, query, name, arrowpointers));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2235,8 +2237,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_allocate_arrow_schema_as_double", (DL_FUNC) &_tiledb_allocate_arrow_schema_as_double, 0},
     {"_tiledb_delete_arrow_array_from_double", (DL_FUNC) &_tiledb_delete_arrow_array_from_double, 1},
     {"_tiledb_delete_arrow_schema_from_double", (DL_FUNC) &_tiledb_delete_arrow_schema_from_double, 1},
-    {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 2},
-    {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 3},
+    {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
+    {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
     {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 5},
     {"_tiledb_libtiledb_query_buffer_var_vec_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_alloc, 5},

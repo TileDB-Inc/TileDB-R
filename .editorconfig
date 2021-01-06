@@ -13,7 +13,7 @@ trim_trailing_whitespace = true
 # 4 space indentation
 [*.{c,cpp,h,hpp,R,r}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 # Tab indentation (no size specified)
 [Makefile]

@@ -86,15 +86,13 @@ void delete_arrow_schema_from_double(double dbl) {
 
 
 // [[Rcpp::export]]
-Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, std::string name) {
+Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
+                                                  XPtr<tiledb::Query> query,
+                                                  std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    auto query = std::shared_ptr<tiledb::Query>(queryxp.get(),
-                                                // with an 'empty' deleter to not destroy xptr
-                                                [](tiledb::Query* p){});
+    tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    tiledb::arrow::ArrowAdapter adapter(query);
-
-    auto arrptr = allocate_arrow_array(); 	// TODO: manage outside and pass in?
+    auto arrptr = allocate_arrow_array(); 	// manage outside and pass in?
     auto schptr = allocate_arrow_schema();
     adapter.export_buffer(name.c_str(),
                           static_cast<void*>(arrptr.get()),
@@ -110,13 +108,12 @@ Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Query> queryxp, s
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Query> queryxp, std::string name,
+XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
+                                                  XPtr<tiledb::Query> query,
+                                                  std::string name,
                                                   Rcpp::NumericVector arrowpointers) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    auto query = std::shared_ptr<tiledb::Query>(queryxp.get(),
-                                                // with an 'empty' deleter to not destroy xptr
-                                                [](tiledb::Query* p){});
-    tiledb::arrow::ArrowAdapter adapter(query);
+    tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
     Pointer<ArrowArray> arrptr(Rcpp::wrap(arrowpointers[0]));
     Pointer<ArrowSchema> schptr(Rcpp::wrap(arrowpointers[1]));
@@ -126,5 +123,5 @@ XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Query> queryxp, s
 #else
     Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
 #endif
-    return(queryxp);
+    return(query);
 }
