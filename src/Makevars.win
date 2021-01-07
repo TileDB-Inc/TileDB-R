@@ -1,13 +1,14 @@
 CXX_STD = CXX11
-VERSION = 2.1.6
-RWINLIB=../windows/tiledb-$(VERSION)
+VERSION = 2.2.0
+#RWINLIB=../windows/tiledb-$(VERSION)
+RWINLIB=../windows/rwinlib-tiledb-$(VERSION)
 
-PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -DTILEDB_STATIC_DEFINE
+PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -I$(RWINLIB)/include/tiledb -DTILEDB_STATIC_DEFINE
 PKG_LIBS = \
 	-L$(RWINLIB)/lib$(subst gcc,,$(COMPILED_BY))$(R_ARCH) \
 	-L$(RWINLIB)/lib$(R_ARCH) \
 	-ltiledbstatic -lbz2 -lzstd -llz4 -lz \
-	-laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common \
+	-laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common \
 	-lShlwapi -lBcrypt -lRpcrt4 -lWininet -lWinhttp -lws2_32 -lVersion -lUserenv
 
 all: clean winlibs
