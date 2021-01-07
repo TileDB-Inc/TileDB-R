@@ -37,9 +37,12 @@
 ##'
 ##' @param obj A \code{data.frame} object.
 ##' @param uri A character variable with an Array URI.
-##' @param sparse A logical switch to select sparse (the default) or dense
+##' @param col_index An optional column index, either numeric with a column index,
+##' or character with a column name, designating an index column; default is NULL
+##' implying an index column is added when the array is created
+##' @param sparse A logical switch to select sparse or dense (the default)
 ##' @param allows_dups A logical switch to select if duplicate values
-##' are allowed or not, default is \sQuote{TRUE}.
+##' are allowed or not, default is the same value as \sQuote{sparse}.
 ##' @param cell_order A character variable with one of the TileDB cell order values,
 ##' default is \dQuote{COL_MAJOR}.
 ##' @param tile_order A character variable with one of the TileDB tile order values,
@@ -65,66 +68,68 @@
 ##' all.equal(iris, newdf)
 ##' }
 ##' @export
-fromDataFrame <- function(obj, uri, sparse=TRUE, allows_dups=TRUE,
-                          cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="NONE",
-                          capacity = 1000L, tile_domain, tile_extent) {
+fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sparse,
+                          cell_order = "ROW_MAJOR", tile_order = "ROW_MAJOR", filter="ZSTD",
+                          capacity = 10000L, tile_domain, tile_extent) {
 
-  dims <- dim(obj)
+    dims <- dim(obj)
 
-  if (missing(tile_domain)) tile_domain <- c(1L, dims[1])
-  if (missing(tile_extent)) tile_extent <- dims[1]
+    if (is.null(col_index)) {
+        if (missing(tile_domain)) tile_domain <- c(1L, dims[1])
+        if (missing(tile_extent)) tile_extent <- dims[1]
 
-  dom <- tiledb_domain(dims = tiledb_dim(name = "rows",
-                                         domain = tile_domain,
-                                         tile = tile_extent,
-                                         type = "INT32"))
+        dom <- tiledb_domain(dims = tiledb_dim(name = "__tiledb_rows",
+                                               domain = tile_domain,
+                                               tile = tile_extent,
+                                               type = "INT32"))
+    }
 
-  ## turn factor columns in char columns
-  factcols <- grep("factor", sapply(obj, class))
-  if (length(factcols) > 0) {
-    for (i in factcols) obj[,i] <- as.character(obj[,i])
-  }
+    ## turn factor columns in char columns
+    factcols <- grep("factor", sapply(obj, class))
+    if (length(factcols) > 0) {
+        for (i in factcols) obj[,i] <- as.character(obj[,i])
+    }
 
-  charcols <- grep("character", sapply(obj, class))
+    charcols <- grep("character", sapply(obj, class))
 
-  ## 'NONE' is a permitted filter
-  filterlist <- tiledb_filter_list(tiledb_filter(filter))
+    ## 'NONE' is a permitted filter
+    filterlist <- tiledb_filter_list(tiledb_filter(filter))
 
-  makeAttr <- function(ind) {
-    col <- obj[,ind]
-    cl <- class(col)[1]
-    if (cl == "integer")
-      tp <- "INT32"
-    else if (cl == "numeric")
-      tp <- "FLOAT64"
-    else if (cl == "character")
-      tp <- "CHAR"
-    else if (cl == "Date")
-      tp <- "DATETIME_DAY"
-    else if (cl == "POSIXct" || cl == "POSIXlt")
-      tp <- "DATETIME_MS"
-    else if (cl == "nanotime")
-      tp <- "DATETIME_NS"
-    else
-      stop("Currently unsupported type: ", cl)
-    tiledb_attr(colnames(obj)[ind],
-                type = tp,
-                ncells = ifelse(tp=="CHAR",NA_integer_,1),
-                filter_list = filterlist)
-  }
-  attributes <- sapply(seq_len(dims[2]), makeAttr)
+    makeAttr <- function(ind) {
+        col <- obj[,ind]
+        cl <- class(col)[1]
+        if (cl == "integer")
+            tp <- "INT32"
+        else if (cl == "numeric")
+            tp <- "FLOAT64"
+        else if (cl == "character")
+            tp <- "CHAR"
+        else if (cl == "Date")
+            tp <- "DATETIME_DAY"
+        else if (cl == "POSIXct" || cl == "POSIXlt")
+            tp <- "DATETIME_MS"
+        else if (cl == "nanotime")
+            tp <- "DATETIME_NS"
+        else
+            stop("Currently unsupported type: ", cl)
+        tiledb_attr(colnames(obj)[ind],
+                    type = tp,
+                    ncells = ifelse(tp=="CHAR",NA_integer_,1),
+                    filter_list = filterlist)
+    }
+    attributes <- sapply(seq_len(dims[2]), makeAttr)
 
-  schema <- tiledb_array_schema(dom, attrs = attributes,
-                                cell_order = cell_order, tile_order = tile_order,
-                                sparse=sparse, capacity=capacity)
-  tiledb_array_create(uri, schema)
+    schema <- tiledb_array_schema(dom, attrs = attributes,
+                                  cell_order = cell_order, tile_order = tile_order,
+                                  sparse=sparse, capacity=capacity)
+    tiledb_array_create(uri, schema)
 
-  allows_dups(schema) <- allows_dups
+    allows_dups(schema) <- allows_dups
 
-  df <- tiledb_array(uri)
-  if (sparse) obj <- cbind(data.frame(rows=seq(1,dims[1])), obj)
-  df[] <- obj
-  invisible(NULL)
+    df <- tiledb_array(uri)
+    if (sparse) obj <- cbind(data.frame(rows=seq(1,dims[1])), obj)
+    df[] <- obj
+    invisible(NULL)
 }
 
 .testFromDataFrame <- function(obj, uri) {
