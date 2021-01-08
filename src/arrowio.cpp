@@ -26,7 +26,7 @@
 #include <tiledb.h>
 #include "tiledb_version.h"
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-#include <arrowio>
+#include <tiledb/arrowio>
 #endif
 
 

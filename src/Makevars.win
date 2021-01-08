@@ -1,9 +1,9 @@
 CXX_STD = CXX11
-VERSION = 2.2.0
+VERSION = 2.2.1
 #RWINLIB=../windows/tiledb-$(VERSION)
 RWINLIB=../windows/rwinlib-tiledb-$(VERSION)
 
-PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -I$(RWINLIB)/include/tiledb -DTILEDB_STATIC_DEFINE
+PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -DTILEDB_STATIC_DEFINE
 PKG_LIBS = \
 	-L$(RWINLIB)/lib$(subst gcc,,$(COMPILED_BY))$(R_ARCH) \
 	-L$(RWINLIB)/lib$(R_ARCH) \
