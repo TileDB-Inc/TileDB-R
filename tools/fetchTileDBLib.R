@@ -17,8 +17,8 @@ if (osarg == "url" && length(argv) <= 1) {
 }
 urlarg <- argv[2]
 
-ver <- "2.1.6"
-sha <- "c16d85e"
+ver <- "2.2.1"
+sha <- "4744a3f"
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
 dlurl <- switch(osarg,
                 linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-full.tar.gz", ver, ver, sha)),
