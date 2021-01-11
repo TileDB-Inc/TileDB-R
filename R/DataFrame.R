@@ -95,7 +95,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
 
 
         if (missing(tile_domain)) tile_domain <- c(min(idxcol), max(idxcol))
-        if (missing(tile_extent)) tile_extent <- diff(range(idxcol)) + 1L
+        if (missing(tile_extent)) tile_extent <- dims[1]
 
         dom <- tiledb_domain(dims = tiledb_dim(name = idxnam,
                                                domain = tile_domain,
@@ -148,6 +148,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     allows_dups(schema) <- allows_dups
 
     df <- tiledb_array(uri)
+    ## when setting an index when likely want 'sparse write to dense array
+    if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
     if (sparse) obj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1])), obj)
     df[] <- obj
     invisible(NULL)
