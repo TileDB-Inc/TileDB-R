@@ -38,8 +38,8 @@ default is \dQuote{COL_MAJOR}.}
 \item{tile_order}{A character variable with one of the TileDB tile order values,
 default is \dQuote{COL_MAJOR}.}
 
-\item{filter}{A character variable, defaults to \sQuote{NONE}, for a
-filter to be applied to each attribute.}
+\item{filter}{A character variable vectoe, defaults to \sQuote{ZSTD}, for
+one or more filters to be applied to each attribute;}
 
 \item{capacity}{A integer value with the schema capacity, default is 1000.}
 

@@ -47,8 +47,8 @@
 ##' default is \dQuote{COL_MAJOR}.
 ##' @param tile_order A character variable with one of the TileDB tile order values,
 ##' default is \dQuote{COL_MAJOR}.
-##' @param filter A character variable, defaults to \sQuote{NONE}, for a
-##' filter to be applied to each attribute.
+##' @param filter A character variable vectoe, defaults to \sQuote{ZSTD}, for
+##' one or more filters to be applied to each attribute;
 ##' @param capacity A integer value with the schema capacity, default is 1000.
 ##' @param tile_domain An integer vector of size two specifying the integer domain of the row
 ##' dimension; if missing the row dimension of the \code{obj} is used.
@@ -82,6 +82,25 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
                                                domain = tile_domain,
                                                tile = tile_extent,
                                                type = "INT32"))
+    } else {
+        if (length(col_index) > 1) {
+            warning("Currently only one index column supported")
+            col_index <- col_index[1]
+        }
+        #cat("Looking at col_index =", col_index, "\n")
+        if (is.character(col_index)) col_index <- match(col_index, colnames(obj))
+        idxcol <- obj[, col_index]
+        idxnam <- colnames(obj)[col_index]
+        #cat("Looking at col_index =", col_index, ":", idxnam, "\n")
+
+
+        if (missing(tile_domain)) tile_domain <- c(min(idxcol), max(idxcol))
+        if (missing(tile_extent)) tile_extent <- diff(range(idxcol)) + 1L
+
+        dom <- tiledb_domain(dims = tiledb_dim(name = idxnam,
+                                               domain = tile_domain,
+                                               tile = tile_extent,
+                                               type = "INT32"))
     }
 
     ## turn factor columns in char columns
@@ -92,8 +111,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
 
     charcols <- grep("character", sapply(obj, class))
 
-    ## 'NONE' is a permitted filter
-    filterlist <- tiledb_filter_list(tiledb_filter(filter))
+    ## Create filterlist from filter vector, 'NONE' and 'ZSTD' is default
+    filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
 
     makeAttr <- function(ind) {
         col <- obj[,ind]
@@ -117,7 +136,9 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
                     ncells = ifelse(tp=="CHAR",NA_integer_,1),
                     filter_list = filterlist)
     }
-    attributes <- sapply(seq_len(dims[2]), makeAttr)
+    cols <- seq_len(dims[2])
+    attributes <- sapply(cols, makeAttr)
+    if (!is.null(col_index)) attributes <- attributes[-col_index]
 
     schema <- tiledb_array_schema(dom, attrs = attributes,
                                   cell_order = cell_order, tile_order = tile_order,
@@ -127,7 +148,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     allows_dups(schema) <- allows_dups
 
     df <- tiledb_array(uri)
-    if (sparse) obj <- cbind(data.frame(rows=seq(1,dims[1])), obj)
+    if (sparse) obj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1])), obj)
     df[] <- obj
     invisible(NULL)
 }
