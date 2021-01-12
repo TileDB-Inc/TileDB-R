@@ -980,10 +980,11 @@ tiledb_config_unset(config, "sm.tile_cache_size")
 # Save to file
 config <- tiledb_config()
 config["sm.tile_cache_size"] <- 0;
-tiledb_config_save(config, "/tmp/tiledb_config.txt")
+file <- tempfile(pattern = "tiledb_config", fileext = ".txt")
+tiledb_config_save(config, file)
 
 # Load from file
-config_loaded <- tiledb_config_load("/tmp/tiledb_config.txt")
+config_loaded <- tiledb_config_load(file)
 tile_cache_size = config_loaded["sm.tile_cache_size"]
 ```
 
@@ -1115,7 +1116,7 @@ tiledb_object_remove(ctx, "/tmp/my_group_2/dense_array")
 
 ```{r vfswrite}
 # binary file to be written
-uri <- "/tmp/tiledb_vfs.bin"
+uri <- tempfile(pattern = "tiledb_vfs", fileext = ".bin")
 # open file
 fhbuf <- tiledb_vfs_open(uri, "WRITE")
 
