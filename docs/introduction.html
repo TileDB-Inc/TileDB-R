@@ -59,10 +59,11 @@
 </ul>
 </nav>
 <article>
+<p>This document introduces TileDB via several simple examples. A corresponding document with more complete <a href="documentation.html">API documentation</a> is also available.</p>
 <section id="getting-started" class="level1">
 <h1>Getting started</h1>
 <p>Once the TileDB R package is installed, it can be loaded via <code>library(tiledb)</code>. Installation is supported for Windows, Linux and macOS via the <a href="https://cran.r-project.org/package=tiledb">official CRAN package</a>, on Linux and macOS via <a href="https://anaconda.org/conda-forge/r-tiledb">the conda package</a> as well as from source.</p>
-<p>Documentation for the TileDB R package is available via the <code>help()</code> function from within R as well as via the <a href="https://tiledb-inc.github.io/TileDB-R/">package documentation</a> and an <a href="https://tiledb-inc.github.io/TileDB-R/documentation.nb.html">introductory notebook</a>. Documentation about TileDB itself is <a href="https://docs.tiledb.com/main/">also available</a>.</p>
+<p>Documentation for the TileDB R package is available via the <code>help()</code> function from within R as well as via the <a href="https://tiledb-inc.github.io/TileDB-R/">package documentation</a> and an [introductory notebook][tiledb_notebook]. Documentation about TileDB itself is <a href="https://docs.tiledb.com/main/">also available</a>.</p>
 <p>Several “quickstart” examples that are discussed on the website are available in the <a href="https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples">examples</a> directory. This vignette discusses similar examples.</p>
 <p>In the following examples, the URIs describing arrays point to local file system object. When TileDB has been built with S3 support, and with proper AWS credentials in the usual environment variables, URIs such as <code>s3://some/data/bucket</code> can be used where a local file would be used. See the script <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_S3.R">ex_S3.R</a> for an example.</p>
 </section>
@@ -77,21 +78,23 @@
 <p>The file <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R">ex_1.R</a> in the examples directory is a simple yet complete example extending <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/quickstart_dense.R">quickstart_dense.R</a> by adding a second and third attribute. In this as well as the following examples we will use <code>tiledb_array()</code> to access the array; the older variants <code>tiledb_dense()</code> and <code>tiledb_sparse()</code> remain supported but are deprecated and may be removed at some point in the future.</p>
 <p><em>Read 1-D</em></p>
 <p>The first example extracts rows 1 to 2 and column 2 from an array. It also limits the selection to just one attribute (via <code>attrs</code>), asks for the return to be a <code>data.frame</code> (instead of a simpler list) and for the (row and column, if present as here) indices to not be printed (via <code>extended=FALSE</code>).</p>
-<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, attrs = &quot;b&quot;, as.data.frame=TRUE, extended=FALSE))
-R&gt; A[1:2,2]
+<pre><code>&gt; A &lt;- tiledb_array(uri = uri, attrs = &quot;b&quot;,
++                   as.data.frame=TRUE, extended=FALSE))
+&gt; A[1:2,2]
 [1] 101.5 104.0
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>Note that the examples create three two-dimensional attributes. The attributes can be selected via the <code>attrs</code> argument, or the <code>attrs()</code> method on the array object. The square-bracket indexing then selects with in the 2-d attribute object.</p>
 <p>If multiple objects are returned (as <code>list</code> or <code>data.frame</code>), subsetting on the returned object works via <code>[[var]]</code> or <code>$var</code>. A numeric index also works (but needs to account for <code>rows</code> and <code>cols</code>).</p>
-<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, attrs = c(&quot;a&quot;,&quot;b&quot;), as.data.frame = TRUE)
-R&gt; A[1:2,2][[&quot;a&quot;]]
+<pre><code>&gt; A &lt;- tiledb_array(uri = uri, attrs = c(&quot;a&quot;,&quot;b&quot;),
++                   as.data.frame = TRUE)
+&gt; A[1:2,2][[&quot;a&quot;]]
 [1] 2 7
-R&gt; A[1:2,2]$a
+&gt; A[1:2,2]$a
 [1] 2 7
-R&gt;</code></pre>
+&gt;</code></pre>
 <p><em>Read 2-D</em></p>
 <p>This works analogously. Note that the results are generally returned as vectors, or as a columns of a <code>data.frame</code> object in case that option was set.</p>
-<pre><code>R&gt; A[6:9,3:4]
+<pre><code>&gt; A[6:9,3:4]
 $a
 [1] 28 29 33 34 38 39 43 44
 
@@ -100,13 +103,14 @@ $b
 
 $c
 [1] &quot;fox&quot; &quot;A&quot;   &quot;E&quot;   &quot;F&quot;   &quot;J&quot;   &quot;K&quot;   &quot;O&quot;   &quot;P&quot;
-R&gt;</code></pre>
+&gt;</code></pre>
 </section>
 <section id="read-2-d-with-attribute-selection" class="level2">
 <h2>Read 2-D with attribute selection</h2>
 <p>We can restrict the selection to a subset of attributes when opening the array.</p>
-<pre><code>R&gt; A &lt;- tiledb_dense(uri = uri, attrs = c(&quot;b&quot;,&quot;c&quot;), as.data.frame = TRUE, extended=FALSE)
-R&gt; A[6:9,2:4]
+<pre><code>&gt; A &lt;- tiledb_dense(uri = uri, attrs = c(&quot;b&quot;,&quot;c&quot;),
++                   as.data.frame = TRUE, extended=FALSE)
+&gt; A[6:9,2:4]
        b     c
 1  114.0 brown
 2  114.5   fox
@@ -120,19 +124,20 @@ R&gt; A[6:9,2:4]
 10 121.5     N
 11 122.0     O
 12 122.5     P
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>This also illustrated the effect of setting <code>as.data.frame=TRUE</code> when opening the array.</p>
 <p>This scheme can be generalized to variable cells, or cells where N&gt;1, as we can expand each (atomistic) value over corresponding row and column indices.</p>
 <p>The column types correspond to the attribute typed in the array schema, subject to the constraint mentioned above on R types. (The char comes in as a factor variable as is still the R 3.6.* default which is about to change. We can also override, users can too.)</p>
-<pre><code>R&gt; A &lt;- tiledb_array(&quot;/tmp/tiledb/ex_1/&quot;, attrs=c(&quot;b&quot;,&quot;c&quot;), as.data.frame = TRUE, extended=TRUE)
-R&gt; sapply(A[6:9, 3:4], &quot;class&quot;)
+<pre><code>&gt; A &lt;- tiledb_array(&quot;/tmp/tiledb/ex_1/&quot;, attrs=c(&quot;b&quot;,&quot;c&quot;),
++                   as.data.frame = TRUE, extended=TRUE)
+&gt; sapply(A[6:9, 3:4], &quot;class&quot;)
        rows        cols           b           c
   &quot;integer&quot;   &quot;integer&quot;   &quot;numeric&quot; &quot;character&quot;
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>Consistent with the <code>data.frame</code> semantics, <em>now</em> requesting a named column <em>reduces to a vector</em> as this happens at the R side:</p>
-<pre><code>R&gt; A[6:9, 3:4]$b
+<pre><code>&gt; A[6:9, 3:4]$b
 [1] 114.5 115.0 117.0 117.5 119.5 120.0 122.0 122.5
-R&gt;</code></pre>
+&gt;</code></pre>
 </section>
 </section>
 <section id="sparse-arrays" class="level1">
@@ -141,8 +146,8 @@ R&gt;</code></pre>
 <h2>Basic Reading and Writing of Sparse Arrays</h2>
 <p><em>Simple Examples</em></p>
 <p>Basic reading returns the coordinates and any attributes. The following examples use the array created by the <a href="https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc">quickstart_sparse</a> example.</p>
-<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, is.sparse = TRUE)
-R&gt; A[]
+<pre><code>&gt; A &lt;- tiledb_array(uri = uri, is.sparse = TRUE)
+&gt; A[]
 $rows
 [1] 1 2 2
 
@@ -152,41 +157,41 @@ $cols
 $a
 [1] 1 3 2
 
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>We can also request a <code>data.frame</code> object, either when opening or by changing this object characteristic on the fly:</p>
-<pre><code>R&gt; return.data.frame(A) &lt;- TRUE
-R&gt; A[]
+<pre><code>&gt; return.data.frame(A) &lt;- TRUE
+&gt; A[]
   a rows cols
 1 1    1    1
 2 3    2    3
 3 2    2    4</code></pre>
 <p>For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can be overridden.</p>
 <p>Assignment works similarly:</p>
-<pre><code>R&gt; A[4,2] &lt;- 42L
-R&gt; A[]
-R&gt; A[]
+<pre><code>&gt; A[4,2] &lt;- 42L
+&gt; A[]
+&gt; A[]
   rows cols  a
 1    1    1  1
 2    2    3  3
 3    2    4  2
 4    4    2 42
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>Reads can select rows and or columns:</p>
-<pre><code>R&gt; A[2,]
+<pre><code>&gt; A[2,]
   rows cols a
 1    2    3 3
 2    2    4 2
-R&gt; A[,2]
+&gt; A[,2]
   rows cols  a
 1    4    2 42
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>Attributes can be selected similarly.</p>
 </section>
 <section id="datetime-attributes" class="level2">
 <h2>Date(time) Attributes</h2>
 <p>Similar to the dense array case described earlier, the file <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_2.R">ex_2.R</a> illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of just integer and double precision floats.</p>
-<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, as.data.frame = TRUE)
-R&gt; A[1577858403:1577858408]
+<pre><code>&gt; A &lt;- tiledb_array(uri = uri, as.data.frame = TRUE)
+&gt; A[1577858403:1577858408]
         rows cols a   b          d                       e
 1 1577858403    1 3 103 2020-01-11 2020-01-02 18:24:33.844
 2 1577858404    1 4 104 2020-01-15 2020-01-05 02:28:36.214
@@ -194,21 +199,21 @@ R&gt; A[1577858403:1577858408]
 4 1577858406    1 6 106 2020-01-21 2020-01-06 12:58:51.770
 5 1577858407    1 7 107 2020-01-25 2020-01-09 04:29:56.309
 6 1577858408    1 8 108 2020-01-26 2020-01-07 13:55:10.240
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>The row coordinate is currently a floating point representation of the underlying time type. We can both select attributes (here we excluded the “a” column) and select rows by time (as the time stamps get converted to the required floating point value).</p>
-<pre><code>R&gt; attrs(A) &lt;- c(&quot;b&quot;, &quot;d&quot;, &quot;e&quot;)
-R&gt; A[as.POSIXct(&quot;2020-01-01 00:00:00&quot;):as.POSIXct(&quot;2020-01-01 00:00:03&quot;)]
+<pre><code>&gt; attrs(A) &lt;- c(&quot;b&quot;, &quot;d&quot;, &quot;e&quot;)
+&gt; A[as.POSIXct(&quot;2020-01-01&quot;):as.POSIXct(&quot;2020-01-01 00:00:03&quot;)]
         rows cols   b          d                       e
 1 1577858401    1 101 2020-01-05 2020-01-01 03:03:07.548
 2 1577858402    1 102 2020-01-10 2020-01-02 21:02:19.747
 3 1577858403    1 103 2020-01-11 2020-01-02 18:24:33.844
-R&gt;</code></pre>
+&gt;</code></pre>
 <p>More extended examples are available showing indexing by date(time) as well as character dimension.</p>
 </section>
 </section>
 <section id="additional-information" class="level1">
 <h1>Additional Information</h1>
-<p>The TileDB R package is documented via R help functions (<em>e.g.</em> <code>help(&quot;tiledb_array&quot;)</code> shows information for the <code>tiledb_array()</code> function) as well as via a <a href="https://tiledb-inc.github.io/TileDB-R/">website regrouping all documentation</a>. An extended <a href="https://tiledb-inc.github.io/TileDB-R/documentation.nb.html">notebook</a> is available, as is a <a href="https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples">examples/</a> directory.</p>
+<p>The TileDB R package is documented via R help functions (<em>e.g.</em> <code>help(&quot;tiledb_array&quot;)</code> shows information for the <code>tiledb_array()</code> function) as well as via a <a href="https://tiledb-inc.github.io/TileDB-R/">website regrouping all documentation</a>. Extended <a href="https://tiledb-inc.github.io/TileDB-R/documentation.html">API documentation</a> is available, as is a <a href="https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples">examples/</a> directory.</p>
 <p>TileDB itself has extensive <a href="https://docs.tiledb.com/developer/installation">installation</a>, and <a href="https://docs.tiledb.com/developer/">overall documentation</a> as well as a <a href="https://forum.tiledb.com/">support forum</a>.</p>
 </section>
 </article>

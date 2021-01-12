@@ -153,6 +153,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </nav>
 <article>
+<p>This document follows the <a href="https://docs.tiledb.com/main/solutions/tiledb-embedded/api-usage">TileDB API usage examples</a>. A shorter <a href="introduction.html">introductory vignette</a> is also available.</p>
 <section id="prelimaries" class="level1">
 <h1>Prelimaries</h1>
 <p>We will show two initial and basic examples for a dense and sparse array simply to create array data on disk to refer to later in examples that follow.</p>
@@ -362,7 +363,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set &#39;duplicates allowed?&#39; status</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">allows_dups</span>(sch) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_schema_set_allows_dups</span>(sch, <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55a005b630e0&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55efe283dc10&gt;</code></pre>
 </section>
 <section id="checking-correctness" class="level4">
 <h4>Checking Correctness</h4>
@@ -479,7 +480,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create encrypted array at &#39;uri&#39; with schema &#39;sch&#39;</span></span>
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_create</span>(uridensewkey, sch, encryption_key)</span></code></pre></div>
-<pre><code>## [1] &quot;/tmp/RtmpKBVIAo/denseenc&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmp4X6VQi/denseenc&quot;</code></pre>
 </section>
 </section>
 <section id="writing-arrays" class="level2">
@@ -541,7 +542,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>val <span class="ot">&lt;-</span> <span class="fu">tiledb_attr</span>(<span class="st">&quot;val&quot;</span>, <span class="at">type =</span> <span class="st">&quot;INT32&quot;</span>)</span>
 <span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>sch <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, val, <span class="at">sparse=</span><span class="cn">TRUE</span>)</span>
 <span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_create</span>(tmp, sch)</span></code></pre></div>
-<pre><code>## [1] &quot;/tmp/RtmpKBVIAo/sparse&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmp4X6VQi/sparse&quot;</code></pre>
 <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare some data</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(3L, 4L, 1L, 2L)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -572,7 +573,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_attribute_set_cell_val_num</span>(attr<span class="sc">@</span>ptr, <span class="dv">2</span>)</span>
 <span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>sch <span class="ot">&lt;-</span> <span class="fu">tiledb_array_schema</span>(dom, attr)</span>
 <span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_array_create</span>(uridensefix, sch)</span></code></pre></div>
-<pre><code>## [1] &quot;/tmp/RtmpKBVIAo/densefix&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmp4X6VQi/densefix&quot;</code></pre>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_ctx</span>()</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>arrptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_open</span>(ctx<span class="sc">@</span>ptr, uridensefix, <span class="st">&quot;WRITE&quot;</span>)</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>subarr <span class="ot">&lt;-</span> <span class="fu">c</span>(1L,4L, 1L,4L)</span>
@@ -611,7 +612,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Create the (empty) array on disk.</span></span>
 <span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_create</span>(uridensevar, schptr)</span></code></pre></div>
-<pre><code>## [1] &quot;/tmp/RtmpKBVIAo/densevar&quot;</code></pre>
+<pre><code>## [1] &quot;/tmp/Rtmp4X6VQi/densevar&quot;</code></pre>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="st">&quot;abbcccddeeefghhhijjjkklmnoop&quot;</span>;</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>offsets <span class="ot">&lt;-</span> <span class="fu">c</span>(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25L, 27L)</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -624,7 +625,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span>(qryptr, <span class="st">&quot;a1&quot;</span>, bufptr)</span>
 <span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
 <span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55a00acf5f90&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55efdca594d0&gt;</code></pre>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#TODO Higher-level R support</span></span></code></pre></div>
 </section>
 <section id="writing-at-a-timestamp" class="level3">
@@ -864,7 +865,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span>(qryptr, <span class="st">&quot;a1&quot;</span>, bufptr)</span>
 <span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>qryptr <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_submit</span>(qryptr)</span>
 <span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a>tiledb<span class="sc">:::</span><span class="fu">libtiledb_array_close</span>(arrptr)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55a009ddba40&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55efdd8e1630&gt;</code></pre>
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> tiledb<span class="sc">:::</span><span class="fu">libtiledb_query_get_buffer_var_char</span>(bufptr)</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mat, <span class="at">quote=</span><span class="cn">FALSE</span>)</span></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4]
@@ -1015,17 +1016,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Unset a configuration parameter</span></span>
 <span id="cb85-11"><a href="#cb85-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_config_unset</span>(config, <span class="st">&quot;sm.tile_cache_size&quot;</span>)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55a008815180&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55efe2880100&gt;</code></pre>
 </section>
 <section id="save-and-load-to-file" class="level4">
 <h4>Save and Load to File</h4>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to file</span></span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">tiledb_config</span>()</span>
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>config[<span class="st">&quot;sm.tile_cache_size&quot;</span>] <span class="ot">&lt;-</span> <span class="dv">0</span>;</span>
-<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_config_save</span>(config, <span class="st">&quot;/tmp/tiledb_config.txt&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;/tmp/tiledb_config.txt&quot;</code></pre>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>file <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">pattern =</span> <span class="st">&quot;tiledb_config&quot;</span>, <span class="at">fileext =</span> <span class="st">&quot;.txt&quot;</span>)</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_config_save</span>(config, file)</span></code></pre></div>
+<pre><code>## [1] &quot;/tmp/Rtmp4X6VQi/tiledb_config13562d561394b7.txt&quot;</code></pre>
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load from file</span></span>
-<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>config_loaded <span class="ot">&lt;-</span> <span class="fu">tiledb_config_load</span>(<span class="st">&quot;/tmp/tiledb_config.txt&quot;</span>)</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>config_loaded <span class="ot">&lt;-</span> <span class="fu">tiledb_config_load</span>(file)</span>
 <span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>tile_cache_size <span class="ot">=</span> config_loaded[<span class="st">&quot;sm.tile_cache_size&quot;</span>]</span></code></pre></div>
 </section>
 <section id="configuration-iterator" class="level4">
@@ -1189,7 +1191,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="writing" class="level4">
 <h4>Writing</h4>
 <div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># binary file to be written</span></span>
-<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb_vfs.bin&quot;</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="fu">tempfile</span>(<span class="at">pattern =</span> <span class="st">&quot;tiledb_vfs&quot;</span>, <span class="at">fileext =</span> <span class="st">&quot;.bin&quot;</span>)</span>
 <span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="co"># open file</span></span>
 <span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>fhbuf <span class="ot">&lt;-</span> <span class="fu">tiledb_vfs_open</span>(uri, <span class="st">&quot;WRITE&quot;</span>)</span>
 <span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a></span>
@@ -1226,84 +1228,82 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;Created &#39;dir_A&#39;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
 <span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;&#39;dir_A&#39; already exists</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<pre><code>## Created &#39;dir_A&#39;</code></pre>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating an (empty) file</span></span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">tiledb_vfs_is_file</span>(<span class="st">&quot;dir_A/file_A&quot;</span>)) {</span>
-<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_vfs_touch</span>(<span class="st">&quot;dir_A/file_A&quot;</span>)</span>
-<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;Created empty file &#39;dir_A/file_A&#39;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;File &#39;dir_A/file_A&#39; already existed</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<pre><code>## Created empty file &#39;dir_A/file_A&#39;</code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting the file size</span></span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Size of file &#39;dir_A/file_A&#39;: &quot;</span>,</span>
-<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_vfs_file_size</span>(<span class="st">&quot;dir_A/file_A&quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Size of file &#39;dir_A/file_A&#39;:  0</code></pre>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Moving files (moving directories is similar)</span></span>
-<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_move_file</span>(<span class="st">&quot;dir_A/file_A&quot;</span>, <span class="st">&quot;dir_A/file_B&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;dir_A/file_B&quot;</code></pre>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaning up</span></span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_remove_file</span>(<span class="st">&quot;dir_A/file_B&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;dir_A/file_B&quot;</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_remove_dir</span>(<span class="st">&quot;dir_A&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;dir_A&quot;</code></pre>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb104-8"><a href="#cb104-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-9"><a href="#cb104-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating an (empty) file</span></span>
+<span id="cb104-10"><a href="#cb104-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">tiledb_vfs_is_file</span>(<span class="st">&quot;dir_A/file_A&quot;</span>)) {</span>
+<span id="cb104-11"><a href="#cb104-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_vfs_touch</span>(<span class="st">&quot;dir_A/file_A&quot;</span>)</span>
+<span id="cb104-12"><a href="#cb104-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;Created empty file &#39;dir_A/file_A&#39;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb104-13"><a href="#cb104-13" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb104-14"><a href="#cb104-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;File &#39;dir_A/file_A&#39; already existed</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb104-15"><a href="#cb104-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb104-16"><a href="#cb104-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-17"><a href="#cb104-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Getting the file size</span></span>
+<span id="cb104-18"><a href="#cb104-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Size of file &#39;dir_A/file_A&#39;: &quot;</span>,</span>
+<span id="cb104-19"><a href="#cb104-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_vfs_file_size</span>(<span class="st">&quot;dir_A/file_A&quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb104-20"><a href="#cb104-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-21"><a href="#cb104-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Moving files (moving directories is similar)</span></span>
+<span id="cb104-22"><a href="#cb104-22" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_move_file</span>(<span class="st">&quot;dir_A/file_A&quot;</span>, <span class="st">&quot;dir_A/file_B&quot;</span>)</span>
+<span id="cb104-23"><a href="#cb104-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-24"><a href="#cb104-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaning up</span></span>
+<span id="cb104-25"><a href="#cb104-25" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_remove_file</span>(<span class="st">&quot;dir_A/file_B&quot;</span>)</span>
+<span id="cb104-26"><a href="#cb104-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_remove_dir</span>(<span class="st">&quot;dir_A&quot;</span>)</span></code></pre></div>
 </section>
 <section id="s3" class="level4">
 <h4>S3</h4>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_create_bucket</span>(<span class="st">&quot;s3://my_bucket&quot;</span>)</span>
-<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_remove_bucket</span>(<span class="st">&quot;s3://my_bucket&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_create_bucket</span>(<span class="st">&quot;s3://my_bucket&quot;</span>)</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_vfs_remove_bucket</span>(<span class="st">&quot;s3://my_bucket&quot;</span>)</span></code></pre></div>
 </section>
 <section id="configuring-vfs" class="level4">
 <h4>Configuring VFS</h4>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_get_context</span>()</span>
-<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">tiledb_config</span>()</span>
-<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>config[<span class="st">&quot;vfs.file.max_parallel_ops&quot;</span>] <span class="ot">&lt;-</span> <span class="dv">16</span></span>
-<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>vfs <span class="ot">&lt;-</span> <span class="fu">tiledb_vfs</span>(config, ctx)</span>
-<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb117-8"><a href="#cb117-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Or create the Config first and pass to the Ctx constructor</span></span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>ctx <span class="ot">&lt;-</span> <span class="fu">tiledb_get_context</span>()</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>config <span class="ot">&lt;-</span> <span class="fu">tiledb_config</span>()</span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>config[<span class="st">&quot;vfs.file.max_parallel_ops&quot;</span>] <span class="ot">&lt;-</span> <span class="dv">16</span></span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>vfs <span class="ot">&lt;-</span> <span class="fu">tiledb_vfs</span>(config, ctx)</span>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Or create the Config first and pass to the Ctx constructor</span></span></code></pre></div>
 </section>
 </section>
 <section id="using-performance-statistics" class="level2">
 <h2>Using Performance Statistics</h2>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Start collecting statistics</span></span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_enable</span>()</span>
-<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create some query here</span></span>
-<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> A[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-8"><a href="#cb118-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Stop collecting statistics</span></span>
-<span id="cb118-9"><a href="#cb118-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_disable</span>()</span>
-<span id="cb118-10"><a href="#cb118-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-11"><a href="#cb118-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the statistics on the console</span></span>
-<span id="cb118-12"><a href="#cb118-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_print</span>()</span>
-<span id="cb118-13"><a href="#cb118-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-14"><a href="#cb118-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the statistics to a file</span></span>
-<span id="cb118-15"><a href="#cb118-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_dump</span>(<span class="st">&quot;my_file_name&quot;</span>)</span>
-<span id="cb118-16"><a href="#cb118-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb118-17"><a href="#cb118-17" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also reset the stats as follows</span></span>
-<span id="cb118-18"><a href="#cb118-18" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_reset</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Start collecting statistics</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_enable</span>()</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ... create some query here</span></span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> A[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Stop collecting statistics</span></span>
+<span id="cb107-9"><a href="#cb107-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_disable</span>()</span>
+<span id="cb107-10"><a href="#cb107-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-11"><a href="#cb107-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the statistics on the console</span></span>
+<span id="cb107-12"><a href="#cb107-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_print</span>()</span>
+<span id="cb107-13"><a href="#cb107-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-14"><a href="#cb107-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the statistics to a file</span></span>
+<span id="cb107-15"><a href="#cb107-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_dump</span>(<span class="st">&quot;my_file_name&quot;</span>)</span>
+<span id="cb107-16"><a href="#cb107-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-17"><a href="#cb107-17" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also reset the stats as follows</span></span>
+<span id="cb107-18"><a href="#cb107-18" aria-hidden="true" tabindex="-1"></a><span class="fu">tiledb_stats_reset</span>()</span></code></pre></div>
 </section>
 <section id="catching-errors" class="level2">
 <h2>Catching Errors</h2>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a group. The code below creates a group `my_group` and prints a</span></span>
-<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># message because (normally) it will succeed.</span></span>
-<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_group_create</span>(<span class="st">&quot;/tmp/my_group&quot;</span>)</span>
-<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the same group again. If we attempt to create the same group</span></span>
-<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `my_group` as shown below, TileDB will return an error.</span></span>
-<span id="cb119-8"><a href="#cb119-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_group_create</span>(<span class="st">&quot;/tmp.my_group&quot;</span>)</span>
-<span id="cb119-9"><a href="#cb119-9" aria-hidden="true" tabindex="-1"></a>}, <span class="at">warning =</span> <span class="cf">function</span>(w) {</span>
-<span id="cb119-10"><a href="#cb119-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">cat</span>(w)</span>
-<span id="cb119-11"><a href="#cb119-11" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
-<span id="cb119-12"><a href="#cb119-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(e)</span>
-<span id="cb119-13"><a href="#cb119-13" aria-hidden="true" tabindex="-1"></a>}, <span class="at">finally =</span> {}</span>
-<span id="cb119-14"><a href="#cb119-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a group. The code below creates a group `my_group` and prints a</span></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># message because (normally) it will succeed.</span></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_group_create</span>(<span class="st">&quot;/tmp/my_group&quot;</span>)</span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the same group again. If we attempt to create the same group</span></span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `my_group` as shown below, TileDB will return an error.</span></span>
+<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tiledb_group_create</span>(<span class="st">&quot;/tmp.my_group&quot;</span>)</span>
+<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>}, <span class="at">warning =</span> <span class="cf">function</span>(w) {</span>
+<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">cat</span>(w)</span>
+<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(e)</span>
+<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a>}, <span class="at">finally =</span> {}</span>
+<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </section>
 </section>
 </article>
