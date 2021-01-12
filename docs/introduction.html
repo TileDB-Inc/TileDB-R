@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>First Steps with TileDB</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+  <link href="data:text/css,%40charset%20%22UTF%2D8%22%3Bbody%7Bfont%2Dfamily%3Asystem%2Dui%2C%2Dapple%2Dsystem%2CBlinkMacSystemFont%2CSegoe%20UI%2CRoboto%2COxygen%2CUbuntu%2CCantarell%2CFira%20Sans%2CDroid%20Sans%2CHelvetica%20Neue%2Csans%2Dserif%3Bline%2Dheight%3A1%2E4%3Bmax%2Dwidth%3A800px%3Bmargin%3A20px%20auto%3Bpadding%3A0%2010px%3Bcolor%3A%23363636%3Bbackground%3A%23fff%3Btext%2Drendering%3AoptimizeLegibility%7Dbutton%2Cinput%2Ctextarea%7Btransition%3Abackground%2Dcolor%20%2E1s%20linear%2Cborder%2Dcolor%20%2E1s%20linear%2Ccolor%20%2E1s%20linear%2Cbox%2Dshadow%20%2E1s%20linear%2Ctransform%20%2E1s%20ease%7Dh1%7Bfont%2Dsize%3A2%2E2em%3Bmargin%2Dtop%3A0%7Dh1%2Ch2%2Ch3%2Ch4%2Ch5%2Ch6%7Bmargin%2Dbottom%3A12px%7Dh1%2Ch2%2Ch3%2Ch4%2Ch5%2Ch6%2Cstrong%7Bcolor%3A%23000%7Db%2Ch1%2Ch2%2Ch3%2Ch4%2Ch5%2Ch6%2Cstrong%2Cth%7Bfont%2Dweight%3A600%7Dblockquote%7Bborder%2Dleft%3A4px%20solid%20rgba%280%2C150%2C191%2C%2E67%29%3Bmargin%3A1%2E5em%200%3Bpadding%3A%2E5em%201em%3Bfont%2Dstyle%3Aitalic%7Dblockquote%3Efooter%7Bmargin%2Dtop%3A10px%3Bfont%2Dstyle%3Anormal%7Daddress%2Cblockquote%20cite%7Bfont%2Dstyle%3Anormal%7Da%5Bhref%5E%3Dmailto%5D%3Abefore%7Bcontent%3A%22%F0%9F%93%A7%20%22%7Da%5Bhref%5E%3Dtel%5D%3Abefore%7Bcontent%3A%22%F0%9F%93%9E%20%22%7Da%5Bhref%5E%3Dsms%5D%3Abefore%7Bcontent%3A%22%F0%9F%92%AC%20%22%7Dbutton%2Cinput%5Btype%3Dbutton%5D%2Cinput%5Btype%3Dcheckbox%5D%2Cinput%5Btype%3Dsubmit%5D%7Bcursor%3Apointer%7Dinput%3Anot%28%5Btype%3Dcheckbox%5D%29%3Anot%28%5Btype%3Dradio%5D%29%2Cselect%7Bdisplay%3Ablock%7Dbutton%2Cinput%2Cselect%2Ctextarea%7Bcolor%3A%23000%3Bbackground%2Dcolor%3A%23efefef%3Bfont%2Dfamily%3Ainherit%3Bfont%2Dsize%3Ainherit%3Bmargin%2Dright%3A6px%3Bmargin%2Dbottom%3A6px%3Bpadding%3A10px%3Bborder%3Anone%3Bborder%2Dradius%3A6px%3Boutline%3Anone%7Dbutton%2Cinput%3Anot%28%5Btype%3Dcheckbox%5D%29%3Anot%28%5Btype%3Dradio%5D%29%2Cselect%2Ctextarea%7B%2Dwebkit%2Dappearance%3Anone%7Dtextarea%7Bmargin%2Dright%3A0%3Bwidth%3A100%25%3Bbox%2Dsizing%3Aborder%2Dbox%3Bresize%3Avertical%7Dbutton%2Cinput%5Btype%3Dbutton%5D%2Cinput%5Btype%3Dsubmit%5D%7Bpadding%2Dright%3A30px%3Bpadding%2Dleft%3A30px%7Dbutton%3Ahover%2Cinput%5Btype%3Dbutton%5D%3Ahover%2Cinput%5Btype%3Dsubmit%5D%3Ahover%7Bbackground%3A%23ddd%7Dbutton%3Afocus%2Cinput%3Afocus%2Cselect%3Afocus%2Ctextarea%3Afocus%7Bbox%2Dshadow%3A0%200%200%202px%20rgba%280%2C150%2C191%2C%2E67%29%7Dbutton%3Aactive%2Cinput%5Btype%3Dbutton%5D%3Aactive%2Cinput%5Btype%3Dcheckbox%5D%3Aactive%2Cinput%5Btype%3Dradio%5D%3Aactive%2Cinput%5Btype%3Dsubmit%5D%3Aactive%7Btransform%3AtranslateY%282px%29%7Dbutton%3Adisabled%2Cinput%3Adisabled%2Cselect%3Adisabled%2Ctextarea%3Adisabled%7Bcursor%3Anot%2Dallowed%3Bopacity%3A%2E5%7D%3A%3A%2Dwebkit%2Dinput%2Dplaceholder%7Bcolor%3A%23949494%7D%3A%2Dms%2Dinput%2Dplaceholder%7Bcolor%3A%23949494%7D%3A%3A%2Dms%2Dinput%2Dplaceholder%7Bcolor%3A%23949494%7D%3A%3Aplaceholder%7Bcolor%3A%23949494%7Da%7Btext%2Ddecoration%3Anone%3Bcolor%3A%230076d1%7Da%3Ahover%7Btext%2Ddecoration%3Aunderline%7Dcode%2Ckbd%7Bbackground%3A%23efefef%3Bcolor%3A%23000%3Bpadding%3A5px%3Bborder%2Dradius%3A6px%7Dpre%3Ecode%7Bpadding%3A10px%3Bdisplay%3Ablock%3Boverflow%2Dx%3Aauto%7Dimg%7Bmax%2Dwidth%3A100%25%7Dhr%7Bborder%3Anone%3Bborder%2Dtop%3A1px%20solid%20%23dbdbdb%7Dtable%7Bborder%2Dcollapse%3Acollapse%3Bmargin%2Dbottom%3A10px%3Bwidth%3A100%25%7Dtd%2Cth%7Bpadding%3A6px%3Btext%2Dalign%3Aleft%7Dth%7Bborder%2Dbottom%3A1px%20solid%20%23dbdbdb%7Dtbody%20tr%3Anth%2Dchild%282n%29%7Bbackground%2Dcolor%3A%23efefef%7D%3A%3A%2Dwebkit%2Dscrollbar%7Bheight%3A10px%3Bwidth%3A10px%7D%3A%3A%2Dwebkit%2Dscrollbar%2Dtrack%7Bbackground%3A%23efefef%3Bborder%2Dradius%3A6px%7D%3A%3A%2Dwebkit%2Dscrollbar%2Dthumb%7Bbackground%3A%23d5d5d5%3Bborder%2Dradius%3A6px%7D%3A%3A%2Dwebkit%2Dscrollbar%2Dthumb%3Ahover%7Bbackground%3A%23c4c4c4%7D%0A%0A" rel="stylesheet" />
+  <link href="data:text/css,%0Acode%20%7B%0Apadding%3A%202px%3B%0Aborder%2Dradius%3A%20unset%3B%0A%7D%0A%0Apre%20%7B%0Abackground%2Dcolor%3A%20unset%3B%0Aborder%3A%20solid%20%23aaa%201px%3B%0Apadding%3A%208px%3B%0A%7D%0Apre%2EnumberSource%20%7B%0Amargin%3A%200%3B%0Apadding%2Dleft%3A%200%3B%0A%7D%0Adiv%2EsourceCode%20%7B%0Aoverflow%3A%20visible%3B%0A%7D%0Apre%2C%20pre%2EsourceCode%20%7B%0Aoverflow%2Dx%3A%20auto%3B%0A%7D%0Apre%3Ecode%20%7B%0Awhite%2Dspace%3A%20pre%3B%0Aoverflow%3A%20visible%3B%0Abackground%2Dcolor%3A%20unset%3B%0Apadding%3A%200%3B%0A%7D%0Apre%2EsourceCode%2EnumberSource%20%7B%0Aoverflow%2Dx%3A%20visible%3B%0A%7D%0Apre%2EsourceCode%2EnumberSource%3Ecode%20%7B%0Awhite%2Dspace%3A%20pre%2Dwrap%0A%7D%0Apre%2EsourceCode%2EnumberSource%3Ecode%3Espan%20%7B%0Aleft%3A%208px%3B%0Atext%2Dindent%3A%20%2D4%2E6em%3B%0A%7D%0A%0A%2Echunk%2Dsummary%20%7B%0Atext%2Dalign%3A%20right%3B%0A%7D%0A%2Echunk%2Dsummary%2Bpre%2C%0A%2Echunk%2Dsummary%2Bdiv%2EsourceCode%20%7B%0Amargin%2Dtop%3A%202px%3B%0A%7D%0A%0Anav%20%3E%20ul%20%7B%0Aborder%3A%20%2E0625rem%20solid%20%23444%3B%0Aborder%2Dradius%3A%204px%3B%0Amargin%3A%205px%3B%0Apadding%3A%205px%3B%0A%7D%0Anav%20ul%20%7B%0Alist%2Dstyle%2Dtype%3A%20none%3B%0Apadding%2Dinline%2Dstart%3A%201rem%3B%0A%7D%0Anav%20ul%20li%20%7B%0Apadding%3A%200%3B%0A%7D%0Anav%20ul%20ul%20%7B%0Amargin%2Dtop%3A%200%3B%0Amargin%2Dbottom%3A%200%3B%0Apadding%2Dtop%3A%200%3B%0Apadding%2Dbottom%3A%200%3B%0A%7D%0Anav%20code%20%7B%0Abackground%2Dcolor%3A%20unset%3B%0Acolor%3A%20unset%3B%0A%7D%0A" rel="stylesheet" />
+  <link href="data:text/css,%2Etooltip%20%7B%0Aposition%3A%20relative%3B%0Adisplay%3A%20inline%2Dblock%3B%0A%7D%0A%2Etooltip%3Abefore%2C%20%2Etooltip%3Aafter%20%7B%0Aposition%3A%20absolute%3B%0Aopacity%3A%200%3B%0Aclip%3A%20rect%280%200%200%200%29%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%28100%25%29%3B%0Aclip%2Dpath%3A%20inset%28100%25%29%3B%0Atransition%3A%20all%200%2E3s%3B%0Az%2Dindex%3A%201010%3B%0Aleft%3A%2050%25%3B%0A%7D%0A%2Etooltip%3Anot%28%2Ebottom%29%3Abefore%2C%20%2Etooltip%3Anot%28%2Ebottom%29%3Aafter%20%7B%0Abottom%3A%2075%25%3B%0A%7D%0A%2Etooltip%2Ebottom%3Abefore%2C%20%2Etooltip%2Ebottom%3Aafter%20%7B%0Atop%3A%2075%25%3B%0A%7D%0A%2Etooltip%3Ahover%3Abefore%2C%20%2Etooltip%3Ahover%3Aafter%2C%20%2Etooltip%3Afocus%3Abefore%2C%20%2Etooltip%3Afocus%3Aafter%20%7B%0Aopacity%3A%201%3B%0Aclip%3A%20auto%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%280%25%29%3B%0Aclip%2Dpath%3A%20inset%280%25%29%3B%0A%7D%0A%2Etooltip%3Abefore%20%7B%0Acontent%3A%20%27%27%3B%0Abackground%3A%20transparent%3B%0Aborder%3A%200%2E5rem%20solid%20transparent%3B%0Aleft%3A%20calc%2850%25%20%2D%200%2E5rem%29%3B%0A%7D%0A%2Etooltip%3Anot%28%2Ebottom%29%3Abefore%20%7B%0Aborder%2Dtop%2Dcolor%3A%20%23212121%3B%0A%7D%0A%2Etooltip%2Ebottom%3Abefore%20%7B%0Aborder%2Dbottom%2Dcolor%3A%20%23212121%3B%0A%7D%0A%2Etooltip%3Aafter%20%7B%0Acontent%3A%20attr%28aria%2Dlabel%29%3B%0Acolor%3A%20%23fafafa%3B%0Abackground%3A%20%23212121%3B%0Aborder%2Dradius%3A%200%2E125rem%3B%0Apadding%3A%200%2E5rem%3B%0Awhite%2Dspace%3A%20nowrap%3B%0Atransform%3A%20translateX%28%2D50%25%29%3B%0A%7D%0A%2Etooltip%3Anot%28%2Ebottom%29%3Aafter%20%7B%0Amargin%2Dbottom%3A%201rem%3B%0A%7D%0A%2Etooltip%2Ebottom%3Aafter%20%7B%0Amargin%2Dtop%3A%201rem%3B%0A%7D%0A" rel="stylesheet" />
+  <link href="data:text/css,%0A%2Ecollapse%20%7B%0Awidth%3A%20calc%28100%25%20%2D%201rem%29%3B%0Aopacity%3A%201%3B%0Adisplay%3A%20flex%3B%0Aflex%2Ddirection%3A%20column%3B%0Amargin%3A%200%2E5rem%3B%0Aborder%2Dradius%3A%200%2E125rem%3B%0A%7D%0A%2Ecollapse%20%3E%20%5Btype%3D%22radio%22%5D%2C%20%2Ecollapse%20%3E%20%5Btype%3D%22checkbox%22%5D%20%7B%0Aheight%3A%201px%3B%0Awidth%3A%201px%3B%0Amargin%3A%20%2D1px%3B%0Aoverflow%3A%20hidden%3B%0Aposition%3A%20absolute%3B%0Aclip%3A%20rect%280%200%200%200%29%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%28100%25%29%3B%0Aclip%2Dpath%3A%20inset%28100%25%29%3B%0A%7D%0A%2Ecollapse%20%3E%20label%20%7B%0Aflex%2Dgrow%3A%201%3B%0Adisplay%3A%20inline%2Dblock%3B%0Aheight%3A%201%2E5rem%3B%0Acursor%3A%20pointer%3B%0Atransition%3A%20background%200%2E3s%3B%0Acolor%3A%20%23212121%3B%0Abackground%3A%20%23e8e8e8%3B%0Aborder%3A%200%2E0625rem%20solid%20%23ddd%3B%0Apadding%3A%200%2E75rem%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Ahover%2C%20%2Ecollapse%20%3E%20label%3Afocus%20%7B%0Abackground%3A%20%23f0f0f0%3B%0A%7D%0A%2Ecollapse%20%3E%20label%20%2B%20div%20%7B%0Aflex%2Dbasis%3A%20auto%3B%0Aheight%3A%201px%3B%0Awidth%3A%201px%3B%0Amargin%3A%20%2D1px%3B%0Aoverflow%3A%20hidden%3B%0Aposition%3A%20absolute%3B%0Aclip%3A%20rect%280%200%200%200%29%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%28100%25%29%3B%0Aclip%2Dpath%3A%20inset%28100%25%29%3B%0Atransition%3A%20max%2Dheight%200%2E3s%3B%0Amax%2Dheight%3A%201px%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%20%2B%20label%20%7B%0Abackground%3A%20%23ececec%3B%0Aborder%2Dbottom%2Dcolor%3A%20%23ececec%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%20%2B%20label%20%2B%20div%20%7B%0Abox%2Dsizing%3A%20border%2Dbox%3B%0Aposition%3A%20relative%3B%0Awidth%3A%20100%25%3B%0Aheight%3A%20auto%3B%0Aoverflow%3A%20auto%3B%0Amargin%3A%200%3B%0Aborder%3A%200%2E0625rem%20solid%20%23ddd%3B%0Aborder%2Dtop%3A%200%3B%0Apadding%3A%200%2E5rem%3B%0Aclip%3A%20auto%3B%0A%2Dwebkit%2Dclip%2Dpath%3A%20inset%280%25%29%3B%0Aclip%2Dpath%3A%20inset%280%25%29%3B%0Amax%2Dheight%3A%20400px%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Anot%28%3Afirst%2Dof%2Dtype%29%20%7B%0Aborder%2Dtop%3A%200%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Afirst%2Dof%2Dtype%20%7B%0Aborder%2Dradius%3A%200%2E125rem%200%2E125rem%200%200%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Alast%2Dof%2Dtype%3Anot%28%3Afirst%2Dof%2Dtype%29%20%7B%0Aborder%2Dradius%3A%200%200%200%2E125rem%200%2E125rem%3B%0A%7D%0A%2Ecollapse%20%3E%20label%3Alast%2Dof%2Dtype%3Afirst%2Dof%2Dtype%20%7B%0Aborder%2Dradius%3A%200%2E125rem%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%3Alast%2Dof%2Dtype%3Anot%28%3Afirst%2Dof%2Dtype%29%20%2B%20label%20%7B%0Aborder%2Dradius%3A%200%3B%0A%7D%0A%2Ecollapse%20%3E%20%3Achecked%3Alast%2Dof%2Dtype%20%2B%20label%20%2B%20div%20%7B%0Aborder%2Dradius%3A%200%200%200%2E125rem%200%2E125rem%3B%0A%7D%0A" rel="stylesheet" />
+  <link href="data:text/css,%40media%20screen%20and%20%28max%2Dwidth%3A%20900px%29%20%7B%0Aheader%2C%20nav%2C%20article%20%7B%0Apadding%3A%200%203rem%3B%0A%7D%0A%7D%0A" rel="stylesheet" />
+  <link href="data:text/css,%40media%20screen%20and%20%28min%2Dwidth%3A%20900px%29%20%7B%0Abody%20%7B%0Amin%2Dwidth%3A%20900px%3B%0Amax%2Dwidth%3A%2062%2E5%25%3B%0Amargin%3A%200%20auto%3B%0A%7D%0Amain%20%7B%0Adisplay%3A%20grid%3B%0Agrid%2Dtemplate%2Dcolumns%3A%20300px%201fr%3B%0Agrid%2Dtemplate%2Drows%3A%20auto%20auto%3B%0A%7D%0Aheader%2C%20article%20%7B%0Amin%2Dwidth%3A%20calc%28600px%20%2D%204rem%29%3B%0Amax%2Dwidth%3A%20calc%28100%25%20%2D%204rem%29%3B%0Apadding%3A%200%200%200%204rem%3B%0A%7D%0Anav%20%7B%0Agrid%2Drow%3A%201%20%2F%20%2D1%3B%0Agrid%2Dcolumns%3A%201%20%2F%202%3B%0Aborder%3A%20none%3B%0Amargin%3A%200%3B%0Awidth%3A%20300px%3B%0A%7D%0Anav%20%3E%20ul%20%7B%0Aposition%3A%20sticky%3B%0Amax%2Dheight%3A%2085vh%3B%0Aoverflow%2Dy%3A%20auto%3B%0Atop%3A%205px%3B%0Aborder%3A%20none%3B%0A%7D%0A%7D%0A" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous" data-external="1">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous" data-external="1"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);" data-external="1"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ],
+        displayMode: true
+      });
+    });
+  </script>
+</head>
+<body>
+<main>
+<header id="title-block-header">
+<h1 class="title">First Steps with TileDB</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#dense-arrays">Dense Arrays</a>
+<ul>
+<li><a href="#preliminaries">Preliminaries</a></li>
+<li><a href="#basic-reading-of-dense-arrays">Basic Reading of Dense Arrays</a></li>
+<li><a href="#read-2-d-with-attribute-selection">Read 2-D with attribute selection</a></li>
+</ul></li>
+<li><a href="#sparse-arrays">Sparse Arrays</a>
+<ul>
+<li><a href="#basic-reading-and-writing-of-sparse-arrays">Basic Reading and Writing of Sparse Arrays</a></li>
+<li><a href="#datetime-attributes">Date(time) Attributes</a></li>
+</ul></li>
+<li><a href="#additional-information">Additional Information</a></li>
+</ul>
+</nav>
+<article>
+<section id="getting-started" class="level1">
+<h1>Getting started</h1>
+<p>Once the TileDB R package is installed, it can be loaded via <code>library(tiledb)</code>. Installation is supported for Windows, Linux and macOS via the <a href="https://cran.r-project.org/package=tiledb">official CRAN package</a>, on Linux and macOS via <a href="https://anaconda.org/conda-forge/r-tiledb">the conda package</a> as well as from source.</p>
+<p>Documentation for the TileDB R package is available via the <code>help()</code> function from within R as well as via the <a href="https://tiledb-inc.github.io/TileDB-R/">package documentation</a> and an <a href="https://tiledb-inc.github.io/TileDB-R/documentation.nb.html">introductory notebook</a>. Documentation about TileDB itself is <a href="https://docs.tiledb.com/main/">also available</a>.</p>
+<p>Several “quickstart” examples that are discussed on the website are available in the <a href="https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples">examples</a> directory. This vignette discusses similar examples.</p>
+<p>In the following examples, the URIs describing arrays point to local file system object. When TileDB has been built with S3 support, and with proper AWS credentials in the usual environment variables, URIs such as <code>s3://some/data/bucket</code> can be used where a local file would be used. See the script <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_S3.R">ex_S3.R</a> for an example.</p>
+</section>
+<section id="dense-arrays" class="level1">
+<h1>Dense Arrays</h1>
+<section id="preliminaries" class="level2">
+<h2>Preliminaries</h2>
+<p>These illustrations use the array created by the file <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R">ex_1.R</a> which one can run from within R, or on the command-line. To follow along with discussion that follows, it helps to run the example once to create the array after possibly adjusting the array location path from its default value (using the current directory or, if set as an option, an override).</p>
+</section>
+<section id="basic-reading-of-dense-arrays" class="level2">
+<h2>Basic Reading of Dense Arrays</h2>
+<p>The file <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R">ex_1.R</a> in the examples directory is a simple yet complete example extending <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/quickstart_dense.R">quickstart_dense.R</a> by adding a second and third attribute. In this as well as the following examples we will use <code>tiledb_array()</code> to access the array; the older variants <code>tiledb_dense()</code> and <code>tiledb_sparse()</code> remain supported but are deprecated and may be removed at some point in the future.</p>
+<p><em>Read 1-D</em></p>
+<p>The first example extracts rows 1 to 2 and column 2 from an array. It also limits the selection to just one attribute (via <code>attrs</code>), asks for the return to be a <code>data.frame</code> (instead of a simpler list) and for the (row and column, if present as here) indices to not be printed (via <code>extended=FALSE</code>).</p>
+<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, attrs = &quot;b&quot;, as.data.frame=TRUE, extended=FALSE))
+R&gt; A[1:2,2]
+[1] 101.5 104.0
+R&gt;</code></pre>
+<p>Note that the examples create three two-dimensional attributes. The attributes can be selected via the <code>attrs</code> argument, or the <code>attrs()</code> method on the array object. The square-bracket indexing then selects with in the 2-d attribute object.</p>
+<p>If multiple objects are returned (as <code>list</code> or <code>data.frame</code>), subsetting on the returned object works via <code>[[var]]</code> or <code>$var</code>. A numeric index also works (but needs to account for <code>rows</code> and <code>cols</code>).</p>
+<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, attrs = c(&quot;a&quot;,&quot;b&quot;), as.data.frame = TRUE)
+R&gt; A[1:2,2][[&quot;a&quot;]]
+[1] 2 7
+R&gt; A[1:2,2]$a
+[1] 2 7
+R&gt;</code></pre>
+<p><em>Read 2-D</em></p>
+<p>This works analogously. Note that the results are generally returned as vectors, or as a columns of a <code>data.frame</code> object in case that option was set.</p>
+<pre><code>R&gt; A[6:9,3:4]
+$a
+[1] 28 29 33 34 38 39 43 44
+
+$b
+[1] 114.5 115.0 117.0 117.5 119.5 120.0 122.0 122.5
+
+$c
+[1] &quot;fox&quot; &quot;A&quot;   &quot;E&quot;   &quot;F&quot;   &quot;J&quot;   &quot;K&quot;   &quot;O&quot;   &quot;P&quot;
+R&gt;</code></pre>
+</section>
+<section id="read-2-d-with-attribute-selection" class="level2">
+<h2>Read 2-D with attribute selection</h2>
+<p>We can restrict the selection to a subset of attributes when opening the array.</p>
+<pre><code>R&gt; A &lt;- tiledb_dense(uri = uri, attrs = c(&quot;b&quot;,&quot;c&quot;), as.data.frame = TRUE, extended=FALSE)
+R&gt; A[6:9,2:4]
+       b     c
+1  114.0 brown
+2  114.5   fox
+3  115.0     A
+4  116.5     D
+5  117.0     E
+6  117.5     F
+7  119.0     I
+8  119.5     J
+9  120.0     K
+10 121.5     N
+11 122.0     O
+12 122.5     P
+R&gt;</code></pre>
+<p>This also illustrated the effect of setting <code>as.data.frame=TRUE</code> when opening the array.</p>
+<p>This scheme can be generalized to variable cells, or cells where N&gt;1, as we can expand each (atomistic) value over corresponding row and column indices.</p>
+<p>The column types correspond to the attribute typed in the array schema, subject to the constraint mentioned above on R types. (The char comes in as a factor variable as is still the R 3.6.* default which is about to change. We can also override, users can too.)</p>
+<pre><code>R&gt; A &lt;- tiledb_array(&quot;/tmp/tiledb/ex_1/&quot;, attrs=c(&quot;b&quot;,&quot;c&quot;), as.data.frame = TRUE, extended=TRUE)
+R&gt; sapply(A[6:9, 3:4], &quot;class&quot;)
+       rows        cols           b           c
+  &quot;integer&quot;   &quot;integer&quot;   &quot;numeric&quot; &quot;character&quot;
+R&gt;</code></pre>
+<p>Consistent with the <code>data.frame</code> semantics, <em>now</em> requesting a named column <em>reduces to a vector</em> as this happens at the R side:</p>
+<pre><code>R&gt; A[6:9, 3:4]$b
+[1] 114.5 115.0 117.0 117.5 119.5 120.0 122.0 122.5
+R&gt;</code></pre>
+</section>
+</section>
+<section id="sparse-arrays" class="level1">
+<h1>Sparse Arrays</h1>
+<section id="basic-reading-and-writing-of-sparse-arrays" class="level2">
+<h2>Basic Reading and Writing of Sparse Arrays</h2>
+<p><em>Simple Examples</em></p>
+<p>Basic reading returns the coordinates and any attributes. The following examples use the array created by the <a href="https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc">quickstart_sparse</a> example.</p>
+<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, is.sparse = TRUE)
+R&gt; A[]
+$rows
+[1] 1 2 2
+
+$cols
+[1] 1 3 4
+
+$a
+[1] 1 3 2
+
+R&gt;</code></pre>
+<p>We can also request a <code>data.frame</code> object, either when opening or by changing this object characteristic on the fly:</p>
+<pre><code>R&gt; return.data.frame(A) &lt;- TRUE
+R&gt; A[]
+  a rows cols
+1 1    1    1
+2 3    2    3
+3 2    2    4</code></pre>
+<p>For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can be overridden.</p>
+<p>Assignment works similarly:</p>
+<pre><code>R&gt; A[4,2] &lt;- 42L
+R&gt; A[]
+R&gt; A[]
+  rows cols  a
+1    1    1  1
+2    2    3  3
+3    2    4  2
+4    4    2 42
+R&gt;</code></pre>
+<p>Reads can select rows and or columns:</p>
+<pre><code>R&gt; A[2,]
+  rows cols a
+1    2    3 3
+2    2    4 2
+R&gt; A[,2]
+  rows cols  a
+1    4    2 42
+R&gt;</code></pre>
+<p>Attributes can be selected similarly.</p>
+</section>
+<section id="datetime-attributes" class="level2">
+<h2>Date(time) Attributes</h2>
+<p>Similar to the dense array case described earlier, the file <a href="https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_2.R">ex_2.R</a> illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of just integer and double precision floats.</p>
+<pre><code>R&gt; A &lt;- tiledb_array(uri = uri, as.data.frame = TRUE)
+R&gt; A[1577858403:1577858408]
+        rows cols a   b          d                       e
+1 1577858403    1 3 103 2020-01-11 2020-01-02 18:24:33.844
+2 1577858404    1 4 104 2020-01-15 2020-01-05 02:28:36.214
+3 1577858405    1 5 105 2020-01-19 2020-01-05 00:44:04.805
+4 1577858406    1 6 106 2020-01-21 2020-01-06 12:58:51.770
+5 1577858407    1 7 107 2020-01-25 2020-01-09 04:29:56.309
+6 1577858408    1 8 108 2020-01-26 2020-01-07 13:55:10.240
+R&gt;</code></pre>
+<p>The row coordinate is currently a floating point representation of the underlying time type. We can both select attributes (here we excluded the “a” column) and select rows by time (as the time stamps get converted to the required floating point value).</p>
+<pre><code>R&gt; attrs(A) &lt;- c(&quot;b&quot;, &quot;d&quot;, &quot;e&quot;)
+R&gt; A[as.POSIXct(&quot;2020-01-01 00:00:00&quot;):as.POSIXct(&quot;2020-01-01 00:00:03&quot;)]
+        rows cols   b          d                       e
+1 1577858401    1 101 2020-01-05 2020-01-01 03:03:07.548
+2 1577858402    1 102 2020-01-10 2020-01-02 21:02:19.747
+3 1577858403    1 103 2020-01-11 2020-01-02 18:24:33.844
+R&gt;</code></pre>
+<p>More extended examples are available showing indexing by date(time) as well as character dimension.</p>
+</section>
+</section>
+<section id="additional-information" class="level1">
+<h1>Additional Information</h1>
+<p>The TileDB R package is documented via R help functions (<em>e.g.</em> <code>help(&quot;tiledb_array&quot;)</code> shows information for the <code>tiledb_array()</code> function) as well as via a <a href="https://tiledb-inc.github.io/TileDB-R/">website regrouping all documentation</a>. An extended <a href="https://tiledb-inc.github.io/TileDB-R/documentation.nb.html">notebook</a> is available, as is a <a href="https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples">examples/</a> directory.</p>
+<p>TileDB itself has extensive <a href="https://docs.tiledb.com/developer/installation">installation</a>, and <a href="https://docs.tiledb.com/developer/">overall documentation</a> as well as a <a href="https://forum.tiledb.com/">support forum</a>.</p>
+</section>
+</article>
+</main>
+</body>
+</html>
