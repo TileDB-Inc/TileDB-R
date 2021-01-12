@@ -1150,7 +1150,7 @@ tiledb_vfs_close(fhbuf)
 
 #### Managing
 
-```{r vfsmanaging}
+```{r vfsmanaging, eval=FALSE}
 # Creating a directory
 if (!tiledb_vfs_is_dir("dir_A")) {
     tiledb_vfs_create_dir("dir_A")
