@@ -82,18 +82,20 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
                                                domain = tile_domain,
                                                tile = tile_extent,
                                                type = "INT32"))
+
     } else {
         if (length(col_index) > 1) {
             warning("Currently only one index column supported")
             col_index <- col_index[1]
         }
-        #cat("Looking at col_index =", col_index, "\n")
         if (is.character(col_index)) col_index <- match(col_index, colnames(obj))
         idxcol <- obj[, col_index]
         idxnam <- colnames(obj)[col_index]
         #cat("Looking at col_index =", col_index, ":", idxnam, "\n")
-
-
+        if (col_index != 1) {
+            obj <- cbind(obj[,col_index,drop=FALSE], obj[, -col_index,drop=FALSE])
+            col_index <- 1
+        }
         if (missing(tile_domain)) tile_domain <- c(min(idxcol), max(idxcol))
         if (missing(tile_extent)) tile_extent <- dims[1]
 

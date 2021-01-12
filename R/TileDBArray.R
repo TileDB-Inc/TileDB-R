@@ -681,16 +681,16 @@ setMethod("[<-", "tiledb_array",
         txtvec <- as.character(value[[i]])
         offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
         data <- paste(txtvec, collapse="")
+        #cat("Alloc char buffer", i, "for", colnam, ":", alltypes[i], "\n")
         buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
-        #cat("Set char buffer", i, "for", colnam, ":", alltypes[i], "nr:", nr, "\n")
       } else {
         nr <- NROW(value[[i]])
+        #cat("Alloc buffer", i, "for", colnam, ":", alltypes[i], "nr:", nr, "\n")
         buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
         buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i],
                                                           value[[i]], asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[i]])
-        #cat("Set buffer", i, "for", colnam, ":", alltypes[i], "nr:", nr, "\n")
       }
     }
 

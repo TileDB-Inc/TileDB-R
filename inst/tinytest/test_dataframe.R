@@ -64,3 +64,56 @@ newdf <- within(newdf, char <- as.character(char))
 
 expect_equal(df, newdf[,-1])
 #})
+
+
+## test dense with non-default columm
+#exit_file("not finished")
+uri <- tempfile()
+set.seed(42)
+rows <- 50L
+
+df <- data.frame(index=sort(sample(1:1000, rows)),
+                 chars=sample(LETTERS, rows, replace=TRUE),
+                 vals=rnorm(rows) * 100)
+fromDataFrame(df, uri)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df, chk[,-1])              # omit first col which is added
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index=1)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index="index")
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
+
+olddf <- df
+df <- data.frame(chars=olddf$chars,
+                 index=olddf$index,     # index not in first column
+                 val=olddf$vals)
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df, chk[,-1])              # omit first col which is added
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index=2)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index="index")
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
