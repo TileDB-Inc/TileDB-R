@@ -13,6 +13,9 @@ vignette: |
 ---
 
 
+This document follows the [TileDB API usage
+examples](https://docs.tiledb.com/main/solutions/tiledb-embedded/api-usage).
+A shorter [introductory vignette](introduction.html) is also available.
 
 # Prelimaries
 

@@ -12,6 +12,9 @@ vignette: |
   %\VignetteEncoding{UTF-8}
 ---
 
+This document introduces TileDB via several simple examples. A corresponding
+document with more complete [API documentation](documentation.html) is also available.
+
 # Getting started
 
 Once the TileDB R package is installed, it can be loaded via `library(tiledb)`. Installation is
