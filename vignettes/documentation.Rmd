@@ -1,19 +1,17 @@
 ---
-title: "TileDB R Notebook"
+title: "TileDB API Documentation"
 output:
   minidown::mini_document:
     framework: water
     toc: yes
     toc_float: true
+vignette: |
+  %\VignetteIndexEntry{TileDB API Documentation}
+  %\VignettePackage{tiledb}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE,
-                      class.output = NULL,
-                      class.message = NULL,
-                      class.warning = NULL,
-                      class.error = NULL)
-```
 
 
 # Prelimaries
