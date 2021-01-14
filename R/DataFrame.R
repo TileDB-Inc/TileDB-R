@@ -47,7 +47,7 @@
 ##' default is \dQuote{COL_MAJOR}.
 ##' @param tile_order A character variable with one of the TileDB tile order values,
 ##' default is \dQuote{COL_MAJOR}.
-##' @param filter A character variable vectoe, defaults to \sQuote{ZSTD}, for
+##' @param filter A character variable vector, defaults to \sQuote{ZSTD}, for
 ##' one or more filters to be applied to each attribute;
 ##' @param capacity A integer value with the schema capacity, default is 1000.
 ##' @param tile_domain An integer vector of size two specifying the integer domain of the row
@@ -152,7 +152,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     df <- tiledb_array(uri)
     ## when setting an index when likely want 'sparse write to dense array
     if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
-    if (sparse) obj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1])), obj)
+    if (sparse) obj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), obj)
     df[] <- obj
     invisible(NULL)
 }
