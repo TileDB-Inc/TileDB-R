@@ -1,20 +1,21 @@
 ---
-title: "TileDB R Notebook"
+title: "TileDB API Documentation"
 output:
   minidown::mini_document:
     framework: water
     toc: yes
     toc_float: true
+vignette: |
+  %\VignetteIndexEntry{TileDB API Documentation}
+  %\VignettePackage{tiledb}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE,
-                      class.output = NULL,
-                      class.message = NULL,
-                      class.warning = NULL,
-                      class.error = NULL)
-```
 
+This document follows the [TileDB API usage
+examples](https://docs.tiledb.com/main/solutions/tiledb-embedded/api-usage).
+A shorter [introductory vignette](introduction.html) is also available.
 
 # Prelimaries
 
@@ -982,10 +983,11 @@ tiledb_config_unset(config, "sm.tile_cache_size")
 # Save to file
 config <- tiledb_config()
 config["sm.tile_cache_size"] <- 0;
-tiledb_config_save(config, "/tmp/tiledb_config.txt")
+file <- tempfile(pattern = "tiledb_config", fileext = ".txt")
+tiledb_config_save(config, file)
 
 # Load from file
-config_loaded <- tiledb_config_load("/tmp/tiledb_config.txt")
+config_loaded <- tiledb_config_load(file)
 tile_cache_size = config_loaded["sm.tile_cache_size"]
 ```
 
@@ -1117,7 +1119,7 @@ tiledb_object_remove(ctx, "/tmp/my_group_2/dense_array")
 
 ```{r vfswrite}
 # binary file to be written
-uri <- "/tmp/tiledb_vfs.bin"
+uri <- tempfile(pattern = "tiledb_vfs", fileext = ".bin")
 # open file
 fhbuf <- tiledb_vfs_open(uri, "WRITE")
 
@@ -1151,7 +1153,7 @@ tiledb_vfs_close(fhbuf)
 
 #### Managing
 
-```{r vfsmanaging}
+```{r vfsmanaging, eval=FALSE}
 # Creating a directory
 if (!tiledb_vfs_is_dir("dir_A")) {
     tiledb_vfs_create_dir("dir_A")
