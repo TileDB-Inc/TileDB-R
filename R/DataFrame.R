@@ -99,10 +99,15 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         if (missing(tile_domain)) tile_domain <- c(min(idxcol), max(idxcol))
         if (missing(tile_extent)) tile_extent <- dims[1]
         dtype <- "INT32"                # default
+
         if (inherits(idxcol, "POSIXt")) {
             dtype <- "DATETIME_US"
             tile_domain <- as.numeric(tile_domain) * 1e6 	# int64 used
+        } else if (inherits(idxcol, "numeric")) {
+            dtype <- "FLOAT64"
+            tile_extent <- as.numeric(tile_extent)
         }
+
 
         dom <- tiledb_domain(dims = tiledb_dim(name = idxnam,
                                                domain = tile_domain,
