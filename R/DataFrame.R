@@ -98,11 +98,16 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         }
         if (missing(tile_domain)) tile_domain <- c(min(idxcol), max(idxcol))
         if (missing(tile_extent)) tile_extent <- dims[1]
+        dtype <- "INT32"                # default
+        if (inherits(idxcol, "POSIXt")) {
+            dtype <- "DATETIME_US"
+            tile_domain <- as.numeric(tile_domain) * 1e6 	# int64 used
+        }
 
         dom <- tiledb_domain(dims = tiledb_dim(name = idxnam,
                                                domain = tile_domain,
                                                tile = tile_extent,
-                                               type = "INT32"))
+                                               type = dtype))
     }
 
     ## turn factor columns in char columns
@@ -145,6 +150,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     schema <- tiledb_array_schema(dom, attrs = attributes,
                                   cell_order = cell_order, tile_order = tile_order,
                                   sparse=sparse, capacity=capacity)
+    #print(schema)
     tiledb_array_create(uri, schema)
 
     allows_dups(schema) <- allows_dups
@@ -152,7 +158,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     df <- tiledb_array(uri)
     ## when setting an index when likely want 'sparse write to dense array
     if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
-    if (sparse) obj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), obj)
+    if (is.null(col_index) && sparse) obj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), obj)
     df[] <- obj
     invisible(NULL)
 }

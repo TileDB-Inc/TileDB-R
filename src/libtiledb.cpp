@@ -576,7 +576,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
   if (dtype == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
     Rcpp::stop("domain or tile_extent does not match dimension type");
   } else if (dtype == TILEDB_FLOAT64 && (TYPEOF(domain) != REALSXP || TYPEOF(tile_extent) != REALSXP)) {
-    Rcpp::stop("domain or tile_extent does not match dimenson type");
+    Rcpp::stop("domain or tile_extent does not match dimension type");
   }
   if (dtype == TILEDB_INT32) {
     using Dtype = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
