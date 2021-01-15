@@ -126,9 +126,16 @@ uri <- tempfile()
 set.seed(42)
 nobs <- 50L
 
+#if (!requireNamespace("bit64", quietly=TRUE)) exit_file("Remainder needs 'bit64'.")
+#suppressMessages(library(bit64))
+if (!requireNamespace("nanotime", quietly=TRUE)) exit_file("Remainder needs 'nanotime'.")
+suppressMessages(library(nanotime))
+
 df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range=seq(-1000, 1000, length=nobs),
-                 int_vals=sort(as.integer(runif(nobs)*1e9)))
+                 int_vals=sort(as.integer(runif(nobs)*1e9)),
+                 #int64_vals=sort(as.integer64(runif(nobs)*1e9)),  ## TODO: return int64
+                 nanotime=as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)))
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, sparse=TRUE)

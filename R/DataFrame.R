@@ -106,8 +106,14 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         } else if (inherits(idxcol, "numeric")) {
             dtype <- "FLOAT64"
             tile_extent <- as.numeric(tile_extent)
+        } else if (inherits(idxcol, "nanotime")) {
+            dtype <- "DATETIME_NS"
+            tile_domain <- c(min(idxcol) - 1e9, max(idxcol) + 1e9)
+            #tile_extent <- as.integer64(tile_extent)
+        } else if (inherits(idxcol, "integer64")) {
+            dtype <- "INT64"
+            tile_extent <- as.integer64(tile_extent)
         }
-
 
         dom <- tiledb_domain(dims = tiledb_dim(name = idxnam,
                                                domain = tile_domain,
@@ -141,6 +147,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
             tp <- "DATETIME_MS"
         else if (cl == "nanotime")
             tp <- "DATETIME_NS"
+        else if (cl == "integer64")
+            tp <- "INT64"
         else
             stop("Currently unsupported type: ", cl)
         tiledb_attr(colnames(obj)[ind],
