@@ -66,7 +66,7 @@ expect_equal(df, newdf[,-1])
 #})
 
 
-## test dense with non-default columm
+## test dense with non-default index columm
 #exit_file("not finished")
 uri <- tempfile()
 set.seed(42)
@@ -117,3 +117,28 @@ arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
 expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
+
+
+
+## test sparse with non-default index columm
+#exit_file("not finished")
+uri <- tempfile()
+set.seed(42)
+nobs <- 50L
+
+df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
+                 double_range=seq(-1000, 1000, length=nobs),
+                 int_vals=sort(as.integer(runif(nobs)*1e9)))
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, sparse=TRUE)
+
+chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
+expect_equal(df, chk[])
+
+for (i in seq_len(dim(df)[2])) {
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    fromDataFrame(df, uri, sparse=TRUE, col_index=i)
+    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    expect_equal(df, chk[][,colnames(df)]) 		# index col comes first so need re-order
+}
