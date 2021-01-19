@@ -112,6 +112,10 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         } else if (inherits(idxcol, "integer64")) {
             dtype <- "INT64"
             tile_extent <- bit64::as.integer64(tile_extent)
+        } else if (inherits(idxcol, "character")) {
+            dtype <- "ASCII"
+            tile_extent <- NULL
+            tile_domain <- c(NULL, NULL)
         }
 
         dom <- tiledb_domain(dims = tiledb_dim(name = idxnam,
