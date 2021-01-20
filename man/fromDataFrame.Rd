@@ -14,8 +14,9 @@ fromDataFrame(
   tile_order = "ROW_MAJOR",
   filter = "ZSTD",
   capacity = 10000L,
-  tile_domain,
-  tile_extent
+  tile_domain = NULL,
+  tile_extent = NULL,
+  debug = FALSE
 )
 }
 \arguments{
@@ -38,17 +39,19 @@ default is \dQuote{COL_MAJOR}.}
 \item{tile_order}{A character variable with one of the TileDB tile order values,
 default is \dQuote{COL_MAJOR}.}
 
-\item{filter}{A character variable vectoe, defaults to \sQuote{ZSTD}, for
+\item{filter}{A character variable vector, defaults to \sQuote{ZSTD}, for
 one or more filters to be applied to each attribute;}
 
 \item{capacity}{A integer value with the schema capacity, default is 1000.}
 
 \item{tile_domain}{An integer vector of size two specifying the integer domain of the row
-dimension; if missing the row dimension of the \code{obj} is used.}
+dimension; if \code{NULL} the row dimension of the \code{obj} is used.}
 
 \item{tile_extent}{An integer value for the tile extent of the row dimensions;
-if missing the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
+if \code{NULL} the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
 cannot exceed the tile domain.}
+
+\item{debug}{Logical flag to select additional output}
 }
 \value{
 Null, invisibly.

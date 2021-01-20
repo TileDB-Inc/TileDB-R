@@ -51,10 +51,11 @@
 ##' one or more filters to be applied to each attribute;
 ##' @param capacity A integer value with the schema capacity, default is 1000.
 ##' @param tile_domain An integer vector of size two specifying the integer domain of the row
-##' dimension; if missing the row dimension of the \code{obj} is used.
+##' dimension; if \code{NULL} the row dimension of the \code{obj} is used.
 ##' @param tile_extent An integer value for the tile extent of the row dimensions;
-##' if missing the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
+##' if \code{NULL} the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
 ##' cannot exceed the tile domain.
+##' @param debug Logical flag to select additional output
 ##' @return Null, invisibly.
 ##' @examples
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -70,9 +71,16 @@
 ##' @export
 fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sparse,
                           cell_order = "ROW_MAJOR", tile_order = "ROW_MAJOR", filter="ZSTD",
-                          capacity = 10000L, tile_domain, tile_extent) {
+                          capacity = 10000L, tile_domain = NULL, tile_extent = NULL, debug = FALSE) {
 
+    if (!is.null(col_index) && is.character(col_index)) col_index <- match(col_index, colnames(obj))
     dims <- dim(obj)
+
+    ## turn factor columns in char columns
+    factcols <- grep("factor", sapply(obj, class))
+    if (length(factcols) > 0) {
+        for (i in factcols) obj[,i] <- as.character(obj[,i])
+    }
 
     if (is.null(col_index)) {
         if (missing(tile_domain)) tile_domain <- c(1L, dims[1])
@@ -82,55 +90,52 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
                                                domain = tile_domain,
                                                tile = tile_extent,
                                                type = "INT32"))
+        useobj <- obj
 
     } else {
-        if (length(col_index) > 1) {
-            warning("Currently only one index column supported")
-            col_index <- col_index[1]
-        }
-        if (is.character(col_index)) col_index <- match(col_index, colnames(obj))
-        idxcol <- obj[, col_index]
-        idxnam <- colnames(obj)[col_index]
-        #cat("Looking at col_index =", col_index, ":", idxnam, "\n")
-        if (col_index != 1) {
-            obj <- cbind(obj[,col_index,drop=FALSE], obj[, -col_index,drop=FALSE])
-            col_index <- 1
-        }
-        if (missing(tile_domain)) tile_domain <- c(min(idxcol), max(idxcol))
-        if (missing(tile_extent)) tile_extent <- dims[1]
-        dtype <- "INT32"                # default
+        #if (length(col_index) > 1) {
+        #    warning("Currently only one index column supported")
+        #    col_index <- col_index[1]
+        #}
 
-        if (inherits(idxcol, "POSIXt")) {
-            dtype <- "DATETIME_US"
-            tile_domain <- as.numeric(tile_domain) * 1e6 	# int64 used
-        } else if (inherits(idxcol, "numeric")) {
-            dtype <- "FLOAT64"
-            tile_extent <- as.numeric(tile_extent)
-        } else if (inherits(idxcol, "nanotime")) {
-            dtype <- "DATETIME_NS"
-            tile_domain <- c(min(idxcol) - 1e10, max(idxcol) + 1e10)
-        } else if (inherits(idxcol, "integer64")) {
-            dtype <- "INT64"
-            tile_extent <- bit64::as.integer64(tile_extent)
-        } else if (inherits(idxcol, "character")) {
-            dtype <- "ASCII"
-            tile_extent <- NULL
-            tile_domain <- c(NULL, NULL)
-        }
+        dimobj <- obj[, col_index, drop=FALSE]
+        atrobj <- obj[, -col_index, drop=FALSE]
+        useobj <- cbind(dimobj, atrobj)
 
-        dom <- tiledb_domain(dims = tiledb_dim(name = idxnam,
-                                               domain = tile_domain,
-                                               tile = tile_extent,
-                                               type = dtype))
+        makeDim <- function(ind) {
+            idxcol <- dimobj[,ind]
+            idxnam <- colnames(dimobj)[ind]
+            if (debug) cat("Looking at col_index =", ind, ":", idxnam, "\n")
+            col_domain <- if (is.null(tile_domain)) c(min(idxcol), max(idxcol)) else tile_domain
+            col_extent <- if (is.null(tile_extent)) dims[1] else tile_extent
+            dtype <- "INT32"                # default
+            if (inherits(idxcol, "POSIXt")) {
+                dtype <- "DATETIME_US"
+                col_domain <- as.numeric(col_domain) * 1e6 	# int64 used
+            } else if (inherits(idxcol, "numeric")) {
+                dtype <- "FLOAT64"
+                col_extent <- as.numeric(col_extent)
+            } else if (inherits(idxcol, "nanotime")) {
+                dtype <- "DATETIME_NS"
+                col_domain <- c(min(idxcol) - 1e10, max(idxcol) + 1e10)
+            } else if (inherits(idxcol, "integer64")) {
+                dtype <- "INT64"
+                col_extent <- bit64::as.integer64(col_extent)
+            } else if (inherits(idxcol, "character")) {
+                dtype <- "ASCII"
+                col_extent <- NULL
+                col_domain <- c(NULL, NULL)
+            }
+
+            tiledb_dim(name = idxnam,
+                       domain = col_domain,
+                       tile = col_extent,
+                       type = dtype)
+        }
+        dimensions <- sapply(seq_len(ncol(dimobj)), makeDim)
+
+        dom <- tiledb_domain(dims = dimensions)
     }
-
-    ## turn factor columns in char columns
-    factcols <- grep("factor", sapply(obj, class))
-    if (length(factcols) > 0) {
-        for (i in factcols) obj[,i] <- as.character(obj[,i])
-    }
-
-    charcols <- grep("character", sapply(obj, class))
 
     ## Create filterlist from filter vector, 'NONE' and 'ZSTD' is default
     filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
@@ -160,13 +165,13 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
                     filter_list = filterlist)
     }
     cols <- seq_len(dims[2])
+    if (!is.null(col_index)) cols <- cols[-col_index]
     attributes <- sapply(cols, makeAttr)
-    if (!is.null(col_index)) attributes <- attributes[-col_index]
 
     schema <- tiledb_array_schema(dom, attrs = attributes,
                                   cell_order = cell_order, tile_order = tile_order,
                                   sparse=sparse, capacity=capacity)
-    #print(schema)
+    if (debug) print(schema)
     tiledb_array_create(uri, schema)
 
     allows_dups(schema) <- allows_dups
@@ -174,8 +179,9 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     df <- tiledb_array(uri)
     ## when setting an index when likely want 'sparse write to dense array
     if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
-    if (is.null(col_index) && sparse) obj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), obj)
-    df[] <- obj
+    if (is.null(col_index) && sparse)
+        useobj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), useobj)
+    df[] <- useobj
     invisible(NULL)
 }
 
