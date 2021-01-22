@@ -64,3 +64,130 @@ newdf <- within(newdf, char <- as.character(char))
 
 expect_equal(df, newdf[,-1])
 #})
+
+
+## test dense with non-default index columm
+#exit_file("not finished")
+uri <- tempfile()
+set.seed(42)
+rows <- 50L
+
+df <- data.frame(index=sort(sample(1:1000, rows)),
+                 chars=sample(LETTERS, rows, replace=TRUE),
+                 vals=rnorm(rows) * 100)
+fromDataFrame(df, uri)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df, chk[,-1])              # omit first col which is added
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index=1)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index="index")
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
+
+olddf <- df
+df <- data.frame(chars=olddf$chars,
+                 index=olddf$index,     # index not in first column
+                 val=olddf$vals)
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df, chk[,-1])              # omit first col which is added
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index=2)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, col_index="index")
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
+expect_equal(df[,3], na.omit(chk)[,3])
+
+
+
+## test sparse with non-default index columm
+uri <- tempfile()
+set.seed(42)
+nobs <- 50L
+
+#if (!requireNamespace("bit64", quietly=TRUE)) exit_file("Remainder needs 'bit64'.")
+#suppressMessages(library(bit64))
+if (!requireNamespace("nanotime", quietly=TRUE)) exit_file("Remainder needs 'nanotime'.")
+suppressMessages(library(nanotime))
+if (!requireNamespace("bit64", quietly=TRUE)) exit_file("Remainder needs 'bit64'.")
+suppressMessages(library(bit64))
+
+df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
+                 double_range=seq(-1000, 1000, length=nobs),
+                 int_vals=sort(as.integer(runif(nobs)*1e9)),
+                 #int64_vals=sort(as.integer64(runif(nobs)*1e9)),  ## TODO: return int64
+                 nanotime=as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)))
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, sparse=TRUE)
+
+chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
+expect_equal(df, chk[])
+
+for (i in seq_len(dim(df)[2])) {
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    fromDataFrame(df, uri, sparse=TRUE, col_index=i)
+    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    expect_equal(df, chk[][,colnames(df)]) 		# index col comes first so need re-order
+}
+
+## test sparse with several non-default index columms
+uri <- tempfile()
+set.seed(42)
+nobs <- 50L
+set.seed(42)
+df <- data.frame(time = round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
+                 double_range = seq(-1000, 1000, length=nobs),
+                 int_vals = sort(as.integer(runif(nobs)*1e9)),
+                 #int64_vals = sort(as.integer64(runif(nobs)*1e9)),#TODO cannot yet comp. all.equal
+                 nanotime = as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)),
+                 txt = sort(sapply(seq_len(nobs), function(i) paste0(sample(LETTERS,1), paste(sample(letters, sample(1:6,1)), collapse=""))))
+                 )
+
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(df, uri, sparse=TRUE)
+
+chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
+expect_equal(df, chk[])
+
+
+for (i in seq_len(dim(df)[2])) {
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    fromDataFrame(df, uri, sparse=TRUE, col_index=i)
+    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    expect_equal(df, chk[][, colnames(df)])
+}
+
+
+combinations <- list(c(1,2), c(1,3), c(2,4), c(3,5), c(4,5), c(2,3,4))
+for (comb in combinations) {
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    fromDataFrame(df, uri, sparse=TRUE, col_index=comb) # by index
+    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    expect_equal(df, chk[][, colnames(df)])
+
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    fromDataFrame(df, uri, sparse=TRUE, col_index=colnames(df)[comb]) # by name
+    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    expect_equal(df, chk[][, colnames(df)])
+}

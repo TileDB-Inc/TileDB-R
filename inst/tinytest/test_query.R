@@ -155,10 +155,11 @@ if (requireNamespace("nanotime", quietly=TRUE)) {
 tmp <- tempfile()
 dir.create(tmp)
 
-dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 1L, type = "INT32")))
-schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("vals", type = "INT32")), sparse=FALSE)
+dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 10L), 1L, type = "INT32"))
+schema <- tiledb_array_schema(dom,
+                              attrs = tiledb_attr("vals", type = "INT32"),
+                              sparse=FALSE)
 tiledb_array_create(tmp, schema)
-
 arr <- tiledb_array(tmp)
 qry <- tiledb_query(arr, "WRITE")
 qry <- tiledb_query_set_layout(qry, "ROW_MAJOR")

@@ -205,7 +205,7 @@ expect_true(length(attrs(arr)) == 0)
 sels <-  c("age", "job", "education", "duration")
 attrs(arr) <- sels
 dat <- arr[]
-expect_equal(colnames(dat), c("rows", sels))
+expect_equal(colnames(dat), c("__tiledb_rows", sels))
 extended(arr) <- FALSE
 dat <- arr[]
 expect_equal(colnames(dat), sels)

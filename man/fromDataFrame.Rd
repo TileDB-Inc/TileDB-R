@@ -7,14 +7,16 @@
 fromDataFrame(
   obj,
   uri,
-  sparse = TRUE,
-  allows_dups = TRUE,
-  cell_order = "COL_MAJOR",
-  tile_order = "COL_MAJOR",
-  filter = "NONE",
-  capacity = 1000L,
-  tile_domain,
-  tile_extent
+  col_index = NULL,
+  sparse = FALSE,
+  allows_dups = sparse,
+  cell_order = "ROW_MAJOR",
+  tile_order = "ROW_MAJOR",
+  filter = "ZSTD",
+  capacity = 10000L,
+  tile_domain = NULL,
+  tile_extent = NULL,
+  debug = FALSE
 )
 }
 \arguments{
@@ -22,10 +24,14 @@ fromDataFrame(
 
 \item{uri}{A character variable with an Array URI.}
 
-\item{sparse}{A logical switch to select sparse (the default) or dense}
+\item{col_index}{An optional column index, either numeric with a column index,
+or character with a column name, designating an index column; default is NULL
+implying an index column is added when the array is created}
+
+\item{sparse}{A logical switch to select sparse or dense (the default)}
 
 \item{allows_dups}{A logical switch to select if duplicate values
-are allowed or not, default is \sQuote{TRUE}.}
+are allowed or not, default is the same value as \sQuote{sparse}.}
 
 \item{cell_order}{A character variable with one of the TileDB cell order values,
 default is \dQuote{COL_MAJOR}.}
@@ -33,17 +39,19 @@ default is \dQuote{COL_MAJOR}.}
 \item{tile_order}{A character variable with one of the TileDB tile order values,
 default is \dQuote{COL_MAJOR}.}
 
-\item{filter}{A character variable, defaults to \sQuote{NONE}, for a
-filter to be applied to each attribute.}
+\item{filter}{A character variable vector, defaults to \sQuote{ZSTD}, for
+one or more filters to be applied to each attribute;}
 
 \item{capacity}{A integer value with the schema capacity, default is 1000.}
 
 \item{tile_domain}{An integer vector of size two specifying the integer domain of the row
-dimension; if missing the row dimension of the \code{obj} is used.}
+dimension; if \code{NULL} the row dimension of the \code{obj} is used.}
 
 \item{tile_extent}{An integer value for the tile extent of the row dimensions;
-if missing the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
+if \code{NULL} the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
 cannot exceed the tile domain.}
+
+\item{debug}{Logical flag to select additional output}
 }
 \value{
 Null, invisibly.

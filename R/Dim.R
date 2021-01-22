@@ -70,7 +70,7 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
                           "DATETIME_MS", "DATETIME_US", "DATETIME_NS",
                           "DATETIME_PS", "DATETIME_FS", "DATETIME_AS",
                           "ASCII")) {
-    stop("type argument must be '(U)INT{8,16,32,64}' or 'FLOAT{32,64}' or a supported 'DATETIME_*' type.", call.=FALSE)
+    stop("type argument must be '(U)INT{8,16,32,64}', 'FLOAT{32,64}', 'ASCII', or a supported 'DATETIME_*' type.", call.=FALSE)
   }
   if (!type %in% c("ASCII")) {
     if ((typeof(domain) != "integer" && typeof(domain) != "double") || (length(domain) != 2)) {
