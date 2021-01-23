@@ -80,6 +80,8 @@ arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
 expect_equal(df, chk[,-1])              # omit first col which is added
 
+if (tiledb_version(TRUE) < "2.1.0") exit_file("Remaining tests required TileDB 2.1.0 or later")
+
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index=1)
 arr <- tiledb_array(uri, as.data.frame=TRUE)
@@ -125,12 +127,11 @@ uri <- tempfile()
 set.seed(42)
 nobs <- 50L
 
-#if (!requireNamespace("bit64", quietly=TRUE)) exit_file("Remainder needs 'bit64'.")
-#suppressMessages(library(bit64))
-if (!requireNamespace("nanotime", quietly=TRUE)) exit_file("Remainder needs 'nanotime'.")
-suppressMessages(library(nanotime))
-if (!requireNamespace("bit64", quietly=TRUE)) exit_file("Remainder needs 'bit64'.")
-suppressMessages(library(bit64))
+## datetimes test (cf ex_aggdatetimes)
+suppressMessages({
+  library(nanotime)
+  library(bit64)
+})
 
 df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range=seq(-1000, 1000, length=nobs),
