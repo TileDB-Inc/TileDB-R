@@ -1,5 +1,5 @@
 CXX_STD = CXX11
-VERSION = 2.2.1
+VERSION = 2.2.2
 #RWINLIB=../windows/tiledb-$(VERSION)
 RWINLIB=../windows/rwinlib-tiledb-$(VERSION)
 
