@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
 
 ## by default we download the source from a given release
-url <- "https://github.com/TileDB-Inc/TileDB/archive/2.2.1.tar.gz"
+url <- "https://github.com/TileDB-Inc/TileDB/archive/2.2.2.tar.gz"
 
 cat("Downloading ", url, "\n")
 op <- options()
