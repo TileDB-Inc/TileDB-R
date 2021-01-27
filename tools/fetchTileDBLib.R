@@ -17,8 +17,15 @@ if (osarg == "url" && length(argv) <= 1) {
 }
 urlarg <- argv[2]
 
-ver <- "2.2.2"
-sha <- "220dd9e"
+dcffile <- "../tools/tiledbVersion.txt"
+if (!file.exists(dcffile)) {
+    message("TileDB Version file not found.")
+    q()
+}
+dcf <- read.dcf(dcffile)
+ver <- dcf[[1, "version"]]
+sha <- dcf[[1, "sha"]]
+
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
 dlurl <- switch(osarg,
                 linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-full.tar.gz", ver, ver, sha)),
