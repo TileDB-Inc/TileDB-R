@@ -152,3 +152,13 @@ arr[] <- data
 arr2 <- tiledb_array(uri, as.data.frame=TRUE)
 readdata <- arr2[]
 expect_true(all.equal(data, readdata))
+
+
+if (tiledb_version(TRUE) < "2.2.0") exit_file("Needs TileDB 2.2.* or later")
+attrib <- tiledb_attr("a",  type = "INT32")
+tiledb_attribute_set_nullable(attrib, TRUE)
+expect_true(tiledb_attribute_get_nullable(attrib))
+tiledb_attribute_set_nullable(attrib, FALSE)
+expect_false(tiledb_attribute_get_nullable(attrib))
+expect_error(tiledb_attribute_set_nullable(attrib, 1L))
+expect_error(tiledb_attribute_set_nullable(attrib, as.logical(NA)))

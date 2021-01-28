@@ -261,6 +261,14 @@ libtiledb_attribute_get_fill_value <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_fill_value`, attr)
 }
 
+libtiledb_attribute_set_nullable <- function(attr, flag) {
+    invisible(.Call(`_tiledb_libtiledb_attribute_set_nullable`, attr, flag))
+}
+
+libtiledb_attribute_get_nullable <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_nullable`, attr)
+}
+
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, sparse = FALSE) {
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, sparse)
 }

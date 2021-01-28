@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2020 TileDB Inc.
+//  Copyright (c) 2017-2021 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -1372,17 +1372,17 @@ void libtiledb_attribute_set_cell_val_num(XPtr<tiledb::Attribute> attr, int num)
   attr->set_cell_val_num(ncells);        // returns reference to self so nothing for us to return
 }
 
-//[[Rcpp::export]]
+// [[Rcpp::export]]
 bool libtiledb_attribute_is_variable_sized(XPtr<tiledb::Attribute> attr) {
   return attr->variable_sized();
 }
 
-//[[Rcpp::export]]
+// [[Rcpp::export]]
 void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
   attr->dump();
 }
 
-//[[Rcpp::export]]
+// [[Rcpp::export]]
 void libtiledb_attribute_set_fill_value(XPtr<tiledb::Attribute> attr, SEXP val) {
 #if TILEDB_VERSION >= TileDB_Version(2,1,0)
   tiledb_datatype_t dtype = attr->type();
@@ -1408,7 +1408,7 @@ void libtiledb_attribute_set_fill_value(XPtr<tiledb::Attribute> attr, SEXP val) 
 #endif
 }
 
-//[[Rcpp::export]]
+// [[Rcpp::export]]
 SEXP libtiledb_attribute_get_fill_value(XPtr<tiledb::Attribute> attr) {
 #if TILEDB_VERSION >= TileDB_Version(2,1,0)
   tiledb_datatype_t dtype = attr->type();
@@ -1431,6 +1431,24 @@ SEXP libtiledb_attribute_get_fill_value(XPtr<tiledb::Attribute> attr) {
 #else
   Rcpp::stop("libtiledb_attribute_get_fill_value_with_type only available with TileDB 2.1.0 or later");
   return R_NilValue; // not reached
+#endif
+}
+
+// [[Rcpp::export]]
+void libtiledb_attribute_set_nullable(XPtr<tiledb::Attribute> attr, const bool flag) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    attr->set_nullable(flag);
+#else
+    Rcpp::stop("Nullable attributes are only available with TileDB 2.2.0 or later");
+#endif
+}
+
+// [[Rcpp::export]]
+bool libtiledb_attribute_get_nullable(XPtr<tiledb::Attribute> attr) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    return attr->nullable();
+#else
+    return false;
 #endif
 }
 

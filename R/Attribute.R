@@ -273,3 +273,25 @@ tiledb_attribute_get_cell_size <- function(attr) {
   stopifnot(attr_object=is(attr, "tiledb_attr"))
   libtiledb_attribute_get_cell_size(attr@ptr)
 }
+
+#' Set the TileDB Attribute Nullable flags
+#'
+#' @param attr A TileDB Attribute object
+#' @param flag A boolean flag to turn \sQuote{Nullable} on or of
+#' @return Nothing is returned
+#' @export
+tiledb_attribute_set_nullable <- function(attr, flag) {
+    stopifnot(attr_object=is(attr, "tiledb_attr"),
+              flag_boolean_not_na=is.logical(flag) & !is.na(flag))
+    libtiledb_attribute_set_nullable(attr@ptr, flag)
+}
+
+#' Get the TileDB Attribute Nullable flag value
+#'
+#' @param attr A TileDB Attribute object
+#' @return A boolean value with the \sQuote{Nullable} status
+#' @export
+tiledb_attribute_get_nullable <- function(attr) {
+    stopifnot(attr_object=is(attr, "tiledb_attr"))
+    libtiledb_attribute_get_nullable(attr@ptr)
+}
