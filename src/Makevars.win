@@ -1,7 +1,5 @@
 CXX_STD = CXX11
-VERSION = 2.2.2
-#RWINLIB=../windows/tiledb-$(VERSION)
-RWINLIB=../windows/rwinlib-tiledb-$(VERSION)
+RWINLIB = ../windows/rwinlib-tiledb
 
 PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -DTILEDB_STATIC_DEFINE
 PKG_LIBS = \
@@ -14,7 +12,7 @@ PKG_LIBS = \
 all: clean winlibs
 
 winlibs:
-	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" "../tools/winlibs.R" $(VERSION)
+	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" "../tools/winlibs.R"
 
 clean:
 	rm -f $(SHLIB) $(OBJECTS)
