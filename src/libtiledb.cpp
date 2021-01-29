@@ -2426,7 +2426,8 @@ List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string a
 // [[Rcpp::export]]
 XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
                                                    std::string domaintype,
-                                                   R_xlen_t ncells) {
+                                                   R_xlen_t ncells,
+                                                   bool nullable = false) {
   XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
   registerXptrFinalizer(buf, libtiledb_query_buf_delete);
   if (domaintype == "INT32"  || domaintype == "UINT32") {
@@ -2461,6 +2462,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
   buf->dtype = _string_to_tiledb_datatype(domaintype);
   buf->ncells = ncells;
   buf->vec.resize(ncells * buf->size);
+  if (nullable) buf->validity_map.resize(ncells);
+  buf->nullable = nullable;
   return buf;
 }
 
@@ -2470,6 +2473,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
   if (dtype == "INT32") {
     IntegerVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromInteger(v, buf->validity_map);
   } else if (dtype == "FLOAT64") {
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
@@ -2573,9 +2578,16 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
 XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    std::string attr,
                                                    XPtr<query_buf_t> buf) {
-  query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
-  return query;
+    if (buf->nullable) {
+        query->set_buffer_nullable(attr, static_cast<void*>(buf->vec.data()), buf->ncells,
+                                   buf->validity_map.data(),
+                                   static_cast<uint64_t>(buf->validity_map.size()));
+    } else {
+        query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
+    }
+    return query;
 }
+
 
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
@@ -2583,6 +2595,8 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    if (buf->nullable)
+        setValidityMapForInteger(v, buf->validity_map);
     return v;
   } else if (dtype == "UINT32") {
     std::vector<uint32_t> v(buf->ncells);
@@ -2938,6 +2952,19 @@ R_xlen_t libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::str
   return static_cast<R_xlen_t>(est);
 }
 
+
+// [[Rcpp::export]]
+NumericVector libtiledb_query_get_est_result_size_nullable(XPtr<tiledb::Query> query, std::string attr) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    std::array<uint64_t, 2> est = query->est_result_size_nullable(attr);
+    return Rcpp::NumericVector::create(static_cast<R_xlen_t>(est[0]),
+                                       static_cast<R_xlen_t>(est[1]));
+#else
+    return Rcpp::NumericVector::create(R_NaReal,R_NaReal);
+#endif
+}
+
+
 // [[Rcpp::export]]
 NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query, std::string attr) {
 #if TILEDB_VERSION < TileDB_Version(2,2,0)
@@ -2946,6 +2973,18 @@ NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query,
 #else
   std::array<uint64_t, 2> est = query->est_result_size_var(attr);
   return NumericVector::create(static_cast<R_xlen_t>(est[0]), static_cast<R_xlen_t>(est[1]));
+#endif
+}
+
+// [[Rcpp::export]]
+NumericVector libtiledb_query_get_est_result_size_var_nullable(XPtr<tiledb::Query> query, std::string attr) {
+#if TILEDB_VERSION < TileDB_Version(2,2,0)
+    return Rcpp::NumericVector::create(R_NaReal,R_NaReal,NaReal);
+#else
+    std::array<uint64_t, 3> est = query->est_result_size_var_nullable(attr);
+    return Rcpp::NumericVector::create(static_cast<R_xlen_t>(est[0]),
+                                       static_cast<R_xlen_t>(est[1]),
+                                       static_cast<R_xlen_t>(est[2]));
 #endif
 }
 

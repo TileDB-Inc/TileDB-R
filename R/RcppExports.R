@@ -553,8 +553,8 @@ libtiledb_query_get_buffer_var_vec <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, query, attr, buf)
 }
 
-libtiledb_query_buffer_alloc_ptr <- function(array, domaintype, ncells) {
-    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, array, domaintype, ncells)
+libtiledb_query_buffer_alloc_ptr <- function(array, domaintype, ncells, nullable = FALSE) {
+    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, array, domaintype, ncells, nullable)
 }
 
 libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec, asint64 = FALSE) {
@@ -613,8 +613,16 @@ libtiledb_query_get_est_result_size <- function(query, attr) {
     .Call(`_tiledb_libtiledb_query_get_est_result_size`, query, attr)
 }
 
+libtiledb_query_get_est_result_size_nullable <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size_nullable`, query, attr)
+}
+
 libtiledb_query_get_est_result_size_var <- function(query, attr) {
     .Call(`_tiledb_libtiledb_query_get_est_result_size_var`, query, attr)
+}
+
+libtiledb_query_get_est_result_size_var_nullable <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size_var_nullable`, query, attr)
 }
 
 libtiledb_query_get_range_num <- function(query, dim_idx) {

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -335,11 +335,13 @@ setMethod("[", "tiledb_array",
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
+  dimnullable <- sapply(dims, function(d) FALSE)
 
   attrs <- tiledb::attrs(schema(x))
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
+  attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
 
   if (length(x@attrs) != 0) {
     ind <- match(x@attrs, attrnames)
@@ -349,12 +351,13 @@ setMethod("[", "tiledb_array",
     attrnames <- attrnames[ind]
     attrtypes <- attrtypes[ind]
     attrvarnum <- attrvarnum[ind]
+    attrnullable <- attrnullable[ind]
   }
 
   allnames <- c(dimnames, attrnames)
   alltypes <- c(dimtypes, attrtypes)
   allvarnum <- c(dimvarnum, attrvarnum)
-
+  allnullable <- c(dimnullable, attrnullable)
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -440,30 +443,33 @@ setMethod("[", "tiledb_array",
   }
 
   ## retrieve est_result_size
-  getEstimatedSize <- function(name, varnum, qryptr) {
-    if (is.na(varnum))
+  getEstimatedSize <- function(name, varnum, nullable, qryptr) {
+    if (is.na(varnum) && !nullable)
       libtiledb_query_get_est_result_size_var(qryptr, name)[1]
-    else
+    else if (is.na(varnum) && nullable)
+      libtiledb_query_get_est_result_size_var_nullable(qryptr, name)[1]
+    else if (!is.na(varnum) && !nullable)
       libtiledb_query_get_est_result_size(qryptr, name)
+    else if (!is.na(varnum) && nullable)
+      libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
   }
-  ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
+  ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
 
   ## allocate and set buffers
-  getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
+  getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
     if (is.na(varnum)) {
       buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
       qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
       buf
     } else {
-      buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv)
+      buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
       qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
       buf
     }
   }
-
-  buflist <- mapply(getBuffer, allnames, alltypes, allvarnum,
+  buflist <- mapply(getBuffer, allnames, alltypes, allvarnum, allnullable,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                     SIMPLIFY=FALSE)
 
