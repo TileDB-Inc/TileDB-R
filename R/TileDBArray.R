@@ -459,15 +459,17 @@ setMethod("[", "tiledb_array",
 
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
-    if (is.na(varnum)) {
-      buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
-      qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
-      buf
-    } else {
-      buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
-      qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
-      buf
-    }
+      if (is.na(varnum)) {
+          if (type %in% c("CHAR", "ASCII")) {
+              buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
+              qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
+          }
+          buf
+      } else {
+          buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
+          qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
+          buf
+      }
   }
   buflist <- mapply(getBuffer, allnames, alltypes, allvarnum, allnullable,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
@@ -580,15 +582,18 @@ setMethod("[<-", "tiledb_array",
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
+  dimnullable <- sapply(dims, function(d) FALSE)
 
   attrs <- tiledb::attrs(schema(x))
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
+  attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
 
   allnames <- c(dimnames, attrnames)
   alltypes <- c(dimtypes, attrtypes)
   allvarnum <- c(dimvarnum, attrvarnum)
+  allnullable <- c(dimnullable, attrnullable)
 
   ## we will recognize two standard cases
   ##  1) arr[]    <- value    where value contains two columns with the dimnames
@@ -692,8 +697,8 @@ setMethod("[<-", "tiledb_array",
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
       } else {
         nr <- NROW(value[[i]])
-        #cat("Alloc buffer", i, "for", colnam, ":", alltypes[i], "nr:", nr, "\n")
-        buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
+        #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr, "null:", allnullable[i], "\n")
+        buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr, allnullable[i])
         buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i],
                                                           value[[i]], asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[i]])
