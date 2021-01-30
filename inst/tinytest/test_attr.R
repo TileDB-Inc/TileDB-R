@@ -162,3 +162,34 @@ tiledb_attribute_set_nullable(attrib, FALSE)
 expect_false(tiledb_attribute_get_nullable(attrib))
 expect_error(tiledb_attribute_set_nullable(attrib, 1L))
 expect_error(tiledb_attribute_set_nullable(attrib, as.logical(NA)))
+
+attrib <- tiledb_attr("a",  type = "FLOAT64", nullable=TRUE)
+expect_true(tiledb_attribute_get_nullable(attrib))
+
+attrib <- tiledb_attr("a",  type = "FLOAT64", nullable=FALSE)
+expect_false(tiledb_attribute_get_nullable(attrib))
+
+
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+
+domain <- tiledb_domain(tiledb_dim("row", c(0L, 100L), 100L, "INT32"))
+attrib <- c(tiledb_attr("int8",   type = "INT8",    nullable = TRUE),
+            tiledb_attr("int16",  type = "INT16",   nullable = TRUE),
+            tiledb_attr("int32",  type = "INT32",   nullable = TRUE),
+            tiledb_attr("double", type = "FLOAT64", nullable = TRUE))
+schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
+res <- tiledb_array_create(uri, schema)
+
+
+df <- data.frame(row   = 1:10,
+                 int8  = 10L*c(1:2, NA, 4:10),
+                 int16 = 20L*c(1:3, NA, 5:10),
+                 int32 = 30L*c(1:4, NA, 6:10),
+                 double=100L*c(1:5, NA, 7:10))
+arr <- tiledb_array(uri)
+arr[] <- df
+
+newarr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- newarr[]
+expect_equal(df, chk)

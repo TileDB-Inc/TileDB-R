@@ -2469,6 +2469,7 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
     if (buf->nullable)
         getValidityMapFromInteger(v, buf->validity_map);
+    //if (buf->nullable) for (int i=0; i<buf->ncells; i++) Rprintf("%d : %d\n", i, buf->validity_map[i]);
   } else if (dtype == "FLOAT64") {
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
