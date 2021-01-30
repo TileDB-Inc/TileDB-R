@@ -213,8 +213,8 @@ libtiledb_filter_list_get_filter_from_index <- function(filterList, filter_index
     .Call(`_tiledb_libtiledb_filter_list_get_filter_from_index`, filterList, filter_index)
 }
 
-libtiledb_attribute <- function(ctx, name, type, filter_list, ncells) {
-    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells)
+libtiledb_attribute <- function(ctx, name, type, filter_list, ncells, nullable) {
+    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells, nullable)
 }
 
 libtiledb_attribute_get_name <- function(attr) {

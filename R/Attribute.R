@@ -41,6 +41,8 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' that this is a _required_ parameter.
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
 #' @param ncells (default 1) The number of cells, use \code{NA} to signal variable length
+#' @param nullable (default FALSE) A logical switch whether the attribute can have missing
+#' values
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
@@ -56,6 +58,7 @@ tiledb_attr <- function(name,
                         type,
                         filter_list = tiledb_filter_list(),
                         ncells = 1,
+                        nullable = FALSE,
                         ctx = tiledb_get_context()
                         ) {
     if (missing(name)) {
@@ -71,7 +74,7 @@ tiledb_attr <- function(name,
     } else if(!is(filter_list, "tiledb_filter_list")) {
         stop("filter_list argument must be a tiledb_filter_list instance")
     }
-    ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells)
+    ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells, nullable)
     new("tiledb_attr", ptr = ptr)
 }
 

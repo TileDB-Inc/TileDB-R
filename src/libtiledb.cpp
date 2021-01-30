@@ -1258,69 +1258,63 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                                             std::string name,
                                             std::string type,
                                             XPtr<tiledb::FilterList> filter_list,
-                                            int ncells) {
-  tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
-  if (ncells < 1 && ncells != R_NaInt) {
-    Rcpp::stop("ncells must be >= 1 (or NA for variable cells)");
-  }
-  if (attr_dtype == TILEDB_INT32) {
-    using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
-    attr->set_filter_list(*filter_list);
-    registerXptrFinalizer(attr, libtiledb_attribute_delete);
-    return attr;
-  } else if (attr_dtype == TILEDB_FLOAT64) {
-    using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
-    attr->set_filter_list(*filter_list);
-    registerXptrFinalizer(attr, libtiledb_attribute_delete);
-    return attr;
-  } else if (attr_dtype == TILEDB_CHAR) {
-    using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
-    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
-    attr->set_filter_list(*filter_list);
-    registerXptrFinalizer(attr, libtiledb_attribute_delete);
-    uint64_t num = static_cast<uint64_t>(ncells);
-    if (ncells == R_NaInt) {
-      num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
+                                            int ncells,
+                                            bool nullable) {
+    tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
+    if (ncells < 1 && ncells != R_NaInt) {
+        Rcpp::stop("ncells must be >= 1 (or NA for variable cells)");
     }
-    attr->set_cell_val_num(num);
-    return attr;
-  } else if (attr_dtype == TILEDB_DATETIME_YEAR ||
-             attr_dtype == TILEDB_DATETIME_MONTH ||
-             attr_dtype == TILEDB_DATETIME_WEEK ||
-             attr_dtype == TILEDB_DATETIME_DAY ||
-             attr_dtype == TILEDB_DATETIME_HR ||
-             attr_dtype == TILEDB_DATETIME_MIN ||
-             attr_dtype == TILEDB_DATETIME_SEC ||
-             attr_dtype == TILEDB_DATETIME_MS  ||
-             attr_dtype == TILEDB_DATETIME_US  ||
-             attr_dtype == TILEDB_DATETIME_NS  ||
-             attr_dtype == TILEDB_DATETIME_PS  ||
-             attr_dtype == TILEDB_DATETIME_FS  ||
-             attr_dtype == TILEDB_DATETIME_AS) {
-    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
+
+    // placeholder, overwritten in all branches below
+    XPtr<tiledb::Attribute> attr = XPtr<tiledb::Attribute>(static_cast<tiledb::Attribute*>(nullptr));
+
+    if (attr_dtype == TILEDB_INT32) {
+        using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+    } else if (attr_dtype == TILEDB_FLOAT64) {
+        using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+    } else if (attr_dtype == TILEDB_CHAR) {
+        using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+        uint64_t num = static_cast<uint64_t>(ncells);
+        if (ncells == R_NaInt) {
+            num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
+        }
+        attr->set_cell_val_num(num);
+    } else if (attr_dtype == TILEDB_DATETIME_YEAR ||
+               attr_dtype == TILEDB_DATETIME_MONTH ||
+               attr_dtype == TILEDB_DATETIME_WEEK ||
+               attr_dtype == TILEDB_DATETIME_DAY ||
+               attr_dtype == TILEDB_DATETIME_HR ||
+               attr_dtype == TILEDB_DATETIME_MIN ||
+               attr_dtype == TILEDB_DATETIME_SEC ||
+               attr_dtype == TILEDB_DATETIME_MS  ||
+               attr_dtype == TILEDB_DATETIME_US  ||
+               attr_dtype == TILEDB_DATETIME_NS  ||
+               attr_dtype == TILEDB_DATETIME_PS  ||
+               attr_dtype == TILEDB_DATETIME_FS  ||
+               attr_dtype == TILEDB_DATETIME_AS) {
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
+    } else if (attr_dtype == TILEDB_INT64  ||
+               attr_dtype == TILEDB_UINT64 ||
+               attr_dtype == TILEDB_UINT32 ||
+               attr_dtype == TILEDB_INT16  ||
+               attr_dtype == TILEDB_UINT16 ||
+               attr_dtype == TILEDB_INT8   ||
+               attr_dtype == TILEDB_UINT8    ) {
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
+    } else {
+        Rcpp::Rcout << type << std::endl;
+        Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT64), "
+                   "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
+                   "nanotime (DATETIME_NS) and character (CHAR) attributes "
+                   "are supported");
+    }
     attr->set_filter_list(*filter_list);
+    attr->set_nullable(nullable);
     registerXptrFinalizer(attr, libtiledb_attribute_delete);
     return attr;
-  } else if (attr_dtype == TILEDB_INT64  ||
-             attr_dtype == TILEDB_UINT64 ||
-             attr_dtype == TILEDB_UINT32 ||
-             attr_dtype == TILEDB_INT16  ||
-             attr_dtype == TILEDB_UINT16 ||
-             attr_dtype == TILEDB_INT8   ||
-             attr_dtype == TILEDB_UINT8    ) {
-    auto attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
-    attr->set_filter_list(*filter_list);
-    registerXptrFinalizer(attr, libtiledb_attribute_delete);
-    return attr;
-  } else {
-    Rcpp::Rcout << type << std::endl;
-    Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT64), "
-               "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
-               "nanotime (DATETIME_NS) and character (CHAR) attributes "
-               "are supported");
-  }
 }
 
 // [[Rcpp::export]]
@@ -2478,6 +2472,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
   } else if (dtype == "FLOAT64") {
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromNumeric(v, buf->validity_map);
   } else if (dtype == "INT64" ||
              (asint64 && is_datetime_column(buf->dtype))) {
     // integer64 from the bit64 package uses doubles, see nanosecond
@@ -2528,6 +2524,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
       x[i] = static_cast<uint32_t>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromInteger(v, buf->validity_map);
   } else if (dtype == "INT16") {
     IntegerVector v(vec);
     auto n = v.length();
@@ -2536,6 +2534,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
       x[i] = static_cast<int16_t>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromInteger(v, buf->validity_map);
   } else if (dtype == "UINT16") {
     IntegerVector v(vec);
     auto n = v.length();
@@ -2544,6 +2544,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
       x[i] = static_cast<uint16_t>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromInteger(v, buf->validity_map);
   } else if (dtype == "INT8") {
     IntegerVector v(vec);
     auto n = v.length();
@@ -2552,6 +2554,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
       x[i] = static_cast<int8_t>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromInteger(v, buf->validity_map);
   } else if (dtype == "UINT8") {
     IntegerVector v(vec);
     auto n = v.length();
@@ -2560,6 +2564,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
       x[i] = static_cast<uint8_t>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromInteger(v, buf->validity_map);
   } else if (dtype == "FLOAT32") {
     NumericVector v(vec);
     auto n = v.length();
@@ -2568,6 +2574,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
       x[i] = static_cast<float>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromNumeric(v, buf->validity_map);
   } else {
     Rcpp::stop("Assignment to '%s' currently unsupported.", dtype.c_str());
   }
@@ -2659,6 +2667,8 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     for (size_t i=0; i<n; i++) {
       out[i] = static_cast<int32_t>(intvec[i]);
     }
+    if (buf->nullable)
+        setValidityMapForInteger(out, buf->validity_map);
     return out;
   } else if (dtype == "UINT16") {
     size_t n = buf->ncells;
@@ -2668,6 +2678,8 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     for (size_t i=0; i<n; i++) {
       out[i] = static_cast<int32_t>(intvec[i]);
     }
+    if (buf->nullable)
+        setValidityMapForInteger(out, buf->validity_map);
     return out;
   } else if (dtype == "INT8") {
     size_t n = buf->ncells;
@@ -2677,6 +2689,8 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     for (size_t i=0; i<n; i++) {
       out[i] = static_cast<int32_t>(intvec[i]);
     }
+    if (buf->nullable)
+        setValidityMapForInteger(out, buf->validity_map);
     return out;
   } else if (dtype == "UINT8") {
     size_t n = buf->ncells;
@@ -2686,6 +2700,8 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     for (size_t i=0; i<n; i++) {
       out[i] = static_cast<int32_t>(uintvec[i]);
     }
+    if (buf->nullable)
+        setValidityMapForInteger(out, buf->validity_map);
     return out;
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());

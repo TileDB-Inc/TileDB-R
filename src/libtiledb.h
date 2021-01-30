@@ -61,5 +61,7 @@ Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t 
 // nullable helpers
 void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map);
 void setValidityMapForInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map);
+void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map);
+void setValidityMapForNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map);
 
 #endif

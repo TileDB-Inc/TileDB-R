@@ -42,3 +42,20 @@ void setValidityMapForInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & 
         if (map[i] == 0)
             vec[i] = R_NaInt;
 }
+
+void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map) {
+    if (static_cast<size_t>(vec.size()) != map.size())
+        Rcpp::stop("Unequal length between vector and map.");
+
+    for (auto i=0; i < vec.size(); i++)
+        map[i] = (vec[i] == R_NaReal) ? 0 : 1;
+}
+
+void setValidityMapForNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map) {
+    if (static_cast<size_t>(vec.size()) != map.size())
+        Rcpp::stop("Unequal length between vector and map.");
+
+    for (auto i=0; i < vec.size(); i++)
+        if (map[i] == 0)
+            vec[i] = R_NaReal;
+}
