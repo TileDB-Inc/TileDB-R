@@ -177,16 +177,18 @@ domain <- tiledb_domain(tiledb_dim("row", c(0L, 100L), 100L, "INT32"))
 attrib <- c(tiledb_attr("int8",   type = "INT8",    nullable = TRUE),
             tiledb_attr("int16",  type = "INT16",   nullable = TRUE),
             tiledb_attr("int32",  type = "INT32",   nullable = TRUE),
-            tiledb_attr("double", type = "FLOAT64", nullable = TRUE))
+            tiledb_attr("float32",type = "FLOAT32", nullable = TRUE),
+            tiledb_attr("float64",type = "FLOAT64", nullable = TRUE))
 schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
 res <- tiledb_array_create(uri, schema)
 
 
-df <- data.frame(row   = 1:10,
-                 int8  = 10L*c(1:2, NA, 4:10),
-                 int16 = 20L*c(1:3, NA, 5:10),
-                 int32 = 30L*c(1:4, NA, 6:10),
-                 double=100L*c(1:5, NA, 7:10))
+df <- data.frame(row     =  1:10,
+                 int8    =  10L*c(1:2, NA, 4:10),
+                 int16   =  20L*c(1:3, NA, 5:10),
+                 int32   =  30L*c(1:4, NA, 6:10),
+                 float32 =  40*c(1:5, NA, 7:10),
+                 float64 =  50*c(1:6, NA, 8:10))
 arr <- tiledb_array(uri)
 arr[] <- df
 
