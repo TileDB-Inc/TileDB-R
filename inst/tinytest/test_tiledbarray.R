@@ -383,8 +383,8 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[as.integer64(1:2), as.integer64(2:4)]
   expect_equal(newdata[,"a"], c(3L, 2L))
-  expect_equal(newdata[,"rows"], c(2L, 2L))
-  expect_equal(newdata[,"cols"], c(3L, 4L))
+  expect_equal(newdata[,"rows"], as.integer64(c(2, 2)))
+  expect_equal(newdata[,"cols"], as.integer64(c(3, 4)))
 
   unlink(tmp, recursive = TRUE)
 
@@ -775,8 +775,8 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
   newdata <- A[as.integer64(1:2), as.integer64(2:3)]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
-  expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
-  expect_equal(newdata[,"cols"], c(2L, 3L, 2L, 3L))
+  expect_equal(newdata[,"rows"], as.integer64(c(1L, 1L, 2L, 2L)))
+  expect_equal(newdata[,"cols"], as.integer64(c(2L, 3L, 2L, 3L)))
 
 
   unlink(tmp, recursive = TRUE)
@@ -863,7 +863,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   expect_equal(newdata[,"a4"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"a5"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"a6"], c(2L, 3L, 6L, 7L))
-  expect_equal(newdata[,"a7"], c(2L, 3L, 6L, 7L))
+  expect_equal(newdata[,"a7"], as.integer64(c(2L, 3L, 6L, 7L)))
   expect_equal(newdata[,"a8"], c(2L, 3L, 6L, 7L))
 
   unlink(tmp, recursive = TRUE)
@@ -919,7 +919,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   expect_equal(newdata[,"a4"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"a5"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"a6"], c(2L, 3L, 6L, 7L))
-  expect_equal(newdata[,"a7"], c(2L, 3L, 6L, 7L))
+  expect_equal(newdata[,"a7"], as.integer64(c(2L, 3L, 6L, 7L)))
   expect_equal(newdata[,"a8"], c(2L, 3L, 6L, 7L))
 
   unlink(tmp, recursive = TRUE)

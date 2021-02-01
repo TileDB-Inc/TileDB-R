@@ -2483,6 +2483,9 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
     // integer64 from the bit64 package uses doubles, see nanosecond
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromInt64(v, buf->validity_map);
+    //if (buf->nullable) for (int i=0; i<10; i++) Rprintf("(get64) %d : %d\n", i, buf->validity_map[i]);
   } else if (dtype == "DATETIME_YEAR" ||
              dtype == "DATETIME_MONTH" ||
              dtype == "DATETIME_WEEK" ||
@@ -2634,7 +2637,9 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
   } else if (dtype == "INT64") {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    return Rcpp::wrap(v);
+    if (buf->nullable)
+        setValidityMapForInt64(v, buf->validity_map);
+    return makeInteger64(v);
   } else if (asint64 && is_datetime_column(buf->dtype)) {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
