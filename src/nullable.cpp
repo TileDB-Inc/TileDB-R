@@ -47,8 +47,10 @@ void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> &
     if (static_cast<size_t>(vec.size()) != map.size())
         Rcpp::stop("Unequal length between vector and map.");
 
-    for (auto i=0; i < vec.size(); i++)
-        map[i] = (vec[i] == R_NaReal) ? 0 : 1;
+    for (auto i=0; i < vec.size(); i++) {
+        // see R_ext/Arith.h: true for both NA and NaN
+        map[i] = (R_isnancpp(vec[i])) ? 0 : 1;
+    }
 }
 
 void setValidityMapForNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map) {

@@ -1274,6 +1274,9 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     } else if (attr_dtype == TILEDB_FLOAT64) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+    } else if (attr_dtype == TILEDB_FLOAT32) {
+        using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
     } else if (attr_dtype == TILEDB_CHAR) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
@@ -1306,7 +1309,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
     } else {
         Rcpp::Rcout << type << std::endl;
-        Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT64), "
+        Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT{32,64}), "
                    "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
                    "nanotime (DATETIME_NS) and character (CHAR) attributes "
                    "are supported");
@@ -2569,14 +2572,14 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
         getValidityMapFromInteger(v, buf->validity_map);
   } else if (dtype == "FLOAT32") {
     NumericVector v(vec);
+    if (buf->nullable)
+        getValidityMapFromNumeric(v, buf->validity_map);
     auto n = v.length();
     std::vector<float> x(n);
     for (auto i=0; i<n; i++) {
       x[i] = static_cast<float>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
-    if (buf->nullable)
-        getValidityMapFromNumeric(v, buf->validity_map);
   } else {
     Rcpp::stop("Assignment to '%s' currently unsupported.", dtype.c_str());
   }
@@ -2614,11 +2617,16 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
   } else if (dtype == "FLOAT64") {
     NumericVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    if (buf->nullable)
+        setValidityMapForNumeric(v, buf->validity_map);
     return v;
   } else if (dtype == "FLOAT32") {
     std::vector<float> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    return Rcpp::wrap(v);
+    NumericVector w(wrap(v));
+    if (buf->nullable)
+        setValidityMapForNumeric(w, buf->validity_map);
+    return w;
   } else if (dtype == "UINT64") {
     std::vector<uint64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
