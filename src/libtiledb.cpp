@@ -2480,7 +2480,7 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
         getValidityMapFromNumeric(v, buf->validity_map);
   } else if (dtype == "INT64" ||
              (asint64 && is_datetime_column(buf->dtype))) {
-    // integer64 from the bit64 package uses doubles, see nanosecond
+    // integer64 from the bit64 package uses doubles, sees nanosecond
     NumericVector v(vec);
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
     if (buf->nullable)
@@ -2614,9 +2614,11 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
         setValidityMapForInteger(v, buf->validity_map);
     return v;
   } else if (dtype == "UINT32") {
-    std::vector<uint32_t> v(buf->ncells);
+    IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    return Rcpp::wrap(v);
+    if (buf->nullable)
+        setValidityMapForInteger(v, buf->validity_map);
+    return v;
   } else if (dtype == "FLOAT64") {
     NumericVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
