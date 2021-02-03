@@ -179,7 +179,12 @@ attrib <- c(tiledb_attr("int8",   type = "INT8",    nullable = TRUE),
             tiledb_attr("int32",  type = "INT32",   nullable = TRUE),
             tiledb_attr("int64",  type = "INT64",   nullable = TRUE),
             tiledb_attr("float32",type = "FLOAT32", nullable = TRUE),
-            tiledb_attr("float64",type = "FLOAT64", nullable = TRUE))
+            tiledb_attr("float64",type = "FLOAT64", nullable = TRUE),
+            tiledb_attr("uint8",  type = "UINT8",   nullable = TRUE),
+            tiledb_attr("uint16", type = "UINT16",  nullable = TRUE),
+            tiledb_attr("uint32", type = "UINT32",  nullable = TRUE),
+            tiledb_attr("uint64", type = "UINT64",  nullable = TRUE))
+
 schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
 res <- tiledb_array_create(uri, schema)
 
@@ -190,10 +195,16 @@ df <- data.frame(row     =  1:10,
                  int32   =  30L*c(1:4, NA, 6:10),
                  int64   =  as.integer64(40L*c(1:5, NA, 7:10)),
                  float32 =  50*c(1:6, NA, 8:10),
-                 float64 =  60*c(1:7, NA, 9:10))
+                 float64 =  60*c(1:7, NA, 9:10),
+                 uint8   =  10*c(1:8, NA, 10),
+                 uint16  =  80*c(1:9, NA),
+                 uint32  =  90*c(1:8, NA, 10),
+                 uint64  = as.integer64(100*c(1:7, NA, 9:10)))
+
 arr <- tiledb_array(uri)
 arr[] <- df
 
 newarr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- newarr[]
-expect_equal(df, chk)
+expect_equal(df[,1:10], chk[,1:10])
+expect_equivalent(as.numeric(df[,11]), chk[,11]) # we currently return uint64_t as numeric
