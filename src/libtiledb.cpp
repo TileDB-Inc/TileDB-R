@@ -2485,7 +2485,6 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
     std::memcpy(buf->vec.data(), &(v[0]), buf->ncells*buf->size);
     if (buf->nullable)
         getValidityMapFromInt64(v, buf->validity_map);
-    //if (buf->nullable) for (int i=0; i<10; i++) Rprintf("(get64) %d : %d\n", i, buf->validity_map[i]);
   } else if (dtype == "DATETIME_YEAR" ||
              dtype == "DATETIME_MONTH" ||
              dtype == "DATETIME_WEEK" ||
@@ -2513,11 +2512,13 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
     std::vector<int64_t> tt = subnano_to_int64(v, _string_to_tiledb_datatype(dtype));
     std::memcpy(buf->vec.data(), tt.data(), buf->ncells * buf->size);
   } else if (dtype == "UINT64") {
-    // integer64 from the bit64 package uses doubles, see nanosecond
+    // R has no native uint64_t representation so this comes in as numeric; we then
+    // use our int64_t <-> integer64 machinery for null maps but store as uint64_t
     NumericVector v(vec);
+    std::vector<int64_t> iv = getInt64Vector(v);
+    if (buf->nullable)
+        getValidityMapFromInt64(v, buf->validity_map);
     auto n = v.length();
-    std::vector<int64_t> iv(n);
-    std::memcpy(&(iv[0]), &(v[0]), buf->ncells*buf->size);
     std::vector<uint64_t> uiv(n);
     for (auto i=0; i<n; i++) {
       uiv[i] = static_cast<uint64_t>(iv[i]);
@@ -2633,9 +2634,18 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
         setValidityMapForNumeric(w, buf->validity_map);
     return w;
   } else if (dtype == "UINT64") {
-    std::vector<uint64_t> v(buf->ncells);
-    std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    return Rcpp::wrap(v);
+    auto n = buf->ncells;
+    std::vector<uint64_t> uv(n);
+    std::memcpy(&(uv[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
+    std::vector<int64_t> iv(n);
+    for (auto i=0; i<n; i++) {
+      iv[i] = static_cast<int64_t>(uv[i]);
+    }
+    NumericVector res = wrap(iv);
+    if (buf->nullable)
+        setValidityMapForNumeric(res, buf->validity_map);
+    //return makeInteger64(iv); // we could return as int64,
+    return res;                 // but current 'contract' is return as NumericVector
   } else if (dtype == "INT64") {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
