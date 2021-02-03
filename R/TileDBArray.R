@@ -443,17 +443,46 @@ setMethod("[", "tiledb_array",
   }
 
   ## retrieve est_result_size
-  getEstimatedSize <- function(name, varnum, nullable, qryptr) {
+  getEstimatedSize <- function(name, varnum, nullable, qryptr, datatype) {
     if (is.na(varnum) && !nullable)
-      libtiledb_query_get_est_result_size_var(qryptr, name)[1]
+      res <- libtiledb_query_get_est_result_size_var(qryptr, name)[1]
     else if (is.na(varnum) && nullable)
-      libtiledb_query_get_est_result_size_var_nullable(qryptr, name)[1]
+      res <- libtiledb_query_get_est_result_size_var_nullable(qryptr, name)[1]
     else if (!is.na(varnum) && !nullable)
-      libtiledb_query_get_est_result_size(qryptr, name)
+      res <- libtiledb_query_get_est_result_size(qryptr, name)
     else if (!is.na(varnum) && nullable)
-      libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
+      res <- libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
+    if (tiledb::tiledb_version(TRUE) >= "2.2.0") {
+      sz <- switch(datatype,
+                   "UINT8"   = ,
+                   "INT8"    = 1,
+                   "UINT16"  = ,
+                   "INT16"   = 2,
+                   "INT32"   = ,
+                   "UINT32"  = ,
+                   "FLOAT32" = 4,
+                   "UINT64"  = ,
+                   "INT64"   = ,
+                   "FLOAT64" = ,
+                   "DATETIME_YEAR" = ,
+                   "DATETIME_MONTH" = ,
+                   "DATETIME_WEEK" = ,
+                   "DATETIME_DAY" = ,
+                   "DATETIME_HR" = ,
+                   "DATETIME_MIN" = ,
+                   "DATETIME_SEC" = ,
+                   "DATETIME_MS" = ,
+                   "DATETIME_US" = ,
+                   "DATETIME_NS" = ,
+                   "DATETIME_PS" = ,
+                   "DATETIME_FS" = ,
+                   "DATETIME_AS" = 8,
+                   1)
+      res <- res / sz
+    }
+    res
   }
-  ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable,
+  ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable, alltypes,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
 
