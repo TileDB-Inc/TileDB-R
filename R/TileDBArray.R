@@ -386,6 +386,9 @@ setMethod("[", "tiledb_array",
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
   if (length(layout) > 0) libtiledb_query_set_layout(qryptr, layout)
 
+  ## ranges seem to interfere with the byte/element adjustment below so set up toggle
+  rangeunset <- TRUE
+
   ## set default range(s) on first dimension if nothing is specified
   if (is.null(i) &&
       (length(x@selected_ranges) == 0 ||
@@ -395,6 +398,7 @@ setMethod("[", "tiledb_array",
     if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) # || nonemptydom[[1]][1] > domdim[1])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     nonemptydom[[1]][1], nonemptydom[[1]][2])
+      rangeunset <- FALSE
   }
   ## if we have is, use it
   if (!is.null(i)) {
@@ -405,6 +409,7 @@ setMethod("[", "tiledb_array",
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     min(eval(el)), max(eval(el)))
     }
+    rangeunset <- FALSE
   }
 
   ## set range(s) on second dimension
@@ -418,6 +423,7 @@ setMethod("[", "tiledb_array",
         if (nonemptydom[[2]][1] != nonemptydom[[2]][2])
           qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                         nonemptydom[[2]][1], nonemptydom[[2]][2])
+      rangeunset <- FALSE
     }
   }
 
@@ -429,6 +435,7 @@ setMethod("[", "tiledb_array",
       el <- j[[ii]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                     min(eval(el)), max(eval(el)))
+      rangeunset <- FALSE
     }
   }
 
@@ -439,6 +446,7 @@ setMethod("[", "tiledb_array",
       for (i in seq_len(nrow(m))) {
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], m[i,1], m[i,2])
       }
+      rangeunset <- FALSE
     }
   }
 
@@ -452,7 +460,7 @@ setMethod("[", "tiledb_array",
       res <- libtiledb_query_get_est_result_size(qryptr, name)
     else if (!is.na(varnum) && nullable)
       res <- libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
-    if (tiledb::tiledb_version(TRUE) >= "2.2.0") {
+    if (rangeunset && tiledb::tiledb_version(TRUE) >= "2.2.0") {
       sz <- switch(datatype,
                    "UINT8"   = ,
                    "INT8"    = 1,
