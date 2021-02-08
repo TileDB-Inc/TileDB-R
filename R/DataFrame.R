@@ -164,7 +164,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         tiledb_attr(colnames(obj)[ind],
                     type = tp,
                     ncells = ifelse(tp=="CHAR",NA_integer_,1),
-                    filter_list = filterlist)
+                    filter_list = filterlist,
+                    nullable = any(is.na(col)))
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]

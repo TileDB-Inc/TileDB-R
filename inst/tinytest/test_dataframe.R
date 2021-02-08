@@ -13,6 +13,8 @@ uri <- tempfile()
 ## turn factor into character
 irisdf <- within(iris, Species <- as.character(Species))
 
+expect_error(fromDataFrame(uri, irisdf)) # arguments checked, error in this wrong case
+
 fromDataFrame(irisdf, uri)
 
 arr <- tiledb_array(uri, as.data.frame=TRUE)
@@ -192,3 +194,16 @@ for (comb in combinations) {
     chk <- tiledb_array(uri, as.data.frame=TRUE)
     expect_equal(df, chk[][, colnames(df)])
 }
+
+## simple nullable example, no CHAR support yet C++
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+dat <- data.frame(A=1:10,
+                  B=LETTERS[1:10],
+                  C=sqrt(1:10))
+dat[3,1] <- NA
+dat[4,3] <- NA
+fromDataFrame(dat, uri)
+chk <- tiledb_array(uri, as.data.frame=TRUE)
+val <- chk[][,-1]  # omit added rows
+expect_equal(dat, val)

@@ -693,6 +693,7 @@ setMethod("[<-", "tiledb_array",
     names(value) <- attrnames
     allnames <- attrnames
     alltypes <- attrtypes
+    allnullable <- attrnullable
   }
 
   nc <- if (is.list(value)) length(value) else ncol(value)
