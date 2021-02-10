@@ -78,6 +78,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     if (!is.null(col_index) && is.character(col_index)) col_index <- match(col_index, colnames(obj))
     dims <- dim(obj)
 
+    if (class(obj)[1] != "data.frame") obj <- as.data.frame(obj)
+
     ## turn factor columns in char columns
     factcols <- grep("factor", sapply(obj, class))
     if (length(factcols) > 0) {
