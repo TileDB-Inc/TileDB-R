@@ -138,7 +138,7 @@ suppressMessages({
 df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range=seq(-1000, 1000, length=nobs),
                  int_vals=sort(as.integer(runif(nobs)*1e9)),
-                 #int64_vals=sort(as.integer64(runif(nobs)*1e9)),  ## TODO: return int64
+                 int64_vals=sort(as.integer64(runif(nobs)*1e9)),
                  nanotime=as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)))
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -162,7 +162,7 @@ set.seed(42)
 df <- data.frame(time = round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range = seq(-1000, 1000, length=nobs),
                  int_vals = sort(as.integer(runif(nobs)*1e9)),
-                 #int64_vals = sort(as.integer64(runif(nobs)*1e9)),#TODO cannot yet comp. all.equal
+                 int64_vals = sort(as.integer64(runif(nobs)*1e9)),
                  nanotime = as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)),
                  txt = sort(sapply(seq_len(nobs), function(i) paste0(sample(LETTERS,1), paste(sample(letters, sample(1:6,1)), collapse=""))))
                  )
