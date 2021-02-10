@@ -104,6 +104,8 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array,
   } else {
     Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
   }
+  buf->nullable = false;
+  buf->validity_map.resize(buf->offsets.size());
   return buf;
 }
 

@@ -562,7 +562,6 @@ expect_equal(v, c(30L, 40L, 50L, 60L, 70L, 80L, 110L, 120L, 130L, 140L, 150L, 16
 res <- tiledb:::libtiledb_array_close(arrptr)
 #})
 
-
 #test_that("low-level variable-length character array write and read works", {
 array_name <- tempfile()
 unlink_and_create(array_name)
@@ -847,7 +846,6 @@ expect_equal(rl[[1]], offsets)
 expect_equal(rl[[2]], data)
 
 #})
-
 
 #test_that("low-level variable-length double array write and read works", {
 array_name <- tempfile()

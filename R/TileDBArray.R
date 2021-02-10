@@ -732,7 +732,7 @@ setMethod("[<-", "tiledb_array",
               offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
               data <- paste(txtvec, collapse="")
               ##cat("Alloc char buffer", i, "for", colnam, ":", alltypes[i], "\n")
-              buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data, FALSE, logical(0))
+              buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
               qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
           } else { # variable length and nullable
               txtvec <- as.character(value[[i]])
@@ -741,7 +741,7 @@ setMethod("[<-", "tiledb_array",
               newvec[navec] <- ".."     # somehow we need two chars for NA as if we passed the char
               offsets <- c(0L, cumsum(nchar(newvec[-length(newvec)])))
               data <- paste(txtvec, collapse="")
-              buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data, allnullable[i], navec)
+              buflist[[i]] <- libtiledb_query_buffer_var_char_create_nullable(offsets, data, allnullable[i], navec)
               qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
           }
       } else {
