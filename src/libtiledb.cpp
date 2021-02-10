@@ -1315,7 +1315,9 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                    "are supported");
     }
     attr->set_filter_list(*filter_list);
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     attr->set_nullable(nullable);
+#endif
     registerXptrFinalizer(attr, libtiledb_attribute_delete);
     return attr;
 }
@@ -2637,6 +2639,7 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
 XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    std::string attr,
                                                    XPtr<query_buf_t> buf) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (buf->nullable) {
         query->set_buffer_nullable(attr, static_cast<void*>(buf->vec.data()), buf->ncells,
                                    buf->validity_map.data(),
@@ -2645,6 +2648,10 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
         query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
     }
     return query;
+#else
+    query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
+    return query;
+#endif
 }
 
 
@@ -3064,7 +3071,7 @@ NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query,
 // [[Rcpp::export]]
 NumericVector libtiledb_query_get_est_result_size_var_nullable(XPtr<tiledb::Query> query, std::string attr) {
 #if TILEDB_VERSION < TileDB_Version(2,2,0)
-    return Rcpp::NumericVector::create(R_NaReal,R_NaReal,NaReal);
+    return Rcpp::NumericVector::create(R_NaReal,R_NaReal,R_NaReal);
 #else
     std::array<uint64_t, 3> est = query->est_result_size_var_nullable(attr);
     return Rcpp::NumericVector::create(static_cast<R_xlen_t>(est[0]),
