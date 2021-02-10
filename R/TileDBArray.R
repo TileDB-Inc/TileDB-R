@@ -498,7 +498,7 @@ setMethod("[", "tiledb_array",
   getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
       if (is.na(varnum)) {
           if (type %in% c("CHAR", "ASCII")) {
-              buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
+              buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8, nullable)
               qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
           }
           buf
@@ -727,18 +727,28 @@ setMethod("[<-", "tiledb_array",
       ## when an index column is use this may be unordered to remap to position in 'nm' names
       i <- match(colnam, nm)
       if (alltypes[i] %in% c("CHAR", "ASCII")) { # variable length
-        txtvec <- as.character(value[[i]])
-        offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
-        data <- paste(txtvec, collapse="")
-        #cat("Alloc char buffer", i, "for", colnam, ":", alltypes[i], "\n")
-        buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
-        qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
+          if (!allnullable[i]) {
+              txtvec <- as.character(value[[i]])
+              offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
+              data <- paste(txtvec, collapse="")
+              ##cat("Alloc char buffer", i, "for", colnam, ":", alltypes[i], "\n")
+              buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data, FALSE, logical(0))
+              qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
+          } else { # variable length and nullable
+              txtvec <- as.character(value[[i]])
+              navec <- is.na(txtvec)
+              newvec <- txtvec
+              newvec[navec] <- ".."     # somehow we need two chars for NA as if we passed the char
+              offsets <- c(0L, cumsum(nchar(newvec[-length(newvec)])))
+              data <- paste(txtvec, collapse="")
+              buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data, allnullable[i], navec)
+              qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
+          }
       } else {
         nr <- NROW(value[[i]])
         #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr, "null:", allnullable[i], "\n")
         buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr, allnullable[i])
-        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i],
-                                                          value[[i]], asint64)
+        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]], asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[i]])
       }
     }

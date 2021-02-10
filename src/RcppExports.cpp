@@ -7,6 +7,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // allocate_arrow_array_as_double
 double allocate_arrow_array_as_double();
 RcppExport SEXP _tiledb_allocate_arrow_array_as_double() {
@@ -1520,14 +1525,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_var_char_alloc_direct
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc_direct(SEXP szoffsetsSEXP, SEXP szdataSEXP) {
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata, bool nullable);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc_direct(SEXP szoffsetsSEXP, SEXP szdataSEXP, SEXP nullableSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type szoffsets(szoffsetsSEXP);
     Rcpp::traits::input_parameter< int >::type szdata(szdataSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc_direct(szoffsets, szdata));
+    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc_direct(szoffsets, szdata, nullable));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1544,14 +1550,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_var_char_create
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets, std::string data);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_create(SEXP intoffsetsSEXP, SEXP dataSEXP) {
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets, std::string data, bool nullable, std::vector<bool> navec);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_create(SEXP intoffsetsSEXP, SEXP dataSEXP, SEXP nullableSEXP, SEXP navecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type intoffsets(intoffsetsSEXP);
     Rcpp::traits::input_parameter< std::string >::type data(dataSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_create(intoffsets, data));
+    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
+    Rcpp::traits::input_parameter< std::vector<bool> >::type navec(navecSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_create(intoffsets, data, nullable, navec));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2410,9 +2418,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_subarray_with_type", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray_with_type, 3},
     {"_tiledb_libtiledb_query_set_subarray", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray, 2},
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
-    {"_tiledb_libtiledb_query_buffer_var_char_alloc_direct", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc_direct, 2},
+    {"_tiledb_libtiledb_query_buffer_var_char_alloc_direct", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc_direct, 3},
     {"_tiledb_convertStringVectorIntoOffsetsAndString", (DL_FUNC) &_tiledb_convertStringVectorIntoOffsetsAndString, 2},
-    {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
+    {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 4},
     {"_tiledb_libtiledb_query_set_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_char_simple", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char_simple, 1},

@@ -13,9 +13,12 @@
 using namespace Rcpp;
 
 struct var_length_char_buffer {
-  std::vector<uint64_t> offsets;  // vector for offset values
-  std::string str;              	// string for data values
-  int32_t rows, cols;             // dimension from subarray
+    std::vector<uint64_t> offsets;  	// vector for offset values
+    std::string str;              		// string for data values
+    int32_t rows, cols;              	// dimension from subarray
+    bool nullable;                      // flag
+    std::vector<uint8_t> validity_map;  // for nullable vectors
+    std::vector<std::string> strvector;
 };
 typedef struct var_length_char_buffer vlc_buf_t;
 

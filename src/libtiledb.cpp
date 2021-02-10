@@ -2263,13 +2263,16 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 // -- vlc_buf_t functions below
 
 // [[Rcpp::export]]
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata) {
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata,
+                                                             bool nullable) {
   XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, false);
   registerXptrFinalizer(buf, libtiledb_vlc_buf_delete);
   buf->offsets.resize(szoffsets);
   buf->str.resize(szdata);
   buf->rows = szoffsets;           // guess for number of elements
   buf->cols = 1;
+  buf->nullable = nullable;
+  buf->validity_map.resize(szdata);
   return buf;
 }
 
@@ -2294,7 +2297,9 @@ std::string convertStringVectorIntoOffsetsAndString(Rcpp::CharacterVector vec,
 // assigning (for a write) allocates
 // [[Rcpp::export]]
 XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
-                                                       std::string data) {
+                                                       std::string data,
+                                                       bool nullable,
+                                                       std::vector<bool> navec) {
   XPtr<vlc_buf_t> bufptr = XPtr<vlc_buf_t>(new vlc_buf_t);
   int n = intoffsets.size();
   bufptr->offsets.resize(n);
@@ -2303,6 +2308,13 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
   }
   bufptr->str = data;
   bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
+  if (nullable) {
+      bufptr->validity_map.resize(n);
+      for (int i=0; i<n; i++) {
+          bufptr->validity_map[i] = (navec[i] ? 1 : 0);
+      }
+  }
+  bufptr->nullable = nullable;
   return(bufptr);
 }
 
@@ -2310,8 +2322,18 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> query,
                                                         std::string attr,
                                                         XPtr<vlc_buf_t> bufptr) {
-  query->set_buffer(attr, bufptr->offsets, bufptr->str);
-  return query;
+
+#if TILEDB_VERSION >= TileDB_Version(2,2,3)
+    if (bufptr->nullable) {
+        query->set_buffer_nullable(attr, bufptr->offsets, bufptr->str, bufptr->validity_map);
+    } else {
+        query->set_buffer(attr, bufptr->offsets, bufptr->str);
+    }
+    return query;
+#else
+    query->set_buffer(attr, bufptr->offsets, bufptr->str);
+    return query;
+#endif
 }
 
 // 'len' is the length of the query result set, i.e. buffer elements for standard columns
@@ -2332,7 +2354,10 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
   // Get the strings
   CharacterMatrix mat(bufptr->rows, bufptr->cols);
   for (size_t i = 0; i < n; i++) {
-    mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
+      if (bufptr->validity_map[i] == 0)
+          mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
+      else
+          mat[i] = R_NaString;
   }
   return(mat);
 }
