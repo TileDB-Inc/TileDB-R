@@ -2343,7 +2343,6 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
                                                         std::string attr,
                                                         XPtr<vlc_buf_t> bufptr) {
 
-//#if TILEDB_VERSION >= TileDB_Version(2,2,3) && !defined(_WIN32)
 #if TILEDB_VERSION >= TileDB_Version(2,2,4)
     if (bufptr->nullable) {
         query->set_buffer_nullable(attr, bufptr->offsets, bufptr->str, bufptr->validity_map);
