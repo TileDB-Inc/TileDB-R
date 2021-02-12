@@ -9,6 +9,8 @@ ctx <- tiledb_ctx(limitTileDBCores())
 
 if (!requireNamespace("Matrix", quietly=TRUE)) exit_file("Need the 'Matrix' package")
 library(Matrix)
+if (packageVersion("Matrix") < "1.3.0") exit_file("Old 'Matrix' package?")
+
 set.seed(123)                           # just to fix it
 n <- 60
 k <- 50
