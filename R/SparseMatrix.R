@@ -22,8 +22,10 @@
 
 ## sparse matrix helper 'roughly similar' to fromDataFrame()
 
-##' Create a TileDB sparse array from a given sparse matrix object
+##' Create (or return) a TileDB sparse array
 ##'
+##' The functions \code{fromSparseMatrix} and \code{toSparseMatrix} help in storing
+##' (and retrieving) sparse matrices using a TileDB backend.
 ##' @param obj A sparse matrix object.
 ##' @param uri A character variable with an Array URI.
 ##' @param cell_order A character variable with one of the TileDB cell order values,
@@ -32,8 +34,24 @@
 ##' default is \dQuote{COL_MAJOR}.
 ##' @param filter A character variable vector, defaults to \sQuote{ZSTD}, for
 ##' one or more filters to be applied to each attribute;
-##' @param capacity A integer value with the schema capacity, default is 1000.
+##' @param capacity A integer value with the schema capacity, default is 10000.
 ##' @return Null, invisibly.
+##' @examples
+##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+##' \dontrun{
+##' if (requireNamespace("Matrix", quietly=TRUE)) {
+##'     library(Matrix)
+##'     set.seed(123)      # just to fix it
+##'     mat <- matrix(0, nrow=20, ncol=10)
+##'     mat[sample(seq_len(200), 20)] <- seq(1, 20)
+##'     spmat <- as(mat, "dgTMatrix")  # sparse matrix in dgTMatrix format
+##'     uri <- "sparse_matrix"
+##'     fromSparseMatrix(spmat, uri)   # now written
+##'     chk <- toSparseMatrix(uri)     # and re-read
+##'     print(chk)
+##'     all.equal(spmat, chk)
+##' }
+##' }
 ##' @importFrom methods as
 ##' @export
 fromSparseMatrix <- function(obj,
@@ -81,7 +99,7 @@ fromSparseMatrix <- function(obj,
 ##' @export
 toSparseMatrix <- function(uri) {
 
-    arr <- tiledb_array(uri, as.data.frame=TRUE) #, extended=FALSE)
+    arr <- tiledb_array(uri, as.data.frame=TRUE, query_layout="UNORDERED")
     obj <- arr[]
 
     dims <- dimensions(domain(schema(uri)))

@@ -3,7 +3,7 @@
 \name{fromSparseMatrix}
 \alias{fromSparseMatrix}
 \alias{toSparseMatrix}
-\title{Create a TileDB sparse array from a given sparse matrix object}
+\title{Create (or return) a TileDB sparse array}
 \usage{
 fromSparseMatrix(
   obj,
@@ -30,11 +30,29 @@ default is \dQuote{COL_MAJOR}.}
 \item{filter}{A character variable vector, defaults to \sQuote{ZSTD}, for
 one or more filters to be applied to each attribute;}
 
-\item{capacity}{A integer value with the schema capacity, default is 1000.}
+\item{capacity}{A integer value with the schema capacity, default is 10000.}
 }
 \value{
 Null, invisibly.
 }
 \description{
-Create a TileDB sparse array from a given sparse matrix object
+The functions \code{fromSparseMatrix} and \code{toSparseMatrix} help in storing
+(and retrieving) sparse matrices using a TileDB backend.
+}
+\examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontrun{
+if (requireNamespace("Matrix", quietly=TRUE)) {
+    library(Matrix)
+    set.seed(123)      # just to fix it
+    mat <- matrix(0, nrow=20, ncol=10)
+    mat[sample(seq_len(200), 20)] <- seq(1, 20)
+    spmat <- as(mat, "dgTMatrix")  # sparse matrix in dgTMatrix format
+    uri <- "sparse_matrix"
+    fromSparseMatrix(spmat, uri)   # now written
+    chk <- toSparseMatrix(uri)     # and re-read
+    print(chk)
+    all.equal(spmat, chk)
+}
+}
 }

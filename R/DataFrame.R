@@ -49,7 +49,7 @@
 ##' default is \dQuote{COL_MAJOR}.
 ##' @param filter A character variable vector, defaults to \sQuote{ZSTD}, for
 ##' one or more filters to be applied to each attribute;
-##' @param capacity A integer value with the schema capacity, default is 1000.
+##' @param capacity A integer value with the schema capacity, default is 10000.
 ##' @param tile_domain An integer vector of size two specifying the integer domain of the row
 ##' dimension; if \code{NULL} the row dimension of the \code{obj} is used.
 ##' @param tile_extent An integer value for the tile extent of the row dimensions;
