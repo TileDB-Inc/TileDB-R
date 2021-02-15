@@ -42,7 +42,7 @@ default is \dQuote{COL_MAJOR}.}
 \item{filter}{A character variable vector, defaults to \sQuote{ZSTD}, for
 one or more filters to be applied to each attribute;}
 
-\item{capacity}{A integer value with the schema capacity, default is 1000.}
+\item{capacity}{A integer value with the schema capacity, default is 10000.}
 
 \item{tile_domain}{An integer vector of size two specifying the integer domain of the row
 dimension; if \code{NULL} the row dimension of the \code{obj} is used.}
