@@ -35,3 +35,32 @@ tiledb_query_import_buffer <- function(query, name, arrowpointers, ctx = tiledb_
     query@ptr <- libtiledb_query_import_buffer(ctx@ptr, query@ptr, name, arrowpointers)
     query
 }
+
+##' Allocate (or Release) Arrow Array and Schema Pointers
+##'
+##' These functions allocate (and free) appropriate pointer objects
+##' for, respectively, Arrow array and schema objects.
+##' @param ptr A pointer object previously allocated with these functions
+##' @return The allocating functions return the requested pointer
+##' @export
+tiledb_arrow_array_ptr <- function() {
+    res <- .allocate_arrow_array_as_double()
+}
+
+##' @rdname tiledb_arrow_array_ptr
+##' @export
+tiledb_arrow_schema_ptr <- function() {
+    res <- .allocate_arrow_schema_as_double()
+}
+
+##' @rdname tiledb_arrow_array_ptr
+##' @export
+tiledb_arrow_array_del <- function(ptr) {
+    .delete_arrow_array_from_double(ptr)
+}
+
+##' @rdname tiledb_arrow_array_ptr
+##' @export
+tiledb_arrow_schema_del <- function(ptr) {
+    .delete_arrow_schema_from_double(ptr)
+}
