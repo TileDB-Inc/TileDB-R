@@ -497,11 +497,13 @@ setMethod("[", "tiledb_array",
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
       if (is.na(varnum)) {
-          if (type %in% c("CHAR", "ASCII")) {
+          if (type %in% c("CHAR", "ASCII", "UTF8")) {
               buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8, nullable)
               qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
+              buf
+          } else {
+              message("Non-char var.num columns are not currently supported.")
           }
-          buf
       } else {
           buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
           qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
