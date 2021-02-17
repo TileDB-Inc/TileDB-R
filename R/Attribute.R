@@ -280,7 +280,7 @@ tiledb_attribute_get_cell_size <- function(attr) {
 #' Set the TileDB Attribute Nullable flags
 #'
 #' @param attr A TileDB Attribute object
-#' @param flag A boolean flag to turn \sQuote{Nullable} on or of
+#' @param flag A boolean flag to turn \sQuote{Nullable} on or off
 #' @return Nothing is returned
 #' @export
 tiledb_attribute_set_nullable <- function(attr, flag) {

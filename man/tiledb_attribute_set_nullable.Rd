@@ -9,7 +9,7 @@ tiledb_attribute_set_nullable(attr, flag)
 \arguments{
 \item{attr}{A TileDB Attribute object}
 
-\item{flag}{A boolean flag to turn \sQuote{Nullable} on or of}
+\item{flag}{A boolean flag to turn \sQuote{Nullable} on or off}
 }
 \value{
 Nothing is returned
