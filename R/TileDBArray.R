@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -335,11 +335,13 @@ setMethod("[", "tiledb_array",
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
+  dimnullable <- sapply(dims, function(d) FALSE)
 
   attrs <- tiledb::attrs(schema(x))
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
+  attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
 
   if (length(x@attrs) != 0) {
     ind <- match(x@attrs, attrnames)
@@ -349,12 +351,13 @@ setMethod("[", "tiledb_array",
     attrnames <- attrnames[ind]
     attrtypes <- attrtypes[ind]
     attrvarnum <- attrvarnum[ind]
+    attrnullable <- attrnullable[ind]
   }
 
   allnames <- c(dimnames, attrnames)
   alltypes <- c(dimtypes, attrtypes)
   allvarnum <- c(dimvarnum, attrvarnum)
-
+  allnullable <- c(dimnullable, attrnullable)
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -383,6 +386,9 @@ setMethod("[", "tiledb_array",
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
   if (length(layout) > 0) libtiledb_query_set_layout(qryptr, layout)
 
+  ## ranges seem to interfere with the byte/element adjustment below so set up toggle
+  rangeunset <- TRUE
+
   ## set default range(s) on first dimension if nothing is specified
   if (is.null(i) &&
       (length(x@selected_ranges) == 0 ||
@@ -392,6 +398,7 @@ setMethod("[", "tiledb_array",
     if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) # || nonemptydom[[1]][1] > domdim[1])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     nonemptydom[[1]][1], nonemptydom[[1]][2])
+      rangeunset <- FALSE
   }
   ## if we have is, use it
   if (!is.null(i)) {
@@ -402,6 +409,7 @@ setMethod("[", "tiledb_array",
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
                                                     min(eval(el)), max(eval(el)))
     }
+    rangeunset <- FALSE
   }
 
   ## set range(s) on second dimension
@@ -415,6 +423,7 @@ setMethod("[", "tiledb_array",
         if (nonemptydom[[2]][1] != nonemptydom[[2]][2])
           qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                         nonemptydom[[2]][1], nonemptydom[[2]][2])
+      rangeunset <- FALSE
     }
   }
 
@@ -426,6 +435,7 @@ setMethod("[", "tiledb_array",
       el <- j[[ii]]
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
                                                     min(eval(el)), max(eval(el)))
+      rangeunset <- FALSE
     }
   }
 
@@ -436,34 +446,71 @@ setMethod("[", "tiledb_array",
       for (i in seq_len(nrow(m))) {
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], m[i,1], m[i,2])
       }
+      rangeunset <- FALSE
     }
   }
 
   ## retrieve est_result_size
-  getEstimatedSize <- function(name, varnum, qryptr) {
-    if (is.na(varnum))
-      libtiledb_query_get_est_result_size_var(qryptr, name)[1]
-    else
-      libtiledb_query_get_est_result_size(qryptr, name)
+  getEstimatedSize <- function(name, varnum, nullable, qryptr, datatype) {
+    if (is.na(varnum) && !nullable)
+      res <- libtiledb_query_get_est_result_size_var(qryptr, name)[1]
+    else if (is.na(varnum) && nullable)
+      res <- libtiledb_query_get_est_result_size_var_nullable(qryptr, name)[1]
+    else if (!is.na(varnum) && !nullable)
+      res <- libtiledb_query_get_est_result_size(qryptr, name)
+    else if (!is.na(varnum) && nullable)
+      res <- libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
+    if (rangeunset && tiledb::tiledb_version(TRUE) >= "2.2.0") {
+      sz <- switch(datatype,
+                   "UINT8"   = ,
+                   "INT8"    = 1,
+                   "UINT16"  = ,
+                   "INT16"   = 2,
+                   "INT32"   = ,
+                   "UINT32"  = ,
+                   "FLOAT32" = 4,
+                   "UINT64"  = ,
+                   "INT64"   = ,
+                   "FLOAT64" = ,
+                   "DATETIME_YEAR" = ,
+                   "DATETIME_MONTH" = ,
+                   "DATETIME_WEEK" = ,
+                   "DATETIME_DAY" = ,
+                   "DATETIME_HR" = ,
+                   "DATETIME_MIN" = ,
+                   "DATETIME_SEC" = ,
+                   "DATETIME_MS" = ,
+                   "DATETIME_US" = ,
+                   "DATETIME_NS" = ,
+                   "DATETIME_PS" = ,
+                   "DATETIME_FS" = ,
+                   "DATETIME_AS" = 8,
+                   1)
+      res <- res / sz
+    }
+    res
   }
-  ressizes <- mapply(getEstimatedSize, allnames, allvarnum,
+  ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable, alltypes,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
 
   ## allocate and set buffers
-  getBuffer <- function(name, type, varnum, resrv, qryptr, arrptr) {
-    if (is.na(varnum)) {
-      buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8)
-      qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
-      buf
-    } else {
-      buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv)
-      qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
-      buf
-    }
+  getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
+      if (is.na(varnum)) {
+          if (type %in% c("CHAR", "ASCII", "UTF8")) {
+              buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8, nullable)
+              qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
+              buf
+          } else {
+              message("Non-char var.num columns are not currently supported.")
+          }
+      } else {
+          buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
+          qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
+          buf
+      }
   }
-
-  buflist <- mapply(getBuffer, allnames, alltypes, allvarnum,
+  buflist <- mapply(getBuffer, allnames, alltypes, allvarnum, allnullable,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                     SIMPLIFY=FALSE)
 
@@ -574,15 +621,18 @@ setMethod("[<-", "tiledb_array",
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
+  dimnullable <- sapply(dims, function(d) FALSE)
 
   attrs <- tiledb::attrs(schema(x))
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
+  attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
 
   allnames <- c(dimnames, attrnames)
   alltypes <- c(dimtypes, attrtypes)
   allvarnum <- c(dimvarnum, attrvarnum)
+  allnullable <- c(dimnullable, attrnullable)
 
   ## we will recognize two standard cases
   ##  1) arr[]    <- value    where value contains two columns with the dimnames
@@ -645,6 +695,7 @@ setMethod("[<-", "tiledb_array",
     names(value) <- attrnames
     allnames <- attrnames
     alltypes <- attrtypes
+    allnullable <- attrnullable
   }
 
   nc <- if (is.list(value)) length(value) else ncol(value)
@@ -678,18 +729,28 @@ setMethod("[<-", "tiledb_array",
       ## when an index column is use this may be unordered to remap to position in 'nm' names
       i <- match(colnam, nm)
       if (alltypes[i] %in% c("CHAR", "ASCII")) { # variable length
-        txtvec <- as.character(value[[i]])
-        offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
-        data <- paste(txtvec, collapse="")
-        #cat("Alloc char buffer", i, "for", colnam, ":", alltypes[i], "\n")
-        buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
-        qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
+          if (!allnullable[i]) {
+              txtvec <- as.character(value[[i]])
+              offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
+              data <- paste(txtvec, collapse="")
+              ##cat("Alloc char buffer", i, "for", colnam, ":", alltypes[i], "\n")
+              buflist[[i]] <- libtiledb_query_buffer_var_char_create(offsets, data)
+              qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
+          } else { # variable length and nullable
+              txtvec <- as.character(value[[i]])
+              navec <- is.na(txtvec)
+              newvec <- txtvec
+              newvec[navec] <- ".."     # somehow we need two chars for NA as if we passed the char
+              offsets <- c(0L, cumsum(nchar(newvec[-length(newvec)])))
+              data <- paste(txtvec, collapse="")
+              buflist[[i]] <- libtiledb_query_buffer_var_char_create_nullable(offsets, data, allnullable[i], navec)
+              qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[i]])
+          }
       } else {
         nr <- NROW(value[[i]])
-        #cat("Alloc buffer", i, "for", colnam, ":", alltypes[i], "nr:", nr, "\n")
-        buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr)
-        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i],
-                                                          value[[i]], asint64)
+        #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr, "null:", allnullable[i], "\n")
+        buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr, allnullable[i])
+        buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]], asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[i]])
       }
     }

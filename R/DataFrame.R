@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -73,8 +73,12 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
                           cell_order = "ROW_MAJOR", tile_order = "ROW_MAJOR", filter="ZSTD",
                           capacity = 10000L, tile_domain = NULL, tile_extent = NULL, debug = FALSE) {
 
+    if (!inherits(obj, "data.frame")) stop("Argument 'obj' should be a 'data.frame' (or a related object).", call. = FALSE)
+    if (!is.character(uri)) stop("Argument 'uri' should be a character variable.", call. = FALSE)
     if (!is.null(col_index) && is.character(col_index)) col_index <- match(col_index, colnames(obj))
     dims <- dim(obj)
+
+    if (class(obj)[1] != "data.frame") obj <- as.data.frame(obj)
 
     ## turn factor columns in char columns
     factcols <- grep("factor", sapply(obj, class))
@@ -162,7 +166,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         tiledb_attr(colnames(obj)[ind],
                     type = tp,
                     ncells = ifelse(tp=="CHAR",NA_integer_,1),
-                    filter_list = filterlist)
+                    filter_list = filterlist,
+                    nullable = any(is.na(col)))
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]

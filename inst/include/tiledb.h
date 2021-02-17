@@ -13,9 +13,11 @@
 using namespace Rcpp;
 
 struct var_length_char_buffer {
-  std::vector<uint64_t> offsets;  // vector for offset values
-  std::string str;              	// string for data values
-  int32_t rows, cols;             // dimension from subarray
+    std::vector<uint64_t> offsets;  	// vector for offset values
+    std::string str;              		// string for data values
+    int32_t rows, cols;              	// dimension from subarray
+    bool nullable;                      // flag
+    std::vector<uint8_t> validity_map;  // for nullable vectors
 };
 typedef struct var_length_char_buffer vlc_buf_t;
 
@@ -50,11 +52,13 @@ typedef struct var_length_vec_buffer vlv_buf_t;
 
 
 struct query_buffer {
-  //void *ptr;                    // pointer to data as an alternativ
-  std::vector<int8_t> vec;        // vector of int8_t as a memory container
-  tiledb_datatype_t dtype;        // data type
-  R_xlen_t ncells;                // extent
-  size_t size;                    // element size
+    //void *ptr;                    	// pointer to data as an alternative
+    std::vector<int8_t> vec;        	// vector of int8_t as a memory container
+    tiledb_datatype_t dtype;        	// data type
+    R_xlen_t ncells;                	// extent
+    size_t size;                    	// element size
+    std::vector<uint8_t> validity_map;  // for nullable vectors
+    bool nullable;                      // flag
 };
 typedef struct query_buffer query_buf_t;
 

@@ -58,6 +58,13 @@ Rcpp::DatetimeVector int64_to_datetimes(std::vector<int64_t> iv, tiledb_datatype
 std::vector<int64_t> subnano_to_int64(NumericVector nv, tiledb_datatype_t dtype);
 Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t dtype);
 
+// nullable helpers
+void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map);
+void setValidityMapForInteger(Rcpp::IntegerVector & vec, const std::vector<uint8_t> & map);
+void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map);
+void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8_t> & map);
+void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & map);
+void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_t> & map);
 
 
 #endif

@@ -13,6 +13,8 @@ uri <- tempfile()
 ## turn factor into character
 irisdf <- within(iris, Species <- as.character(Species))
 
+expect_error(fromDataFrame(uri, irisdf)) # arguments checked, error in this wrong case
+
 fromDataFrame(irisdf, uri)
 
 arr <- tiledb_array(uri, as.data.frame=TRUE)
@@ -136,7 +138,7 @@ suppressMessages({
 df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range=seq(-1000, 1000, length=nobs),
                  int_vals=sort(as.integer(runif(nobs)*1e9)),
-                 #int64_vals=sort(as.integer64(runif(nobs)*1e9)),  ## TODO: return int64
+                 int64_vals=sort(as.integer64(runif(nobs)*1e9)),
                  nanotime=as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)))
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -160,7 +162,7 @@ set.seed(42)
 df <- data.frame(time = round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range = seq(-1000, 1000, length=nobs),
                  int_vals = sort(as.integer(runif(nobs)*1e9)),
-                 #int64_vals = sort(as.integer64(runif(nobs)*1e9)),#TODO cannot yet comp. all.equal
+                 int64_vals = sort(as.integer64(runif(nobs)*1e9)),
                  nanotime = as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)),
                  txt = sort(sapply(seq_len(nobs), function(i) paste0(sample(LETTERS,1), paste(sample(letters, sample(1:6,1)), collapse=""))))
                  )
@@ -192,3 +194,16 @@ for (comb in combinations) {
     chk <- tiledb_array(uri, as.data.frame=TRUE)
     expect_equal(df, chk[][, colnames(df)])
 }
+
+## simple nullable example, no CHAR support yet C++
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+dat <- data.frame(A=1:10,
+                  B=LETTERS[1:10],
+                  C=sqrt(1:10))
+dat[3,1] <- NA
+dat[4,3] <- NA
+fromDataFrame(dat, uri)
+chk <- tiledb_array(uri, as.data.frame=TRUE)
+val <- chk[][,-1]  # omit added rows
+expect_equal(dat, val)

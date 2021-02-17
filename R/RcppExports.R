@@ -213,8 +213,8 @@ libtiledb_filter_list_get_filter_from_index <- function(filterList, filter_index
     .Call(`_tiledb_libtiledb_filter_list_get_filter_from_index`, filterList, filter_index)
 }
 
-libtiledb_attribute <- function(ctx, name, type, filter_list, ncells) {
-    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells)
+libtiledb_attribute <- function(ctx, name, type, filter_list, ncells, nullable) {
+    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells, nullable)
 }
 
 libtiledb_attribute_get_name <- function(attr) {
@@ -259,6 +259,14 @@ libtiledb_attribute_set_fill_value <- function(attr, val) {
 
 libtiledb_attribute_get_fill_value <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_fill_value`, attr)
+}
+
+libtiledb_attribute_set_nullable <- function(attr, flag) {
+    invisible(.Call(`_tiledb_libtiledb_attribute_set_nullable`, attr, flag))
+}
+
+libtiledb_attribute_get_nullable <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_nullable`, attr)
 }
 
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, sparse = FALSE) {
@@ -509,8 +517,8 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
-libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata)
+libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata, nullable) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata, nullable)
 }
 
 convertStringVectorIntoOffsetsAndString <- function(vec, offsets) {
@@ -519,6 +527,10 @@ convertStringVectorIntoOffsetsAndString <- function(vec, offsets) {
 
 libtiledb_query_buffer_var_char_create <- function(intoffsets, data) {
     .Call(`_tiledb_libtiledb_query_buffer_var_char_create`, intoffsets, data)
+}
+
+libtiledb_query_buffer_var_char_create_nullable <- function(intoffsets, data, nullable, navec) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_create_nullable`, intoffsets, data, nullable, navec)
 }
 
 libtiledb_query_set_buffer_var_char <- function(query, attr, bufptr) {
@@ -545,8 +557,8 @@ libtiledb_query_get_buffer_var_vec <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, query, attr, buf)
 }
 
-libtiledb_query_buffer_alloc_ptr <- function(array, domaintype, ncells) {
-    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, array, domaintype, ncells)
+libtiledb_query_buffer_alloc_ptr <- function(array, domaintype, ncells, nullable = FALSE) {
+    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, array, domaintype, ncells, nullable)
 }
 
 libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec, asint64 = FALSE) {
@@ -605,8 +617,16 @@ libtiledb_query_get_est_result_size <- function(query, attr) {
     .Call(`_tiledb_libtiledb_query_get_est_result_size`, query, attr)
 }
 
+libtiledb_query_get_est_result_size_nullable <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size_nullable`, query, attr)
+}
+
 libtiledb_query_get_est_result_size_var <- function(query, attr) {
     .Call(`_tiledb_libtiledb_query_get_est_result_size_var`, query, attr)
+}
+
+libtiledb_query_get_est_result_size_var_nullable <- function(query, attr) {
+    .Call(`_tiledb_libtiledb_query_get_est_result_size_var_nullable`, query, attr)
 }
 
 libtiledb_query_get_range_num <- function(query, dim_idx) {

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,8 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' that this is a _required_ parameter.
 #' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
 #' @param ncells (default 1) The number of cells, use \code{NA} to signal variable length
+#' @param nullable (default FALSE) A logical switch whether the attribute can have missing
+#' values
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
@@ -56,6 +58,7 @@ tiledb_attr <- function(name,
                         type,
                         filter_list = tiledb_filter_list(),
                         ncells = 1,
+                        nullable = FALSE,
                         ctx = tiledb_get_context()
                         ) {
     if (missing(name)) {
@@ -71,7 +74,7 @@ tiledb_attr <- function(name,
     } else if(!is(filter_list, "tiledb_filter_list")) {
         stop("filter_list argument must be a tiledb_filter_list instance")
     }
-    ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells)
+    ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells, nullable)
     new("tiledb_attr", ptr = ptr)
 }
 
@@ -272,4 +275,26 @@ tiledb_attribute_is_variable_sized <- function(attr) {
 tiledb_attribute_get_cell_size <- function(attr) {
   stopifnot(attr_object=is(attr, "tiledb_attr"))
   libtiledb_attribute_get_cell_size(attr@ptr)
+}
+
+#' Set the TileDB Attribute Nullable flags
+#'
+#' @param attr A TileDB Attribute object
+#' @param flag A boolean flag to turn \sQuote{Nullable} on or off
+#' @return Nothing is returned
+#' @export
+tiledb_attribute_set_nullable <- function(attr, flag) {
+    stopifnot(attr_object=is(attr, "tiledb_attr"),
+              flag_boolean_not_na=is.logical(flag) & !is.na(flag))
+    libtiledb_attribute_set_nullable(attr@ptr, flag)
+}
+
+#' Get the TileDB Attribute Nullable flag value
+#'
+#' @param attr A TileDB Attribute object
+#' @return A boolean value with the \sQuote{Nullable} status
+#' @export
+tiledb_attribute_get_nullable <- function(attr) {
+    stopifnot(attr_object=is(attr, "tiledb_attr"))
+    libtiledb_attribute_get_nullable(attr@ptr)
 }
