@@ -1,2 +1,2 @@
-version: 2.2.3
-sha: dbaf5ff
+version: 2.2.4
+sha: 2f138f9
