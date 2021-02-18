@@ -201,7 +201,7 @@ for (dtype in dimtypes) {
 
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
-    expect_true(all.equal(data, readdata))
+    expect_equal(data[,-1], readdata[,-1])
 
     if (grepl("^DATETIME", dtype)) {
         ## check for default date(time) type

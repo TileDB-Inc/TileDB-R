@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dump stats to file — tiledb_stats_dump • tiledb</title>
+<title>Dumps internal TileDB statistics to file — tiledb_stats_dump • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Dump stats to file — tiledb_stats_dump" />
-<meta property="og:description" content="Dump stats to file" />
+<meta property="og:title" content="Dumps internal TileDB statistics to file — tiledb_stats_dump" />
+<meta property="og:description" content="Dumps internal TileDB statistics to file" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/documentation.html">TileDB API Documentation</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
   </ul>
@@ -103,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -120,25 +123,24 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Dump stats to file</h1>
+    <h1>Dumps internal TileDB statistics to file</h1>
     <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Stats.R'><code>R/Stats.R</code></a></small>
     <div class="hidden name"><code>tiledb_stats_dump.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Dump stats to file</p>
+    <p>Dumps internal TileDB statistics to file</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tiledb_stats_dump</span><span class='op'>(</span><span class='va'>path</span><span class='op'>)</span>
-
-<span class='fu'>tiledb_stats_print</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>tiledb_stats_dump</span><span class='op'>(</span><span class='va'>path</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>path</th>
-      <td><p>to stats file</p></td>
+      <td><p>Character variable with path to stats file;
+if the empty string is passed then the result is displayed on stdout.</p></td>
     </tr>
     </table>
 

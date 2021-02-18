@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/documentation.html">TileDB API Documentation</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
   </ul>
@@ -103,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -137,6 +140,10 @@
   attrs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
   extended <span class='op'>=</span> <span class='cn'>TRUE</span>,
   selected_ranges <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  query_layout <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  datetimes_as_int64 <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  encryption_key <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  timestamp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/double.html'>double</a></span><span class='op'>(</span><span class='op'>)</span>, origin <span class='op'>=</span> <span class='st'>"1970-01-01"</span><span class='op'>)</span>,
   ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
@@ -171,8 +178,29 @@ format, defaults to "TRUE"</p></td>
     </tr>
     <tr>
       <th>selected_ranges</th>
-      <td><p>An optional list with matrices where each matrix i
+      <td><p>optional A list with matrices where each matrix i
 describes the (min,max) pair of ranges for dimension i</p></td>
+    </tr>
+    <tr>
+      <th>query_layout</th>
+      <td><p>optional A value for the TileDB query layout, defaults to
+an empty character variable indicating no special layout is set</p></td>
+    </tr>
+    <tr>
+      <th>datetimes_as_int64</th>
+      <td><p>optional A logical value selecting date and datetime value
+representation as &#8216;raw&#8217; <code>integer64</code> and not as <code>Date</code>,
+<code>POSIXct</code> or <code>nanotime</code> objects.</p></td>
+    </tr>
+    <tr>
+      <th>encryption_key</th>
+      <td><p>optional A character value with an AES-256 encryption key
+in case the array was written with encryption.</p></td>
+    </tr>
+    <tr>
+      <th>timestamp</th>
+      <td><p>optional A POSIXct Datetime value determining where in time the array is
+to be openened.</p></td>
     </tr>
     <tr>
       <th>ctx</th>
@@ -182,7 +210,7 @@ describes the (min,max) pair of ranges for dimension i</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tiledb_sparse array object</p>
+    <p>tiledb_array object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

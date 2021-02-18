@@ -15,7 +15,7 @@ tiledb_array(
   query_layout = character(),
   datetimes_as_int64 = FALSE,
   encryption_key = character(),
-  timestamp = as.POSIXct(double()),
+  timestamp = as.POSIXct(double(), origin = "1970-01-01"),
   ctx = tiledb_get_context()
 )
 }

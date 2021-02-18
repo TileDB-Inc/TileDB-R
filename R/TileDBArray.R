@@ -91,7 +91,7 @@ tiledb_array <- function(uri,
                          query_layout = character(),
                          datetimes_as_int64 = FALSE,
                          encryption_key = character(),
-                         timestamp = as.POSIXct(double()),
+                         timestamp = as.POSIXct(double(), origin="1970-01-01"),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))

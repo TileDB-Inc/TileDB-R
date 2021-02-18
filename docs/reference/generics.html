@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/documentation.html">TileDB API Documentation</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
   </ul>
@@ -103,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -141,6 +144,8 @@
 
 <span class='fu'>filter_list</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
+<span class='fu'>filter_list</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
+
 <span class='fu'>is.sparse</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='fu'>tiledb_ndim</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -149,8 +154,6 @@
 
 <span class='fu'>datatype</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
 
-<span class='fu'>cell_val_num</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
-
 <span class='fu'>config</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='fu'>schema</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -158,10 +161,6 @@
 <span class='fu'>tile</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
 
 <span class='fu'>is.integral</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
-
-<span class='fu'>set_max_chunk_size</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>value</span><span class='op'>)</span>
-
-<span class='fu'>max_chunk_size</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
 
 <span class='fu'>nfilters</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span></pre>
 
@@ -179,6 +178,10 @@
     <tr>
       <th>idx</th>
       <td><p>An index argument</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>A TileDB Object</p></td>
     </tr>
     <tr>
       <th>value</th>

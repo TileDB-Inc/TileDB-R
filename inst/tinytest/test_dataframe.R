@@ -19,8 +19,9 @@ fromDataFrame(irisdf, uri)
 
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 newdf <- arr[]
-if (getRversion() >= '4.0.0') newdf$Species <- as.factor(newdf$Species)
-expect_equal(iris, newdf[,-1])
+#if (getRversion() >= '4.0.0') newdf$Species <- as.factor(newdf$Species)
+if (getRversion() <  '4.0.0') newdf$Species <- as.character(newdf$Species)
+expect_equal(irisdf, newdf[,-1])
 expect_equal(dim(irisdf), dim(newdf[,-1]))
 
 ## result comes back as factor by default
@@ -76,10 +77,12 @@ rows <- 50L
 
 df <- data.frame(index=sort(sample(1:1000, rows)),
                  chars=sample(LETTERS, rows, replace=TRUE),
-                 vals=rnorm(rows) * 100)
+                 vals=rnorm(rows) * 100,
+                 stringsAsFactors=FALSE)
 fromDataFrame(df, uri)
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
+if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df, chk[,-1])              # omit first col which is added
 
 if (tiledb_version(TRUE) < "2.1.0") exit_file("Remaining tests required TileDB 2.1.0 or later")
@@ -88,13 +91,16 @@ if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index=1)
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
+if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
+
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index="index")
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
+if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
 
@@ -106,12 +112,17 @@ if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri)
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
+if (getRversion() < '4.0.0') {
+    df$chars <- as.character(df$chars)
+    chk$chars <- as.character(chk$chars)
+}
 expect_equal(df, chk[,-1])              # omit first col which is added
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index=2)
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
+if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
 
@@ -119,9 +130,9 @@ if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index="index")
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
+if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
-
 
 
 ## test sparse with non-default index columm
@@ -135,11 +146,13 @@ suppressMessages({
   library(bit64)
 })
 
+if (getRversion() < '4.0.0') Sys.setenv(TZ="")
 df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range=seq(-1000, 1000, length=nobs),
                  int_vals=sort(as.integer(runif(nobs)*1e9)),
                  int64_vals=sort(as.integer64(runif(nobs)*1e9)),
-                 nanotime=as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)))
+                 nanotime=as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)),
+                 stringsAsFactors=FALSE)
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, sparse=TRUE)
@@ -164,21 +177,26 @@ df <- data.frame(time = round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*360
                  int_vals = sort(as.integer(runif(nobs)*1e9)),
                  int64_vals = sort(as.integer64(runif(nobs)*1e9)),
                  nanotime = as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)),
-                 txt = sort(sapply(seq_len(nobs), function(i) paste0(sample(LETTERS,1), paste(sample(letters, sample(1:6,1)), collapse=""))))
-                 )
+                 txt = sort(sapply(seq_len(nobs), function(i) paste0(sample(LETTERS,1), paste(sample(letters, sample(1:6,1)), collapse="")))),
+                 stringsAsFactors=FALSE)
+
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, sparse=TRUE)
 
 chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
-expect_equal(df, chk[])
+newdf <- chk[]
+if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
+expect_equal(df, newdf)
 
 
 for (i in seq_len(dim(df)[2])) {
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     fromDataFrame(df, uri, sparse=TRUE, col_index=i)
     chk <- tiledb_array(uri, as.data.frame=TRUE)
-    expect_equal(df, chk[][, colnames(df)])
+    newdf <- chk[]
+    if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
+    expect_equal(df, newdf[, colnames(df)])
 }
 
 
@@ -187,12 +205,16 @@ for (comb in combinations) {
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     fromDataFrame(df, uri, sparse=TRUE, col_index=comb) # by index
     chk <- tiledb_array(uri, as.data.frame=TRUE)
-    expect_equal(df, chk[][, colnames(df)])
+    newdf <- chk[]
+    if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
+    expect_equal(df, newdf[][, colnames(df)])
 
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     fromDataFrame(df, uri, sparse=TRUE, col_index=colnames(df)[comb]) # by name
     chk <- tiledb_array(uri, as.data.frame=TRUE)
-    expect_equal(df, chk[][, colnames(df)])
+    newdf <- chk[]
+    if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
+    expect_equal(df, newdf[, colnames(df)])
 }
 
 ## simple nullable example, no CHAR support yet C++
@@ -206,4 +228,8 @@ dat[4,3] <- NA
 fromDataFrame(dat, uri)
 chk <- tiledb_array(uri, as.data.frame=TRUE)
 val <- chk[][,-1]  # omit added rows
+if (getRversion() < '4.0.0') {
+    dat$B <- as.character(dat$B)
+    val$B <- as.character(val$B)
+}
 expect_equal(dat, val)

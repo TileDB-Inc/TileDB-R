@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -94,6 +94,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/documentation.html">TileDB API Documentation</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
   </ul>
@@ -102,7 +105,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -230,6 +233,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_config_unset.html">tiledb_config_unset()</a></code> </p>
+        </td>
+        <td><p>Unset a TileDB Config parameter to its default value</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="as.vector.tiledb_config.html">as.vector(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
         </td>
         <td><p>Convert a <code>tiledb_config</code> object to a R vector</p></td>
@@ -303,20 +312,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="allows_dups-set-tiledb_array_schema-method.html">`allows_dups&lt;-`()</a></code> </p>
-        </td>
-        <td><p>Sets toggle whether the array schema allows duplicate values or not.
-This is only valid for sparse arrays.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="allows_dups-tiledb_array_schema-method.html">allows_dups()</a></code> </p>
-        </td>
-        <td><p>Returns logical value whether the array schema allows duplicate values or not.
-This is only valid for sparse arrays.</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="attrs-set-tiledb_array-method.html">`attrs&lt;-`(<i>&lt;tiledb_array&gt;</i>)</a></code> </p>
         </td>
         <td><p>Selects attributes for the given TileDB array</p></td>
@@ -350,6 +345,18 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="cell_order-tiledb_array_schema-method.html">cell_order(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the cell layout string associated with the <code>tiledb_array_schema</code></p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="datetimes_as_int64-set-tiledb_array-method.html">`datetimes_as_int64&lt;-`()</a></code> </p>
+        </td>
+        <td><p>Set datetimes_as_int64 toggle</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="datetimes_as_int64-tiledb_array-method.html">datetimes_as_int64()</a></code> </p>
+        </td>
+        <td><p>Retrieve datetimes_as_int64 toggle</p></td>
       </tr><tr>
         
         <td>
@@ -392,6 +399,18 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="is.sparse-tiledb_array_schema-method.html">is.sparse(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns TRUE if the tiledb_array_schema is sparse, else FALSE</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="query_layout-set-tiledb_array-method.html">`query_layout&lt;-`()</a></code> </p>
+        </td>
+        <td><p>Set query_layout return values for the array</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="query_layout-tiledb_array-method.html">query_layout()</a></code> </p>
+        </td>
+        <td><p>Retrieve query_layout values for the array</p></td>
       </tr><tr>
         
         <td>
@@ -473,6 +492,18 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_array_get_non_empty_domain_from_index.html">tiledb_array_get_non_empty_domain_from_index()</a></code> </p>
+        </td>
+        <td><p>Get the non-empty domain from a TileDB Array by index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_get_non_empty_domain_from_name.html">tiledb_array_get_non_empty_domain_from_name()</a></code> </p>
+        </td>
+        <td><p>Get the non-empty domain from a TileDB Array by name</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_array_is_heterogeneous.html">tiledb_array_is_heterogeneous()</a></code> </p>
         </td>
         <td><p>Check for Heterogeneous Domain</p></td>
@@ -491,6 +522,12 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_array_open_at.html">tiledb_array_open_at()</a></code> </p>
+        </td>
+        <td><p>Open a TileDB Array at Timestamp</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_array_schema-class.html">tiledb_array_schema-class</a></code> </p>
         </td>
         <td><p>An S4 class for the TileDB array schema</p></td>
@@ -500,6 +537,50 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_array_schema.html">tiledb_array_schema()</a></code> </p>
         </td>
         <td><p>Constructs a <code>tiledb_array_schema</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_check.html">check()</a></code> <code><a href="tiledb_array_schema_check.html">tiledb_array_schema_check()</a></code> </p>
+        </td>
+        <td><p>Check the schema for correctness</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_get_allows_dups.html">allows_dups()</a></code> <code><a href="tiledb_array_schema_get_allows_dups.html">tiledb_array_schema_get_allows_dups()</a></code> </p>
+        </td>
+        <td><p>Returns logical value whether the array schema allows duplicate values or not.
+This is only valid for sparse arrays.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_get_capacity.html">capacity()</a></code> <code><a href="tiledb_array_schema_get_capacity.html">tiledb_array_schema_get_capacity()</a></code> </p>
+        </td>
+        <td><p>Retrieve schema capacity (for sparse fragments)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_set_allows_dups.html">`allows_dups&lt;-`()</a></code> <code><a href="tiledb_array_schema_set_allows_dups.html">tiledb_array_schema_set_allows_dups()</a></code> </p>
+        </td>
+        <td><p>Sets toggle whether the array schema allows duplicate values or not.
+This is only valid for sparse arrays.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_set_capacity.html">`capacity&lt;-`()</a></code> <code><a href="tiledb_array_schema_set_capacity.html">tiledb_array_schema_set_capacity()</a></code> </p>
+        </td>
+        <td><p>Sets the schema capacity (for sparse fragments)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_set_coords_filter_list.html">tiledb_array_schema_set_coords_filter_list()</a></code> </p>
+        </td>
+        <td><p>Set a Filter List for Coordinate of a TileDB Schema</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_set_offsets_filter_list.html">tiledb_array_schema_set_offsets_filter_list()</a></code> </p>
+        </td>
+        <td><p>Set a Filter List for Variable-Sized Offsets of a TileDB Schema</p></td>
       </tr><tr>
         
         <td>
@@ -648,17 +729,47 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="allows_dups-set-tiledb_array_schema-method.html">`allows_dups&lt;-`()</a></code> </p>
+          <p><code><a href="tiledb_array_schema_check.html">check()</a></code> <code><a href="tiledb_array_schema_check.html">tiledb_array_schema_check()</a></code> </p>
+        </td>
+        <td><p>Check the schema for correctness</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_get_allows_dups.html">allows_dups()</a></code> <code><a href="tiledb_array_schema_get_allows_dups.html">tiledb_array_schema_get_allows_dups()</a></code> </p>
+        </td>
+        <td><p>Returns logical value whether the array schema allows duplicate values or not.
+This is only valid for sparse arrays.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_get_capacity.html">capacity()</a></code> <code><a href="tiledb_array_schema_get_capacity.html">tiledb_array_schema_get_capacity()</a></code> </p>
+        </td>
+        <td><p>Retrieve schema capacity (for sparse fragments)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_set_allows_dups.html">`allows_dups&lt;-`()</a></code> <code><a href="tiledb_array_schema_set_allows_dups.html">tiledb_array_schema_set_allows_dups()</a></code> </p>
         </td>
         <td><p>Sets toggle whether the array schema allows duplicate values or not.
 This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="allows_dups-tiledb_array_schema-method.html">allows_dups()</a></code> </p>
+          <p><code><a href="tiledb_array_schema_set_capacity.html">`capacity&lt;-`()</a></code> <code><a href="tiledb_array_schema_set_capacity.html">tiledb_array_schema_set_capacity()</a></code> </p>
         </td>
-        <td><p>Returns logical value whether the array schema allows duplicate values or not.
-This is only valid for sparse arrays.</p></td>
+        <td><p>Sets the schema capacity (for sparse fragments)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_set_coords_filter_list.html">tiledb_array_schema_set_coords_filter_list()</a></code> </p>
+        </td>
+        <td><p>Set a Filter List for Coordinate of a TileDB Schema</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_set_offsets_filter_list.html">tiledb_array_schema_set_offsets_filter_list()</a></code> </p>
+        </td>
+        <td><p>Set a Filter List for Variable-Sized Offsets of a TileDB Schema</p></td>
       </tr><tr>
         
         <td>
@@ -677,6 +788,18 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_schema_get_types.html">tiledb_schema_get_types()</a></code> </p>
         </td>
         <td><p>Get all Dimension and Attribute Types</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="attrs-tiledb_array_schema-character-method.html">attrs(<i>&lt;tiledb_array_schema&gt;</i>,<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns a <code>tiledb_attr</code> object associated with the <code>tiledb_array_schema</code> with a given name.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="schema-character-method.html">schema(<i>&lt;character&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Return a schema from a URI character value</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -702,6 +825,54 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_attr.html">tiledb_attr()</a></code> </p>
         </td>
         <td><p>Contructs a <code>tiledb_attr</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_get_cell_size.html">tiledb_attribute_get_cell_size()</a></code> </p>
+        </td>
+        <td><p>Get the TileDB Attribute cell size</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_get_cell_val_num.html">cell_val_num()</a></code> <code><a href="tiledb_attribute_get_cell_val_num.html">tiledb_attribute_get_cell_val_num()</a></code> </p>
+        </td>
+        <td><p>Return the number of scalar values per attribute cell</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_get_fill_value.html">tiledb_attribute_get_fill_value()</a></code> </p>
+        </td>
+        <td><p>Get the fill value for a TileDB Attribute</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_get_nullable.html">tiledb_attribute_get_nullable()</a></code> </p>
+        </td>
+        <td><p>Get the TileDB Attribute Nullable flag value</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_is_variable_sized.html">tiledb_attribute_is_variable_sized()</a></code> </p>
+        </td>
+        <td><p>Check whether TileDB Attribute is variable-sized</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_set_cell_val_num.html">`cell_val_num&lt;-`()</a></code> <code><a href="tiledb_attribute_set_cell_val_num.html">tiledb_attribute_set_cell_val_num()</a></code> </p>
+        </td>
+        <td><p>Set the number of scalar values per attribute cell</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_set_fill_value.html">tiledb_attribute_set_fill_value()</a></code> </p>
+        </td>
+        <td><p>Set the fill value for a TileDB Attribute</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_attribute_set_nullable.html">tiledb_attribute_set_nullable()</a></code> </p>
+        </td>
+        <td><p>Set the TileDB Attribute Nullable flags</p></td>
       </tr><tr>
         
         <td>
@@ -759,15 +930,9 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cell_val_num-tiledb_attr-method.html">cell_val_num(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Return the number of scalar values per attribute cell</p></td>
       </tr><tr>
         
         <td>
@@ -777,9 +942,15 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="filter_list-set-tiledb_attr-method.html">`filter_list&lt;-`(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets the TileDB Filter List for the TileDB Attribute object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="filter_list-tiledb_attr-method.html">filter_list(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code></p></td>
+        <td><p>Returns the TileDB Filter List object associated with the given TileDB Attribute</p></td>
       </tr><tr>
         
         <td>
@@ -792,6 +963,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="show-tiledb_attr-method.html">show(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
         </td>
         <td><p>Prints an attribute object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="has_attribute.html">has_attribute()</a></code> </p>
+        </td>
+        <td><p>Check a schema for a given attribute name</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -838,6 +1015,18 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_filter_list_get_max_chunk_size.html">max_chunk_size()</a></code> <code><a href="tiledb_filter_list_get_max_chunk_size.html">tiledb_filter_list_get_max_chunk_size()</a></code> </p>
+        </td>
+        <td><p>Returns the filter_list's max_chunk_size</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_filter_list_set_max_chunk_size.html">set_max_chunk_size()</a></code> <code><a href="tiledb_filter_list_set_max_chunk_size.html">tiledb_filter_list_set_max_chunk_size()</a></code> </p>
+        </td>
+        <td><p>Set the filter_list's max_chunk_size</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_filter_set_option.html">tiledb_filter_set_option()</a></code> </p>
         </td>
         <td><p>Set the filter's option</p></td>
@@ -850,6 +1039,18 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="filter_list-set-tiledb_attr-method.html">`filter_list&lt;-`(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets the TileDB Filter List for the TileDB Attribute object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_list-set-tiledb_dim-method.html">`filter_list&lt;-`(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets the TileDB Filter List for the TileDB Dimension object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="filter_list-tiledb_array_schema-method.html">filter_list(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the offsets and coordinate filter_lists associated with the <code>tiledb_array_schema</code></p></td>
@@ -858,11 +1059,17 @@ This is only valid for sparse arrays.</p></td>
         <td>
           <p><code><a href="filter_list-tiledb_attr-method.html">filter_list(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code></p></td>
+        <td><p>Returns the TileDB Filter List object associated with the given TileDB Attribute</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="filter_list-tiledb_dim-method.html">filter_list(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the TileDB Filter List object associated with the given TileDB Dimension</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr>
@@ -881,21 +1088,9 @@ This is only valid for sparse arrays.</p></td>
       <tr>
         
         <td>
-          <p><code><a href="max_chunk_size-tiledb_filter_list-method.html">max_chunk_size(<i>&lt;tiledb_filter_list&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Returns the filter_list's max_chunk_size</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="nfilters-tiledb_filter_list-method.html">nfilters(<i>&lt;tiledb_filter_list&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the filter_list's number of filters</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_max_chunk_size-tiledb_filter_list-numeric-method.html">set_max_chunk_size(<i>&lt;tiledb_filter_list&gt;</i>,<i>&lt;numeric&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Set the filter_list's max_chunk_size</p></td>
       </tr><tr>
         
         <td>
@@ -917,6 +1112,30 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_filter_list_get_max_chunk_size.html">max_chunk_size()</a></code> <code><a href="tiledb_filter_list_get_max_chunk_size.html">tiledb_filter_list_get_max_chunk_size()</a></code> </p>
+        </td>
+        <td><p>Returns the filter_list's max_chunk_size</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_filter_list_set_max_chunk_size.html">set_max_chunk_size()</a></code> <code><a href="tiledb_filter_list_set_max_chunk_size.html">tiledb_filter_list_set_max_chunk_size()</a></code> </p>
+        </td>
+        <td><p>Set the filter_list's max_chunk_size</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_list-set-tiledb_attr-method.html">`filter_list&lt;-`(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets the TileDB Filter List for the TileDB Attribute object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_list-set-tiledb_dim-method.html">`filter_list&lt;-`(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets the TileDB Filter List for the TileDB Dimension object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="filter_list-tiledb_array_schema-method.html">filter_list(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the offsets and coordinate filter_lists associated with the <code>tiledb_array_schema</code></p></td>
@@ -925,11 +1144,17 @@ This is only valid for sparse arrays.</p></td>
         <td>
           <p><code><a href="filter_list-tiledb_attr-method.html">filter_list(<i>&lt;tiledb_attr&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Returns the <code>tiledb_filter_list</code> object associated with the given <code>tiledb_attr</code></p></td>
+        <td><p>Returns the TileDB Filter List object associated with the given TileDB Attribute</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="filter_list-tiledb_dim-method.html">filter_list(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the TileDB Filter List object associated with the given TileDB Dimension</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr>
@@ -960,7 +1185,25 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="tiledb_domain_get_dimension_from_index.html">tiledb_domain_get_dimension_from_index()</a></code> </p>
+        </td>
+        <td><p>Returns a Dimension indicated by index for the given TileDB Domain</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_domain_get_dimension_from_name.html">tiledb_domain_get_dimension_from_name()</a></code> </p>
+        </td>
+        <td><p>Returns a Dimension indicated by name for the given TileDB Domain</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_domain_has_dimension.html">tiledb_domain_has_dimension()</a></code> </p>
+        </td>
+        <td><p>Check a domain for a given dimension name</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr><tr>
@@ -986,7 +1229,7 @@ This is only valid for sparse arrays.</p></td>
         <td>
           <p><code><a href="datatype-tiledb_domain-method.html">datatype(<i>&lt;tiledb_domain&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Returns tiledb_domain TileDB type string</p></td>
+        <td><p>Returns the tiledb_domain TileDB type string</p></td>
       </tr><tr>
         
         <td>
@@ -1063,7 +1306,7 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">cell_val_num()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">set_max_chunk_size()</a></code> <code><a href="generics.html">max_chunk_size()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr><tr>
@@ -1078,6 +1321,18 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="domain-tiledb_dim-method.html">domain(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Return the <code>tiledb_dim</code> domain</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_list-set-tiledb_dim-method.html">`filter_list&lt;-`(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Sets the TileDB Filter List for the TileDB Dimension object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_list-tiledb_dim-method.html">filter_list(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Returns the TileDB Filter List object associated with the given TileDB Dimension</p></td>
       </tr><tr>
         
         <td>
@@ -1172,6 +1427,12 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_query_export_buffer.html">tiledb_query_export_buffer()</a></code> </p>
+        </td>
+        <td><p>Export Query Buffer to Pair of Arrow IO Pointers</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_query_finalize.html">tiledb_query_finalize()</a></code> </p>
         </td>
         <td><p>Finalize TileDB Query</p></td>
@@ -1190,9 +1451,57 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_query_get_est_result_size.html">tiledb_query_get_est_result_size()</a></code> </p>
+        </td>
+        <td><p>Retrieve the estimated result size for a query and attribute</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_est_result_size_var.html">tiledb_query_get_est_result_size_var()</a></code> </p>
+        </td>
+        <td><p>Retrieve the estimated result size for a query and variable-sized attribute</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_fragment_num.html">tiledb_query_get_fragment_num()</a></code> </p>
+        </td>
+        <td><p>Retrieve the Number of Fragments for Query</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_fragment_timestamp_range.html">tiledb_query_get_fragment_timestamp_range()</a></code> </p>
+        </td>
+        <td><p>Retrieve the timestamp range for a given Query Fragment</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_fragment_uri.html">tiledb_query_get_fragment_uri()</a></code> </p>
+        </td>
+        <td><p>Retrieve the URI for a given Query Fragment</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_query_get_layout.html">tiledb_query_get_layout()</a></code> </p>
         </td>
         <td><p>Get TileDB Query layout</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_range.html">tiledb_query_get_range()</a></code> <code><a href="tiledb_query_get_range.html">tiledb_query_get_range()</a></code> </p>
+        </td>
+        <td><p>Retrieve the query range for a query dimension and range index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_get_range_num.html">tiledb_query_get_range_num()</a></code> </p>
+        </td>
+        <td><p>Retrieve the number of ranges for a query dimension</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_import_buffer.html">tiledb_query_import_buffer()</a></code> </p>
+        </td>
+        <td><p>Import to Query Buffer from Pair of Arrow IO Pointers</p></td>
       </tr><tr>
         
         <td>
@@ -1241,6 +1550,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_query_submit.html">tiledb_query_submit()</a></code> </p>
         </td>
         <td><p>Submit TileDB Query</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_submit_async.html">tiledb_query_submit_async()</a></code> </p>
+        </td>
+        <td><p>Submit TileDB Query asynchronously without a callback returning immediately</p></td>
       </tr><tr>
         
         <td>
@@ -1321,6 +1636,18 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="is.anonymous.tiledb_dim.html">is.anonymous(<i>&lt;tiledb_dim&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns TRUE if the tiledb_dim is anonymous</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="array_consolidate.html">array_consolidate()</a></code> </p>
+        </td>
+        <td><p>Consolidate fragments of a TileDB Array</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="array_vacuum.html">array_vacuum()</a></code> </p>
+        </td>
+        <td><p>After consolidation, remove consilidated fragments of a TileDB Array</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -1394,25 +1721,49 @@ This is only valid for sparse arrays.</p></td>
         <td>
           <p><code><a href="tiledb_stats_disable.html">tiledb_stats_disable()</a></code> </p>
         </td>
-        <td><p>Disable stats counters</p></td>
+        <td><p>Disable internal TileDB statistics counters</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="tiledb_stats_dump.html">tiledb_stats_dump()</a></code> <code><a href="tiledb_stats_dump.html">tiledb_stats_print()</a></code> </p>
+          <p><code><a href="tiledb_stats_dump.html">tiledb_stats_dump()</a></code> </p>
         </td>
-        <td><p>Dump stats to file</p></td>
+        <td><p>Dumps internal TileDB statistics to file</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="tiledb_stats_enable.html">tiledb_stats_enable()</a></code> </p>
         </td>
-        <td><p>Enable stats counters</p></td>
+        <td><p>Enable internal TileDB statistics counters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_print.html">tiledb_stats_print()</a></code> </p>
+        </td>
+        <td><p>Print internal TileDB statistics</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_raw_dump.html">tiledb_stats_raw_dump()</a></code> </p>
+        </td>
+        <td><p>Dumps internal TileDB statistics as JSON to file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_raw_get.html">tiledb_stats_raw_get()</a></code> </p>
+        </td>
+        <td><p>Gets internal TileDB statistics as JSON string</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_stats_raw_print.html">tiledb_stats_raw_print()</a></code> </p>
+        </td>
+        <td><p>Print internal TileDB statistics as JSON</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="tiledb_stats_reset.html">tiledb_stats_reset()</a></code> </p>
         </td>
-        <td><p>Reset stats counters</p></td>
+        <td><p>Reset internal TileDB statistics counters</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -1438,6 +1789,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_vfs.html">tiledb_vfs()</a></code> </p>
         </td>
         <td><p>Creates a <code>tiledb_vfs</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_close.html">tiledb_vfs_close()</a></code> </p>
+        </td>
+        <td><p>Close a TileDB VFS Filehandle</p></td>
       </tr><tr>
         
         <td>
@@ -1501,6 +1858,18 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_vfs_open.html">tiledb_vfs_open()</a></code> </p>
+        </td>
+        <td><p>Open a TileDB VFS Filehandle for reading or writing</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_read.html">tiledb_vfs_read()</a></code> </p>
+        </td>
+        <td><p>Read from a TileDB VFS Filehandle</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_vfs_remove_bucket.html">tiledb_vfs_remove_bucket()</a></code> </p>
         </td>
         <td><p>Remove a VFS Bucket</p></td>
@@ -1519,9 +1888,33 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_vfs_sync.html">tiledb_vfs_sync()</a></code> </p>
+        </td>
+        <td><p>Sync a TileDB VFS Filehandle</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_vfs_touch.html">tiledb_vfs_touch()</a></code> </p>
         </td>
         <td><p>Touch a VFS URI Resource</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_vfs_write.html">tiledb_vfs_write()</a></code> </p>
+        </td>
+        <td><p>Write to a TileDB VFS Filehandle</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_get_vfs.html">tiledb_get_vfs()</a></code> </p>
+        </td>
+        <td><p>Retrieve a TileDB VFS object from the package environment and cache</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_set_vfs.html">tiledb_set_vfs()</a></code> </p>
+        </td>
+        <td><p>Store a TileDB VFS object in the package environment</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -1546,7 +1939,7 @@ This is only valid for sparse arrays.</p></td>
         <td>
           <p><code><a href="fromDataFrame.html">fromDataFrame()</a></code> </p>
         </td>
-        <td><p>Create a TileDB Dense Array from a given <code>data.frame</code> Object</p></td>
+        <td><p>Create a TileDB dense or sparse array from a given <code>data.frame</code> Object</p></td>
       </tr><tr>
         
         <td>
@@ -1589,6 +1982,44 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="as.data.frame.tiledb_config.html">as.data.frame(<i>&lt;tiledb_config&gt;</i>)</a></code> </p>
         </td>
         <td><p>Convert a <code>tiledb_config</code> object to a R data.frame</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-sparsematrix" class="hasAnchor"><a href="#section-sparsematrix" class="anchor"></a>SparseMatrix</h2>
+          <p class="section-desc"><p>sparse matrices helper functions</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="fromSparseMatrix.html">fromSparseMatrix()</a></code> <code><a href="fromSparseMatrix.html">toSparseMatrix()</a></code> </p>
+        </td>
+        <td><p>Create (or return) a TileDB sparse array</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-arrow" class="hasAnchor"><a href="#section-arrow" class="anchor"></a>Arrow</h2>
+          <p class="section-desc"><p>interface to Arrow in-memory representation</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_arrow_array_ptr.html">tiledb_arrow_array_ptr()</a></code> <code><a href="tiledb_arrow_array_ptr.html">tiledb_arrow_schema_ptr()</a></code> <code><a href="tiledb_arrow_array_ptr.html">tiledb_arrow_array_del()</a></code> <code><a href="tiledb_arrow_array_ptr.html">tiledb_arrow_schema_del()</a></code> </p>
+        </td>
+        <td><p>Allocate (or Release) Arrow Array and Schema Pointers</p></td>
       </tr>
     </tbody><tbody>
       <tr>
