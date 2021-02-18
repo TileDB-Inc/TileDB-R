@@ -146,7 +146,7 @@ suppressMessages({
   library(bit64)
 })
 
-if (getRversion() < '4.0.0') Sys.setenv(TZ="")
+Sys.setenv(TZ="")
 df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range=seq(-1000, 1000, length=nobs),
                  int_vals=sort(as.integer(runif(nobs)*1e9)),

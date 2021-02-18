@@ -58,7 +58,9 @@
 
 * Support for Nullable vectors has been added (#211)
 
-* Support for the default TileDB Embedded library has been set to 2.2.4 (#206, #209)
+* Support for the default TileDB Embedded library has been set to 2.2.4 (#212)
+
+* Small tweaks to timezone and factor settings in unit tests (#213, #214)
 
 
 # 0.8.2
