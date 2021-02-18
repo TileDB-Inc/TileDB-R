@@ -61,7 +61,7 @@ of TileDB, but should also build against the newest development version.
 
 ## Copyright
 
-The TileDB R package is Copyright 2018-2020 TileDB, Inc
+The TileDB R package is Copyright 2018-2021 TileDB, Inc
 
 ## License
 
