@@ -35,11 +35,13 @@ reference:
   - matches("tiledb_schema_get_names")
   - matches("tiledb_schema_get_types")
   - matches("tiledb_schema_set_names")
+  - matches("schema,character-method")
 - title: Attribute
   contents:
   - starts_with("tiledb_attr")
   - starts_with("attr")
   - ends_with("tiledb_attr-method")
+  - matches("has_attribute")
 - title: Filter
   contents:
   - starts_with("tiledb_filter")
@@ -72,6 +74,8 @@ reference:
   contents:
   - starts_with("tiledb_object")
   - matches("is.anonymous")
+  - matches("array_consolidate")
+  - matches("array_vacuum")
 - title: MetaData
   desc: arrray metadata functionality
   contents:
@@ -84,6 +88,8 @@ reference:
   desc: virtual file system functions
   contents:
   - starts_with("tiledb_vfs")
+  - matches("tiledb_get_vfs")
+  - matches("tiledb_set_vfs")
 - title: DataFrame
   desc:  data.frame functionality functions
   contents:
@@ -91,6 +97,14 @@ reference:
   - matches("fromDataFrame")
   - starts_with("return.data.frame")
   - matches("data.frame")
+- title: SparseMatrix
+  desc:  sparse matrices helper functions
+  contents:
+  - matches("fromSparseMatrix")
+- title: Arrow
+  desc: interface to Arrow in-memory representation
+  contents:
+  - matches("tiledb_arrow_array_ptr")
 - title: Package
   desc: package and version information
   contents:

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/documentation.html">TileDB API Documentation</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
   </ul>
@@ -103,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -134,6 +137,7 @@
   <span class='va'>type</span>,
   filter_list <span class='op'>=</span> <span class='fu'><a href='tiledb_filter_list.html'>tiledb_filter_list</a></span><span class='op'>(</span><span class='op'>)</span>,
   ncells <span class='op'>=</span> <span class='fl'>1</span>,
+  nullable <span class='op'>=</span> <span class='cn'>FALSE</span>,
   ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
@@ -156,6 +160,11 @@ that this is a <em>required</em> parameter.</p></td>
     <tr>
       <th>ncells</th>
       <td><p>(default 1) The number of cells, use <code>NA</code> to signal variable length</p></td>
+    </tr>
+    <tr>
+      <th>nullable</th>
+      <td><p>(default FALSE) A logical switch whether the attribute can have missing
+values</p></td>
     </tr>
     <tr>
       <th>ctx</th>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +95,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/documentation.html">TileDB API Documentation</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
   </ul>
@@ -103,7 +106,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -154,76 +157,89 @@
 <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>cfg</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                               parameter                  value
 #&gt; 1                 config.env_var_prefix                TILEDB_
-#&gt; 2                  rest.http_compressor                    any
-#&gt; 3                   rest.server_address https://api.tiledb.com
-#&gt; 4      rest.server_serialization_format                  CAPNP
-#&gt; 5                   sm.check_coord_dups                   true
-#&gt; 6                    sm.check_coord_oob                   true
-#&gt; 7                 sm.check_global_order                   true
-#&gt; 8          sm.compute_concurrency_level                     12
-#&gt; 9        sm.consolidation.amplification                    1.0
-#&gt; 10         sm.consolidation.buffer_size               50000000
-#&gt; 11                sm.consolidation.mode              fragments
-#&gt; 12      sm.consolidation.step_max_frags             4294967295
-#&gt; 13      sm.consolidation.step_min_frags             4294967295
-#&gt; 14     sm.consolidation.step_size_ratio                    0.0
-#&gt; 15               sm.consolidation.steps             4294967295
-#&gt; 16                      sm.dedup_coords                  false
-#&gt; 17            sm.enable_signal_handlers                   true
-#&gt; 18              sm.io_concurrency_level                     12
-#&gt; 19                     sm.memory_budget             5368709120
-#&gt; 20                 sm.memory_budget_var            10737418240
-#&gt; 21                   sm.num_tbb_threads                     -1
-#&gt; 22          sm.skip_checksum_validation                  false
-#&gt; 23     sm.sub_partitioner_memory_budget                      0
-#&gt; 24                   sm.tile_cache_size               10000000
-#&gt; 25                       sm.vacuum.mode              fragments
-#&gt; 26              vfs.azure.blob_endpoint                       
-#&gt; 27      vfs.azure.block_list_block_size                5242880
-#&gt; 28           vfs.azure.max_parallel_ops                     12
-#&gt; 29        vfs.azure.storage_account_key                       
-#&gt; 30       vfs.azure.storage_account_name                       
-#&gt; 31      vfs.azure.use_block_list_upload                   true
-#&gt; 32                  vfs.azure.use_https                   true
-#&gt; 33            vfs.file.enable_filelocks                   true
-#&gt; 34            vfs.file.max_parallel_ops                     12
-#&gt; 35 vfs.file.posix_directory_permissions                    755
-#&gt; 36      vfs.file.posix_file_permissions                    644
-#&gt; 37             vfs.gcs.max_parallel_ops                     12
-#&gt; 38              vfs.gcs.multi_part_size                5242880
-#&gt; 39                   vfs.gcs.project_id                       
-#&gt; 40        vfs.gcs.use_multi_part_upload                   true
-#&gt; 41      vfs.hdfs.kerb_ticket_cache_path                       
-#&gt; 42               vfs.hdfs.name_node_uri                       
-#&gt; 43                    vfs.hdfs.username                       
-#&gt; 44                    vfs.min_batch_gap                 512000
-#&gt; 45                   vfs.min_batch_size               20971520
-#&gt; 46                vfs.min_parallel_size               10485760
-#&gt; 47            vfs.read_ahead_cache_size               10485760
-#&gt; 48                  vfs.read_ahead_size                 102400
-#&gt; 49             vfs.s3.aws_access_key_id                       
-#&gt; 50         vfs.s3.aws_secret_access_key                       
-#&gt; 51             vfs.s3.aws_session_token                       
-#&gt; 52                       vfs.s3.ca_file                       
-#&gt; 53                       vfs.s3.ca_path                       
-#&gt; 54             vfs.s3.connect_max_tries                      5
-#&gt; 55          vfs.s3.connect_scale_factor                     25
-#&gt; 56            vfs.s3.connect_timeout_ms                   3000
-#&gt; 57             vfs.s3.endpoint_override                       
-#&gt; 58                 vfs.s3.logging_level                    Off
-#&gt; 59              vfs.s3.max_parallel_ops                     12
-#&gt; 60           vfs.s3.multipart_part_size                5242880
-#&gt; 61                    vfs.s3.proxy_host                       
-#&gt; 62                vfs.s3.proxy_password                       
-#&gt; 63                    vfs.s3.proxy_port                      0
-#&gt; 64                  vfs.s3.proxy_scheme                   http
-#&gt; 65                vfs.s3.proxy_username                       
-#&gt; 66                        vfs.s3.region              us-east-1
-#&gt; 67            vfs.s3.request_timeout_ms                   3000
-#&gt; 68                        vfs.s3.scheme                  https
-#&gt; 69          vfs.s3.use_multipart_upload                   true
-#&gt; 70        vfs.s3.use_virtual_addressing                   true
-#&gt; 71                    vfs.s3.verify_ssl                   true</div><div class='input'>
+#&gt; 2                  config.logging_level                      0
+#&gt; 3                  rest.http_compressor                    any
+#&gt; 4                      rest.retry_count                      3
+#&gt; 5               rest.retry_delay_factor                   1.25
+#&gt; 6                 rest.retry_http_codes                    503
+#&gt; 7           rest.retry_initial_delay_ms                    500
+#&gt; 8                   rest.server_address https://api.tiledb.com
+#&gt; 9      rest.server_serialization_format                  CAPNP
+#&gt; 10                  sm.check_coord_dups                   true
+#&gt; 11                   sm.check_coord_oob                   true
+#&gt; 12                sm.check_global_order                   true
+#&gt; 13         sm.compute_concurrency_level                     12
+#&gt; 14       sm.consolidation.amplification                    1.0
+#&gt; 15         sm.consolidation.buffer_size               50000000
+#&gt; 16                sm.consolidation.mode              fragments
+#&gt; 17      sm.consolidation.step_max_frags             4294967295
+#&gt; 18      sm.consolidation.step_min_frags             4294967295
+#&gt; 19     sm.consolidation.step_size_ratio                    0.0
+#&gt; 20               sm.consolidation.steps             4294967295
+#&gt; 21                      sm.dedup_coords                  false
+#&gt; 22            sm.enable_signal_handlers                   true
+#&gt; 23              sm.io_concurrency_level                     12
+#&gt; 24                     sm.memory_budget             5368709120
+#&gt; 25                 sm.memory_budget_var            10737418240
+#&gt; 26                   sm.num_tbb_threads                     -1
+#&gt; 27          sm.skip_checksum_validation                  false
+#&gt; 28     sm.sub_partitioner_memory_budget                      0
+#&gt; 29                   sm.tile_cache_size               10000000
+#&gt; 30                       sm.vacuum.mode              fragments
+#&gt; 31               sm.var_offsets.bitsize                     64
+#&gt; 32         sm.var_offsets.extra_element                  false
+#&gt; 33                  sm.var_offsets.mode                  bytes
+#&gt; 34              vfs.azure.blob_endpoint                       
+#&gt; 35      vfs.azure.block_list_block_size                5242880
+#&gt; 36           vfs.azure.max_parallel_ops                     12
+#&gt; 37        vfs.azure.storage_account_key                       
+#&gt; 38       vfs.azure.storage_account_name                       
+#&gt; 39      vfs.azure.use_block_list_upload                   true
+#&gt; 40                  vfs.azure.use_https                   true
+#&gt; 41            vfs.file.enable_filelocks                   true
+#&gt; 42            vfs.file.max_parallel_ops                     12
+#&gt; 43 vfs.file.posix_directory_permissions                    755
+#&gt; 44      vfs.file.posix_file_permissions                    644
+#&gt; 45             vfs.gcs.max_parallel_ops                     12
+#&gt; 46              vfs.gcs.multi_part_size                5242880
+#&gt; 47                   vfs.gcs.project_id                       
+#&gt; 48        vfs.gcs.use_multi_part_upload                   true
+#&gt; 49      vfs.hdfs.kerb_ticket_cache_path                       
+#&gt; 50               vfs.hdfs.name_node_uri                       
+#&gt; 51                    vfs.hdfs.username                       
+#&gt; 52                    vfs.min_batch_gap                 512000
+#&gt; 53                   vfs.min_batch_size               20971520
+#&gt; 54                vfs.min_parallel_size               10485760
+#&gt; 55            vfs.read_ahead_cache_size               10485760
+#&gt; 56                  vfs.read_ahead_size                 102400
+#&gt; 57             vfs.s3.aws_access_key_id                       
+#&gt; 58               vfs.s3.aws_external_id                       
+#&gt; 59            vfs.s3.aws_load_frequency                       
+#&gt; 60                  vfs.s3.aws_role_arn                       
+#&gt; 61         vfs.s3.aws_secret_access_key                       
+#&gt; 62              vfs.s3.aws_session_name                       
+#&gt; 63             vfs.s3.aws_session_token                       
+#&gt; 64                       vfs.s3.ca_file                       
+#&gt; 65                       vfs.s3.ca_path                       
+#&gt; 66             vfs.s3.connect_max_tries                      5
+#&gt; 67          vfs.s3.connect_scale_factor                     25
+#&gt; 68            vfs.s3.connect_timeout_ms                  10800
+#&gt; 69             vfs.s3.endpoint_override                       
+#&gt; 70                 vfs.s3.logging_level                    Off
+#&gt; 71              vfs.s3.max_parallel_ops                     12
+#&gt; 72           vfs.s3.multipart_part_size                5242880
+#&gt; 73                    vfs.s3.proxy_host                       
+#&gt; 74                vfs.s3.proxy_password                       
+#&gt; 75                    vfs.s3.proxy_port                      0
+#&gt; 76                  vfs.s3.proxy_scheme                   http
+#&gt; 77                vfs.s3.proxy_username                       
+#&gt; 78                        vfs.s3.region              us-east-1
+#&gt; 79            vfs.s3.request_timeout_ms                   3000
+#&gt; 80                vfs.s3.requester_pays                  false
+#&gt; 81                        vfs.s3.scheme                  https
+#&gt; 82          vfs.s3.use_multipart_upload                   true
+#&gt; 83        vfs.s3.use_virtual_addressing                   true
+#&gt; 84                    vfs.s3.verify_ssl                   true</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Submit TileDB Query — tiledb_query_submit" />
-<meta property="og:description" content="Submit TileDB Query" />
+<meta property="og:description" content="Note that the query object may need to be finalized
+via tiledb_query_finalize." />
 
 
 
@@ -72,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -80,7 +81,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -95,6 +96,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/documentation.html">TileDB API Documentation</a>
+    </li>
+    <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
   </ul>
@@ -103,7 +107,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/TileDB-Inc/TileDB-R/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -126,7 +130,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Submit TileDB Query</p>
+    <p>Note that the query object may need to be finalized
+via <code>tiledb_query_finalize</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>tiledb_query_submit</span><span class='op'>(</span><span class='va'>query</span><span class='op'>)</span></pre>

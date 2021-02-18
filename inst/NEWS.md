@@ -1,8 +1,12 @@
 # Ongoing
 
+# 0.9.0
+
+* This release of the R package builds against [TileDB 2.2.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.4), but has also been tested against two previous release series as well as the development version.
+
 ## Improvements
 
-* The older implementations `tiledb_dense` and `tiledb_sparse` are now marked as deprecated in favor of `tiledb_array`. No removal date is set or planned yet, but it is recommended to migrate new code. (#180)
+* The older implementations `tiledb_dense` and `tiledb_sparse` are now marked as deprecated in favor of `tiledb_array`. No removal date is set or planned yet, but it is recommended to migrate to new code. (#180)
 
 * Updated the underlying TileDB library to use TileDB 2.1.2 on macOS and Linux (when no system library is found) (#181)
 
@@ -21,6 +25,41 @@
 * Datetime support for Dimensions and Attributes has been extended (#189)
 
 * The API coverage has been increased alongside an update of the documentation (#190)
+
+* The Array schema can now be accessed and printed directly from a URI (#191)
+
+* The accessor for the estimated array result size was updated with the updaded API (#192)
+
+* Initial Arrow support for importing and exporting vector has been added (#193, #199)
+
+* Support for the default TileDB Embedded library was set to 2.1.3 and 2.1.4 (#194, #195)
+
+* The package documentation was updated and extended (#196)
+
+* Support for 'time-traveling' access to arrays was extended (#197)
+
+* Support for the default TileDB Embedded library was set to 2.1.5 and 2.1.6 (#198, #200)
+
+* Support for the default TileDB Embedded library was set to 2.2.0 and 2.2.1 (#201, #202)
+
+* The vignettes were updated and extended (#203)
+
+* The `fromDataFrame()` function was extended (#204)
+
+* Some unit tests were conditioned on having TileDB Embedded 2.1.0 or later (#205)
+
+* Support for the default TileDB Embedded library was set to 2.2.2 and 2.2.3 (#206, #208)
+
+* The default TileDB Embedded library version is now set centrally (#207)
+
+* Support was added to write and read sparse matrices directly via higher-level functions (#209)
+
+* Arrow array and schema allocation and deallocation helper functions were added (#210)
+
+* Support for Nullable vectors has been added (#211)
+
+* Support for the default TileDB Embedded library has been set to 2.2.4 (#206, #209)
+
 
 # 0.8.2
 
