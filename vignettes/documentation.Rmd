@@ -13,6 +13,17 @@ vignette: |
 ---
 
 
+```{r setup, include=FALSE}
+library(tiledb)
+tdir <- tempdir()
+urisparse <- file.path(tdir, "sparse")
+uridense <- file.path(tdir, "dense")
+uridensefix <- file.path(tdir, "densefix")
+uridensevar <- file.path(tdir, "densevar")
+uridensewkey <- file.path(tdir, "denseenc")
+notWindows <- .Platform$OS.type != "windows"
+```
+
 This document follows the [TileDB API usage
 examples](https://docs.tiledb.com/main/solutions/tiledb-embedded/api-usage).
 A shorter [introductory vignette](introduction.html) is also available.
@@ -22,7 +33,7 @@ A shorter [introductory vignette](introduction.html) is also available.
 We will show two initial and basic examples for a dense and sparse array simply to create
 array data on disk to refer to later in examples that follow.
 
-```{r runexamples}
+```{r runexamples, eval=notWindows}
 library(tiledb)
 
 tdir <- tempdir()
@@ -243,7 +254,7 @@ tiledb_array_schema_get_capacity(schema)
 
 #### Allowing Duplicates
 
-```{r allowdupes}
+```{r allowdupes, eval=notWindows}
 sch <- schema(urisparse)
 
 # get 'duplicates allowed?' status
@@ -257,7 +268,7 @@ tiledb_array_schema_set_allows_dups(sch, TRUE)
 
 #### Checking Correctness
 
-```{r checkcorrect}
+```{r checkcorrect, eval=notWindows}
 check(sch)
 tiledb_array_schema_check(sch)
 ```
@@ -266,7 +277,7 @@ tiledb_array_schema_check(sch)
 
 #### Creating a Filter List
 
-```{r createfilterlist}
+```{r createfilterlist, eval=notWindows}
 # create a "GZIP" compression filter
 flt <- tiledb_filter("GZIP")
 # set the option 'COMPRESSION_LEVEL' to 10
@@ -286,7 +297,7 @@ fltlst <- tiledb_filter_list(c(flt1, flt2))
 
 #### Setting the Tile Chunk Size
 
-```{r settilechunksize}
+```{r settilechunksize, eval=notWindows}
 # ... create filter list
 set_max_chunk_size(filter_list, 10000)
 tiledb_filter_list_set_max_chunk_size(filter_list, 10000)
@@ -297,7 +308,7 @@ tiledb_filter_list_get_max_chunk_size(filter_list)
 
 #### Setting a Filter List for an Attribute
 
-```{r settingfilterlistforattribute}
+```{r settingfilterlistforattribute, eval=notWindows}
 # create (or access) an attribute
 attr <- tiledb_attr("a", "INT32")
 
@@ -312,7 +323,7 @@ filter_list(attr) <- fltlst
 
 #### Setting a Filter List for a Dimension
 
-```{r settingfilterlistfordim}
+```{r settingfilterlistfordim, eval=notWindows}
 d <- tiledb_dim("d", c(1L, 10L), 1L, "INT32")
 
 # create a filter list
@@ -354,7 +365,7 @@ sch <- tiledb_array_schema(dom, c(attr1, attr2), offsets_filter_list = fl)
 #### Setting Coordinate and Offset Filters
 <!-- #### ?? -->
 
-```{r setcoordoffsetfilt}
+```{r setcoordoffsetfilt, eval=notWindows}
 # ... create domain dom
 # ... create attributes attr1, attr2
 # ... create filter lists fl1, fl2, similar to attributes
@@ -384,7 +395,7 @@ tiledb_array_create(uridense, schema)
 
 ### Creating Encrypted Arrays
 
-```{r createwithkey}
+```{r createwithkey, eval=notWindows}
 # assume previously created schema 'sch'
 # use encryption key
 encryption_key <- "0123456789abcdeF0123456789abcdeF"
@@ -431,7 +442,7 @@ unlink(tmp, recursive=TRUE)
 
 #### Basic Writing using Low-Level Code
 
-```{r basiscwritinglowlevel}
+```{r basiscwritinglowlevel, eval=notWindows}
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "WRITE")
 
@@ -450,7 +461,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 
 ### Writing Sparse Cells
 
-```{r writesparsecells}
+```{r writesparsecells, eval=notWindows}
 tmp <- urisparse
 unlink(tmp, recursive=TRUE)
 
@@ -487,7 +498,7 @@ A <- tiledb_array(uridensewkey, encryption_key = encryption_key)
 
 ### Fixed-length Attributes
 
-```{r fixedlengthattributes}
+```{r fixedlengthattributes, eval=notWindows}
 if (dir.exists(uridensefix)) unlink(uridensefix, recursive=TRUE)
 d1  <- tiledb_dim("d1", domain = c(1L, 4L))
 d2  <- tiledb_dim("d2", domain = c(1L, 4L))
@@ -517,7 +528,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 
 ### Var-length Attributes
 
-```{r}
+```{r, eval=notWindows}
 if (dir.exists(uridensevar)) unlink(uridensevar, recursive=TRUE)
 ## Define array
 ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
@@ -617,7 +628,7 @@ sch <- schema(A)
 
 
 
-```{r schemainspect}
+```{r schemainspect, eval=notWindows}
 # Get array schema, this shows the sparse accessor
 # and it is similar for tiledb_dense()
 A <- tiledb_array(uri = urisparse, is.sparse = TRUE)
@@ -770,7 +781,7 @@ tiledb_filter_type(fltr)
 
 ### Basic Reading
 
-```{r basiscreading}
+```{r basiscreading, eval=notWindows}
 # Open a dense array
 A <- tiledb_array(uri = uridense)
 
@@ -784,7 +795,7 @@ show(data)
 
 #### Basic Reading using Low-Level Code
 
-```{r basiscreadinglowlevel}
+```{r basiscreadinglowlevel, eval=notWindows}
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
 ## subarray of rows 1,2 and cols 2,3,4
@@ -802,7 +813,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 
 #### Variable-length Attributes
 
-```{r readvarlength}
+```{r readvarlength, eval=notWindows}
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
 
@@ -892,7 +903,7 @@ strrng <- tiledb_query_get_range_var(qry, idx, i)
 
 ### Incomplete Queries
 
-```{r incompletereads}
+```{r incompletereads, eval=notWindows}
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
@@ -923,7 +934,7 @@ sz <- tiledb_query_get_est_result_size_var(qry, "b")
 
 ### Time Traveling
 
-```{r timetravel}
+```{r timetravel, eval=notWindows}
 # time traveling is currently only accessible via the lower-level API
 # we use the R Datetime type; internally TileDB uses milliseconds since epoch
 tstamp <- Sys.time() - 60*60 # one hour ago
@@ -963,7 +974,7 @@ tiledb_query_submit_async(qry)
 
 #### Basic Usage
 
-```{r configbasic}
+```{r configbasic, eval=notWindows}
 # Create a configuration object
 config <- tiledb_config()
 
@@ -979,7 +990,7 @@ tiledb_config_unset(config, "sm.tile_cache_size")
 
 #### Save and Load to File
 
-```{r configsaveload}
+```{r configsaveload, eval=notWindows}
 # Save to file
 config <- tiledb_config()
 config["sm.tile_cache_size"] <- 0;
@@ -994,7 +1005,7 @@ tile_cache_size = config_loaded["sm.tile_cache_size"]
 
 #### Configuration Iterator
 
-```{r configiterator}
+```{r configiterator, eval=notWindows}
 # R has no native iterator but one loop over the config elements
 # by retrieving the configuration as a vector
 
@@ -1117,7 +1128,7 @@ tiledb_object_remove(ctx, "/tmp/my_group_2/dense_array")
 
 #### Writing
 
-```{r vfswrite}
+```{r vfswrite, eval=notWindows}
 # binary file to be written
 uri <- tempfile(pattern = "tiledb_vfs", fileext = ".bin")
 # open file
@@ -1194,7 +1205,7 @@ tiledb_vfs_remove_bucket("s3://my_bucket")
 
 #### Configuring VFS
 
-```{r vfsconfigure}
+```{r vfsconfigure, eval=notWindows}
 ctx <- tiledb_get_context()
 
 config <- tiledb_config()
