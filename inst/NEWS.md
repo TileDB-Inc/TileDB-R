@@ -1,5 +1,15 @@
 # Ongoing
 
+* This release of the R package builds against [TileDB 2.2.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.4), but has also been tested against two previous release series as well as the development version.
+
+## Improvements
+
+## Bug Fixes
+
+* Two tests with datetime comparisons which fail only on one macOS system are now conditional (#216)
+
+
+
 # 0.9.0
 
 * This release of the R package builds against [TileDB 2.2.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.4), but has also been tested against two previous release series as well as the development version.
