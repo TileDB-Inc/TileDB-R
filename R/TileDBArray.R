@@ -526,7 +526,11 @@ setMethod("[", "tiledb_array",
       libtiledb_query_result_buffer_elements(qryptr, name)
   }
   estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-  resrv <- max(estsz, na.rm=TRUE)
+  if (any(!is.na(estsz))) {
+      resrv <- max(estsz, na.rm=TRUE)
+  } else {
+      resrv <- resrv/8                  # character case where bytesize of offset vector was used
+  }
 
   ## get results
   getResult <- function(buf, name, varnum, resrv, qryptr) {
