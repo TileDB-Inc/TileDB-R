@@ -8,6 +8,7 @@
 
 * Two tests with datetime comparisons which fail only on one macOS system are now conditional (#216)
 
+* Result sets with all-character column now fall back to estimated result sizes (#217)
 
 
 # 0.9.0
