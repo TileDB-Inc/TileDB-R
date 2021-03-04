@@ -70,7 +70,6 @@ expect_equal(df, newdf[,-1])
 
 
 ## test dense with non-default index columm
-#exit_file("not finished")
 uri <- tempfile()
 set.seed(42)
 rows <- 50L
@@ -233,3 +232,17 @@ if (getRversion() < '4.0.0') {
     val$B <- as.character(val$B)
 }
 expect_equal(dat, val)
+
+## array with char only columns in dimension and attribute, used to error before #217
+N <- 20
+D <- data.frame(sample=paste(LETTERS[1:N], as.character(sort(trunc(runif(N, 100, 200)))), sep=""),
+                header=paste(LETTERS[1:N], as.character(sort(trunc(runif(N, 10000, 20000)))), sep=""),
+                stringsAsFactors=FALSE)
+uri <- tempfile()
+fromDataFrame(D, uri, col_index=1, sparse=TRUE)
+chk <- tiledb_array(uri, as.data.frame=TRUE)
+if (getRversion() < '4.0.0') {
+    chk$sample <- as.character(chk$sample)
+    chk$header <- as.character(chk$header)
+}
+expect_equal(D, chk[])
