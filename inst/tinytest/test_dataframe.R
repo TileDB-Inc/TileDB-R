@@ -84,7 +84,7 @@ chk <- arr[]
 if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df, chk[,-1])              # omit first col which is added
 
-if (tiledb_version(TRUE) < "2.1.0") exit_file("Remaining tests required TileDB 2.1.0 or later")
+if (tiledb_version(TRUE) < "2.1.0") exit_file("Remaining tests require TileDB 2.1.0 or later")
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index=1)
@@ -234,6 +234,7 @@ if (getRversion() < '4.0.0') {
 expect_equal(dat, val)
 
 ## array with char only columns in dimension and attribute, used to error before #217
+if (tiledb_version(TRUE) < "2.2.0") exit_file("Remaining tests require TileDB 2.2.0 or later")
 N <- 20
 D <- data.frame(sample=paste(LETTERS[1:N], as.character(sort(trunc(runif(N, 100, 200)))), sep=""),
                 header=paste(LETTERS[1:N], as.character(sort(trunc(runif(N, 10000, 20000)))), sep=""),
