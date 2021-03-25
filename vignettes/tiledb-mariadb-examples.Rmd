@@ -1,0 +1,157 @@
+---
+title: "TileDB and (R)MariaDB Examples"
+output:
+  minidown::mini_document:
+    framework: water
+    toc: true
+    toc_float: true
+    code_folding:
+      source: show
+      output: show
+      message: hide
+      warning: hide
+      error: hide
+vignette: >
+  %\VignetteIndexEntry{TileDB RMariaDB Examples}
+  %\VignettePackage{tiledb}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+[TileDB](https://www.tiledb.com/) provides the _Universal Data Engine_ that
+can be accessed in a variety of ways. The C/C++ library offered by [TileDB
+Embedded](https://www.tiledb.com/embedded) is one approach, and the [R
+package](https://github.com/TileDB-Inc/TileDB-R), as well as the [Python
+package](https://github.com/TileDB-Inc/TileDB-Python) and other language
+bindings use it. Another interface is provided by the [MariaDB Integration
+via the MyTile storage plugin](https://docs.tiledb.com/mariadb/).
+
+This provides integration of TileDB with any frontend that interface with
+MariaDB---as for example the
+[RMariaDB](https://cran.r-project.org/package=RMariaDB) package for R.  So
+this vignette illustrates the use of TileDB via MariaDB using R and the
+RMariaDB packages.
+
+## Installation
+
+In order to use the MyTile storage plugin, one has to compile both the
+storage plugin itself and the MariaDB server with consistent compiler flags.
+As the build also requires the TileDB Embedded library and headers, use in a
+Docker container may be easiest.  The Dockerfile also provides a concrete
+example of the build setup.
+
+So here we will use the `tiledb-mariadb-r` container.
+
+#### Launch Container in Background
+
+We launch the container 'tiledb/tiledb-mariadb-r' as a daemon, allowing
+MariaDB to accept empty password (using an older MySQL variable setting), and
+name the running image 'tiledb-mariadb-r':
+
+```sh
+docker run --name tiledb-mariadb-r -it -d --rm -e MYSQL_ALLOW_EMPTY_PASSWORD=1 tiledb/tiledb-mariadb-r
+```
+
+#### Access Container Once to Write via TileDB
+
+Using the name given to the running instance, we start an R session to write
+data with TileDB:
+
+```sh
+docker exec -it -u root tiledb-mariadb-r R
+```
+
+then in the R session
+
+```r
+> library(tiledb)
+> library(palmerpenguins)
+> praw <- penguins_raw
+> fromDataFrame(praw, "/tmp/penguinsraw")
+```
+
+
+#### Access Container Again to Read via RMariaDB
+
+In another shell, we can access the container once more and launch another R
+process:
+
+```sh
+docker exec -it -u root tiledb-mariadb-r R
+```
+
+where we use RMariaDB to access the data via a `tibble` object and `magrittr` pipe
+
+```r
+> library(RMariaDB)
+> library(dplyr, warn.conflicts=FALSE)
+> con <- DBI::dbConnect(RMariaDB::MariaDB(), dbname="test")
+> tbl(con, "/tmp/penguinsraw") %>%
++        dplyr::select(contains("Length"))
+# Source:   lazy query [?? x 2]
+# Database: mysql [@localhost:NA/test]
+   `Culmen Length (mm)` `Flipper Length (mm)`
+                  <dbl>                 <dbl>
+ 1                 39.1                   181
+ 2                 39.5                   186
+ 3                 40.3                   195
+ 4                 NA                      NA
+ 5                 36.7                   193
+ 6                 39.3                   190
+ 7                 38.9                   181
+ 8                 39.2                   195
+ 9                 34.1                   193
+10                 42                     190
+# ... with more rows
+```
+
+Note that this R session uses TileDB only via the MyTile plugin which is
+activated implicitly via the 'table location' (here `/tmp/penguinsraw`) of
+the test database enabling plugins.
+
+Also note that the query is still 'lazy': only summary such as column names
+and the first ten observation has been retrieved, and the total size is still
+unknown as indicated by `lazy query [?? x 2]`.  Adding a `collect()` verb
+materialized the full subset.
+
+```r
+> tbl(con, "/tmp/penguinsraw")  %>%
++     dplyr::select(contains("Length")) %>%
++     collect()
+# A tibble: 344 x 2
+   `Culmen Length (mm)` `Flipper Length (mm)`
+                  <dbl>                 <dbl>
+ 1                 39.1                   181
+ 2                 39.5                   186
+ 3                 40.3                   195
+ 4                 NA                      NA
+ 5                 36.7                   193
+ 6                 39.3                   190
+ 7                 38.9                   181
+ 8                 39.2                   195
+ 9                 34.1                   193
+10                 42                     190
+# ... with 334 more rows
+>
+```
+
+We now see that all 344 rows of this particular result set have been accessed.
+
+Similarly, we can also run summaries on selected column:
+
+```r
+> tbl(con, "/tmp/penguinsraw") %>%
++     group_by(Species) %>%
++     summarise(across(starts_with("Flipper"),
++                      list(~mean(.x, na.rm=TRUE), ~sd(.x, na.rm=TRUE))))
+# Source:   lazy query [?? x 3]
+# Database: mysql [@localhost:NA/test]
+  Species              `\`Flipper Length (mm)\`_~me~ `\`Flipper Length (mm)\`_~~
+  <chr>                                        <dbl>                       <dbl>
+1 Adelie Penguin (Pyg~                          190.                        6.54
+2 Chinstrap penguin (~                          196.                        7.13
+3 Gentoo penguin (Pyg~                          217.                        6.48
+>
+```
