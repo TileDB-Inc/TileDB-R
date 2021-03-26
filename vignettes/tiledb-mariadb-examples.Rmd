@@ -34,7 +34,7 @@ MariaDB---as for example the
 this vignette illustrates the use of TileDB via MariaDB using R and the
 RMariaDB packages.
 
-## Installation
+## Installation or Using Docker
 
 In order to use the MyTile storage plugin, one has to compile both the
 storage plugin itself and the MariaDB server with consistent compiler flags.
@@ -63,7 +63,9 @@ data with TileDB:
 docker exec -it -u root tiledb-mariadb-r R
 ```
 
-then in the R session
+## Example 1: Palmer Penguins
+
+With the sessions started as in the previous section, we start an R session.
 
 ```r
 > library(tiledb)
@@ -154,4 +156,54 @@ Similarly, we can also run summaries on selected column:
 2 Chinstrap penguin (~                          196.                        7.13
 3 Gentoo penguin (Pyg~                          217.                        6.48
 >
+```
+
+## Example 2: DBI
+
+We can connect directly using the `DBI` package along with the `RMariaDB`
+package and its MyTile bindings:
+
+```r
+library(DBI)
+con <- dbConnect(RMariaDB::MariaDB(), dbname="test")
+res <- dbSendQuery(con, "select * from `/work/penguins` as `q91` limit 10")
+df <- dbFetch(res, n = 10)
+dbClearResult(res)
+print(df)
+dbDisconnect(con)
+```
+
+## Example 3: S3
+
+When using Docker, the container setup needs to be modified to include
+passing the required AWS access environment variables:
+
+```sh
+docker run --name tiledb-mariadb-r \
+       -it -d --rm \
+       -v /tmp/tiledb/:/data \
+       -v $PWD:/work -w /work \
+       -e MYSQL_ALLOW_EMPTY_PASSWORD=1 \
+       -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+       -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+       tiledb/tiledb-mariadb-r
+```
+
+In the following example we also set a TileDB configuration option to switch
+AWS regions.
+
+```r
+library(dplyr, warn.conflicts=FALSE)
+
+## connect as usual
+con <- DBI::dbConnect(RMariaDB::MariaDB(), dbname="test")
+
+## use connection to update config in order to switch s3 regions
+res1 <- DBI::dbSendQuery(con, "set mytile_tiledb_config=\"vfs.s3.region=us-west-1\";")
+DBI::dbClearResult(res1)
+
+## run simple query
+tbl(con, "s3://tiledb-public-us-west-1/test-array-4x4") %>% collect()
+
+DBI::dbDisconnect(con)
 ```
