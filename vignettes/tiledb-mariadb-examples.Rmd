@@ -251,11 +251,28 @@ Then we can access it via the path `/work/trip_data_1` via RMariaDB.
  9             208        1
 10             255        1
 > # here to request is actually send as SQL and the computation is done in the SQL layer
-> tbl(con, "/work/trip_data_1") %>% group_by(passenger_count) %>% summarize(nobs = n()) %>% show_query()
+> tbl(con, "/work/trip_data_1")  %>%
++      group_by(passenger_count) %>%
++      summarize(nobs = n())     %>%
++      show_query()
 <SQL>
 SELECT `passenger_count`, COUNT(*) AS `nobs`
 FROM `/work/trip_data_1`
 GROUP BY `passenger_count`
+> # naturally we can also sent the query directly to the SQL backend
+> sql <- "SELECT passenger_count, count(*) AS n FROM `/work/trip_data_1` GROUP BY passenger_count;"
+> DBI::dbGetQuery(con, sql)
+   passenger_count        n
+1                0      166
+2                1 10471701
+3                2  1986196
+4                3   597485
+5                4   280992
+6                5   920006
+7                6   520066
+8                9        1
+9              208        1
+10             255        1
 >
 ```
 
