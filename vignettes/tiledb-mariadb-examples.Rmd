@@ -206,7 +206,27 @@ AWS regions.
 > DBI::dbClearResult(res1)
 > # run simple query
 > tbl(con, "s3://tiledb-public-us-west-1/test-array-4x4") %>% collect()
-> DBI::dbDisconnect(con)
+# A tibble: 16 x 3
+   `__dim_0` `__dim_1` `__attr`
+     <int64>   <int64>    <dbl>
+ 1         0         0   0.397
+ 2         0         1   0.432
+ 3         0         2   0.617
+ 4         0         3   0.403
+ 5         1         0   0.837
+ 6         1         1   0.670
+ 7         1         2   0.235
+ 8         1         3   0.841
+ 9         2         0   0.222
+10         2         1   0.468
+11         2         2   0.970
+12         2         3   0.551
+13         3         0   0.628
+14         3         1   0.0149
+15         3         2   0.0540
+16         3         3   0.445
+>
+> DBI::dbDisconnect(con)  # close connection
 ```
 
 ### NYC Taxis
@@ -226,9 +246,14 @@ Then we can access it via the path `/work/trip_data_1` via RMariaDB.
 > con <- DBI::dbConnect(RMariaDB::MariaDB(), dbname="test")
 > # list column names
 > tbl(con, "/work/trip_data_1") %>% colnames()
+> tbl(con, "/work/trip_data_1") %>% colnames()
+ [1] "__tiledb_rows"      "dropoff_latitude"   "medallion"
+ [4] "hack_license"       "dropoff_longitude"  "vendor_id"
+ [7] "rate_code"          "store_and_fwd_flag" "pickup_datetime"
+[10] "dropoff_datetime"   "trip_time_in_secs"  "pickup_latitude"
+[13] "passenger_count"    "trip_distance"      "pickup_longitude"
 > # extract one column (here passenger_count) completely and tabulate in R
 > tbl(con, "/work/trip_data_1") %>% select(passenger_count) %>% collect() %>% table()
-> DBI::dbDisconnect(con)
 .
        0        1        2        3        4        5        6        9
      166 10471701  1986196   597485   280992   920006   520066        1
@@ -274,6 +299,7 @@ GROUP BY `passenger_count`
 9              208        1
 10             255        1
 >
+> DBI::dbDisconnect(con)  # close connection
 ```
 
 ## Summary
