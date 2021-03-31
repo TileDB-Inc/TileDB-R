@@ -99,17 +99,17 @@
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p><a href="https://www.tiledb.com/">TileDB</a> provides the <em>Universal Data Engine</em> that can be accessed in a variety of ways. The C/C++ library offered by <a href="https://www.tiledb.com/embedded">TileDB Embedded</a> is one approach, and the <a href="https://github.com/TileDB-Inc/TileDB-R">R package</a>, as well as the <a href="https://github.com/TileDB-Inc/TileDB-Python">Python package</a> and other language bindings use it. Another interface is provided by the <a href="https://docs.tiledb.com/mariadb/">MariaDB Integration via the MyTile storage plugin</a>.</p>
-<p>This provides integration of TileDB with any frontend that interface with MariaDB—as for example the <a href="https://cran.r-project.org/package=RMariaDB">RMariaDB</a> package for R. So this vignette illustrates the use of TileDB via MariaDB using R and the RMariaDB packages.</p>
+<p>This provides TileDB integration with any frontend that interfaces with MariaDB—such as the <a href="https://cran.r-project.org/package=RMariaDB">RMariaDB</a> package for R. So this vignette illustrates the use of TileDB via MariaDB using R and the RMariaDB packages.</p>
 </div>
 <div id="installation-or-using-docker" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation-or-using-docker" class="anchor"></a>Installation or Using Docker</h2>
-<p>In order to use the MyTile storage plugin, one has to compile both the storage plugin itself and the MariaDB server with consistent compiler flags. As the build also requires the TileDB Embedded library and headers, use in a Docker container may be easiest. The Dockerfile also provides a concrete example of the build setup.</p>
-<p>So here we will use the <code>tiledb-mariadb-r</code> container.</p>
+<p>In order to use the MyTile storage plugin, one has to compile both the storage plugin itself and the MariaDB server with consistent compiler flags. As the build also requires the TileDB Embedded library and headers, using a Docker container may be easiest. The Dockerfile also provides a concrete example of the build setup.</p>
+<p>So here we will use the <a href="https://hub.docker.com/r/tiledb/tiledb-mariadb-r"><code>tiledb-mariadb-r</code></a> container.</p>
 <div id="launch-container-in-background" class="section level4">
 <h4 class="hasAnchor">
 <a href="#launch-container-in-background" class="anchor"></a>Launch Container in Background</h4>
-<p>We launch the container ‘tiledb/tiledb-mariadb-r’ as a daemon, allowing MariaDB to accept empty password (using an older MySQL variable setting), and name the running image ‘tiledb-mariadb-r’:</p>
+<p>We launch the container ‘tiledb/tiledb-mariadb-r’ as a daemon, allowing MariaDB to accept an empty password (using an older MySQL variable setting), and name the running image ‘tiledb-mariadb-r’:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> tiledb-mariadb-r <span class="at">-it</span> <span class="at">-d</span> <span class="at">--rm</span> <span class="at">-e</span> MYSQL_ALLOW_EMPTY_PASSWORD=1 tiledb/tiledb-mariadb-r</span></code></pre></div>
 </div>
 <div id="access-container-once-to-write-via-tiledb" class="section level4">
@@ -157,7 +157,7 @@
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>                 <span class="dv">42</span>                     <span class="dv">190</span></span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># ... with more rows</span></span></code></pre></div>
 <p>Note that this R session uses TileDB only via the MyTile plugin which is activated implicitly via the ‘table location’ (here <code>/tmp/penguinsraw</code>) of the test database enabling plugins.</p>
-<p>Also note that the query is still ‘lazy’: only summary such as column names and the first ten observation has been retrieved, and the total size is still unknown as indicated by <code>lazy query [?? x 2]</code>. Adding a <code>collect()</code> verb materialized the full subset.</p>
+<p>Also note that the query is still ‘lazy’: only column names and the first ten observations have been retrieved, and the total size is still unknown as indicated by <code>lazy query [?? x 2]</code>. Adding a <code>collect()</code> verb materialized the full subset.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">tbl</span>(con, <span class="st">"/tmp/penguinsraw"</span>)  <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>     dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"Length"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>     <span class="fu">collect</span>()</span>
@@ -208,7 +208,7 @@
 <div id="s3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#s3" class="anchor"></a>S3</h3>
-<p>When using Docker, the container setup needs to be modified to include passing the required AWS access environment variables:</p>
+<p>When using Docker, the container setup needs to be modified to include the required AWS access environment variables:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> tiledb-mariadb-r <span class="dt">\</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">-it</span> <span class="at">-d</span> <span class="at">--rm</span> <span class="dt">\</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">-v</span> <span class="va">$PWD</span>:/work <span class="at">-w</span> /work <span class="dt">\</span></span>
@@ -288,7 +288,7 @@
 <span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span>               <span class="dv">9</span>        <span class="dv">1</span></span>
 <span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span>             <span class="dv">208</span>        <span class="dv">1</span></span>
 <span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span>             <span class="dv">255</span>        <span class="dv">1</span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="co"># here to request is actually send as SQL and the computation is done in the SQL layer</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="co"># here the request is actually sent as SQL and the computation is done in the SQL layer</span></span>
 <span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="er">&gt;</span> <span class="fu">tbl</span>(con, <span class="st">"/work/trip_data_1"</span>)  <span class="sc">%&gt;%</span></span>
 <span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>      <span class="fu">group_by</span>(passenger_count) <span class="sc">%&gt;%</span></span>
 <span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>      <span class="fu">summarize</span>(<span class="at">nobs =</span> <span class="fu">n</span>())     <span class="sc">%&gt;%</span></span>
@@ -297,7 +297,7 @@
 <span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>SELECT <span class="st">`</span><span class="at">passenger_count</span><span class="st">`</span>, <span class="fu">COUNT</span>(<span class="sc">*</span>) AS <span class="st">`</span><span class="at">nobs</span><span class="st">`</span></span>
 <span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>FROM <span class="st">`</span><span class="at">/work/trip_data_1</span><span class="st">`</span></span>
 <span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>GROUP BY <span class="st">`</span><span class="at">passenger_count</span><span class="st">`</span></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="co"># naturally we can also sent the query directly to the SQL backend</span></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="co"># naturally we can also send the query directly to the SQL backend</span></span>
 <span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a><span class="er">&gt;</span> sql <span class="ot">&lt;-</span> <span class="st">"SELECT passenger_count, count(*) AS n FROM `/work/trip_data_1` GROUP BY passenger_count;"</span></span>
 <span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> DBI<span class="sc">::</span><span class="fu">dbGetQuery</span>(con, sql)</span>
 <span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>   passenger_count        n</span>
@@ -318,7 +318,7 @@
 <div id="summary" class="section level2">
 <h2 class="hasAnchor">
 <a href="#summary" class="anchor"></a>Summary</h2>
-<p>This short vignette demonstrates the use TileDB-stored data from R using RMariaDB via the MyTile storage extension to MariaBD.</p>
+<p>This short vignette demonstrates the use of TileDB-stored data from R using RMariaDB via the MyTile storage extension to MariaBD.</p>
 </div>
   </div>
 
