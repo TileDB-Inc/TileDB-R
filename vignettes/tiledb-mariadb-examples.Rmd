@@ -42,7 +42,7 @@ As the build also requires the TileDB Embedded library and headers, using a
 Docker container may be easiest.  The Dockerfile also provides a concrete
 example of the build setup.
 
-So here we will use the [`tiledb-mariadb-r`](https://hub.docker.com/r/tiledb/tiledb-mariadb-r) container.
+So here we will use the [`tiledb/tiledb-mariadb-r`](https://hub.docker.com/r/tiledb/tiledb-mariadb-r) container.
 
 #### Launch Container in Background
 
