@@ -28,8 +28,8 @@ package](https://github.com/TileDB-Inc/TileDB-Python) and other language
 bindings use it. Another interface is provided by the [MariaDB Integration
 via the MyTile storage plugin](https://docs.tiledb.com/mariadb/).
 
-This provides integration of TileDB with any frontend that interface with
-MariaDB---as for example the
+This provides TileDB integration with any frontend that interfaces with
+MariaDB---such as the
 [RMariaDB](https://cran.r-project.org/package=RMariaDB) package for R.  So
 this vignette illustrates the use of TileDB via MariaDB using R and the
 RMariaDB packages.
@@ -38,16 +38,16 @@ RMariaDB packages.
 
 In order to use the MyTile storage plugin, one has to compile both the
 storage plugin itself and the MariaDB server with consistent compiler flags.
-As the build also requires the TileDB Embedded library and headers, use in a
+As the build also requires the TileDB Embedded library and headers, using a
 Docker container may be easiest.  The Dockerfile also provides a concrete
 example of the build setup.
 
-So here we will use the `tiledb-mariadb-r` container.
+So here we will use the [`tiledb-mariadb-r`](https://hub.docker.com/r/tiledb/tiledb-mariadb-r) container.
 
 #### Launch Container in Background
 
 We launch the container 'tiledb/tiledb-mariadb-r' as a daemon, allowing
-MariaDB to accept empty password (using an older MySQL variable setting), and
+MariaDB to accept an empty password (using an older MySQL variable setting), and
 name the running image 'tiledb-mariadb-r':
 
 ```sh
@@ -115,8 +115,8 @@ Note that this R session uses TileDB only via the MyTile plugin which is
 activated implicitly via the 'table location' (here `/tmp/penguinsraw`) of
 the test database enabling plugins.
 
-Also note that the query is still 'lazy': only summary such as column names
-and the first ten observation has been retrieved, and the total size is still
+Also note that the query is still 'lazy': only column names
+and the first ten observations have been retrieved, and the total size is still
 unknown as indicated by `lazy query [?? x 2]`.  Adding a `collect()` verb
 materialized the full subset.
 
@@ -177,8 +177,7 @@ dbDisconnect(con)
 
 ### S3
 
-When using Docker, the container setup needs to be modified to include
-passing the required AWS access environment variables:
+When using Docker, the container setup needs to be modified to include the required AWS access environment variables:
 
 ```sh
 docker run --name tiledb-mariadb-r \
@@ -275,7 +274,7 @@ Then we can access it via the path `/work/trip_data_1` via RMariaDB.
  8               9        1
  9             208        1
 10             255        1
-> # here to request is actually send as SQL and the computation is done in the SQL layer
+> # here the request is actually sent as SQL and the computation is done in the SQL layer
 > tbl(con, "/work/trip_data_1")  %>%
 +      group_by(passenger_count) %>%
 +      summarize(nobs = n())     %>%
@@ -284,7 +283,7 @@ Then we can access it via the path `/work/trip_data_1` via RMariaDB.
 SELECT `passenger_count`, COUNT(*) AS `nobs`
 FROM `/work/trip_data_1`
 GROUP BY `passenger_count`
-> # naturally we can also sent the query directly to the SQL backend
+> # naturally we can also send the query directly to the SQL backend
 > sql <- "SELECT passenger_count, count(*) AS n FROM `/work/trip_data_1` GROUP BY passenger_count;"
 > DBI::dbGetQuery(con, sql)
    passenger_count        n
@@ -304,5 +303,5 @@ GROUP BY `passenger_count`
 
 ## Summary
 
-This short vignette demonstrates the use TileDB-stored data from R using
+This short vignette demonstrates the use of TileDB-stored data from R using
 RMariaDB via the MyTile storage extension to MariaBD.
