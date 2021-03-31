@@ -100,6 +100,9 @@
     <li>
       <a href="../articles/introduction.html">First Steps with TileDB</a>
     </li>
+    <li>
+      <a href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -202,44 +205,48 @@
 #&gt;                                "755"                                "644" 
 #&gt;             vfs.gcs.max_parallel_ops              vfs.gcs.multi_part_size 
 #&gt;                                 "12"                            "5242880" 
-#&gt;                   vfs.gcs.project_id        vfs.gcs.use_multi_part_upload 
-#&gt;                                   ""                               "true" 
-#&gt;      vfs.hdfs.kerb_ticket_cache_path               vfs.hdfs.name_node_uri 
+#&gt;                   vfs.gcs.project_id           vfs.gcs.request_timeout_ms 
+#&gt;                                   ""                               "3000" 
+#&gt;        vfs.gcs.use_multi_part_upload      vfs.hdfs.kerb_ticket_cache_path 
+#&gt;                               "true"                                   "" 
+#&gt;               vfs.hdfs.name_node_uri                    vfs.hdfs.username 
 #&gt;                                   ""                                   "" 
-#&gt;                    vfs.hdfs.username                    vfs.min_batch_gap 
-#&gt;                                   ""                             "512000" 
-#&gt;                   vfs.min_batch_size                vfs.min_parallel_size 
-#&gt;                           "20971520"                           "10485760" 
-#&gt;            vfs.read_ahead_cache_size                  vfs.read_ahead_size 
-#&gt;                           "10485760"                             "102400" 
-#&gt;             vfs.s3.aws_access_key_id               vfs.s3.aws_external_id 
+#&gt;                    vfs.min_batch_gap                   vfs.min_batch_size 
+#&gt;                             "512000"                           "20971520" 
+#&gt;                vfs.min_parallel_size            vfs.read_ahead_cache_size 
+#&gt;                           "10485760"                           "10485760" 
+#&gt;                  vfs.read_ahead_size             vfs.s3.aws_access_key_id 
+#&gt;                             "102400"                                   "" 
+#&gt;               vfs.s3.aws_external_id            vfs.s3.aws_load_frequency 
 #&gt;                                   ""                                   "" 
-#&gt;            vfs.s3.aws_load_frequency                  vfs.s3.aws_role_arn 
+#&gt;                  vfs.s3.aws_role_arn         vfs.s3.aws_secret_access_key 
 #&gt;                                   ""                                   "" 
-#&gt;         vfs.s3.aws_secret_access_key              vfs.s3.aws_session_name 
+#&gt;              vfs.s3.aws_session_name             vfs.s3.aws_session_token 
 #&gt;                                   ""                                   "" 
-#&gt;             vfs.s3.aws_session_token                       vfs.s3.ca_file 
+#&gt;                       vfs.s3.ca_file                       vfs.s3.ca_path 
 #&gt;                                   ""                                   "" 
-#&gt;                       vfs.s3.ca_path             vfs.s3.connect_max_tries 
-#&gt;                                   ""                                  "5" 
-#&gt;          vfs.s3.connect_scale_factor            vfs.s3.connect_timeout_ms 
-#&gt;                                 "25"                              "10800" 
-#&gt;             vfs.s3.endpoint_override                 vfs.s3.logging_level 
-#&gt;                                   ""                                "Off" 
-#&gt;              vfs.s3.max_parallel_ops           vfs.s3.multipart_part_size 
-#&gt;                                 "12"                            "5242880" 
-#&gt;                    vfs.s3.proxy_host                vfs.s3.proxy_password 
+#&gt;             vfs.s3.connect_max_tries          vfs.s3.connect_scale_factor 
+#&gt;                                  "5"                                 "25" 
+#&gt;            vfs.s3.connect_timeout_ms             vfs.s3.endpoint_override 
+#&gt;                              "10800"                                   "" 
+#&gt;                 vfs.s3.logging_level              vfs.s3.max_parallel_ops 
+#&gt;                                "Off"                                 "12" 
+#&gt;           vfs.s3.multipart_part_size                    vfs.s3.proxy_host 
+#&gt;                            "5242880"                                   "" 
+#&gt;                vfs.s3.proxy_password                    vfs.s3.proxy_port 
+#&gt;                                   ""                                  "0" 
+#&gt;                  vfs.s3.proxy_scheme                vfs.s3.proxy_username 
+#&gt;                               "http"                                   "" 
+#&gt;                        vfs.s3.region            vfs.s3.request_timeout_ms 
+#&gt;                          "us-east-1"                               "3000" 
+#&gt;                vfs.s3.requester_pays                        vfs.s3.scheme 
+#&gt;                              "false"                              "https" 
+#&gt;                           vfs.s3.sse                vfs.s3.sse_kms_key_id 
 #&gt;                                   ""                                   "" 
-#&gt;                    vfs.s3.proxy_port                  vfs.s3.proxy_scheme 
-#&gt;                                  "0"                               "http" 
-#&gt;                vfs.s3.proxy_username                        vfs.s3.region 
-#&gt;                                   ""                          "us-east-1" 
-#&gt;            vfs.s3.request_timeout_ms                vfs.s3.requester_pays 
-#&gt;                               "3000"                              "false" 
-#&gt;                        vfs.s3.scheme          vfs.s3.use_multipart_upload 
-#&gt;                              "https"                               "true" 
-#&gt;        vfs.s3.use_virtual_addressing                    vfs.s3.verify_ssl 
-#&gt;                               "true"                               "true" </div><div class='input'>
+#&gt;          vfs.s3.use_multipart_upload        vfs.s3.use_virtual_addressing 
+#&gt;                               "true"                               "true" 
+#&gt;                    vfs.s3.verify_ssl 
+#&gt;                               "true" </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
