@@ -177,9 +177,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
                                   cell_order = cell_order, tile_order = tile_order,
                                   sparse=sparse, capacity=capacity)
     if (debug) print(schema)
-    tiledb_array_create(uri, schema)
-
     allows_dups(schema) <- allows_dups
+    tiledb_array_create(uri, schema)
 
     df <- tiledb_array(uri)
     ## when setting an index when likely want 'sparse write to dense array
