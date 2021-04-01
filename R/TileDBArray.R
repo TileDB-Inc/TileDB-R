@@ -119,7 +119,11 @@ tiledb_array <- function(uri,
   is_sparse_status <- libtiledb_array_schema_sparse(schema_xptr)
   if (!is.na(is.sparse) && is.sparse != is_sparse_status) {
     libtiledb_array_close(array_xptr)
-    stop("sparse array selected but dense array found", call. = FALSE)
+    if (is_sparse_status) {
+      stop("dense array selected but sparse array found", call. = FALSE)
+    } else {
+      stop("sparse array selected but dense array found", call. = FALSE)
+    }
   }
   is.sparse <- is_sparse_status
   array_xptr <- libtiledb_array_close(array_xptr)
