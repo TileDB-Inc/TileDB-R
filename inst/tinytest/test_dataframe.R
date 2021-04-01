@@ -247,3 +247,24 @@ if (getRversion() < '4.0.0') {
     chk$header <- as.character(chk$header)
 }
 expect_equal(D, chk[])
+
+## sparse array can have duplicate values in index column
+df <- data.frame(
+  index = c(1, 1, 3),
+  char = c("a", "a", "c"),
+  stringsAsFactors = FALSE
+)
+
+uri <- tempfile()
+expect_error(
+    fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=FALSE)
+)
+
+uri <- tempfile()
+expect_silent(
+    arr <- fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=TRUE)
+)
+
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
+expect_equal(df, chk)
