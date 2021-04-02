@@ -363,8 +363,8 @@ setMethod("[", "tiledb_array",
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
 
-  if (length(x@attrs) != 0) {
-    ind <- match(x@attrs, attrnames)
+  if (length(sel) != 0) {
+    ind <- match(sel, attrnames)
     if (length(ind) == 0) {
       stop("Only non-existing columns selected.", call.=FALSE)
     }
