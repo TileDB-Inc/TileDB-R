@@ -583,7 +583,9 @@ setMethod("[", "tiledb_array",
     } else if (ncol(res) > 3) {
       message("case of more than one argument not yet implemented")
     } else if (!is.null(i)) {
-      message("case of row selection not supported for matrix")
+      message("case of row selection not supported for accessing as.matrix")
+    } else if (!is.null(j)) {
+      message("case of column selection not supported for accessing as.matrix")
     } else {
       mat <- matrix(, nrow=max(res[,1]), ncol=max(res[,2]))
       mat[ cbind( res[,1], res[,2] ) ] <- res[,3]

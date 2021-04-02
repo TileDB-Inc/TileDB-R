@@ -1023,3 +1023,37 @@ A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 - 0.5)
 expect_equal(nrow(A[]), 3)
 A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 + 0.5)
 expect_equal(nrow(A[]), 6)
+
+## as.matrix
+tmp <- tempfile()
+dir.create(tmp)
+## Generate a matrix
+n <- 5L
+k <- 4L
+mat <- matrix(1:(n*k), nrow=n, ncol=k)
+dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, n), n, "INT32"),
+                              tiledb_dim("cols", c(1L, k), k, "INT32")))
+schema <- tiledb_array_schema(dom, attrs=tiledb_attr("vals", type="INT32"))
+tiledb_array_create(tmp, schema)
+arr <- tiledb_array(tmp)
+query_layout(arr) <- "COL_MAJOR"    	# needed if we want column order
+arr[] <- mat                        	# we can write directly
+
+arr2 <- tiledb_array(tmp, as.matrix=TRUE)
+mat2 <- arr2[]
+expect_equal(mat, mat2)                 # check round-turn
+
+## check no double selection
+expect_error(tiledb_array(tmp, as.data.frame=TRUE, as.matrix=TRUE))
+## check normal data.frame return when row col select
+expect_true(is.data.frame(suppressMessages(arr2[1:2,])))
+expect_true(is.data.frame(suppressMessages(arr2[,3])))
+
+arr3 <- tiledb_array(tmp, as.data.frame=TRUE)
+df1 <- arr3[]
+df1$vals2 <- df1$vals * 10
+tmp2 <- tempfile()
+fromDataFrame(df1, tmp2)
+
+arr4 <- tiledb_array(tmp2, as.matrix=TRUE)
+expect_true(is.data.frame(suppressMessages(arr4[]))) # will fail if we add list of matrices
