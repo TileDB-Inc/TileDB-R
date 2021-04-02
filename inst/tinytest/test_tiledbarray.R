@@ -1055,9 +1055,14 @@ df1$vals2 <- df1$vals * 10
 tmp2 <- tempfile()
 fromDataFrame(df1, tmp2)
 
-arr4 <- tiledb_array(tmp2, as.matrix=TRUE)
-expect_true(is.data.frame(suppressMessages(arr4[]))) # will fail if we add list of matrices
-
 ## check selecting matrix out of multiple cols
-arr5 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals2"), as.matrix=TRUE)
-expect_equal(arr5[], 10*mat)
+arr4 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals2"), as.matrix=TRUE)
+expect_equal(arr4[], 10*mat)
+arr5 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals"), as.matrix=TRUE)
+expect_equal(arr5[], mat)
+arr6 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals", "vals2"), as.matrix=TRUE)
+res <- arr6[]
+expect_true(is.list(res))
+expect_equal(length(res), 2L)
+expect_equal(res$vals, mat)
+expect_equal(res$vals2, 10*mat)
