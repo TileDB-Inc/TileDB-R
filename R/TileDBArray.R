@@ -568,8 +568,8 @@ setMethod("[", "tiledb_array",
   res <- data.frame(reslist)[seq_len(resrv),]
   colnames(res) <- allnames
 
-  ## reduce output if extended is false
-  if (!x@extended) {
+  ## reduce output if extended is false, or attrs given
+  if (!x@extended || length(sel) > 0) {
     res <- res[, attrnames]
   }
 

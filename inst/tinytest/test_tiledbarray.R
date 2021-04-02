@@ -205,7 +205,7 @@ expect_true(length(attrs(arr)) == 0)
 sels <-  c("age", "job", "education", "duration")
 attrs(arr) <- sels
 dat <- arr[]
-expect_equal(colnames(dat), c("__tiledb_rows", sels))
+expect_equal(colnames(dat), sels)
 extended(arr) <- FALSE
 dat <- arr[]
 expect_equal(colnames(dat), sels)
@@ -1057,3 +1057,7 @@ fromDataFrame(df1, tmp2)
 
 arr4 <- tiledb_array(tmp2, as.matrix=TRUE)
 expect_true(is.data.frame(suppressMessages(arr4[]))) # will fail if we add list of matrices
+
+## check selecting matrix out of multiple cols
+arr5 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals2"), as.matrix=TRUE)
+expect_equal(arr5[], 10*mat)
