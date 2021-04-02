@@ -16,6 +16,7 @@ tiledb_array(
   datetimes_as_int64 = FALSE,
   encryption_key = character(),
   timestamp = as.POSIXct(double(), origin = "1970-01-01"),
+  as.matrix = FALSE,
   ctx = tiledb_get_context()
 )
 }
@@ -49,6 +50,9 @@ in case the array was written with encryption.}
 
 \item{timestamp}{optional A POSIXct Datetime value determining where in time the array is
 to be openened.}
+
+\item{as.matrix}{optional logical switch, defaults to "FALSE"; currently limited to dense
+matrices; in the case of multiple attributes in query lists of matrices are returned}
 
 \item{ctx}{tiledb_ctx (optional)}
 }

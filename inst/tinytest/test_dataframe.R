@@ -33,7 +33,7 @@ expect_equal(irisdf, newdf[,-1])
 arr <- tiledb_array(uri, as.data.frame=TRUE,
                     attrs = c("Petal.Length", "Petal.Width"))
 newdf <- arr[]
-expect_equal(iris[, c("Petal.Length", "Petal.Width")], newdf[,-1])
+expect_equal(iris[, c("Petal.Length", "Petal.Width")], newdf)
 
 
 ## test list

@@ -35,6 +35,8 @@ describes the (min,max) pair of ranges for dimension i}
 
 \item{\code{timestamp}}{A POSIXct datetime variable}
 
+\item{\code{as.matrix}}{A logical value}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 

@@ -39,6 +39,7 @@
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
 #' @slot timestamp A POSIXct datetime variable
+#' @slot as.matrix A logical value
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -53,6 +54,7 @@ setClass("tiledb_array",
                       datetimes_as_int64 = "logical",
                       encryption_key = "character",
                       timestamp = "POSIXct",
+                      as.matrix = "logical",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -78,6 +80,8 @@ setClass("tiledb_array",
 #' in case the array was written with encryption.
 #' @param timestamp optional A POSIXct Datetime value determining where in time the array is
 #' to be openened.
+#' @param as.matrix optional logical switch, defaults to "FALSE"; currently limited to dense
+#' matrices; in the case of multiple attributes in query lists of matrices are returned
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object
 #' @export
@@ -92,12 +96,17 @@ tiledb_array <- function(uri,
                          datetimes_as_int64 = FALSE,
                          encryption_key = character(),
                          timestamp = as.POSIXct(double(), origin="1970-01-01"),
+                         as.matrix = FALSE,
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
     stop("argument ctx must be a tiledb_ctx", call. = FALSE)
   if (missing(uri) || !is.scalar(uri, "character"))
-    stop("argument uri must be a string scalar", call.=FALSE)
+    stop("argument uri must be a string scalar", call. = FALSE)
+  if (as.data.frame && as.matrix)
+    stop("arguments as.data.frame and as.matrix cannot be selected togethers", call. = FALSE)
+  if (isTRUE(is.sparse) && as.matrix)
+    stop("argument as.matrix cannot be selected for sparse arrays", call. = FALSE)
 
   if (length(encryption_key) > 0) {
     if (!is.character(encryption_key))
@@ -139,6 +148,7 @@ tiledb_array <- function(uri,
       datetimes_as_int64 = datetimes_as_int64,
       encryption_key = encryption_key,
       timestamp = timestamp,
+      as.matrix = as.matrix,
       ptr = array_xptr)
 }
 
@@ -199,6 +209,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  datetimes_as_int64 = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
      ,"  encryption_key     = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
      ,"  timestamp          = ", if (length(object@timestamp) == 0) "(none)" else format(object@timestamp), "\n"
+     ,"  as.matrix          = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
      ,sep="")
 })
 
@@ -274,6 +285,11 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'timestamp' slot does not contain a POSIXct value.")
   }
 
+  if (!is.logical(object@as.matrix)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'as.matrix' slot does not contain a logical value.")
+  }
+
   if (!is(object@ptr, "externalptr")) {
     valid <- FALSE
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
@@ -347,8 +363,8 @@ setMethod("[", "tiledb_array",
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
 
-  if (length(x@attrs) != 0) {
-    ind <- match(x@attrs, attrnames)
+  if (length(sel) != 0) {
+    ind <- match(sel, attrnames)
     if (length(ind) == 0) {
       stop("Only non-existing columns selected.", call.=FALSE)
     }
@@ -552,13 +568,37 @@ setMethod("[", "tiledb_array",
   res <- data.frame(reslist)[seq_len(resrv),]
   colnames(res) <- allnames
 
-  ## reduce output if extended is false
-  if (!x@extended) {
+  ## reduce output if extended is false, or attrs given
+  if (!x@extended || length(sel) > 0) {
     res <- res[, attrnames]
   }
 
-  if (!x@as.data.frame) {
+  if (!x@as.data.frame && !x@as.matrix) {
     res <- as.list(res)
+  }
+
+  if (x@as.matrix) {
+    if (ncol(res) < 3) {
+      message("ignoring as.matrix argument with insufficient result set")
+    } else if (!is.null(i)) {
+      message("case of row selection not supported for accessing as.matrix")
+    } else if (!is.null(j)) {
+      message("case of column selection not supported for accessing as.matrix")
+    } else if (ncol(res) == 3) {
+      mat <- matrix(, nrow=max(res[,1]), ncol=max(res[,2]))
+      mat[ cbind( res[,1], res[,2] ) ] <- res[,3]
+      res <- mat
+    } else {                            # case of ncol > 3
+      k <- ncol(res) - 2
+      lst <- vector(mode = "list", length = k)
+      for (i in seq_len(k)) {
+         mat <- matrix(, nrow=max(res[,1]), ncol=max(res[,2]))
+         mat[ cbind( res[,1], res[,2] ) ] <- res[, 2 + i]
+         lst[[i]] <- mat
+      }
+      names(lst) <- tail(colnames(res), k)
+      res <- lst
+    }
   }
 
   invisible(res)
