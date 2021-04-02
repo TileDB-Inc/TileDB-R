@@ -52,7 +52,7 @@ in case the array was written with encryption.}
 to be openened.}
 
 \item{as.matrix}{optional logical switch, defaults to "FALSE"; currently limited to dense
-matrices from queries returning one attribute}
+matrices; in the case of multiple attributes in query lists of matrices are returned}
 
 \item{ctx}{tiledb_ctx (optional)}
 }

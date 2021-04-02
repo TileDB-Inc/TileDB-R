@@ -81,7 +81,7 @@ setClass("tiledb_array",
 #' @param timestamp optional A POSIXct Datetime value determining where in time the array is
 #' to be openened.
 #' @param as.matrix optional logical switch, defaults to "FALSE"; currently limited to dense
-#' matrices from queries returning one attribute
+#' matrices; in the case of multiple attributes in query lists of matrices are returned
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object
 #' @export
