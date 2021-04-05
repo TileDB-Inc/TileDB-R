@@ -1,14 +1,24 @@
 # Ongoing
 
-* This release of the R package builds against [TileDB 2.2.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.4), but has also been tested against two previous release series as well as the development version.
+* This release of the R package builds against [TileDB 2.2.7](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.7), but has also been tested against two previous release series as well as the development version.
 
 ## Improvements
+
+* A new vignette show use of TileDB array via RMariaDB and the MyTile extension to MariaDB (#221)
+
+* Matrices can now be returned directly from suitable two-dimensional TileDB arrays (#225)
 
 ## Bug Fixes
 
 * Two tests with datetime comparisons which fail only on one macOS system are now conditional (#216)
 
 * Result sets with all-character column now fall back to estimated result sizes (#217)
+
+* Setup of support for duplicate values in sparse arrays has been corrected (#223)
+
+* Error messages concerning an array types and selection mismatch are now clearer (#224)
+
+* Writes from data.frame objects to dense array revert back to column-major order (#226)
 
 
 # 0.9.0
