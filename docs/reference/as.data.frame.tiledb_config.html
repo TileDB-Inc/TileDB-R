@@ -182,70 +182,71 @@
 #&gt; 21                      sm.dedup_coords                  false
 #&gt; 22            sm.enable_signal_handlers                   true
 #&gt; 23              sm.io_concurrency_level                     12
-#&gt; 24                     sm.memory_budget             5368709120
-#&gt; 25                 sm.memory_budget_var            10737418240
-#&gt; 26                   sm.num_tbb_threads                     -1
-#&gt; 27          sm.skip_checksum_validation                  false
-#&gt; 28     sm.sub_partitioner_memory_budget                      0
-#&gt; 29                   sm.tile_cache_size               10000000
-#&gt; 30                       sm.vacuum.mode              fragments
-#&gt; 31               sm.var_offsets.bitsize                     64
-#&gt; 32         sm.var_offsets.extra_element                  false
-#&gt; 33                  sm.var_offsets.mode                  bytes
-#&gt; 34              vfs.azure.blob_endpoint                       
-#&gt; 35      vfs.azure.block_list_block_size                5242880
-#&gt; 36           vfs.azure.max_parallel_ops                     12
-#&gt; 37        vfs.azure.storage_account_key                       
-#&gt; 38       vfs.azure.storage_account_name                       
-#&gt; 39      vfs.azure.use_block_list_upload                   true
-#&gt; 40                  vfs.azure.use_https                   true
-#&gt; 41            vfs.file.enable_filelocks                   true
-#&gt; 42            vfs.file.max_parallel_ops                     12
-#&gt; 43 vfs.file.posix_directory_permissions                    755
-#&gt; 44      vfs.file.posix_file_permissions                    644
-#&gt; 45             vfs.gcs.max_parallel_ops                     12
-#&gt; 46              vfs.gcs.multi_part_size                5242880
-#&gt; 47                   vfs.gcs.project_id                       
-#&gt; 48           vfs.gcs.request_timeout_ms                   3000
-#&gt; 49        vfs.gcs.use_multi_part_upload                   true
-#&gt; 50      vfs.hdfs.kerb_ticket_cache_path                       
-#&gt; 51               vfs.hdfs.name_node_uri                       
-#&gt; 52                    vfs.hdfs.username                       
-#&gt; 53                    vfs.min_batch_gap                 512000
-#&gt; 54                   vfs.min_batch_size               20971520
-#&gt; 55                vfs.min_parallel_size               10485760
-#&gt; 56            vfs.read_ahead_cache_size               10485760
-#&gt; 57                  vfs.read_ahead_size                 102400
-#&gt; 58             vfs.s3.aws_access_key_id                       
-#&gt; 59               vfs.s3.aws_external_id                       
-#&gt; 60            vfs.s3.aws_load_frequency                       
-#&gt; 61                  vfs.s3.aws_role_arn                       
-#&gt; 62         vfs.s3.aws_secret_access_key                       
-#&gt; 63              vfs.s3.aws_session_name                       
-#&gt; 64             vfs.s3.aws_session_token                       
-#&gt; 65                       vfs.s3.ca_file                       
-#&gt; 66                       vfs.s3.ca_path                       
-#&gt; 67             vfs.s3.connect_max_tries                      5
-#&gt; 68          vfs.s3.connect_scale_factor                     25
-#&gt; 69            vfs.s3.connect_timeout_ms                  10800
-#&gt; 70             vfs.s3.endpoint_override                       
-#&gt; 71                 vfs.s3.logging_level                    Off
-#&gt; 72              vfs.s3.max_parallel_ops                     12
-#&gt; 73           vfs.s3.multipart_part_size                5242880
-#&gt; 74                    vfs.s3.proxy_host                       
-#&gt; 75                vfs.s3.proxy_password                       
-#&gt; 76                    vfs.s3.proxy_port                      0
-#&gt; 77                  vfs.s3.proxy_scheme                   http
-#&gt; 78                vfs.s3.proxy_username                       
-#&gt; 79                        vfs.s3.region              us-east-1
-#&gt; 80            vfs.s3.request_timeout_ms                   3000
-#&gt; 81                vfs.s3.requester_pays                  false
-#&gt; 82                        vfs.s3.scheme                  https
-#&gt; 83                           vfs.s3.sse                       
-#&gt; 84                vfs.s3.sse_kms_key_id                       
-#&gt; 85          vfs.s3.use_multipart_upload                   true
-#&gt; 86        vfs.s3.use_virtual_addressing                   true
-#&gt; 87                    vfs.s3.verify_ssl                   true</div><div class='input'>
+#&gt; 24             sm.max_tile_overlap_size              314572800
+#&gt; 25                     sm.memory_budget             5368709120
+#&gt; 26                 sm.memory_budget_var            10737418240
+#&gt; 27                    sm.read_range_oob                  error
+#&gt; 28          sm.skip_checksum_validation                  false
+#&gt; 29     sm.sub_partitioner_memory_budget                      0
+#&gt; 30                   sm.tile_cache_size               10000000
+#&gt; 31                       sm.vacuum.mode              fragments
+#&gt; 32               sm.var_offsets.bitsize                     64
+#&gt; 33         sm.var_offsets.extra_element                  false
+#&gt; 34                  sm.var_offsets.mode                  bytes
+#&gt; 35              vfs.azure.blob_endpoint                       
+#&gt; 36      vfs.azure.block_list_block_size                5242880
+#&gt; 37           vfs.azure.max_parallel_ops                     12
+#&gt; 38        vfs.azure.storage_account_key                       
+#&gt; 39       vfs.azure.storage_account_name                       
+#&gt; 40      vfs.azure.use_block_list_upload                   true
+#&gt; 41                  vfs.azure.use_https                   true
+#&gt; 42            vfs.file.enable_filelocks                   true
+#&gt; 43            vfs.file.max_parallel_ops                     12
+#&gt; 44 vfs.file.posix_directory_permissions                    755
+#&gt; 45      vfs.file.posix_file_permissions                    644
+#&gt; 46             vfs.gcs.max_parallel_ops                     12
+#&gt; 47              vfs.gcs.multi_part_size                5242880
+#&gt; 48                   vfs.gcs.project_id                       
+#&gt; 49           vfs.gcs.request_timeout_ms                   3000
+#&gt; 50        vfs.gcs.use_multi_part_upload                   true
+#&gt; 51      vfs.hdfs.kerb_ticket_cache_path                       
+#&gt; 52               vfs.hdfs.name_node_uri                       
+#&gt; 53                    vfs.hdfs.username                       
+#&gt; 54                    vfs.min_batch_gap                 512000
+#&gt; 55                   vfs.min_batch_size               20971520
+#&gt; 56                vfs.min_parallel_size               10485760
+#&gt; 57            vfs.read_ahead_cache_size               10485760
+#&gt; 58                  vfs.read_ahead_size                 102400
+#&gt; 59             vfs.s3.aws_access_key_id                       
+#&gt; 60               vfs.s3.aws_external_id                       
+#&gt; 61            vfs.s3.aws_load_frequency                       
+#&gt; 62                  vfs.s3.aws_role_arn                       
+#&gt; 63         vfs.s3.aws_secret_access_key                       
+#&gt; 64              vfs.s3.aws_session_name                       
+#&gt; 65             vfs.s3.aws_session_token                       
+#&gt; 66                       vfs.s3.ca_file                       
+#&gt; 67                       vfs.s3.ca_path                       
+#&gt; 68             vfs.s3.connect_max_tries                      5
+#&gt; 69          vfs.s3.connect_scale_factor                     25
+#&gt; 70            vfs.s3.connect_timeout_ms                  10800
+#&gt; 71             vfs.s3.endpoint_override                       
+#&gt; 72                 vfs.s3.logging_level                    Off
+#&gt; 73              vfs.s3.max_parallel_ops                     12
+#&gt; 74           vfs.s3.multipart_part_size                5242880
+#&gt; 75                    vfs.s3.proxy_host                       
+#&gt; 76                vfs.s3.proxy_password                       
+#&gt; 77                    vfs.s3.proxy_port                      0
+#&gt; 78                  vfs.s3.proxy_scheme                   http
+#&gt; 79                vfs.s3.proxy_username                       
+#&gt; 80                        vfs.s3.region              us-east-1
+#&gt; 81            vfs.s3.request_timeout_ms                   3000
+#&gt; 82                vfs.s3.requester_pays                  false
+#&gt; 83                        vfs.s3.scheme                  https
+#&gt; 84                           vfs.s3.sse                       
+#&gt; 85                vfs.s3.sse_kms_key_id                       
+#&gt; 86          vfs.s3.use_multipart_upload                   true
+#&gt; 87        vfs.s3.use_virtual_addressing                   true
+#&gt; 88                    vfs.s3.verify_ssl                   true</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -258,7 +259,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Dirk Eddelbuettel.</p>
+  <p>Developed by <a href='https://tiledb.com'><img src='https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png' height=24></a>, Dirk Eddelbuettel.</p>
 </div>
 
 <div class="pkgdown">

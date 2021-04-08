@@ -1,10 +1,10 @@
-<a href="https://tiledb.com"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
-
+<!-- badges: start -->
 [![Build Status](https://img.shields.io/azure-devops/build/tiledb-inc/836549eb-f74a-4986-a18f-7fbba6bbb5f0/24/master?label=Azure%20Pipelines&logo=azure-pipelines&style=flat-square)](https://dev.azure.com/TileDB-Inc/CI/_build/latest?definitionId=24&branchName=master)
 ![R-CMD-check](https://github.com/TileDB-Inc/TileDB-R/workflows/R-CMD-check/badge.svg)
 [![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
+<!-- badges: end -->
 
-# TileDB-R
+# TileDB-R <img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="300" align="right"/>
 
 The TileDB R package offers an [R](https://www.r-project.org/) interface to the [storage
 engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
