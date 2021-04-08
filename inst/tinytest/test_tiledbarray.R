@@ -585,7 +585,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -616,7 +616,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -647,7 +647,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -678,7 +678,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -709,7 +709,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -740,7 +740,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -771,7 +771,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -803,7 +803,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- 1:16
   ## can write as data.frame
@@ -845,7 +845,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
-  query_layout(A) <- "ROW_MAJOR"      # as in issue #222, before PR #226 changed to "COL_MAJOR"
+  query_layout(A) <- "UNORDERED"
 
   data <- data.frame(a1=1:16,
                      a2=1:16,

@@ -35,7 +35,6 @@ tiledb:::.delete_arrow_schema_from_double(as)
 tiledb:::.delete_arrow_array_from_double(aa)
 
 
-
 ## round-turn test 1: write tiledb first, create arrow object via zero-copy
 suppressMessages(library(bit64))
 n <- 10L
@@ -69,6 +68,7 @@ for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "u
     attrlst[[col]] <- tiledb_query_create_buffer_ptr(qry, toupper(col), vals)
     qry <- tiledb_query_set_buffer_ptr(qry, col, attrlst[[col]])
 }
+tiledb_query_set_layout(qry, "UNORDERED")
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 
@@ -157,6 +157,7 @@ for (nam in nms) {
 
     lst[[nam]] <- list(aa=aa, as=as)
 }
+tiledb_query_set_layout(qry, "UNORDERED")
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 
