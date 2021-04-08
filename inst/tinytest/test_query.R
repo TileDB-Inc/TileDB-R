@@ -170,6 +170,7 @@ qry <- tiledb_query_set_buffer(qry, "rows", rows)
 vals <- seq(101,110)
 qry <- tiledb_query_set_buffer(qry, "vals", vals)
 
+tiledb_query_set_layout(qry, "UNORDERED")
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 expect_equal(tiledb_query_status(qry), "COMPLETE")
