@@ -1954,6 +1954,12 @@ NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array
   } else if (typestr == "INT32") {
     auto p = array->non_empty_domain<int32_t>(idx);
     return NumericVector::create(p.first, p.second);
+  } else if (typestr == "FLOAT64") {
+    auto p = array->non_empty_domain<double>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "FLOAT32") {
+    auto p = array->non_empty_domain<float>(idx);
+    return NumericVector::create(p.first, p.second);
   } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_MS") {
     // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(idx);
