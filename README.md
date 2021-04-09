@@ -2,7 +2,7 @@
 ![R-CMD-check](https://github.com/TileDB-Inc/TileDB-R/workflows/R-CMD-check/badge.svg)
 [![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
 
-# <img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"/>
+# <a href="https://tiledb.com/"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
 
 The TileDB R package offers an [R](https://www.r-project.org/) interface to the [storage
 engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
