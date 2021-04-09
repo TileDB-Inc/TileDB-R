@@ -1943,22 +1943,58 @@ NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array
                                                               int32_t idx,
                                                               std::string typestr) {
 #if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  if (typestr == "DATETIME_NS") {
+  if (typestr == "INT64") {
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
-    return makeNanotime(v);
-  } else if (typestr == "INT64") {
-    auto p = array->non_empty_domain<int64_t>(idx);
-    std::vector<int64_t> v{p.first, p.second};
+    return makeInteger64(v);
+  } else if (typestr == "UINT64") {
+    auto p = array->non_empty_domain<uint64_t>(idx);
+    std::vector<int64_t> v{ static_cast<int64_t>(p.first), static_cast<int64_t>(p.second) };
     return makeInteger64(v);
   } else if (typestr == "INT32") {
     auto p = array->non_empty_domain<int32_t>(idx);
     return NumericVector::create(p.first, p.second);
-  } else if (typestr == "DATETIME_DAY" || typestr == "DATETIME_MS") {
+  } else if (typestr == "UINT32") {
+    auto p = array->non_empty_domain<uint32_t>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "INT16") {
+    auto p = array->non_empty_domain<int16_t>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "UINT16") {
+    auto p = array->non_empty_domain<uint16_t>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "INT8") {
+    auto p = array->non_empty_domain<int8_t>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "UINT8") {
+    auto p = array->non_empty_domain<uint8_t>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "FLOAT64") {
+    auto p = array->non_empty_domain<double>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "FLOAT32") {
+    auto p = array->non_empty_domain<float>(idx);
+    return NumericVector::create(p.first, p.second);
+  } else if (typestr == "DATETIME_YEAR" ||
+             typestr == "DATETIME_MONTH" ||
+             typestr == "DATETIME_WEEK" ||
+             typestr == "DATETIME_DAY" ||
+             typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS"  ||
+             typestr == "DATETIME_US"  ||
+             typestr == "DATETIME_PS"  ||
+             typestr == "DATETIME_FS"  ||
+             typestr == "DATETIME_AS"    ) {
     // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
     return makeInteger64(v);
+  } else if (typestr == "DATETIME_NS") {
+    auto p = array->non_empty_domain<int64_t>(idx);
+    std::vector<int64_t> v{p.first, p.second};
+    return makeNanotime(v);
   } else {
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
