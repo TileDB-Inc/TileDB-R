@@ -314,7 +314,7 @@ setValidity("tiledb_array", function(object) {
 #' ranges.
 #' @param ... Extra parameters for method signature, currently unused.
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
-#' @return An element from the sparse array
+#' @return The resulting elements in the selected format
 #' @import nanotime
 #' @aliases [,tiledb_array
 #' @aliases [,tiledb_array-method
@@ -335,6 +335,8 @@ setMethod("[", "tiledb_array",
   asint64 <- x@datetimes_as_int64
   enckey <- x@encryption_key
   tstamp <- x@timestamp
+
+  sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -570,7 +572,11 @@ setMethod("[", "tiledb_array",
 
   ## reduce output if extended is false, or attrs given
   if (!x@extended || length(sel) > 0) {
-    res <- res[, attrnames]
+      res <- res[, if (sparse) allnames else attrnames]
+      k <- match("__tiledb_rows", colnames(res))
+      if (is.finite(k)) {
+          res <- res[, -k]
+      }
   }
 
   if (!x@as.data.frame && !x@as.matrix) {
