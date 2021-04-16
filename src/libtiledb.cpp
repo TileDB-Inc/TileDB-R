@@ -627,8 +627,19 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
       dtype != TILEDB_DATETIME_PS &&
       dtype != TILEDB_DATETIME_FS &&
       dtype != TILEDB_DATETIME_AS &&
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
+      dtype != TILEDB_TIME_HR &&
+      dtype != TILEDB_TIME_MIN &&
+      dtype != TILEDB_TIME_SEC &&
+      dtype != TILEDB_TIME_MS &&
+      dtype != TILEDB_TIME_US &&
+      dtype != TILEDB_TIME_NS &&
+      dtype != TILEDB_TIME_PS &&
+      dtype != TILEDB_TIME_FS &&
+      dtype != TILEDB_TIME_AS &&
+#endif
       dtype != TILEDB_STRING_ASCII) {
-    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT{32,64}), DATETIME_{YEAR,MONTH,WEEK,DAY,HR,MIN,SEC,MS,US,NS,PS,FS,AS}, STRING_ACII domains supported");
+    Rcpp::stop("only integer ((U)INT{8,16,32,64}), real (FLOAT{32,64}), DATETIME_{YEAR,MONTH,WEEK,DAY,HR,MIN,SEC,MS,US,NS,PS,FS,AS}, TIME_{HR,MIN,SEC,MS,US,NS,PS,FS}, STRING_ASCII domains supported");
   }
   // check that the dimension type aligns with the domain and tiledb_extent type
   if (dtype == TILEDB_INT32 && (TYPEOF(domain) != INTSXP || TYPEOF(tile_extent) != INTSXP)) {
@@ -810,7 +821,19 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
              dtype == TILEDB_DATETIME_NS  ||
              dtype == TILEDB_DATETIME_PS  ||
              dtype == TILEDB_DATETIME_FS  ||
-             dtype == TILEDB_DATETIME_AS    ) {
+             dtype == TILEDB_DATETIME_AS
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
+             || dtype == TILEDB_TIME_HR
+             || dtype == TILEDB_TIME_MIN
+             || dtype == TILEDB_TIME_SEC
+             || dtype == TILEDB_TIME_MS
+             || dtype == TILEDB_TIME_US
+             || dtype == TILEDB_TIME_NS
+             || dtype == TILEDB_TIME_PS
+             || dtype == TILEDB_TIME_FS
+             || dtype == TILEDB_TIME_AS
+#endif
+             ) {
     auto domain_vec = as<std::vector<int64_t>>(domain);
     if (domain_vec.size() != 2) {
       Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
