@@ -233,6 +233,26 @@ std::string tiledb_datatype_R_type(std::string datatype) {
       return "DATETIME_US";
     case TILEDB_DATETIME_NS:
       return "DATETIME_NS";
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
+    case TILEDB_TIME_HR:
+      return "TIME_HR";
+    case TILEDB_TIME_MIN:
+      return "TIME_MIN";
+    case TILEDB_TIME_SEC:
+      return "TIME_SEC";
+    case TILEDB_TIME_MS:
+      return "TIME_MS";
+    case TILEDB_TIME_US:
+      return "TIME_US";
+    case TILEDB_TIME_NS:
+      return "TIME_NS";
+    case TILEDB_TIME_PS:
+      return "TIME_PS";
+    case TILEDB_TIME_FS:
+      return "TIME_FS";
+    case TILEDB_TIME_AS:
+      return "TIME_AS";
+#endif
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
