@@ -93,6 +93,7 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
       return "DATETIME_FS";
     case TILEDB_DATETIME_AS:
       return "DATETIME_AS";
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     case TILEDB_TIME_HR:
       return "TIME_HR";
     case TILEDB_TIME_MIN:
@@ -111,6 +112,7 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
       return "TIME_FS";
     case TILEDB_TIME_AS:
       return "TIME_AS";
+#endif
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
@@ -167,6 +169,26 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_DATETIME_FS;
   } else if (typestr == "DATETIME_AS") {
     return TILEDB_DATETIME_AS;
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
+  } else if (typestr == "TIME_HR") {
+    return TILEDB_TIME_HR;
+  } else if (typestr == "TIME_MIN") {
+    return TILEDB_TIME_MIN;
+  } else if (typestr == "TIME_SEC") {
+    return TILEDB_TIME_SEC;
+  } else if (typestr == "TIME_MS") {
+    return TILEDB_TIME_MS;
+  } else if (typestr == "TIME_US") {
+    return TILEDB_TIME_US;
+  } else if (typestr == "TIME_NS") {
+    return TILEDB_TIME_NS;
+  } else if (typestr == "TIME_PS") {
+    return TILEDB_TIME_PS;
+  } else if (typestr == "TIME_FS") {
+    return TILEDB_TIME_FS;
+  } else if (typestr == "TIME_AS") {
+    return TILEDB_TIME_AS;
+#endif
   } else if (typestr == "UTF8") {
     return TILEDB_STRING_UTF8;
   } else {
