@@ -29,8 +29,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins(cpp11)]]
-
 const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
   switch (dtype) {
     case TILEDB_INT8:
@@ -95,6 +93,24 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
       return "DATETIME_FS";
     case TILEDB_DATETIME_AS:
       return "DATETIME_AS";
+    case TILEDB_TIME_HR:
+      return "TIME_HR";
+    case TILEDB_TIME_MIN:
+      return "TIME_MIN";
+    case TILEDB_TIME_SEC:
+      return "TIME_SEC";
+    case TILEDB_TIME_MS:
+      return "TIME_MS";
+    case TILEDB_TIME_US:
+      return "TIME_US";
+    case TILEDB_TIME_NS:
+      return "TIME_NS";
+    case TILEDB_TIME_PS:
+      return "TIME_PS";
+    case TILEDB_TIME_FS:
+      return "TIME_FS";
+    case TILEDB_TIME_AS:
+      return "TIME_AS";
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
