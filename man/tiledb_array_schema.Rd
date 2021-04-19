@@ -13,6 +13,7 @@ tiledb_array_schema(
   coords_filter_list = NULL,
   offsets_filter_list = NULL,
   capacity = 10000L,
+  allows_dups = FALSE,
   ctx = tiledb_get_context()
 )
 }
@@ -32,6 +33,8 @@ tiledb_array_schema(
 \item{offsets_filter_list}{(optional)}
 
 \item{capacity}{(optional)}
+
+\item{allows_dups}{(optional, requires \sQuote{spars} to be TRUE)}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }
