@@ -653,6 +653,7 @@ setMethod("[<-", "tiledb_array",
       return(x)
     }
   }
+  if (is.null(names(value))) stop("No column names supplied", call. = FALSE)
 
   ## add defaults
   if (missing(i)) i <- NULL
