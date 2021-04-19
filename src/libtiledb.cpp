@@ -1277,7 +1277,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     } else if (attr_dtype == TILEDB_FLOAT32) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
-    } else if (attr_dtype == TILEDB_CHAR) {
+    } else if (attr_dtype == TILEDB_CHAR || attr_dtype == TILEDB_STRING_ASCII) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
         uint64_t num = static_cast<uint64_t>(ncells);
@@ -1311,7 +1311,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
         Rcpp::Rcout << type << std::endl;
         Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT{32,64}), "
                    "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
-                   "nanotime (DATETIME_NS) and character (CHAR) attributes "
+                   "nanotime (DATETIME_NS) and character (CHAR,ASCII) attributes "
                    "are supported");
     }
     attr->set_filter_list(*filter_list);
