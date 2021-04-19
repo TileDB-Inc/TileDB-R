@@ -44,6 +44,7 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param coords_filter_list (optional)
 #' @param offsets_filter_list (optional)
 #' @param capacity (optional)
+#' @param allows_dups (optional, requires \sQuote{spars} to be TRUE)
 #' @param ctx tiledb_ctx object (optional)
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -66,6 +67,7 @@ tiledb_array_schema <- function(domain,
                                 coords_filter_list = NULL,
                                 offsets_filter_list = NULL,
                                 capacity = 10000L,
+                                allows_dups = FALSE,
                                 ctx = tiledb_get_context()) {
   if (!is(ctx, "tiledb_ctx")) {
     stop("ctx argument must be a tiledb_ctx")
@@ -95,6 +97,12 @@ tiledb_array_schema <- function(domain,
   if (!is.logical(sparse)) {
     stop("sparse argument must be a logical TRUE or FALSE")
   }
+  if (!is.logical(allows_dups)) {
+    stop("allows_dups argument must be a logical TRUE or FALSE")
+  }
+  if (allows_dups && !sparse) {
+    stop("allows_dups argument requires sparse argument")
+  }
   attr_ptrs <- lapply(attrs, function(obj) slot(obj, "ptr"))
   coords_filter_list_ptr <- NULL
   if (!is.null(coords_filter_list)) {
@@ -107,6 +115,9 @@ tiledb_array_schema <- function(domain,
   ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order,
                                 coords_filter_list_ptr, offsets_filter_list_ptr, sparse)
   libtiledb_array_schema_set_capacity(ptr, capacity)
+  if (allows_dups) {
+      libtiledb_array_schema_set_allows_dups(ptr, TRUE)
+  }
   return(new("tiledb_array_schema", ptr = ptr))
 }
 

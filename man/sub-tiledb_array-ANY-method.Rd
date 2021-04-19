@@ -26,7 +26,7 @@ ranges.}
 \item{drop}{Optional logical switch to drop dimensions, default FALSE, currently unused.}
 }
 \value{
-An element from the sparse array
+The resulting elements in the selected format
 }
 \description{
 Heterogenous domains are supported, including timestamps and characters.
