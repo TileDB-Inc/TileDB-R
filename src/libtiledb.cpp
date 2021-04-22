@@ -3028,15 +3028,25 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       uint8_t stride = as<uint16_t>(strides);
       query->add_range(uidx, start, end, stride);
     }
-  } else if (typestr == "DATETIME_YEAR" ||
+  } else if (typestr == "DATETIME_YEAR"  ||
              typestr == "DATETIME_MONTH" ||
-             typestr == "DATETIME_WEEK" ||
-             typestr == "DATETIME_DAY" ||
-             typestr == "DATETIME_HR"  ||
-             typestr == "DATETIME_MIN" ||
-             typestr == "DATETIME_SEC" ||
-             typestr == "DATETIME_MS" ||
-             typestr == "DATETIME_US" ||
+             typestr == "DATETIME_WEEK"  ||
+             typestr == "DATETIME_DAY"   ||
+             typestr == "DATETIME_HR"    ||
+             typestr == "DATETIME_MIN"   ||
+             typestr == "DATETIME_SEC"   ||
+             typestr == "DATETIME_MS"    ||
+             typestr == "DATETIME_US"   ) {
+    int64_t start = makeScalarInteger64(as<double>(starts));
+    int64_t end = makeScalarInteger64(as<double>(ends));
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+      //Rcpp::Rcout << "Added range (" << start << "," << end << ")\n";
+    } else {
+      int64_t stride = as<int64_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (
              typestr == "DATETIME_NS" ||
              typestr == "DATETIME_FS" ||
              typestr == "DATETIME_PS" ||
@@ -3055,6 +3065,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     std::string end = as<std::string>(ends);
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
+      //Rcpp::Rcout << "Added range (" << start << "," << end << ")\n";
     } else {
       Rcpp::stop("Non-emoty stride for string not supported yet.");
     }
