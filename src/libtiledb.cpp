@@ -2978,9 +2978,10 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     uint64_t start = static_cast<uint64_t>(makeScalarInteger64(as<double>(starts)));
     uint64_t end = static_cast<uint64_t>(makeScalarInteger64(as<double>(ends)));
     if (strides == R_NilValue) {
+      //Rcpp::Rcout << "Added range (" << start << "," << end << ")\n";
       query->add_range(uidx, start, end);
     } else {
-      uint64_t stride = static_cast<uint64_t>(makeScalarInteger64(as<double>(strides)));
+      uint64_t stride = makeScalarInteger64(as<double>(strides));
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "UINT32") {
@@ -3037,11 +3038,15 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
              typestr == "DATETIME_SEC"   ||
              typestr == "DATETIME_MS"    ||
              typestr == "DATETIME_US"   ) {
+    //int64_t start = date_to_int64(as<Date>(starts), _string_to_tiledb_datatype(typestr));
     int64_t start = makeScalarInteger64(as<double>(starts));
+    //int64_t end = date_to_int64(as<Date>(ends), _string_to_tiledb_datatype(typestr));
     int64_t end = makeScalarInteger64(as<double>(ends));
     if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
       //Rcpp::Rcout << "Added range (" << start << "," << end << ")\n";
+      //Rcpp::print(starts);
+      //Rcpp::print(ends);
+      query->add_range(uidx, start, end);
     } else {
       int64_t stride = as<int64_t>(strides);
       query->add_range(uidx, start, end, stride);
@@ -3054,6 +3059,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     int64_t start = makeScalarInteger64(as<double>(starts));
     int64_t end = makeScalarInteger64(as<double>(ends));
     if (strides == R_NilValue) {
+      //Rcpp::Rcout << "Added range (" << start << "," << end << ")\n";
       query->add_range(uidx, start, end);
     } else {
       int64_t stride = as<int64_t>(strides);
@@ -3064,8 +3070,8 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     std::string start = as<std::string>(starts);
     std::string end = as<std::string>(ends);
     if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
       //Rcpp::Rcout << "Added range (" << start << "," << end << ")\n";
+      query->add_range(uidx, start, end);
     } else {
       Rcpp::stop("Non-emoty stride for string not supported yet.");
     }
@@ -3074,6 +3080,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     float start = as<float>(starts);
     float end = as<float>(ends);
     if (strides == R_NilValue) {
+      //Rcpp::Rcout << "Added range (" << start << "," << end << ")\n";
       query->add_range(uidx, start, end);
     } else {
       float stride = as<float>(strides);
