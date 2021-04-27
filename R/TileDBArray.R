@@ -449,10 +449,7 @@ setMethod("[", "tiledb_array",
     ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
     #domdim <- domain(dimensions(dom)[[1]])
     if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) { # || nonemptydom[[1]][1] > domdim[1])
-      #cat("AA\n")
-      #print(nonemptydom[[1]])
       vec <- .mapDatetime2integer64(nonemptydom[[1]], dimtypes[1])
-
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], vec[1], vec[2])
       rangeunset <- FALSE
     }
@@ -463,7 +460,6 @@ setMethod("[", "tiledb_array",
     if (length(i) == 0) stop("No content to parse in row argument.")
     for (ii in 1:length(i)) {
       el <- i[[ii]]
-      #cat("BB\n")
       vec <- .mapDatetime2integer64(c(min(eval(el)), max(eval(el))), dimtypes[1])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], vec[1], vec[2])
     }
@@ -479,7 +475,6 @@ setMethod("[", "tiledb_array",
       #domdim <- domain(dimensions(dom)[[2]])
       if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) # || nonemptydom[[2]][1] > domdim[1])
         if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) {
-          #cat("CC\n")
           vec <- .mapDatetime2integer64(nonemptydom[[2]], dimtypes[2])
           qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], vec[1], vec[2])
         }
@@ -493,7 +488,6 @@ setMethod("[", "tiledb_array",
     if (length(j) == 0) stop("No content to parse in col argument.")
     for (ii in 1:length(j)) {
       el <- j[[ii]]
-      #cat("DD\n")
       vec <- .mapDatetime2integer64(c(min(eval(el)), max(eval(el))), dimtypes[2])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], vec[1], vec[2])
       rangeunset <- FALSE
@@ -506,7 +500,6 @@ setMethod("[", "tiledb_array",
       #cat("Adding non-zero dim", k, "\n")
       m <- x@selected_ranges[[k]]
       for (i in seq_len(nrow(m))) {
-        #cat("EE\n")
         vec <- .mapDatetime2integer64(c(m[i,1], m[i,2]), dimtypes[k])
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
       }
