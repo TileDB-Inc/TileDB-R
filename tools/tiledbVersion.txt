@@ -1,2 +1,2 @@
-version: 2.2.7
-sha: a788ce5
+version: 2.2.8
+sha: 6e7a5a2
