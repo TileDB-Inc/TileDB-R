@@ -299,6 +299,37 @@ setValidity("tiledb_array", function(object) {
 
 })
 
+## Internal helper function to map DATETIME_* data to the internal representation (where
+## we mostly follow NumPy). An example is DATETIME_YEAR where the current year (2021) is
+## encoded as the offset relative to the _year_ of the epoch, i.e. 51.  When an R user submits
+## a date type as a min or max value for a range, if would likely be as.Date("2021-01-01")
+## which, being an R date, has an internal representation of _days_ since the epoch, i.e.
+## as.numeric(as.Date("2021-01-01")) yields 18628.
+##
+## We also convert to integer64 because that is
+.mapDatetime2integer64 <- function(val, dtype) {
+    ## in case it is not a datetime type, or already an int64, return unchanged
+    if (!grepl("^DATETIME_", dtype) || inherits(val, "integer64"))
+        return(val)
+
+    val <- switch(dtype,
+                  "DATETIME_YEAR" = as.numeric(strftime(val, "%Y")) - 1970,
+                  "DATETIME_MONTH" = 12*(as.numeric(strftime(val, "%Y")) - 1970) + as.numeric(strftime(val, "%m")) - 1,
+                  "DATETIME_WEEK" = as.numeric(val)/7,
+                  "DATETIME_DAY" = as.numeric(val),
+                  "DATETIME_HR" = as.numeric(val)/3600,
+                  "DATETIME_MIN" = as.numeric(val)/60,
+                  "DATETIME_SEC" = as.numeric(val),
+                  "DATETIME_MS" = as.numeric(val) * 1e3,
+                  "DATETIME_US" = as.numeric(val) * 1e6,
+                  "DATETIME_NS" = as.numeric(val),
+                  "DATETIME_PS" = as.numeric(val) * 1e3,
+                  "DATETIME_FS" = as.numeric(val) * 1e6,
+                  "DATETIME_AS" = as.numeric(val) * 1e9)
+    bit64::as.integer64(val)
+}
+
+
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
 #' Heterogenous domains are supported, including timestamps and characters.
@@ -417,19 +448,20 @@ setMethod("[", "tiledb_array",
        (length(x@selected_ranges) >= 1 && is.null(x@selected_ranges[[1]])))) {
     ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
     #domdim <- domain(dimensions(dom)[[1]])
-    if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) # || nonemptydom[[1]][1] > domdim[1])
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
-                                                    nonemptydom[[1]][1], nonemptydom[[1]][2])
+    if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) { # || nonemptydom[[1]][1] > domdim[1])
+      vec <- .mapDatetime2integer64(nonemptydom[[1]], dimtypes[1])
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], vec[1], vec[2])
       rangeunset <- FALSE
+    }
   }
-  ## if we have is, use it
+  ## if we have it, use it
   if (!is.null(i)) {
     ##if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
     if (length(i) == 0) stop("No content to parse in row argument.")
     for (ii in 1:length(i)) {
       el <- i[[ii]]
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1],
-                                                    min(eval(el)), max(eval(el)))
+      vec <- .mapDatetime2integer64(c(min(eval(el)), max(eval(el))), dimtypes[1])
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], vec[1], vec[2])
     }
     rangeunset <- FALSE
   }
@@ -442,9 +474,10 @@ setMethod("[", "tiledb_array",
       ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
       #domdim <- domain(dimensions(dom)[[2]])
       if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) # || nonemptydom[[2]][1] > domdim[1])
-        if (nonemptydom[[2]][1] != nonemptydom[[2]][2])
-          qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
-                                                        nonemptydom[[2]][1], nonemptydom[[2]][2])
+        if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) {
+          vec <- .mapDatetime2integer64(nonemptydom[[2]], dimtypes[2])
+          qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], vec[1], vec[2])
+        }
       rangeunset <- FALSE
     }
   }
@@ -455,8 +488,8 @@ setMethod("[", "tiledb_array",
     if (length(j) == 0) stop("No content to parse in col argument.")
     for (ii in 1:length(j)) {
       el <- j[[ii]]
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2],
-                                                    min(eval(el)), max(eval(el)))
+      vec <- .mapDatetime2integer64(c(min(eval(el)), max(eval(el))), dimtypes[2])
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], vec[1], vec[2])
       rangeunset <- FALSE
     }
   }
@@ -464,9 +497,11 @@ setMethod("[", "tiledb_array",
   ## if ranges selected, use those
   for (k in seq_len(length(x@selected_ranges))) {
     if (!is.null(x@selected_ranges[[k]])) {
+      #cat("Adding non-zero dim", k, "\n")
       m <- x@selected_ranges[[k]]
       for (i in seq_len(nrow(m))) {
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], m[i,1], m[i,2])
+        vec <- .mapDatetime2integer64(c(m[i,1], m[i,2]), dimtypes[k])
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
     }
@@ -515,7 +550,6 @@ setMethod("[", "tiledb_array",
   ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable, alltypes,
                      MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
   resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
-
   ## allocate and set buffers
   getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
       if (is.na(varnum)) {
@@ -803,7 +837,7 @@ setMethod("[<-", "tiledb_array",
           }
       } else {
         nr <- NROW(value[[i]])
-        #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr, "null:", allnullable[i], "\n")
+        #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr, "null:", allnullable[i], "asint64:", asint64, "\n")
         buflist[[i]] <- libtiledb_query_buffer_alloc_ptr(arrptr, alltypes[i], nr, allnullable[i])
         buflist[[i]] <- libtiledb_query_buffer_assign_ptr(buflist[[i]], alltypes[i], value[[i]], asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[i]])

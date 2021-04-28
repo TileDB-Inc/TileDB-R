@@ -2980,7 +2980,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
-      uint64_t stride = static_cast<uint64_t>(makeScalarInteger64(as<double>(strides)));
+      uint64_t stride = makeScalarInteger64(as<double>(strides));
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "UINT32") {
@@ -3028,15 +3028,26 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       uint8_t stride = as<uint16_t>(strides);
       query->add_range(uidx, start, end, stride);
     }
-  } else if (typestr == "DATETIME_YEAR" ||
+  } else if (typestr == "DATETIME_YEAR"  ||
              typestr == "DATETIME_MONTH" ||
-             typestr == "DATETIME_WEEK" ||
-             typestr == "DATETIME_DAY" ||
-             typestr == "DATETIME_HR"  ||
-             typestr == "DATETIME_MIN" ||
-             typestr == "DATETIME_SEC" ||
-             typestr == "DATETIME_MS" ||
-             typestr == "DATETIME_US" ||
+             typestr == "DATETIME_WEEK"  ||
+             typestr == "DATETIME_DAY"   ||
+             typestr == "DATETIME_HR"    ||
+             typestr == "DATETIME_MIN"   ||
+             typestr == "DATETIME_SEC"   ||
+             typestr == "DATETIME_MS"    ||
+             typestr == "DATETIME_US"   ) {
+    //int64_t start = date_to_int64(as<Date>(starts), _string_to_tiledb_datatype(typestr));
+    int64_t start = makeScalarInteger64(as<double>(starts));
+    //int64_t end = date_to_int64(as<Date>(ends), _string_to_tiledb_datatype(typestr));
+    int64_t end = makeScalarInteger64(as<double>(ends));
+    if (strides == R_NilValue) {
+      query->add_range(uidx, start, end);
+    } else {
+      int64_t stride = as<int64_t>(strides);
+      query->add_range(uidx, start, end, stride);
+    }
+  } else if (
              typestr == "DATETIME_NS" ||
              typestr == "DATETIME_FS" ||
              typestr == "DATETIME_PS" ||

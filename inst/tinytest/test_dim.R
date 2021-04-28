@@ -119,7 +119,6 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_FS",    # femtosecond
               "DATETIME_AS"     # attosecond
               )
-
 for (dtype in dimtypes) {
     if (tiledb_vfs_is_dir(uri)) {
         tiledb_vfs_remove_dir(uri)
@@ -168,41 +167,40 @@ for (dtype in dimtypes) {
 
     arr <- tiledb_array(uri, as.data.frame=TRUE)
     dvec <- switch(dtype,
-                   "ASCII"   = LETTERS[1:3],
+                   "ASCII"   = LETTERS[1:5],
                    "INT8"    =,
                    "UINT8"   =,
                    "INT16"   =,
                    "UINT16"  =,
                    "UINT32"  =,
-                   "INT32"   = 1:3,      # sequences are integers
+                   "INT32"   = 1:5,      # sequences are integers
                    "INT64"   =,
-                   "UINT64"  = as.integer64(1:3),
+                   "UINT64"  = as.integer64(1:5),
                    "FLOAT32" =,
-                   "FLOAT64" = as.numeric(1:3),
-                   "DATETIME_YEAR" = c(as.Date("2020-01-01"), as.Date("2021-01-01"), as.Date("2022-01-01")),
-                   "DATETIME_MONTH" = c(as.Date("2020-01-01"), as.Date("2020-02-01"), as.Date("2020-03-01")),
-
-                   "DATETIME_WEEK" = c(as.Date("2020-01-01"), as.Date("2020-01-08"), as.Date("2020-01-15")),
-                   "DATETIME_DAY" = as.Date("2020-01-01") + 0:2,
-                   "DATETIME_HR"  = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
-                   "DATETIME_MIN" = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
-                   "DATETIME_SEC" = as.POSIXct("2020-01-01 00:00:00") + (0:2)*3600,
-                   "DATETIME_MS"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.001,3),
-                   ## POSIXct can do a bit less than 1 microsec so we set it to 2 on purpose
-                   "DATETIME_US"  = as.POSIXct("2000-01-01 00:00:00") + (0:2)*3600 + rep(0.000002,3),
+                   "FLOAT64" = as.numeric(1:5),
+                   "DATETIME_YEAR" = c(as.Date("2020-01-01"), as.Date("2021-01-01"), as.Date("2022-01-01"), as.Date("2023-01-01"), as.Date("2024-01-01")),
+                   "DATETIME_MONTH" = c(as.Date("2020-01-01"), as.Date("2020-02-01"), as.Date("2020-03-01"), as.Date("2020-04-01"), as.Date("2020-05-01")),
+                   "DATETIME_WEEK" = c(as.Date("2020-01-01"), as.Date("2020-01-08"), as.Date("2020-01-15"), as.Date("2020-01-22"), as.Date("2020-01-29")),
+                   "DATETIME_DAY" = as.Date("2020-01-01") + 0:4,
+                   "DATETIME_HR"  = as.POSIXct("2020-01-01 00:00:00") + (0:4)*3600,
+                   "DATETIME_MIN" = as.POSIXct("2020-01-01 00:00:00") + (0:4)*3600,
+                   "DATETIME_SEC" = as.POSIXct("2020-01-01 00:00:00") + (0:4)*3600,
+                   "DATETIME_MS"  = as.POSIXct("2000-01-01 00:00:00") + (0:4)*3600 + rep(0.001,5),
+                   ## POSIXct can do a bit less than 1 microsec so we drop one level
+                   "DATETIME_US"  = as.POSIXct("2000-01-01 00:00:00") + (0:4)*3600 + rep(0.00001,5),
                    "DATETIME_NS"  =,
                    "DATETIME_PS"  =,
                    "DATETIME_FS"  =,
-                   "DATETIME_AS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:2)*1e9
+                   "DATETIME_AS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:4)*1e9
                    )
-    avec <- 10^(1:3)
+    avec <- 10^(1:5)
     data <- data.frame(row = dvec, attr = avec)
     arr[] <- data
 
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
-    expect_equal(data[,-1], readdata[,-1])
-
+    if (dtype == "UINT64") readdata[,1] <- as.integer64(readdata[,1])  # return doubles here
+    expect_equal(data, readdata)
     if (grepl("^DATETIME", dtype)) {
         ## check for default date(time) type
         expect_false(class(readdata) == "integer64")
@@ -214,4 +212,47 @@ for (dtype in dimtypes) {
         expect_true(class(arr2[][,"row"]) == "integer64")
     }
 
+    ## subset tests
+    arr3 <- tiledb_array(uri, as.data.frame=TRUE)
+    if (dtype %in% c("DATETIME_YEAR", "DATETIME_MONTH", "DATETIME_WEEK", "DATETIME_DAY")) {
+        scaleDate <- function(val, dtype) {
+            val <- switch(dtype,
+                          "DATETIME_YEAR" = as.numeric(strftime(val, "%Y")) - 1970,
+                          "DATETIME_MONTH" = 12*(as.numeric(strftime(val, "%Y")) - 1970) + as.numeric(strftime(val, "%m")) - 1,
+                          "DATETIME_WEEK" = as.numeric(val)/7,
+                          "DATETIME_DAY" = as.numeric(val))
+        }
+        selected_ranges(arr3) <- list(cbind(as.integer64(scaleDate(data[2, "row"], dtype)),
+                                            as.integer64(scaleDate(data[4, "row"], dtype))))
+    } else if (dtype %in% c("DATETIME_HR", "DATETIME_MIN", "DATETIME_SEC",
+                            "DATETIME_MS", "DATETIME_US")) {
+        scaleDatetime <- function(val, dtype) {
+            val <- switch(dtype,
+                          "DATETIME_HR" = as.numeric(val)/3600,
+                          "DATETIME_MIN" = as.numeric(val)/60,
+                          "DATETIME_SEC" = as.numeric(val),
+                          "DATETIME_MS" = as.numeric(val) * 1e3,
+                          "DATETIME_US" = as.numeric(val) * 1e6
+                          )
+        }
+        selected_ranges(arr3) <- list(cbind(as.integer64(scaleDatetime(data[2, "row"], dtype)),
+                                            as.integer64(scaleDatetime(data[4, "row"], dtype))))
+    } else if (dtype %in% c("DATETIME_NS", "DATETIME_PS", "DATETIME_FS", "DATETIME_AS")) {
+        scaleDatetime <- function(val, dtype) {
+            val <- switch(dtype,
+                          "DATETIME_NS" = as.integer64(val),
+                          "DATETIME_PS" = as.integer64(val) * 1e3,
+                          "DATETIME_FS" = as.integer64(val) * 1e6,
+                          "DATETIME_AS" = as.integer64(val) * 1e9
+                          )
+        }
+        selected_ranges(arr3) <- list(cbind(as.integer64(scaleDatetime(data[2, "row"], dtype)),
+                                            as.integer64(scaleDatetime(data[4, "row"], dtype))))
+    } else {
+        selected_ranges(arr3) <- list(cbind(data[2, "row"], data[4, "row"]))
+    }
+    readdata <- arr3[]
+    if (dtype == "UINT64") readdata[,1] <- as.integer64(readdata[,1])  # return doubles here
+    expect_equivalent(data[2:4,], readdata, info=dtype) # equivalent as not type consistent (int <-> numeric)
+    expect_equal(NROW(readdata), 3L)
 }
