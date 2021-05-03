@@ -516,10 +516,11 @@ setMethod("[", "tiledb_array",
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
-    } else {                 # cases 1 and 2 covered above in 'i' and 'j' case
+    } else if (k > 2) {                 # cases 1 and 2 covered above in 'i' and 'j' case
       #cat("Adding null dim", k, "\n")
       vec <- .mapDatetime2integer64(nonemptydom[[k]], dimtypes[k])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+      rangeunset <- FALSE
     }
 
   }
