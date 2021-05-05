@@ -442,6 +442,18 @@ setMethod("[", "tiledb_array",
   ## ranges seem to interfere with the byte/element adjustment below so set up toggle
   rangeunset <- TRUE
 
+  ## expand a shorter-but-named selected_ranges list
+  if (   (length(x@selected_ranges) < length(dimnames))
+      && (!is.null(names(x@selected_ranges)))          ) {
+      fulllist <- vector(mode="list", length=length(dimnames))
+      ind <- match(names(x@selected_ranges), dimnames)
+      if (any(is.na(ind))) stop("Name for selected ranges does not match dimension names.")
+      for (ii in seq_len(length(ind))) {
+          fulllist[[ ind[ii] ]] <- x@selected_ranges[[ii]]
+      }
+      x@selected_ranges <- fulllist
+  }
+
   ## set default range(s) on first dimension if nothing is specified
   if (is.null(i) &&
       (length(x@selected_ranges) == 0 ||
@@ -504,7 +516,13 @@ setMethod("[", "tiledb_array",
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
+    } else if (k > 2) {                 # cases 1 and 2 covered above in 'i' and 'j' case
+      #cat("Adding null dim", k, "\n")
+      vec <- .mapDatetime2integer64(nonemptydom[[k]], dimtypes[k])
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+      rangeunset <- FALSE
     }
+
   }
 
   ## retrieve est_result_size
