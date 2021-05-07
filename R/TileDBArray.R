@@ -984,7 +984,8 @@ setGeneric("selected_ranges<-", function(x, value) standardGeneric("selected_ran
 #' A \code{tiledb_array} object can have a range selection for each dimension
 #' attribute. This methods returns the selection value for \sQuote{selected_ranges}
 #' and returns a list (with one element per dimension) of two-column matrices where
-#' each row describes one pair of minimum and maximum values.
+#' each row describes one pair of minimum and maximum values. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
 #' @param object A \code{tiledb_array} object
 #' @return A list which can contain a matrix for each dimension
 #' @export
@@ -996,7 +997,8 @@ setMethod("selected_ranges", signature = "tiledb_array",
 #' A \code{tiledb_array} object can have a range selection for each dimension
 #' attribute. This methods sets the selection value for \sQuote{selected_ranges}
 #' which is a list (with one element per dimension) of two-column matrices where
-#' each row describes one pair of minimum and maximum values.
+#' each row describes one pair of minimum and maximum values. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
 #' @param x A \code{tiledb_array} object
 #' @param value A list of two-column matrices where each list element \sQuote{i}
 #' corresponds to the dimension attribute \sQuote{i}. The matrices can contain rows
