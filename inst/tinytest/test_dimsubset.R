@@ -75,6 +75,7 @@ expect_equal(nrow(dat), nrow(flights))
 expect_equal(dat$carrier, sort(as.character(flights$carrier)))
 expect_equal(table(dat$origin), table(flights$origin))
 
+## test list of four with one null
 selected_ranges(newarr) <- list(cbind("AA","AA"),
                                 cbind("JFK","JFK"),
                                 cbind("BOS", "BOS"),
@@ -84,6 +85,26 @@ expect_equal(unique(dat$carrier), "AA")
 expect_equal(unique(dat$origin), "JFK")
 expect_equal(unique(dat$dest), "BOS")
 
+## test named lists with one element
+selected_ranges(newarr) <- list(carrier = cbind("AA","AA"))
+dat <- newarr[]
+expect_equal(unique(dat$carrier), "AA")
+
+selected_ranges(newarr) <- list(origin = cbind("JFK","JFK"))
+dat <- newarr[]
+expect_equal(unique(dat$origin), "JFK")
+
+selected_ranges(newarr) <- list(dest = cbind("BOS", "BOS"))
+dat <- newarr[]
+expect_equal(unique(dat$dest), "BOS")
+
+daterange <- c(as.POSIXct("2013-01-10 00:00:00"), as.POSIXct("2013-01-19 23:59:99"))
+selected_ranges(newarr) <- list(time_hour = cbind(daterange[1], daterange[2]))
+dat <- newarr[]
+expect_true(dat$time_hour >= daterange[1] && dat$time_hour <= daterange[2])
+
+
+## test named lists of two
 selected_ranges(newarr) <- list(dest = cbind("BOS", "BOS"), origin = cbind("LGA", "LGA"))
 dat <- newarr[]
 expect_equal(unique(dat$dest), "BOS")
