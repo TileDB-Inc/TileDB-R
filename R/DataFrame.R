@@ -115,7 +115,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
             col_domain <- if (is.null(tile_domain)) c(min(idxcol), max(idxcol)) else tile_domain
             col_extent <- if (is.null(tile_extent)) dims[1] else tile_extent
             if (!inherits(idxcol, "character")) {
-                dom_range <- diff(range(col_domain)) + 1
+                dom_range <- diff(as.numeric(range(col_domain))) + 1
                 col_extent <- min(dom_range, col_extent)
             }
             dtype <- "INT32"                # default
