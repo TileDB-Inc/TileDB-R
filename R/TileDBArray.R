@@ -442,6 +442,14 @@ setMethod("[", "tiledb_array",
   ## ranges seem to interfere with the byte/element adjustment below so set up toggle
   rangeunset <- TRUE
 
+  ## ensure selected_ranges, if submitted, is of correct length
+  if (length(x@selected_ranges) != 0 &&
+      length(x@selected_ranges) != length(dimnames) &&
+      is.null(names(x@selected_ranges))) {
+      stop(paste0("If ranges are selected by index alone (and not named), ",
+                  "one is required for each dimension."), call. = FALSE)
+  }
+
   ## expand a shorter-but-named selected_ranges list
   if (   (length(x@selected_ranges) < length(dimnames))
       && (!is.null(names(x@selected_ranges)))          ) {
@@ -454,75 +462,48 @@ setMethod("[", "tiledb_array",
       x@selected_ranges <- fulllist
   }
 
-  ## set default range(s) on first dimension if nothing is specified
-  if (is.null(i) &&
-      (length(x@selected_ranges) == 0 ||
-       (length(x@selected_ranges) >= 1 && is.null(x@selected_ranges[[1]])))) {
-    ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
-    #domdim <- domain(dimensions(dom)[[1]])
-    if (nonemptydom[[1]][1] != nonemptydom[[1]][2]) { # || nonemptydom[[1]][1] > domdim[1])
-      vec <- .mapDatetime2integer64(nonemptydom[[1]], dimtypes[1])
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], vec[1], vec[2])
-      rangeunset <- FALSE
-    }
+  ## if selected_ranges is still an empty list, make it an explicit one
+  if (length(x@selected_ranges) == 0) {
+      x@selected_ranges <- vector(mode="list", length=length(dimnames))
   }
-  ## if we have it, use it
+
   if (!is.null(i)) {
-    ##if (!identical(eval(is[[1]]),list)) stop("The row argument must be a list.")
-    if (length(i) == 0) stop("No content to parse in row argument.")
-    for (ii in 1:length(i)) {
-      el <- i[[ii]]
-      vec <- .mapDatetime2integer64(c(min(eval(el)), max(eval(el))), dimtypes[1])
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 0, dimtypes[1], vec[1], vec[2])
-    }
-    rangeunset <- FALSE
+      if (!is.null(x@selected_ranges[[1]])) {
+          stop("Cannot set both 'i' and first element of 'selected_ranges'.", call. = FALSE)
+      }
+      x@selected_ranges[[1]] <- i
   }
 
-  ## set range(s) on second dimension
-  if (is.null(j) &&
-      (length(x@selected_ranges) == 0 ||
-       (length(x@selected_ranges) >= 2 && is.null(x@selected_ranges[[2]])))) {
-    if (length(nonemptydom) == 2) {
-      ## domain values can currently be eg (0,0) rather than a flag, so check explicitly
-      #domdim <- domain(dimensions(dom)[[2]])
-      if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) # || nonemptydom[[2]][1] > domdim[1])
-        if (nonemptydom[[2]][1] != nonemptydom[[2]][2]) {
-          vec <- .mapDatetime2integer64(nonemptydom[[2]], dimtypes[2])
-          qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], vec[1], vec[2])
-        }
-      rangeunset <- FALSE
-    }
-  }
-
-  ## if we have js, use it
   if (!is.null(j)) {
-    #if (!identical(eval(js[[1]]),list)) stop("The col argument must be a list.")
-    if (length(j) == 0) stop("No content to parse in col argument.")
-    for (ii in 1:length(j)) {
-      el <- j[[ii]]
-      vec <- .mapDatetime2integer64(c(min(eval(el)), max(eval(el))), dimtypes[2])
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, 1, dimtypes[2], vec[1], vec[2])
-      rangeunset <- FALSE
-    }
+      if (!is.null(x@selected_ranges[[2]])) {
+          stop("Cannot set both 'j' and second element of 'selected_ranges'.", call. = FALSE)
+      }
+      x@selected_ranges[[2]] <- j
   }
 
   ## if ranges selected, use those
   for (k in seq_len(length(x@selected_ranges))) {
-    if (!is.null(x@selected_ranges[[k]])) {
-      #cat("Adding non-zero dim", k, "\n")
+    if (is.null(x@selected_ranges[[k]])) {
+      #cat("Adding null dim", k, "on", dimtypes[[k]], "\n")
+      vec <- .mapDatetime2integer64(nonemptydom[[k]], dimtypes[k])
+      if (vec[1] != 0 && vec[2] != 0) { # corner case of A[] on empty array
+          qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+          rangeunset <- FALSE
+      }
+    } else if (is.null(nrow(x@selected_ranges[[k]]))) {
+      #cat("Adding nrow null dim", k, "on", dimtypes[[k]], "\n")
+      vec <- x@selected_ranges[[k]]
+      qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], min(vec), max(vec))
+      rangeunset <- FALSE
+    } else {
+      #cat("Adding non-zero dim", k, "on", dimtypes[[k]], "\n")
       m <- x@selected_ranges[[k]]
       for (i in seq_len(nrow(m))) {
         vec <- .mapDatetime2integer64(c(m[i,1], m[i,2]), dimtypes[k])
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
-    } else if (k > 2) {                 # cases 1 and 2 covered above in 'i' and 'j' case
-      #cat("Adding null dim", k, "\n")
-      vec <- .mapDatetime2integer64(nonemptydom[[k]], dimtypes[k])
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
-      rangeunset <- FALSE
     }
-
   }
 
   ## retrieve est_result_size
@@ -1003,7 +984,8 @@ setGeneric("selected_ranges<-", function(x, value) standardGeneric("selected_ran
 #' A \code{tiledb_array} object can have a range selection for each dimension
 #' attribute. This methods returns the selection value for \sQuote{selected_ranges}
 #' and returns a list (with one element per dimension) of two-column matrices where
-#' each row describes one pair of minimum and maximum values.
+#' each row describes one pair of minimum and maximum values. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
 #' @param object A \code{tiledb_array} object
 #' @return A list which can contain a matrix for each dimension
 #' @export
@@ -1015,7 +997,8 @@ setMethod("selected_ranges", signature = "tiledb_array",
 #' A \code{tiledb_array} object can have a range selection for each dimension
 #' attribute. This methods sets the selection value for \sQuote{selected_ranges}
 #' which is a list (with one element per dimension) of two-column matrices where
-#' each row describes one pair of minimum and maximum values.
+#' each row describes one pair of minimum and maximum values. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
 #' @param x A \code{tiledb_array} object
 #' @param value A list of two-column matrices where each list element \sQuote{i}
 #' corresponds to the dimension attribute \sQuote{i}. The matrices can contain rows
