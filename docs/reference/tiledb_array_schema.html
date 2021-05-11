@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -104,6 +104,9 @@
       <a href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -144,6 +147,7 @@
   coords_filter_list <span class='op'>=</span> <span class='cn'>NULL</span>,
   offsets_filter_list <span class='op'>=</span> <span class='cn'>NULL</span>,
   capacity <span class='op'>=</span> <span class='fl'>10000L</span>,
+  allows_dups <span class='op'>=</span> <span class='cn'>FALSE</span>,
   ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
@@ -181,6 +185,10 @@
     <tr>
       <th>capacity</th>
       <td><p>(optional)</p></td>
+    </tr>
+    <tr>
+      <th>allows_dups</th>
+      <td><p>(optional, requires &#8216;spars&#8217; to be TRUE)</p></td>
     </tr>
     <tr>
       <th>ctx</th>

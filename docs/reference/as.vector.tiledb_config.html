@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -104,6 +104,9 @@
       <a href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -167,8 +170,10 @@
 #&gt;                               "1.25"                                "503" 
 #&gt;          rest.retry_initial_delay_ms                  rest.server_address 
 #&gt;                                "500"             "https://api.tiledb.com" 
-#&gt;     rest.server_serialization_format                  sm.check_coord_dups 
-#&gt;                              "CAPNP"                               "true" 
+#&gt;     rest.server_serialization_format               sm.array.timestamp_end 
+#&gt;                              "CAPNP"               "18446744073709551615" 
+#&gt;             sm.array.timestamp_start                  sm.check_coord_dups 
+#&gt;                                  "0"                               "true" 
 #&gt;                   sm.check_coord_oob                sm.check_global_order 
 #&gt;                               "true"                               "true" 
 #&gt;         sm.compute_concurrency_level       sm.consolidation.amplification 
@@ -179,6 +184,8 @@
 #&gt;                         "4294967295"                         "4294967295" 
 #&gt;     sm.consolidation.step_size_ratio               sm.consolidation.steps 
 #&gt;                                "0.0"                         "4294967295" 
+#&gt;       sm.consolidation.timestamp_end     sm.consolidation.timestamp_start 
+#&gt;               "18446744073709551615"                                  "0" 
 #&gt;                      sm.dedup_coords            sm.enable_signal_handlers 
 #&gt;                              "false"                               "true" 
 #&gt;              sm.io_concurrency_level             sm.max_tile_overlap_size 
@@ -186,63 +193,67 @@
 #&gt;                     sm.memory_budget                 sm.memory_budget_var 
 #&gt;                         "5368709120"                        "10737418240" 
 #&gt;                    sm.read_range_oob          sm.skip_checksum_validation 
-#&gt;                              "error"                              "false" 
-#&gt;     sm.sub_partitioner_memory_budget                   sm.tile_cache_size 
-#&gt;                                  "0"                           "10000000" 
-#&gt;                       sm.vacuum.mode               sm.var_offsets.bitsize 
-#&gt;                          "fragments"                                 "64" 
-#&gt;         sm.var_offsets.extra_element                  sm.var_offsets.mode 
-#&gt;                              "false"                              "bytes" 
-#&gt;              vfs.azure.blob_endpoint      vfs.azure.block_list_block_size 
-#&gt;                                   ""                            "5242880" 
-#&gt;           vfs.azure.max_parallel_ops        vfs.azure.storage_account_key 
-#&gt;                                 "12"                                   "" 
-#&gt;       vfs.azure.storage_account_name      vfs.azure.use_block_list_upload 
-#&gt;                                   ""                               "true" 
-#&gt;                  vfs.azure.use_https            vfs.file.enable_filelocks 
+#&gt;                               "warn"                              "false" 
+#&gt;        sm.skip_est_size_partitioning     sm.sub_partitioner_memory_budget 
+#&gt;                              "false"                                  "0" 
+#&gt;                   sm.tile_cache_size                       sm.vacuum.mode 
+#&gt;                           "10000000"                          "fragments" 
+#&gt;              sm.vacuum.timestamp_end            sm.vacuum.timestamp_start 
+#&gt;               "18446744073709551615"                                  "0" 
+#&gt;               sm.var_offsets.bitsize         sm.var_offsets.extra_element 
+#&gt;                                 "64"                              "false" 
+#&gt;                  sm.var_offsets.mode              vfs.azure.blob_endpoint 
+#&gt;                              "bytes"                                   "" 
+#&gt;      vfs.azure.block_list_block_size           vfs.azure.max_parallel_ops 
+#&gt;                            "5242880"                                 "12" 
+#&gt;        vfs.azure.storage_account_key       vfs.azure.storage_account_name 
+#&gt;                                   ""                                   "" 
+#&gt;      vfs.azure.use_block_list_upload                  vfs.azure.use_https 
 #&gt;                               "true"                               "true" 
-#&gt;            vfs.file.max_parallel_ops vfs.file.posix_directory_permissions 
-#&gt;                                 "12"                                "755" 
-#&gt;      vfs.file.posix_file_permissions             vfs.gcs.max_parallel_ops 
-#&gt;                                "644"                                 "12" 
-#&gt;              vfs.gcs.multi_part_size                   vfs.gcs.project_id 
-#&gt;                            "5242880"                                   "" 
-#&gt;           vfs.gcs.request_timeout_ms        vfs.gcs.use_multi_part_upload 
-#&gt;                               "3000"                               "true" 
-#&gt;      vfs.hdfs.kerb_ticket_cache_path               vfs.hdfs.name_node_uri 
-#&gt;                                   ""                                   "" 
-#&gt;                    vfs.hdfs.username                    vfs.min_batch_gap 
-#&gt;                                   ""                             "512000" 
-#&gt;                   vfs.min_batch_size                vfs.min_parallel_size 
-#&gt;                           "20971520"                           "10485760" 
-#&gt;            vfs.read_ahead_cache_size                  vfs.read_ahead_size 
-#&gt;                           "10485760"                             "102400" 
-#&gt;             vfs.s3.aws_access_key_id               vfs.s3.aws_external_id 
-#&gt;                                   ""                                   "" 
-#&gt;            vfs.s3.aws_load_frequency                  vfs.s3.aws_role_arn 
-#&gt;                                   ""                                   "" 
-#&gt;         vfs.s3.aws_secret_access_key              vfs.s3.aws_session_name 
-#&gt;                                   ""                                   "" 
-#&gt;             vfs.s3.aws_session_token                       vfs.s3.ca_file 
-#&gt;                                   ""                                   "" 
-#&gt;                       vfs.s3.ca_path             vfs.s3.connect_max_tries 
-#&gt;                                   ""                                  "5" 
-#&gt;          vfs.s3.connect_scale_factor            vfs.s3.connect_timeout_ms 
-#&gt;                                 "25"                              "10800" 
-#&gt;             vfs.s3.endpoint_override                 vfs.s3.logging_level 
-#&gt;                                   ""                                "Off" 
-#&gt;              vfs.s3.max_parallel_ops           vfs.s3.multipart_part_size 
+#&gt;            vfs.file.enable_filelocks            vfs.file.max_parallel_ops 
+#&gt;                               "true"                                 "12" 
+#&gt; vfs.file.posix_directory_permissions      vfs.file.posix_file_permissions 
+#&gt;                                "755"                                "644" 
+#&gt;             vfs.gcs.max_parallel_ops              vfs.gcs.multi_part_size 
 #&gt;                                 "12"                            "5242880" 
-#&gt;                    vfs.s3.proxy_host                vfs.s3.proxy_password 
+#&gt;                   vfs.gcs.project_id           vfs.gcs.request_timeout_ms 
+#&gt;                                   ""                               "3000" 
+#&gt;        vfs.gcs.use_multi_part_upload      vfs.hdfs.kerb_ticket_cache_path 
+#&gt;                               "true"                                   "" 
+#&gt;               vfs.hdfs.name_node_uri                    vfs.hdfs.username 
 #&gt;                                   ""                                   "" 
-#&gt;                    vfs.s3.proxy_port                  vfs.s3.proxy_scheme 
-#&gt;                                  "0"                               "http" 
-#&gt;                vfs.s3.proxy_username                        vfs.s3.region 
-#&gt;                                   ""                          "us-east-1" 
-#&gt;            vfs.s3.request_timeout_ms                vfs.s3.requester_pays 
-#&gt;                               "3000"                              "false" 
-#&gt;                        vfs.s3.scheme                           vfs.s3.sse 
-#&gt;                              "https"                                   "" 
+#&gt;                    vfs.min_batch_gap                   vfs.min_batch_size 
+#&gt;                             "512000"                           "20971520" 
+#&gt;                vfs.min_parallel_size            vfs.read_ahead_cache_size 
+#&gt;                           "10485760"                           "10485760" 
+#&gt;                  vfs.read_ahead_size             vfs.s3.aws_access_key_id 
+#&gt;                             "102400"                                   "" 
+#&gt;               vfs.s3.aws_external_id            vfs.s3.aws_load_frequency 
+#&gt;                                   ""                                   "" 
+#&gt;                  vfs.s3.aws_role_arn         vfs.s3.aws_secret_access_key 
+#&gt;                                   ""                                   "" 
+#&gt;              vfs.s3.aws_session_name             vfs.s3.aws_session_token 
+#&gt;                                   ""                                   "" 
+#&gt;                       vfs.s3.ca_file                       vfs.s3.ca_path 
+#&gt;                                   ""                                   "" 
+#&gt;             vfs.s3.connect_max_tries          vfs.s3.connect_scale_factor 
+#&gt;                                  "5"                                 "25" 
+#&gt;            vfs.s3.connect_timeout_ms             vfs.s3.endpoint_override 
+#&gt;                              "10800"                                   "" 
+#&gt;                 vfs.s3.logging_level              vfs.s3.max_parallel_ops 
+#&gt;                                "Off"                                 "12" 
+#&gt;           vfs.s3.multipart_part_size                    vfs.s3.proxy_host 
+#&gt;                            "5242880"                                   "" 
+#&gt;                vfs.s3.proxy_password                    vfs.s3.proxy_port 
+#&gt;                                   ""                                  "0" 
+#&gt;                  vfs.s3.proxy_scheme                vfs.s3.proxy_username 
+#&gt;                               "http"                                   "" 
+#&gt;                        vfs.s3.region            vfs.s3.request_timeout_ms 
+#&gt;                          "us-east-1"                               "3000" 
+#&gt;                vfs.s3.requester_pays                        vfs.s3.scheme 
+#&gt;                              "false"                              "https" 
+#&gt;                     vfs.s3.skip_init                           vfs.s3.sse 
+#&gt;                              "false"                                   "" 
 #&gt;                vfs.s3.sse_kms_key_id          vfs.s3.use_multipart_upload 
 #&gt;                                   ""                               "true" 
 #&gt;        vfs.s3.use_virtual_addressing                    vfs.s3.verify_ssl 
