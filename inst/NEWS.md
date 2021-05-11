@@ -1,12 +1,20 @@
-# Ongoing
+# 0.9.1
 
-* This release of the R package builds against [TileDB 2.2.7](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.7), but has also been tested against two previous release series as well as the development version.
+* This release of the R package builds against [TileDB 2.2.9](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.9), but has also been tested against previous releases as well as the development version.
 
 ## Improvements
 
 * A new vignette show use of TileDB array via RMariaDB and the MyTile extension to MariaDB (#221)
 
 * Matrices can now be returned directly from suitable two-dimensional TileDB arrays (#225)
+
+* More data types are supported in the non-empty domain accessor function (#229)
+
+* The DESCRIPTION, README.md and pkgdown site were updated (#230)
+
+* Creation of TileDB arrays from data.frame object has been made more robust (#238)
+
+* On startup, versions numbers of the R package and the TileDB Embedded library are displayed (#239)
 
 ## Bug Fixes
 
@@ -19,6 +27,16 @@
 * Error messages concerning an array types and selection mismatch are now clearer (#224)
 
 * Writes from data.frame objects to dense array revert back to column-major order (#226)
+
+* Tests of sparse writes to dense matrices now use UNORDERED layout (#228)
+
+* Data.frame returns of selected columns now coversion dimensions as well (#231)
+
+* Schema creation has been generalized and made more robust (#232)
+
+* Selection of dimension ranges now maps date(time) values correctly (#233)
+
+* Selection and setting of dimension ranges has been generalized and made more robust (#235, #236)
 
 
 # 0.9.0
