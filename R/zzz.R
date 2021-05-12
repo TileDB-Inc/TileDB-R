@@ -32,7 +32,9 @@
 }
 
 .onAttach <- function(libname, pkgName) {
-    packageStartupMessage("TileDB R ", packageVersion("tiledb"),
-                          " with TileDB Embedded ", format(tiledb_version(TRUE)),
-                          ". See https://tiledb.com for more information.")
+    if (interactive()) {
+        packageStartupMessage("TileDB R ", packageVersion("tiledb"),
+                              " with TileDB Embedded ", format(tiledb_version(TRUE)),
+                              ". See https://tiledb.com for more information.")
+    }
 }
