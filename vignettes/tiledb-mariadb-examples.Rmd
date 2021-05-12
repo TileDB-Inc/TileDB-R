@@ -24,7 +24,7 @@ vignette: >
 can be accessed in a variety of ways. The C/C++ library offered by [TileDB
 Embedded](https://www.tiledb.com/embedded) is one approach, and the [R
 package](https://github.com/TileDB-Inc/TileDB-R), as well as the [Python
-package](https://github.com/TileDB-Inc/TileDB-Python) and other language
+package](https://github.com/TileDB-Inc/TileDB-Py) and other language
 bindings use it. Another interface is provided by the [MariaDB Integration
 via the MyTile storage plugin](https://docs.tiledb.com/mariadb/).
 
