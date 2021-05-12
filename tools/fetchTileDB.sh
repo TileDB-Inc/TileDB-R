@@ -11,9 +11,9 @@ if [ $# -ge 2 ]; then
     ## url="" automatic in case of 'else'
 fi
 
-if [ ! -f NEWS.md ]; then
+if [ ! -d tinytest ]; then
     echo "This script should run from the inst/ directory."
-    echo "No NEWS.md present, so likely not inst/. Exiting."
+    echo "No tinytest/ directory present, so likely not inst/. Exiting."
     exit 1
 fi
 
