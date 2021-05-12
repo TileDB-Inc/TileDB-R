@@ -16,6 +16,8 @@
 
 * On startup, versions numbers of the R package and the TileDB Embedded library are displayed (#239)
 
+* The pkgdown website now shows the ChangeLog derived from this NEWS file (#240)
+
 ## Bug Fixes
 
 * Two tests with datetime comparisons which fail only on one macOS system are now conditional (#216)
@@ -34,7 +36,7 @@
 
 * Schema creation has been generalized and made more robust (#232)
 
-* Selection of dimension ranges now maps date(time) values correctly (#233)
+* Selection of dimension ranges now maps date and datetime values correctly (#233, #241)
 
 * Selection and setting of dimension ranges has been generalized and made more robust (#235, #236)
 
