@@ -3,3 +3,6 @@ steps:
       R CMD build --no-build-vignettes --no-manual .
       R CMD check --no-manual --no-vignettes tiledb_*.tar.gz
     displayName: 'Run check'
+
+## -- use this to display installation log
+## test -f /*/*/work/1/s/tiledb.Rcheck/00install.out && cat /*/*/work/1/s/tiledb.Rcheck/00install.out

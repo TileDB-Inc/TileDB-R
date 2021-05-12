@@ -1,10 +1,9 @@
 Package: tiledb
 Type: Package
-Version: 0.9.0
+Version: 0.9.1
 Title: Sparse and Dense Multidimensional Array Storage Engine for Data Science
-Author: TileDB, Inc.
-Copyright: TileDB, Inc.
-Maintainer: Dirk Eddelbuettel <dirk@tiledb.com>
+Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
+ person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
 Description: The data science storage engine 'TileDB' introduces a
  powerful on-disk format for multi-dimensional arrays. It supports
  dense and sparse arrays, dataframes and key-values stores, cloud
@@ -14,8 +13,7 @@ Description: The data science storage engine 'TileDB' introduces a
  travel'), metadata and groups. It is implemented as an embeddable
  cross-platform C++ library with APIs from several languages, and
  integrations.
-Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
- person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
+Copyright: TileDB, Inc.
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues

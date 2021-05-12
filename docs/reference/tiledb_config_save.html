@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -104,6 +104,9 @@
       <a href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -170,6 +173,8 @@
 #&gt; rest.retry_initial_delay_ms 500
 #&gt; rest.server_address https://api.tiledb.com
 #&gt; rest.server_serialization_format CAPNP
+#&gt; sm.array.timestamp_end 18446744073709551615
+#&gt; sm.array.timestamp_start 0
 #&gt; sm.check_coord_dups true
 #&gt; sm.check_coord_oob true
 #&gt; sm.check_global_order true
@@ -181,17 +186,22 @@
 #&gt; sm.consolidation.step_min_frags 4294967295
 #&gt; sm.consolidation.step_size_ratio 0.0
 #&gt; sm.consolidation.steps 4294967295
+#&gt; sm.consolidation.timestamp_end 18446744073709551615
+#&gt; sm.consolidation.timestamp_start 0
 #&gt; sm.dedup_coords false
 #&gt; sm.enable_signal_handlers true
 #&gt; sm.io_concurrency_level 12
 #&gt; sm.max_tile_overlap_size 314572800
 #&gt; sm.memory_budget 5368709120
 #&gt; sm.memory_budget_var 10737418240
-#&gt; sm.read_range_oob error
+#&gt; sm.read_range_oob warn
 #&gt; sm.skip_checksum_validation false
+#&gt; sm.skip_est_size_partitioning false
 #&gt; sm.sub_partitioner_memory_budget 0
 #&gt; sm.tile_cache_size 10
 #&gt; sm.vacuum.mode fragments
+#&gt; sm.vacuum.timestamp_end 18446744073709551615
+#&gt; sm.vacuum.timestamp_start 0
 #&gt; sm.var_offsets.bitsize 64
 #&gt; sm.var_offsets.extra_element false
 #&gt; sm.var_offsets.mode bytes
@@ -224,6 +234,7 @@
 #&gt; vfs.s3.request_timeout_ms 3000
 #&gt; vfs.s3.requester_pays false
 #&gt; vfs.s3.scheme https
+#&gt; vfs.s3.skip_init false
 #&gt; vfs.s3.use_multipart_upload true
 #&gt; vfs.s3.use_virtual_addressing true
 #&gt; vfs.s3.verify_ssl true</div><div class='input'>

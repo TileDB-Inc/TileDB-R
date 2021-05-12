@@ -1,12 +1,22 @@
-# Ongoing
+# tiledb 0.9.1
 
-* This release of the R package builds against [TileDB 2.2.7](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.7), but has also been tested against two previous release series as well as the development version.
+* This release of the R package builds against [TileDB 2.2.9](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.9), but has also been tested against previous releases as well as the development version.
 
 ## Improvements
 
 * A new vignette show use of TileDB array via RMariaDB and the MyTile extension to MariaDB (#221)
 
 * Matrices can now be returned directly from suitable two-dimensional TileDB arrays (#225)
+
+* More data types are supported in the non-empty domain accessor function (#229)
+
+* The DESCRIPTION, README.md and pkgdown site were updated (#230)
+
+* Creation of TileDB arrays from data.frame object has been made more robust (#238)
+
+* On startup, versions numbers of the R package and the TileDB Embedded library are displayed (#239)
+
+* The pkgdown website now shows the ChangeLog derived from this NEWS file (#240)
 
 ## Bug Fixes
 
@@ -20,8 +30,18 @@
 
 * Writes from data.frame objects to dense array revert back to column-major order (#226)
 
+* Tests of sparse writes to dense matrices now use UNORDERED layout (#228)
 
-# 0.9.0
+* Data.frame returns of selected columns now coversion dimensions as well (#231)
+
+* Schema creation has been generalized and made more robust (#232)
+
+* Selection of dimension ranges now maps date and datetime values correctly (#233, #241)
+
+* Selection and setting of dimension ranges has been generalized and made more robust (#235, #236)
+
+
+# tiledb 0.9.0
 
 * This release of the R package builds against [TileDB 2.2.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.4), but has also been tested against two previous release series as well as the development version.
 
@@ -84,7 +104,7 @@
 * Small tweaks to timezone and factor settings in unit tests, and vignette (#213, #214, #215)
 
 
-# 0.8.2
+# tiledb 0.8.2
 
 * This release of the R package builds against [TileDB 2.1.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.1), but has also been tested against previous releases as well as the development version.
 
@@ -99,7 +119,7 @@
 * Build scripts have been updated for use of TileDB 2.1.1 on Windows, macOS and Linux (when no system library is found) (#178)
 
 
-# 0.8.1
+# tiledb 0.8.1
 
 * This release of the R package supports [TileDB 2.1.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.0), but has also been tested against the previous release [TileDB 2.0.8](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8).
 
@@ -116,7 +136,7 @@
 * A typo in the manual page source, copied three more times, has been corrected (#167)
 
 
-# 0.8.0
+# tiledb 0.8.0
 
 * This release of the R package supports [TileDB 2.0.8](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8), but has
   also been tested against the previous release [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7).
@@ -156,7 +176,7 @@
 - The number of TBB threads will only be set once (#158)
 
 
-# 0.7.1
+# tiledb 0.7.1
 
 * This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.5](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5)
 
@@ -183,7 +203,7 @@
 - A character conversion when retrieving array metadata resulting in an out-of-bounds reads has been corrected (#137)
 
 
-# 0.7.0
+# tiledb 0.7.0
 
 * This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.5](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5)
 
@@ -206,7 +226,7 @@
 - An introductory vignette was added (#129, #131)
 
 
-# 0.6.0
+# tiledb 0.6.0
 
 * This release of the R package supports [TileDB 1.7.7](https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7) and [TileDB 2.0.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.0)
 
@@ -243,7 +263,7 @@
 - Dimension attributes must now be named
 
 
-# 0.5.0
+# tiledb 0.5.0
 
 - This release of the R package builds against the 1.7.5 releases of TileDB.
 
@@ -256,7 +276,7 @@
 - Added additional support for metadata [#106](https://github.com/TileDB-Inc/TileDB-R/pull/105)
 
 
-# 0.4.0
+# tiledb 0.4.0
 
 * This release of the R package builds against the 1.7.* releases of tiledb.
 

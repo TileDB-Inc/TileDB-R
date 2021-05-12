@@ -1,6 +1,7 @@
 template:
   params:
     bootswatch: lumen
+
 reference:
 - title: Ctx
   contents:
@@ -111,7 +112,11 @@ reference:
   - starts_with("tiledb_version")
   - matches("tiledb-package")
   - matches("limitTileDBCores")
+
 authors:
   TileDB, Inc.:
     href: "https://tiledb.com"
     html: "<img src='https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png' height=24>"
+
+news:
+  cran_dates: false
