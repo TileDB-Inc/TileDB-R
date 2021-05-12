@@ -38,7 +38,7 @@ The most recent released version can be installed from
     > library(tiledb)
     > tiledb_version()
     major minor patch
-        2     2     4
+        2     2     9
     > help(package=tiledb)
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
