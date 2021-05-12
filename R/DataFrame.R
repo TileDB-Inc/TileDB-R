@@ -122,6 +122,9 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
             if (inherits(idxcol, "POSIXt")) {
                 dtype <- "DATETIME_US"
                 col_domain <- as.numeric(col_domain) * 1e6 	# int64 used
+            } else if (inherits(idxcol, "Date")) {
+                dtype <- "DATETIME_DAY"
+                col_extent <- as.numeric(col_extent) # to not trigger INT32 test
             } else if (inherits(idxcol, "numeric")) {
                 dtype <- "FLOAT64"
                 col_extent <- as.numeric(col_extent)
@@ -177,6 +180,9 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
             tp <- "INT64"
         else
             stop("Currently unsupported type: ", cl)
+        if (debug) {
+            cat(sprintf("Setting attribute name %s type %s\n", colnames(obj)[ind], tp))
+        }
         tiledb_attr(colnames(obj)[ind],
                     type = tp,
                     ncells = ifelse(tp=="CHAR",NA_integer_,1),
