@@ -194,11 +194,12 @@ for (dtype in dimtypes) {
                    "DATETIME_AS"  = as.nanotime("1970-01-01T00:00:00.000000001+00:00") + (0:4)*1e9
                    )
     avec <- 10^(1:5)
-    data <- data.frame(row = dvec, attr = avec)
+    data <- data.frame(row = dvec, attr = avec, stringsAsFactors=FALSE)
     arr[] <- data
 
     arr2 <- tiledb_array(uri, as.data.frame=TRUE)
     readdata <- arr2[]
+    if (dtype == "ASCII" && getRversion() < '4.0.0') readdata$row <- as.character(readdata$row)
     if (dtype == "UINT64") readdata[,1] <- as.integer64(readdata[,1])  # return doubles here
     expect_equal(data, readdata)
     if (grepl("^DATETIME", dtype)) {
@@ -252,6 +253,7 @@ for (dtype in dimtypes) {
         selected_ranges(arr3) <- list(cbind(data[2, "row"], data[4, "row"]))
     }
     readdata <- arr3[]
+    if (dtype == "ASCII" && getRversion() < '4.0.0') readdata$row <- as.character(readdata$row)
     if (dtype == "UINT64") readdata[,1] <- as.integer64(readdata[,1])  # return doubles here
     expect_equivalent(data[2:4,], readdata, info=dtype) # equivalent as not type consistent (int <-> numeric)
     expect_equal(NROW(readdata), 3L)

@@ -1,3 +1,10 @@
+# tiledb 'under development'
+
+## Bug Fixes
+
+* Unit tests of character columns in data frames accomodate R versions prior to R 4.0.0 in all cases (#243)
+
+
 # tiledb 0.9.1
 
 * This release of the R package builds against [TileDB 2.2.9](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.9), but has also been tested against previous releases as well as the development version.
