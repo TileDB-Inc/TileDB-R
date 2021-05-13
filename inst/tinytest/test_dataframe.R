@@ -241,12 +241,13 @@ D <- data.frame(sample=paste(LETTERS[1:N], as.character(sort(trunc(runif(N, 100,
                 stringsAsFactors=FALSE)
 uri <- tempfile()
 fromDataFrame(D, uri, col_index=1, sparse=TRUE)
-chk <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- arr[]
 if (getRversion() < '4.0.0') {
     chk$sample <- as.character(chk$sample)
     chk$header <- as.character(chk$header)
 }
-expect_equal(D, chk[])
+expect_equal(D, chk)
 
 ## sparse array can have duplicate values in index column
 df <- data.frame(
@@ -256,15 +257,12 @@ df <- data.frame(
 )
 
 uri <- tempfile()
-expect_error(
-    fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=FALSE)
-)
+expect_error(fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=FALSE))
 
 uri <- tempfile()
-expect_silent(
-    arr <- fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=TRUE)
-)
+expect_silent(arr <- fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=TRUE))
 
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
+if (getRversion() <  '4.0.0') chk$char <- as.character(chk$char)
 expect_equal(df, chk)
