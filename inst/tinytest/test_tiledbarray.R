@@ -199,7 +199,7 @@ dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
 dir.create(tmpuri <- tempfile())
 fromDataFrame(dat[,-1], tmpuri)
 
-arr <- tiledb_array(tmpuri, as.data.frame=TRUE)
+arr <- tiledb_array(tmpuri, as.data.frame=TRUE, extended=FALSE)
 expect_true(length(attrs(arr)) == 0)
 
 sels <-  c("age", "job", "education", "duration")
