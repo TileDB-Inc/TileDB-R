@@ -604,8 +604,10 @@ setMethod("[", "tiledb_array",
   colnames(res) <- allnames
 
   ## reduce output if extended is false, or attrs given
-  if (!x@extended || length(sel) > 0) {
-      res <- res[, if (sparse) allnames else attrnames]
+  if (!x@extended) {
+      if (length(sel) > 0) {
+          res <- res[, if (sparse) allnames else attrnames]
+      }
       k <- match("__tiledb_rows", colnames(res))
       if (is.finite(k)) {
           res <- res[, -k]
@@ -617,6 +619,10 @@ setMethod("[", "tiledb_array",
   }
 
   if (x@as.matrix) {
+    k <- match("__tiledb_rows", colnames(res))
+    if (is.finite(k)) {
+       res <- res[, -k]
+    }
     if (ncol(res) < 3) {
       message("ignoring as.matrix argument with insufficient result set")
     } else if (!is.null(i)) {
