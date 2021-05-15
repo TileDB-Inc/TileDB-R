@@ -30,7 +30,7 @@ expect_equal(irisdf, newdf[,-1])
 
 
 ## test attrs subselection
-arr <- tiledb_array(uri, as.data.frame=TRUE,
+arr <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE,
                     attrs = c("Petal.Length", "Petal.Width"))
 newdf <- arr[]
 expect_equal(iris[, c("Petal.Length", "Petal.Width")], newdf)
