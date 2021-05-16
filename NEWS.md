@@ -4,6 +4,10 @@
 
 * Unit tests of character columns in data frames accomodate R versions prior to R 4.0.0 in all cases (#243)
 
+* Dimension reduction for attribute-selected columns was incorrect in some cases (#245)
+
+* Attribute-selected columns were using dimenion data types in some cases (#246)
+
 
 # tiledb 0.9.1
 
