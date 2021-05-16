@@ -773,6 +773,8 @@ setMethod("[<-", "tiledb_array",
       value <- data.frame(x=as.matrix(value)[seq(1, d[1]*d[2])])
       colnames(value) <- attrnames
       allnames <- attrnames
+      alltypes <- attrtypes
+      allnullable <- attrnullable
     }
 
   ## Case 4: dense, list on RHS e.g. the ex_1.R example
