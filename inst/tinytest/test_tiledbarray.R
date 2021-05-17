@@ -1055,9 +1055,11 @@ expect_equal(mat, mat2)                 # check round-turn
 
 ## check no double selection
 expect_error(tiledb_array(tmp, as.data.frame=TRUE, as.matrix=TRUE))
-## check normal data.frame return when row col select
-expect_true(is.data.frame(suppressMessages(arr2[1:2,])))
-expect_true(is.data.frame(suppressMessages(arr2[,3])))
+## check normal data.frame return when row col select (after matrix reset)
+expect_false(is.data.frame(suppressMessages(arr2[1:2,])))
+expect_true(is.matrix(suppressMessages(arr2[1:2,])))
+expect_false(is.data.frame(suppressMessages(arr2[,3])))
+expect_true(is.matrix(suppressMessages(arr2[,3])))
 
 arr3 <- tiledb_array(tmp, as.data.frame=TRUE)
 df1 <- arr3[]
