@@ -626,11 +626,11 @@ setMethod("[", "tiledb_array",
     if (ncol(res) < 3) {
       stop("Seeing as.matrix argument with insufficient result set")
     }
-    if (min(res[,1]) != 1) {
+    if (!identical(unique(res[,1]), seq(1, length(unique(res[,1]))))) {
         cur <- unique(res[,1])
         for (l in seq_len(length(cur))) res[ which(res[,1] == cur[l]), 1 ] <- l
     }
-    if (min(res[,2]) != 1) {
+    if (!identical(unique(res[,2]), seq(1, length(unique(res[,2]))))) {
         cur <- unique(res[,2])
         for (l in seq_len(length(cur))) res[ which(res[,2] == cur[l]), 2 ] <- l
     }
