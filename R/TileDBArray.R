@@ -290,6 +290,11 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'as.matrix' slot does not contain a logical value.")
   }
 
+  if (object@as.data.frame && object@as.matrix) {
+    valid <- FALSE
+    msg <- c(msg, "The 'as.data.frame' and 'as.matrix' slots cannot be both set to 'TRUE'.")
+  }
+
   if (!is(object@ptr, "externalptr")) {
     valid <- FALSE
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
@@ -1198,3 +1203,42 @@ tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
 
   tiledb_array_get_non_empty_domain_from_index(arr, idx)
 }
+
+
+#' @rdname return.matrix-tiledb_array-method
+#' @param ... Currently unused
+#' @export
+setGeneric("return.matrix", function(object, ...) standardGeneric("return.matrix"))
+
+#' Retrieve matrix.frame return toggle
+#'
+#' A \code{tiledb_array} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame} or as a \code{matrix}. This methods returns
+#' the selection value for the \code{matrix} selection.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether \code{matrix} return is selected
+#' @export
+setMethod("return.matrix",
+          signature = "tiledb_array",
+          function(object) object@as.matrix)
+
+#' @rdname return.matrix-set-tiledb_array-method
+#' @export
+setGeneric("return.matrix<-", function(x, value) standardGeneric("return.matrix<-"))
+
+#' Set marix return toggle
+#'
+#' A \code{tiledb_array} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets the
+#' selection value for a \code{matrix}.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("return.matrix",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@as.matrix <- value
+  validObject(x)
+  x
+})
