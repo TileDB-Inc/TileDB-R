@@ -1055,9 +1055,20 @@ expect_equal(mat, mat2)                 # check round-turn
 
 ## check no double selection
 expect_error(tiledb_array(tmp, as.data.frame=TRUE, as.matrix=TRUE))
-## check normal data.frame return when row col select
-expect_true(is.data.frame(suppressMessages(arr2[1:2,])))
-expect_true(is.data.frame(suppressMessages(arr2[,3])))
+## check matrix return and not data.frame return when row col select
+expect_false(is.data.frame(suppressMessages(arr2[1:2,])))
+expect_true(is.matrix(suppressMessages(arr2[1:2,])))
+expect_false(is.data.frame(suppressMessages(arr2[,3])))
+expect_true(is.matrix(suppressMessages(arr2[,3])))
+## selections via i and j
+expect_equal(arr2[1:2,], cbind( c(1,2), c(6,7), c(11,12), c(16,17)))
+expect_equal(arr2[,3], cbind(11:15) )
+## more complex selection with holes via selected_ranges()
+selected_ranges(arr2) <- list(cbind(c(1,4),c(2,5)), cbind(2,3))
+expect_equal(arr2[], cbind(c(6,7,9,10), c(11,12,14,15)))
+selected_ranges(arr2) <- list(cbind(c(1,4),c(2,5)), cbind(2,2))
+expect_equal(arr2[], cbind(c(6,7,9,10)))
+
 
 arr3 <- tiledb_array(tmp, as.data.frame=TRUE)
 df1 <- arr3[]

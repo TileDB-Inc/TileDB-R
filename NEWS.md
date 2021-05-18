@@ -1,5 +1,9 @@
 # tiledb 'under development'
 
+## Improvements
+
+* Matrix objects can now be returned under range selections (#247)
+
 ## Bug Fixes
 
 * Unit tests of character columns in data frames accomodate R versions prior to R 4.0.0 in all cases (#243)

@@ -104,7 +104,7 @@ tiledb_array <- function(uri,
   if (missing(uri) || !is.scalar(uri, "character"))
     stop("argument uri must be a string scalar", call. = FALSE)
   if (as.data.frame && as.matrix)
-    stop("arguments as.data.frame and as.matrix cannot be selected togethers", call. = FALSE)
+    stop("arguments as.data.frame and as.matrix cannot be selected together", call. = FALSE)
   if (isTRUE(is.sparse) && as.matrix)
     stop("argument as.matrix cannot be selected for sparse arrays", call. = FALSE)
 
@@ -624,12 +624,17 @@ setMethod("[", "tiledb_array",
        res <- res[, -k]
     }
     if (ncol(res) < 3) {
-      message("ignoring as.matrix argument with insufficient result set")
-    } else if (!is.null(i)) {
-      message("case of row selection not supported for accessing as.matrix")
-    } else if (!is.null(j)) {
-      message("case of column selection not supported for accessing as.matrix")
-    } else if (ncol(res) == 3) {
+      stop("Seeing as.matrix argument with insufficient result set")
+    }
+    if (!identical(unique(res[,1]), seq(1, length(unique(res[,1]))))) {
+        cur <- unique(res[,1])
+        for (l in seq_len(length(cur))) res[ which(res[,1] == cur[l]), 1 ] <- l
+    }
+    if (!identical(unique(res[,2]), seq(1, length(unique(res[,2]))))) {
+        cur <- unique(res[,2])
+        for (l in seq_len(length(cur))) res[ which(res[,2] == cur[l]), 2 ] <- l
+    }
+    if (ncol(res) == 3) {
       mat <- matrix(, nrow=max(res[,1]), ncol=max(res[,2]))
       mat[ cbind( res[,1], res[,2] ) ] <- res[,3]
       res <- mat
