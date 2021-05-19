@@ -1,8 +1,10 @@
-# tiledb 'under development'
+# tiledb 0.9.2
 
 ## Improvements
 
 * Matrix objects can now be returned under range selections (#247)
+
+* Matrix return get turned on and off with setter / getter functions (#248)
 
 ## Bug Fixes
 
@@ -10,7 +12,7 @@
 
 * Dimension reduction for attribute-selected columns was incorrect in some cases (#245)
 
-* Attribute-selected columns were using dimenion data types in some cases (#246)
+* Attribute-selected columns were using incorrect dimension data types in some cases (#246)
 
 
 # tiledb 0.9.1
