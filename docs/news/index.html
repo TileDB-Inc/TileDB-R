@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.2</span>
       </span>
     </div>
 
@@ -132,15 +132,36 @@
       <small>Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tiledb-092" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.2">
+<a href="#tiledb-092" class="anchor"></a>tiledb 0.9.2</h1>
+<div id="improvements" class="section level2">
+<h2 class="hasAnchor">
+<a href="#improvements" class="anchor"></a>Improvements</h2>
+<ul>
+<li><p>Matrix objects can now be returned under range selections (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/247'>#247</a>)</p></li>
+<li><p>Matrix return get turned on and off with setter / getter functions (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/248'>#248</a>)</p></li>
+</ul>
+</div>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h2>
+<ul>
+<li><p>Unit tests of character columns in data frames accomodate R versions prior to R 4.0.0 in all cases (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/243'>#243</a>)</p></li>
+<li><p>Dimension reduction for attribute-selected columns was incorrect in some cases (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/245'>#245</a>)</p></li>
+<li><p>Attribute-selected columns were using incorrect dimension data types in some cases (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/246'>#246</a>)</p></li>
+</ul>
+</div>
+</div>
     <div id="tiledb-091" class="section level1">
 <h1 class="page-header" data-toc-text="0.9.1">
 <a href="#tiledb-091" class="anchor"></a>tiledb 0.9.1</h1>
 <ul>
 <li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.9">TileDB 2.2.9</a>, but has also been tested against previous releases as well as the development version.</li>
 </ul>
-<div id="improvements" class="section level2">
+<div id="improvements-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements" class="anchor"></a>Improvements</h2>
+<a href="#improvements-1" class="anchor"></a>Improvements</h2>
 <ul>
 <li><p>A new vignette show use of TileDB array via RMariaDB and the MyTile extension to MariaDB (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/221'>#221</a>)</p></li>
 <li><p>Matrices can now be returned directly from suitable two-dimensional TileDB arrays (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/225'>#225</a>)</p></li>
@@ -151,9 +172,9 @@
 <li><p>The pkgdown website now shows the ChangeLog derived from this NEWS file (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/240'>#240</a>)</p></li>
 </ul>
 </div>
-<div id="bug-fixes" class="section level2">
+<div id="bug-fixes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a>Bug Fixes</h2>
+<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes</h2>
 <ul>
 <li><p>Two tests with datetime comparisons which fail only on one macOS system are now conditional (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/216'>#216</a>)</p></li>
 <li><p>Result sets with all-character column now fall back to estimated result sizes (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/217'>#217</a>)</p></li>
@@ -174,9 +195,9 @@
 <ul>
 <li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.4">TileDB 2.2.4</a>, but has also been tested against two previous release series as well as the development version.</li>
 </ul>
-<div id="improvements-1" class="section level2">
+<div id="improvements-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-1" class="anchor"></a>Improvements</h2>
+<a href="#improvements-2" class="anchor"></a>Improvements</h2>
 <ul>
 <li><p>The older implementations <code>tiledb_dense</code> and <code>tiledb_sparse</code> are now marked as deprecated in favor of <code>tiledb_array</code>. No removal date is set or planned yet, but it is recommended to migrate to new code. (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/180'>#180</a>)</p></li>
 <li><p>Updated the underlying TileDB library to use TileDB 2.1.2 on macOS and Linux (when no system library is found) (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/181'>#181</a>)</p></li>
@@ -215,9 +236,9 @@
 <ul>
 <li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.1">TileDB 2.1.1</a>, but has also been tested against previous releases as well as the development version.</li>
 </ul>
-<div id="bug-fixes-1" class="section level2">
+<div id="bug-fixes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a>Bug Fixes</h2>
+<a href="#bug-fixes-2" class="anchor"></a>Bug Fixes</h2>
 <ul>
 <li><p>The <code><a href="../reference/tiledb_stats_reset.html">tiledb_stats_reset()</a></code> function is now exported, and <code><a href="../reference/tiledb_stats_print.html">tiledb_stats_print()</a></code> has been re-added as a wrapper to <code><a href="../reference/tiledb_stats_dump.html">tiledb_stats_dump()</a></code> (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/174'>#174</a>)</p></li>
 <li><p>Configuration options for compute and input/output concurrency set only the new TileDB 2.1 configuration options; documentation on how to checking values has been expanded. (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/175'>#175</a>)</p></li>
@@ -232,18 +253,18 @@
 <ul>
 <li>This release of the R package supports <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.1.0">TileDB 2.1.0</a>, but has also been tested against the previous release <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8">TileDB 2.0.8</a>.</li>
 </ul>
-<div id="improvements-2" class="section level2">
+<div id="improvements-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-2" class="anchor"></a>Improvements</h2>
+<a href="#improvements-3" class="anchor"></a>Improvements</h2>
 <ul>
 <li><p>R-based metadata accessors have been extended to also support <code>tiledb_array</code> arrays (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/169'>#169</a>)</p></li>
 <li><p><code>configure</code> now also checks the hardware platform before attempting a download of a prebuilt library (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/170'>#170</a>)</p></li>
 <li><p><code>SystemRequirements:</code> in the <code>DESCRIPTION</code> file has been expanded (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/170'>#170</a>)</p></li>
 </ul>
 </div>
-<div id="bug-fixes-2" class="section level2">
+<div id="bug-fixes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-2" class="anchor"></a>Bug Fixes</h2>
+<a href="#bug-fixes-3" class="anchor"></a>Bug Fixes</h2>
 <ul>
 <li>A typo in the manual page source, copied three more times, has been corrected (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/167'>#167</a>)</li>
 </ul>
@@ -255,9 +276,9 @@
 <ul>
 <li>This release of the R package supports <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.8">TileDB 2.0.8</a>, but has also been tested against the previous release <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7">TileDB 1.7.7</a>.</li>
 </ul>
-<div id="improvements-3" class="section level2">
+<div id="improvements-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-3" class="anchor"></a>Improvements</h2>
+<a href="#improvements-4" class="anchor"></a>Improvements</h2>
 <ul>
 <li><p>A new function <code><a href="../reference/limitTileDBCores.html">limitTileDBCores()</a></code> controls resource use, it is being used in tests (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/139'>#139</a>)</p></li>
 <li><p>The function <code><a href="../reference/tiledb_get_context.html">tiledb_get_context()</a></code> is now exported (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/140'>#140</a>)</p></li>
@@ -273,9 +294,9 @@
 <li><p>Continuous integration now uses Azure for macOS and Linux (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/160'>#160</a>) and GitHub Actions for Windows (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/162'>#162</a>,<a href='https://github.com/TileDB-Inc/TileDB-R/issues/165'>#165</a>)</p></li>
 </ul>
 </div>
-<div id="bug-fixes-3" class="section level2">
+<div id="bug-fixes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-3" class="anchor"></a>Bug Fixes</h2>
+<a href="#bug-fixes-4" class="anchor"></a>Bug Fixes</h2>
 <ul>
 <li><p>Conda builds no longer call <code>install_name_tool</code> (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/133'>#133</a>, <a href='https://github.com/TileDB-Inc/TileDB-R/issues/146'>#146</a>)</p></li>
 <li><p>Downloading the prebuild library accomodates multitple targets per architecture (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/150'>#150</a>)</p></li>
@@ -290,9 +311,9 @@
 <li>This release of the R package supports <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7">TileDB 1.7.7</a> and <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5">TileDB 2.0.5</a>
 </li>
 </ul>
-<div id="improvements-4" class="section level2">
+<div id="improvements-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-4" class="anchor"></a>Improvements</h2>
+<a href="#improvements-5" class="anchor"></a>Improvements</h2>
 <ul>
 <li><p>Range selection for tiledb_array objects can get/set matrices defining range (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/132'>#132</a>)</p></li>
 <li><p>The <code>show</code> methods are now consistently exported and documented (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/134'>#134</a>)</p></li>
@@ -304,9 +325,9 @@
 <li><p>The (optional) library download now relied on suggested R packages ‘jsonlite’ and ‘curl’ (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/137'>#137</a>)</p></li>
 </ul>
 </div>
-<div id="bug-fixes-4" class="section level2">
+<div id="bug-fixes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-4" class="anchor"></a>Bug Fixes</h2>
+<a href="#bug-fixes-5" class="anchor"></a>Bug Fixes</h2>
 <ul>
 <li>A character conversion when retrieving array metadata resulting in an out-of-bounds reads has been corrected (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/137'>#137</a>)</li>
 </ul>
@@ -319,9 +340,9 @@
 <li>This release of the R package supports <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7">TileDB 1.7.7</a> and <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.5">TileDB 2.0.5</a>
 </li>
 </ul>
-<div id="improvements-5" class="section level2">
+<div id="improvements-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-5" class="anchor"></a>Improvements</h2>
+<a href="#improvements-6" class="anchor"></a>Improvements</h2>
 <ul>
 <li><p>All S4 classes are now consistently documented or aliased (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/117'>#117</a>)</p></li>
 <li><p>If needed, the build system now builds TileDB and its required component (<a href='https://github.com/TileDB-Inc/TileDB-R/issues/118'>#118</a>)</p></li>
@@ -341,9 +362,9 @@
 <li>This release of the R package supports <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/1.7.7">TileDB 1.7.7</a> and <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.0.0">TileDB 2.0.0</a>
 </li>
 </ul>
-<div id="improvements-6" class="section level2">
+<div id="improvements-7" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-6" class="anchor"></a>Improvements</h2>
+<a href="#improvements-7" class="anchor"></a>Improvements</h2>
 <ul>
 <li><p>Added support for heterogenous domains</p></li>
 <li><p>Added support for string dimensions</p></li>
@@ -372,9 +393,9 @@
 <ul>
 <li>This release of the R package builds against the 1.7.5 releases of TileDB.</li>
 </ul>
-<div id="improvements-7" class="section level2">
+<div id="improvements-8" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-7" class="anchor"></a>Improvements</h2>
+<a href="#improvements-8" class="anchor"></a>Improvements</h2>
 <ul>
 <li>
 <p>Added support for i) multi-range subarrays, ii) incomplete queries,</p>
@@ -390,9 +411,9 @@
 <ul>
 <li>This release of the R package builds against the 1.7.* releases of tiledb.</li>
 </ul>
-<div id="improvements-8" class="section level2">
+<div id="improvements-9" class="section level2">
 <h2 class="hasAnchor">
-<a href="#improvements-8" class="anchor"></a>Improvements</h2>
+<a href="#improvements-9" class="anchor"></a>Improvements</h2>
 <ul>
 <li>This release contains increased coverage of the underlying API, additional documentation as well as unit tests.</li>
 </ul>

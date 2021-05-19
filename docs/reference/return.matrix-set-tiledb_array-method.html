@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generic Methods — domain • tiledb</title>
+<title>Set marix return toggle — return.matrix&lt;- • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Generic Methods — domain" />
-<meta property="og:description" content="Definition of generic methods" />
+<meta property="og:title" content="Set marix return toggle — return.matrix&lt;-" />
+<meta property="og:description" content="A tiledb_array object can be returned as an array (or list of arrays),
+or, if select, as a data.frame or a matrix. This methods sets the
+selection value for a matrix." />
 
 
 
@@ -129,72 +131,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generic Methods</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/ArraySchema.R'><code>R/ArraySchema.R</code></a>, <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Attribute.R'><code>R/Attribute.R</code></a>, <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Ctx.R'><code>R/Ctx.R</code></a>, and 5 more</small>
-    <div class="hidden name"><code>generics.Rd</code></div>
+    <h1>Set marix return toggle</h1>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/TileDBArray.R'><code>R/TileDBArray.R</code></a></small>
+    <div class="hidden name"><code>return.matrix-set-tiledb_array-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Definition of generic methods</p>
+    <p>A <code>tiledb_array</code> object can be returned as an array (or list of arrays),
+or, if select, as a <code>data.frame</code> or a <code>matrix</code>. This methods sets the
+selection value for a <code>matrix</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>domain</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'><a href='return.matrix.html'>return.matrix</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
-<span class='fu'>dimensions</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>attrs</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>idx</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>cell_order</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>tile_order</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>filter_list</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>filter_list</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-
-<span class='fu'>is.sparse</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>tiledb_ndim</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>name</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
-
-<span class='fu'>datatype</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
-
-<span class='fu'>config</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>schema</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>tile</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
-
-<span class='fu'>is.integral</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
-
-<span class='fu'>nfilters</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span></pre>
+<span class='co'># S4 method for tiledb_array</span>
+<span class='fu'><a href='return.matrix.html'>return.matrix</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>A TileDB object</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Variable argument</p></td>
-    </tr>
-    <tr>
-      <th>idx</th>
-      <td><p>An index argument</p></td>
-    </tr>
-    <tr>
       <th>x</th>
-      <td><p>A TileDB Object</p></td>
+      <td><p>A <code>tiledb_array</code> object</p></td>
     </tr>
     <tr>
       <th>value</th>
-      <td><p>A value to be assigned</p></td>
+      <td><p>A logical value with the selection</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The modified <code>tiledb_array</code> array object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
