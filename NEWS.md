@@ -1,4 +1,15 @@
+# tiledb under developement
+
+* This release of the R package builds against [TileDB 2.2.9](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.9), but has also been tested against previous releases as well as the development version.
+
+## Improvements
+
+* Continuous integration at GitHub is now faster as suggested packages are no longer installed (#250)
+
+
 # tiledb 0.9.2
+
+* This release of the R package builds against [TileDB 2.2.9](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.9), but has also been tested against previous releases as well as the development version.
 
 ## Improvements
 
