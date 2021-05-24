@@ -1132,7 +1132,7 @@ expect_equal(chk[], M)
 
 ## test for data.frame append
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
-data(penguins, package="palmerpenguins")
+library(palmerpenguins)
 uri <- tempfile()
 fromDataFrame(penguins, uri, sparse = TRUE,
               col_index = c("species", "year"),
