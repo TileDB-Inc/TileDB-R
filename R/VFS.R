@@ -222,7 +222,7 @@ tiledb_vfs_remove_dir <- function(uri, vfs = tiledb_get_vfs()) {
   }
   stopifnot(vfs_argument=is(vfs, "tiledb_vfs"),
             uri_argument=is.character(uri))
-  libtiledb_vfs_remove_dir(vfs@ptr, uri)
+  invisible(libtiledb_vfs_remove_dir(vfs@ptr, uri))
 }
 
 #' Test for VFS File
