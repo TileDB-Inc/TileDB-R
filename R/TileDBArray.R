@@ -745,13 +745,14 @@ setMethod("[<-", "tiledb_array",
 
   ## Case 1
   if (length(colnames(value)) == length(allnames)) {
-    ## same length is good
-    if (length(intersect(colnames(value), allnames)) == length(allnames)) {
-      ## all good, proceed
-      #message("Yay all columns found")
-    } else {
-      stop("Assigned data.frame does not contain all required attribute and dimension columns.")
-    }
+      ## same length is good
+      if (length(intersect(colnames(value), allnames)) == length(allnames)) {
+          ## all good, proceed
+          #message("Yay all columns found")
+          value <- value[, allnames]    # reordering helps with append case
+      } else {
+          stop("Assigned data.frame does not contain all required attribute and dimension columns.")
+      }
   }
 
   ## Case 2
