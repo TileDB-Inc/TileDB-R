@@ -1145,7 +1145,7 @@ newdf$island <- c("Manhattan", "Staten Island")
 newdf$year <- c(1966L, 1969L)                     # int is important
 arr[] <- newdf
 ## check it
-chk <- tiledb_array("/tmp/tiledb/penguinsTest", as.data.frame=TRUE)
+chk <- tiledb_array(uri, as.data.frame=TRUE)
 res <- chk[]
 expect_true(1966L %in% res$year)
 expect_true(1969L %in% res$year)
