@@ -1145,9 +1145,9 @@ array_consolidate <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
 #' @return \code{NULL} is returned invisibly
 #' @export
 array_vacuum <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
-  libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri,
-                              # C++ code has Nullable and can instantiate but needs S4 XPtr
-                              cfgptr = if (is.null(cfg)) cfg else cfg@ptr)
+    libtiledb_array_vacuum(ctx = ctx@ptr, uri = uri,
+                           # C++ code has Nullable and can instantiate but needs S4 XPtr
+                           cfgptr = if (is.null(cfg)) cfg else cfg@ptr)
 }
 
 #' Get the non-empty domain from a TileDB Array by index
