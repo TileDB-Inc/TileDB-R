@@ -50,8 +50,10 @@
 ##' @param filter A character variable vector, defaults to \sQuote{ZSTD}, for
 ##' one or more filters to be applied to each attribute;
 ##' @param capacity A integer value with the schema capacity, default is 10000.
-##' @param tile_domain An integer vector of size two specifying the integer domain of the row
-##' dimension; if \code{NULL} the row dimension of the \code{obj} is used.
+##' @param tile_domain An integer vector or list or \code{NULL}. If an integer vector
+##' of size two it specifies the integer domain of the row dimension; if a list then a named
+##' element is used for the dimension of the same name; or if \code{NULL} the row
+##' dimension of the \code{obj} is used.
 ##' @param tile_extent An integer value for the tile extent of the row dimensions;
 ##' if \code{NULL} the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
 ##' cannot exceed the tile domain.
@@ -97,10 +99,6 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         useobj <- obj
 
     } else {
-        #if (length(col_index) > 1) {
-        #    warning("Currently only one index column supported")
-        #    col_index <- col_index[1]
-        #}
 
         dimobj <- obj[, col_index, drop=FALSE]
         atrobj <- obj[, -col_index, drop=FALSE]
@@ -112,7 +110,17 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         makeDim <- function(ind) {
             idxcol <- dimobj[,ind]
             idxnam <- colnames(dimobj)[ind]
-            col_domain <- if (is.null(tile_domain)) c(min(idxcol), max(idxcol)) else tile_domain
+            col_domain <- if (is.null(tile_domain)) {                   # default case
+                              c(min(idxcol), max(idxcol))               #   use range
+                          } else if (is.list(tile_domain)) {            # but if list
+                              if (idxnam %in% names(tile_domain)) {     #   and name exists
+                                  tile_domain[[idxnam]]                 #   use element
+                              } else {
+                                  c(min(idxcol), max(idxcol))           #   else fallback
+                              }
+                          } else {                                      # else
+                              tile_domain                               #   use non-list value
+                          }
             col_extent <- if (is.null(tile_extent)) dims[1] else tile_extent
             if (!inherits(idxcol, "character")) {
                 dom_range <- diff(as.numeric(range(col_domain))) + 1
@@ -121,7 +129,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
             dtype <- "INT32"                # default
             if (inherits(idxcol, "POSIXt")) {
                 dtype <- "DATETIME_US"
-                col_domain <- as.numeric(col_domain) * 1e6 	# int64 used
+                col_domain <- as.numeric(col_domain) * 1e6  # int64 used
             } else if (inherits(idxcol, "Date")) {
                 dtype <- "DATETIME_DAY"
                 col_extent <- as.numeric(col_extent) # to not trigger INT32 test

@@ -1128,3 +1128,30 @@ M <- matrix(runif(N*K), N, K)
 obj[] <- M                              # prior to #246 this write had a write data type
 chk <- tiledb_array(uri, as.matrix=TRUE)
 expect_equal(chk[], M)
+
+
+## test for data.frame append
+if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
+library(palmerpenguins)
+uri <- tempfile()
+fromDataFrame(penguins, uri, sparse = TRUE,
+              col_index = c("species", "year"),
+              tile_domain=list(year=c(1966L, 2021L)))
+arr <- tiledb_array(uri)
+## new data
+newdf <- penguins[1:2,]
+newdf$species <- c("Fred", "Ginger")
+newdf$island <- c("Manhattan", "Staten Island")
+newdf$year <- c(1966L, 1969L)                     # int is important
+arr[] <- newdf
+## check it
+chk <- tiledb_array(uri, as.data.frame=TRUE)
+res <- chk[]
+expect_true(1966L %in% res$year)
+expect_true(1969L %in% res$year)
+expect_true("Manhattan" %in% res$island)
+expect_true("Staten Island" %in% res$island)
+expect_true("Fred" %in% res$species)
+expect_true("Ginger" %in% res$species)
+expect_equal(nrow(penguins) + 2, nrow(res))
+expect_equal(ncol(penguins), ncol(res))
