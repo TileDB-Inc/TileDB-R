@@ -1137,7 +1137,7 @@ uri <- tempfile()
 fromDataFrame(penguins, uri, sparse = TRUE,
               col_index = c("species", "year"),
               tile_domain=list(year=c(1966L, 2021L)))
-arr <- tiledb_array(uri)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
 ## new data
 newdf <- penguins[1:2,]
 newdf$species <- c("Fred", "Ginger")
@@ -1155,3 +1155,18 @@ expect_true("Fred" %in% res$species)
 expect_true("Ginger" %in% res$species)
 expect_equal(nrow(penguins) + 2, nrow(res))
 expect_equal(ncol(penguins), ncol(res))
+
+## test for both possible orders of selected_ranges
+selected_ranges(arr) <- list(year=cbind(1966L, 1999L),
+                             species=matrix(c("Fred", "Fred",
+                                              "Ginger", "Ginger"),
+                                            2, 2, byrow=TRUE))
+res1 <- arr[]
+expect_equal(nrow(res1), 2)
+selected_ranges(arr) <- list(species=matrix(c("Fred", "Fred",
+                                              "Ginger", "Ginger"),
+                                            2, 2, byrow=TRUE),
+                             year=cbind(1966L, 1999L))
+res2 <- arr[]
+expect_equal(nrow(res2), 2)
+expect_equal(res1, res2)

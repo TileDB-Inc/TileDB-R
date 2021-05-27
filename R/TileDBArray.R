@@ -467,6 +467,13 @@ setMethod("[", "tiledb_array",
       x@selected_ranges <- fulllist
   }
 
+  ## selected_ranges may be in different order than dimnames, so reorder if need be
+  if ((length(x@selected_ranges) == length(dimnames))
+      && (!is.null(names(x@selected_ranges)))
+      && (!identical(names(x@selected_ranges), dimnames))) {
+      x@selected_ranges <- x@selected_ranges[dimnames]
+  }
+
   ## if selected_ranges is still an empty list, make it an explicit one
   if (length(x@selected_ranges) == 0) {
       x@selected_ranges <- vector(mode="list", length=length(dimnames))
