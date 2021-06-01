@@ -233,10 +233,10 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2), sparse = FALSE)
 # ... create domain dom
 # ... create attributes attr1, attr2
 
-# The tile and order can be "ROW_MAJOR" or "COL_MAJOR"
+# The tile and order can be "COL_MAJOR" or "ROW_MAJOR"
 schema <- tiledb_array_schema(dom, c(attr1, attr2),
                               cell_order = "COL_MAJOR",
-                              tile_order = "ROW_MAJOR")
+                              tile_order = "COL_MAJOR")
 ```
 
 #### Setting the Data Tile Capacity
@@ -452,7 +452,7 @@ subarr <- c(1L,4L, 1L,4L)
 
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
 qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
-qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
 qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
 qryptr <- tiledb:::libtiledb_query_submit(qryptr)
 res <- tiledb:::libtiledb_array_close(arrptr)
@@ -518,7 +518,7 @@ subarr <- c(1L,4L, 1L,4L)
 
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
 qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
-qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
 qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", vec)
 qryptr <- tiledb:::libtiledb_query_submit(qryptr)
 res <- tiledb:::libtiledb_array_close(arrptr)
@@ -544,8 +544,8 @@ tiledb:::libtiledb_attribute_set_cell_val_num(attr@ptr, NA)
 ctx <- tiledb_ctx()
 schptr <- tiledb:::libtiledb_array_schema_create(ctx@ptr, "DENSE")
 tiledb:::libtiledb_array_schema_set_domain(schptr, dom@ptr)
-tiledb:::libtiledb_array_schema_set_cell_order(schptr, "ROW_MAJOR")
-tiledb:::libtiledb_array_schema_set_tile_order(schptr, "ROW_MAJOR")
+tiledb:::libtiledb_array_schema_set_cell_order(schptr, "COL_MAJOR")
+tiledb:::libtiledb_array_schema_set_tile_order(schptr, "COL_MAJOR")
 tiledb:::libtiledb_array_schema_add_attribute(schptr, attr@ptr)
 
 
@@ -559,7 +559,7 @@ offsets <- c(0L, 1L, 3L, 6L, 8L, 11L, 12L, 13L, 16L, 17L, 20L, 22L, 23L, 24L, 25
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "WRITE")
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "WRITE")
-qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
 
 bufptr <- tiledb:::libtiledb_query_buffer_var_char_create(offsets, data)
 qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
@@ -803,7 +803,7 @@ subarr <- c(1L,2L, 2L,4L)
 
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
 qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
-qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
 v <- integer(6)  # reserve space
 qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", v)
 qryptr <- tiledb:::libtiledb_query_submit(qryptr)
@@ -822,7 +822,7 @@ bufptr <- tiledb:::libtiledb_query_buffer_var_char_alloc(arrptr, subarr, "a1", 1
 
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
 qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
-qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
 
 qryptr <- tiledb:::libtiledb_query_set_buffer_var_char(qryptr, "a1", bufptr)
 qryptr <- tiledb:::libtiledb_query_submit(qryptr)
@@ -944,7 +944,7 @@ arrptr <- tiledb:::libtiledb_array_open_at(ctx@ptr, uridense, "READ", tstamp)
 subarr <- c(1L,2L, 2L,4L)
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
 qryptr <- tiledb:::libtiledb_query_set_subarray(qryptr, subarr)
-qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "ROW_MAJOR")
+qryptr <- tiledb:::libtiledb_query_set_layout(qryptr, "COL_MAJOR")
 a <- integer(6)  # reserve space
 qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a", a)
 qryptr <- tiledb:::libtiledb_query_submit(qryptr)
