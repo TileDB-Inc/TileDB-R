@@ -58,11 +58,11 @@ tiledb_query_type <- function(query) {
 #'
 #' @param query A TileDB Query object
 #' @param layout A character variable with the layout; must be one of
-#'   "COL_MAJOR", "ROW_MAJOR", "GLOBAL_ORDER", "UNORDERED")
+#'   "COL_MAJOR", "ROW_MAJOR", "GLOBAL_ORDER", "UNORDERED", "HILBERT")
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_layout <- function(query, layout=c("COL_MAJOR", "ROW_MAJOR",
-                                                    "GLOBAL_ORDER", "UNORDERED")) {
+                                                    "GLOBAL_ORDER", "UNORDERED", "HILBERT")) {
   layout <- match.arg(layout)
   stopifnot(query_object=is(query, "tiledb_query"))
   libtiledb_query_set_layout(query@ptr, layout)
