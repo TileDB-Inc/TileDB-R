@@ -72,7 +72,7 @@
 ##' }
 ##' @export
 fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sparse,
-                          cell_order = "ROW_MAJOR", tile_order = "ROW_MAJOR", filter="ZSTD",
+                          cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="ZSTD",
                           capacity = 10000L, tile_domain = NULL, tile_extent = NULL, debug = FALSE) {
 
     if (!inherits(obj, "data.frame")) stop("Argument 'obj' should be a 'data.frame' (or a related object).", call. = FALSE)

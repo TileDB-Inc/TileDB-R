@@ -52,7 +52,6 @@ expect_equal(tiledb_query_get_layout(tiledb_query_set_layout(query, "ROW_MAJOR")
 expect_equal(tiledb_query_get_layout(tiledb_query_set_layout(query, "COL_MAJOR")), "COL_MAJOR")
 expect_equal(tiledb_query_get_layout(tiledb_query_set_layout(query, "GLOBAL_ORDER")), "GLOBAL_ORDER")
 expect_equal(tiledb_query_get_layout(tiledb_query_set_layout(query, "UNORDERED")), "UNORDERED")
-
 unlink(tmp, recursive=TRUE)
 #})
 
