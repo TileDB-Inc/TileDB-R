@@ -6,14 +6,14 @@
 \usage{
 tiledb_query_set_layout(
   query,
-  layout = c("COL_MAJOR", "ROW_MAJOR", "GLOBAL_ORDER", "UNORDERED", "HILBERT")
+  layout = c("COL_MAJOR", "ROW_MAJOR", "GLOBAL_ORDER", "UNORDERED")
 )
 }
 \arguments{
 \item{query}{A TileDB Query object}
 
 \item{layout}{A character variable with the layout; must be one of
-"COL_MAJOR", "ROW_MAJOR", "GLOBAL_ORDER", "UNORDERED", "HILBERT")}
+"COL_MAJOR", "ROW_MAJOR", "GLOBAL_ORDER", "UNORDERED")}
 }
 \value{
 The modified query object, invisibly
