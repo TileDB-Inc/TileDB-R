@@ -10,8 +10,8 @@ fromDataFrame(
   col_index = NULL,
   sparse = FALSE,
   allows_dups = sparse,
-  cell_order = "ROW_MAJOR",
-  tile_order = "ROW_MAJOR",
+  cell_order = "COL_MAJOR",
+  tile_order = "COL_MAJOR",
   filter = "ZSTD",
   capacity = 10000L,
   tile_domain = NULL,
@@ -44,8 +44,10 @@ one or more filters to be applied to each attribute;}
 
 \item{capacity}{A integer value with the schema capacity, default is 10000.}
 
-\item{tile_domain}{An integer vector of size two specifying the integer domain of the row
-dimension; if \code{NULL} the row dimension of the \code{obj} is used.}
+\item{tile_domain}{An integer vector or list or \code{NULL}. If an integer vector
+of size two it specifies the integer domain of the row dimension; if a list then a named
+element is used for the dimension of the same name; or if \code{NULL} the row
+dimension of the \code{obj} is used.}
 
 \item{tile_extent}{An integer value for the tile extent of the row dimensions;
 if \code{NULL} the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
