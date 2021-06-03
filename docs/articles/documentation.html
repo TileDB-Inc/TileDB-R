@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.3</span>
       </span>
     </div>
 
@@ -301,10 +301,10 @@
 <code class="sourceCode R"><span class="co"># ... create domain dom</span>
 <span class="co"># ... create attributes attr1, attr2</span>
 
-<span class="co"># The tile and order can be "ROW_MAJOR" or "COL_MAJOR"</span>
+<span class="co"># The tile and order can be "COL_MAJOR" or "ROW_MAJOR"</span>
 <span class="va">schema</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array_schema.html">tiledb_array_schema</a></span><span class="op">(</span><span class="va">dom</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">attr1</span>, <span class="va">attr2</span><span class="op">)</span>,
                               cell_order <span class="op">=</span> <span class="st">"COL_MAJOR"</span>,
-                              tile_order <span class="op">=</span> <span class="st">"ROW_MAJOR"</span><span class="op">)</span></code></pre></div>
+                              tile_order <span class="op">=</span> <span class="st">"COL_MAJOR"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="setting-the-data-tile-capacity" class="section level4">
 <h4 class="hasAnchor">
@@ -337,7 +337,7 @@
 <code class="sourceCode R"><span class="co"># set 'duplicates allowed?' status</span>
 <span class="fu"><a href="../reference/allows_dups.html">allows_dups</a></span><span class="op">(</span><span class="va">sch</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="fu"><a href="../reference/allows_dups&lt;-.html">tiledb_array_schema_set_allows_dups</a></span><span class="op">(</span><span class="va">sch</span>, <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x564b22e4c0a0&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c9f6b48040&gt;</code></pre>
 </div>
 <div id="checking-correctness" class="section level4">
 <h4 class="hasAnchor">
@@ -479,7 +479,7 @@
 
 <span class="co"># create encrypted array at 'uri' with schema 'sch'</span>
 <span class="fu"><a href="../reference/tiledb_array_create.html">tiledb_array_create</a></span><span class="op">(</span><span class="va">uridensewkey</span>, <span class="va">sch</span>, <span class="va">encryption_key</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpIth74A/denseenc"</code></pre>
+<pre><code>## [1] "/tmp/RtmpMqj8qr/denseenc"</code></pre>
 </div>
 </div>
 <div id="writing-arrays" class="section level2">
@@ -529,7 +529,7 @@
 
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">arrptr</span>, <span class="st">"WRITE"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_subarray</span><span class="op">(</span><span class="va">qryptr</span>, <span class="va">subarr</span><span class="op">)</span>
-<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
+<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a"</span>, <span class="va">vec</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span></code></pre></div>
@@ -548,7 +548,7 @@
 <span class="va">val</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_attr.html">tiledb_attr</a></span><span class="op">(</span><span class="st">"val"</span>, type <span class="op">=</span> <span class="st">"INT32"</span><span class="op">)</span>
 <span class="va">sch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array_schema.html">tiledb_array_schema</a></span><span class="op">(</span><span class="va">dom</span>, <span class="va">val</span>, sparse<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="../reference/tiledb_array_create.html">tiledb_array_create</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="va">sch</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpIth74A/sparse"</code></pre>
+<pre><code>## [1] "/tmp/RtmpMqj8qr/sparse"</code></pre>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Prepare some data</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3L</span>, <span class="fl">4L</span>, <span class="fl">1L</span>, <span class="fl">2L</span><span class="op">)</span>
@@ -584,7 +584,7 @@
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_attribute_set_cell_val_num</span><span class="op">(</span><span class="va">attr</span><span class="op">@</span><span class="va">ptr</span>, <span class="fl">2</span><span class="op">)</span>
 <span class="va">sch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array_schema.html">tiledb_array_schema</a></span><span class="op">(</span><span class="va">dom</span>, <span class="va">attr</span><span class="op">)</span>
 <span class="fu"><a href="../reference/tiledb_array_create.html">tiledb_array_create</a></span><span class="op">(</span><span class="va">uridensefix</span>, <span class="va">sch</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpIth74A/densefix"</code></pre>
+<pre><code>## [1] "/tmp/RtmpMqj8qr/densefix"</code></pre>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">arrptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_open</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">uridensefix</span>, <span class="st">"WRITE"</span><span class="op">)</span>
@@ -592,7 +592,7 @@
 
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">arrptr</span>, <span class="st">"WRITE"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_subarray</span><span class="op">(</span><span class="va">qryptr</span>, <span class="va">subarr</span><span class="op">)</span>
-<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
+<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a"</span>, <span class="va">vec</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span>
@@ -618,15 +618,15 @@
 <span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">schptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_schema_create</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="st">"DENSE"</span><span class="op">)</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_schema_set_domain</span><span class="op">(</span><span class="va">schptr</span>, <span class="va">dom</span><span class="op">@</span><span class="va">ptr</span><span class="op">)</span>
-<span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_schema_set_cell_order</span><span class="op">(</span><span class="va">schptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
-<span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_schema_set_tile_order</span><span class="op">(</span><span class="va">schptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
+<span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_schema_set_cell_order</span><span class="op">(</span><span class="va">schptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
+<span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_schema_set_tile_order</span><span class="op">(</span><span class="va">schptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_schema_add_attribute</span><span class="op">(</span><span class="va">schptr</span>, <span class="va">attr</span><span class="op">@</span><span class="va">ptr</span><span class="op">)</span>
 
 
 
 <span class="co">## Create the (empty) array on disk.</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_create</span><span class="op">(</span><span class="va">uridensevar</span>, <span class="va">schptr</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpIth74A/densevar"</code></pre>
+<pre><code>## [1] "/tmp/RtmpMqj8qr/densevar"</code></pre>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="st">"abbcccddeeefghhhijjjkklmnoop"</span>;
 <span class="va">offsets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0L</span>, <span class="fl">1L</span>, <span class="fl">3L</span>, <span class="fl">6L</span>, <span class="fl">8L</span>, <span class="fl">11L</span>, <span class="fl">12L</span>, <span class="fl">13L</span>, <span class="fl">16L</span>, <span class="fl">17L</span>, <span class="fl">20L</span>, <span class="fl">22L</span>, <span class="fl">23L</span>, <span class="fl">24L</span>, <span class="fl">25L</span>, <span class="fl">27L</span><span class="op">)</span>
@@ -634,13 +634,13 @@
 <span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">arrptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_open</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">uridensevar</span>, <span class="st">"WRITE"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">arrptr</span>, <span class="st">"WRITE"</span><span class="op">)</span>
-<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
+<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
 
 <span class="va">bufptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_buffer_var_char_create</span><span class="op">(</span><span class="va">offsets</span>, <span class="va">data</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a1"</span>, <span class="va">bufptr</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x564b2292b480&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c9fa7dd4e0&gt;</code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#TODO Higher-level R support</span></code></pre></div>
 </div>
@@ -867,7 +867,7 @@
 ## [1] 2 3 4 2 3 4
 ## 
 ## $a
-## [1] 20 30 40 60 70 80</code></pre>
+## [1]  50  90 130  60 100 140</code></pre>
 <div id="basic-reading-using-low-level-code" class="section level4">
 <h4 class="hasAnchor">
 <a href="#basic-reading-using-low-level-code" class="anchor"></a>Basic Reading using Low-Level Code</h4>
@@ -879,12 +879,12 @@
 
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">arrptr</span>, <span class="st">"READ"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_subarray</span><span class="op">(</span><span class="va">qryptr</span>, <span class="va">subarr</span><span class="op">)</span>
-<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
+<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
 <span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">integer</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>  <span class="co"># reserve space</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a"</span>, <span class="va">v</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span>         <span class="co"># unformed array, no coordinates</span></code></pre></div>
-<pre><code>## [1] 20 30 40 60 70 80</code></pre>
+<pre><code>## [1]  50  60  90 100 130 140</code></pre>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span></code></pre></div>
 </div>
@@ -900,12 +900,12 @@
 
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">arrptr</span>, <span class="st">"READ"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_subarray</span><span class="op">(</span><span class="va">qryptr</span>, <span class="va">subarr</span><span class="op">)</span>
-<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
+<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
 
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a1"</span>, <span class="va">bufptr</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x564b2573adf0&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c9f9d80a00&gt;</code></pre>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_get_buffer_var_char</span><span class="op">(</span><span class="va">bufptr</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">mat</span>, quote<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -1001,10 +1001,10 @@
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">vec</span><span class="op">)</span>
   <span class="va">finished</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_status</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span> <span class="op">==</span> <span class="st">"COMPLETE"</span>
 <span class="op">}</span></code></pre></div>
-<pre><code>## [1] 10 20 30 40
-## [1] 50 60 70 80
-## [1]  90 100 110 120
-## [1] 130 140 150 160</code></pre>
+<pre><code>## [1]  10  50  90 130
+## [1]  20  60 100 140
+## [1]  30  70 110 150
+## [1]  40  80 120 160</code></pre>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span></code></pre></div>
 </div>
@@ -1033,7 +1033,7 @@
 <span class="va">subarr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1L</span>,<span class="fl">2L</span>, <span class="fl">2L</span>,<span class="fl">4L</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">arrptr</span>, <span class="st">"READ"</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_subarray</span><span class="op">(</span><span class="va">qryptr</span>, <span class="va">subarr</span><span class="op">)</span>
-<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"ROW_MAJOR"</span><span class="op">)</span>
+<span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_layout</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"COL_MAJOR"</span><span class="op">)</span>
 <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">integer</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>  <span class="co"># reserve space</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
@@ -1079,7 +1079,7 @@
 
 <span class="co"># Unset a configuration parameter</span>
 <span class="fu"><a href="../reference/tiledb_config_unset.html">tiledb_config_unset</a></span><span class="op">(</span><span class="va">config</span>, <span class="st">"sm.tile_cache_size"</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x564b1f4695e0&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c9fc3c2680&gt;</code></pre>
 </div>
 <div id="save-and-load-to-file" class="section level4">
 <h4 class="hasAnchor">
@@ -1090,7 +1090,7 @@
 <span class="va">config</span><span class="op">[</span><span class="st">"sm.tile_cache_size"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>;
 <span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"tiledb_config"</span>, fileext <span class="op">=</span> <span class="st">".txt"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/tiledb_config_save.html">tiledb_config_save</a></span><span class="op">(</span><span class="va">config</span>, <span class="va">file</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpIth74A/tiledb_config3e92096647e95b.txt"</code></pre>
+<pre><code>## [1] "/tmp/RtmpMqj8qr/tiledb_config2910c627bc2333.txt"</code></pre>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Load from file</span>
 <span class="va">config_loaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_config_load.html">tiledb_config_load</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span>
@@ -1118,8 +1118,6 @@
 ## rest.retry_initial_delay_ms : 500 
 ## rest.server_address : https://api.tiledb.com 
 ## rest.server_serialization_format : CAPNP 
-## sm.array.timestamp_end : 18446744073709551615 
-## sm.array.timestamp_start : 0 
 ## sm.check_coord_dups : true 
 ## sm.check_coord_oob : true 
 ## sm.check_global_order : true 
@@ -1135,6 +1133,8 @@
 ## sm.consolidation.timestamp_start : 0 
 ## sm.dedup_coords : false 
 ## sm.enable_signal_handlers : true 
+## sm.encryption_key : 0 
+## sm.encryption_type : NO_ENCRYPTION 
 ## sm.io_concurrency_level : 12 
 ## sm.max_tile_overlap_size : 314572800 
 ## sm.memory_budget : 5368709120 

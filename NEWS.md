@@ -1,10 +1,22 @@
-# tiledb under developement
+# tiledb 0.9.2
 
 * This release of the R package builds against [TileDB 2.2.9](https://github.com/TileDB-Inc/TileDB/releases/tag/2.2.9), but has also been tested against previous releases as well as the development version.
 
 ## Improvements
 
 * Continuous integration at GitHub is now faster as suggested packages are no longer installed (#250)
+
+* Arrays can now be written incrementally via the higher-level replacement function `arr[] <- obj` (#251)
+
+* The default column layout for arrays written via `fromDataFrame` is now column-order (#254)
+
+## Bug Fixes
+
+* The call to vaccum not correctly calls the library function to vaccum instead of the consolidation function (#252)
+
+* When several columns are selected via `selected_ranges`, a potentially necessary reordering is done for a query (#253)
+
+* Dense subarrays can be written for `tiledb_array` (#256)
 
 
 # tiledb 0.9.2
