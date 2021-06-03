@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.3</span>
       </span>
     </div>
 
@@ -173,8 +173,6 @@
 #&gt; rest.retry_initial_delay_ms 500
 #&gt; rest.server_address https://api.tiledb.com
 #&gt; rest.server_serialization_format CAPNP
-#&gt; sm.array.timestamp_end 18446744073709551615
-#&gt; sm.array.timestamp_start 0
 #&gt; sm.check_coord_dups true
 #&gt; sm.check_coord_oob true
 #&gt; sm.check_global_order true
@@ -190,6 +188,8 @@
 #&gt; sm.consolidation.timestamp_start 0
 #&gt; sm.dedup_coords false
 #&gt; sm.enable_signal_handlers true
+#&gt; sm.encryption_key 0
+#&gt; sm.encryption_type NO_ENCRYPTION
 #&gt; sm.io_concurrency_level 12
 #&gt; sm.max_tile_overlap_size 314572800
 #&gt; sm.memory_budget 5368709120
