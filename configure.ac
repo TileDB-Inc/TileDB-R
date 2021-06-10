@@ -149,8 +149,8 @@ fi
 ## -- Part 4: Branch on Setup and Choices ---------------------------------------
 ##
 ## to test one can force some selections here
-have_tiledb="no"
-enable_building="no"
+#have_tiledb="no"
+#enable_building="no"
 if test x"${have_tiledb}" = x"no"; then
 
     ## case one: build is selected (or forced) so try building TileDB
