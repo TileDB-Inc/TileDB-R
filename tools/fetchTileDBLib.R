@@ -2,7 +2,7 @@
 
 argv <- commandArgs(trailingOnly=TRUE)
 if (length(argv) == 0) {
-  message("Requires either one argument (macos|linux) or two (url downloadurl)")
+  message("Requires either one argument (macos|linux) (plus optional machine) or two (url downloadurl)")
   q()
 }
 
@@ -27,10 +27,15 @@ ver <- dcf[[1, "version"]]
 sha <- dcf[[1, "sha"]]
 
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
-dlurl <- switch(osarg,
-                linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-full.tar.gz", ver, ver, sha)),
-                macos = file.path(baseurl,sprintf("%s/tiledb-macos-%s-%s-full.tar.gz", ver, ver, sha)),
-                url = urlarg)
+if (osarg == "macos" && urlarg == "arm64") {
+    message("Overriding download for arm64")
+    dlurl <- "https://dirk.eddelbuettel.com/tmp/tiledb_2.3.0_macos_arm64.tar.gz"
+} else {
+    dlurl <- switch(osarg,
+                    linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-full.tar.gz", ver, ver, sha)),
+                    macos = file.path(baseurl,sprintf("%s/tiledb-macos-%s-%s-full.tar.gz", ver, ver, sha)),
+                    url = urlarg)
+}
 cat("downloading", dlurl, "\n")
 op <- options()
 options(timeout=60)

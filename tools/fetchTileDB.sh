@@ -1,7 +1,8 @@
 #!/bin/sh
 
 if [ $# -lt 1 ] || { [ "$1" != "linux" ] && [ "$1" != "macos" ] && [ "$1" != "url" ]; }; then
-    echo "Usage: fetchTileDB.sh (linux|macos|url)"
+    echo "Usage: fetchTileDB.sh (linux|macos|url) (givenurl|machine)"
+    echo "where 'givenurl' and 'machine' are optional"
     exit 1
 fi
 os="${1}"
