@@ -7,6 +7,7 @@ if (length(argv) == 0) {
 }
 
 osarg <- argv[1]
+urlarg <- ""                            # placeholder, used for macos as arm64 arch, or for url
 if (!osarg %in% c("macos", "linux", "url")) {
   message("Requires first argument: macos|linux|url")
   q()
@@ -15,7 +16,9 @@ if (osarg == "url" && length(argv) <= 1) {
   message("First argument 'url' requires second argument with actual url")
   q()
 }
-urlarg <- argv[2]
+if (length(argv) >= 2) {                # if download url, or for macOS arm64, given
+  urlarg <- argv[2]
+}
 
 dcffile <- "../tools/tiledbVersion.txt"
 if (!file.exists(dcffile)) {
