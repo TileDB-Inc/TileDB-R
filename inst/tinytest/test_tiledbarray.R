@@ -1206,7 +1206,6 @@ schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32"),
                                              tiledb_attr("c", type = "CHAR", ncells = NA_integer_)))
 
 uri <- tempfile()
-if (tiledb_vfs_is_dir(uri)) tiledb_vfs_remove_dir(uri)
 res <- tiledb_array_create(uri, schema)
 data <- list(a=array(seq(1:100), dim = c(10,5, 2)),
              b=array(as.double(seq(101,by=0.5,length=100)), dim = c(10,5,2)),
