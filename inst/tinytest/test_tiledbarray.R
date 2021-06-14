@@ -1196,3 +1196,23 @@ expect_equal(dim(res), c(5,4))
 expect_equal(sum(is.na(res[1:3,1:2])), 6) # arr[1:3,1:2] all NA
 expect_equal(res[1:3,3:4], mat[1:3,3:4])
 expect_equal(res[4:5,1:4], mat[4:5,1:4])
+
+## issue 259 dense array with n>2 dimensions
+dom <- tiledb_domain(dims = list(tiledb_dim("rows", c(1L, 10L), 10L, "INT32"),
+                                 tiledb_dim("cols", c(1L, 5L), 5L, "INT32"),
+                                 tiledb_dim("time", c(1L, 2L), 2L, "INT32")))
+schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32"),
+                                             tiledb_attr("b", type = "FLOAT64"),
+                                             tiledb_attr("c", type = "CHAR", ncells = NA_integer_)))
+
+uri <- tempfile()
+res <- tiledb_array_create(uri, schema)
+data <- list(a=array(seq(1:100), dim = c(10,5, 2)),
+             b=array(as.double(seq(101,by=0.5,length=100)), dim = c(10,5,2)),
+             c=array(rep(c(letters[1:26], "brs", "asdf", LETTERS[1:22]), 2), dim = c(10,5,2)))
+A <- tiledb_array(uri = uri, as.data.frame = TRUE, query_layout = "ROW_MAJOR")
+A[] <- data
+chk <- tiledb_array(uri = uri, as.data.frame=TRUE)
+res <- chk[]
+expect_equal(dim(res), c(100,6))
+expect_equal(colnames(res), c("rows", "cols", "time", "a", "b", "c"))
