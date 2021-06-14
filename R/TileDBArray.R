@@ -803,7 +803,7 @@ setMethod("[<-", "tiledb_array",
       nl <- length(value)
       for (k in seq_len(nl)) {
         d <- dim(value[[k]])
-        value[[k]] <- as.matrix(value[[k]])[seq(1, d[1]*d[2])]
+        value[[k]] <- as.matrix(value[[k]])[seq(1, prod(d))]
       }
     }
     names(value) <- attrnames
