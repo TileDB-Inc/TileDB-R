@@ -648,6 +648,14 @@ setMethod("[", "tiledb_array",
   }
 
   if (x@as.matrix) {
+    res <- .convertToMatrix(res)
+  }
+
+  invisible(res)
+})
+
+## helper function
+.convertToMatrix <- function(res) {
     k <- match("__tiledb_rows", colnames(res))
     if (is.finite(k)) {
        res <- res[, -k]
@@ -678,10 +686,8 @@ setMethod("[", "tiledb_array",
       names(lst) <- tail(colnames(res), k)
       res <- lst
     }
-  }
-
-  invisible(res)
-})
+    res
+}
 
 
 #' Sets a tiledb array value or value range
