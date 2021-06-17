@@ -703,6 +703,10 @@ setMethod("[", "tiledb_array",
 
 .convertToArray <- function(dimnames,attrnames,res) {
     dims <- sapply(dimnames, function(n) length(unique(res[,n])), USE.NAMES=FALSE)
+    if (prod(dims) != nrow(res)) {
+        message("Total array dimensions from unique elements does not match rows, returning data.frame unchanged.")
+        return(invisible(res))
+    }
     lst <- lapply(attrnames, function(n) array(res[,n], dim=dims))
     names(lst) <- attrnames
     lst
