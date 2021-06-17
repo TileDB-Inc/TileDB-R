@@ -3479,7 +3479,7 @@ $as_echo "installing TileDB for ${osrel}..." >&6; }
             else
                 os="linux"
             fi
-            cd inst && ../tools/fetchTileDB.sh "${os}" && cd ..
+            cd inst && ../tools/fetchTileDB.sh "${os}" "${machine}" && cd ..
 
         elif test x"${machine}" = x"arm64" && test x"${uname}" = x"Darwin"; then
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: downloading arm64 TileDB library..." >&5

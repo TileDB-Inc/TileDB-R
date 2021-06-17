@@ -191,7 +191,7 @@ if test x"${have_tiledb}" = x"no"; then
             else
                 os="linux"
             fi
-            cd inst && ../tools/fetchTileDB.sh "${os}" && cd ..
+            cd inst && ../tools/fetchTileDB.sh "${os}" "${machine}" && cd ..
 
         elif test x"${machine}" = x"arm64" && test x"${uname}" = x"Darwin"; then
             AC_MSG_RESULT([downloading arm64 TileDB library...])
