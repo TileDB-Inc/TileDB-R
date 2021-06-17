@@ -40,6 +40,7 @@
 #' @slot encryption_key A character value
 #' @slot timestamp A POSIXct datetime variable
 #' @slot as.matrix A logical value
+#' @slot as.array A logical value
 #' @slot query_condition A Query Condition object
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
@@ -56,6 +57,7 @@ setClass("tiledb_array",
                       encryption_key = "character",
                       timestamp = "POSIXct",
                       as.matrix = "logical",
+                      as.array = "logical",
                       query_condition = "tiledb_query_condition",
                       ptr = "externalptr"))
 
@@ -83,7 +85,9 @@ setClass("tiledb_array",
 #' @param timestamp optional A POSIXct Datetime value determining where in time the array is
 #' to be openened.
 #' @param as.matrix optional logical switch, defaults to "FALSE"; currently limited to dense
-#' matrices; in the case of multiple attributes in query lists of matrices are returned
+#' matrices; in the case of multiple attributes in query a list of matrices is returned
+#' @param as.array optional logical switch, defaults to "FALSE"; in the case of multiple
+#' attributes in query a list of arrays is returned
 #' @param query_condition optional \code{tiledb_query_condition} object, by default uninitialized
 #' without a condition; this functionality requires TileDB 2.3.0 or later
 #' @param ctx tiledb_ctx (optional)
@@ -101,6 +105,7 @@ tiledb_array <- function(uri,
                          encryption_key = character(),
                          timestamp = as.POSIXct(double(), origin="1970-01-01"),
                          as.matrix = FALSE,
+                         as.array = FALSE,
                          query_condition = new("tiledb_query_condition"),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
@@ -108,8 +113,8 @@ tiledb_array <- function(uri,
     stop("argument ctx must be a tiledb_ctx", call. = FALSE)
   if (missing(uri) || !is.scalar(uri, "character"))
     stop("argument uri must be a string scalar", call. = FALSE)
-  if (as.data.frame && as.matrix)
-    stop("arguments as.data.frame and as.matrix cannot be selected together", call. = FALSE)
+  if (sum(as.data.frame, as.matrix, as.array) > 1)
+    stop("at most one argument of as.data.frame, as.matrix and as.array can be selected", call. = FALSE)
   if (isTRUE(is.sparse) && as.matrix)
     stop("argument as.matrix cannot be selected for sparse arrays", call. = FALSE)
 
@@ -154,6 +159,7 @@ tiledb_array <- function(uri,
       encryption_key = encryption_key,
       timestamp = timestamp,
       as.matrix = as.matrix,
+      as.array = as.array,
       query_condition = query_condition,
       ptr = array_xptr)
 }
@@ -216,6 +222,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  encryption_key     = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
      ,"  timestamp          = ", if (length(object@timestamp) == 0) "(none)" else format(object@timestamp), "\n"
      ,"  as.matrix          = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
+     ,"  as.array           = ", if (object@as.array) "TRUE" else "FALSE", "\n"
      ,"  query_condition    = ", if (isTRUE(object@query_condition@init)) "(set)" else "(none)", "\n"
      ,sep="")
 })
@@ -297,9 +304,14 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'as.matrix' slot does not contain a logical value.")
   }
 
-  if (object@as.data.frame && object@as.matrix) {
+  if (!is.logical(object@as.array)) {
     valid <- FALSE
-    msg <- c(msg, "The 'as.data.frame' and 'as.matrix' slots cannot be both set to 'TRUE'.")
+    msg <- c(msg, "The 'as.array' slot does not contain a logical value.")
+  }
+
+  if (sum(c(object@as.data.frame, object@as.matrix, object@as.array)) > 1) {
+    valid <- FALSE
+    msg <- c(msg, "At most one of 'as.data.frame', 'as.matrix', 'as.array' slots can be set to 'TRUE'.")
   }
 
   if (!is(object@query_condition, "tiledb_query_condition")) {
@@ -643,18 +655,18 @@ setMethod("[", "tiledb_array",
       }
   }
 
-  if (!x@as.data.frame && !x@as.matrix) {
+  if (!x@as.data.frame && !x@as.matrix && !x@as.array) {
     res <- as.list(res)
-  }
-
-  if (x@as.matrix) {
+  } else if (x@as.matrix) {
     res <- .convertToMatrix(res)
+  } else if (x@as.array) {
+    res <- .convertToArray(dimnames, attrnames, res)
   }
 
   invisible(res)
 })
 
-## helper function
+## helper functions
 .convertToMatrix <- function(res) {
     k <- match("__tiledb_rows", colnames(res))
     if (is.finite(k)) {
@@ -689,6 +701,12 @@ setMethod("[", "tiledb_array",
     res
 }
 
+.convertToArray <- function(dimnames,attrnames,res) {
+    dims <- sapply(dimnames, function(n) length(unique(res[,n])), USE.NAMES=FALSE)
+    lst <- lapply(attrnames, function(n) array(res[,n], dim=dims))
+    names(lst) <- attrnames
+    lst
+}
 
 #' Sets a tiledb array value or value range
 #'

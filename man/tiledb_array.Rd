@@ -17,6 +17,7 @@ tiledb_array(
   encryption_key = character(),
   timestamp = as.POSIXct(double(), origin = "1970-01-01"),
   as.matrix = FALSE,
+  as.array = FALSE,
   query_condition = new("tiledb_query_condition"),
   ctx = tiledb_get_context()
 )
@@ -53,7 +54,10 @@ in case the array was written with encryption.}
 to be openened.}
 
 \item{as.matrix}{optional logical switch, defaults to "FALSE"; currently limited to dense
-matrices; in the case of multiple attributes in query lists of matrices are returned}
+matrices; in the case of multiple attributes in query a list of matrices is returned}
+
+\item{as.array}{optional logical switch, defaults to "FALSE"; in the case of multiple
+attributes in query a list of arrays is returned}
 
 \item{query_condition}{optional \code{tiledb_query_condition} object, by default uninitialized
 without a condition; this functionality requires TileDB 2.3.0 or later}
