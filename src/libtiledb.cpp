@@ -3149,6 +3149,13 @@ CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim
   return CharacterVector::create(rng[0], rng[1]);	 // start and end
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
+                                                  XPtr<tiledb::QueryCondition> query_cond) {
+    query->set_condition(*query_cond.get());
+    return query;
+}
+
 /**
  * Query Condition
  */
@@ -3225,26 +3232,25 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
                                     const std::string& attr_name,
                                     SEXP condition_value,
                                     const std::string& cond_val_type,
-                                    //const int32_t& cond_val_size,
                                     const std::string& cond_op_string) {
-    void *ptr = nullptr;
-    int cond_val_size = 0;
-    tiledb_query_condition_op_t op = TILEDB_LT;
-    // this is a dual mapp first to the TILEDB_* type and then to the R type
+
+    tiledb_query_condition_op_t op = _tiledb_query_string_to_condition_op(cond_op_string);
+    // this is a dual map first to the TILEDB_* type and then to the R type
     std::string rtype = tiledb_datatype_R_type(cond_val_type);
     if (rtype == "integer") {
         int v = as<int>(condition_value);
-        ptr = &v;
-        cond_val_size = sizeof(int);
+        uint64_t cond_val_size = sizeof(int);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else if (cond_val_type == "double") {
         double v = as<double>(condition_value);
-        ptr = &v;
-        cond_val_size = sizeof(double);
+        uint64_t cond_val_size = sizeof(double);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else {
         Rcpp::stop("Currently unsupport type: %s", cond_val_type);
     }
-    query_cond->init(attr_name, ptr, cond_val_size, op);
 }
+
+
 
 /**
  * Array helper functions
