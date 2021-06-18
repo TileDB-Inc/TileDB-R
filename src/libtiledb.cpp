@@ -3150,6 +3150,103 @@ CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim
 }
 
 /**
+ * Query Condition
+ */
+const char* _tiledb_query_condition_op_to_string(tiledb_query_condition_op_t op) {
+    switch (op) {
+    case TILEDB_LT:
+        return "LT";
+    case TILEDB_LE:
+        return "LE";
+    case TILEDB_GT:
+        return "GT";
+    case TILEDB_GE:
+        return "GE";
+    case TILEDB_EQ:
+        return "EQ";
+    case TILEDB_NE:
+        return "NE";
+    default:
+        Rcpp::stop("Unknown condition op (%d)", op);
+    }
+}
+
+tiledb_query_condition_op_t _tiledb_query_string_to_condition_op(const std::string& opstr) {
+    if (opstr == "LT") {
+        return TILEDB_LT;
+    } else if (opstr == "LE") {
+        return TILEDB_LE;
+    } else if (opstr == "GT") {
+        return TILEDB_GT;
+    } else if (opstr == "GE") {
+        return TILEDB_GE;
+    } else if (opstr == "EQ") {
+        return TILEDB_EQ;
+    } else if (opstr == "NE") {
+        return TILEDB_NE;
+    } else {
+        Rcpp::stop("Unknown TileDB op string '%s'", opstr.c_str());
+    }
+}
+
+const char* _tiledb_query_condition_combination_op_to_string(tiledb_query_condition_combination_op_t op) {
+    switch (op) {
+    case TILEDB_AND:
+        return "AND";
+    case TILEDB_OR:
+        return "OR";
+    case TILEDB_NOT:
+        return "NOT";
+    default:
+        Rcpp::stop("Unknown condition combination op (%d)", op);
+    }
+}
+
+tiledb_query_condition_combination_op_t _tiledb_query_string_to_condition_combination_op(const std::string& opstr) {
+    if (opstr == "AND") {
+        return TILEDB_AND;
+    } else if (opstr == "OR") {
+        return TILEDB_OR;
+    } else if (opstr == "NOT") {
+        return TILEDB_NOT;
+    } else {
+        Rcpp::stop("Unknown TileDB combination op string '%s'", opstr.c_str());
+    }
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx) {
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()));
+    return query_cond;
+}
+
+// [[Rcpp::export]]
+void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
+                                    const std::string& attr_name,
+                                    SEXP condition_value,
+                                    const std::string& cond_val_type,
+                                    //const int32_t& cond_val_size,
+                                    const std::string& cond_op_string) {
+    void *ptr = nullptr;
+    int cond_val_size = 0;
+    tiledb_query_condition_op_t op = TILEDB_LT;
+    // this is a dual mapp first to the TILEDB_* type and then to the R type
+    std::string rtype = tiledb_datatype_R_type(cond_val_type);
+    if (rtype == "integer") {
+        int v = as<int>(condition_value);
+        ptr = &v;
+        cond_val_size = sizeof(int);
+    } else if (cond_val_type == "double") {
+        double v = as<double>(condition_value);
+        ptr = &v;
+        cond_val_size = sizeof(double);
+    } else {
+        Rcpp::stop("Currently unsupport type: %s", cond_val_type);
+    }
+    query_cond->init(attr_name, ptr, cond_val_size, op);
+}
+
+/**
  * Array helper functions
  */
 // [[Rcpp::export]]
