@@ -34,7 +34,7 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 }
 
 #' @export
-tiledb_query_condition_init <- function(qc, attr, value, dtype, op) {
+tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
     stopifnot(`needs query condition object`=is(qc, "tiledb_query_condition"),
               `attr must be character`=is.character(attr),
               `dtype must be character`=is.character(dtype),
@@ -42,6 +42,7 @@ tiledb_query_condition_init <- function(qc, attr, value, dtype, op) {
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
     ## maybe check dtype too
     libtiledb_query_condition_init(qc@ptr, attr, value, dtype, op)
+    invisible(qc)
 }
 
 #' @export
