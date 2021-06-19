@@ -46,6 +46,21 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
 }
 
 #' @export
+tiledb_query_condition_combine <- function(lhs, rhs, op) {
+    stopifnot(`needs query condition object on lhs`=is(lhs, "tiledb_query_condition"),
+              `needs query condition object on rhs`=is(rhs, "tiledb_query_condition"),
+              `op must be character`=is.character(op))
+    op <- match.arg(op, c("AND", "OR", "NOT"))
+    qc <- tiledb_query_condition()
+    qc@ptr <- libtiledb_query_condition_combine(lhs@ptr, rhs@ptr, op)
+    invisible(qc)
+}
+
+
+
+## TODO --> Query.R file
+
+#' @export
 tiledb_query_set_condition <- function(qry, qc) {
     stopifnot(`needs query object`=is(qry, "tiledb_query"),
               `needs query condition object`=is(qc, "tiledb_query_condition"))

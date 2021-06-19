@@ -3250,6 +3250,14 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
     }
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::QueryCondition> lhs,
+                                                               XPtr<tiledb::QueryCondition> rhs,
+                                                               const std::string& str) {
+    tiledb_query_condition_combination_op_t op = _tiledb_query_string_to_condition_combination_op(str);
+    lhs->combine(*rhs.get(), op);
+    return lhs;
+}
 
 
 /**

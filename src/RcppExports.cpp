@@ -1948,6 +1948,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_query_condition_combine
+XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::QueryCondition> lhs, XPtr<tiledb::QueryCondition> rhs, const std::string& str);
+RcppExport SEXP _tiledb_libtiledb_query_condition_combine(SEXP lhsSEXP, SEXP rhsSEXP, SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::QueryCondition> >::type lhs(lhsSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::QueryCondition> >::type rhs(rhsSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_condition_combine(lhs, rhs, str));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_zip_coords_numeric
 NumericVector libtiledb_zip_coords_numeric(List coords, R_xlen_t coord_length);
 RcppExport SEXP _tiledb_libtiledb_zip_coords_numeric(SEXP coordsSEXP, SEXP coord_lengthSEXP) {
@@ -2501,6 +2514,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_condition", (DL_FUNC) &_tiledb_libtiledb_query_set_condition, 2},
     {"_tiledb_libtiledb_query_condition", (DL_FUNC) &_tiledb_libtiledb_query_condition, 1},
     {"_tiledb_libtiledb_query_condition_init", (DL_FUNC) &_tiledb_libtiledb_query_condition_init, 5},
+    {"_tiledb_libtiledb_query_condition_combine", (DL_FUNC) &_tiledb_libtiledb_query_condition_combine, 3},
     {"_tiledb_libtiledb_zip_coords_numeric", (DL_FUNC) &_tiledb_libtiledb_zip_coords_numeric, 2},
     {"_tiledb_libtiledb_zip_coords_integer", (DL_FUNC) &_tiledb_libtiledb_zip_coords_integer, 2},
     {"_tiledb_libtiledb_group_create", (DL_FUNC) &_tiledb_libtiledb_group_create, 2},

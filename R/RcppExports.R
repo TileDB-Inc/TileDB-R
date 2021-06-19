@@ -653,6 +653,10 @@ libtiledb_query_condition_init <- function(query_cond, attr_name, condition_valu
     invisible(.Call(`_tiledb_libtiledb_query_condition_init`, query_cond, attr_name, condition_value, cond_val_type, cond_op_string))
 }
 
+libtiledb_query_condition_combine <- function(lhs, rhs, str) {
+    .Call(`_tiledb_libtiledb_query_condition_combine`, lhs, rhs, str)
+}
+
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {
     .Call(`_tiledb_libtiledb_zip_coords_numeric`, coords, coord_length)
 }
