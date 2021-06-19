@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2020      TileDB Inc.
+//  Copyright (c) 2020-2021 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -157,6 +157,15 @@ extern "C" {
         if (ptr != nullptr) {
             tiledb_vfs_fh_t *fh = static_cast<tiledb_vfs_fh_t*>(ptr->fh);
             tiledb_vfs_fh_free(&fh);
+            delete ptr;
+            ptr = nullptr;
+        }
+    }
+
+    inline void libtiledb_query_condition_delete(SEXP sexp) {
+        XPtr<tiledb::QueryCondition> qc(sexp);
+        tiledb::QueryCondition* ptr = qc.get();
+        if (ptr != nullptr) {
             delete ptr;
             ptr = nullptr;
         }

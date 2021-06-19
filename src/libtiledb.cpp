@@ -3224,6 +3224,7 @@ tiledb_query_condition_combination_op_t _tiledb_query_string_to_condition_combin
 // [[Rcpp::export]]
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx) {
     XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()));
+    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
 
