@@ -3256,8 +3256,10 @@ XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::Quer
                                                                XPtr<tiledb::QueryCondition> rhs,
                                                                const std::string& str) {
     tiledb_query_condition_combination_op_t op = _tiledb_query_string_to_condition_combination_op(str);
-    lhs->combine(*rhs.get(), op);
-    return lhs;
+    tiledb::QueryCondition res = lhs->combine(*rhs.get(), op);
+    auto query_cond = XPtr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
+    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
+    return query_cond;
 }
 
 
