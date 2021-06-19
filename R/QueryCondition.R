@@ -20,11 +20,18 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
-
+#' An S4 class for a TileDB QueryCondition object
+#'
+#' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_query_condition
 setClass("tiledb_query_condition",
          slots = list(ptr = "externalptr"))
 
+#' Creates a 'tiledb_query_condition' object
+#'
+#' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+#' context object is retrieved
+#' @return A 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition <- function(ctx = tiledb_get_context()) {
     stopifnot(`needs ctx object`=is(ctx, "tiledb_ctx"))
@@ -33,10 +40,26 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
     invisible(query_condition)
 }
 
+#' Initialize a 'tiledb_query_condition' object
+#'
+#' Initializes (and possibly allocates) a query condition object using a triplet of
+#' attribute name, comparison value, and operator.  Six types of condition are supported,
+#' they all take a single scalar comparison argument and attribute to compare against.
+#' At present only integer or numeric attribute comparisons are implemented.
+#' @param attr A character value with the scheme attribute name
+#' @param value A scalar value that the attribute is compared against
+#' @param dtype A character value with the TileDB data type of the attribute column, for
+#' example 'FLOAT64' or 'INT32'
+#' @param op A character value with then comparison operation, this must be one of
+#' 'LT', 'LE', 'GT', 'GE', 'EQ', 'NE'.
+#' @param qc (optional) A 'tiledb_query_condition' object to be initialized by this call,
+#' if none is given a new one is allocated.
+#' @return The initialized 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
     stopifnot(`needs query condition object`=is(qc, "tiledb_query_condition"),
               `attr must be character`=is.character(attr),
+              `value must be of length one`=is.vector(value) && all.equal(length(value),1),
               `dtype must be character`=is.character(dtype),
               `op must be character`=is.character(op))
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
@@ -45,6 +68,14 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
     invisible(qc)
 }
 
+#' Combine two 'tiledb_query_condition' objects
+#'
+#' Combines two query condition object using a relatiional operator. Note that at present
+#' only 'AND' is supported.
+#' @param lhs A 'tiledb_query_condition' object on the left-hand side of the relation
+#' @param rhs A 'tiledb_query_condition' object on the left-hand side of the relation
+#' @param op A character value with then relation, this must be one of 'AND', 'OR' or 'NOT'.
+#' @return The combined 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_combine <- function(lhs, rhs, op) {
     stopifnot(`needs query condition object on lhs`=is(lhs, "tiledb_query_condition"),
@@ -54,16 +85,4 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
     qc <- tiledb_query_condition()
     qc@ptr <- libtiledb_query_condition_combine(lhs@ptr, rhs@ptr, op)
     invisible(qc)
-}
-
-
-
-## TODO --> Query.R file
-
-#' @export
-tiledb_query_set_condition <- function(qry, qc) {
-    stopifnot(`needs query object`=is(qry, "tiledb_query"),
-              `needs query condition object`=is(qc, "tiledb_query_condition"))
-    qry@ptr <- libtiledb_query_set_condition(qry@ptr, qc@ptr)
-    invisible(qry)
 }
