@@ -3224,7 +3224,7 @@ tiledb_query_condition_combination_op_t _tiledb_query_string_to_condition_combin
 // [[Rcpp::export]]
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx) {
     XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()));
-    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
+    //registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
 
@@ -3242,7 +3242,7 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
         int v = as<int>(condition_value);
         uint64_t cond_val_size = sizeof(int);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
-    } else if (cond_val_type == "double") {
+    } else if (rtype == "double") {
         double v = as<double>(condition_value);
         uint64_t cond_val_size = sizeof(double);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
@@ -3258,7 +3258,7 @@ XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::Quer
     tiledb_query_condition_combination_op_t op = _tiledb_query_string_to_condition_combination_op(str);
     tiledb::QueryCondition res = lhs->combine(*rhs.get(), op);
     auto query_cond = XPtr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
-    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
+    //registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
 
