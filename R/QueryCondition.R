@@ -34,7 +34,8 @@ setClass("tiledb_query_condition",
 #' @return A 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition <- function(ctx = tiledb_get_context()) {
-    stopifnot(`needs ctx object`=is(ctx, "tiledb_ctx"))
+    stopifnot(`needs ctx object` = is(ctx, "tiledb_ctx"),
+              `needs TileDB 2.3.0 or newer` = tiledb_version(TRUE) >= "2.3.0")
     ptr <- libtiledb_query_condition(ctx@ptr)
     query_condition <- new("tiledb_query_condition", ptr = ptr)
     invisible(query_condition)

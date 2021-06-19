@@ -3152,13 +3152,16 @@ CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
                                                   XPtr<tiledb::QueryCondition> query_cond) {
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     query->set_condition(*query_cond.get());
+#endif
     return query;
 }
 
 /**
  * Query Condition
  */
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
 const char* _tiledb_query_condition_op_to_string(tiledb_query_condition_op_t op) {
     switch (op) {
     case TILEDB_LT:
@@ -3220,10 +3223,15 @@ tiledb_query_condition_combination_op_t _tiledb_query_string_to_condition_combin
         Rcpp::stop("Unknown TileDB combination op string '%s'", opstr.c_str());
     }
 }
+#endif
 
 // [[Rcpp::export]]
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx) {
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()));
+#else
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition());
+#endif
     //registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
@@ -3235,6 +3243,7 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
                                     const std::string& cond_val_type,
                                     const std::string& cond_op_string) {
 
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     tiledb_query_condition_op_t op = _tiledb_query_string_to_condition_op(cond_op_string);
     // this is a dual map first to the TILEDB_* type and then to the R type
     std::string rtype = tiledb_datatype_R_type(cond_val_type);
@@ -3249,15 +3258,20 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
     } else {
         Rcpp::stop("Currently unsupport type: %s", cond_val_type);
     }
+#endif
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::QueryCondition> lhs,
                                                                XPtr<tiledb::QueryCondition> rhs,
                                                                const std::string& str) {
+#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     tiledb_query_condition_combination_op_t op = _tiledb_query_string_to_condition_combination_op(str);
     tiledb::QueryCondition res = lhs->combine(*rhs.get(), op);
     auto query_cond = XPtr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
+#else
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition());
+#endif
     //registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
