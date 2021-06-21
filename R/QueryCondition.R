@@ -47,7 +47,7 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 #' Initialize a 'tiledb_query_condition' object
 #'
 #' Initializes (and possibly allocates) a query condition object using a triplet of
-#' attribute name, comparison value, and operator.  Six types of condition are supported,
+#' attribute name, comparison value, and operator.  Six types of conditions are supported,
 #' they all take a single scalar comparison argument and attribute to compare against.
 #' At present only integer or numeric attribute comparisons are implemented.
 #' @param attr A character value with the scheme attribute name
