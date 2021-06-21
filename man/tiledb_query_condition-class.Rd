@@ -11,5 +11,8 @@ An S4 class for a TileDB QueryCondition object
 
 \describe{
 \item{\code{ptr}}{An external pointer to the underlying implementation}
+
+\item{\code{init}}{A logical variable tracking if the query condition object has been
+initialized}
 }}
 

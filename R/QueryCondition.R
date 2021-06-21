@@ -23,9 +23,12 @@
 #' An S4 class for a TileDB QueryCondition object
 #'
 #' @slot ptr An external pointer to the underlying implementation
+#' @slot init A logical variable tracking if the query condition object has been
+#' initialized
 #' @exportClass tiledb_query_condition
 setClass("tiledb_query_condition",
-         slots = list(ptr = "externalptr"))
+         slots = list(ptr = "externalptr",
+                      init = "logical"))
 
 #' Creates a 'tiledb_query_condition' object
 #'
@@ -37,7 +40,7 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
     stopifnot(`needs ctx object` = is(ctx, "tiledb_ctx"),
               `needs TileDB 2.3.0 or newer` = tiledb_version(TRUE) >= "2.3.0")
     ptr <- libtiledb_query_condition(ctx@ptr)
-    query_condition <- new("tiledb_query_condition", ptr = ptr)
+    query_condition <- new("tiledb_query_condition", ptr = ptr, init = FALSE)
     invisible(query_condition)
 }
 
@@ -66,6 +69,7 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
     ## maybe check dtype too
     libtiledb_query_condition_init(qc@ptr, attr, value, dtype, op)
+    qc@init <- TRUE
     invisible(qc)
 }
 
@@ -85,5 +89,6 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
     op <- match.arg(op, c("AND", "OR", "NOT"))
     qc <- tiledb_query_condition()
     qc@ptr <- libtiledb_query_condition_combine(lhs@ptr, rhs@ptr, op)
+    qc@init <- TRUE
     invisible(qc)
 }

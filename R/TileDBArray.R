@@ -40,6 +40,7 @@
 #' @slot encryption_key A character value
 #' @slot timestamp A POSIXct datetime variable
 #' @slot as.matrix A logical value
+#' @slot query_condition A Query Condition object
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -55,6 +56,7 @@ setClass("tiledb_array",
                       encryption_key = "character",
                       timestamp = "POSIXct",
                       as.matrix = "logical",
+                      query_condition = "tiledb_query_condition",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -82,6 +84,8 @@ setClass("tiledb_array",
 #' to be openened.
 #' @param as.matrix optional logical switch, defaults to "FALSE"; currently limited to dense
 #' matrices; in the case of multiple attributes in query lists of matrices are returned
+#' @param query_condition optional \code{tiledb_query_condition} object, by default uninitialized
+#' without a condition; this functionality requires TileDB 2.3.0 or later
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object
 #' @export
@@ -97,6 +101,7 @@ tiledb_array <- function(uri,
                          encryption_key = character(),
                          timestamp = as.POSIXct(double(), origin="1970-01-01"),
                          as.matrix = FALSE,
+                         query_condition = new("tiledb_query_condition"),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -149,6 +154,7 @@ tiledb_array <- function(uri,
       encryption_key = encryption_key,
       timestamp = timestamp,
       as.matrix = as.matrix,
+      query_condition = query_condition,
       ptr = array_xptr)
 }
 
@@ -210,6 +216,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  encryption_key     = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
      ,"  timestamp          = ", if (length(object@timestamp) == 0) "(none)" else format(object@timestamp), "\n"
      ,"  as.matrix          = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
+     ,"  query_condition    = ", if (isTRUE(object@query_condition@init)) "(set)" else "(none)", "\n"
      ,sep="")
 })
 
@@ -295,6 +302,11 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'as.data.frame' and 'as.matrix' slots cannot be both set to 'TRUE'.")
   }
 
+  if (!is(object@query_condition, "tiledb_query_condition")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'query_condition' slot does not contain a query condition object.")
+  }
+
   if (!is(object@ptr, "externalptr")) {
     valid <- FALSE
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
@@ -311,7 +323,7 @@ setValidity("tiledb_array", function(object) {
 ## which, being an R date, has an internal representation of _days_ since the epoch, i.e.
 ## as.numeric(as.Date("2021-01-01")) yields 18628.
 ##
-## We also convert to integer64 because that is
+## We also convert the value to integer64 because that is the internal storage format
 .mapDatetime2integer64 <- function(val, dtype) {
     ## in case it is not a datetime type, or already an int64, return unchanged
     if (!grepl("^DATETIME_", dtype) || inherits(val, "integer64"))
@@ -580,6 +592,11 @@ setMethod("[", "tiledb_array",
   buflist <- mapply(getBuffer, allnames, alltypes, allvarnum, allnullable,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                     SIMPLIFY=FALSE)
+
+  ## if we have a query condition, apply it
+  if (isTRUE(x@query_condition@init)) {
+      qryptr <- libtiledb_query_set_condition(qryptr, x@query_condition@ptr)
+  }
 
   ## fire off query and close array
   qryptr <- libtiledb_query_submit(qryptr)
@@ -1254,6 +1271,42 @@ setReplaceMethod("return.matrix",
                  signature = "tiledb_array",
                  function(x, value) {
   x@as.matrix <- value
+  validObject(x)
+  x
+})
+
+
+## -- query_condition accessors
+
+#' @rdname query_condition-tiledb_array-method
+#' @export
+setGeneric("query_condition", function(object) standardGeneric("query_condition"))
+
+#' @rdname query_condition-set-tiledb_array-method
+#' @export
+setGeneric("query_condition<-", function(x, value) standardGeneric("query_condition<-"))
+
+#' Retrieve query_condition value for the array
+#'
+#' A \code{tiledb_array} object can have a corresponding query condition object.
+#' This methods returns it.
+#' @param object A \code{tiledb_array} object
+#' @return A \code{tiledb_query_condition} object
+#' @export
+setMethod("query_condition", signature = "tiledb_array", function(object) object@query_condition)
+
+#' Set query_condition object for the array
+#'
+#' A \code{tiledb_array} object can have an associated query condition object to set
+#' conditions on the read queries. This methods sets the \sQuote{query_condition} object.
+#' @param x A \code{tiledb_array} object
+#'
+#' @param value A \code{tiledb_query_conditon_object}
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("query_condition", signature = "tiledb_array", function(x, value) {
+  stopifnot(`need query_condition object` = is(value, "tiledb_query_condition"))
+  x@query_condition <- value
   validObject(x)
   x
 })
