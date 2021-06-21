@@ -131,3 +131,31 @@ ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
 expect_equal(nrow(ndf), 1)
 tiledb_array_close(arr)
 rm(qry)
+
+
+## tiledb_array support
+if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
+library(palmerpenguins)
+uri <- tempfile()
+fromDataFrame(penguins, uri, sparse=TRUE)
+unconstr <- tiledb_array(uri, as.data.frame=TRUE)
+expect_equal(NROW(unconstr[]), 344L)    # no condition -> 344 rows
+
+qc <- tiledb_query_condition_init("year", 2009, "INT32", "EQ")
+arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+res <- arrwithqc[]
+expect_equal(NROW(res), 120L)    		# year 2009 only -> 120 rows
+expect_true(all(res$year == 2009))
+
+arr2 <- tiledb_array(uri, as.data.frame=TRUE)
+expect_equal(NROW(arr2[]), 344L)    	# no condition -> 344 rows
+query_condition(arr2) <- qc
+expect_equal(NROW(arr2[]), 120L)    	# year 2009 only -> 120 rows
+
+qc2 <- tiledb_query_condition_init("bill_length_mm", 40.0, "FLOAT64", "LT")
+qc3 <- tiledb_query_condition_combine(qc, qc2, "AND")
+query_condition(arr2) <- qc3
+res <- arr2[]
+expect_equal(NROW(res), 34L)
+expect_true(all(res$bill_length_mm < 40))
+expect_true(all(res$year == 2009))
