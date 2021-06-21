@@ -6,6 +6,10 @@
 
 * The builds now uses TileDB Embedded 2.3.0 (unless another version is found during build) (#258)
 
+* Dense arrays with more than two dimensions can now be written (#260)
+
+* Query condition support is available for TileDB 2.3.0 or later, allowing (possibly multiple) numerical constraints on attributes (#261)
+
 
 # tiledb 0.9.3
 

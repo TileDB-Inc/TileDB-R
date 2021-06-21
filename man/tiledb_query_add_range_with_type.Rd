@@ -2,7 +2,7 @@
 % Please edit documentation in R/Query.R
 \name{tiledb_query_add_range_with_type}
 \alias{tiledb_query_add_range_with_type}
-\title{Set a range for a given query}
+\title{Set a range for a given query, also supplying type}
 \usage{
 tiledb_query_add_range_with_type(
   query,
@@ -30,5 +30,5 @@ tiledb_query_add_range_with_type(
 The query object, invisibly
 }
 \description{
-Set a range for a given query
+Set a range for a given query, also supplying type
 }

@@ -69,4 +69,12 @@ struct vfs_fh {
 typedef struct vfs_fh vfs_fh_t;
 
 
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 3
+// we need a placeholder as tiledb::QueryCondition is in at least one function signature
+namespace tiledb {
+    class QueryCondition {
+    };
+}
+#endif
+
 #endif // __tiledb_h__

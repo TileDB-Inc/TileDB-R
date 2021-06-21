@@ -1911,6 +1911,56 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_set_condition
+XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query, XPtr<tiledb::QueryCondition> query_cond);
+RcppExport SEXP _tiledb_libtiledb_query_set_condition(SEXP querySEXP, SEXP query_condSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::QueryCondition> >::type query_cond(query_condSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_condition(query, query_cond));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_condition
+XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx);
+RcppExport SEXP _tiledb_libtiledb_query_condition(SEXP ctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_condition(ctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_condition_init
+void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond, const std::string& attr_name, SEXP condition_value, const std::string& cond_val_type, const std::string& cond_op_string);
+RcppExport SEXP _tiledb_libtiledb_query_condition_init(SEXP query_condSEXP, SEXP attr_nameSEXP, SEXP condition_valueSEXP, SEXP cond_val_typeSEXP, SEXP cond_op_stringSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::QueryCondition> >::type query_cond(query_condSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type attr_name(attr_nameSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type condition_value(condition_valueSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type cond_val_type(cond_val_typeSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type cond_op_string(cond_op_stringSEXP);
+    libtiledb_query_condition_init(query_cond, attr_name, condition_value, cond_val_type, cond_op_string);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_query_condition_combine
+XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::QueryCondition> lhs, XPtr<tiledb::QueryCondition> rhs, const std::string& str);
+RcppExport SEXP _tiledb_libtiledb_query_condition_combine(SEXP lhsSEXP, SEXP rhsSEXP, SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::QueryCondition> >::type lhs(lhsSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::QueryCondition> >::type rhs(rhsSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_condition_combine(lhs, rhs, str));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_zip_coords_numeric
 NumericVector libtiledb_zip_coords_numeric(List coords, R_xlen_t coord_length);
 RcppExport SEXP _tiledb_libtiledb_zip_coords_numeric(SEXP coordsSEXP, SEXP coord_lengthSEXP) {
@@ -2461,6 +2511,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_get_range_num", (DL_FUNC) &_tiledb_libtiledb_query_get_range_num, 2},
     {"_tiledb_libtiledb_query_get_range", (DL_FUNC) &_tiledb_libtiledb_query_get_range, 3},
     {"_tiledb_libtiledb_query_get_range_var", (DL_FUNC) &_tiledb_libtiledb_query_get_range_var, 3},
+    {"_tiledb_libtiledb_query_set_condition", (DL_FUNC) &_tiledb_libtiledb_query_set_condition, 2},
+    {"_tiledb_libtiledb_query_condition", (DL_FUNC) &_tiledb_libtiledb_query_condition, 1},
+    {"_tiledb_libtiledb_query_condition_init", (DL_FUNC) &_tiledb_libtiledb_query_condition_init, 5},
+    {"_tiledb_libtiledb_query_condition_combine", (DL_FUNC) &_tiledb_libtiledb_query_condition_combine, 3},
     {"_tiledb_libtiledb_zip_coords_numeric", (DL_FUNC) &_tiledb_libtiledb_zip_coords_numeric, 2},
     {"_tiledb_libtiledb_zip_coords_integer", (DL_FUNC) &_tiledb_libtiledb_zip_coords_integer, 2},
     {"_tiledb_libtiledb_group_create", (DL_FUNC) &_tiledb_libtiledb_group_create, 2},

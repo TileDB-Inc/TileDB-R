@@ -332,7 +332,7 @@ tiledb_query_add_range <- function(query, schema, attr, lowval, highval, stride=
   invisible(query)
 }
 
-#' Set a range for a given query
+#' Set a range for a given query, also supplying type
 #'
 #' @param query A TileDB Query object
 #' @param idx An integer index, zero based, of the dimensions
@@ -464,4 +464,17 @@ tiledb_query_get_range <- function(query, dimidx, rngidx) {
             dimidx_argument=is.numeric(dimidx),
             rngidx_argument=is.numeric(rngidx))
   libtiledb_query_get_range_var(query@ptr, dimidx-1, rngidx-1)
+}
+
+#' Set a query combination object for a query
+#'
+#' @param query A TileDB Query object
+#' @param qc A TileDB Query Combination object
+#' @return The modified query object, invisibly
+#' @export
+tiledb_query_set_condition <- function(query, qc) {
+    stopifnot(`needs query object`=is(query, "tiledb_query"),
+              `needs query condition object`=is(qc, "tiledb_query_condition"))
+    query@ptr <- libtiledb_query_set_condition(query@ptr, qc@ptr)
+    invisible(query)
 }
