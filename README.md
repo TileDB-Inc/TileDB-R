@@ -49,6 +49,10 @@ If the TileDB library is installed in a custom location, you need to pass the ex
 Note that the TileDB R package is developed and tested against the latest stable (`v2.2.x`) version
 of TileDB, but should also build against the newest development version.
 
+The TileDB-R package may install from a local source checkout of this repository using:
+
+    > R CMD INSTALL . --configure-args=--with-tiledb=/path/to/tiledb
+
 ## Quick Links
 
 - [TileDB Installation](https://docs.tiledb.com/main/solutions/tiledb-embedded/installation/quick-install)
