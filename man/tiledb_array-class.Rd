@@ -37,6 +37,8 @@ describes the (min,max) pair of ranges for dimension i}
 
 \item{\code{as.matrix}}{A logical value}
 
+\item{\code{as.array}}{A logical value}
+
 \item{\code{query_condition}}{A Query Condition object}
 
 \item{\code{ptr}}{External pointer to the underlying implementation}
