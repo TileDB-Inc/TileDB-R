@@ -1264,13 +1264,14 @@ tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
   tiledb_array_get_non_empty_domain_from_index(arr, idx)
 }
 
+## -- matrix return accessors
 
 #' @rdname return.matrix-tiledb_array-method
 #' @param ... Currently unused
 #' @export
 setGeneric("return.matrix", function(object, ...) standardGeneric("return.matrix"))
 
-#' Retrieve matrix.frame return toggle
+#' Retrieve matrix return toggle
 #'
 #' A \code{tiledb_array} object can be returned as an array (or list of arrays),
 #' or, if select, as a \code{data.frame} or as a \code{matrix}. This methods returns
@@ -1286,7 +1287,7 @@ setMethod("return.matrix",
 #' @export
 setGeneric("return.matrix<-", function(x, value) standardGeneric("return.matrix<-"))
 
-#' Set marix return toggle
+#' Set matrix return toggle
 #'
 #' A \code{tiledb_array} object can be returned as an array (or list of arrays),
 #' or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets the
@@ -1335,6 +1336,46 @@ setMethod("query_condition", signature = "tiledb_array", function(object) object
 setReplaceMethod("query_condition", signature = "tiledb_array", function(x, value) {
   stopifnot(`need query_condition object` = is(value, "tiledb_query_condition"))
   x@query_condition <- value
+  validObject(x)
+  x
+})
+
+## -- array return accessors
+
+#' @rdname return.array-tiledb_array-method
+#' @param ... Currently unused
+#' @export
+setGeneric("return.array", function(object, ...) standardGeneric("return.array"))
+
+#' Retrieve array return toggle
+#'
+#' A \code{tiledb_array} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame} or as a \code{matrix}. This methods returns
+#' the selection value for the \code{array} selection.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether \code{array} return is selected
+#' @export
+setMethod("return.array",
+          signature = "tiledb_array",
+          function(object) object@as.array)
+
+#' @rdname return.array-set-tiledb_array-method
+#' @export
+setGeneric("return.array<-", function(x, value) standardGeneric("return.array<-"))
+
+#' Set array return toggle
+#'
+#' A \code{tiledb_array} object can be returned as an array (or list of arrays),
+#' or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets the
+#' selection value for a \code{array}.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("return.array",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@as.array <- value
   validObject(x)
   x
 })

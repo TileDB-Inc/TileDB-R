@@ -43,3 +43,4 @@ describes the (min,max) pair of ranges for dimension i}
 
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
+
