@@ -38,7 +38,7 @@ The most recent released version can be installed from
     > library(tiledb)
     > tiledb_version()
     major minor patch
-        2     2     9
+        2     3     1
     > help(package=tiledb)
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
@@ -46,7 +46,7 @@ If the TileDB library is installed in a custom location, you need to pass the ex
     > remotes::install_github("TileDB-Inc/TileDB-R",
           args="--configure-args='--with-tiledb=/path/to/tiledb'")
 
-Note that the TileDB R package is developed and tested against the latest stable (`v2.2.x`) version
+Note that the TileDB R package is developed and tested against the latest stable (`v2.3.x`) version
 of TileDB, but should also build against the newest development version.
 
 ## Quick Links

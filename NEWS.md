@@ -1,10 +1,10 @@
-# tiledb under developement
+# tiledb 0.9.4
 
-* This release of the R package builds against [TileDB 2.3.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.0), but has also been tested against previous releases and the development version.
+* This release of the R package builds against [TileDB 2.3.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.1), but has also been tested against previous releases and the development version.
 
 ## Improvements
 
-* The builds now uses TileDB Embedded 2.3.0 (unless another version is found during build) (#258)
+* The build defaults to TileDB Embedded 2.3.* (unless another version is found during build, or explicitly selected) (#258, #264)
 
 * Query condition support is available for TileDB 2.3.0 or later, allowing (possibly multiple) numerical constraints on attributes (#261)
 
