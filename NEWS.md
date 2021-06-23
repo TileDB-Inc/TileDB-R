@@ -4,7 +4,7 @@
 
 ## Improvements
 
-* The builds now uses TileDB Embedded 2.3.0 (unless another version is found during build) (#258)
+* The build defaults to TileDB Embedded 2.3.* (unless another version is found during build, or explicitly selected) (#258, #264)
 
 * Query condition support is available for TileDB 2.3.0 or later, allowing (possibly multiple) numerical constraints on attributes (#261)
 
