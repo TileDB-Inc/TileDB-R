@@ -2,7 +2,7 @@
 
 ##  MIT License
 ##
-##  Copyright (c) 2017-2020 TileDB Inc.
+##  Copyright (c) 2017-2021 TileDB Inc.
 ##
 ##  Permission is hereby granted, free of charge, to any person obtaining a copy
 ##  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R], [0.8.0])
+AC_INIT([TileDB-R], [0.9.3])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -150,7 +150,7 @@ fi
 ##
 ## to test one can force some selections here
 #have_tiledb="no"
-#enable_building="yes"
+#enable_building="no"
 if test x"${have_tiledb}" = x"no"; then
 
     ## case one: build is selected (or forced) so try building TileDB
@@ -182,7 +182,7 @@ if test x"${have_tiledb}" = x"no"; then
             cd inst && ../tools/fetchTileDB.sh url ${TILEDB_LIB_URL} && cd ..
 
         elif test x"${machine}" = x"x86_64" && test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
-            AC_MSG_RESULT([downloading TileDB library...])
+            AC_MSG_RESULT([downloading x86_64 TileDB library...])
 
             osrel=`tools/getOsRelease.sh`
             AC_MSG_RESULT([installing TileDB for ${osrel}...])
@@ -191,7 +191,14 @@ if test x"${have_tiledb}" = x"no"; then
             else
                 os="linux"
             fi
-            cd inst && ../tools/fetchTileDB.sh "${os}" && cd ..
+            cd inst && ../tools/fetchTileDB.sh "${os}" "${machine}" && cd ..
+
+        elif test x"${machine}" = x"arm64" && test x"${uname}" = x"Darwin"; then
+            AC_MSG_RESULT([downloading arm64 TileDB library...])
+            osrel=`tools/getOsRelease.sh`
+            AC_MSG_RESULT([installing TileDB for ${osrel}...])
+            os="macos"
+            cd inst && ../tools/fetchTileDB.sh "${os}" "${machine}" && cd ..
 
         ## default case: be unhappy
         else

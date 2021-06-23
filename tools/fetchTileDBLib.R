@@ -2,11 +2,12 @@
 
 argv <- commandArgs(trailingOnly=TRUE)
 if (length(argv) == 0) {
-  message("Requires either one argument (macos|linux) or two (url downloadurl)")
+  message("Requires either argument pairing [(macos|linux) machine] or [url downloadurl]")
   q()
 }
 
 osarg <- argv[1]
+arch <- urlarg <- ""                    # placeholder, used for macos as arm64 arch, or for url
 if (!osarg %in% c("macos", "linux", "url")) {
   message("Requires first argument: macos|linux|url")
   q()
@@ -15,7 +16,10 @@ if (osarg == "url" && length(argv) <= 1) {
   message("First argument 'url' requires second argument with actual url")
   q()
 }
-urlarg <- argv[2]
+if (length(argv) >= 2) {                # if download url, or for macOS arm64, given
+  urlarg <- argv[2]                     # used if 'osarg' argument value was 'url'
+  arch <- argv[2]                       # otherwise can also be 'arm64' in case of 'macos'
+}
 
 dcffile <- "../tools/tiledbVersion.txt"
 if (!file.exists(dcffile)) {
@@ -28,8 +32,8 @@ sha <- dcf[[1, "sha"]]
 
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
 dlurl <- switch(osarg,
-                linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-full.tar.gz", ver, ver, sha)),
-                macos = file.path(baseurl,sprintf("%s/tiledb-macos-%s-%s-full.tar.gz", ver, ver, sha)),
+                linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-%s.tar.gz", ver, arch, ver, sha)),
+                macos = file.path(baseurl,sprintf("%s/tiledb-macos-%s-%s-%s.tar.gz", ver, arch, ver, sha)),
                 url = urlarg)
 cat("downloading", dlurl, "\n")
 op <- options()
