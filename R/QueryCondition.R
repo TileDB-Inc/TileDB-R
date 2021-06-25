@@ -121,7 +121,7 @@ parse_query_condition <- function(expr, debug=FALSE) {
                                               `!`  = "NOT")
     .makeExpr <- function(x) {
         if (is.symbol(x)) {
-            cat("??", x, "\n")
+            stop("Unexpected symbol in expression: ", format(x))
         } else if (.isBooleanOperator(x[1])) {
             if (debug) cat("-- [", as.character(x[2]), "]",
                            " ", as.character(x[1]),
