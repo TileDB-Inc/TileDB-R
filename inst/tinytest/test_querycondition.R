@@ -159,3 +159,20 @@ res <- arr2[]
 expect_equal(NROW(res), 34L)
 expect_true(all(res$bill_length_mm < 40))
 expect_true(all(res$year == 2009))
+unlink(uri, recursive=TRUE)
+
+## parse query condition support
+uri <- tempfile()
+fromDataFrame(penguins, uri, sparse=TRUE)
+qc <- parse_query_condition(year == 2009)
+arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+res <- arrwithqc[]
+expect_equal(NROW(res), 120L)    # year 2009 only -> 120 rows
+expect_true(all(res$year == 2009))
+
+qc2 <- parse_query_condition(year == 2009 && bill_length_mm <= 39.99)
+arrwithqc2 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc2)
+res <- arrwithqc2[]
+expect_equal(NROW(res), 34L)
+expect_true(all(res$bill_length_mm < 40))
+expect_true(all(res$year == 2009))
