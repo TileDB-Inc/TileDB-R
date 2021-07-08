@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TileDB API Documentation • tiledb</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -337,7 +337,7 @@
 <code class="sourceCode R"><span class="co"># set 'duplicates allowed?' status</span>
 <span class="fu"><a href="../reference/allows_dups.html">allows_dups</a></span><span class="op">(</span><span class="va">sch</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span>
 <span class="fu"><a href="../reference/allows_dups&lt;-.html">tiledb_array_schema_set_allows_dups</a></span><span class="op">(</span><span class="va">sch</span>, <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55f067251b20&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c1e8068690&gt;</code></pre>
 </div>
 <div id="checking-correctness" class="section level4">
 <h4 class="hasAnchor">
@@ -479,7 +479,7 @@
 
 <span class="co"># create encrypted array at 'uri' with schema 'sch'</span>
 <span class="fu"><a href="../reference/tiledb_array_create.html">tiledb_array_create</a></span><span class="op">(</span><span class="va">uridensewkey</span>, <span class="va">sch</span>, <span class="va">encryption_key</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpRruGA4/denseenc"</code></pre>
+<pre><code>## [1] "/tmp/RtmpT9TN31/denseenc"</code></pre>
 </div>
 </div>
 <div id="writing-arrays" class="section level2">
@@ -548,7 +548,7 @@
 <span class="va">val</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_attr.html">tiledb_attr</a></span><span class="op">(</span><span class="st">"val"</span>, type <span class="op">=</span> <span class="st">"INT32"</span><span class="op">)</span>
 <span class="va">sch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array_schema.html">tiledb_array_schema</a></span><span class="op">(</span><span class="va">dom</span>, <span class="va">val</span>, sparse<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="../reference/tiledb_array_create.html">tiledb_array_create</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="va">sch</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpRruGA4/sparse"</code></pre>
+<pre><code>## [1] "/tmp/RtmpT9TN31/sparse"</code></pre>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Prepare some data</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3L</span>, <span class="fl">4L</span>, <span class="fl">1L</span>, <span class="fl">2L</span><span class="op">)</span>
@@ -584,7 +584,7 @@
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_attribute_set_cell_val_num</span><span class="op">(</span><span class="va">attr</span><span class="op">@</span><span class="va">ptr</span>, <span class="fl">2</span><span class="op">)</span>
 <span class="va">sch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array_schema.html">tiledb_array_schema</a></span><span class="op">(</span><span class="va">dom</span>, <span class="va">attr</span><span class="op">)</span>
 <span class="fu"><a href="../reference/tiledb_array_create.html">tiledb_array_create</a></span><span class="op">(</span><span class="va">uridensefix</span>, <span class="va">sch</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpRruGA4/densefix"</code></pre>
+<pre><code>## [1] "/tmp/RtmpT9TN31/densefix"</code></pre>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">arrptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_open</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">uridensefix</span>, <span class="st">"WRITE"</span><span class="op">)</span>
@@ -626,7 +626,7 @@
 
 <span class="co">## Create the (empty) array on disk.</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_create</span><span class="op">(</span><span class="va">uridensevar</span>, <span class="va">schptr</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpRruGA4/densevar"</code></pre>
+<pre><code>## [1] "/tmp/RtmpT9TN31/densevar"</code></pre>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="st">"abbcccddeeefghhhijjjkklmnoop"</span>;
 <span class="va">offsets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0L</span>, <span class="fl">1L</span>, <span class="fl">3L</span>, <span class="fl">6L</span>, <span class="fl">8L</span>, <span class="fl">11L</span>, <span class="fl">12L</span>, <span class="fl">13L</span>, <span class="fl">16L</span>, <span class="fl">17L</span>, <span class="fl">20L</span>, <span class="fl">22L</span>, <span class="fl">23L</span>, <span class="fl">24L</span>, <span class="fl">25L</span>, <span class="fl">27L</span><span class="op">)</span>
@@ -640,7 +640,7 @@
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a1"</span>, <span class="va">bufptr</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55f060901db0&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c1e1d6cec0&gt;</code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#TODO Higher-level R support</span></code></pre></div>
 </div>
@@ -905,7 +905,7 @@
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer_var_char</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a1"</span>, <span class="va">bufptr</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55f0603a6ca0&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c1e60f8bb0&gt;</code></pre>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_get_buffer_var_char</span><span class="op">(</span><span class="va">bufptr</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">mat</span>, quote<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -1038,10 +1038,9 @@
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_set_buffer</span><span class="op">(</span><span class="va">qryptr</span>, <span class="st">"a"</span>, <span class="va">a</span><span class="op">)</span>
 <span class="va">qryptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_query_submit</span><span class="op">(</span><span class="va">qryptr</span><span class="op">)</span>
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_close</span><span class="op">(</span><span class="va">arrptr</span><span class="op">)</span>
-<span class="va">a</span></code></pre></div>
-<pre><code>## [1] NA NA NA NA NA NA</code></pre>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># we can do the same with encrypted arrays</span>
+<span class="va">a</span>
+
+<span class="co"># we can do the same with encrypted arrays</span>
 <span class="va">encryption_key</span> <span class="op">&lt;-</span> <span class="st">"0123456789abcdeF0123456789abcdeF"</span>
 <span class="va">arrptr</span> <span class="op">&lt;-</span> <span class="fu">tiledb</span><span class="fu">:::</span><span class="fu">libtiledb_array_open_at_with_key</span><span class="op">(</span><span class="va">ctx</span><span class="op">@</span><span class="va">ptr</span>, <span class="va">uridensewkey</span>, <span class="st">"READ"</span>,
                                                     <span class="va">encryption_key</span>, <span class="va">tstamp</span><span class="op">)</span></code></pre></div>
@@ -1054,7 +1053,7 @@
 <div id="asynchronous-queries" class="section level2">
 <h2 class="hasAnchor">
 <a href="#asynchronous-queries" class="anchor"></a>Asynchronous Queries</h2>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#  ... create read or write query</span>
 
 <span class="co"># Instead of using tiledb_query_submit(), use tiledb_query_submit_async()</span>
@@ -1067,7 +1066,7 @@
 <div id="basic-usage" class="section level4">
 <h4 class="hasAnchor">
 <a href="#basic-usage" class="anchor"></a>Basic Usage</h4>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a configuration object</span>
 <span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -1079,19 +1078,19 @@
 
 <span class="co"># Unset a configuration parameter</span>
 <span class="fu"><a href="../reference/tiledb_config_unset.html">tiledb_config_unset</a></span><span class="op">(</span><span class="va">config</span>, <span class="st">"sm.tile_cache_size"</span><span class="op">)</span></code></pre></div>
-<pre><code>## &lt;pointer: 0x55f064003ba0&gt;</code></pre>
+<pre><code>## &lt;pointer: 0x55c1e779d7b0&gt;</code></pre>
 </div>
 <div id="save-and-load-to-file" class="section level4">
 <h4 class="hasAnchor">
 <a href="#save-and-load-to-file" class="anchor"></a>Save and Load to File</h4>
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Save to file</span>
 <span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">config</span><span class="op">[</span><span class="st">"sm.tile_cache_size"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>;
 <span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"tiledb_config"</span>, fileext <span class="op">=</span> <span class="st">".txt"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/tiledb_config_save.html">tiledb_config_save</a></span><span class="op">(</span><span class="va">config</span>, <span class="va">file</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "/tmp/RtmpRruGA4/tiledb_config2dc54d57c15aa0.txt"</code></pre>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<pre><code>## [1] "/tmp/RtmpT9TN31/tiledb_config2b60ab549540a4.txt"</code></pre>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Load from file</span>
 <span class="va">config_loaded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_config_load.html">tiledb_config_load</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span>
 <span class="va">tile_cache_size</span> <span class="op">=</span> <span class="va">config_loaded</span><span class="op">[</span><span class="st">"sm.tile_cache_size"</span><span class="op">]</span></code></pre></div>
@@ -1099,7 +1098,7 @@
 <div id="configuration-iterator" class="section level4">
 <h4 class="hasAnchor">
 <a href="#configuration-iterator" class="anchor"></a>Configuration Iterator</h4>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># R has no native iterator but one loop over the config elements</span>
 <span class="co"># by retrieving the configuration as a vector</span>
 
@@ -1144,6 +1143,7 @@
 ## sm.skip_est_size_partitioning : false 
 ## sm.sub_partitioner_memory_budget : 0 
 ## sm.tile_cache_size : 10000000 
+## sm.use_refactored_readers : false 
 ## sm.vacuum.mode : fragments 
 ## sm.vacuum.timestamp_end : 18446744073709551615 
 ## sm.vacuum.timestamp_start : 0 
@@ -1167,12 +1167,14 @@
 ## vfs.min_parallel_size : 10485760 
 ## vfs.read_ahead_cache_size : 10485760 
 ## vfs.read_ahead_size : 102400 
+## vfs.s3.bucket_canned_acl : NOT_SET 
 ## vfs.s3.connect_max_tries : 5 
 ## vfs.s3.connect_scale_factor : 25 
 ## vfs.s3.connect_timeout_ms : 10800 
 ## vfs.s3.logging_level : Off 
 ## vfs.s3.max_parallel_ops : 12 
 ## vfs.s3.multipart_part_size : 5242880 
+## vfs.s3.object_canned_acl : NOT_SET 
 ## vfs.s3.proxy_port : 0 
 ## vfs.s3.proxy_scheme : http 
 ## vfs.s3.region : us-east-1 
@@ -1191,7 +1193,7 @@
 <div id="writing-array-metadata" class="section level4">
 <h4 class="hasAnchor">
 <a href="#writing-array-metadata" class="anchor"></a>Writing Array Metadata</h4>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 'array' can be a URI, or an array opened for writing</span>
 <span class="fu"><a href="../reference/tiledb_put_metadata.html">tiledb_put_metadata</a></span><span class="op">(</span><span class="va">array</span>, <span class="st">"aaa"</span>, <span class="fl">100L</span><span class="op">)</span>
 <span class="fu"><a href="../reference/tiledb_put_metadata.html">tiledb_put_metadata</a></span><span class="op">(</span><span class="va">array</span>, <span class="st">"bb"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1.1</span>, <span class="fl">2.2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -1200,11 +1202,11 @@
 <h4 class="hasAnchor">
 <a href="#reading-array-metadata" class="anchor"></a>Reading Array Metadata</h4>
 <p>One can read by key:</p>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 'array' can be a URI, or an array opened for reading</span>
 <span class="fu"><a href="../reference/tiledb_get_metadata.html">tiledb_get_metadata</a></span><span class="op">(</span><span class="va">array</span>, <span class="st">"aaa"</span><span class="op">)</span></code></pre></div>
 <p>Or one can retrieve all metadata at once:</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 'array' can be a URI, or an array opened for reading</span>
 <span class="va">md</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_get_all_metadata.html">tiledb_get_all_metadata</a></span><span class="op">(</span><span class="va">array</span><span class="op">)</span>
 
@@ -1214,7 +1216,7 @@
 <div id="deleting-array-metadata" class="section level4">
 <h4 class="hasAnchor">
 <a href="#deleting-array-metadata" class="anchor"></a>Deleting Array Metadata</h4>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 'array' can be a URI, or an array opened for writing</span>
 <span class="fu"><a href="../reference/tiledb_delete_metadata.html">tiledb_delete_metadata</a></span><span class="op">(</span><span class="va">array</span>, <span class="st">"aaa"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -1225,7 +1227,7 @@
 <div id="fragments" class="section level4">
 <h4 class="hasAnchor">
 <a href="#fragments" class="anchor"></a>Fragments</h4>
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># An array URI</span>
 <span class="va">uri</span> <span class="op">&lt;-</span> <span class="st">"&lt;array_uri&gt;"</span>
 
@@ -1241,7 +1243,7 @@
 <div id="vacuuming" class="section level4">
 <h4 class="hasAnchor">
 <a href="#vacuuming" class="anchor"></a>Vacuuming</h4>
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># An array URI</span>
 <span class="va">uri</span> <span class="op">&lt;-</span> <span class="st">"&lt;array_uri&gt;"</span>
 
@@ -1260,19 +1262,19 @@
 <div id="creating-tiledb-groups" class="section level4">
 <h4 class="hasAnchor">
 <a href="#creating-tiledb-groups" class="anchor"></a>Creating TileDB Groups</h4>
-<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/tiledb_group_create.html">tiledb_group_create</a></span><span class="op">(</span><span class="st">"/tmp/my_group"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="getting-the-object-type" class="section level4">
 <h4 class="hasAnchor">
 <a href="#getting-the-object-type" class="anchor"></a>Getting the Object Type</h4>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">type</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_object_type.html">tiledb_object_type</a></span><span class="op">(</span><span class="st">"&lt;path&gt;"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="list-the-object-hierarchy" class="section level4">
 <h4 class="hasAnchor">
 <a href="#list-the-object-hierarchy" class="anchor"></a>List the Object Hierarchy</h4>
-<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># List arrays (defaults to default "PREORDER" traversal)</span>
 <span class="fu"><a href="../reference/tiledb_object_ls.html">tiledb_object_ls</a></span><span class="op">(</span><span class="va">uri</span><span class="op">)</span>
 
@@ -1285,7 +1287,7 @@
 <div id="move-remove-object" class="section level4">
 <h4 class="hasAnchor">
 <a href="#move-remove-object" class="anchor"></a>Move / Remove Object</h4>
-<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/tiledb_object_mv.html">tiledb_object_mv</a></span><span class="op">(</span><span class="st">"/tmp/my_group"</span>, <span class="st">"/tmp/my_group_2"</span><span class="op">)</span>
 
 <span class="fu">tiledb_object_remove</span><span class="op">(</span><span class="va">ctx</span>, <span class="st">"/tmp/my_group_2/dense_array"</span><span class="op">)</span></code></pre></div>
@@ -1297,7 +1299,7 @@
 <div id="writing" class="section level4">
 <h4 class="hasAnchor">
 <a href="#writing" class="anchor"></a>Writing</h4>
-<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># binary file to be written</span>
 <span class="va">uri</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"tiledb_vfs"</span>, fileext <span class="op">=</span> <span class="st">".bin"</span><span class="op">)</span>
 <span class="co"># open file</span>
@@ -1324,7 +1326,7 @@
 <div id="reading" class="section level4">
 <h4 class="hasAnchor">
 <a href="#reading" class="anchor"></a>Reading</h4>
-<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># open a binary file for reading</span>
 <span class="va">fhbuf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_vfs_open.html">tiledb_vfs_open</a></span><span class="op">(</span><span class="va">uri</span>, <span class="st">"READ"</span><span class="op">)</span>
 <span class="va">vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_vfs_read.html">tiledb_vfs_read</a></span><span class="op">(</span><span class="va">fhbuf</span>, <span class="fu">as.integer64</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, <span class="fu">as.integer64</span><span class="op">(</span><span class="fl">488</span><span class="op">)</span><span class="op">)</span>
@@ -1333,7 +1335,7 @@
 <div id="managing" class="section level4">
 <h4 class="hasAnchor">
 <a href="#managing" class="anchor"></a>Managing</h4>
-<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Creating a directory</span>
 <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="../reference/tiledb_vfs_is_dir.html">tiledb_vfs_is_dir</a></span><span class="op">(</span><span class="st">"dir_A"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="../reference/tiledb_vfs_create_dir.html">tiledb_vfs_create_dir</a></span><span class="op">(</span><span class="st">"dir_A"</span><span class="op">)</span>
@@ -1364,7 +1366,7 @@
 <div id="s3" class="section level4">
 <h4 class="hasAnchor">
 <a href="#s3" class="anchor"></a>S3</h4>
-<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/tiledb_vfs_create_bucket.html">tiledb_vfs_create_bucket</a></span><span class="op">(</span><span class="st">"s3://my_bucket"</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/tiledb_vfs_remove_bucket.html">tiledb_vfs_remove_bucket</a></span><span class="op">(</span><span class="st">"s3://my_bucket"</span><span class="op">)</span></code></pre></div>
@@ -1372,7 +1374,7 @@
 <div id="configuring-vfs" class="section level4">
 <h4 class="hasAnchor">
 <a href="#configuring-vfs" class="anchor"></a>Configuring VFS</h4>
-<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_get_context.html">tiledb_get_context</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="op">)</span>
@@ -1386,7 +1388,7 @@
 <div id="using-performance-statistics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#using-performance-statistics" class="anchor"></a>Using Performance Statistics</h2>
-<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Start collecting statistics</span>
 <span class="fu"><a href="../reference/tiledb_stats_enable.html">tiledb_stats_enable</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -1409,7 +1411,7 @@
 <div id="catching-errors" class="section level2">
 <h2 class="hasAnchor">
 <a href="#catching-errors" class="anchor"></a>Catching Errors</h2>
-<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">result</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html">tryCatch</a></span><span class="op">(</span><span class="op">{</span>
     <span class="co"># Create a group. The code below creates a group `my_group` and prints a</span>
     <span class="co"># message because (normally) it will succeed.</span>

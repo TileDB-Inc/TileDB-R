@@ -1,6 +1,3 @@
-template:
-  params:
-    bootswatch: lumen
 
 reference:
 - title: Ctx
@@ -67,6 +64,7 @@ reference:
   desc: query object functions
   contents:
   - starts_with("tiledb_query")
+  - matches("parse_query_condition")
 - title: Group
   contents:
   - starts_with("tiledb_group")

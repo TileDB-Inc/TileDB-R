@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -196,44 +196,46 @@
 #&gt;                               "warn"                              "false" 
 #&gt;        sm.skip_est_size_partitioning     sm.sub_partitioner_memory_budget 
 #&gt;                              "false"                                  "0" 
-#&gt;                   sm.tile_cache_size                       sm.vacuum.mode 
-#&gt;                           "10000000"                          "fragments" 
-#&gt;              sm.vacuum.timestamp_end            sm.vacuum.timestamp_start 
-#&gt;               "18446744073709551615"                                  "0" 
-#&gt;               sm.var_offsets.bitsize         sm.var_offsets.extra_element 
-#&gt;                                 "64"                              "false" 
-#&gt;                  sm.var_offsets.mode              vfs.azure.blob_endpoint 
-#&gt;                              "bytes"                                   "" 
-#&gt;      vfs.azure.block_list_block_size           vfs.azure.max_parallel_ops 
-#&gt;                            "5242880"                                 "12" 
-#&gt;        vfs.azure.storage_account_key       vfs.azure.storage_account_name 
-#&gt;                                   ""                                   "" 
-#&gt;      vfs.azure.use_block_list_upload                  vfs.azure.use_https 
+#&gt;                   sm.tile_cache_size            sm.use_refactored_readers 
+#&gt;                           "10000000"                              "false" 
+#&gt;                       sm.vacuum.mode              sm.vacuum.timestamp_end 
+#&gt;                          "fragments"               "18446744073709551615" 
+#&gt;            sm.vacuum.timestamp_start               sm.var_offsets.bitsize 
+#&gt;                                  "0"                                 "64" 
+#&gt;         sm.var_offsets.extra_element                  sm.var_offsets.mode 
+#&gt;                              "false"                              "bytes" 
+#&gt;              vfs.azure.blob_endpoint      vfs.azure.block_list_block_size 
+#&gt;                                   ""                            "5242880" 
+#&gt;           vfs.azure.max_parallel_ops        vfs.azure.storage_account_key 
+#&gt;                                 "12"                                   "" 
+#&gt;       vfs.azure.storage_account_name      vfs.azure.use_block_list_upload 
+#&gt;                                   ""                               "true" 
+#&gt;                  vfs.azure.use_https            vfs.file.enable_filelocks 
 #&gt;                               "true"                               "true" 
-#&gt;            vfs.file.enable_filelocks            vfs.file.max_parallel_ops 
-#&gt;                               "true"                                 "12" 
-#&gt; vfs.file.posix_directory_permissions      vfs.file.posix_file_permissions 
-#&gt;                                "755"                                "644" 
-#&gt;             vfs.gcs.max_parallel_ops              vfs.gcs.multi_part_size 
-#&gt;                                 "12"                            "5242880" 
-#&gt;                   vfs.gcs.project_id           vfs.gcs.request_timeout_ms 
-#&gt;                                   ""                               "3000" 
-#&gt;        vfs.gcs.use_multi_part_upload      vfs.hdfs.kerb_ticket_cache_path 
-#&gt;                               "true"                                   "" 
-#&gt;               vfs.hdfs.name_node_uri                    vfs.hdfs.username 
+#&gt;            vfs.file.max_parallel_ops vfs.file.posix_directory_permissions 
+#&gt;                                 "12"                                "755" 
+#&gt;      vfs.file.posix_file_permissions             vfs.gcs.max_parallel_ops 
+#&gt;                                "644"                                 "12" 
+#&gt;              vfs.gcs.multi_part_size                   vfs.gcs.project_id 
+#&gt;                            "5242880"                                   "" 
+#&gt;           vfs.gcs.request_timeout_ms        vfs.gcs.use_multi_part_upload 
+#&gt;                               "3000"                               "true" 
+#&gt;      vfs.hdfs.kerb_ticket_cache_path               vfs.hdfs.name_node_uri 
 #&gt;                                   ""                                   "" 
-#&gt;                    vfs.min_batch_gap                   vfs.min_batch_size 
-#&gt;                             "512000"                           "20971520" 
-#&gt;                vfs.min_parallel_size            vfs.read_ahead_cache_size 
-#&gt;                           "10485760"                           "10485760" 
-#&gt;                  vfs.read_ahead_size             vfs.s3.aws_access_key_id 
-#&gt;                             "102400"                                   "" 
-#&gt;               vfs.s3.aws_external_id            vfs.s3.aws_load_frequency 
+#&gt;                    vfs.hdfs.username                    vfs.min_batch_gap 
+#&gt;                                   ""                             "512000" 
+#&gt;                   vfs.min_batch_size                vfs.min_parallel_size 
+#&gt;                           "20971520"                           "10485760" 
+#&gt;            vfs.read_ahead_cache_size                  vfs.read_ahead_size 
+#&gt;                           "10485760"                             "102400" 
+#&gt;             vfs.s3.aws_access_key_id               vfs.s3.aws_external_id 
 #&gt;                                   ""                                   "" 
-#&gt;                  vfs.s3.aws_role_arn         vfs.s3.aws_secret_access_key 
+#&gt;            vfs.s3.aws_load_frequency                  vfs.s3.aws_role_arn 
 #&gt;                                   ""                                   "" 
-#&gt;              vfs.s3.aws_session_name             vfs.s3.aws_session_token 
+#&gt;         vfs.s3.aws_secret_access_key              vfs.s3.aws_session_name 
 #&gt;                                   ""                                   "" 
+#&gt;             vfs.s3.aws_session_token             vfs.s3.bucket_canned_acl 
+#&gt;                                   ""                            "NOT_SET" 
 #&gt;                       vfs.s3.ca_file                       vfs.s3.ca_path 
 #&gt;                                   ""                                   "" 
 #&gt;             vfs.s3.connect_max_tries          vfs.s3.connect_scale_factor 
@@ -242,22 +244,24 @@
 #&gt;                              "10800"                                   "" 
 #&gt;                 vfs.s3.logging_level              vfs.s3.max_parallel_ops 
 #&gt;                                "Off"                                 "12" 
-#&gt;           vfs.s3.multipart_part_size                    vfs.s3.proxy_host 
-#&gt;                            "5242880"                                   "" 
-#&gt;                vfs.s3.proxy_password                    vfs.s3.proxy_port 
-#&gt;                                   ""                                  "0" 
-#&gt;                  vfs.s3.proxy_scheme                vfs.s3.proxy_username 
-#&gt;                               "http"                                   "" 
-#&gt;                        vfs.s3.region            vfs.s3.request_timeout_ms 
-#&gt;                          "us-east-1"                               "3000" 
-#&gt;                vfs.s3.requester_pays                        vfs.s3.scheme 
-#&gt;                              "false"                              "https" 
-#&gt;                     vfs.s3.skip_init                           vfs.s3.sse 
-#&gt;                              "false"                                   "" 
-#&gt;                vfs.s3.sse_kms_key_id          vfs.s3.use_multipart_upload 
-#&gt;                                   ""                               "true" 
-#&gt;        vfs.s3.use_virtual_addressing                    vfs.s3.verify_ssl 
-#&gt;                               "true"                               "true" </div><div class='input'>
+#&gt;           vfs.s3.multipart_part_size             vfs.s3.object_canned_acl 
+#&gt;                            "5242880"                            "NOT_SET" 
+#&gt;                    vfs.s3.proxy_host                vfs.s3.proxy_password 
+#&gt;                                   ""                                   "" 
+#&gt;                    vfs.s3.proxy_port                  vfs.s3.proxy_scheme 
+#&gt;                                  "0"                               "http" 
+#&gt;                vfs.s3.proxy_username                        vfs.s3.region 
+#&gt;                                   ""                          "us-east-1" 
+#&gt;            vfs.s3.request_timeout_ms                vfs.s3.requester_pays 
+#&gt;                               "3000"                              "false" 
+#&gt;                        vfs.s3.scheme                     vfs.s3.skip_init 
+#&gt;                              "https"                              "false" 
+#&gt;                           vfs.s3.sse                vfs.s3.sse_kms_key_id 
+#&gt;                                   ""                                   "" 
+#&gt;          vfs.s3.use_multipart_upload        vfs.s3.use_virtual_addressing 
+#&gt;                               "true"                               "true" 
+#&gt;                    vfs.s3.verify_ssl 
+#&gt;                               "true" </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

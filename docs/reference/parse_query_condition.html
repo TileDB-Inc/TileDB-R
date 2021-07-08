@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gets a config parameter value — [,tiledb_config,ANY-method • tiledb</title>
+<title>Create a 'tiledb_query_condition' object from an expression — parse_query_condition • tiledb</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Gets a config parameter value — [,tiledb_config,ANY-method" />
-<meta property="og:description" content="Gets a config parameter value" />
+<meta property="og:title" content="Create a 'tiledb_query_condition' object from an expression — parse_query_condition" />
+<meta property="og:description" content="The grammar for query conditions is at present constraint to six operators
+and three boolean types." />
 
 
 
@@ -129,55 +130,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Gets a config parameter value</h1>
-    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/Config.R'><code>R/Config.R</code></a></small>
-    <div class="hidden name"><code>sub-tiledb_config-ANY-method.Rd</code></div>
+    <h1>Create a 'tiledb_query_condition' object from an expression</h1>
+    <small class="dont-index">Source: <a href='https://github.com/TileDB-Inc/TileDB-R/blob/master/R/QueryCondition.R'><code>R/QueryCondition.R</code></a></small>
+    <div class="hidden name"><code>parse_query_condition.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Gets a config parameter value</p>
+    <p>The grammar for query conditions is at present constraint to six operators
+and three boolean types.</p>
     </div>
 
-    <pre class="usage"># S4 method for tiledb_config,ANY
-[(x, i, j, ..., drop = FALSE)</pre>
+    <pre class="usage"><span class='fu'>parse_query_condition</span><span class='op'>(</span><span class='va'>expr</span>, debug <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p><code>tiledb_config</code> object</p></td>
+      <th>expr</th>
+      <td><p>An expression that is understood by the TileDB grammar for
+query conditions.</p></td>
     </tr>
     <tr>
-      <th>i</th>
-      <td><p>parameter key string</p></td>
-    </tr>
-    <tr>
-      <th>j</th>
-      <td><p>parameter key string, currently unused.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Extra parameter for method signature, currently unused.</p></td>
-    </tr>
-    <tr>
-      <th>drop</th>
-      <td><p>Optional logical switch to drop dimensions, default FALSE, currently unused.</p></td>
+      <th>debug</th>
+      <td><p>A boolean toogle to enable more verbose operations, defaults
+to 'FALSE'.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a config string value if parameter exists, else NA</p>
+    <p>A <code>tiledb_query_condition</code> object</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>cfg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>cfg</span><span class='op'>[</span><span class='st'>"sm.tile_cache_size"</span><span class='op'>]</span>
-</div><div class='output co'>#&gt; sm.tile_cache_size 
-#&gt;         "10000000" </div><div class='input'><span class='va'>cfg</span><span class='op'>[</span><span class='st'>"does_not_exist"</span><span class='op'>]</span>
-</div><div class='output co'>#&gt; NA 
-#&gt; NA </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
