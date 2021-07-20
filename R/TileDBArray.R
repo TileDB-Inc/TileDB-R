@@ -1188,7 +1188,7 @@ setReplaceMethod("datetimes_as_int64",
 #' @param end_time An optional timestamp value, if missing config default is used
 #' @param cfg An optional TileDB Configuration object
 #' @param ctx An option TileDB Context object
-#' @return The result of the underlying library call is returned.
+#' @return NULL is returned invisibly
 #' @export
 array_consolidate <- function(uri, cfg = NULL,
                               start_time, end_time,
@@ -1227,7 +1227,7 @@ array_consolidate <- function(uri, cfg = NULL,
 #' @param end_time An optional timestamp value, if missing config default is used
 #' @param cfg An optional TileDB Configuration object
 #' @param ctx An option TileDB Context object
-#' @return The result of the underlying library call is returned.
+#' @return NULL is returned invisibly
 #' @export
 array_vacuum <- function(uri, cfg = NULL,
                          start_time, end_time,

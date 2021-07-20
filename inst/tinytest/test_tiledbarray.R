@@ -1216,3 +1216,16 @@ chk <- tiledb_array(uri = uri, as.data.frame=TRUE)
 res <- chk[]
 expect_equal(dim(res), c(100,6))
 expect_equal(colnames(res), c("rows", "cols", "time", "a", "b", "c"))
+
+## consolidate
+expect_equal(array_consolidate(uri), NULL)
+expect_error(array_consolidate(uri, start_time="abc")) # not a datetime
+expect_error(array_consolidate(uri, end_time="def"))   # not a datetime
+now <- Sys.time()
+expect_equal(array_consolidate(uri, start_time=now-60, end_time=now), NULL)
+
+## vaccum
+expect_equal(array_vacuum(uri), NULL)
+expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
+expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
+expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)

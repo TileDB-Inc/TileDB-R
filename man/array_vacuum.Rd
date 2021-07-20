@@ -18,7 +18,7 @@ array_vacuum(uri, cfg = NULL, start_time, end_time, ctx = tiledb_get_context())
 \item{ctx}{An option TileDB Context object}
 }
 \value{
-The result of the underlying library call is returned.
+NULL is returned invisibly
 }
 \description{
 This function can remove fragments following a consolidation step. Note that vacuuming

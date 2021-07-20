@@ -24,7 +24,7 @@ array_consolidate(
 \item{ctx}{An option TileDB Context object}
 }
 \value{
-The result of the underlying library call is returned.
+NULL is returned invisibly
 }
 \description{
 This function invokes a consolidation operation. Parameters affecting the operation
