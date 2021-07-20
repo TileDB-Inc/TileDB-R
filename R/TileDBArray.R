@@ -1180,33 +1180,77 @@ setReplaceMethod("datetimes_as_int64",
 
 #' Consolidate fragments of a TileDB Array
 #'
-#' This function invokes a consolidation operation. Parameters can be set via
-#' an option configuration object.
+#' This function invokes a consolidation operation. Parameters affecting the operation
+#' can be set via an optional configuration object. Start and end timestamps can also be
+#' set directly.
 #' @param uri A character value with the URI of a TileDB Array
+#' @param start_time An optional timestamp value, if missing config default is used
+#' @param end_time An optional timestamp value, if missing config default is used
 #' @param cfg An optional TileDB Configuration object
 #' @param ctx An option TileDB Context object
-#' @return \code{NULL} is returned invisibly
+#' @return The result of the underlying library call is returned.
 #' @export
-array_consolidate <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
-  libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri,
-                              # C++ code has Nullable and can instantiate but needs S4 XPtr
-                              cfgptr = if (is.null(cfg)) cfg else cfg@ptr)
+array_consolidate <- function(uri, cfg = NULL,
+                              start_time, end_time,
+                              ctx = tiledb_get_context()) {
+    if (is.null(cfg)) {
+        cfg <- tiledb_config()
+    }
+
+    if (!missing(start_time)) {
+        stopifnot(`start_time must be datetime object` = inherits(start_time, "POSIXt"),
+                  `the 'bit64' package is required` = requireNamespace("bit64", quietly=TRUE))
+        cfg["sm.consolidation.timestamp_start"] = as.character(bit64::as.integer64(nanotime::as.nanotime(start_time)))
+    }
+
+    if (!missing(end_time)) {
+        stopifnot(`end_time must be datetime object` = inherits(end_time, "POSIXt"))
+        cfg["sm.consolidation.timestamp_end"] = as.character(bit64::as.integer64(nanotime::as.nanotime(end_time)))
+    }
+
+    ctx <- tiledb_ctx(cfg)
+
+    libtiledb_array_consolidate(ctx = ctx@ptr, uri = uri, cfgptr = cfg@ptr)
 }
 
-#' After consolidation, remove consilidated fragments of a TileDB Array
+#' After consolidation, remove consolidated fragments of a TileDB Array
 #'
 #' This function can remove fragments following a consolidation step. Note that vacuuming
 #' should \emph{not} be run if one intends to use the TileDB \emph{time-traveling} feature
-#' of opening arrays at particular timestamps
+#' of opening arrays at particular timestamps.
+#'
+#' Parameters affecting the operation can be set via an optional configuration object.
+#' Start and end timestamps can also be set directly.
+#'
 #' @param uri A character value with the URI of a TileDB Array
+#' @param start_time An optional timestamp value, if missing config default is used
+#' @param end_time An optional timestamp value, if missing config default is used
 #' @param cfg An optional TileDB Configuration object
 #' @param ctx An option TileDB Context object
-#' @return \code{NULL} is returned invisibly
+#' @return The result of the underlying library call is returned.
 #' @export
-array_vacuum <- function(uri, cfg = NULL, ctx = tiledb_get_context()) {
-    libtiledb_array_vacuum(ctx = ctx@ptr, uri = uri,
-                           # C++ code has Nullable and can instantiate but needs S4 XPtr
-                           cfgptr = if (is.null(cfg)) cfg else cfg@ptr)
+array_vacuum <- function(uri, cfg = NULL,
+                         start_time, end_time,
+                         ctx = tiledb_get_context()) {
+
+    if (is.null(cfg)) {
+        cfg <- tiledb_config()
+    }
+
+    if (!missing(start_time)) {
+        stopifnot(`start_time must be datetime object` = inherits(start_time, "POSIXt"),
+                  `the 'bit64' package is required` = requireNamespace("bit64", quietly=TRUE))
+        cfg["sm.consolidation.timestamp_start"] = as.character(bit64::as.integer64(nanotime::as.nanotime(start_time)))
+    }
+
+    if (!missing(end_time)) {
+        stopifnot(`end_time must be datetime object` = inherits(end_time, "POSIXt"))
+        cfg["sm.consolidation.timestamp_end"] = as.character(bit64::as.integer64(nanotime::as.nanotime(end_time)))
+    }
+
+    ctx <- tiledb_ctx(cfg)
+
+    libtiledb_array_vacuum(ctx = ctx@ptr, uri = uri, cfgptr = cfg@ptr)
 }
 
 #' Get the non-empty domain from a TileDB Array by index
