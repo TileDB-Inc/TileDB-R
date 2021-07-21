@@ -443,7 +443,6 @@ tiledb_vfs_write <- function(fh, vec, ctx = tiledb_get_context()) {
 #' @return The binary file content is returned as an integer vector.
 #' @export
 tiledb_vfs_read <- function(fh, offset, nbytes, ctx = tiledb_get_context()) {
-  if (!requireNamespace("bit64", quietly=TRUE)) stop("The 'bit64' package is needed.")
   if (missing(offset)) offset <- bit64::as.integer64(0)
   if (missing(nbytes)) stop("nbytes currently a required parameter")
   stopifnot(fh_argument=is(fh, "externalptr"),
