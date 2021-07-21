@@ -1199,13 +1199,16 @@ array_consolidate <- function(uri, cfg = NULL,
 
     if (!missing(start_time)) {
         stopifnot(`start_time must be datetime object` = inherits(start_time, "POSIXt"),
-                  `the 'bit64' package is required` = requireNamespace("bit64", quietly=TRUE))
-        cfg["sm.consolidation.timestamp_start"] = as.character(bit64::as.integer64(nanotime::as.nanotime(start_time)))
+                  `TileDB 2.3.0 or later is required`  = tiledb_version(TRUE) >= "2.3.0")
+        start_time_int64 <- bit64::as.integer64(nanotime::as.nanotime(start_time))
+        cfg["sm.consolidation.timestamp_start"] = as.character(start_time_int64)
     }
 
     if (!missing(end_time)) {
-        stopifnot(`end_time must be datetime object` = inherits(end_time, "POSIXt"))
-        cfg["sm.consolidation.timestamp_end"] = as.character(bit64::as.integer64(nanotime::as.nanotime(end_time)))
+        stopifnot(`end_time must be datetime object`  = inherits(end_time, "POSIXt"),
+                  `TileDB 2.3.0 or later is required` = tiledb_version(TRUE) >= "2.3.0")
+        end_time_int64 <- bit64::as.integer64(nanotime::as.nanotime(end_time))
+        cfg["sm.consolidation.timestamp_end"] = as.character(end_time_int64)
     }
 
     ctx <- tiledb_ctx(cfg)
@@ -1239,13 +1242,16 @@ array_vacuum <- function(uri, cfg = NULL,
 
     if (!missing(start_time)) {
         stopifnot(`start_time must be datetime object` = inherits(start_time, "POSIXt"),
-                  `the 'bit64' package is required` = requireNamespace("bit64", quietly=TRUE))
-        cfg["sm.consolidation.timestamp_start"] = as.character(bit64::as.integer64(nanotime::as.nanotime(start_time)))
+                  `TileDB 2.3.0 or later is required`  = tiledb_version(TRUE) >= "2.3.0")
+        start_time_int64 <- bit64::as.integer64(nanotime::as.nanotime(start_time))
+        cfg["sm.consolidation.timestamp_start"] = as.character(start_time_int64)
     }
 
     if (!missing(end_time)) {
-        stopifnot(`end_time must be datetime object` = inherits(end_time, "POSIXt"))
-        cfg["sm.consolidation.timestamp_end"] = as.character(bit64::as.integer64(nanotime::as.nanotime(end_time)))
+        stopifnot(`end_time must be datetime object` = inherits(end_time, "POSIXt"),
+                  `TileDB 2.3.0 or later is required` = tiledb_version(TRUE) >= "2.3.0")
+        end_time_int64 <- bit64::as.integer64(nanotime::as.nanotime(end_time))
+        cfg["sm.consolidation.timestamp_end"] = as.character(end_time_int64)
     }
 
     ctx <- tiledb_ctx(cfg)
