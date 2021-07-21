@@ -38,10 +38,12 @@
 #' @slot query_layout An optional character value
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
-#' @slot timestamp A POSIXct datetime variable
+#' @slot timestamp A POSIXct datetime variable (deprecated, use timestamp_start)
 #' @slot as.matrix A logical value
 #' @slot as.array A logical value
 #' @slot query_condition A Query Condition object
+#' @slot timestamp_start A POSIXct datetime variable for the inclusive interval start
+#' @slot timestamp_end A POSIXct datetime variable for the inclusive interval start
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -59,6 +61,8 @@ setClass("tiledb_array",
                       as.matrix = "logical",
                       as.array = "logical",
                       query_condition = "tiledb_query_condition",
+                      timestamp_start = "POSIXct",
+                      timestamp_end = "POSIXct",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -83,13 +87,17 @@ setClass("tiledb_array",
 #' @param encryption_key optional A character value with an AES-256 encryption key
 #' in case the array was written with encryption.
 #' @param timestamp optional A POSIXct Datetime value determining where in time the array is
-#' to be openened.
+#' to be openened. Deprecated, use \sQuote{timestamp_start} instead
 #' @param as.matrix optional logical switch, defaults to "FALSE"; currently limited to dense
 #' matrices; in the case of multiple attributes in query a list of matrices is returned
 #' @param as.array optional logical switch, defaults to "FALSE"; in the case of multiple
 #' attributes in query a list of arrays is returned
 #' @param query_condition optional \code{tiledb_query_condition} object, by default uninitialized
 #' without a condition; this functionality requires TileDB 2.3.0 or later
+#' @param timestamp_start optional A POSIXct Datetime value determining the inclusive time point
+#' at which the array is to be openened. No fragments written earlier will be considered.
+#' @param timestamp_end optional A POSIXct Datetime value determining the inclusive time point
+#' until which the array is to be openened. No fragments written earlier later be considered.
 #' @param ctx tiledb_ctx (optional)
 #' @return tiledb_array object
 #' @export
@@ -107,6 +115,8 @@ tiledb_array <- function(uri,
                          as.matrix = FALSE,
                          as.array = FALSE,
                          query_condition = new("tiledb_query_condition"),
+                         timestamp_start = as.POSIXct(double(), origin="1970-01-01"),
+                         timestamp_end = as.POSIXct(double(), origin="1970-01-01"),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -134,6 +144,14 @@ tiledb_array <- function(uri,
       array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
     }
   }
+
+  if (length(timestamp) > 0)
+      .Deprecated(msg="Use 'timestamp_start' (or possibly 'timestamp_end') instead of 'timestamp'.")
+  if (length(timestamp_start) > 0)
+      libtiledb_array_open(array_xptr, timestamp_start)
+  if (length(timestamp_end) > 0)
+      libtiledb_array_open(array_xptr, timestamp_end)
+
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
   is_sparse_status <- libtiledb_array_schema_sparse(schema_xptr)
   if (!is.na(is.sparse) && is.sparse != is_sparse_status) {
@@ -161,6 +179,8 @@ tiledb_array <- function(uri,
       as.matrix = as.matrix,
       as.array = as.array,
       query_condition = query_condition,
+      timestamp_start = timestamp_start,
+      timestamp_end = timestamp_end,
       ptr = array_xptr)
 }
 
