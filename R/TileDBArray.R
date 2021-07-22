@@ -146,7 +146,7 @@ tiledb_array <- function(uri,
   }
 
   if (length(timestamp) > 0)
-      .Deprecated(msg="Use 'timestamp_start' (or possibly 'timestamp_end') instead of 'timestamp'.")
+      .Deprecated(msg="Use 'timestamp_start' (and maybe 'timestamp_end') instead of 'timestamp'.")
   if (length(timestamp_start) > 0) {
       libtiledb_array_set_open_timestamp_start(array_xptr, timestamp_start)
   }

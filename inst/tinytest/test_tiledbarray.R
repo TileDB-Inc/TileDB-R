@@ -1268,3 +1268,37 @@ res5 <- arr5[]
 expect_equal(NROW(res5), 20)            # expects 2 groups, 2 and 3, with 20 obs
 expect_equal(min(res5$grp), 2)
 expect_equal(max(res5$grp), 3)
+
+## earlier time travel test recast via timestamp_{start,end}
+## time travel
+tmp <- tempfile()
+dir.create(tmp)
+dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 5L, "INT32"),
+                              tiledb_dim("cols", c(1L, 10L), 5L, "INT32")))
+schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
+invisible( tiledb_array_create(tmp, schema) )
+
+I <- c(1, 2, 2)
+J <- c(1, 4, 3)
+data <- c(1L, 2L, 3L)
+now1 <- Sys.time()
+A <- tiledb_array(uri = tmp, timestamp_start=now1)
+A[I, J] <- data
+
+Sys.sleep(1)
+
+now2 <- Sys.time()
+I <- c(8, 6, 9)
+J <- c(5, 7, 8)
+data <- c(11L, 22L, 33L)
+A <- tiledb_array(uri = tmp, timestamp_start=now2)
+A[I, J] <- data
+
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now1 - 0.5)
+expect_equal(nrow(A[]), 0)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_start=now1 + 0.5)
+expect_equal(nrow(A[]), 3)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 - 0.5)
+expect_equal(nrow(A[]), 3)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 + 0.5)
+expect_equal(nrow(A[]), 6)
