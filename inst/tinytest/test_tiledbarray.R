@@ -1229,3 +1229,42 @@ expect_equal(array_vacuum(uri), NULL)
 expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
 expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
 expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
+
+## timestamp_start and timestamp_end
+uri <- tempfile()
+
+data <- data.frame(grp = rep(1:4, each=10), 				# 4 distinct groups
+                   val = rep(1:4, each=10) * 100 + 1:10)    # and 4 sets of value (used as index)
+
+fromDataFrame(subset(data, grp==1),     # write array, but only write group one
+              uri, sparse=TRUE,
+              col_index="val", tile_domain=list(val=range(data$val)))
+
+arr <- tiledb_array(uri)
+times <- Sys.time() + 0:3               # pre-allocate for four time stampps
+
+for (i in 2:4) {                        # in loop, write groups two to four
+    Sys.sleep(1)
+    arr[] <- subset(data, grp==i)
+    times[i] <- Sys.time()              # and note time
+}
+
+arr <- tiledb_array(uri, as.data.frame=TRUE) 			# no limits
+expect_equal(NROW(arr[]), 40)                           # all four observations
+
+arr2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1])    # end before 1st timestamp
+expect_equal(NROW(arr2[]), 10)          # expect group one (10 elements)
+
+arr3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+1) # start after fourth
+expect_equal(NROW(arr3[]), 0)           # expect zero data
+
+arr4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-1)    # end before 3rd
+res4 <- arr4[]
+expect_equal(NROW(res4), 20)            # expect 2 groups, 20 obs
+expect_equal(max(res4$grp), 2)          # with groups being 1 and 2
+
+arr5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-1, timestamp_end=times[3])
+res5 <- arr5[]
+expect_equal(NROW(res5), 20)            # expects 2 groups, 2 and 3, with 20 obs
+expect_equal(min(res5$grp), 2)
+expect_equal(max(res5$grp), 3)
