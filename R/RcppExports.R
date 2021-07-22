@@ -490,7 +490,7 @@ libtiledb_array_delete_metadata <- function(array, key) {
 }
 
 libtiledb_array_set_open_timestamp_start <- function(array, tstamp) {
-    invisible(.Call(`_tiledb_libtiledb_array_set_open_timestamp_start`, array, tstamp))
+    .Call(`_tiledb_libtiledb_array_set_open_timestamp_start`, array, tstamp)
 }
 
 libtiledb_array_open_timestamp_start <- function(array) {
@@ -498,7 +498,7 @@ libtiledb_array_open_timestamp_start <- function(array) {
 }
 
 libtiledb_array_set_open_timestamp_end <- function(array, tstamp) {
-    invisible(.Call(`_tiledb_libtiledb_array_set_open_timestamp_end`, array, tstamp))
+    .Call(`_tiledb_libtiledb_array_set_open_timestamp_end`, array, tstamp)
 }
 
 libtiledb_array_open_timestamp_end <- function(array) {

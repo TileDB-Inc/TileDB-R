@@ -1440,14 +1440,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_set_open_timestamp_start
-void libtiledb_array_set_open_timestamp_start(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp);
+XPtr<tiledb::Array> libtiledb_array_set_open_timestamp_start(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp);
 RcppExport SEXP _tiledb_libtiledb_array_set_open_timestamp_start(SEXP arraySEXP, SEXP tstampSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< Rcpp::Datetime >::type tstamp(tstampSEXP);
-    libtiledb_array_set_open_timestamp_start(array, tstamp);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_set_open_timestamp_start(array, tstamp));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_array_open_timestamp_start
@@ -1462,14 +1463,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_set_open_timestamp_end
-void libtiledb_array_set_open_timestamp_end(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp);
+XPtr<tiledb::Array> libtiledb_array_set_open_timestamp_end(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp);
 RcppExport SEXP _tiledb_libtiledb_array_set_open_timestamp_end(SEXP arraySEXP, SEXP tstampSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< Rcpp::Datetime >::type tstamp(tstampSEXP);
-    libtiledb_array_set_open_timestamp_end(array, tstamp);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_set_open_timestamp_end(array, tstamp));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_array_open_timestamp_end

@@ -147,11 +147,12 @@ tiledb_array <- function(uri,
 
   if (length(timestamp) > 0)
       .Deprecated(msg="Use 'timestamp_start' (or possibly 'timestamp_end') instead of 'timestamp'.")
-  if (length(timestamp_start) > 0)
-      libtiledb_array_open(array_xptr, timestamp_start)
-  if (length(timestamp_end) > 0)
-      libtiledb_array_open(array_xptr, timestamp_end)
-
+  if (length(timestamp_start) > 0) {
+      libtiledb_array_set_open_timestamp_start(array_xptr, timestamp_start)
+  }
+  if (length(timestamp_end) > 0) {
+      libtiledb_array_set_open_timestamp_end(array_xptr, timestamp_end)
+  }
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
   is_sparse_status <- libtiledb_array_schema_sparse(schema_xptr)
   if (!is.na(is.sparse) && is.sparse != is_sparse_status) {
@@ -244,6 +245,8 @@ setMethod("show", signature = "tiledb_array",
      ,"  as.matrix          = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
      ,"  as.array           = ", if (object@as.array) "TRUE" else "FALSE", "\n"
      ,"  query_condition    = ", if (isTRUE(object@query_condition@init)) "(set)" else "(none)", "\n"
+     ,"  timestamp_start    = ", if (length(object@timestamp_start) == 0) "(none)" else format(object@timestamp_start), "\n"
+     ,"  timestamp_end      = ", if (length(object@timestamp_end) == 0) "(none)" else format(object@timestamp_end), "\n"
      ,sep="")
 })
 
@@ -339,6 +342,16 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'query_condition' slot does not contain a query condition object.")
   }
 
+  if (!inherits(object@timestamp_start, "POSIXct")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'timestamp_start' slot does not contain a POSIXct value.")
+  }
+
+  if (!inherits(object@timestamp_end, "POSIXct")) {
+    valid <- FALSE
+    msg <- c(msg, "The 'timestamp_end' slot does not contain a POSIXct value.")
+  }
+
   if (!is(object@ptr, "externalptr")) {
     valid <- FALSE
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
@@ -431,6 +444,17 @@ setMethod("[", "tiledb_array",
       x@ptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
     }
   }
+
+  if (length(x@timestamp_start) > 0) {
+      libtiledb_array_set_open_timestamp_start(x@ptr, x@timestamp_start)
+  }
+  if (length(x@timestamp_end) > 0) {
+      libtiledb_array_set_open_timestamp_end(x@ptr, x@timestamp_end)
+  }
+  if (length(x@timestamp_start) > 0 || length(x@timestamp_end) > 0) {
+      x@ptr <- libtiledb_array_reopen(x@ptr)
+  }
+
   on.exit(libtiledb_array_close(x@ptr))
 
   dims <- tiledb::dimensions(dom)
@@ -473,6 +497,15 @@ setMethod("[", "tiledb_array",
     } else {
       arrptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
     }
+  }
+  if (length(x@timestamp_start) > 0) {
+      arrptr <- libtiledb_array_set_open_timestamp_start(arrptr, x@timestamp_start)
+  }
+  if (length(x@timestamp_end) > 0) {
+      arrptr <- libtiledb_array_set_open_timestamp_end(arrptr, x@timestamp_end)
+  }
+  if (length(x@timestamp_start) > 0 || length(x@timestamp_end) > 0) {
+      arrptr <- libtiledb_array_reopen(arrptr)
   }
 
   ## helper function to sweep over names and types of domain
