@@ -1230,6 +1230,7 @@ expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
 expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
 expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
 
+
 ## timestamp_start and timestamp_end
 uri <- tempfile()
 
@@ -1268,6 +1269,18 @@ res5 <- arr5[]
 expect_equal(NROW(res5), 20)            # expects 2 groups, 2 and 3, with 20 obs
 expect_equal(min(res5$grp), 2)
 expect_equal(max(res5$grp), 3)
+
+## time-travel vaccum test
+vfs <- tiledb_vfs()
+ndirfull <- tiledb_vfs_ls(uri, vfs=vfs)
+array_consolidate(uri, start_time=times[2]-1, end_time=times[3])
+array_vacuum(uri, start_time=times[2]-1, end_time=times[3])
+ndircons <- tiledb_vfs_ls(uri, vfs=vfs)
+expect_true(length(ndircons) < length(ndirfull))
+array_consolidate(uri, start_time=times[1]-1, end_time=times[3])
+array_vacuum(uri, start_time=times[1]-1, end_time=times[3])
+ndircons2 <- tiledb_vfs_ls(uri, vfs=vfs)
+expect_true(length(ndircons2) < length(ndircons))
 
 ## earlier time travel test recast via timestamp_{start,end}
 ## time travel

@@ -265,7 +265,7 @@ tiledb_vfs_remove_file <- function(uri, vfs = tiledb_get_vfs()) {
 #'
 #' @param uri Character variable with a URI describing a file path
 #' @param vfs A TileDB VFS object; default is to use a cached value.
-#' @return The size removed file
+#' @return The size of the file
 #' @export
 tiledb_vfs_file_size <- function(uri, vfs = tiledb_get_vfs()) {
   if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
@@ -450,4 +450,28 @@ tiledb_vfs_read <- function(fh, offset, nbytes, ctx = tiledb_get_context()) {
             nbytes_argument=is(nbytes, "integer64"),
             ctx_argument=is(ctx, "tiledb_ctx"))
   libtiledb_vfs_read(ctx@ptr, fh, offset, nbytes)
+}
+
+#' Return VFS Directory Size
+#'
+#' @param uri Character variable with a URI describing a file path
+#' @param vfs A TileDB VFS object; default is to use a cached value.
+#' @return The size of the directory
+#' @export
+tiledb_vfs_dir_size <- function(uri, vfs = tiledb_get_vfs()) {
+  stopifnot(vfs_argument=is(vfs, "tiledb_vfs"),
+            uri_argument=is.character(uri))
+  libtiledb_vfs_dir_size(vfs@ptr, uri)
+}
+
+#' Return VFS Directory Listing
+#'
+#' @param uri Character variable with a URI describing a file path
+#' @param vfs A TileDB VFS object; default is to use a cached value.
+#' @return The content of the directory, non-recursive
+#' @export
+tiledb_vfs_ls <- function(uri, vfs = tiledb_get_vfs()) {
+  stopifnot(vfs_argument=is(vfs, "tiledb_vfs"),
+            uri_argument=is.character(uri))
+  libtiledb_vfs_ls(vfs@ptr, uri)
 }

@@ -2338,6 +2338,30 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_vfs_dir_size
+double libtiledb_vfs_dir_size(XPtr<tiledb::VFS> vfs, std::string uri);
+RcppExport SEXP _tiledb_libtiledb_vfs_dir_size(SEXP vfsSEXP, SEXP uriSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::VFS> >::type vfs(vfsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_dir_size(vfs, uri));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_vfs_ls
+std::vector<std::string> libtiledb_vfs_ls(XPtr<tiledb::VFS> vfs, std::string uri);
+RcppExport SEXP _tiledb_libtiledb_vfs_ls(SEXP vfsSEXP, SEXP uriSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::VFS> >::type vfs(vfsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_ls(vfs, uri));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_stats_enable
 void libtiledb_stats_enable();
 RcppExport SEXP _tiledb_libtiledb_stats_enable() {
@@ -2592,6 +2616,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_vfs_write", (DL_FUNC) &_tiledb_libtiledb_vfs_write, 3},
     {"_tiledb_libtiledb_vfs_read", (DL_FUNC) &_tiledb_libtiledb_vfs_read, 4},
     {"_tiledb_libtiledb_vfs_sync", (DL_FUNC) &_tiledb_libtiledb_vfs_sync, 2},
+    {"_tiledb_libtiledb_vfs_dir_size", (DL_FUNC) &_tiledb_libtiledb_vfs_dir_size, 2},
+    {"_tiledb_libtiledb_vfs_ls", (DL_FUNC) &_tiledb_libtiledb_vfs_ls, 2},
     {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
     {"_tiledb_libtiledb_stats_reset", (DL_FUNC) &_tiledb_libtiledb_stats_reset, 0},
