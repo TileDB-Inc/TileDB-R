@@ -781,6 +781,14 @@ libtiledb_vfs_sync <- function(ctxxp, fh) {
     invisible(.Call(`_tiledb_libtiledb_vfs_sync`, ctxxp, fh))
 }
 
+libtiledb_vfs_dir_size <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_dir_size`, vfs, uri)
+}
+
+libtiledb_vfs_ls <- function(vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_ls`, vfs, uri)
+}
+
 libtiledb_stats_enable <- function() {
     invisible(.Call(`_tiledb_libtiledb_stats_enable`))
 }
