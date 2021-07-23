@@ -2183,6 +2183,34 @@ void libtiledb_array_delete_metadata(XPtr<tiledb::Array> array, std::string key)
   array->delete_metadata(key.c_str());
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_set_open_timestamp_start(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp) {
+    uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+    array->set_open_timestamp_start(ts_ms);
+    return array;
+}
+
+// [[Rcpp::export]]
+Rcpp::Datetime libtiledb_array_open_timestamp_start(XPtr<tiledb::Array> array) {
+    uint64_t ts_ms = array->open_timestamp_start();
+    double ts = ts_ms / 1000.0;
+    return(Rcpp::Datetime(ts));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_array_set_open_timestamp_end(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp) {
+    uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+    array->set_open_timestamp_end(ts_ms);
+    return array;
+}
+
+// [[Rcpp::export]]
+Rcpp::Datetime libtiledb_array_open_timestamp_end(XPtr<tiledb::Array> array) {
+    uint64_t ts_ms = array->open_timestamp_end();
+    double ts = ts_ms / 1000.0;
+    return(Rcpp::Datetime(ts));
+}
+
 /**
  * Query
  */

@@ -19,6 +19,8 @@ tiledb_array(
   as.matrix = FALSE,
   as.array = FALSE,
   query_condition = new("tiledb_query_condition"),
+  timestamp_start = as.POSIXct(double(), origin = "1970-01-01"),
+  timestamp_end = as.POSIXct(double(), origin = "1970-01-01"),
   ctx = tiledb_get_context()
 )
 }
@@ -51,7 +53,7 @@ representation as \sQuote{raw} \code{integer64} and not as \code{Date},
 in case the array was written with encryption.}
 
 \item{timestamp}{optional A POSIXct Datetime value determining where in time the array is
-to be openened.}
+to be openened. Deprecated, use \sQuote{timestamp_start} instead}
 
 \item{as.matrix}{optional logical switch, defaults to "FALSE"; currently limited to dense
 matrices; in the case of multiple attributes in query a list of matrices is returned}
@@ -61,6 +63,12 @@ attributes in query a list of arrays is returned}
 
 \item{query_condition}{optional \code{tiledb_query_condition} object, by default uninitialized
 without a condition; this functionality requires TileDB 2.3.0 or later}
+
+\item{timestamp_start}{optional A POSIXct Datetime value determining the inclusive time point
+at which the array is to be openened. No fragments written earlier will be considered.}
+
+\item{timestamp_end}{optional A POSIXct Datetime value determining the inclusive time point
+until which the array is to be openened. No fragments written earlier later be considered.}
 
 \item{ctx}{tiledb_ctx (optional)}
 }

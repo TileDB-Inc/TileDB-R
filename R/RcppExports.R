@@ -489,6 +489,22 @@ libtiledb_array_delete_metadata <- function(array, key) {
     invisible(.Call(`_tiledb_libtiledb_array_delete_metadata`, array, key))
 }
 
+libtiledb_array_set_open_timestamp_start <- function(array, tstamp) {
+    .Call(`_tiledb_libtiledb_array_set_open_timestamp_start`, array, tstamp)
+}
+
+libtiledb_array_open_timestamp_start <- function(array) {
+    .Call(`_tiledb_libtiledb_array_open_timestamp_start`, array)
+}
+
+libtiledb_array_set_open_timestamp_end <- function(array, tstamp) {
+    .Call(`_tiledb_libtiledb_array_set_open_timestamp_end`, array, tstamp)
+}
+
+libtiledb_array_open_timestamp_end <- function(array) {
+    .Call(`_tiledb_libtiledb_array_open_timestamp_end`, array)
+}
+
 libtiledb_query <- function(ctx, array, type) {
     .Call(`_tiledb_libtiledb_query`, ctx, array, type)
 }
