@@ -177,7 +177,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         else if (cl == "numeric")
             tp <- "FLOAT64"
         else if (cl == "character")
-            tp <- "CHAR"
+            tp <- "ASCII"
         else if (cl == "Date")
             tp <- "DATETIME_DAY"
         else if (cl == "POSIXct" || cl == "POSIXlt")
@@ -193,14 +193,13 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
         }
         tiledb_attr(colnames(obj)[ind],
                     type = tp,
-                    ncells = ifelse(tp=="CHAR",NA_integer_,1),
+                    ncells = ifelse(tp %in% c("CHAR","ASCII"), NA_integer_, 1),
                     filter_list = filterlist,
                     nullable = any(is.na(col)))
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]
     attributes <- sapply(cols, makeAttr)
-
     schema <- tiledb_array_schema(dom, attrs = attributes,
                                   cell_order = cell_order, tile_order = tile_order,
                                   sparse=sparse, capacity=capacity)

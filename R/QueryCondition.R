@@ -107,7 +107,14 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 parse_query_condition <- function(expr, debug=FALSE) {
     .isComparisonOperator <- function(x) as.character(x) %in% c(">", ">=", "<", "<=", "==", "!=")
     .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!")
+    .isAscii <- function(x) grepl("^[a-zA-Z_]*$", x)
     .isInteger <- function(x) as.character(as.integer(x)) == x
+    .isDouble <- function(x) as.character(as.numeric(x)) == x && grepl("[\\.]", as.character(x))
+    .getType <- function(x) {
+        if (.isAscii(as.character(x))) "ASCII"
+        else if (.isDouble(as.character(x))) "FLOAT64"
+        else "INT32"
+    }
     .mapOpToCharacter <- function(x) switch(x,
                                             `>`  = "GT",
                                             `>=` = "GE",
@@ -135,12 +142,12 @@ parse_query_condition <- function(expr, debug=FALSE) {
         } else if (.isComparisonOperator(x[1])) {
             if (debug) cat("   [",as.character(x[2]),"] ",
                            as.character(x[1]), " (aka ", .mapOpToCharacter(as.character(x[1])), ")",
-                           " [",as.character(x[3]), "]",
-                           if (.isInteger(as.character(x[3]))) " int" else " float",
-                           "\n", sep="")
+                           " [",as.character(x[3]), "] ", .getType(x[3]), "\n", sep="")
+            ch <- as.character(x[3])
+            dtype <- .getType(ch)
             tiledb_query_condition_init(attr = as.character(x[2]), # still need to check again schema
-                                        value = as.numeric(as.character(x[3])),
-                                        dtype = if (.isInteger(as.character(x[3]))) "INT32" else "FLOAT64",
+                                        value = if (dtype == "ASCII") ch else as.numeric(ch),
+                                        dtype = dtype,
                                         op = .mapOpToCharacter(as.character(x[1])))
         } else {
             stop("Unexpected token in expression: ", format(x))

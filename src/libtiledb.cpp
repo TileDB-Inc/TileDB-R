@@ -1277,9 +1277,16 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     } else if (attr_dtype == TILEDB_FLOAT32) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
-    } else if (attr_dtype == TILEDB_CHAR || attr_dtype == TILEDB_STRING_ASCII) {
+    } else if (attr_dtype == TILEDB_CHAR) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+        uint64_t num = static_cast<uint64_t>(ncells);
+        if (ncells == R_NaInt) {
+            num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
+        }
+        attr->set_cell_val_num(num);
+    } else if (attr_dtype == TILEDB_STRING_ASCII) {
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, TILEDB_STRING_ASCII), false);
         uint64_t num = static_cast<uint64_t>(ncells);
         if (ncells == R_NaInt) {
             num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
@@ -3295,8 +3302,11 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
         double v = as<double>(condition_value);
         uint64_t cond_val_size = sizeof(double);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
+    } else if (cond_val_type == "ASCII") {
+        std::string v = as<std::string>(condition_value);
+        query_cond->init(attr_name, v, op);
     } else {
-        Rcpp::stop("Currently unsupport type: %s", cond_val_type);
+        Rcpp::stop("Currently unsupported type: %s", cond_val_type);
     }
 #endif
 }
