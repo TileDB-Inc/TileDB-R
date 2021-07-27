@@ -2406,7 +2406,7 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create_nullable(IntegerVector in
   if (nullable) {
       bufptr->validity_map.resize(n);
       for (int i=0; i<n; i++) {
-          bufptr->validity_map[i] = (navec[i] ? 1 : 0);
+          bufptr->validity_map[i] = (navec[i] ? 0 : 1);
       }
   }
   bufptr->nullable = nullable;
@@ -2439,8 +2439,8 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
 CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
                                                     int32_t len=0, int32_t nchar=0) {
   size_t n = (len==0 ? bufptr->offsets.size() : len);
-  //Rprintf("n=%d, strsize=%d, row %d col %d, nchar %d\n",
-  //        n, bufptr->str.size(), bufptr->rows, bufptr->cols, nchar);
+  //Rprintf("n=%d, strsize=%d, row %d col %d, nchar %d, nullable %d\n",
+  //        n, bufptr->str.size(), bufptr->rows, bufptr->cols, nchar, bufptr->nullable);
   std::vector<uint64_t> str_sizes(n);
   for (size_t i = 0; i < n - 1; i++) {                          // all but last
     //Rprintf("%d %d %d\n", i, bufptr->offsets[i + 1] , bufptr->offsets[i]);
@@ -2450,7 +2450,7 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
   // Get the strings
   CharacterMatrix mat(bufptr->rows, bufptr->cols);
   for (size_t i = 0; i < n; i++) {
-      if (bufptr->validity_map[i] == 0)
+      if (!bufptr->nullable || bufptr->validity_map[i] == 1)
           mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
       else
           mat[i] = R_NaString;
