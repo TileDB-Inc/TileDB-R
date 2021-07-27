@@ -94,7 +94,7 @@ expect_equal(nrow(ndf), 10)
 tiledb_array_close(arr)
 rm(qry)
 
-## check b == 115.5 (yes, yes, yes, we know EQ dicey on floats; can remove this if it croaks)
+## check b == 115.5 (yes, yes, yes, we know EQ is dicey on floats; can remove this if it croaks)
 qry <- tiledb_query(arr, "READ")
 rows <- integer(20)
 cola <- integer(20)
@@ -159,6 +159,7 @@ res <- arr2[]
 expect_equal(NROW(res), 34L)
 expect_true(all(res$bill_length_mm < 40))
 expect_true(all(res$year == 2009))
+
 unlink(uri, recursive=TRUE)
 
 ## parse query condition support
@@ -176,3 +177,20 @@ res <- arrwithqc2[]
 expect_equal(NROW(res), 34L)
 expect_true(all(res$bill_length_mm < 40))
 expect_true(all(res$year == 2009))
+
+unlink(uri, recursive=TRUE)
+
+## qc and string_ascii
+uri <- tempfile()
+fromDataFrame(na.omit(penguins), uri, sparse=TRUE)
+qc3 <- parse_query_condition(sex == "male")
+arrwithqc3 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc3)
+res <- arrwithqc3[]
+expect_equal(NROW(res), 168L)
+expect_true(all(res$sex == "male"))
+
+qc <- tiledb_query_condition_init("sex", "female", "ASCII", "EQ")
+arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+res <- arrwithqc[]
+expect_equal(NROW(res), 165L)
+expect_true(all(res$sex != "male"))
