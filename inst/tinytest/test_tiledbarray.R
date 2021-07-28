@@ -1256,15 +1256,15 @@ expect_equal(NROW(arr[]), 40)                           # all four observations
 arr2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1])    # end before 1st timestamp
 expect_equal(NROW(arr2[]), 10)          # expect group one (10 elements)
 
-arr3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+1) # start after fourth
+arr3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+0.5) # start after fourth
 expect_equal(NROW(arr3[]), 0)           # expect zero data
 
-arr4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-1)    # end before 3rd
+arr4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-0.5)    # end before 3rd
 res4 <- arr4[]
 expect_equal(NROW(res4), 20)            # expect 2 groups, 20 obs
 expect_equal(max(res4$grp), 2)          # with groups being 1 and 2
 
-arr5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-1, timestamp_end=times[3])
+arr5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-0.5, timestamp_end=times[3])
 res5 <- arr5[]
 expect_equal(NROW(res5), 20)            # expects 2 groups, 2 and 3, with 20 obs
 expect_equal(min(res5$grp), 2)
@@ -1273,12 +1273,12 @@ expect_equal(max(res5$grp), 3)
 ## time-travel vaccum test
 vfs <- tiledb_vfs()
 ndirfull <- tiledb_vfs_ls(uri, vfs=vfs)
-array_consolidate(uri, start_time=times[2]-1, end_time=times[3])
-array_vacuum(uri, start_time=times[2]-1, end_time=times[3])
+array_consolidate(uri, start_time=times[2]-0.5, end_time=times[3])
+array_vacuum(uri, start_time=times[2]-0.5, end_time=times[3])
 ndircons <- tiledb_vfs_ls(uri, vfs=vfs)
 expect_true(length(ndircons) < length(ndirfull))
-array_consolidate(uri, start_time=times[1]-1, end_time=times[3])
-array_vacuum(uri, start_time=times[1]-1, end_time=times[3])
+array_consolidate(uri, start_time=times[1]-0.5, end_time=times[3])
+array_vacuum(uri, start_time=times[1]-0.5, end_time=times[3])
 ndircons2 <- tiledb_vfs_ls(uri, vfs=vfs)
 expect_true(length(ndircons2) < length(ndircons))
 
