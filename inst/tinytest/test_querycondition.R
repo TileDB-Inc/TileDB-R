@@ -204,4 +204,4 @@ fromDataFrame(edgecases, uri, sparse=TRUE)
 qcx1 <- tiledb::parse_query_condition(x1 == "a1")
 arrx1 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx1)
 res <- arrx1[]
-expect_true(res$x1, "a1")
+expect_equal(res$x1, "a1")
