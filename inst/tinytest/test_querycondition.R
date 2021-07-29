@@ -196,7 +196,7 @@ expect_equal(NROW(res), 165L)
 expect_true(all(res$sex != "male"))
 
 ## check type inference for edge cases
-edgecases <- data.frame(x1 = "a1")
+edgecases <- data.frame(x1 = "a1", x2 = 1L)
 
 uri <- tempfile()
 fromDataFrame(edgecases, uri, sparse=TRUE)
@@ -205,3 +205,8 @@ qcx1 <- tiledb::parse_query_condition(x1 == "a1")
 arrx1 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx1)
 res <- arrx1[]
 expect_equal(res$x1, "a1")
+
+qcx2 <- tiledb::parse_query_condition(x2 == 1L)
+arrx2 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx2)
+res <- arrx2[]
+expect_equal(res$x2, 1L)
