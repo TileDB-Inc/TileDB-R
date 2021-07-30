@@ -107,6 +107,7 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 parse_query_condition <- function(expr, debug=FALSE) {
     .isComparisonOperator <- function(x) as.character(x) %in% c(">", ">=", "<", "<=", "==", "!=")
     .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!")
+    .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
     .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
     .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
     .getType <- function(x) {
