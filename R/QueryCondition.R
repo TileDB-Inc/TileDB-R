@@ -107,13 +107,13 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 parse_query_condition <- function(expr, debug=FALSE) {
     .isComparisonOperator <- function(x) as.character(x) %in% c(">", ">=", "<", "<=", "==", "!=")
     .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!")
-    .isAscii <- function(x) grepl("^[a-zA-Z_]*$", x)
-    .isInteger <- function(x) as.character(as.integer(x)) == x
-    .isDouble <- function(x) as.character(as.numeric(x)) == x && grepl("[\\.]", as.character(x))
+    .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
+    .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
+    .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
     .getType <- function(x) {
-        if (.isAscii(as.character(x))) "ASCII"
-        else if (.isDouble(as.character(x))) "FLOAT64"
-        else "INT32"
+        if (isTRUE(.isInteger(x))) "INT32"
+        else if (isTRUE(.isDouble(x))) "FLOAT64"
+        else "ASCII"
     }
     .mapOpToCharacter <- function(x) switch(x,
                                             `>`  = "GT",
