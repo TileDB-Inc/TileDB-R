@@ -1794,14 +1794,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_result_buffer_elements
-R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute);
-RcppExport SEXP _tiledb_libtiledb_query_result_buffer_elements(SEXP querySEXP, SEXP attributeSEXP) {
+R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute, int32_t which);
+RcppExport SEXP _tiledb_libtiledb_query_result_buffer_elements(SEXP querySEXP, SEXP attributeSEXP, SEXP whichSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_result_buffer_elements(query, attribute));
+    Rcpp::traits::input_parameter< int32_t >::type which(whichSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_result_buffer_elements(query, attribute, which));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2572,7 +2573,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_submit_async", (DL_FUNC) &_tiledb_libtiledb_query_submit_async, 1},
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},
     {"_tiledb_libtiledb_query_status", (DL_FUNC) &_tiledb_libtiledb_query_status, 1},
-    {"_tiledb_libtiledb_query_result_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_query_result_buffer_elements, 2},
+    {"_tiledb_libtiledb_query_result_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_query_result_buffer_elements, 3},
     {"_tiledb_libtiledb_query_get_fragment_num", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_num, 1},
     {"_tiledb_libtiledb_query_get_fragment_uri", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_uri, 2},
     {"_tiledb_libtiledb_query_get_fragment_timestamp_range", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_timestamp_range, 2},
