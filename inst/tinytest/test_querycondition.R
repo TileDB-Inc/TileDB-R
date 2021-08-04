@@ -218,3 +218,16 @@ expect_equal(arrx3[]$x3, "_1")
 qcx4 <- tiledb::parse_query_condition(x4 == "1.1.1")
 arrx4 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx4)
 expect_equal(arrx4[]$x4, "1.1.1")
+
+
+## edge case of text only array
+df <- data.frame(abb = state.abb,		# builtin-data
+                 region = state.region,	# idem
+                 name = state.name)     # idem
+uri <- tempfile()
+fromDataFrame(df, uri, col_index="abb", sparse=TRUE)
+fullarr <- tiledb_array(uri, as.data.frame=TRUE)[]
+expect_equal(dim(fullarr), c(50,3))
+subarr <- tiledb_array(uri, as.data.frame=TRUE,
+                       query_condition=parse_query_condition(region == "Northeast"))[]
+expect_equal(dim(subarr), c(9,3))

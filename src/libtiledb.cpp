@@ -2910,9 +2910,12 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
 }
 
 // [[Rcpp::export]]
-R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query, std::string attribute) {
-  R_xlen_t nelem = query->result_buffer_elements()[attribute].second;
-  return nelem;
+R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
+                                                std::string attribute,
+                                                int32_t which=1) {
+    auto nelements = query->result_buffer_elements()[attribute];
+    R_xlen_t nelem = (which == 0 ? nelements.first : nelements.second);
+    return nelem;
 }
 
 // [[Rcpp::export]]

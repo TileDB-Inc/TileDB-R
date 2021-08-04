@@ -670,7 +670,7 @@ setMethod("[", "tiledb_array",
   ## retrieve actual result size (from fixed size element columns)
   getResultSize <- function(name, varnum, qryptr) {
     if (is.na(varnum))                  # symbols come up with higher count
-      varnum
+      libtiledb_query_result_buffer_elements(qryptr, name, 0)
     else
       libtiledb_query_result_buffer_elements(qryptr, name)
   }
@@ -684,15 +684,15 @@ setMethod("[", "tiledb_array",
   ## get results
   getResult <- function(buf, name, varnum, resrv, qryptr) {
     if (is.na(varnum)) {
-      sz <- libtiledb_query_result_buffer_elements(qryptr, name)
-      libtiledb_query_get_buffer_var_char(buf, resrv, sz)[,1]
+      sz <- libtiledb_query_result_buffer_elements(qryptr, name, 0)
+      len <- libtiledb_query_result_buffer_elements(qryptr, name, 1)
+      libtiledb_query_get_buffer_var_char(buf, sz, len)[,1]
     } else {
       libtiledb_query_get_buffer_ptr(buf, asint64)
     }
   }
   reslist <- mapply(getResult, buflist, allnames, allvarnum,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-
   ## convert list into data.frame (cheaply) and subset
   res <- data.frame(reslist)[seq_len(resrv),]
   colnames(res) <- allnames
