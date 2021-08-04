@@ -670,7 +670,6 @@ setMethod("[", "tiledb_array",
   ## retrieve actual result size (from fixed size element columns)
   getResultSize <- function(name, varnum, qryptr) {
     if (is.na(varnum))                  # symbols come up with higher count
-      #varnum
       libtiledb_query_result_buffer_elements(qryptr, name, 0)
     else
       libtiledb_query_result_buffer_elements(qryptr, name)
