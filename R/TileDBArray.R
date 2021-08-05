@@ -153,6 +153,7 @@ tiledb_array <- function(uri,
   if (length(timestamp_end) > 0) {
       libtiledb_array_set_open_timestamp_end(array_xptr, timestamp_end)
   }
+
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
   is_sparse_status <- libtiledb_array_schema_sparse(schema_xptr)
   if (!is.na(is.sparse) && is.sparse != is_sparse_status) {
@@ -430,32 +431,6 @@ setMethod("[", "tiledb_array",
   tstamp <- x@timestamp
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
-
-  if (length(enckey) > 0) {
-    if (length(tstamp) > 0) {
-      x@ptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "READ", enckey, tstamp)
-    } else {
-      x@ptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
-    }
-  } else {
-    if (length(tstamp) > 0) {
-      x@ptr <- libtiledb_array_open_at(ctx@ptr, uri, "READ", tstamp)
-    } else {
-      x@ptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
-    }
-  }
-
-  if (length(x@timestamp_start) > 0) {
-      libtiledb_array_set_open_timestamp_start(x@ptr, x@timestamp_start)
-  }
-  if (length(x@timestamp_end) > 0) {
-      libtiledb_array_set_open_timestamp_end(x@ptr, x@timestamp_end)
-  }
-  if (length(x@timestamp_start) > 0 || length(x@timestamp_end) > 0) {
-      x@ptr <- libtiledb_array_reopen(x@ptr)
-  }
-
-  on.exit(libtiledb_array_close(x@ptr))
 
   dims <- tiledb::dimensions(dom)
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
@@ -915,20 +890,24 @@ setMethod("[<-", "tiledb_array",
 
   if (all.equal(sort(allnames),sort(nm))) {
 
-    if (length(enckey) > 0) {
-      if (length(tstamp) > 0) {
-        arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "WRITE", enckey, tstamp)
+    if (libtiledb_array_is_open_for_writing(x@ptr)) { 			# if open for writing
+      arrptr <- x@ptr                                           #   use array
+    } else {                                                    # else open appropriately
+      if (length(enckey) > 0) {
+        if (length(tstamp) > 0) {
+          arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "WRITE", enckey, tstamp)
+        } else {
+          arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", enckey)
+        }
       } else {
-        arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", enckey)
+        if (length(tstamp) > 0) {
+          arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "WRITE", tstamp)
+        } else {
+          arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
+        }
       }
-    } else {
-      if (length(tstamp) > 0) {
-        arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "WRITE", tstamp)
-      } else {
-        arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
-      }
-    }
 
+    }
 
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
     qryptr <- libtiledb_query_set_layout(qryptr,
