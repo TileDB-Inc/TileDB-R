@@ -890,20 +890,24 @@ setMethod("[<-", "tiledb_array",
 
   if (all.equal(sort(allnames),sort(nm))) {
 
-    if (length(enckey) > 0) {
-      if (length(tstamp) > 0) {
-        arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "WRITE", enckey, tstamp)
+    if (libtiledb_array_is_open_for_writing(x@ptr)) { 			# if open for writing
+      arrptr <- x@ptr                                           #   use array
+    } else {                                                    # else open appropriately
+      if (length(enckey) > 0) {
+        if (length(tstamp) > 0) {
+          arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "WRITE", enckey, tstamp)
+        } else {
+          arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", enckey)
+        }
       } else {
-        arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", enckey)
+        if (length(tstamp) > 0) {
+          arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "WRITE", tstamp)
+        } else {
+          arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
+        }
       }
-    } else {
-      if (length(tstamp) > 0) {
-        arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "WRITE", tstamp)
-      } else {
-        arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
-      }
-    }
 
+    }
 
     qryptr <- libtiledb_query(ctx@ptr, arrptr, "WRITE")
     qryptr <- libtiledb_query_set_layout(qryptr,
