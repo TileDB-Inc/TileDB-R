@@ -206,7 +206,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sp
     allows_dups(schema) <- allows_dups
     tiledb_array_create(uri, schema)
 
-    df <- tiledb_array(uri)
+    df <- tiledb_array(uri, query_type = "WRITE")
     ## when setting an index when likely want 'sparse write to dense array
     if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
     if (is.null(col_index) && sparse)
