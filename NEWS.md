@@ -8,7 +8,7 @@
 
 * Windows UCRT builds at CRAN are now supported (#268)
 
-* Use of TileDB Embedded was upgraded to release 2.3.2 (and later to 2.3.3) (#270)
+* Use of TileDB Embedded was upgraded to release 2.3.2 (#270), and again to 2.3.3 (#280)
 
 * The vacuum and consolidation helper functions now use time stamp support (#271)
 
