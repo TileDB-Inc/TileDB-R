@@ -1,3 +1,38 @@
+# tiledb 0.9.5
+
+* This release of the R package builds against [TileDB 2.3.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.3), but has also been tested against previous releases and the development version.
+
+## Improvements
+
+* A query condition parser was added for use with standard (non-quoted) R expressions (#267)
+
+* Windows UCRT builds at CRAN are now supported (#268)
+
+* Use of TileDB Embedded was upgraded to release 2.3.2 (#270), and again to 2.3.3 (#280)
+
+* The vacuum and consolidation helper functions now use time stamp support (#271)
+
+* The time-travel array opening support was updated to start and end timestamps (#272)
+
+* Tests for both vacuuming and consolidation 'time traveling' were added (#273)
+
+* Nullable string string attribute support was improved (#274)
+
+* Ascii columns attribute support was added (#276)
+
+* The query parser heuristic was improved to cover ascii strings (#277)
+
+* Array opening uses improvemed array state consideration skippingg re-openings for better performance (#279)
+
+## Bug Fixes
+
+* Domain size information gathering has been corrected for uint32, uint64, and int64 attribute domains (#266)
+
+* Timesteps for time-traveling unit tests were adjusted to not trip up macOS continuous integration tests (#275)
+
+* String array buffer size calculation was corrected also allowing for all-string arrays (#278)
+
+
 # tiledb 0.9.4
 
 * This release of the R package builds against [TileDB 2.3.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.1), but has also been tested against previous releases and the development version.
