@@ -74,7 +74,7 @@ based on refactored implementation utilising newer TileDB features." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
       </span>
     </div>
 
@@ -170,13 +170,17 @@ describes the (min,max) pair of ranges for dimension i</p></dd>
 
 <dt><code>encryption_key</code></dt><dd><p>A character value</p></dd>
 
-<dt><code>timestamp</code></dt><dd><p>A POSIXct datetime variable</p></dd>
+<dt><code>timestamp</code></dt><dd><p>A POSIXct datetime variable (deprecated, use timestamp_start)</p></dd>
 
 <dt><code>as.matrix</code></dt><dd><p>A logical value</p></dd>
 
 <dt><code>as.array</code></dt><dd><p>A logical value</p></dd>
 
 <dt><code>query_condition</code></dt><dd><p>A Query Condition object</p></dd>
+
+<dt><code>timestamp_start</code></dt><dd><p>A POSIXct datetime variable for the inclusive interval start</p></dd>
+
+<dt><code>timestamp_end</code></dt><dd><p>A POSIXct datetime variable for the inclusive interval start</p></dd>
 
 <dt><code>ptr</code></dt><dd><p>External pointer to the underlying implementation</p></dd>
 

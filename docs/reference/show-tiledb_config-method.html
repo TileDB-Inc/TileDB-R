@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
       </span>
     </div>
 
@@ -159,7 +159,7 @@
 #&gt; "config.env_var_prefix" : "TILEDB_"
 #&gt; "config.logging_level" : "0"
 #&gt; "rest.http_compressor" : "any"
-#&gt; "rest.retry_count" : "3"
+#&gt; "rest.retry_count" : "25"
 #&gt; "rest.retry_delay_factor" : "1.25"
 #&gt; "rest.retry_http_codes" : "503"
 #&gt; "rest.retry_initial_delay_ms" : "500"
@@ -184,12 +184,16 @@
 #&gt; "sm.encryption_type" : "NO_ENCRYPTION"
 #&gt; "sm.io_concurrency_level" : "12"
 #&gt; "sm.max_tile_overlap_size" : "314572800"
+#&gt; "sm.mem.reader.sparse_global_order.ratio_array_data" : "0.1"
+#&gt; "sm.mem.reader.sparse_global_order.ratio_coords" : "0.5"
+#&gt; "sm.mem.reader.sparse_global_order.ratio_query_condition" : "0.25"
+#&gt; "sm.mem.reader.sparse_global_order.ratio_tile_ranges" : "0.1"
+#&gt; "sm.mem.total_budget" : "10737418240"
 #&gt; "sm.memory_budget" : "5368709120"
 #&gt; "sm.memory_budget_var" : "10737418240"
 #&gt; "sm.read_range_oob" : "warn"
 #&gt; "sm.skip_checksum_validation" : "false"
 #&gt; "sm.skip_est_size_partitioning" : "false"
-#&gt; "sm.sub_partitioner_memory_budget" : "0"
 #&gt; "sm.tile_cache_size" : "10000000"
 #&gt; "sm.use_refactored_readers" : "false"
 #&gt; "sm.vacuum.mode" : "fragments"
@@ -203,6 +207,7 @@
 #&gt; "vfs.azure.max_parallel_ops" : "12"
 #&gt; "vfs.azure.storage_account_key" : ""
 #&gt; "vfs.azure.storage_account_name" : ""
+#&gt; "vfs.azure.storage_sas_token" : ""
 #&gt; "vfs.azure.use_block_list_upload" : "true"
 #&gt; "vfs.azure.use_https" : "true"
 #&gt; "vfs.file.enable_filelocks" : "true"

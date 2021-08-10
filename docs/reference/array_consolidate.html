@@ -40,8 +40,9 @@
 
 
 <meta property="og:title" content="Consolidate fragments of a TileDB Array — array_consolidate" />
-<meta property="og:description" content="This function invokes a consolidation operation. Parameters can be set via
-an option configuration object." />
+<meta property="og:description" content="This function invokes a consolidation operation. Parameters affecting the operation
+can be set via an optional configuration object. Start and end timestamps can also be
+set directly." />
 
 
 
@@ -73,7 +74,7 @@ an option configuration object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
       </span>
     </div>
 
@@ -136,11 +137,18 @@ an option configuration object." />
     </div>
 
     <div class="ref-description">
-    <p>This function invokes a consolidation operation. Parameters can be set via
-an option configuration object.</p>
+    <p>This function invokes a consolidation operation. Parameters affecting the operation
+can be set via an optional configuration object. Start and end timestamps can also be
+set directly.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>array_consolidate</span><span class='op'>(</span><span class='va'>uri</span>, cfg <span class='op'>=</span> <span class='cn'>NULL</span>, ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>array_consolidate</span><span class='op'>(</span>
+  <span class='va'>uri</span>,
+  cfg <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>start_time</span>,
+  <span class='va'>end_time</span>,
+  ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,6 +162,14 @@ an option configuration object.</p>
       <td><p>An optional TileDB Configuration object</p></td>
     </tr>
     <tr>
+      <th>start_time</th>
+      <td><p>An optional timestamp value, if missing config default is used</p></td>
+    </tr>
+    <tr>
+      <th>end_time</th>
+      <td><p>An optional timestamp value, if missing config default is used</p></td>
+    </tr>
+    <tr>
       <th>ctx</th>
       <td><p>An option TileDB Context object</p></td>
     </tr>
@@ -161,7 +177,7 @@ an option configuration object.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>NULL</code> is returned invisibly</p>
+    <p>NULL is returned invisibly</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
