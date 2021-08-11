@@ -836,8 +836,8 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
       auto d1 = dim->domain<DataType>().first;
       auto d2 = dim->domain<DataType>().second;
-      if (d1 > std::numeric_limits<int64_t>::max() ||
-          d2 > std::numeric_limits<int64_t>::max()) {
+      if (d1 > std::numeric_limits<uint32_t>::max() ||
+          d2 > std::numeric_limits<uint32_t>::max()) {
         Rcpp::stop("tiledb_dim domain UINT32 value not representable as an R integer64 type");
       }
       std::vector<int64_t> v = { static_cast<int64_t>(d1), static_cast<int64_t>(d2) };
