@@ -2919,6 +2919,13 @@ R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
 }
 
 // [[Rcpp::export]]
+NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> query,
+                                                         std::string attribute) {
+    auto nelem = query->result_buffer_elements()[attribute];
+    return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
+}
+
+// [[Rcpp::export]]
 int libtiledb_query_get_fragment_num(XPtr<tiledb::Query> query) {
   if (query->query_type() != TILEDB_WRITE) {
     Rcpp::stop("Fragment number only applicable to 'write' queries.");

@@ -1806,6 +1806,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_result_buffer_elements_vec
+NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> query, std::string attribute);
+RcppExport SEXP _tiledb_libtiledb_query_result_buffer_elements_vec(SEXP querySEXP, SEXP attributeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_result_buffer_elements_vec(query, attribute));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_get_fragment_num
 int libtiledb_query_get_fragment_num(XPtr<tiledb::Query> query);
 RcppExport SEXP _tiledb_libtiledb_query_get_fragment_num(SEXP querySEXP) {
@@ -2574,6 +2586,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_finalize", (DL_FUNC) &_tiledb_libtiledb_query_finalize, 1},
     {"_tiledb_libtiledb_query_status", (DL_FUNC) &_tiledb_libtiledb_query_status, 1},
     {"_tiledb_libtiledb_query_result_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_query_result_buffer_elements, 3},
+    {"_tiledb_libtiledb_query_result_buffer_elements_vec", (DL_FUNC) &_tiledb_libtiledb_query_result_buffer_elements_vec, 2},
     {"_tiledb_libtiledb_query_get_fragment_num", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_num, 1},
     {"_tiledb_libtiledb_query_get_fragment_uri", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_uri, 2},
     {"_tiledb_libtiledb_query_get_fragment_timestamp_range", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_timestamp_range, 2},

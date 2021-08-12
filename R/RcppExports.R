@@ -609,6 +609,10 @@ libtiledb_query_result_buffer_elements <- function(query, attribute, which = 1L)
     .Call(`_tiledb_libtiledb_query_result_buffer_elements`, query, attribute, which)
 }
 
+libtiledb_query_result_buffer_elements_vec <- function(query, attribute) {
+    .Call(`_tiledb_libtiledb_query_result_buffer_elements_vec`, query, attribute)
+}
+
 libtiledb_query_get_fragment_num <- function(query) {
     .Call(`_tiledb_libtiledb_query_get_fragment_num`, query)
 }

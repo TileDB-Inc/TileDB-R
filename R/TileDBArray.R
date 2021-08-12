@@ -665,9 +665,8 @@ setMethod("[", "tiledb_array",
   ## get results
   getResult <- function(buf, name, varnum, resrv, qryptr) {
     if (is.na(varnum)) {
-      sz <- libtiledb_query_result_buffer_elements(qryptr, name, 0)
-      len <- libtiledb_query_result_buffer_elements(qryptr, name, 1)
-      libtiledb_query_get_buffer_var_char(buf, sz, len)[,1]
+      vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
+      libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
     } else {
       libtiledb_query_get_buffer_ptr(buf, asint64)
     }
