@@ -4,17 +4,21 @@
 \alias{tiledb_query_result_buffer_elements_vec}
 \title{Get TileDB Query result buffer element size pair as vector}
 \usage{
-tiledb_query_result_buffer_elements_vec(query, attr)
+tiledb_query_result_buffer_elements_vec(query, attr, nullable = FALSE)
 }
 \arguments{
 \item{query}{A TileDB Query object}
 
 \item{attr}{A character value containing the attribute}
+
+\item{nullable}{A logical variable that is \sQuote{TRUE} to signal that the attribute
+is nullable, and \sQuote{FALSE} otherwise}
 }
 \value{
 A vector with the number of elements in the offsets buffer (and zero
-for fixed-size attribute or dimensions) and the number elements in the results
-buffer #' for the given attribute
+for fixed-size attribute or dimensions), the number elements in the results
+buffer for the given attribute, and (if nullable) a third element with the validity
+buffer size.
 }
 \description{
 The underlying library functions returns a pair of values as a vector
@@ -23,6 +27,8 @@ size attributes (and always zero for fixed-sized attributes and coordinates).
 The second is the number of elements in the data buffer. For variable-sized
 attributes the first number is the number of cells read (and hence the number
 of offsets), the second number is the number of elements in the data buffer.
+In the case of a nullable attribute, a third element is returned with the size of
+the validity buffer.
 }
 \seealso{
 tiledb_query_result_buffer_elements

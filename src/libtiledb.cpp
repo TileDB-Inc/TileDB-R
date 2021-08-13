@@ -2912,7 +2912,7 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
 // [[Rcpp::export]]
 R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
                                                 std::string attribute,
-                                                int32_t which=1) {
+                                                int32_t which = 1) {
     auto nelements = query->result_buffer_elements()[attribute];
     R_xlen_t nelem = (which == 0 ? nelements.first : nelements.second);
     return nelem;
@@ -2920,9 +2920,20 @@ R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
 
 // [[Rcpp::export]]
 NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> query,
-                                                         std::string attribute) {
-    auto nelem = query->result_buffer_elements()[attribute];
-    return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
+                                                         std::string attribute,
+                                                         bool nullable = false) {
+    if (nullable) {
+        auto nelem = query->result_buffer_elements_nullable()[attribute];
+        auto vec = NumericVector( {
+                static_cast<double>(std::get<0>(nelem)),
+                static_cast<double>(std::get<1>(nelem)),
+                static_cast<double>(std::get<2>(nelem))
+            });
+        return vec;
+    } else {
+        auto nelem = query->result_buffer_elements()[attribute];
+        return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
+    }
 }
 
 // [[Rcpp::export]]
