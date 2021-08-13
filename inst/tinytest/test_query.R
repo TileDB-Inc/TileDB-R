@@ -192,6 +192,14 @@ n <- tiledb_query_result_buffer_elements(qry, "rows")
 expect_equal(n, 4L)
 expect_equal(rowdat[1:n], rows[4:7])
 expect_equal(valdat[1:n], vals[4:7])
+n2 <- tiledb:::libtiledb_query_result_buffer_elements(qry@ptr, "rows", 0)
+expect_equal(n2, 0)                     # first element can be requested, is zero for fixed-sized
+
+nv <- tiledb_query_result_buffer_elements_vec(qry, "rows")
+expect_equal(length(nv), 2)             # vector accessors have two elements
+expect_equal(nv[1], 0)                  # first is zero for fixed-sized attributes
+expect_equal(nv[2], n)                  # second is what tiledb_query_result_buffer_elements has
+
 #})
 
 ## check for warning in insufficient memory
