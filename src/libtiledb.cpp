@@ -3226,6 +3226,20 @@ XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
     return query;
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_query_get_array(XPtr<tiledb::Query> query, XPtr<tiledb::Context> ctx) {
+    auto arr = query->array();
+    auto cptr = arr.ptr().get();
+    return XPtr<tiledb::Array>(new tiledb::Array(*ctx.get(), cptr, false));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_query_get_schema(XPtr<tiledb::Query> query,
+                                                     XPtr<tiledb::Context> ctx) {
+    auto arr = query->array();
+    return libtiledb_array_schema_load(ctx, arr.uri()); // returns an XPtr<tiledb::ArraySchema>
+}
+
 /**
  * Query Condition
  */

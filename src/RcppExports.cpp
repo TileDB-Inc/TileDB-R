@@ -1983,6 +1983,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_get_array
+XPtr<tiledb::Array> libtiledb_query_get_array(XPtr<tiledb::Query> query, XPtr<tiledb::Context> ctx);
+RcppExport SEXP _tiledb_libtiledb_query_get_array(SEXP querySEXP, SEXP ctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_array(query, ctx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_get_schema
+XPtr<tiledb::ArraySchema> libtiledb_query_get_schema(XPtr<tiledb::Query> query, XPtr<tiledb::Context> ctx);
+RcppExport SEXP _tiledb_libtiledb_query_get_schema(SEXP querySEXP, SEXP ctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_get_schema(query, ctx));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_condition
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx);
 RcppExport SEXP _tiledb_libtiledb_query_condition(SEXP ctxSEXP) {
@@ -2601,6 +2625,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_get_range", (DL_FUNC) &_tiledb_libtiledb_query_get_range, 3},
     {"_tiledb_libtiledb_query_get_range_var", (DL_FUNC) &_tiledb_libtiledb_query_get_range_var, 3},
     {"_tiledb_libtiledb_query_set_condition", (DL_FUNC) &_tiledb_libtiledb_query_set_condition, 2},
+    {"_tiledb_libtiledb_query_get_array", (DL_FUNC) &_tiledb_libtiledb_query_get_array, 2},
+    {"_tiledb_libtiledb_query_get_schema", (DL_FUNC) &_tiledb_libtiledb_query_get_schema, 2},
     {"_tiledb_libtiledb_query_condition", (DL_FUNC) &_tiledb_libtiledb_query_condition, 1},
     {"_tiledb_libtiledb_query_condition_init", (DL_FUNC) &_tiledb_libtiledb_query_condition_init, 5},
     {"_tiledb_libtiledb_query_condition_combine", (DL_FUNC) &_tiledb_libtiledb_query_condition_combine, 3},

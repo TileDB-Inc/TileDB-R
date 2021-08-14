@@ -665,6 +665,14 @@ libtiledb_query_set_condition <- function(query, query_cond) {
     .Call(`_tiledb_libtiledb_query_set_condition`, query, query_cond)
 }
 
+libtiledb_query_get_array <- function(query, ctx) {
+    .Call(`_tiledb_libtiledb_query_get_array`, query, ctx)
+}
+
+libtiledb_query_get_schema <- function(query, ctx) {
+    .Call(`_tiledb_libtiledb_query_get_schema`, query, ctx)
+}
+
 libtiledb_query_condition <- function(ctx) {
     .Call(`_tiledb_libtiledb_query_condition`, ctx)
 }
