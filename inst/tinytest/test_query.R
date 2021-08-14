@@ -195,8 +195,16 @@ expect_equal(valdat[1:n], vals[4:7])
 n2 <- tiledb:::libtiledb_query_result_buffer_elements(qry@ptr, "rows", 0)
 expect_equal(n2, 0)                     # first element can be requested, is zero for fixed-sized
 
-nv <- tiledb_query_result_buffer_elements_vec(qry, "rows")
-expect_equal(length(nv), 2)             # vector accessors have two elements
+## not as streamlined as it could, may need a wrapper for schema-from-query
+arrschptr <- tiledb:::libtiledb_query_get_schema(qry@ptr, tiledb_get_context()@ptr)
+sch <- tiledb:::tiledb_array_schema.from_ptr(arrschptr)
+
+attrs <- attrs(sch)
+isnullable <- tiledb:::libtiledb_attribute_get_nullable( attrs[["vals"]]@ptr )
+
+nv <- tiledb_query_result_buffer_elements_vec(qry, "vals", isnullable)
+
+expect_equal(length(nv), 2)             # vector accessors have two elements (or three if nullable)
 expect_equal(nv[1], 0)                  # first is zero for fixed-sized attributes
 expect_equal(nv[2], n)                  # second is what tiledb_query_result_buffer_elements has
 
