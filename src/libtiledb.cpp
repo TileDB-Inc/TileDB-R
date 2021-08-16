@@ -2922,6 +2922,7 @@ R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
 NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> query,
                                                          std::string attribute,
                                                          bool nullable = false) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (nullable) {
         auto nelem = query->result_buffer_elements_nullable()[attribute];
         auto vec = NumericVector( {
@@ -2934,6 +2935,10 @@ NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> que
         auto nelem = query->result_buffer_elements()[attribute];
         return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
     }
+#else
+    auto nelem = query->result_buffer_elements()[attribute];
+    return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
+#endif
 }
 
 // [[Rcpp::export]]
@@ -3231,16 +3236,24 @@ XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
 //
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_query_get_array(XPtr<tiledb::Query> query, XPtr<tiledb::Context> ctx) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto arr = query->array();
     auto cptr = arr.ptr().get();
     return XPtr<tiledb::Array>(new tiledb::Array(*ctx.get(), cptr, false));
+#else
+    return XPtr<tiledb::Array>(R_NilValue);
+#endif
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_query_get_schema(XPtr<tiledb::Query> query,
                                                      XPtr<tiledb::Context> ctx) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto arr = query->array();
     return libtiledb_array_schema_load(ctx, arr.uri()); // returns an XPtr<tiledb::ArraySchema>
+#else
+    return XPtr<tiledb::ArraySchema>(R_NilValue);
+#endif
 }
 
 /**

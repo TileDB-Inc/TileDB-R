@@ -208,6 +208,8 @@ expect_equal(keydat[1:n], keys[4:7])
 n2 <- tiledb:::libtiledb_query_result_buffer_elements(qry@ptr, "rows", 0)
 expect_equal(n2, 0)                     # first element can be requested, is zero for fixed-sized
 
+if (tiledb_version(TRUE) < "2.2.0") exit_file("Remaining tests require TileDB 2.2.* or later")
+
 ## not as streamlined as it could, may need a wrapper for schema-from-query
 arrschptr <- tiledb:::libtiledb_query_get_schema(qry@ptr, tiledb_get_context()@ptr)
 sch <- tiledb:::tiledb_array_schema.from_ptr(arrschptr)
