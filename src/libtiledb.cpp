@@ -2912,10 +2912,28 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
 // [[Rcpp::export]]
 R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
                                                 std::string attribute,
-                                                int32_t which=1) {
+                                                int32_t which = 1) {
     auto nelements = query->result_buffer_elements()[attribute];
     R_xlen_t nelem = (which == 0 ? nelements.first : nelements.second);
     return nelem;
+}
+
+// [[Rcpp::export]]
+NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> query,
+                                                         std::string attribute,
+                                                         bool nullable = false) {
+    if (nullable) {
+        auto nelem = query->result_buffer_elements_nullable()[attribute];
+        auto vec = NumericVector( {
+                static_cast<double>(std::get<0>(nelem)),
+                static_cast<double>(std::get<1>(nelem)),
+                static_cast<double>(std::get<2>(nelem))
+            });
+        return vec;
+    } else {
+        auto nelem = query->result_buffer_elements()[attribute];
+        return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
+    }
 }
 
 // [[Rcpp::export]]
@@ -3206,6 +3224,23 @@ XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
     query->set_condition(*query_cond.get());
 #endif
     return query;
+}
+
+// Note that the Array pointer returned here from a Query object is not owned and will not
+// outlive the query object
+//
+// [[Rcpp::export]]
+XPtr<tiledb::Array> libtiledb_query_get_array(XPtr<tiledb::Query> query, XPtr<tiledb::Context> ctx) {
+    auto arr = query->array();
+    auto cptr = arr.ptr().get();
+    return XPtr<tiledb::Array>(new tiledb::Array(*ctx.get(), cptr, false));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_query_get_schema(XPtr<tiledb::Query> query,
+                                                     XPtr<tiledb::Context> ctx) {
+    auto arr = query->array();
+    return libtiledb_array_schema_load(ctx, arr.uri()); // returns an XPtr<tiledb::ArraySchema>
 }
 
 /**

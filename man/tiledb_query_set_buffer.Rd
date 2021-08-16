@@ -19,5 +19,6 @@ The modified query object, invisisibly
 \description{
 This function allocates query buffers directly from R vectors in
 case the types match: \code{integer}, \code{double}, \code{logical}. For more
-general types see \code{tiledb_query_buffer_alloc_ptr}.
+general types see \code{tiledb_query_buffer_alloc_ptr} and
+\code{tiledb_query_buffer_assign_ptr}
 }

@@ -156,7 +156,8 @@ dir.create(tmp)
 
 dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 10L), 1L, type = "INT32"))
 schema <- tiledb_array_schema(dom,
-                              attrs = tiledb_attr("vals", type = "INT32"),
+                              attrs = c(tiledb_attr("vals", type = "INT32"),
+                                        tiledb_attr("keys", type = "INT32", nullable = TRUE)),
                               sparse=FALSE)
 tiledb_array_create(tmp, schema)
 arr <- tiledb_array(tmp)
@@ -168,6 +169,11 @@ qry <- tiledb_query_set_buffer(qry, "rows", rows)
 
 vals <- seq(101,110)
 qry <- tiledb_query_set_buffer(qry, "vals", vals)
+
+keys <- c(201:204, NA_integer_, 206L, NA_integer_, 208:210)
+buf <- tiledb:::libtiledb_query_buffer_alloc_ptr(arr@ptr, "INT32", 10, TRUE)
+buf <- tiledb:::libtiledb_query_buffer_assign_ptr(buf, "INT32", keys, FALSE)
+qry@ptr <- tiledb:::libtiledb_query_set_buffer_ptr(qry@ptr, "keys", buf)
 
 tiledb_query_set_layout(qry, "UNORDERED")
 tiledb_query_submit(qry)
@@ -183,15 +189,46 @@ qry <- tiledb_query_set_buffer(qry, "rows", rowdat)
 valdat <- integer(10)
 qry <- tiledb_query_set_buffer(qry, "vals", valdat)
 
+buf <- tiledb:::libtiledb_query_buffer_alloc_ptr(arr@ptr, "INT32", 10, TRUE)
+buf <- tiledb:::libtiledb_query_buffer_assign_ptr(buf, "INT32", keys, FALSE)
+qry@ptr <- tiledb:::libtiledb_query_set_buffer_ptr(qry@ptr, "keys", buf)
+
 qry <- tiledb_query_set_subarray(qry, c(4L,7L))
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 expect_equal(tiledb_query_status(qry), "COMPLETE")
 
+keydat <- tiledb:::libtiledb_query_get_buffer_ptr(buf, FALSE)
+
 n <- tiledb_query_result_buffer_elements(qry, "rows")
 expect_equal(n, 4L)
 expect_equal(rowdat[1:n], rows[4:7])
 expect_equal(valdat[1:n], vals[4:7])
+expect_equal(keydat[1:n], keys[4:7])
+n2 <- tiledb:::libtiledb_query_result_buffer_elements(qry@ptr, "rows", 0)
+expect_equal(n2, 0)                     # first element can be requested, is zero for fixed-sized
+
+## not as streamlined as it could, may need a wrapper for schema-from-query
+arrschptr <- tiledb:::libtiledb_query_get_schema(qry@ptr, tiledb_get_context()@ptr)
+sch <- tiledb:::tiledb_array_schema.from_ptr(arrschptr)
+
+attrs <- attrs(sch)
+isnullable <- tiledb:::libtiledb_attribute_get_nullable( attrs[["vals"]]@ptr )
+
+nv <- tiledb_query_result_buffer_elements_vec(qry, "vals", isnullable)
+expect_equal(length(nv), 2)             # vector accessors have two elements (or three if nullable)
+expect_equal(nv[1], 0)                  # first is zero for fixed-sized attributes
+expect_equal(nv[2], n)                  # second is what tiledb_query_result_buffer_elements has
+
+attrs <- attrs(sch)
+isnullable <- tiledb:::libtiledb_attribute_get_nullable( attrs[["keys"]]@ptr )
+
+nv <- tiledb_query_result_buffer_elements_vec(qry, "keys", isnullable)
+expect_equal(length(nv), 3)             # vector accessors have two elements (or three if nullable)
+expect_equal(nv[1], 0)                  # first is zero for fixed-sized attributes
+expect_equal(nv[2], n)                  # second is what tiledb_query_result_buffer_elements has
+expect_equal(nv[3], n)                  # third is length of validity buffer (if nullable)
+
 #})
 
 ## check for warning in insufficient memory

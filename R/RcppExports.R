@@ -609,6 +609,10 @@ libtiledb_query_result_buffer_elements <- function(query, attribute, which = 1L)
     .Call(`_tiledb_libtiledb_query_result_buffer_elements`, query, attribute, which)
 }
 
+libtiledb_query_result_buffer_elements_vec <- function(query, attribute, nullable = FALSE) {
+    .Call(`_tiledb_libtiledb_query_result_buffer_elements_vec`, query, attribute, nullable)
+}
+
 libtiledb_query_get_fragment_num <- function(query) {
     .Call(`_tiledb_libtiledb_query_get_fragment_num`, query)
 }
@@ -659,6 +663,14 @@ libtiledb_query_get_range_var <- function(query, dim_idx, rng_idx) {
 
 libtiledb_query_set_condition <- function(query, query_cond) {
     .Call(`_tiledb_libtiledb_query_set_condition`, query, query_cond)
+}
+
+libtiledb_query_get_array <- function(query, ctx) {
+    .Call(`_tiledb_libtiledb_query_get_array`, query, ctx)
+}
+
+libtiledb_query_get_schema <- function(query, ctx) {
+    .Call(`_tiledb_libtiledb_query_get_schema`, query, ctx)
 }
 
 libtiledb_query_condition <- function(ctx) {
