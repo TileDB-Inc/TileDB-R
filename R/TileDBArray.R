@@ -638,8 +638,14 @@ setMethod("[", "tiledb_array",
       qryptr <- libtiledb_query_set_condition(qryptr, x@query_condition@ptr)
   }
 
-  ## fire off query and close array
+  ## fire off query
   qryptr <- libtiledb_query_submit(qryptr)
+
+  ## check status
+  status <- libtiledb_query_status(qryptr)
+  if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
+
+  ## close array
   libtiledb_array_close(arrptr)
 
   ## retrieve actual result size (from fixed size element columns)
