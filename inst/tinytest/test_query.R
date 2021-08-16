@@ -193,3 +193,12 @@ expect_equal(n, 4L)
 expect_equal(rowdat[1:n], rows[4:7])
 expect_equal(valdat[1:n], vals[4:7])
 #})
+
+## check for warning in insufficient memory
+cfg <- tiledb_config()
+cfg["sm.memory_budget"] <- "16"
+cfg["sm.memory_budget_var"] <- "32"
+ctx <- tiledb_ctx(cfg)
+array <- tiledb_array(tmp, as.data.frame=TRUE)
+
+expect_warning(array[])
