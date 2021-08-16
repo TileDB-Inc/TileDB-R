@@ -3226,6 +3226,9 @@ XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
     return query;
 }
 
+// Note that the Array pointer returned here from a Query object is not owned and will not
+// outlive the query object
+//
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_query_get_array(XPtr<tiledb::Query> query, XPtr<tiledb::Context> ctx) {
     auto arr = query->array();
