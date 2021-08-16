@@ -101,7 +101,8 @@ tiledb_query_set_subarray <- function(query, subarray, type) {
 #'
 #' This function allocates query buffers directly from R vectors in
 #' case the types match: `integer`, `double`, `logical`. For more
-#' general types see \code{tiledb_query_buffer_alloc_ptr}.
+#' general types see \code{tiledb_query_buffer_alloc_ptr} and
+#' \code{tiledb_query_buffer_assign_ptr}
 #' @param query A TileDB Query object
 #' @param attr A character value containing the attribute
 #' @param buffer A vector providing the query buffer
