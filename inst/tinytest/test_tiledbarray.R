@@ -3,6 +3,7 @@ library(tiledb)
 
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
+isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
@@ -1016,7 +1017,9 @@ now1 <- Sys.time()
 A <- tiledb_array(uri = tmp, timestamp=now1)
 A[I, J] <- data
 
-Sys.sleep(1)
+twot <- 1 + isMacOS*5
+onet <- twot/2
+Sys.sleep(twot)
 
 now2 <- Sys.time()
 I <- c(8, 6, 9)
@@ -1025,13 +1028,13 @@ data <- c(11L, 22L, 33L)
 A <- tiledb_array(uri = tmp, timestamp=now2)
 A[I, J] <- data
 
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 - 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 - onet)
 expect_equal(nrow(A[]), 0)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 + 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 + onet)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 - 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 - onet)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 + 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 + onet)
 expect_equal(nrow(A[]), 6)
 
 ## as.matrix
@@ -1244,8 +1247,12 @@ fromDataFrame(subset(data, grp==1),     # write array, but only write group one
 arr <- tiledb_array(uri)
 times <- Sys.time() + 0:3               # pre-allocate for four time stampps
 
+twot <- 1 + isMacOS*5
+onet <- twot/2
+Sys.sleep(twot)
+
 for (i in 2:4) {                        # in loop, write groups two to four
-    Sys.sleep(1)
+    Sys.sleep(twot)
     arr[] <- subset(data, grp==i)
     times[i] <- Sys.time()              # and note time
 }
@@ -1256,15 +1263,15 @@ expect_equal(NROW(arr[]), 40)                           # all four observations
 arr2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1])    # end before 1st timestamp
 expect_equal(NROW(arr2[]), 10)          # expect group one (10 elements)
 
-arr3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+0.5) # start after fourth
+arr3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+onet) # start after fourth
 expect_equal(NROW(arr3[]), 0)           # expect zero data
 
-arr4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-0.5)    # end before 3rd
+arr4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-onet)    # end before 3rd
 res4 <- arr4[]
 expect_equal(NROW(res4), 20)            # expect 2 groups, 20 obs
 expect_equal(max(res4$grp), 2)          # with groups being 1 and 2
 
-arr5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-0.5, timestamp_end=times[3])
+arr5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-onet, timestamp_end=times[3])
 res5 <- arr5[]
 expect_equal(NROW(res5), 20)            # expects 2 groups, 2 and 3, with 20 obs
 expect_equal(min(res5$grp), 2)
@@ -1298,7 +1305,9 @@ now1 <- Sys.time()
 A <- tiledb_array(uri = tmp, timestamp_start=now1)
 A[I, J] <- data
 
-Sys.sleep(1)
+twot <- 1 + isMacOS*5
+onet <- twot/2
+Sys.sleep(twot)
 
 now2 <- Sys.time()
 I <- c(8, 6, 9)
@@ -1307,11 +1316,11 @@ data <- c(11L, 22L, 33L)
 A <- tiledb_array(uri = tmp, timestamp_start=now2)
 A[I, J] <- data
 
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now1 - 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now1 - onet)
 expect_equal(nrow(A[]), 0)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_start=now1 + 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_start=now1 + onet)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 - 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 - onet)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 + 0.5)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 + onet)
 expect_equal(nrow(A[]), 6)
