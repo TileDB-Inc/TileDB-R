@@ -133,7 +133,7 @@ arr[] <- dat
 
 newarr <- tiledb_array(tmpuri, as.data.frame=TRUE)
 newdat <- newarr[]
-expect_equal(dat, newdat)
+expect_equivalent(dat, newdat)
 
 unlink(tmpuri, recursive = TRUE)
 options(op)
@@ -1051,7 +1051,7 @@ arr[] <- mat                        	# we can write directly
 
 arr2 <- tiledb_array(tmp, as.matrix=TRUE)
 mat2 <- arr2[]
-expect_equal(mat, mat2)                 # check round-turn
+expect_true(all.equal(mat, mat2, check.attributes=FALSE)) # check round-turn
 
 ## check no double selection
 expect_error(tiledb_array(tmp, as.data.frame=TRUE, as.matrix=TRUE))
@@ -1060,14 +1060,14 @@ expect_false(is.data.frame(suppressMessages(arr2[1:2,])))
 expect_true(is.matrix(suppressMessages(arr2[1:2,])))
 expect_false(is.data.frame(suppressMessages(arr2[,3])))
 expect_true(is.matrix(suppressMessages(arr2[,3])))
-## selections via i and j
-expect_equal(arr2[1:2,], cbind( c(1,2), c(6,7), c(11,12), c(16,17)))
-expect_equal(arr2[,3], cbind(11:15) )
+## selections via i and j (and ignore attribute)
+expect_equivalent(arr2[1:2,], cbind( c(1,2), c(6,7), c(11,12), c(16,17)))
+expect_equivalent(arr2[,3], cbind(11:15) )
 ## more complex selection with holes via selected_ranges()
 selected_ranges(arr2) <- list(cbind(c(1,4),c(2,5)), cbind(2,3))
-expect_equal(arr2[], cbind(c(6,7,9,10), c(11,12,14,15)))
+expect_equivalent(arr2[], cbind(c(6,7,9,10), c(11,12,14,15)))
 selected_ranges(arr2) <- list(cbind(c(1,4),c(2,5)), cbind(2,2))
-expect_equal(arr2[], cbind(c(6,7,9,10)))
+expect_equivalent(arr2[], cbind(c(6,7,9,10)))
 
 
 arr3 <- tiledb_array(tmp, as.data.frame=TRUE)
@@ -1078,9 +1078,9 @@ fromDataFrame(df1, tmp2)
 
 ## check selecting matrix out of multiple cols
 arr4 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals2"), as.matrix=TRUE)
-expect_equal(arr4[], 10*mat)
+expect_equivalent(arr4[], 10*mat)
 arr5 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals"), as.matrix=TRUE)
-expect_equal(arr5[], mat)
+expect_equivalent(arr5[], mat)
 arr6 <- tiledb_array(tmp2, attrs=c("rows", "cols", "vals", "vals2"), as.matrix=TRUE)
 res <- arr6[]
 expect_true(is.list(res))
@@ -1107,7 +1107,7 @@ obj <- tiledb_array(uri, attrs="a", as.data.frame=TRUE)
 res <- obj[]
 expect_equal(colnames(res), c("rows", "cols", "a")) 	# this was the PR issues
 obj <- tiledb_array(uri, attrs="a", as.matrix=TRUE)     # this is the preferred accessor here
-expect_equal(obj[], data[["a"]])
+expect_equivalent(obj[], data[["a"]])
 obj <- tiledb_array(uri, as.matrix=TRUE)     			# test all three matrices
 res <- obj[]
 expect_equal(res[["a"]], data[["a"]])
@@ -1127,7 +1127,7 @@ obj <- tiledb_array(uri, attrs="x", query_type="WRITE")
 M <- matrix(runif(N*K), N, K)
 obj[] <- M                              # prior to #246 this write had a write data type
 chk <- tiledb_array(uri, as.matrix=TRUE)
-expect_equal(chk[], M)
+expect_equivalent(chk[], M)
 
 
 ## test for data.frame append

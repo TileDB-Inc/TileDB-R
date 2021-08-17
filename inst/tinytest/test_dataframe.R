@@ -33,7 +33,7 @@ expect_equal(irisdf, newdf[,-1])
 arr <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE,
                     attrs = c("Petal.Length", "Petal.Width"))
 newdf <- arr[]
-expect_equal(iris[, c("Petal.Length", "Petal.Width")], newdf)
+expect_equivalent(iris[, c("Petal.Length", "Petal.Width")], newdf) # skip attribute
 
 
 ## test list
@@ -157,7 +157,7 @@ if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, sparse=TRUE)
 
 chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
-expect_equal(df, chk[])
+expect_equivalent(df, chk[])            # skip attribute
 
 for (i in seq_len(dim(df)[2])) {
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -186,7 +186,7 @@ fromDataFrame(df, uri, sparse=TRUE)
 chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
 newdf <- chk[]
 if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
-expect_equal(df, newdf)
+expect_equivalent(df, newdf)            # skip attribute
 
 
 for (i in seq_len(dim(df)[2])) {
@@ -247,7 +247,7 @@ if (getRversion() < '4.0.0') {
     chk$sample <- as.character(chk$sample)
     chk$header <- as.character(chk$header)
 }
-expect_equal(D, chk)
+expect_equivalent(D, chk)               # skip attribute
 
 ## sparse array can have duplicate values in index column
 df <- data.frame(
@@ -265,4 +265,4 @@ expect_silent(arr <- fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dup
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
 if (getRversion() <  '4.0.0') chk$char <- as.character(chk$char)
-expect_equal(df, chk)
+expect_equivalent(df, chk)              # skip attribute

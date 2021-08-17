@@ -201,7 +201,7 @@ for (dtype in dimtypes) {
     readdata <- arr2[]
     if (dtype == "ASCII" && getRversion() < '4.0.0') readdata$row <- as.character(readdata$row)
     if (dtype == "UINT64") readdata[,1] <- as.integer64(readdata[,1])  # return doubles here
-    expect_equal(data, readdata)
+    expect_equivalent(data, readdata)
     if (grepl("^DATETIME", dtype)) {
         ## check for default date(time) type
         expect_false(class(readdata) == "integer64")

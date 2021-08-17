@@ -240,4 +240,4 @@ cfg["sm.memory_budget_var"] <- "32"
 ctx <- tiledb_ctx(cfg)
 array <- tiledb_array(tmp, as.data.frame=TRUE)
 
-expect_warning(array[])
+expect_warning(res <- array[])
