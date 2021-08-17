@@ -641,8 +641,12 @@ setMethod("[", "tiledb_array",
   ## fire off query
   qryptr <- libtiledb_query_submit(qryptr)
 
+  ## finalize query
+  qryptr <- libtiledb_query_finalize(qryptr)
+
   ## check status
   status <- libtiledb_query_status(qryptr)
+  .pkgenv[["query_status"]] <- libtiledb_query_status(qryptr)
   if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
 
   ## close array
