@@ -286,6 +286,7 @@ tiledb_query_submit_async <- function(query) {
 tiledb_query_finalize <- function(query) {
   stopifnot(query_object=is(query, "tiledb_query"))
   libtiledb_query_finalize(query@ptr)
+  .pkgenv[["query_status"]] <- libtiledb_query_status(query@ptr)
   invisible(query)
 }
 
@@ -517,4 +518,15 @@ tiledb_query_set_condition <- function(query, qc) {
               `needs query condition object`=is(qc, "tiledb_query_condition"))
     query@ptr <- libtiledb_query_set_condition(query@ptr, qc@ptr)
     invisible(query)
+}
+
+#' Retrieve the cached status of the last finalized query
+#'
+#' This function accesses the status of the last query without
+#' requiring the query object.
+#'
+#' @return The status of the last query
+#' @export
+tiledb_get_query_status <- function() {
+    .pkgenv[["query_status"]]
 }

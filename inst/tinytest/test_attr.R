@@ -151,7 +151,7 @@ data <- data.frame(row = dvec,
 arr[] <- data
 arr2 <- tiledb_array(uri, as.data.frame=TRUE)
 readdata <- arr2[]
-expect_true(all.equal(data, readdata))
+expect_true(all.equal(data, readdata, check.attributes=FALSE))
 
 
 if (tiledb_version(TRUE) < "2.2.0") exit_file("Needs TileDB 2.2.* or later")

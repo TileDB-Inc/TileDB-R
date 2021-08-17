@@ -645,6 +645,9 @@ setMethod("[", "tiledb_array",
   status <- libtiledb_query_status(qryptr)
   if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
 
+  ## finalize query
+  qryptr <- libtiledb_query_finalize(qryptr)
+
   ## close array
   libtiledb_array_close(arrptr)
 
@@ -695,6 +698,9 @@ setMethod("[", "tiledb_array",
   } else if (x@as.array) {
     res <- .convertToArray(dimnames, attrnames, res)
   }
+
+  ## attach query status
+  attr(res, "query_status") <- .pkgenv[["query_status"]]
 
   invisible(res)
 })

@@ -23,12 +23,15 @@
 .pkgenv <- new.env(parent = emptyenv())
 
 .onLoad <- function(libname, pkgName) {
-  ## create a slot for ctx in the per-package enviroment but do no fill it yet to allow 'lazy load'
-  ## this entry is generally accessed with a (non-exported) getter and setter in R/Ctx.R
-  .pkgenv[["ctx"]] <- NULL
+    ## create a slot for ctx in the per-package enviroment but do no fill it yet to allow 'lazy load'
+    ## this entry is generally accessed with a (non-exported) getter and setter in R/Ctx.R
+    .pkgenv[["ctx"]] <- NULL
 
-  ## similarly, use a slot for the vfs object
-  .pkgenv[["vfs"]] <- NULL
+    ## similarly, use a slot for the vfs object
+    .pkgenv[["vfs"]] <- NULL
+
+    ## cache query status of last finalized query
+    .pkgenv[["query_status"]] <- character()
 }
 
 .onAttach <- function(libname, pkgName) {
