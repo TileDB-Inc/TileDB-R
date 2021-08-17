@@ -10,6 +10,6 @@ tiledb_get_query_status()
 The status of the last query
 }
 \description{
-This function permits to access the status of the last query
-without requiring the query object.
+This function accesses the status of the last query without
+requiring the query object.
 }

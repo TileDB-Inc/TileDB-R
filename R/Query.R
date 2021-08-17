@@ -522,8 +522,8 @@ tiledb_query_set_condition <- function(query, qc) {
 
 #' Retrieve the cached status of the last finalized query
 #'
-#' This function permits to access the status of the last query
-#' without requiring the query object.
+#' This function accesses the status of the last query without
+#' requiring the query object.
 #'
 #' @return The status of the last query
 #' @export
