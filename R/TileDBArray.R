@@ -700,6 +700,9 @@ setMethod("[", "tiledb_array",
     res <- .convertToArray(dimnames, attrnames, res)
   }
 
+  ## attach query status
+  attr(res, "query_status") <- .pkgenv[["query_status"]]
+
   invisible(res)
 })
 
