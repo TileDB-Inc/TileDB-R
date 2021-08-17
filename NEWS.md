@@ -1,3 +1,18 @@
+# Ongoing development
+
+* This release of the R package builds against [TileDB 2.3.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.3), but has also been tested against previous releases and the development version.
+
+## Improvements
+
+* When retrieving results via the `[` operator, incomplete queries generate a warning (#283)
+
+* The interface to query element size of queries was extended (#282)
+
+## Bug Fixes
+
+* One cast statement was corrected so a warning is no longer triggered from `clang` (#281)
+
+
 # tiledb 0.9.5
 
 * This release of the R package builds against [TileDB 2.3.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.3), but has also been tested against previous releases and the development version.
