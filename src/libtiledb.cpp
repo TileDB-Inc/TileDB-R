@@ -3746,20 +3746,153 @@ std::string libtiledb_fragment_info_uri(XPtr<tiledb::FragmentInfo> fi, int32_t f
 
 // [[Rcpp::export]]
 Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tiledb::FragmentInfo> fi,
-                                                                       int32_t fid, int32_t did) {
-    std::vector<int64_t> non_empty_dom(2);
-    fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
-    //std::cout << (int32_t) non_empty_dom[0] << " " << (int32_t) non_empty_dom[1] << std::endl;
-    return makeInteger64(non_empty_dom);
+                                                                       int32_t fid, int32_t did,
+                                                                       const std::string& typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+    if (typestr == "INT64") {
+        std::vector<int64_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return makeInteger64(non_empty_dom);
+    } else if (typestr == "UINT64") {
+        std::vector<uint64_t> ned(2);
+        fi->get_non_empty_domain(fid, did, &ned[0]);
+        std::vector<int64_t> v{ static_cast<int64_t>(ned[0]), static_cast<int64_t>(ned[1]) };
+        return makeInteger64(v);
+    } else if (typestr == "INT32") {
+        std::vector<int32_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+    } else if (typestr == "UINT32") {
+        std::vector<uint32_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+    } else if (typestr == "INT16") {
+        std::vector<int16_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+    } else if (typestr == "UINT16") {
+        std::vector<uint16_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "INT8") {
+        std::vector<int8_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "UINT8") {
+        std::vector<uint8_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "FLOAT64") {
+        std::vector<double> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "FLOAT32") {
+        std::vector<float> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "DATETIME_YEAR" ||
+             typestr == "DATETIME_MONTH" ||
+             typestr == "DATETIME_WEEK" ||
+             typestr == "DATETIME_DAY" ||
+             typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS"  ||
+             typestr == "DATETIME_US"  ||
+             typestr == "DATETIME_PS"  ||
+             typestr == "DATETIME_FS"  ||
+             typestr == "DATETIME_AS"    ) {
+        // type_check() from exception.h gets invoked and wants an int64_t
+        std::vector<int64_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return makeInteger64(non_empty_dom);
+    } else if (typestr == "DATETIME_NS") {
+        std::vector<int64_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+        return makeNanotime(non_empty_dom);
+    } else {
+        Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
+        return NumericVector::create(NA_REAL, NA_REAL); // not reached
+    }
+#else
+    return NumericVector::create(NA_REAL, NA_REAL);
+#endif
 }
 
 // [[Rcpp::export]]
 Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiledb::FragmentInfo> fi,
                                                                       int32_t fid,
-                                                                      const std::string& dim_name) {
-    std::vector<int64_t> non_empty_dom(2);
-    fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
-    return makeInteger64(non_empty_dom);
+                                                                      const std::string& dim_name,
+                                                                      const std::string& typestr) {
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+    if (typestr == "INT64") {
+        std::vector<int64_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return makeInteger64(non_empty_dom);
+    } else if (typestr == "UINT64") {
+        std::vector<uint64_t> ned(2);
+        fi->get_non_empty_domain(fid, dim_name, &ned[0]);
+        std::vector<int64_t> v{ static_cast<int64_t>(ned[0]), static_cast<int64_t>(ned[1]) };
+        return makeInteger64(v);
+    } else if (typestr == "INT32") {
+        std::vector<int32_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+    } else if (typestr == "UINT32") {
+        std::vector<uint32_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+    } else if (typestr == "INT16") {
+        std::vector<int16_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+    } else if (typestr == "UINT16") {
+        std::vector<uint16_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "INT8") {
+        std::vector<int8_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "UINT8") {
+        std::vector<uint8_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "FLOAT64") {
+        std::vector<double> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "FLOAT32") {
+        std::vector<float> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
+  } else if (typestr == "DATETIME_YEAR" ||
+             typestr == "DATETIME_MONTH" ||
+             typestr == "DATETIME_WEEK" ||
+             typestr == "DATETIME_DAY" ||
+             typestr == "DATETIME_HR"  ||
+             typestr == "DATETIME_MIN" ||
+             typestr == "DATETIME_SEC" ||
+             typestr == "DATETIME_MS"  ||
+             typestr == "DATETIME_US"  ||
+             typestr == "DATETIME_PS"  ||
+             typestr == "DATETIME_FS"  ||
+             typestr == "DATETIME_AS"    ) {
+        // type_check() from exception.h gets invoked and wants an int64_t
+        std::vector<int64_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return makeInteger64(non_empty_dom);
+    } else if (typestr == "DATETIME_NS") {
+        std::vector<int64_t> non_empty_dom(2);
+        fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+        return makeNanotime(non_empty_dom);
+    } else {
+        Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
+        return NumericVector::create(NA_REAL, NA_REAL); // not reached
+    }
+#else
+    return NumericVector::create(NA_REAL, NA_REAL);
+#endif
 }
 
 // [[Rcpp::export]]

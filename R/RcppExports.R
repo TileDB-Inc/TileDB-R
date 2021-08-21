@@ -833,12 +833,12 @@ libtiledb_fragment_info_uri <- function(fi, fid) {
     .Call(`_tiledb_libtiledb_fragment_info_uri`, fi, fid)
 }
 
-libtiledb_fragment_info_get_non_empty_domain_index <- function(fi, fid, did) {
-    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_index`, fi, fid, did)
+libtiledb_fragment_info_get_non_empty_domain_index <- function(fi, fid, did, typestr) {
+    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_index`, fi, fid, did, typestr)
 }
 
-libtiledb_fragment_info_get_non_empty_domain_name <- function(fi, fid, dim_name) {
-    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_name`, fi, fid, dim_name)
+libtiledb_fragment_info_get_non_empty_domain_name <- function(fi, fid, dim_name, typestr) {
+    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_name`, fi, fid, dim_name, typestr)
 }
 
 libtiledb_fragment_info_get_non_empty_domain_var_index <- function(fi, fid, did) {

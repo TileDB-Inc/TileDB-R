@@ -2482,28 +2482,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_fragment_info_get_non_empty_domain_index
-Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tiledb::FragmentInfo> fi, int32_t fid, int32_t did);
-RcppExport SEXP _tiledb_libtiledb_fragment_info_get_non_empty_domain_index(SEXP fiSEXP, SEXP fidSEXP, SEXP didSEXP) {
+Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tiledb::FragmentInfo> fi, int32_t fid, int32_t did, const std::string& typestr);
+RcppExport SEXP _tiledb_libtiledb_fragment_info_get_non_empty_domain_index(SEXP fiSEXP, SEXP fidSEXP, SEXP didSEXP, SEXP typestrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FragmentInfo> >::type fi(fiSEXP);
     Rcpp::traits::input_parameter< int32_t >::type fid(fidSEXP);
     Rcpp::traits::input_parameter< int32_t >::type did(didSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_fragment_info_get_non_empty_domain_index(fi, fid, did));
+    Rcpp::traits::input_parameter< const std::string& >::type typestr(typestrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_fragment_info_get_non_empty_domain_index(fi, fid, did, typestr));
     return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_fragment_info_get_non_empty_domain_name
-Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiledb::FragmentInfo> fi, int32_t fid, const std::string& dim_name);
-RcppExport SEXP _tiledb_libtiledb_fragment_info_get_non_empty_domain_name(SEXP fiSEXP, SEXP fidSEXP, SEXP dim_nameSEXP) {
+Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiledb::FragmentInfo> fi, int32_t fid, const std::string& dim_name, const std::string& typestr);
+RcppExport SEXP _tiledb_libtiledb_fragment_info_get_non_empty_domain_name(SEXP fiSEXP, SEXP fidSEXP, SEXP dim_nameSEXP, SEXP typestrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FragmentInfo> >::type fi(fiSEXP);
     Rcpp::traits::input_parameter< int32_t >::type fid(fidSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type dim_name(dim_nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_fragment_info_get_non_empty_domain_name(fi, fid, dim_name));
+    Rcpp::traits::input_parameter< const std::string& >::type typestr(typestrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_fragment_info_get_non_empty_domain_name(fi, fid, dim_name, typestr));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2871,8 +2873,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_stats_raw_get", (DL_FUNC) &_tiledb_libtiledb_stats_raw_get, 0},
     {"_tiledb_libtiledb_fragment_info", (DL_FUNC) &_tiledb_libtiledb_fragment_info, 2},
     {"_tiledb_libtiledb_fragment_info_uri", (DL_FUNC) &_tiledb_libtiledb_fragment_info_uri, 2},
-    {"_tiledb_libtiledb_fragment_info_get_non_empty_domain_index", (DL_FUNC) &_tiledb_libtiledb_fragment_info_get_non_empty_domain_index, 3},
-    {"_tiledb_libtiledb_fragment_info_get_non_empty_domain_name", (DL_FUNC) &_tiledb_libtiledb_fragment_info_get_non_empty_domain_name, 3},
+    {"_tiledb_libtiledb_fragment_info_get_non_empty_domain_index", (DL_FUNC) &_tiledb_libtiledb_fragment_info_get_non_empty_domain_index, 4},
+    {"_tiledb_libtiledb_fragment_info_get_non_empty_domain_name", (DL_FUNC) &_tiledb_libtiledb_fragment_info_get_non_empty_domain_name, 4},
     {"_tiledb_libtiledb_fragment_info_get_non_empty_domain_var_index", (DL_FUNC) &_tiledb_libtiledb_fragment_info_get_non_empty_domain_var_index, 3},
     {"_tiledb_libtiledb_fragment_info_get_non_empty_domain_var_name", (DL_FUNC) &_tiledb_libtiledb_fragment_info_get_non_empty_domain_var_name, 3},
     {"_tiledb_libtiledb_fragment_info_num", (DL_FUNC) &_tiledb_libtiledb_fragment_info_num, 1},
