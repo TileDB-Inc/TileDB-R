@@ -13,7 +13,8 @@ tiledb_fragment_info_get_non_empty_domain_name(object, fid, dim_name, typestr)
 
 \item{dim_name}{A character variable with the dimension name}
 
-\item{typestr}{A character variable describing the data type}
+\item{typestr}{An optional character variable describing the data type which will
+be accessed from the schema if missinh}
 }
 \value{
 A TileDB Domain object

@@ -64,10 +64,15 @@ tiledb_fragment_info_uri <- function(object, fid) {
 #' @param object A TileDB fragment info object
 #' @param fid A fragment object index
 #' @param did A domain index
-#' @param typestr A character variable describing the data type
+#' @param typestr An optional character variable describing the data type which will
+#' be accessed from the schema if missinh
 #' @return A TileDB Domain object
 #' @export
 tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did, typestr) {
+    if (missing(typestr)) {
+        uri <- dirname(libtiledb_fragment_info_uri(object@ptr, fid))
+        typestr <- datatype( dimensions(domain(schema(uri)))[[did+1]] )
+    }
     libtiledb_fragment_info_get_non_empty_domain_index(object@ptr, fid, did, typestr)
 }
 
@@ -78,10 +83,17 @@ tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did, ty
 #' @param object A TileDB fragment info object
 #' @param fid A fragment object index
 #' @param dim_name A character variable with the dimension name
-#' @param typestr A character variable describing the data type
+#' @param typestr An optional character variable describing the data type which will
+#' be accessed from the schema if missinh
 #' @return A TileDB Domain object
 #' @export
 tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name, typestr) {
+    if (missing(typestr)) {
+        uri <- dirname(libtiledb_fragment_info_uri(object@ptr, fid))
+        names <- sapply(dimensions(domain(schema(uri))), name)
+        ind <- which(names == dim_name)
+        typestr <- datatype( dimensions(domain(schema(uri)))[[ind]] )
+    }
     libtiledb_fragment_info_get_non_empty_domain_name(object@ptr, fid, dim_name, typestr)
 }
 

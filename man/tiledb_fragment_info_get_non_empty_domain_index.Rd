@@ -13,7 +13,8 @@ tiledb_fragment_info_get_non_empty_domain_index(object, fid, did, typestr)
 
 \item{did}{A domain index}
 
-\item{typestr}{A character variable describing the data type}
+\item{typestr}{An optional character variable describing the data type which will
+be accessed from the schema if missinh}
 }
 \value{
 A TileDB Domain object
