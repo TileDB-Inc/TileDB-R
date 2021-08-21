@@ -3726,3 +3726,121 @@ std::string libtiledb_stats_raw_get() {
   return result;
 #endif
 }
+
+/**
+ * FragmentInfo
+ */
+// [[Rcpp::export]]
+XPtr<tiledb::FragmentInfo> libtiledb_fragment_info(XPtr<tiledb::Context> ctx,
+                                                   const std::string& uri) {
+    auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo(*ctx.get(), uri));
+    registerXptrFinalizer(ptr, libtiledb_fragment_info_delete);
+    ptr->load();                // also load
+    return ptr;
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_fragment_info_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return fi->fragment_uri(static_cast<uint32_t>(fid));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Domain> libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tiledb::FragmentInfo> fi,
+                                                                        int32_t fid, int32_t did,
+                                                                        XPtr<tiledb::Context> ctx) {
+
+    XPtr<tiledb::Domain> domain = XPtr<tiledb::Domain>(new tiledb::Domain(*ctx.get()));
+    fi->get_non_empty_domain(static_cast<uint32_t>(fid),
+                             static_cast<uint32_t>(did),
+                             static_cast<void*>(domain.get()));
+    //libtiledb_domain_dump(domain);
+    //registerXptrFinalizer(domain, libtiledb_domain_delete);
+    return domain;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Domain> libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiledb::FragmentInfo> fi,
+                                                                       int32_t fid,
+                                                                       const std::string& dim_name,
+                                                                       XPtr<tiledb::Context> ctx) {
+    auto domptr = new tiledb::Domain(*ctx.get());
+    fi->get_non_empty_domain(static_cast<uint32_t>(fid), dim_name,
+                             static_cast<void*>(domptr));
+    XPtr<tiledb::Domain> domain(domptr, false);
+    registerXptrFinalizer(domain, libtiledb_domain_delete);
+    return domain;
+}
+
+// [[Rcpp::export]]
+Rcpp::CharacterVector
+libtiledb_fragment_info_get_non_empty_domain_var_index(XPtr<tiledb::FragmentInfo> fi,
+                                                       int32_t fid, int32_t did) {
+    auto sp = fi->non_empty_domain_var(static_cast<uint32_t>(fid), static_cast<uint32_t>(did));
+    return CharacterVector::create(sp.first, sp.second);
+}
+
+// [[Rcpp::export]]
+Rcpp::CharacterVector
+libtiledb_fragment_info_get_non_empty_domain_var_name(XPtr<tiledb::FragmentInfo> fi,
+                                                      int32_t fid,
+                                                      const std::string& dim_name) {
+    auto sp = fi->non_empty_domain_var(static_cast<uint32_t>(fid), dim_name);
+    return CharacterVector::create(sp.first, sp.second);
+}
+
+// [[Rcpp::export]]
+double libtiledb_fragment_info_num(XPtr<tiledb::FragmentInfo> fi) {
+    return static_cast<double>(fi->fragment_num());
+}
+
+// [[Rcpp::export]]
+double libtiledb_fragment_info_size(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return static_cast<double>(fi->fragment_size(static_cast<uint32_t>(fid)));
+}
+
+// [[Rcpp::export]]
+bool libtiledb_fragment_info_dense(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return fi->dense(static_cast<uint32_t>(fid));
+}
+
+// [[Rcpp::export]]
+bool libtiledb_fragment_info_sparse(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return fi->sparse(static_cast<uint32_t>(fid));
+}
+
+// [[Rcpp::export]]
+Rcpp::DatetimeVector
+libtiledb_fragment_info_timestamp_range(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    auto range = fi->timestamp_range(static_cast<uint32_t>(fid));
+    return Rcpp::DatetimeVector::create(range.first/1000.0, range.second/1000.0);
+}
+
+// [[Rcpp::export]]
+double libtiledb_fragment_info_cell_num(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return static_cast<double>(fi->cell_num(static_cast<uint32_t>(fid)));
+}
+
+// [[Rcpp::export]]
+int libtiledb_fragment_info_version(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return static_cast<int>(fi->version(static_cast<uint32_t>(fid)));
+}
+
+// [[Rcpp::export]]
+bool libtiledb_fragment_info_has_consolidated_metadata(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return fi->has_consolidated_metadata(static_cast<uint32_t>(fid));
+}
+
+// [[Rcpp::export]]
+double libtiledb_fragment_info_unconsolidated_metadata_num(XPtr<tiledb::FragmentInfo> fi) {
+    return static_cast<double>(fi->unconsolidated_metadata_num());
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_fragment_info_to_vacuum_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+    return fi->to_vacuum_uri(static_cast<uint32_t>(fid));
+}
+
+// [[Rcpp::export]]
+void libtiledb_fragment_info_dump(XPtr<tiledb::FragmentInfo> fi) {
+    return fi->dump();
+}
