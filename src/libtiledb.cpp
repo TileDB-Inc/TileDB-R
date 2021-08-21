@@ -3745,30 +3745,21 @@ std::string libtiledb_fragment_info_uri(XPtr<tiledb::FragmentInfo> fi, int32_t f
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Domain> libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tiledb::FragmentInfo> fi,
-                                                                        int32_t fid, int32_t did,
-                                                                        XPtr<tiledb::Context> ctx) {
-
-    XPtr<tiledb::Domain> domain = XPtr<tiledb::Domain>(new tiledb::Domain(*ctx.get()));
-    fi->get_non_empty_domain(static_cast<uint32_t>(fid),
-                             static_cast<uint32_t>(did),
-                             static_cast<void*>(domain.get()));
-    //libtiledb_domain_dump(domain);
-    //registerXptrFinalizer(domain, libtiledb_domain_delete);
-    return domain;
+Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tiledb::FragmentInfo> fi,
+                                                                       int32_t fid, int32_t did) {
+    std::vector<int64_t> non_empty_dom(2);
+    fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
+    //std::cout << (int32_t) non_empty_dom[0] << " " << (int32_t) non_empty_dom[1] << std::endl;
+    return makeInteger64(non_empty_dom);
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Domain> libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiledb::FragmentInfo> fi,
-                                                                       int32_t fid,
-                                                                       const std::string& dim_name,
-                                                                       XPtr<tiledb::Context> ctx) {
-    auto domptr = new tiledb::Domain(*ctx.get());
-    fi->get_non_empty_domain(static_cast<uint32_t>(fid), dim_name,
-                             static_cast<void*>(domptr));
-    XPtr<tiledb::Domain> domain(domptr, false);
-    registerXptrFinalizer(domain, libtiledb_domain_delete);
-    return domain;
+Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiledb::FragmentInfo> fi,
+                                                                      int32_t fid,
+                                                                      const std::string& dim_name) {
+    std::vector<int64_t> non_empty_dom(2);
+    fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
+    return makeInteger64(non_empty_dom);
 }
 
 // [[Rcpp::export]]

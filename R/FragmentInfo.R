@@ -59,30 +59,28 @@ tiledb_fragment_info_uri <- function(object, fid) {
 
 #' Return a fragment info non-empty domain from index
 #'
+#' TODO: Rework with type information
+#'
 #' @param object A TileDB fragment info object
 #' @param fid A fragment object index
 #' @param did A domain index
-#' @param ctx tiledb_ctx object (optional)
 #' @return A TileDB Domain object
 #' @export
-tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did,
-                                                            ctx = tiledb_get_context()) {
-    domptr <- libtiledb_fragment_info_get_non_empty_domain_index(object@ptr, fid, did, ctx@ptr)
-    new("tiledb_domain", ptr = domptr)
+tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did) {
+    libtiledb_fragment_info_get_non_empty_domain_index(object@ptr, fid, did)
 }
 
 #' Return a fragment info non-empty domain from name
 #'
+#' TODO: Rework with type information
+#'
 #' @param object A TileDB fragment info object
 #' @param fid A fragment object index
 #' @param dim_name A character variable with the dimension name
-#' @param ctx tiledb_ctx object (optional)
 #' @return A TileDB Domain object
 #' @export
-tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name,
-                                                            ctx = tiledb_get_context()) {
-    domptr <- libtiledb_fragment_info_get_non_empty_domain_name(object@ptr, fid, dim_name, ctx@ptr)
-    new("tiledb_domain", ptr = domptr)
+tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name) {
+    libtiledb_fragment_info_get_non_empty_domain_name(object@ptr, fid, dim_name)
 }
 
 #' Return a fragment info non-empty domain variable from index

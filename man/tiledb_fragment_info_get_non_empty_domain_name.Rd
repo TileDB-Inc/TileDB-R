@@ -4,12 +4,7 @@
 \alias{tiledb_fragment_info_get_non_empty_domain_name}
 \title{Return a fragment info non-empty domain from name}
 \usage{
-tiledb_fragment_info_get_non_empty_domain_name(
-  object,
-  fid,
-  dim_name,
-  ctx = tiledb_get_context()
-)
+tiledb_fragment_info_get_non_empty_domain_name(object, fid, dim_name)
 }
 \arguments{
 \item{object}{A TileDB fragment info object}
@@ -17,12 +12,10 @@ tiledb_fragment_info_get_non_empty_domain_name(
 \item{fid}{A fragment object index}
 
 \item{dim_name}{A character variable with the dimension name}
-
-\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 A TileDB Domain object
 }
 \description{
-Return a fragment info non-empty domain from name
+TODO: Rework with type information
 }
