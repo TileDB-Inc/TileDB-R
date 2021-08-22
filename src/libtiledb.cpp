@@ -3733,22 +3733,30 @@ std::string libtiledb_stats_raw_get() {
 // [[Rcpp::export]]
 XPtr<tiledb::FragmentInfo> libtiledb_fragment_info(XPtr<tiledb::Context> ctx,
                                                    const std::string& uri) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo(*ctx.get(), uri));
     registerXptrFinalizer(ptr, libtiledb_fragment_info_delete);
     ptr->load();                // also load
+#else
+    auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo()); // placeholder class to permit compilation
+#endif
     return ptr;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_fragment_info_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->fragment_uri(static_cast<uint32_t>(fid));
+#else
+    return std::string("NA");
+#endif
 }
 
 // [[Rcpp::export]]
 Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tiledb::FragmentInfo> fi,
                                                                        int32_t fid, int32_t did,
                                                                        const std::string& typestr) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (typestr == "INT64") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
@@ -3824,7 +3832,7 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiled
                                                                       int32_t fid,
                                                                       const std::string& dim_name,
                                                                       const std::string& typestr) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (typestr == "INT64") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
@@ -3899,8 +3907,12 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiled
 Rcpp::CharacterVector
 libtiledb_fragment_info_get_non_empty_domain_var_index(XPtr<tiledb::FragmentInfo> fi,
                                                        int32_t fid, int32_t did) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto sp = fi->non_empty_domain_var(static_cast<uint32_t>(fid), static_cast<uint32_t>(did));
     return CharacterVector::create(sp.first, sp.second);
+#else
+    return CharacterVector::create(NA_STRING, NA_STRING);
+#endif
 }
 
 // [[Rcpp::export]]
@@ -3908,68 +3920,118 @@ Rcpp::CharacterVector
 libtiledb_fragment_info_get_non_empty_domain_var_name(XPtr<tiledb::FragmentInfo> fi,
                                                       int32_t fid,
                                                       const std::string& dim_name) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto sp = fi->non_empty_domain_var(static_cast<uint32_t>(fid), dim_name);
     return CharacterVector::create(sp.first, sp.second);
+#else
+    return CharacterVector::create(NA_STRING, NA_STRING);
+#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_num(XPtr<tiledb::FragmentInfo> fi) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->fragment_num());
+#else
+    return NA_REAL;
+#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_size(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->fragment_size(static_cast<uint32_t>(fid)));
+#else
+    return NA_REAL;
+#endif
 }
 
 // [[Rcpp::export]]
 bool libtiledb_fragment_info_dense(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->dense(static_cast<uint32_t>(fid));
+#else
+    return NA_LOGICAL;
+#endif
 }
 
 // [[Rcpp::export]]
 bool libtiledb_fragment_info_sparse(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->sparse(static_cast<uint32_t>(fid));
+#else
+    return NA_LOGICAL;
+#endif
 }
 
 // [[Rcpp::export]]
 Rcpp::DatetimeVector
 libtiledb_fragment_info_timestamp_range(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto range = fi->timestamp_range(static_cast<uint32_t>(fid));
     return Rcpp::DatetimeVector::create(range.first/1000.0, range.second/1000.0);
+#else
+    return DatetimeVector::create(NA_REAL, NA_REAL);
+#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_cell_num(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->cell_num(static_cast<uint32_t>(fid)));
+#else
+    return NA_REAL;
+#endif
 }
 
 // [[Rcpp::export]]
 int libtiledb_fragment_info_version(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<int>(fi->version(static_cast<uint32_t>(fid)));
+#else
+    return NA_INTEGER;
+#endif
 }
 
 // [[Rcpp::export]]
 bool libtiledb_fragment_info_has_consolidated_metadata(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->has_consolidated_metadata(static_cast<uint32_t>(fid));
+#else
+    return NA_LOGICAL;
+#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_unconsolidated_metadata_num(XPtr<tiledb::FragmentInfo> fi) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->unconsolidated_metadata_num());
+#else
+    return NA_REAL;
+#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_to_vacuum_num(XPtr<tiledb::FragmentInfo> fi) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->to_vacuum_num());
+#else
+    return NA_REAL;
+#endif
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_fragment_info_to_vacuum_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->to_vacuum_uri(static_cast<uint32_t>(fid));
+#else
+    return std::string("NA");
+#endif
 }
 
 // [[Rcpp::export]]
 void libtiledb_fragment_info_dump(XPtr<tiledb::FragmentInfo> fi) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->dump();
+#endif
 }
