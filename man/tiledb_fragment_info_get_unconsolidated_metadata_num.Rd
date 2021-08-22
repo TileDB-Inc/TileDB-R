@@ -4,12 +4,10 @@
 \alias{tiledb_fragment_info_get_unconsolidated_metadata_num}
 \title{Return fragment info number of unconsolidated metadata}
 \usage{
-tiledb_fragment_info_get_unconsolidated_metadata_num(object, fid)
+tiledb_fragment_info_get_unconsolidated_metadata_num(object)
 }
 \arguments{
 \item{object}{A TileDB fragment info object}
-
-\item{fid}{A fragment object index}
 }
 \value{
 A numeric value with the number of unconsolidated metadata

@@ -201,11 +201,10 @@ tiledb_fragment_info_has_consolidated_metadata <- function(object, fid) {
 #' Return fragment info number of unconsolidated metadata
 #'
 #' @param object A TileDB fragment info object
-#' @param fid A fragment object index
 #' @return A numeric value with the number of unconsolidated metadata
 #' @export
-tiledb_fragment_info_get_unconsolidated_metadata_num <- function(object, fid) {
-    libtiledb_fragment_info_unconsolidated_metadata_num(object@ptr, fid)
+tiledb_fragment_info_get_unconsolidated_metadata_num <- function(object) {
+    libtiledb_fragment_info_unconsolidated_metadata_num(object@ptr)
 }
 
 #' Return the number of fragment info elements to be vacuumed
