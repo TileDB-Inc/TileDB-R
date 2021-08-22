@@ -885,6 +885,10 @@ libtiledb_fragment_info_unconsolidated_metadata_num <- function(fi) {
     .Call(`_tiledb_libtiledb_fragment_info_unconsolidated_metadata_num`, fi)
 }
 
+libtiledb_fragment_info_to_vacuum_num <- function(fi) {
+    .Call(`_tiledb_libtiledb_fragment_info_to_vacuum_num`, fi)
+}
+
 libtiledb_fragment_info_to_vacuum_uri <- function(fi, fid) {
     .Call(`_tiledb_libtiledb_fragment_info_to_vacuum_uri`, fi, fid)
 }

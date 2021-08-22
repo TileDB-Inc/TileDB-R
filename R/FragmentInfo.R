@@ -134,7 +134,7 @@ tiledb_fragment_info_get_num <- function(object) {
 #' @param fid A fragment object index
 #' @return A numeric variable with the number of fragments
 #' @export
-tiledb_fragment_info_get_num <- function(object, fid) {
+tiledb_fragment_info_get_size <- function(object, fid) {
     libtiledb_fragment_info_size(object@ptr, fid)
 }
 
@@ -208,6 +208,15 @@ tiledb_fragment_info_get_unconsolidated_metadata_num <- function(object, fid) {
     libtiledb_fragment_info_unconsolidated_metadata_num(object@ptr, fid)
 }
 
+#' Return the number of fragment info elements to be vacuumed
+#'
+#' @param object A TileDB fragment info object
+#' @return A numeric value with the number of to be vacuumed fragments
+#' @export
+tiledb_fragment_info_get_to_vacuum_num <- function(object) {
+    libtiledb_fragment_info_to_vacuum_num(object@ptr)
+}
+
 #' Return fragment info URI of the to be vacuumed index
 #'
 #' @param object A TileDB fragment info object
@@ -215,7 +224,7 @@ tiledb_fragment_info_get_unconsolidated_metadata_num <- function(object, fid) {
 #' @return A character variable with the URI of the be vacuumed index
 #' @export
 tiledb_fragment_info_get_to_vacuum_uri <- function(object, fid) {
-    libtiledb_fragment_info_to_vaccum_uri(object@ptr, fid)
+    libtiledb_fragment_info_to_vacuum_uri(object@ptr, fid)
 }
 
 #' Dump the fragment info to console

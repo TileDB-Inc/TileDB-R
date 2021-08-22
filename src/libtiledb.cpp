@@ -3960,6 +3960,11 @@ double libtiledb_fragment_info_unconsolidated_metadata_num(XPtr<tiledb::Fragment
 }
 
 // [[Rcpp::export]]
+double libtiledb_fragment_info_to_vacuum_num(XPtr<tiledb::FragmentInfo> fi) {
+    return static_cast<double>(fi->to_vacuum_num());
+}
+
+// [[Rcpp::export]]
 std::string libtiledb_fragment_info_to_vacuum_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     return fi->to_vacuum_uri(static_cast<uint32_t>(fid));
 }

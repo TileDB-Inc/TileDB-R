@@ -4,22 +4,14 @@
 \alias{tiledb_fragment_info_get_num}
 \title{Return a fragment info number of fragments}
 \usage{
-tiledb_fragment_info_get_num(object, fid)
-
-tiledb_fragment_info_get_num(object, fid)
+tiledb_fragment_info_get_num(object)
 }
 \arguments{
 \item{object}{A TileDB fragment info object}
-
-\item{fid}{A fragment object index}
 }
 \value{
-A numeric variable with the number of fragments
-
 A numeric variable with the number of fragments
 }
 \description{
 Return a fragment info number of fragments
-
-Return a fragment info fragment size for a given fragment index
 }

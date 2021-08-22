@@ -2641,6 +2641,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_fragment_info_to_vacuum_num
+double libtiledb_fragment_info_to_vacuum_num(XPtr<tiledb::FragmentInfo> fi);
+RcppExport SEXP _tiledb_libtiledb_fragment_info_to_vacuum_num(SEXP fiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::FragmentInfo> >::type fi(fiSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_fragment_info_to_vacuum_num(fi));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_fragment_info_to_vacuum_uri
 std::string libtiledb_fragment_info_to_vacuum_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid);
 RcppExport SEXP _tiledb_libtiledb_fragment_info_to_vacuum_uri(SEXP fiSEXP, SEXP fidSEXP) {
@@ -2886,6 +2897,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_fragment_info_version", (DL_FUNC) &_tiledb_libtiledb_fragment_info_version, 2},
     {"_tiledb_libtiledb_fragment_info_has_consolidated_metadata", (DL_FUNC) &_tiledb_libtiledb_fragment_info_has_consolidated_metadata, 2},
     {"_tiledb_libtiledb_fragment_info_unconsolidated_metadata_num", (DL_FUNC) &_tiledb_libtiledb_fragment_info_unconsolidated_metadata_num, 1},
+    {"_tiledb_libtiledb_fragment_info_to_vacuum_num", (DL_FUNC) &_tiledb_libtiledb_fragment_info_to_vacuum_num, 1},
     {"_tiledb_libtiledb_fragment_info_to_vacuum_uri", (DL_FUNC) &_tiledb_libtiledb_fragment_info_to_vacuum_uri, 2},
     {"_tiledb_libtiledb_fragment_info_dump", (DL_FUNC) &_tiledb_libtiledb_fragment_info_dump, 1},
     {NULL, NULL, 0}
