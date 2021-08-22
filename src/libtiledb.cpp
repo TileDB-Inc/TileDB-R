@@ -3326,11 +3326,11 @@ tiledb_query_condition_combination_op_t _tiledb_query_string_to_condition_combin
 // [[Rcpp::export]]
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx) {
 #if TILEDB_VERSION >= TileDB_Version(2,3,0)
-    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()));
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()), false);
 #else
-    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition());
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(), false);
 #endif
-    //registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
+    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
 
@@ -3369,11 +3369,11 @@ XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::Quer
 #if TILEDB_VERSION >= TileDB_Version(2,3,0)
     tiledb_query_condition_combination_op_t op = _tiledb_query_string_to_condition_combination_op(str);
     tiledb::QueryCondition res = lhs->combine(*rhs.get(), op);
-    auto query_cond = XPtr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
+    auto query_cond = XPtr<tiledb::QueryCondition>(new tiledb::QueryCondition(res), false);
 #else
-    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition());
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(), false);
 #endif
-    //registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
+    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
 
@@ -3734,7 +3734,7 @@ std::string libtiledb_stats_raw_get() {
 XPtr<tiledb::FragmentInfo> libtiledb_fragment_info(XPtr<tiledb::Context> ctx,
                                                    const std::string& uri) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo(*ctx.get(), uri));
+    auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo(*ctx.get(), uri), false);
     registerXptrFinalizer(ptr, libtiledb_fragment_info_delete);
     ptr->load();                // also load
 #else
