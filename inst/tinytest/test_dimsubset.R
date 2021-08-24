@@ -72,7 +72,7 @@ newarr <- tiledb_array(tmp, as.data.frame=TRUE)
 dat <- newarr[]
 expect_equal(nrow(dat), nrow(flights))
 ## compare some columns, as we re-order comparing all trickers
-expect_equal(dat$carrier, sort(as.character(flights$carrier)))
+expect_equal(sort(dat$carrier), sort(as.character(flights$carrier)))
 expect_equal(table(dat$origin), table(flights$origin))
 
 ## test list of four with one null

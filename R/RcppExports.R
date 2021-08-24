@@ -825,3 +825,75 @@ libtiledb_stats_raw_get <- function() {
     .Call(`_tiledb_libtiledb_stats_raw_get`)
 }
 
+libtiledb_fragment_info <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_fragment_info`, ctx, uri)
+}
+
+libtiledb_fragment_info_uri <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_uri`, fi, fid)
+}
+
+libtiledb_fragment_info_get_non_empty_domain_index <- function(fi, fid, did, typestr) {
+    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_index`, fi, fid, did, typestr)
+}
+
+libtiledb_fragment_info_get_non_empty_domain_name <- function(fi, fid, dim_name, typestr) {
+    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_name`, fi, fid, dim_name, typestr)
+}
+
+libtiledb_fragment_info_get_non_empty_domain_var_index <- function(fi, fid, did) {
+    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_var_index`, fi, fid, did)
+}
+
+libtiledb_fragment_info_get_non_empty_domain_var_name <- function(fi, fid, dim_name) {
+    .Call(`_tiledb_libtiledb_fragment_info_get_non_empty_domain_var_name`, fi, fid, dim_name)
+}
+
+libtiledb_fragment_info_num <- function(fi) {
+    .Call(`_tiledb_libtiledb_fragment_info_num`, fi)
+}
+
+libtiledb_fragment_info_size <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_size`, fi, fid)
+}
+
+libtiledb_fragment_info_dense <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_dense`, fi, fid)
+}
+
+libtiledb_fragment_info_sparse <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_sparse`, fi, fid)
+}
+
+libtiledb_fragment_info_timestamp_range <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_timestamp_range`, fi, fid)
+}
+
+libtiledb_fragment_info_cell_num <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_cell_num`, fi, fid)
+}
+
+libtiledb_fragment_info_version <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_version`, fi, fid)
+}
+
+libtiledb_fragment_info_has_consolidated_metadata <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_has_consolidated_metadata`, fi, fid)
+}
+
+libtiledb_fragment_info_unconsolidated_metadata_num <- function(fi) {
+    .Call(`_tiledb_libtiledb_fragment_info_unconsolidated_metadata_num`, fi)
+}
+
+libtiledb_fragment_info_to_vacuum_num <- function(fi) {
+    .Call(`_tiledb_libtiledb_fragment_info_to_vacuum_num`, fi)
+}
+
+libtiledb_fragment_info_to_vacuum_uri <- function(fi, fid) {
+    .Call(`_tiledb_libtiledb_fragment_info_to_vacuum_uri`, fi, fid)
+}
+
+libtiledb_fragment_info_dump <- function(fi) {
+    invisible(.Call(`_tiledb_libtiledb_fragment_info_dump`, fi))
+}
+

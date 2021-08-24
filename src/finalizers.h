@@ -171,6 +171,15 @@ extern "C" {
         }
     }
 
+    inline void libtiledb_fragment_info_delete(SEXP sexp) {
+        XPtr<tiledb::FragmentInfo> fi(sexp);
+        tiledb::FragmentInfo* ptr = fi.get();
+        if (ptr != nullptr) {
+            delete ptr;
+            ptr = nullptr;
+        }
+    }
+
 }
 
 #endif
