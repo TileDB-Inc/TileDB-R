@@ -46,8 +46,8 @@ expect_true(tiledb_fragment_info_sparse(fraginf, 0))
 rng <- tiledb_fragment_info_get_timestamp_range(fraginf, 0)
 expect_true(inherits(rng, "POSIXt"))
 expect_equal(length(rng), 2)
-expect_equal(as.Date(rng[1]), Sys.Date()) # very coarse :)
-
+expect_equal(as.Date(rng[1]), as.Date(as.POSIXlt(Sys.time(), tz="UTC")))  # very coarse :)
+expect_true(as.numeric(difftime(Sys.time(), rng[1], "secs")) < 0.5) # at most 0.5 sec after array creation
 expect_equal(tiledb_fragment_info_get_cell_num(fraginf, 0), 10)
 
 expect_true(tiledb_fragment_info_get_version(fraginf, 0) > 5) # we may test with older core libs
@@ -62,7 +62,13 @@ D2 <- data.frame(keys = 11:20,
 arr <- tiledb_array(uri, "WRITE")
 arr[] <- D2
 
+array_consolidate(uri)                  # written twice so consolidate
+
 rm(fraginf)
 fraginf <- tiledb_fragment_info(uri)
-expect_equal(tiledb_fragment_info_get_num(fraginf), 2)
-expect_equal(tiledb_fragment_info_get_to_vacuum_num(fraginf), 0)
+expect_equal(tiledb_fragment_info_get_num(fraginf), 1)
+expect_equal(tiledb_fragment_info_get_to_vacuum_num(fraginf), 2)
+expect_true(nchar(tiledb_fragment_info_get_to_vacuum_uri(fraginf, 0)) > 20)
+expect_true(nchar(tiledb_fragment_info_get_to_vacuum_uri(fraginf, 1)) > 20)
+expect_false(tiledb_fragment_info_has_consolidated_metadata(fraginf, 0))
+expect_equal(tiledb_fragment_info_get_unconsolidated_metadata_num(fraginf), 1)
