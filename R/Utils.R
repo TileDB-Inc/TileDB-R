@@ -20,8 +20,68 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
+packageName <- function() "tiledb"
+
+##' Save (or load) data.frame conversion preference in an optional config file
+##'
+##' The \code{tiledb_array} object can set a preference for \code{data.frame}
+##' conversion for each retrieved object. This preference can also be enconded
+##' in configuration file as R (version 4.0.0 or later) allows a user- and
+##' package specific configuration file.  These helper functions sets and retrieve
+##' the value, respectively, or retrieve the cached value from the package environment
+##' where is it set at package load.
+##'
+##' Note that the value must be one of \dQuote{none} (the default), \dQuote{data.frame},
+##' \dQuote{data.table} or \dQuote{tibble}.
+##'
+##' @note This function requires R version 4.0.0 or later to utilise the per-user
+##' config directory accessor function. For older R versions, please set the attribute
+##' directly when creating the \code{tiledb_array} object, or via the
+##' \code{data.frame_conversion()} method.
+##' @title Store data.frame conversion preference
+##' @param value A character variable with one of the four permitted values
+##' @return For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
+##' side effect of storing the value. For either getter, the character value.
+##' @export
+save_dataframe_conversion_preference <- function(value = c("none", "data.frame",
+                                                           "data.table", "tibble")) {
+    stopifnot(`This function relies on R version 4.0.0 or later.` = R.version.string >= "4.0.0")
+    value <- match.arg(value)
+
+    cfgdir <- tools::R_user_dir(packageName())
+    if (!dir.exists(cfgdir)) dir.create(cfgdir)
+    fname <- file.path(cfgdir, "config.dcf")
+#    print(fname)
+#    if (file.exists(fname)) warning("Existing file found, so overwriting")
+    con <- file(fname, "w+")
+    cat("data.frame_conversion:", value, "\n", file=con)
+    close(con)
+    .pkgenv[["data.frame_conversion"]] <- value
+    invisible(TRUE)
+}
+
+##' @rdname save_dataframe_conversion_preference
+##' @export
+load_dataframe_conversion_preference <- function() {
+    value <- "none"                     # default, and fallback
+    cfgfile <- .defaultConfigFile()
+    if (cfgfile != "" && file.exists(cfgfile)) {
+        cfg <- read.dcf(cfgfile)
+#        print(str(cfg))
+        if ("data.frame_conversion" %in% colnames(cfg))
+            value <- cfg[[1, "data.frame_conversion"]]
+    }
+    .pkgenv[["data.frame_conversion"]] <- value
+    value
+}
+
+##' @rdname save_dataframe_conversion_preference
+##' @export
+get_dataframe_conversion_preference <- function() .pkgenv[["data.frame_conversion"]]
+
+
 is.scalar <- function(x, typestr) {
-  (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
+    (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
 }
 
 ## Adapted from the DelayedArray package

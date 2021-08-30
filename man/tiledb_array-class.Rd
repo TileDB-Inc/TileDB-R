@@ -45,6 +45,10 @@ describes the (min,max) pair of ranges for dimension i}
 
 \item{\code{timestamp_end}}{A POSIXct datetime variable for the inclusive interval start}
 
+\item{\code{data.frame_conversion}}{A character value with the desired conversion of a data.frame
+object, permitted values are \dQuote{none} (default), \dQuote{data.frame}, \dQuote{data.table}
+or \dQuote{tibble}}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 

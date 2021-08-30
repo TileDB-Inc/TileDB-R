@@ -21,6 +21,7 @@ tiledb_array(
   query_condition = new("tiledb_query_condition"),
   timestamp_start = as.POSIXct(double(), origin = "1970-01-01"),
   timestamp_end = as.POSIXct(double(), origin = "1970-01-01"),
+  data.frame_conversion = get_dataframe_conversion_preference(),
   ctx = tiledb_get_context()
 )
 }
@@ -70,7 +71,12 @@ at which the array is to be openened. No fragments written earlier will be consi
 \item{timestamp_end}{optional A POSIXct Datetime value determining the inclusive time point
 until which the array is to be openened. No fragments written earlier later be considered.}
 
-\item{ctx}{tiledb_ctx (optional)}
+\item{data.frame_conversion}{optional A character value with the desired conversion of a data.frame
+object, permitted values are \dQuote{none} (default), \dQuote{data.frame}, \dQuote{data.table}
+or \dQuote{tibble}, which is retrieve from the per-package environment where it is stored at
+package load; see \code{save_dataframe_conversion_preference} to store a value.}
+
+\item{ctx}{optional tiledb_ctx}
 }
 \value{
 tiledb_array object
