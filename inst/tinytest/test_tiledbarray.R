@@ -1327,6 +1327,9 @@ expect_equal(nrow(A[]), 6)
 
 
 ## test return preference
+uri <- tempfile()
+fromDataFrame(penguins, uri, sparse = TRUE, col_index = c("species", "year"))
+
 defaultConversion <- get_dataframe_conversion_preference()
 if (defaultConversion != "none") {
     oldConversionValue <- defaultConversion
@@ -1351,5 +1354,14 @@ res <- tiledb_array(uri)[]
 expect_true(inherits(res, "tbl_df"))
 expect_true(inherits(res, "tbl"))
 
-
 set_dataframe_conversion_preference(oldConversionValue) 		# reset baseline value
+
+res <- tiledb_array(uri, data.frame_conversion="data.frame")[]
+expect_equal(class(res), "data.frame")
+
+res <- tiledb_array(uri, data.frame_conversion="data.table")[]
+expect_true(inherits(res, "data.table"))
+
+res <- tiledb_array(uri, data.frame_conversion="tibble")[]
+expect_true(inherits(res, "tbl_df"))
+expect_true(inherits(res, "tbl"))
