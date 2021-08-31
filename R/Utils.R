@@ -51,12 +51,10 @@ save_dataframe_conversion_preference <- function(value = c("none", "data.frame",
     cfgdir <- tools::R_user_dir(packageName())
     if (!dir.exists(cfgdir)) dir.create(cfgdir)
     fname <- file.path(cfgdir, "config.dcf")
-#    print(fname)
-#    if (file.exists(fname)) warning("Existing file found, so overwriting")
     con <- file(fname, "w+")
     cat("data.frame_conversion:", value, "\n", file=con)
     close(con)
-    .pkgenv[["data.frame_conversion"]] <- value
+    set_dataframe_conversion_preference(value)
     invisible(TRUE)
 }
 
@@ -67,11 +65,10 @@ load_dataframe_conversion_preference <- function() {
     cfgfile <- .defaultConfigFile()
     if (cfgfile != "" && file.exists(cfgfile)) {
         cfg <- read.dcf(cfgfile)
-#        print(str(cfg))
         if ("data.frame_conversion" %in% colnames(cfg))
             value <- cfg[[1, "data.frame_conversion"]]
     }
-    .pkgenv[["data.frame_conversion"]] <- value
+    set_dataframe_conversion_preference(value)
     value
 }
 
@@ -79,6 +76,13 @@ load_dataframe_conversion_preference <- function() {
 ##' @export
 get_dataframe_conversion_preference <- function() .pkgenv[["data.frame_conversion"]]
 
+##' @rdname save_dataframe_conversion_preference
+##' @export
+set_dataframe_conversion_preference <- function(value = c("none", "data.frame",
+                                                          "data.table", "tibble")) {
+    value <- match.arg(value)
+    .pkgenv[["data.frame_conversion"]] <- value
+}
 
 is.scalar <- function(x, typestr) {
     (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L

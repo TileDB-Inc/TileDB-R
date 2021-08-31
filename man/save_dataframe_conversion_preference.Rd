@@ -4,6 +4,7 @@
 \alias{save_dataframe_conversion_preference}
 \alias{load_dataframe_conversion_preference}
 \alias{get_dataframe_conversion_preference}
+\alias{set_dataframe_conversion_preference}
 \title{Store data.frame conversion preference}
 \usage{
 save_dataframe_conversion_preference(
@@ -13,6 +14,10 @@ save_dataframe_conversion_preference(
 load_dataframe_conversion_preference()
 
 get_dataframe_conversion_preference()
+
+set_dataframe_conversion_preference(
+  value = c("none", "data.frame", "data.table", "tibble")
+)
 }
 \arguments{
 \item{value}{A character variable with one of the four permitted values}

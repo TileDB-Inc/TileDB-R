@@ -1324,3 +1324,32 @@ A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 - onet)
 expect_equal(nrow(A[]), 3)
 A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 + onet)
 expect_equal(nrow(A[]), 6)
+
+
+## test return preference
+defaultConversion <- get_dataframe_conversion_preference()
+if (defaultConversion != "none") {
+    oldConversionValue <- defaultConversion
+    set_dataframe_conversion_preference("none") 		# baseline value
+} else {
+    oldConversionValue <- "none"
+}
+
+res <- tiledb_array(uri)[]
+expect_equal(class(res), "list")
+
+set_dataframe_conversion_preference("data.frame")
+res <- tiledb_array(uri)[]
+expect_equal(class(res), "data.frame")
+
+set_dataframe_conversion_preference("data.table")
+res <- tiledb_array(uri)[]
+expect_true(inherits(res, "data.table"))
+
+set_dataframe_conversion_preference("tibble")
+res <- tiledb_array(uri)[]
+expect_true(inherits(res, "tbl_df"))
+expect_true(inherits(res, "tbl"))
+
+
+set_dataframe_conversion_preference(oldConversionValue) 		# reset baseline value
