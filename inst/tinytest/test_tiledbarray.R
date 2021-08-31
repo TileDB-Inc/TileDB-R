@@ -1333,46 +1333,46 @@ expect_equal(nrow(A[]), 6)
 uri <- tempfile()
 fromDataFrame(penguins, uri, sparse = TRUE, col_index = c("species", "year"))
 
-defaultConversion <- get_dataframe_conversion_preference()
-if (defaultConversion != "none") {
+defaultConversion <- get_return_as_preference()
+if (defaultConversion != "asis") {
     oldConversionValue <- defaultConversion
-    set_dataframe_conversion_preference("none") 		# baseline value
+    set_return_as_preference("asis") 		# baseline value
 } else {
-    oldConversionValue <- "none"
+    oldConversionValue <- "asis"
 }
 
 res <- tiledb_array(uri)[]
 expect_equal(class(res), "list")
 
-set_dataframe_conversion_preference("data.frame")
+set_return_as_preference("data.frame")
 res <- tiledb_array(uri)[]
 expect_equal(class(res), "data.frame")
 
 if (hasDataTable) {
-    set_dataframe_conversion_preference("data.table")
+    set_return_as_preference("data.table")
     res <- tiledb_array(uri)[]
     expect_true(inherits(res, "data.table"))
 }
 
 if (hasTibble) {
-    set_dataframe_conversion_preference("tibble")
+    set_return_as_preference("tibble")
     res <- tiledb_array(uri)[]
     expect_true(inherits(res, "tbl_df"))
     expect_true(inherits(res, "tbl"))
 }
 
-set_dataframe_conversion_preference(oldConversionValue) 		# reset baseline value
+set_return_as_preference(oldConversionValue) 		# reset baseline value
 
-res <- tiledb_array(uri, data.frame_conversion="data.frame")[]
+res <- tiledb_array(uri, return_as="data.frame")[]
 expect_equal(class(res), "data.frame")
 
 if (hasDataTable) {
-    res <- tiledb_array(uri, data.frame_conversion="data.table")[]
+    res <- tiledb_array(uri, return_as="data.table")[]
     expect_true(inherits(res, "data.table"))
 }
 
 if (hasTibble) {
-    res <- tiledb_array(uri, data.frame_conversion="tibble")[]
+    res <- tiledb_array(uri, return_as="tibble")[]
     expect_true(inherits(res, "tbl_df"))
     expect_true(inherits(res, "tbl"))
 }

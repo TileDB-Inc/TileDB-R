@@ -48,7 +48,7 @@
     .pkgenv[["query_status"]] <- character()
 
     ## set a preference for data.frame conversion for tiledb_array and [] access
-    .pkgenv[["data.frame_conversion"]] <- load_dataframe_conversion_preference()
+    .pkgenv[["return_as"]] <- load_return_as_preference()
 }
 
 .onAttach <- function(libname, pkgName) {

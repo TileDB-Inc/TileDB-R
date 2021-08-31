@@ -22,29 +22,29 @@
 
 packageName <- function() "tiledb"
 
-##' Save (or load) data.frame conversion preference in an optional config file
+##' Save (or load) \sQuote{return_as} conversion preference in an optional config file
 ##'
-##' The \code{tiledb_array} object can set a preference for \code{data.frame}
-##' conversion for each retrieved object. This preference can also be enconded
-##' in configuration file as R (version 4.0.0 or later) allows a user- and
-##' package specific configuration file.  These helper functions sets and retrieve
-##' the value, respectively, or retrieve the cached value from the package environment
-##' where is it set at package load.
+##' The \code{tiledb_array} object can set a preference for conversion for each retrieved
+##' object. This preference can also be enconded in a configuration file as R (version
+##' 4.0.0 or later) allows a user- and package specific configuration files.  These helper
+##' functions sets and retrieve the value, respectively, or retrieve the cached value from
+##' the package environment where is it set at package load.
 ##'
-##' Note that the value must be one of \dQuote{none} (the default), \dQuote{data.frame},
-##' \dQuote{data.table} or \dQuote{tibble}.
+##' Note that the value must be one of \sQuote{asis} (the default), \sQuote{array},
+##' \sQuote{matrix}\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. The latter
+##' two require the corresponding package to be installed.
 ##'
 ##' @note This function requires R version 4.0.0 or later to utilise the per-user
 ##' config directory accessor function. For older R versions, please set the attribute
 ##' directly when creating the \code{tiledb_array} object, or via the
-##' \code{data.frame_conversion()} method.
-##' @title Store data.frame conversion preference
-##' @param value A character variable with one of the four permitted values
+##' \code{return_as()} method.
+##' @title Store object conversion preference
+##' @param value A character variable with one of the six permitted values
 ##' @return For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
 ##' side effect of storing the value. For either getter, the character value.
 ##' @export
-save_dataframe_conversion_preference <- function(value = c("none", "data.frame",
-                                                           "data.table", "tibble")) {
+save_return_as_preference <- function(value = c("asis", "array", "matrix", "data.frame",
+                                                "data.table", "tibble")) {
     stopifnot(`This function relies on R version 4.0.0 or later.` = R.version.string >= "4.0.0")
     value <- match.arg(value)
 
@@ -52,36 +52,36 @@ save_dataframe_conversion_preference <- function(value = c("none", "data.frame",
     if (!dir.exists(cfgdir)) dir.create(cfgdir)
     fname <- file.path(cfgdir, "config.dcf")
     con <- file(fname, "w+")
-    cat("data.frame_conversion:", value, "\n", file=con)
+    cat("return_as:", value, "\n", file=con)
     close(con)
-    set_dataframe_conversion_preference(value)
+    set_return_as_preference(value)
     invisible(TRUE)
 }
 
-##' @rdname save_dataframe_conversion_preference
+##' @rdname save_return_as_preference
 ##' @export
-load_dataframe_conversion_preference <- function() {
-    value <- "none"                     # default, and fallback
+load_return_as_preference <- function() {
+    value <- "asis"                     # default, and fallback
     cfgfile <- .defaultConfigFile()
     if (cfgfile != "" && file.exists(cfgfile)) {
         cfg <- read.dcf(cfgfile)
-        if ("data.frame_conversion" %in% colnames(cfg))
-            value <- cfg[[1, "data.frame_conversion"]]
+        if ("return_as" %in% colnames(cfg))
+            value <- cfg[[1, "return_as"]]
     }
-    set_dataframe_conversion_preference(value)
+    set_return_as_preference(value)
     value
 }
 
-##' @rdname save_dataframe_conversion_preference
+##' @rdname save_return_as_preference
 ##' @export
-get_dataframe_conversion_preference <- function() .pkgenv[["data.frame_conversion"]]
+get_return_as_preference <- function() .pkgenv[["return_as"]]
 
-##' @rdname save_dataframe_conversion_preference
+##' @rdname save_return_as_preference
 ##' @export
-set_dataframe_conversion_preference <- function(value = c("none", "data.frame",
+set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.frame",
                                                           "data.table", "tibble")) {
     value <- match.arg(value)
-    .pkgenv[["data.frame_conversion"]] <- value
+    .pkgenv[["return_as"]] <- value
 }
 
 is.scalar <- function(x, typestr) {

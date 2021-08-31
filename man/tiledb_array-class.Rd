@@ -45,9 +45,10 @@ describes the (min,max) pair of ranges for dimension i}
 
 \item{\code{timestamp_end}}{A POSIXct datetime variable for the inclusive interval start}
 
-\item{\code{data.frame_conversion}}{A character value with the desired conversion of a data.frame
-object, permitted values are \dQuote{none} (default), \dQuote{data.frame}, \dQuote{data.table}
-or \dQuote{tibble}}
+\item{\code{return_as}}{A character value with the desired \code{tiledb_array} conversion,
+permitted values are \sQuote{asis} (default, returning a list of columns),
+\sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}
+or \sQuote{tibble}; the latter two require the respective packages installed}
 
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}

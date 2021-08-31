@@ -44,9 +44,10 @@
 #' @slot query_condition A Query Condition object
 #' @slot timestamp_start A POSIXct datetime variable for the inclusive interval start
 #' @slot timestamp_end A POSIXct datetime variable for the inclusive interval start
-#' @slot data.frame_conversion A character value with the desired conversion of a data.frame
-#' object, permitted values are \dQuote{none} (default), \dQuote{data.frame}, \dQuote{data.table}
-#' or \dQuote{tibble}
+#' @slot return_as A character value with the desired \code{tiledb_array} conversion,
+#' permitted values are \sQuote{asis} (default, returning a list of columns),
+#' \sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}
+#' or \sQuote{tibble}; the latter two require the respective packages installed
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -66,7 +67,7 @@ setClass("tiledb_array",
                       query_condition = "tiledb_query_condition",
                       timestamp_start = "POSIXct",
                       timestamp_end = "POSIXct",
-                      data.frame_conversion = "character",
+                      return_as = "character",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -102,10 +103,10 @@ setClass("tiledb_array",
 #' at which the array is to be openened. No fragments written earlier will be considered.
 #' @param timestamp_end optional A POSIXct Datetime value determining the inclusive time point
 #' until which the array is to be openened. No fragments written earlier later be considered.
-#' @param data.frame_conversion optional A character value with the desired conversion of a data.frame
-#' object, permitted values are \dQuote{none} (default), \dQuote{data.frame}, \dQuote{data.table}
-#' or \dQuote{tibble}, which is retrieve from the per-package environment where it is stored at
-#' package load; see \code{save_dataframe_conversion_preference} to store a value.
+#' @param return_as optional A character value with the desired \code{tiledb_array} conversion,
+#' permitted values are \sQuote{asis} (default, returning a list of columns), \sQuote{array},
+#' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}; the latter
+#' two require the respective packages installed
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
 #' @export
@@ -125,7 +126,7 @@ tiledb_array <- function(uri,
                          query_condition = new("tiledb_query_condition"),
                          timestamp_start = as.POSIXct(double(), origin="1970-01-01"),
                          timestamp_end = as.POSIXct(double(), origin="1970-01-01"),
-                         data.frame_conversion = get_dataframe_conversion_preference(),
+                         return_as = get_return_as_preference(),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -192,7 +193,7 @@ tiledb_array <- function(uri,
       query_condition = query_condition,
       timestamp_start = timestamp_start,
       timestamp_end = timestamp_end,
-      data.frame_conversion = data.frame_conversion,
+      return_as = return_as,
       ptr = array_xptr)
 }
 
@@ -241,24 +242,24 @@ setMethod("schema", "character", function(object, ...) {
 setMethod("show", signature = "tiledb_array",
           definition = function (object) {
   cat("tiledb_array\n"
-     ,"  uri                   = '", object@uri, "'\n"
-     ,"  is.sparse             = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
-     ,"  as.data.frame         = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
-     ,"  attrs                 = ", if (length(object@attrs) == 0) "(none)"
-                               else paste(object@attrs, collapse=","), "\n"
-     ,"  selected_ranges       = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
-                               else "(none)", "\n"
-     ,"  extended              = ", if (object@extended) "TRUE" else "FALSE" ,"\n"
-     ,"  query_layout          = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
-     ,"  datetimes_as_int64    = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
-     ,"  encryption_key        = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
-     ,"  timestamp             = ", if (length(object@timestamp) == 0) "(none)" else format(object@timestamp), "\n"
-     ,"  as.matrix             = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
-     ,"  as.array              = ", if (object@as.array) "TRUE" else "FALSE", "\n"
-     ,"  query_condition       = ", if (isTRUE(object@query_condition@init)) "(set)" else "(none)", "\n"
-     ,"  timestamp_start       = ", if (length(object@timestamp_start) == 0) "(none)" else format(object@timestamp_start), "\n"
-     ,"  timestamp_end         = ", if (length(object@timestamp_end) == 0) "(none)" else format(object@timestamp_end), "\n"
-     ,"  data.frame_conversion = '",  object@data.frame_conversion, "'\n"
+     ,"  uri                = '", object@uri, "'\n"
+     ,"  is.sparse          = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
+     ,"  as.data.frame      = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
+     ,"  attrs              = ", if (length(object@attrs) == 0) "(none)"
+                            else paste(object@attrs, collapse=","), "\n"
+     ,"  selected_ranges    = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
+                            else "(none)", "\n"
+     ,"  extended           = ", if (object@extended) "TRUE" else "FALSE" ,"\n"
+     ,"  query_layout       = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
+     ,"  datetimes_as_int64 = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
+     ,"  encryption_key     = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
+     ,"  timestamp          = ", if (length(object@timestamp) == 0) "(none)" else format(object@timestamp), "\n"
+     ,"  as.matrix          = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
+     ,"  as.array           = ", if (object@as.array) "TRUE" else "FALSE", "\n"
+     ,"  query_condition    = ", if (isTRUE(object@query_condition@init)) "(set)" else "(none)", "\n"
+     ,"  timestamp_start    = ", if (length(object@timestamp_start) == 0) "(none)" else format(object@timestamp_start), "\n"
+     ,"  timestamp_end      = ", if (length(object@timestamp_end) == 0) "(none)" else format(object@timestamp_end), "\n"
+     ,"  return_as          = '", object@return_as, "'\n"
      ,sep="")
 })
 
@@ -369,9 +370,9 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
   }
 
-  if (!(object@data.frame_conversion %in% c("none", "data.frame", "data.table", "tibble"))) {
+  if (!(object@return_as %in% c("asis", "array", "matrix", "data.frame", "data.table", "tibble"))) {
     valid <- FALSE
-    msg <- c(msg, "The 'data.frame_conversion' slot must contain one of 'none', 'data.frame', 'data.table', 'tibble'.")
+    msg <- c(msg, "The 'return_as' slot must contain one of 'asis', 'array', 'matrix', 'data.frame', 'data.table', 'tibble'.")
   }
 
   if (valid) TRUE else msg
@@ -708,25 +709,25 @@ setMethod("[", "tiledb_array",
       }
   }
 
-  if (!x@as.data.frame && !x@as.matrix && !x@as.array) {
-    res <- as.list(res)
-  } else if (x@as.matrix) {
-    res <- .convertToMatrix(res)
-  } else if (x@as.array) {
-    res <- .convertToArray(dimnames, attrnames, res)
-  }
-
-  ## if a conversion preference has been given, use it
-  if (x@data.frame_conversion != "none") {
-     if (x@data.frame_conversion == "data.frame") {
-        res <- as.data.frame(res)
-     } else if (x@data.frame_conversion == "data.table" &&
-                requireNamespace("data.table", quietly=TRUE)) {
-        res <- data.table::data.table(as.data.frame(res))
-     } else if (x@data.frame_conversion == "tibble" &&
-                requireNamespace("tibble", quietly=TRUE)) {
-        res <- tibble::as_tibble(res)
-     }
+  if (x@return_as == "asis") {
+      if (!x@as.data.frame && !x@as.matrix && !x@as.array) {
+          res <- as.list(res)
+      } else if (x@as.matrix) {
+          res <- .convertToMatrix(res)
+      } else if (x@as.array) {
+          res <- .convertToArray(dimnames, attrnames, res)
+      }
+  } else {
+      ## if a conversion preference has been given, use it
+      if (x@return_as != "asis") {
+          if (x@return_as == "data.frame") {
+              res <- as.data.frame(res)
+          } else if (x@return_as == "data.table" && requireNamespace("data.table", quietly=TRUE)) {
+              res <- data.table::data.table(as.data.frame(res))
+          } else if (x@return_as == "tibble" && requireNamespace("tibble", quietly=TRUE)) {
+              res <- tibble::as_tibble(res)
+          }
+      }
   }
 
   ## attach query status
@@ -1505,46 +1506,47 @@ setReplaceMethod("return.array",
 
 
 
-## -- data.frame conversion preference
+## -- return_as conversion preference
 
-#' @rdname data.frame.conversion-tiledb_array-method
+#' @rdname return_as-tiledb_array-method
 #' @param ... Currently unused
 #' @export
-setGeneric("data.frame.conversion", function(object, ...) standardGeneric("data.frame.conversion"))
+setGeneric("return_as", function(object, ...) standardGeneric("return_as"))
 
-#' Retrieve data.frame conversion preference
+#' Retrieve return_as conversion preference
 #'
-#' A \code{tiledb_array} object can be returned as a data.frame (or, if selected,
-#' as a \code{matrix} or as an \code{array}. This methods permits to select a preference
-#' of returning a \code{data.frame}, a \code{data.table}, or a \code{tibble}. The default
-#' value of \dQuote{none} means that no conversion is performed.
+#' A \code{tiledb_array} object can be returned as a \sQuote{list} (default), \sQuote{array},
+#' \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. This method
+#' permits to select a preference for the returned object. The default value of \sQuote{asis}
+#' means that no conversion is performed.
 #' @param object A \code{tiledb_array} object
 #' @return A character value indicating the preferred conversion where the value is
-#' one \dQuote{none} (the default), \dQuote{data.frame}, \dQuote{data.table}, or
-#' \dQuote{tibble}.
+#' one of \sQuote{asis} (the default), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame},
+#' \sQuote{data.table}, or \sQuote{tibble}.
 #' @export
-setMethod("data.frame.conversion",
+setMethod("return_as",
           signature = "tiledb_array",
-          function(object) object@data.frame_conversion)
+          function(object) object@return_as)
 
-#' @rdname data.frame.conversion-set-tiledb_array-method
+#' @rdname return_as-set-tiledb_array-method
 #' @export
-setGeneric("data.frame.conversion<-", function(x, value) standardGeneric("data.frame.conversion<-"))
+setGeneric("return_as<-", function(x, value) standardGeneric("return_as<-"))
 
-#' Retrieve data.frame conversion preference
+#' Retrieve return_as conversion preference
 #'
-#' A \code{tiledb_array} object can be returned as a data.frame (or, if selected,
-#' as a \code{matrix} or as an \code{array}. This methods permits to set a preference
-#' of returning a \code{data.frame}, a \code{data.table}, or a \code{tibble}. The default
-#' value of \dQuote{none} means that no conversion is performed.
+#' A \code{tiledb_array} object can be returned as a \sQuote{list} (default), \sQuote{array},
+#' \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. This method
+#' This methods permits to set a preference of returning a \code{list}, \code{array},
+#' \code{matrix}, \code{data.frame}, a \code{data.table}, or a \code{tibble}. The default
+#' value of \dQuote{asis} means that no conversion is performed and a \code{list} is returned.
 #' @param x A \code{tiledb_array} object
 #' @param value A character value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("data.frame.conversion",
+setReplaceMethod("return_as",
                  signature = "tiledb_array",
                  function(x, value) {
-  x@data.frame_conversion <- value
+  x@return_as <- value
   validObject(x)
   x
 })

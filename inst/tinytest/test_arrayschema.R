@@ -5,8 +5,7 @@ isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 20
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (get_dataframe_conversion_preference() != "none")
-    set_dataframe_conversion_preference("none") 		# baseline value
+if (get_return_as_preference() != "asis") set_return_as_preference("asis") 		# baseline value
 
 #test_that("tiledb_array_schema default constructor works", {
 d1  <- tiledb_dim("d1", domain=c(1L, 100L))

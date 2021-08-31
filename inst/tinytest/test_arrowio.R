@@ -11,8 +11,7 @@ if (tiledb_version(TRUE) < "2.2.0") exit_file("TileDB ArrowIO types required Til
 if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
 suppressMessages(library(arrow))
 
-if (get_dataframe_conversion_preference() != "none")
-    set_dataframe_conversion_preference("none") 		# baseline value
+if (get_return_as_preference() != "asis") set_return_as_preference("asis") 		# baseline value
 
 ## -- RecordBatch test (and TileDB does not yet export to / import from these)
 df <- data.frame(one = c(-1, NA, 2.5),
