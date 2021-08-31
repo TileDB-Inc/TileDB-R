@@ -9,6 +9,9 @@ ctx <- tiledb_ctx(limitTileDBCores())
 
 if (tiledb_version(TRUE) < "2.0.0") exit_file("TileDB Array types required TileDB 2.0.* or greater")
 
+hasDataTable <- requireNamespace("data.table", quietly=TRUE)
+hasTibble <- requireNamespace("tibble", quietly=TRUE)
+
 #test_that("test tiledb_array read/write sparse array with heterogenous date domains", {
 op <- options()
 options(stringsAsFactors=FALSE)       # accomodate R 3.*
@@ -1345,23 +1348,31 @@ set_dataframe_conversion_preference("data.frame")
 res <- tiledb_array(uri)[]
 expect_equal(class(res), "data.frame")
 
-set_dataframe_conversion_preference("data.table")
-res <- tiledb_array(uri)[]
-expect_true(inherits(res, "data.table"))
+if (hasDataTable) {
+    set_dataframe_conversion_preference("data.table")
+    res <- tiledb_array(uri)[]
+    expect_true(inherits(res, "data.table"))
+}
 
-set_dataframe_conversion_preference("tibble")
-res <- tiledb_array(uri)[]
-expect_true(inherits(res, "tbl_df"))
-expect_true(inherits(res, "tbl"))
+if (hasTibble) {
+    set_dataframe_conversion_preference("tibble")
+    res <- tiledb_array(uri)[]
+    expect_true(inherits(res, "tbl_df"))
+    expect_true(inherits(res, "tbl"))
+}
 
 set_dataframe_conversion_preference(oldConversionValue) 		# reset baseline value
 
 res <- tiledb_array(uri, data.frame_conversion="data.frame")[]
 expect_equal(class(res), "data.frame")
 
-res <- tiledb_array(uri, data.frame_conversion="data.table")[]
-expect_true(inherits(res, "data.table"))
+if (hasDataTable) {
+    res <- tiledb_array(uri, data.frame_conversion="data.table")[]
+    expect_true(inherits(res, "data.table"))
+}
 
-res <- tiledb_array(uri, data.frame_conversion="tibble")[]
-expect_true(inherits(res, "tbl_df"))
-expect_true(inherits(res, "tbl"))
+if (hasTibble) {
+    res <- tiledb_array(uri, data.frame_conversion="tibble")[]
+    expect_true(inherits(res, "tbl_df"))
+    expect_true(inherits(res, "tbl"))
+}
