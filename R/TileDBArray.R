@@ -106,7 +106,8 @@ setClass("tiledb_array",
 #' @param return_as optional A character value with the desired \code{tiledb_array} conversion,
 #' permitted values are \sQuote{asis} (default, returning a list of columns), \sQuote{array},
 #' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}; the latter
-#' two require the respective packages installed
+#' two require the respective packages installed. The existing \code{as.*} arguments take precedent
+#' over this.
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
 #' @export
@@ -137,6 +138,8 @@ tiledb_array <- function(uri,
     stop("at most one argument of as.data.frame, as.matrix and as.array can be selected", call. = FALSE)
   if (isTRUE(is.sparse) && as.matrix)
     stop("argument as.matrix cannot be selected for sparse arrays", call. = FALSE)
+  if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
+    return_as <- "asis"
 
   if (length(encryption_key) > 0) {
     if (!is.character(encryption_key))
