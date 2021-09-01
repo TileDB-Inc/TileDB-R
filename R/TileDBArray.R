@@ -717,17 +717,16 @@ setMethod("[", "tiledb_array",
       } else if (x@as.array) {
           res <- .convertToArray(dimnames, attrnames, res)
       }
-  } else {
-      ## if a conversion preference has been given, use it
-      if (x@return_as != "asis") {
-          if (x@return_as == "data.frame") {
-              res <- as.data.frame(res)
-          } else if (x@return_as == "data.table" && requireNamespace("data.table", quietly=TRUE)) {
-              res <- data.table::data.table(as.data.frame(res))
-          } else if (x@return_as == "tibble" && requireNamespace("tibble", quietly=TRUE)) {
-              res <- tibble::as_tibble(res)
-          }
-      }
+  } else if (x@return_as == "array") {       	# if a conversion preference has been given, use it
+      res <- .convertToArray(dimnames, attrnames, res)
+  } else if (x@return_as == "matrix") {
+      res <- .convertToMatrix(res)
+  } else if (x@return_as == "data.frame") {
+      res <- as.data.frame(res)         		# should already be one per above
+  } else if (x@return_as == "data.table" && requireNamespace("data.table", quietly=TRUE)) {
+      res <- data.table::data.table(as.data.frame(res))
+  } else if (x@return_as == "tibble" && requireNamespace("tibble", quietly=TRUE)) {
+      res <- tibble::as_tibble(res)
   }
 
   ## attach query status

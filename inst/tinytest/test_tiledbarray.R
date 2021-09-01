@@ -1376,3 +1376,27 @@ if (hasTibble) {
     expect_true(inherits(res, "tbl_df"))
     expect_true(inherits(res, "tbl"))
 }
+
+## test return_as for array and matrix
+uri <- tempfile()
+dir.create(uri)
+n <- 5L
+k <- 5L
+mat <- matrix(1:(n*k), nrow=n, ncol=k)
+dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, n), n, "INT32"),
+                              tiledb_dim("cols", c(1L, k), k, "INT32")))
+schema <- tiledb_array_schema(dom, attrs=tiledb_attr("vals", type="INT32"))
+tiledb_array_create(uri, schema)
+arr <- tiledb_array(uri)
+query_layout(arr) <- "COL_MAJOR"    	# needed if we want column order
+arr[] <- mat                        	# we can write directly
+
+set_return_as_preference("array")
+res <- tiledb_array(uri)[][[1]]
+expect_true(inherits(res, "array"))
+
+set_return_as_preference("matrix")
+res <- tiledb_array(uri)[]
+expect_true(inherits(res, "matrix"))
+
+set_return_as_preference(oldConversionValue) 		# reset baseline value
