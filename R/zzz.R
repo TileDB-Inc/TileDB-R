@@ -22,6 +22,20 @@
 
 .pkgenv <- new.env(parent = emptyenv())
 
+.defaultConfigFile <- function() {
+    if (getRversion() >= "4.0.0") {
+        ## ~/.local/share/R/ + package
+        pkgdir <- tools::R_user_dir(packageName())
+        if (dir.exists(pkgdir)) {
+            fname <- file.path(pkgdir, "config.dcf")
+            if (file.exists(fname)) {
+                return(fname)
+            }
+        }
+    }
+    return("")
+}
+
 .onLoad <- function(libname, pkgName) {
     ## create a slot for ctx in the per-package enviroment but do no fill it yet to allow 'lazy load'
     ## this entry is generally accessed with a (non-exported) getter and setter in R/Ctx.R
@@ -32,6 +46,9 @@
 
     ## cache query status of last finalized query
     .pkgenv[["query_status"]] <- character()
+
+    ## set a preference for data.frame conversion for tiledb_array and [] access
+    .pkgenv[["return_as"]] <- load_return_as_preference()
 }
 
 .onAttach <- function(libname, pkgName) {

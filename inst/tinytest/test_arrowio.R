@@ -11,6 +11,7 @@ if (tiledb_version(TRUE) < "2.2.0") exit_file("TileDB ArrowIO types required Til
 if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
 suppressMessages(library(arrow))
 
+if (get_return_as_preference() != "asis") set_return_as_preference("asis") 		# baseline value
 
 ## -- RecordBatch test (and TileDB does not yet export to / import from these)
 df <- data.frame(one = c(-1, NA, 2.5),
@@ -172,5 +173,7 @@ for (i in 1:10) {
 
 expect_true(is(df, "data.frame"))
 expect_equal(dim(df), c(n, 10))
-for (i in 1:10)
-  expect_equal(df[,1], 1:10)
+for (i in c(1:7,9:10)) {
+    expect_equivalent(df[,i], 1:10)
+}
+expect_equivalent(df[,8], as.integer64(1:10))

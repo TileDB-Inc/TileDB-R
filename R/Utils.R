@@ -20,8 +20,72 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
+packageName <- function() "tiledb"
+
+##' Save (or load) \sQuote{return_as} conversion preference in an optional config file
+##'
+##' The \code{tiledb_array} object can set a preference for conversion for each retrieved
+##' object. This preference can also be enconded in a configuration file as R (version
+##' 4.0.0 or later) allows a user- and package specific configuration files.  These helper
+##' functions sets and retrieve the value, respectively, or retrieve the cached value from
+##' the package environment where is it set at package load.
+##'
+##' Note that the value must be one of \sQuote{asis} (the default), \sQuote{array},
+##' \sQuote{matrix}\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. The latter
+##' two require the corresponding package to be installed.
+##'
+##' @note This function requires R version 4.0.0 or later to utilise the per-user
+##' config directory accessor function. For older R versions, please set the attribute
+##' directly when creating the \code{tiledb_array} object, or via the
+##' \code{return_as()} method.
+##' @title Store object conversion preference
+##' @param value A character variable with one of the six permitted values
+##' @return For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
+##' side effect of storing the value. For either getter, the character value.
+##' @export
+save_return_as_preference <- function(value = c("asis", "array", "matrix", "data.frame",
+                                                "data.table", "tibble")) {
+    stopifnot(`This function relies on R version 4.0.0 or later.` = R.version.string >= "4.0.0")
+    value <- match.arg(value)
+
+    cfgdir <- tools::R_user_dir(packageName())
+    if (!dir.exists(cfgdir)) dir.create(cfgdir)
+    fname <- file.path(cfgdir, "config.dcf")
+    con <- file(fname, "w+")
+    cat("return_as:", value, "\n", file=con)
+    close(con)
+    set_return_as_preference(value)
+    invisible(TRUE)
+}
+
+##' @rdname save_return_as_preference
+##' @export
+load_return_as_preference <- function() {
+    value <- "asis"                     # default, and fallback
+    cfgfile <- .defaultConfigFile()
+    if (cfgfile != "" && file.exists(cfgfile)) {
+        cfg <- read.dcf(cfgfile)
+        if ("return_as" %in% colnames(cfg))
+            value <- cfg[[1, "return_as"]]
+    }
+    set_return_as_preference(value)
+    value
+}
+
+##' @rdname save_return_as_preference
+##' @export
+get_return_as_preference <- function() .pkgenv[["return_as"]]
+
+##' @rdname save_return_as_preference
+##' @export
+set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.frame",
+                                                          "data.table", "tibble")) {
+    value <- match.arg(value)
+    .pkgenv[["return_as"]] <- value
+}
+
 is.scalar <- function(x, typestr) {
-  (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
+    (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
 }
 
 ## Adapted from the DelayedArray package
