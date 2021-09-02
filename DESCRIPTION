@@ -24,7 +24,7 @@ SystemRequirements: cmake (only when TileDB source build selected),
  option to build or download was specified by the user.
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
-Suggests: tinytest, rmarkdown, knitr, minidown, curl, bit64, Matrix, palmerpenguins, data.table, tibble
+Suggests: tinytest, rmarkdown, knitr, minidown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
