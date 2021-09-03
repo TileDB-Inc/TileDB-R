@@ -1,6 +1,6 @@
 # Ongoing development
 
-* This release of the R package builds against [TileDB 2.3.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.3), but has also been tested against previous releases and the development version.
+* This release of the R package builds against [TileDB 2.3.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.3.4), but has been tested against previous releases and the development version.
 
 ## Improvements
 
@@ -8,9 +8,25 @@
 
 * The interface to query element size of queries was extended (#282)
 
+* If query ends as 'incomplete', a warning is now issue (#283)
+
+* The status of the preceding query can now be accessed also when using a higher-level wrapper (#285)
+
+* Fragment Information can be accessed via high-level accessor functions (#286)
+
+* A preference for data type as which TileDB array data is returned can be set (#288)
+
+* Continuous Integration will use increased test coverage by installing more optional package (#289)
+
+* Use of TileDB Embedded was upgraded to release 2.3.4 (#290)
+
 ## Bug Fixes
 
 * One cast statement was corrected so a warning is no longer triggered from `clang` (#281)
+
+* Some added unit tests were not conditional on TileDB Embedded 2.2.* or later (#284)
+
+* A time-comparison unit test did not properly respect timezones which was corrected (#287)
 
 
 # tiledb 0.9.5
