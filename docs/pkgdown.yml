@@ -1,9 +1,9 @@
-pandoc: 2.14.1
+pandoc: 2.14.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   documentation: documentation.html
   introduction: introduction.html
   tiledb-mariadb-examples: tiledb-mariadb-examples.html
-last_built: 2021-08-10T16:30Z
+last_built: 2021-09-03T17:13Z
 

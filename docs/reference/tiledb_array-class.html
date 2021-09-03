@@ -74,7 +74,7 @@ based on refactored implementation utilising newer TileDB features." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
       </span>
     </div>
 
@@ -181,6 +181,11 @@ describes the (min,max) pair of ranges for dimension i</p></dd>
 <dt><code>timestamp_start</code></dt><dd><p>A POSIXct datetime variable for the inclusive interval start</p></dd>
 
 <dt><code>timestamp_end</code></dt><dd><p>A POSIXct datetime variable for the inclusive interval start</p></dd>
+
+<dt><code>return_as</code></dt><dd><p>A character value with the desired <code>tiledb_array</code> conversion,
+permitted values are &#8216;asis&#8217; (default, returning a list of columns),
+&#8216;array&#8217;, &#8216;matrix&#8217;,&#8216;data.frame&#8217;, &#8216;data.table&#8217;
+or &#8216;tibble&#8217;; the latter two require the respective packages installed</p></dd>
 
 <dt><code>ptr</code></dt><dd><p>External pointer to the underlying implementation</p></dd>
 

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
       </span>
     </div>
 
@@ -155,6 +155,7 @@
   query_condition <span class='op'>=</span> <span class='fu'>new</span><span class='op'>(</span><span class='st'>"tiledb_query_condition"</span><span class='op'>)</span>,
   timestamp_start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/double.html'>double</a></span><span class='op'>(</span><span class='op'>)</span>, origin <span class='op'>=</span> <span class='st'>"1970-01-01"</span><span class='op'>)</span>,
   timestamp_end <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/double.html'>double</a></span><span class='op'>(</span><span class='op'>)</span>, origin <span class='op'>=</span> <span class='st'>"1970-01-01"</span><span class='op'>)</span>,
+  return_as <span class='op'>=</span> <span class='fu'><a href='save_return_as_preference.html'>get_return_as_preference</a></span><span class='op'>(</span><span class='op'>)</span>,
   ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
@@ -239,8 +240,16 @@ at which the array is to be openened. No fragments written earlier will be consi
 until which the array is to be openened. No fragments written earlier later be considered.</p></td>
     </tr>
     <tr>
+      <th>return_as</th>
+      <td><p>optional A character value with the desired <code>tiledb_array</code> conversion,
+permitted values are &#8216;asis&#8217; (default, returning a list of columns), &#8216;array&#8217;,
+&#8216;matrix&#8217;,&#8216;data.frame&#8217;, &#8216;data.table&#8217; or &#8216;tibble&#8217;; the latter
+two require the respective packages installed. The existing <code>as.*</code> arguments take precedent
+over this.</p></td>
+    </tr>
+    <tr>
       <th>ctx</th>
-      <td><p>tiledb_ctx (optional)</p></td>
+      <td><p>optional tiledb_ctx</p></td>
     </tr>
     </table>
 

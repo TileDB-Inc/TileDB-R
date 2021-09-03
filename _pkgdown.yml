@@ -25,6 +25,7 @@ reference:
   - matches(",tiledb_dense")
   - matches(",tiledb_sparse")
   - matches("tiledb_subarray")
+  - matches("save_return_as_preference")
 - title: ArraySchema
   contents:
   - starts_with("tiledb_array_schema")
@@ -65,6 +66,7 @@ reference:
   contents:
   - starts_with("tiledb_query")
   - matches("parse_query_condition")
+  - matches("tiledb_get_query_status")
 - title: Group
   contents:
   - starts_with("tiledb_group")
@@ -89,6 +91,9 @@ reference:
   - starts_with("tiledb_vfs")
   - matches("tiledb_get_vfs")
   - matches("tiledb_set_vfs")
+- title: Fragment
+  contents:
+  - starts_with("tiledb_fragment")
 - title: DataFrame
   desc:  data.frame functionality functions
   contents:
