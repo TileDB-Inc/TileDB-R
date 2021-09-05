@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
       </span>
     </div>
 
@@ -192,10 +192,19 @@
 #&gt; sm.encryption_type NO_ENCRYPTION
 #&gt; sm.io_concurrency_level 12
 #&gt; sm.max_tile_overlap_size 314572800
+#&gt; sm.mem.malloc_trim true
 #&gt; sm.mem.reader.sparse_global_order.ratio_array_data 0.1
 #&gt; sm.mem.reader.sparse_global_order.ratio_coords 0.5
 #&gt; sm.mem.reader.sparse_global_order.ratio_query_condition 0.25
+#&gt; sm.mem.reader.sparse_global_order.ratio_rcs 0.05
+#&gt; sm.mem.reader.sparse_global_order.ratio_result_tiles 0.05
 #&gt; sm.mem.reader.sparse_global_order.ratio_tile_ranges 0.1
+#&gt; sm.mem.reader.sparse_unordered_with_dups.ratio_array_data 0.1
+#&gt; sm.mem.reader.sparse_unordered_with_dups.ratio_coords 0.5
+#&gt; sm.mem.reader.sparse_unordered_with_dups.ratio_query_condition 0.25
+#&gt; sm.mem.reader.sparse_unordered_with_dups.ratio_rcs 0.05
+#&gt; sm.mem.reader.sparse_unordered_with_dups.ratio_result_tiles 0.05
+#&gt; sm.mem.reader.sparse_unordered_with_dups.ratio_tile_ranges 0.1
 #&gt; sm.mem.total_budget 10737418240
 #&gt; sm.memory_budget 5368709120
 #&gt; sm.memory_budget_var 10737418240

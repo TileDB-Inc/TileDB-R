@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
       </span>
     </div>
 
@@ -161,111 +161,120 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>cfg</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_config.html'>tiledb_config</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>cfg</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                                                   parameter
-#&gt; 1                                     config.env_var_prefix
-#&gt; 2                                      config.logging_level
-#&gt; 3                                      rest.http_compressor
-#&gt; 4                                          rest.retry_count
-#&gt; 5                                   rest.retry_delay_factor
-#&gt; 6                                     rest.retry_http_codes
-#&gt; 7                               rest.retry_initial_delay_ms
-#&gt; 8                                       rest.server_address
-#&gt; 9                          rest.server_serialization_format
-#&gt; 10                                      sm.check_coord_dups
-#&gt; 11                                       sm.check_coord_oob
-#&gt; 12                                    sm.check_global_order
-#&gt; 13                             sm.compute_concurrency_level
-#&gt; 14                           sm.consolidation.amplification
-#&gt; 15                             sm.consolidation.buffer_size
-#&gt; 16                                    sm.consolidation.mode
-#&gt; 17                          sm.consolidation.step_max_frags
-#&gt; 18                          sm.consolidation.step_min_frags
-#&gt; 19                         sm.consolidation.step_size_ratio
-#&gt; 20                                   sm.consolidation.steps
-#&gt; 21                           sm.consolidation.timestamp_end
-#&gt; 22                         sm.consolidation.timestamp_start
-#&gt; 23                                          sm.dedup_coords
-#&gt; 24                                sm.enable_signal_handlers
-#&gt; 25                                        sm.encryption_key
-#&gt; 26                                       sm.encryption_type
-#&gt; 27                                  sm.io_concurrency_level
-#&gt; 28                                 sm.max_tile_overlap_size
-#&gt; 29       sm.mem.reader.sparse_global_order.ratio_array_data
-#&gt; 30           sm.mem.reader.sparse_global_order.ratio_coords
-#&gt; 31  sm.mem.reader.sparse_global_order.ratio_query_condition
-#&gt; 32      sm.mem.reader.sparse_global_order.ratio_tile_ranges
-#&gt; 33                                      sm.mem.total_budget
-#&gt; 34                                         sm.memory_budget
-#&gt; 35                                     sm.memory_budget_var
-#&gt; 36                                        sm.read_range_oob
-#&gt; 37                              sm.skip_checksum_validation
-#&gt; 38                            sm.skip_est_size_partitioning
-#&gt; 39                                       sm.tile_cache_size
-#&gt; 40                                sm.use_refactored_readers
-#&gt; 41                                           sm.vacuum.mode
-#&gt; 42                                  sm.vacuum.timestamp_end
-#&gt; 43                                sm.vacuum.timestamp_start
-#&gt; 44                                   sm.var_offsets.bitsize
-#&gt; 45                             sm.var_offsets.extra_element
-#&gt; 46                                      sm.var_offsets.mode
-#&gt; 47                                  vfs.azure.blob_endpoint
-#&gt; 48                          vfs.azure.block_list_block_size
-#&gt; 49                               vfs.azure.max_parallel_ops
-#&gt; 50                            vfs.azure.storage_account_key
-#&gt; 51                           vfs.azure.storage_account_name
-#&gt; 52                              vfs.azure.storage_sas_token
-#&gt; 53                          vfs.azure.use_block_list_upload
-#&gt; 54                                      vfs.azure.use_https
-#&gt; 55                                vfs.file.enable_filelocks
-#&gt; 56                                vfs.file.max_parallel_ops
-#&gt; 57                     vfs.file.posix_directory_permissions
-#&gt; 58                          vfs.file.posix_file_permissions
-#&gt; 59                                 vfs.gcs.max_parallel_ops
-#&gt; 60                                  vfs.gcs.multi_part_size
-#&gt; 61                                       vfs.gcs.project_id
-#&gt; 62                               vfs.gcs.request_timeout_ms
-#&gt; 63                            vfs.gcs.use_multi_part_upload
-#&gt; 64                          vfs.hdfs.kerb_ticket_cache_path
-#&gt; 65                                   vfs.hdfs.name_node_uri
-#&gt; 66                                        vfs.hdfs.username
-#&gt; 67                                        vfs.min_batch_gap
-#&gt; 68                                       vfs.min_batch_size
-#&gt; 69                                    vfs.min_parallel_size
-#&gt; 70                                vfs.read_ahead_cache_size
-#&gt; 71                                      vfs.read_ahead_size
-#&gt; 72                                 vfs.s3.aws_access_key_id
-#&gt; 73                                   vfs.s3.aws_external_id
-#&gt; 74                                vfs.s3.aws_load_frequency
-#&gt; 75                                      vfs.s3.aws_role_arn
-#&gt; 76                             vfs.s3.aws_secret_access_key
-#&gt; 77                                  vfs.s3.aws_session_name
-#&gt; 78                                 vfs.s3.aws_session_token
-#&gt; 79                                 vfs.s3.bucket_canned_acl
-#&gt; 80                                           vfs.s3.ca_file
-#&gt; 81                                           vfs.s3.ca_path
-#&gt; 82                                 vfs.s3.connect_max_tries
-#&gt; 83                              vfs.s3.connect_scale_factor
-#&gt; 84                                vfs.s3.connect_timeout_ms
-#&gt; 85                                 vfs.s3.endpoint_override
-#&gt; 86                                     vfs.s3.logging_level
-#&gt; 87                                  vfs.s3.max_parallel_ops
-#&gt; 88                               vfs.s3.multipart_part_size
-#&gt; 89                                 vfs.s3.object_canned_acl
-#&gt; 90                                        vfs.s3.proxy_host
-#&gt; 91                                    vfs.s3.proxy_password
-#&gt; 92                                        vfs.s3.proxy_port
-#&gt; 93                                      vfs.s3.proxy_scheme
-#&gt; 94                                    vfs.s3.proxy_username
-#&gt; 95                                            vfs.s3.region
-#&gt; 96                                vfs.s3.request_timeout_ms
-#&gt; 97                                    vfs.s3.requester_pays
-#&gt; 98                                            vfs.s3.scheme
-#&gt; 99                                         vfs.s3.skip_init
-#&gt; 100                                              vfs.s3.sse
-#&gt; 101                                   vfs.s3.sse_kms_key_id
-#&gt; 102                             vfs.s3.use_multipart_upload
-#&gt; 103                           vfs.s3.use_virtual_addressing
-#&gt; 104                                       vfs.s3.verify_ssl
+</div><div class='output co'>#&gt;                                                          parameter
+#&gt; 1                                            config.env_var_prefix
+#&gt; 2                                             config.logging_level
+#&gt; 3                                             rest.http_compressor
+#&gt; 4                                                 rest.retry_count
+#&gt; 5                                          rest.retry_delay_factor
+#&gt; 6                                            rest.retry_http_codes
+#&gt; 7                                      rest.retry_initial_delay_ms
+#&gt; 8                                              rest.server_address
+#&gt; 9                                 rest.server_serialization_format
+#&gt; 10                                             sm.check_coord_dups
+#&gt; 11                                              sm.check_coord_oob
+#&gt; 12                                           sm.check_global_order
+#&gt; 13                                    sm.compute_concurrency_level
+#&gt; 14                                  sm.consolidation.amplification
+#&gt; 15                                    sm.consolidation.buffer_size
+#&gt; 16                                           sm.consolidation.mode
+#&gt; 17                                 sm.consolidation.step_max_frags
+#&gt; 18                                 sm.consolidation.step_min_frags
+#&gt; 19                                sm.consolidation.step_size_ratio
+#&gt; 20                                          sm.consolidation.steps
+#&gt; 21                                  sm.consolidation.timestamp_end
+#&gt; 22                                sm.consolidation.timestamp_start
+#&gt; 23                                                 sm.dedup_coords
+#&gt; 24                                       sm.enable_signal_handlers
+#&gt; 25                                               sm.encryption_key
+#&gt; 26                                              sm.encryption_type
+#&gt; 27                                         sm.io_concurrency_level
+#&gt; 28                                        sm.max_tile_overlap_size
+#&gt; 29                                              sm.mem.malloc_trim
+#&gt; 30              sm.mem.reader.sparse_global_order.ratio_array_data
+#&gt; 31                  sm.mem.reader.sparse_global_order.ratio_coords
+#&gt; 32         sm.mem.reader.sparse_global_order.ratio_query_condition
+#&gt; 33                     sm.mem.reader.sparse_global_order.ratio_rcs
+#&gt; 34            sm.mem.reader.sparse_global_order.ratio_result_tiles
+#&gt; 35             sm.mem.reader.sparse_global_order.ratio_tile_ranges
+#&gt; 36       sm.mem.reader.sparse_unordered_with_dups.ratio_array_data
+#&gt; 37           sm.mem.reader.sparse_unordered_with_dups.ratio_coords
+#&gt; 38  sm.mem.reader.sparse_unordered_with_dups.ratio_query_condition
+#&gt; 39              sm.mem.reader.sparse_unordered_with_dups.ratio_rcs
+#&gt; 40     sm.mem.reader.sparse_unordered_with_dups.ratio_result_tiles
+#&gt; 41      sm.mem.reader.sparse_unordered_with_dups.ratio_tile_ranges
+#&gt; 42                                             sm.mem.total_budget
+#&gt; 43                                                sm.memory_budget
+#&gt; 44                                            sm.memory_budget_var
+#&gt; 45                                               sm.read_range_oob
+#&gt; 46                                     sm.skip_checksum_validation
+#&gt; 47                                   sm.skip_est_size_partitioning
+#&gt; 48                                              sm.tile_cache_size
+#&gt; 49                                       sm.use_refactored_readers
+#&gt; 50                                                  sm.vacuum.mode
+#&gt; 51                                         sm.vacuum.timestamp_end
+#&gt; 52                                       sm.vacuum.timestamp_start
+#&gt; 53                                          sm.var_offsets.bitsize
+#&gt; 54                                    sm.var_offsets.extra_element
+#&gt; 55                                             sm.var_offsets.mode
+#&gt; 56                                         vfs.azure.blob_endpoint
+#&gt; 57                                 vfs.azure.block_list_block_size
+#&gt; 58                                      vfs.azure.max_parallel_ops
+#&gt; 59                                   vfs.azure.storage_account_key
+#&gt; 60                                  vfs.azure.storage_account_name
+#&gt; 61                                     vfs.azure.storage_sas_token
+#&gt; 62                                 vfs.azure.use_block_list_upload
+#&gt; 63                                             vfs.azure.use_https
+#&gt; 64                                       vfs.file.enable_filelocks
+#&gt; 65                                       vfs.file.max_parallel_ops
+#&gt; 66                            vfs.file.posix_directory_permissions
+#&gt; 67                                 vfs.file.posix_file_permissions
+#&gt; 68                                        vfs.gcs.max_parallel_ops
+#&gt; 69                                         vfs.gcs.multi_part_size
+#&gt; 70                                              vfs.gcs.project_id
+#&gt; 71                                      vfs.gcs.request_timeout_ms
+#&gt; 72                                   vfs.gcs.use_multi_part_upload
+#&gt; 73                                 vfs.hdfs.kerb_ticket_cache_path
+#&gt; 74                                          vfs.hdfs.name_node_uri
+#&gt; 75                                               vfs.hdfs.username
+#&gt; 76                                               vfs.min_batch_gap
+#&gt; 77                                              vfs.min_batch_size
+#&gt; 78                                           vfs.min_parallel_size
+#&gt; 79                                       vfs.read_ahead_cache_size
+#&gt; 80                                             vfs.read_ahead_size
+#&gt; 81                                        vfs.s3.aws_access_key_id
+#&gt; 82                                          vfs.s3.aws_external_id
+#&gt; 83                                       vfs.s3.aws_load_frequency
+#&gt; 84                                             vfs.s3.aws_role_arn
+#&gt; 85                                    vfs.s3.aws_secret_access_key
+#&gt; 86                                         vfs.s3.aws_session_name
+#&gt; 87                                        vfs.s3.aws_session_token
+#&gt; 88                                        vfs.s3.bucket_canned_acl
+#&gt; 89                                                  vfs.s3.ca_file
+#&gt; 90                                                  vfs.s3.ca_path
+#&gt; 91                                        vfs.s3.connect_max_tries
+#&gt; 92                                     vfs.s3.connect_scale_factor
+#&gt; 93                                       vfs.s3.connect_timeout_ms
+#&gt; 94                                        vfs.s3.endpoint_override
+#&gt; 95                                            vfs.s3.logging_level
+#&gt; 96                                         vfs.s3.max_parallel_ops
+#&gt; 97                                      vfs.s3.multipart_part_size
+#&gt; 98                                        vfs.s3.object_canned_acl
+#&gt; 99                                               vfs.s3.proxy_host
+#&gt; 100                                          vfs.s3.proxy_password
+#&gt; 101                                              vfs.s3.proxy_port
+#&gt; 102                                            vfs.s3.proxy_scheme
+#&gt; 103                                          vfs.s3.proxy_username
+#&gt; 104                                                  vfs.s3.region
+#&gt; 105                                      vfs.s3.request_timeout_ms
+#&gt; 106                                          vfs.s3.requester_pays
+#&gt; 107                                                  vfs.s3.scheme
+#&gt; 108                                               vfs.s3.skip_init
+#&gt; 109                                                     vfs.s3.sse
+#&gt; 110                                          vfs.s3.sse_kms_key_id
+#&gt; 111                                    vfs.s3.use_multipart_upload
+#&gt; 112                                  vfs.s3.use_virtual_addressing
+#&gt; 113                                              vfs.s3.verify_ssl
 #&gt;                      value
 #&gt; 1                  TILEDB_
 #&gt; 2                        0
@@ -295,82 +304,91 @@
 #&gt; 26           NO_ENCRYPTION
 #&gt; 27                      12
 #&gt; 28               314572800
-#&gt; 29                     0.1
-#&gt; 30                     0.5
-#&gt; 31                    0.25
-#&gt; 32                     0.1
-#&gt; 33             10737418240
-#&gt; 34              5368709120
-#&gt; 35             10737418240
-#&gt; 36                    warn
-#&gt; 37                   false
-#&gt; 38                   false
-#&gt; 39                10000000
-#&gt; 40                   false
-#&gt; 41               fragments
-#&gt; 42    18446744073709551615
-#&gt; 43                       0
-#&gt; 44                      64
-#&gt; 45                   false
-#&gt; 46                   bytes
-#&gt; 47                        
-#&gt; 48                 5242880
-#&gt; 49                      12
-#&gt; 50                        
-#&gt; 51                        
-#&gt; 52                        
-#&gt; 53                    true
-#&gt; 54                    true
-#&gt; 55                    true
-#&gt; 56                      12
-#&gt; 57                     755
-#&gt; 58                     644
-#&gt; 59                      12
-#&gt; 60                 5242880
+#&gt; 29                    true
+#&gt; 30                     0.1
+#&gt; 31                     0.5
+#&gt; 32                    0.25
+#&gt; 33                    0.05
+#&gt; 34                    0.05
+#&gt; 35                     0.1
+#&gt; 36                     0.1
+#&gt; 37                     0.5
+#&gt; 38                    0.25
+#&gt; 39                    0.05
+#&gt; 40                    0.05
+#&gt; 41                     0.1
+#&gt; 42             10737418240
+#&gt; 43              5368709120
+#&gt; 44             10737418240
+#&gt; 45                    warn
+#&gt; 46                   false
+#&gt; 47                   false
+#&gt; 48                10000000
+#&gt; 49                   false
+#&gt; 50               fragments
+#&gt; 51    18446744073709551615
+#&gt; 52                       0
+#&gt; 53                      64
+#&gt; 54                   false
+#&gt; 55                   bytes
+#&gt; 56                        
+#&gt; 57                 5242880
+#&gt; 58                      12
+#&gt; 59                        
+#&gt; 60                        
 #&gt; 61                        
-#&gt; 62                    3000
+#&gt; 62                    true
 #&gt; 63                    true
-#&gt; 64                        
-#&gt; 65                        
-#&gt; 66                        
-#&gt; 67                  512000
-#&gt; 68                20971520
-#&gt; 69                10485760
-#&gt; 70                10485760
-#&gt; 71                  102400
-#&gt; 72                        
+#&gt; 64                    true
+#&gt; 65                      12
+#&gt; 66                     755
+#&gt; 67                     644
+#&gt; 68                      12
+#&gt; 69                 5242880
+#&gt; 70                        
+#&gt; 71                    3000
+#&gt; 72                    true
 #&gt; 73                        
 #&gt; 74                        
 #&gt; 75                        
-#&gt; 76                        
-#&gt; 77                        
-#&gt; 78                        
-#&gt; 79                 NOT_SET
-#&gt; 80                        
+#&gt; 76                  512000
+#&gt; 77                20971520
+#&gt; 78                10485760
+#&gt; 79                10485760
+#&gt; 80                  102400
 #&gt; 81                        
-#&gt; 82                       5
-#&gt; 83                      25
-#&gt; 84                   10800
+#&gt; 82                        
+#&gt; 83                        
+#&gt; 84                        
 #&gt; 85                        
-#&gt; 86                     Off
-#&gt; 87                      12
-#&gt; 88                 5242880
-#&gt; 89                 NOT_SET
+#&gt; 86                        
+#&gt; 87                        
+#&gt; 88                 NOT_SET
+#&gt; 89                        
 #&gt; 90                        
-#&gt; 91                        
-#&gt; 92                       0
-#&gt; 93                    http
+#&gt; 91                       5
+#&gt; 92                      25
+#&gt; 93                   10800
 #&gt; 94                        
-#&gt; 95               us-east-1
-#&gt; 96                    3000
-#&gt; 97                   false
-#&gt; 98                   https
-#&gt; 99                   false
+#&gt; 95                     Off
+#&gt; 96                      12
+#&gt; 97                 5242880
+#&gt; 98                 NOT_SET
+#&gt; 99                        
 #&gt; 100                       
-#&gt; 101                       
-#&gt; 102                   true
-#&gt; 103                   true
-#&gt; 104                   true</div><div class='input'>
+#&gt; 101                      0
+#&gt; 102                   http
+#&gt; 103                       
+#&gt; 104              us-east-1
+#&gt; 105                   3000
+#&gt; 106                  false
+#&gt; 107                  https
+#&gt; 108                  false
+#&gt; 109                       
+#&gt; 110                       
+#&gt; 111                   true
+#&gt; 112                   true
+#&gt; 113                   true</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

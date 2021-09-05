@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
       </span>
     </div>
 
@@ -468,6 +468,18 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="return_as-set-tiledb_array-method.html">`return_as&lt;-`()</a></code> </p>
+        </td>
+        <td><p>Retrieve return_as conversion preference</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="return_as-tiledb_array-method.html">return_as()</a></code> </p>
+        </td>
+        <td><p>Retrieve return_as conversion preference</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="schema-tiledb_array-method.html">schema(<i>&lt;tiledb_array&gt;</i>)</a></code> </p>
         </td>
         <td><p>Return a schema from a tiledb_array object</p></td>
@@ -743,6 +755,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_subarray.html">tiledb_subarray()</a></code> </p>
         </td>
         <td><p>Query a array using a subarray vector</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="save_return_as_preference.html">save_return_as_preference()</a></code> <code><a href="save_return_as_preference.html">load_return_as_preference()</a></code> <code><a href="save_return_as_preference.html">get_return_as_preference()</a></code> <code><a href="save_return_as_preference.html">set_return_as_preference()</a></code> </p>
+        </td>
+        <td><p>Store object conversion preference</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -1573,7 +1591,13 @@ This is only valid for sparse arrays.</p></td>
         <td>
           <p><code><a href="tiledb_query_result_buffer_elements.html">tiledb_query_result_buffer_elements()</a></code> </p>
         </td>
-        <td><p>Get TileDB Query result buffer elements</p></td>
+        <td><p>Get TileDB Query result buffer element size</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_result_buffer_elements_vec.html">tiledb_query_result_buffer_elements_vec()</a></code> </p>
+        </td>
+        <td><p>Get TileDB Query result buffer element size pair as vector</p></td>
       </tr><tr>
         
         <td>
@@ -1640,6 +1664,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="parse_query_condition.html">parse_query_condition()</a></code> </p>
         </td>
         <td><p>Create a 'tiledb_query_condition' object from an expression</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_get_query_status.html">tiledb_get_query_status()</a></code> </p>
+        </td>
+        <td><p>Retrieve the cached status of the last finalized query</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -1751,6 +1781,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_delete_metadata.html">tiledb_delete_metadata()</a></code> </p>
         </td>
         <td><p>Delete a TileDB Array Metadata object given by key</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_has_consolidated_metadata.html">tiledb_fragment_info_has_consolidated_metadata()</a></code> </p>
+        </td>
+        <td><p>Return if a fragment info index has consolidated metadata</p></td>
       </tr><tr>
         
         <td>
@@ -2005,6 +2041,133 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_set_vfs.html">tiledb_set_vfs()</a></code> </p>
         </td>
         <td><p>Store a TileDB VFS object in the package environment</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-fragment" class="hasAnchor"><a href="#section-fragment" class="anchor"></a>Fragment</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info-class.html">tiledb_fragment_info-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB fragment info object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info.html">tiledb_fragment_info()</a></code> </p>
+        </td>
+        <td><p>Constructs a <code>tiledb_fragment_info</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_dense.html">tiledb_fragment_info_dense()</a></code> </p>
+        </td>
+        <td><p>Return if a fragment info index is dense</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_dump.html">tiledb_fragment_info_dump()</a></code> </p>
+        </td>
+        <td><p>Dump the fragment info to console</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_cell_num.html">tiledb_fragment_info_get_cell_num()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info number of cells for a given fragment index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_non_empty_domain_index.html">tiledb_fragment_info_get_non_empty_domain_index()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info non-empty domain from index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_non_empty_domain_name.html">tiledb_fragment_info_get_non_empty_domain_name()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info non-empty domain from name</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_non_empty_domain_var_index.html">tiledb_fragment_info_get_non_empty_domain_var_index()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info non-empty domain variable from index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_non_empty_domain_var_name.html">tiledb_fragment_info_get_non_empty_domain_var_name()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info non-empty domain variable from name</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_num.html">tiledb_fragment_info_get_num()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info number of fragments</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_size.html">tiledb_fragment_info_get_size()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info fragment size for a given fragment index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_timestamp_range.html">tiledb_fragment_info_get_timestamp_range()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info timestamp range for a given fragment index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_to_vacuum_num.html">tiledb_fragment_info_get_to_vacuum_num()</a></code> </p>
+        </td>
+        <td><p>Return the number of fragment info elements to be vacuumed</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_to_vacuum_uri.html">tiledb_fragment_info_get_to_vacuum_uri()</a></code> </p>
+        </td>
+        <td><p>Return fragment info URI of the to be vacuumed index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_unconsolidated_metadata_num.html">tiledb_fragment_info_get_unconsolidated_metadata_num()</a></code> </p>
+        </td>
+        <td><p>Return fragment info number of unconsolidated metadata</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_get_version.html">tiledb_fragment_info_get_version()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info version for a given fragment index</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_has_consolidated_metadata.html">tiledb_fragment_info_has_consolidated_metadata()</a></code> </p>
+        </td>
+        <td><p>Return if a fragment info index has consolidated metadata</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_sparse.html">tiledb_fragment_info_sparse()</a></code> </p>
+        </td>
+        <td><p>Return if a fragment info index is sparse</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_fragment_info_uri.html">tiledb_fragment_info_uri()</a></code> </p>
+        </td>
+        <td><p>Return a fragment info URI given its index</p></td>
       </tr>
     </tbody><tbody>
       <tr>

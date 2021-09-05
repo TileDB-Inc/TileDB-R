@@ -42,7 +42,8 @@
 <meta property="og:title" content="Set TileDB Query buffer — tiledb_query_set_buffer" />
 <meta property="og:description" content="This function allocates query buffers directly from R vectors in
 case the types match: integer, double, logical. For more
-general types see tiledb_query_buffer_alloc_ptr." />
+general types see tiledb_query_buffer_alloc_ptr and
+tiledb_query_buffer_assign_ptr" />
 
 
 
@@ -74,7 +75,7 @@ general types see tiledb_query_buffer_alloc_ptr." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
       </span>
     </div>
 
@@ -139,7 +140,8 @@ general types see tiledb_query_buffer_alloc_ptr." />
     <div class="ref-description">
     <p>This function allocates query buffers directly from R vectors in
 case the types match: <code>integer</code>, <code>double</code>, <code>logical</code>. For more
-general types see <code>tiledb_query_buffer_alloc_ptr</code>.</p>
+general types see <code>tiledb_query_buffer_alloc_ptr</code> and
+<code>tiledb_query_buffer_assign_ptr</code></p>
     </div>
 
     <pre class="usage"><span class='fu'>tiledb_query_set_buffer</span><span class='op'>(</span><span class='va'>query</span>, <span class='va'>attr</span>, <span class='va'>buffer</span><span class='op'>)</span></pre>
