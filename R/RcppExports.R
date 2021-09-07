@@ -77,6 +77,10 @@ libtiledb_ctx_set_tag <- function(ctx, key, value) {
     invisible(.Call(`_tiledb_libtiledb_ctx_set_tag`, ctx, key, value))
 }
 
+libtiledb_ctx_stats <- function(ctx) {
+    .Call(`_tiledb_libtiledb_ctx_stats`, ctx)
+}
+
 libtiledb_config <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_config`, config)
 }

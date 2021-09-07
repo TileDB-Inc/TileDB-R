@@ -444,6 +444,12 @@ bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme
     return ctx->is_supported_fs(TILEDB_S3);
   } else if (scheme == "hdfs") {
     return ctx->is_supported_fs(TILEDB_HDFS);
+  } else if (scheme == "azure") {
+    return ctx->is_supported_fs(TILEDB_AZURE);
+  } else if (scheme == "gcs") {
+    return ctx->is_supported_fs(TILEDB_GCS);
+  } else if (scheme == "memory") {
+    return ctx->is_supported_fs(TILEDB_MEMFS);
   } else {
     Rcpp::stop("Unknown TileDB fs scheme: '%s'", scheme.c_str());
   }
@@ -452,6 +458,11 @@ bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme
 // [[Rcpp::export]]
 void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::string value) {
   ctx->set_tag(key, value);
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_ctx_stats(XPtr<tiledb::Context> ctx) {
+    return ctx->stats();
 }
 
 /**
