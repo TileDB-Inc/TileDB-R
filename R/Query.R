@@ -537,7 +537,7 @@ tiledb_get_query_status <- function() {
 #' @return A JSON-formatted string with context statistics
 #' @export
 tiledb_query_stats <- function(query) {
-    stopifnot(`The 'query' must be a TileDB Query object` = is(object, "tiledb_query"),
+    stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"),
               `TileDB 2.4.0 or later is required` = tiledb_version(TRUE) >= "2.4.0")
     libtiledb_query_stats(query@ptr)
 }

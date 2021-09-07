@@ -48,6 +48,9 @@
 #' permitted values are \sQuote{asis} (default, returning a list of columns),
 #' \sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}
 #' or \sQuote{tibble}; the latter two require the respective packages installed
+#' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
+#' query statistics are returned (as a JSON string) via the attribute
+#' \sQuote{query_statistics} of the return object.
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -68,6 +71,7 @@ setClass("tiledb_array",
                       timestamp_start = "POSIXct",
                       timestamp_end = "POSIXct",
                       return_as = "character",
+                      query_statistics = "logical",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -108,6 +112,9 @@ setClass("tiledb_array",
 #' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}; the latter
 #' two require the respective packages installed. The existing \code{as.*} arguments take precedent
 #' over this.
+#' @param query_statistics optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
+#' query statistics are returned (as a JSON string) via the attribute
+#' \sQuote{query_statistics} of the return object.
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
 #' @export
@@ -128,6 +135,7 @@ tiledb_array <- function(uri,
                          timestamp_start = as.POSIXct(double(), origin="1970-01-01"),
                          timestamp_end = as.POSIXct(double(), origin="1970-01-01"),
                          return_as = get_return_as_preference(),
+                         query_statistics = FALSE,
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -197,6 +205,7 @@ tiledb_array <- function(uri,
       timestamp_start = timestamp_start,
       timestamp_end = timestamp_end,
       return_as = return_as,
+      query_statistics = query_statistics,
       ptr = array_xptr)
 }
 
@@ -263,6 +272,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  timestamp_start    = ", if (length(object@timestamp_start) == 0) "(none)" else format(object@timestamp_start), "\n"
      ,"  timestamp_end      = ", if (length(object@timestamp_end) == 0) "(none)" else format(object@timestamp_end), "\n"
      ,"  return_as          = '", object@return_as, "'\n"
+     ,"  query_statistics   = ", if (object@query_statistics) "TRUE" else "FALSE", "\n"
      ,sep="")
 })
 
@@ -376,6 +386,11 @@ setValidity("tiledb_array", function(object) {
   if (!(object@return_as %in% c("asis", "array", "matrix", "data.frame", "data.table", "tibble"))) {
     valid <- FALSE
     msg <- c(msg, "The 'return_as' slot must contain one of 'asis', 'array', 'matrix', 'data.frame', 'data.table', 'tibble'.")
+  }
+
+  if (!is.logical(object@query_statistics)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'query_statistics' slot does not contain a logical value.")
   }
 
   if (valid) TRUE else msg
@@ -732,8 +747,9 @@ setMethod("[", "tiledb_array",
       res <- tibble::as_tibble(res)
   }
 
-  ## attach query status
   attr(res, "query_status") <- .pkgenv[["query_status"]]
+  if (x@query_statistics)
+      attr(res, "query_statistics") <- libtiledb_query_stats(qryptr)
 
   invisible(res)
 })
