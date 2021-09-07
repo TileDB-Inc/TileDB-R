@@ -241,3 +241,13 @@ ctx <- tiledb_ctx(cfg)
 array <- tiledb_array(tmp, as.data.frame=TRUE)
 
 expect_warning(res <- array[])
+
+## check for query stats
+if (tiledb_version(TRUE) < "2.4.0") exit_file("TileDB Query + Ctx stats requires TileDB 2.4.* or greater")
+res <- tiledb_query_stats(qry)
+expect_true(is.character(res))
+expect_true(nchar(res) > 1000)  		# safe lower boundary
+
+res <- tiledb_ctx_stats()               # test here rather than in test_ctx to have real query
+expect_true(is.character(res))
+expect_true(nchar(res) > 1000)  		# safe lower boundary
