@@ -1400,3 +1400,12 @@ res <- tiledb_array(uri)[]
 expect_true(inherits(res, "matrix"))
 
 set_return_as_preference(oldConversionValue) 		# reset baseline value
+
+## test query_statistics setter and getter
+if (tiledb_version(TRUE) < "2.4.0") exit_file("TileDB Query stats requires TileDB 2.4.* or greater")
+uri <- tempfile()
+fromDataFrame(mtcars, uri)
+arr <- tiledb_array(uri)
+expect_false(query_statistics(arr))     # as not set
+query_statistics(arr) <- TRUE
+expect_true(query_statistics(arr))

@@ -1568,3 +1568,45 @@ setReplaceMethod("return_as",
   validObject(x)
   x
 })
+
+
+## -- query_statistics return toggle
+
+#' @rdname query_statistics-tiledb_array-method
+#' @param ... Currently unused
+#' @export
+setGeneric("query_statistics", function(object, ...) standardGeneric("query_statistics"))
+
+#' Retrieve query_statistics toggle
+#'
+#' A \code{tiledb_array} object can, if requested, return query statistics as a JSON
+#' string in an attribute \sQuote{query_statistics} attached to the return object. The
+#' default value of the logical switch is \sQuote{FALSE}. This method returns the current
+#' value.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether query statistics are returned.
+#' @export
+setMethod("query_statistics",
+          signature = "tiledb_array",
+          function(object) object@query_statistics)
+
+#' @rdname query_statistics-set-tiledb_array-method
+#' @export
+setGeneric("query_statistics<-", function(x, value) standardGeneric("query_statistics<-"))
+
+#' Set query_statistics toggle
+#'
+#' A \code{tiledb_array} object can, if requested, return query statistics as a JSON
+#' string in an attribute \sQuote{query_statistics} attached to the return object. The
+#' default value of the logical switch is \sQuote{FALSE}. This method sets the value.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("query_statistics",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@query_statistics <- value
+  validObject(x)
+  x
+})
