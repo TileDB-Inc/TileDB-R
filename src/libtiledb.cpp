@@ -462,7 +462,11 @@ void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::stri
 
 // [[Rcpp::export]]
 std::string libtiledb_ctx_stats(XPtr<tiledb::Context> ctx) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     return ctx->stats();
+#else
+    return std::string("");
+#endif
 }
 
 /**
@@ -3264,6 +3268,15 @@ XPtr<tiledb::ArraySchema> libtiledb_query_get_schema(XPtr<tiledb::Query> query,
     return libtiledb_array_schema_load(ctx, arr.uri()); // returns an XPtr<tiledb::ArraySchema>
 #else
     return XPtr<tiledb::ArraySchema>(R_NilValue);
+#endif
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_query_stats(XPtr<tiledb::Query> query) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
+    return query->stats();
+#else
+    return std::string("");
 #endif
 }
 
