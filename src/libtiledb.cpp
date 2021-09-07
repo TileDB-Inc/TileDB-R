@@ -1722,6 +1722,50 @@ bool libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
   return true;
 }
 
+/**
+ * TileDB Array Schema Evolution
+ */
+//[[Rcpp::export]]
+XPtr<tiledb::ArraySchemaEvolution>
+libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx) {
+    auto p = new tiledb::ArraySchemaEvolution(tiledb::ArraySchemaEvolution(*ctx.get()));
+    auto ptr = XPtr<tiledb::ArraySchemaEvolution>(p, false);
+    registerXptrFinalizer(ptr, libtiledb_arrayschemaevolution_delete);
+    return ptr;
+}
+
+//[[Rcpp::export]]
+XPtr<tiledb::ArraySchemaEvolution>
+libtiledb_array_schema_evolution_add_attribute(XPtr<tiledb::ArraySchemaEvolution> ase,
+                                               XPtr<tiledb::Attribute> attr) {
+    tiledb::ArraySchemaEvolution res = ase->add_attribute(*attr.get());
+    auto ptr = new tiledb::ArraySchemaEvolution(res);
+    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
+    registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
+    return xptr;
+}
+
+//[[Rcpp::export]]
+XPtr<tiledb::ArraySchemaEvolution>
+libtiledb_array_schema_evolution_drop_attribute(XPtr<tiledb::ArraySchemaEvolution> ase,
+                                                const std::string & attrname) {
+    tiledb::ArraySchemaEvolution res = ase->drop_attribute(attrname);
+    auto ptr = new tiledb::ArraySchemaEvolution(res);
+    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
+    registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
+    return xptr;
+}
+
+//[[Rcpp::export]]
+XPtr<tiledb::ArraySchemaEvolution>
+libtiledb_array_schema_evolution_array_evolve(XPtr<tiledb::ArraySchemaEvolution> ase,
+                                              const std::string & uri) {
+    tiledb::ArraySchemaEvolution res = ase->array_evolve(uri);
+    auto ptr = new tiledb::ArraySchemaEvolution(res);
+    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
+    registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
+    return xptr;
+}
 
 /**
  * TileDB Array
