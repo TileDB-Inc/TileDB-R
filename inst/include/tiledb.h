@@ -3,7 +3,9 @@
 #define TILEDB_DEPRECATED
 
 #include <tiledb/tiledb>
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR >= 4
 #include <tiledb/tiledb_experimental>
+#endif
 
 #define STRICT_R_HEADERS
 #include "Rcpp.h"
