@@ -9,7 +9,7 @@ tiledb_array_schema_evolution_add_attribute(object, attr)
 \arguments{
 \item{object}{A TileDB 'array_schema_evolution' object}
 
-\item{attr}{A Tileb attribute}
+\item{attr}{A TileDB attribute}
 }
 \value{
 The modified 'array_schema_evolution' object, invisibly

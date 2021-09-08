@@ -2,7 +2,7 @@
 % Please edit documentation in R/ArraySchemaEvolution.R
 \name{tiledb_array_schema_evolution_array_evolve}
 \alias{tiledb_array_schema_evolution_array_evolve}
-\title{Evolve and Array Schema}
+\title{Evolve an Array Schema}
 \usage{
 tiledb_array_schema_evolution_array_evolve(object, uri)
 }
@@ -15,5 +15,5 @@ tiledb_array_schema_evolution_array_evolve(object, uri)
 The modified 'array_schema_evolution' object, invisibly
 }
 \description{
-Evolve and Array Schema
+Evolve an Array Schema
 }

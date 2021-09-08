@@ -23,7 +23,7 @@
 #' An S4 class for a TileDB ArraySchemaEvolution object
 #'
 #' @slot ptr An external pointer to the underlying implementation
-#' @ export Class tiledb_array_schema_evolution
+#' @exportClass tiledb_array_schema_evolution
 setClass("tiledb_array_schema_evolution",
          slots = list(ptr = "externalptr"))
 
@@ -44,7 +44,7 @@ tiledb_array_schema_evolution <- function(ctx = tiledb_get_context()) {
 #' Add an Attribute to a TileDB Array Schema Evolution object
 #'
 #' @param object A TileDB 'array_schema_evolution' object
-#' @param attr A Tileb attribute
+#' @param attr A TileDB attribute
 #' @return The modified 'array_schema_evolution' object, invisibly
 #' @export
 tiledb_array_schema_evolution_add_attribute <- function(object, attr) {
@@ -69,7 +69,7 @@ tiledb_array_schema_evolution_drop_attribute <- function(object, attrname) {
     invisible(object)
 }
 
-#' Evolve and Array Schema
+#' Evolve an Array Schema
 #'
 #' @param object A TileDB 'array_schema_evolution' object
 #' @param uri A character variable with an URI
