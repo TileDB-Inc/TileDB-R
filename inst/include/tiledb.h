@@ -3,6 +3,9 @@
 #define TILEDB_DEPRECATED
 
 #include <tiledb/tiledb>
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR >= 4
+#include <tiledb/tiledb_experimental>
+#endif
 
 #define STRICT_R_HEADERS
 #include "Rcpp.h"
@@ -68,6 +71,14 @@ struct vfs_fh {
 };
 typedef struct vfs_fh vfs_fh_t;
 
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 2
+// we need a placeholder as tiledb::FragmentInfo is in function signatures
+namespace tiledb {
+    class FragmentInfo {
+    };
+}
+#endif
+
 #if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 3
 // we need a placeholder as tiledb::QueryCondition is in at least one function signature
 namespace tiledb {
@@ -76,10 +87,10 @@ namespace tiledb {
 }
 #endif
 
-#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 2
-// we need a placeholder as tiledb::FragmentInfo is in function signatures
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 4
+// we need a placeholder as tiledb::ArraySchemaEvolution is in function signatures
 namespace tiledb {
-    class FragmentInfo {
+    class ArraySchemaEvolution {
     };
 }
 #endif

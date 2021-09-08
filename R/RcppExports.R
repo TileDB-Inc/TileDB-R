@@ -385,6 +385,22 @@ libtiledb_array_schema_check <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_check`, schema)
 }
 
+libtiledb_array_schema_evolution <- function(ctx) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution`, ctx)
+}
+
+libtiledb_array_schema_evolution_add_attribute <- function(ase, attr) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_add_attribute`, ase, attr)
+}
+
+libtiledb_array_schema_evolution_drop_attribute <- function(ase, attrname) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_drop_attribute`, ase, attrname)
+}
+
+libtiledb_array_schema_evolution_array_evolve <- function(ase, uri) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_array_evolve`, ase, uri)
+}
+
 libtiledb_array_create <- function(uri, schema) {
     .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }

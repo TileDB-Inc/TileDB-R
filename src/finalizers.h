@@ -180,6 +180,15 @@ extern "C" {
         }
     }
 
+    inline void libtiledb_arrayschemaevolution_delete(SEXP sexp) {
+        XPtr<tiledb::ArraySchemaEvolution> arr(sexp);
+        tiledb::ArraySchemaEvolution* ptr = arr.get();
+        if (ptr != nullptr) {
+            delete ptr;
+            ptr = nullptr;
+        }
+    }
+
 }
 
 #endif
