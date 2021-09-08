@@ -5,6 +5,8 @@ isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 20
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
+if (tiledb_version(TRUE) < "2.4.0") exit_file("Needs TileDB 2.4.* or later")
+
 df <- data.frame(key=letters[1:10],
                  val=1:10)
 uri <- tempfile()
