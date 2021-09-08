@@ -1728,9 +1728,14 @@ bool libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     auto p = new tiledb::ArraySchemaEvolution(tiledb::ArraySchemaEvolution(*ctx.get()));
     auto ptr = XPtr<tiledb::ArraySchemaEvolution>(p, false);
     registerXptrFinalizer(ptr, libtiledb_arrayschemaevolution_delete);
+#else
+    auto p = new tiledb::ArraySchemaEvolution(tiledb::ArraySchemaEvolution()); // placeholder
+    auto ptr = XPtr<tiledb::ArraySchemaEvolution>(p);
+#endif
     return ptr;
 }
 
@@ -1738,33 +1743,45 @@ libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx) {
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution_add_attribute(XPtr<tiledb::ArraySchemaEvolution> ase,
                                                XPtr<tiledb::Attribute> attr) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     tiledb::ArraySchemaEvolution res = ase->add_attribute(*attr.get());
     auto ptr = new tiledb::ArraySchemaEvolution(res);
     auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
     registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
     return xptr;
+#else
+    return ase;
+#endif
 }
 
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution_drop_attribute(XPtr<tiledb::ArraySchemaEvolution> ase,
                                                 const std::string & attrname) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     tiledb::ArraySchemaEvolution res = ase->drop_attribute(attrname);
     auto ptr = new tiledb::ArraySchemaEvolution(res);
     auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
     registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
     return xptr;
+#else
+    return ase;
+#endif
 }
 
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution_array_evolve(XPtr<tiledb::ArraySchemaEvolution> ase,
                                               const std::string & uri) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     tiledb::ArraySchemaEvolution res = ase->array_evolve(uri);
     auto ptr = new tiledb::ArraySchemaEvolution(res);
     auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
     registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
     return xptr;
+#else
+    return ase;
+#endif
 }
 
 /**
