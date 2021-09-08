@@ -77,6 +77,10 @@ libtiledb_ctx_set_tag <- function(ctx, key, value) {
     invisible(.Call(`_tiledb_libtiledb_ctx_set_tag`, ctx, key, value))
 }
 
+libtiledb_ctx_stats <- function(ctx) {
+    .Call(`_tiledb_libtiledb_ctx_stats`, ctx)
+}
+
 libtiledb_config <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_config`, config)
 }
@@ -671,6 +675,10 @@ libtiledb_query_get_array <- function(query, ctx) {
 
 libtiledb_query_get_schema <- function(query, ctx) {
     .Call(`_tiledb_libtiledb_query_get_schema`, query, ctx)
+}
+
+libtiledb_query_stats <- function(query) {
+    .Call(`_tiledb_libtiledb_query_stats`, query)
 }
 
 libtiledb_query_condition <- function(ctx) {

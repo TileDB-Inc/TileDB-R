@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -182,4 +182,15 @@ tiledb_ctx_set_default_tags <- function(object) {
   tiledb_ctx_set_tag(object, "x-tiledb-api-language-version", as.character(packageVersion("tiledb")))
   info <- Sys.info()
   tiledb_ctx_set_tag(object, "x-tiledb-api-sys-platform", paste(info["sysname"], info["release"], info["machine"], collapse=""))
+}
+
+#' Return context statistics as a JSON string
+#'
+#' @param object `A tiledb_ctx` object
+#' @return A JSON-formatted string with context statistics
+#' @export
+tiledb_ctx_stats <- function(object = tiledb_get_context()) {
+    stopifnot(`The 'object' must be a TileDB Context object` = is(object, "tiledb_ctx"),
+              `TileDB 2.4.0 or later is required` = tiledb_version(TRUE) >= "2.4.0")
+    libtiledb_ctx_stats(object@ptr)
 }

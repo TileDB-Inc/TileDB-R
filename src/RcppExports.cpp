@@ -239,6 +239,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_ctx_stats
+std::string libtiledb_ctx_stats(XPtr<tiledb::Context> ctx);
+RcppExport SEXP _tiledb_libtiledb_ctx_stats(SEXP ctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_ctx_stats(ctx));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_config
 XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config);
 RcppExport SEXP _tiledb_libtiledb_config(SEXP configSEXP) {
@@ -2007,6 +2018,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_stats
+std::string libtiledb_query_stats(XPtr<tiledb::Query> query);
+RcppExport SEXP _tiledb_libtiledb_query_stats(SEXP querySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_stats(query));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_condition
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx);
 RcppExport SEXP _tiledb_libtiledb_query_condition(SEXP ctxSEXP) {
@@ -2695,6 +2717,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_ctx_config", (DL_FUNC) &_tiledb_libtiledb_ctx_config, 1},
     {"_tiledb_libtiledb_ctx_is_supported_fs", (DL_FUNC) &_tiledb_libtiledb_ctx_is_supported_fs, 2},
     {"_tiledb_libtiledb_ctx_set_tag", (DL_FUNC) &_tiledb_libtiledb_ctx_set_tag, 3},
+    {"_tiledb_libtiledb_ctx_stats", (DL_FUNC) &_tiledb_libtiledb_ctx_stats, 1},
     {"_tiledb_libtiledb_config", (DL_FUNC) &_tiledb_libtiledb_config, 1},
     {"_tiledb_libtiledb_config_save_to_file", (DL_FUNC) &_tiledb_libtiledb_config_save_to_file, 2},
     {"_tiledb_libtiledb_config_load_from_file", (DL_FUNC) &_tiledb_libtiledb_config_load_from_file, 1},
@@ -2844,6 +2867,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_condition", (DL_FUNC) &_tiledb_libtiledb_query_set_condition, 2},
     {"_tiledb_libtiledb_query_get_array", (DL_FUNC) &_tiledb_libtiledb_query_get_array, 2},
     {"_tiledb_libtiledb_query_get_schema", (DL_FUNC) &_tiledb_libtiledb_query_get_schema, 2},
+    {"_tiledb_libtiledb_query_stats", (DL_FUNC) &_tiledb_libtiledb_query_stats, 1},
     {"_tiledb_libtiledb_query_condition", (DL_FUNC) &_tiledb_libtiledb_query_condition, 1},
     {"_tiledb_libtiledb_query_condition_init", (DL_FUNC) &_tiledb_libtiledb_query_condition_init, 5},
     {"_tiledb_libtiledb_query_condition_combine", (DL_FUNC) &_tiledb_libtiledb_query_condition_combine, 3},

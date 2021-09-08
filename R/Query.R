@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -529,4 +529,15 @@ tiledb_query_set_condition <- function(query, qc) {
 #' @export
 tiledb_get_query_status <- function() {
     .pkgenv[["query_status"]]
+}
+
+#' Return query statistics as a JSON string
+#'
+#' @param query A TileDB Query object
+#' @return A JSON-formatted string with context statistics
+#' @export
+tiledb_query_stats <- function(query) {
+    stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"),
+              `TileDB 2.4.0 or later is required` = tiledb_version(TRUE) >= "2.4.0")
+    libtiledb_query_stats(query@ptr)
 }
