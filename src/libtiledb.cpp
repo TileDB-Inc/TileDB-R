@@ -2506,15 +2506,12 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
 
 #if TILEDB_VERSION >= TileDB_Version(2,2,4)
     if (bufptr->nullable) {
-        query->set_buffer_nullable(attr, bufptr->offsets, bufptr->str, bufptr->validity_map);
-    } else {
-        query->set_buffer(attr, bufptr->offsets, bufptr->str);
+        query->set_validity_buffer(attr, bufptr->validity_map);
     }
-    return query;
-#else
-    query->set_buffer(attr, bufptr->offsets, bufptr->str);
-    return query;
 #endif
+    query->set_data_buffer(attr, bufptr->str);
+    query->set_offsets_buffer(attr, bufptr->offsets);
+    return query;
 }
 
 // 'len' is the length of the query result set, i.e. buffer elements for standard columns
