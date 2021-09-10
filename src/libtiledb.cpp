@@ -2576,11 +2576,13 @@ XPtr<vlv_buf_t> libtiledb_query_buffer_var_vec_create(IntegerVector intoffsets, 
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_vec(XPtr<tiledb::Query> query,
                                                        std::string attr, XPtr<vlv_buf_t> buf) {
   if (buf->dtype == TILEDB_INT32) {
-    query->set_buffer(attr, buf->offsets, buf->idata);
+      query->set_data_buffer(attr, buf->idata);
+      query->set_offsets_buffer(attr, buf->offsets);
   } else if (buf->dtype == TILEDB_FLOAT64) {
-    query->set_buffer(attr, buf->offsets, buf->ddata);
+      query->set_data_buffer(attr, buf->ddata);
+      query->set_offsets_buffer(attr, buf->offsets);
   } else {
-    Rcpp::stop("Unsupported type '%s' for buffer", _tiledb_datatype_to_string(buf->dtype));
+      Rcpp::stop("Unsupported type '%s' for buffer", _tiledb_datatype_to_string(buf->dtype));
   }
   return query;
 }
