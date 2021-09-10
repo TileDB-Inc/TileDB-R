@@ -2801,17 +2801,11 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    XPtr<query_buf_t> buf) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (buf->nullable) {
-        query->set_buffer_nullable(attr, static_cast<void*>(buf->vec.data()), buf->ncells,
-                                   buf->validity_map.data(),
-                                   static_cast<uint64_t>(buf->validity_map.size()));
-    } else {
-        query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
+        query->set_validity_buffer(attr, buf->validity_map);
     }
-    return query;
-#else
-    query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
-    return query;
 #endif
+    query->set_data_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
+    return query;
 }
 
 
