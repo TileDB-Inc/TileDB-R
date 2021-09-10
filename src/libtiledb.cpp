@@ -448,8 +448,10 @@ bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme
     return ctx->is_supported_fs(TILEDB_AZURE);
   } else if (scheme == "gcs") {
     return ctx->is_supported_fs(TILEDB_GCS);
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
   } else if (scheme == "memory") {
     return ctx->is_supported_fs(TILEDB_MEMFS);
+#endif
   } else {
     Rcpp::stop("Unknown TileDB fs scheme: '%s'", scheme.c_str());
   }
@@ -2405,15 +2407,15 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
                                                SEXP buffer) {
   if (TYPEOF(buffer) == INTSXP) {
     IntegerVector vec(buffer);
-    query->set_buffer(attr, vec.begin(), vec.length());
+    query->set_data_buffer(attr, vec.begin(), vec.length());
     return query;
   } else if (TYPEOF(buffer) == REALSXP) {
     NumericVector vec(buffer);
-    query->set_buffer(attr, vec.begin(), vec.length());
+    query->set_data_buffer(attr, vec.begin(), vec.length());
     return query;
   } else if (TYPEOF(buffer) == LGLSXP) {
     LogicalVector vec(buffer);
-    query->set_buffer(attr, vec.begin(), vec.length());
+    query->set_data_buffer(attr, vec.begin(), vec.length());
     return query;
   } else {
     Rcpp::stop("Invalid attribute buffer type for attribute '%s': %s",
