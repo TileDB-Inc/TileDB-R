@@ -2407,15 +2407,27 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
                                                SEXP buffer) {
   if (TYPEOF(buffer) == INTSXP) {
     IntegerVector vec(buffer);
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
+#else
+    query->set_buffer(attr, vec.begin(), vec.length());
+#endif
     return query;
   } else if (TYPEOF(buffer) == REALSXP) {
     NumericVector vec(buffer);
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
+#else
+    query->set_buffer(attr, vec.begin(), vec.length());
+#endif
     return query;
   } else if (TYPEOF(buffer) == LGLSXP) {
     LogicalVector vec(buffer);
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
+#else
+    query->set_buffer(attr, vec.begin(), vec.length());
+#endif
     return query;
   } else {
     Rcpp::stop("Invalid attribute buffer type for attribute '%s': %s",
@@ -2504,14 +2516,24 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
                                                         std::string attr,
                                                         XPtr<vlc_buf_t> bufptr) {
 
-#if TILEDB_VERSION >= TileDB_Version(2,2,4)
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     if (bufptr->nullable) {
         query->set_validity_buffer(attr, bufptr->validity_map);
     }
-#endif
     query->set_data_buffer(attr, bufptr->str);
     query->set_offsets_buffer(attr, bufptr->offsets);
     return query;
+#elif TILEDB_VERSION >= TileDB_Version(2,2,4)
+    if (bufptr->nullable) {
+        query->set_buffer_nullable(attr, bufptr->offsets, bufptr->str, bufptr->validity_map);
+    } else {
+        query->set_buffer(attr, bufptr->offsets, bufptr->str);
+    }
+    return query;
+#else
+    query->set_buffer(attr, bufptr->offsets, bufptr->str);
+    return query;
+#endif
 }
 
 // 'len' is the length of the query result set, i.e. buffer elements for standard columns
@@ -2576,11 +2598,19 @@ XPtr<vlv_buf_t> libtiledb_query_buffer_var_vec_create(IntegerVector intoffsets, 
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_vec(XPtr<tiledb::Query> query,
                                                        std::string attr, XPtr<vlv_buf_t> buf) {
   if (buf->dtype == TILEDB_INT32) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
       query->set_data_buffer(attr, buf->idata);
       query->set_offsets_buffer(attr, buf->offsets);
+#else
+      query->set_buffer(attr, buf->offsets, buf->idata);
+#endif
   } else if (buf->dtype == TILEDB_FLOAT64) {
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
       query->set_data_buffer(attr, buf->ddata);
       query->set_offsets_buffer(attr, buf->offsets);
+#else
+      query->set_buffer(attr, buf->offsets, buf->ddata);
+#endif
   } else {
       Rcpp::stop("Unsupported type '%s' for buffer", _tiledb_datatype_to_string(buf->dtype));
   }
@@ -2799,12 +2829,22 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
 XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    std::string attr,
                                                    XPtr<query_buf_t> buf) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     if (buf->nullable) {
         query->set_validity_buffer(attr, buf->validity_map);
     }
-#endif
     query->set_data_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
+#elif TILEDB_VERSION >= TileDB_Version(2,2,0)
+    if (buf->nullable) {
+        query->set_buffer_nullable(attr, static_cast<void*>(buf->vec.data()), buf->ncells,
+                                   buf->validity_map.data(),
+                                   static_cast<uint64_t>(buf->validity_map.size()));
+    } else {
+        query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
+    }
+#else
+    query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
+#endif
     return query;
 }
 
