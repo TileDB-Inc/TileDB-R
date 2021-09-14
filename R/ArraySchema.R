@@ -465,7 +465,7 @@ tiledb_array_schema_set_allows_dups <- function(x, value) {
 ##' @return A character vector of dimension and attribute names
 ##' @export
 tiledb_schema_get_names <- function(sch) {
-  stopifnot(schema_object=is(sch, "tiledb_array_schema"))
+  stopifnot(`Argument must be a schema` = is(sch, "tiledb_array_schema"))
   dom <- tiledb::domain(sch)
   dims <- tiledb::dimensions(dom)
   ndims <- length(dims)
@@ -483,7 +483,7 @@ tiledb_schema_get_names <- function(sch) {
 ##' @return A character vector of dimension and attribute data types
 ##' @export
 tiledb_schema_get_types <- function(sch) {
-  stopifnot(schema_object=is(sch, "tiledb_array_schema"))
+  stopifnot(`Argument must be a schema` = is(sch, "tiledb_array_schema"))
   dom <- tiledb::domain(sch)
   dims <- tiledb::dimensions(dom)
   ndims <- length(dims)
@@ -494,6 +494,21 @@ tiledb_schema_get_types <- function(sch) {
 
   alltypes <- c(dimtypes, attrtypes)
 }
+
+##' Get Dimension or Attribute Status
+##'
+##' @param sch A TileDB Schema object
+##' @return An integer vector where each element corresponds to a schema entry,
+##' and a value of one signals dimension and a value of two an attribute.
+##' @export
+tiledb_schema_get_dim_attr_status <- function(sch) {
+  stopifnot(`Argument must be a schema` = is(sch, "tiledb_array_schema"))
+  dom <- tiledb::domain(sch)
+  dims <- tiledb::dimensions(dom)
+  attrs <- tiledb::attrs(sch)
+  return(c(rep(1L, length(dims)), rep(2L, length(attrs))))
+}
+
 
 # -- get and set tile capacity
 
