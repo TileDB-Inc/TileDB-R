@@ -8,7 +8,7 @@ fromDataFrame(
   obj,
   uri,
   col_index = NULL,
-  sparse = FALSE,
+  sparse = TRUE,
   allows_dups = sparse,
   cell_order = "COL_MAJOR",
   tile_order = "COL_MAJOR",
@@ -28,7 +28,7 @@ fromDataFrame(
 or character with a column name, designating an index column; default is NULL
 implying an index column is added when the array is created}
 
-\item{sparse}{A logical switch to select sparse or dense (the default)}
+\item{sparse}{A logical switch to select sparse (the default) or dense}
 
 \item{allows_dups}{A logical switch to select if duplicate values
 are allowed or not, default is the same value as \sQuote{sparse}.}

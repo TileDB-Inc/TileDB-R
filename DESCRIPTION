@@ -27,5 +27,5 @@ LinkingTo: Rcpp
 Suggests: tinytest, rmarkdown, knitr, minidown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8

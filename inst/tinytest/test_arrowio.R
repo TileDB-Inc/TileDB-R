@@ -52,7 +52,7 @@ sch <- tiledb_array_schema(dom,
                                      tiledb_attr("int64",  type="INT64"),
                                      tiledb_attr("uint64", type="UINT64"),
                                      tiledb_attr("float64",type="FLOAT64")),
-                           sparse = FALSE)
+                           sparse = TRUE)
 tiledb_array_create(tmp, sch)
 
 arr <- tiledb_array(tmp)
@@ -126,7 +126,7 @@ sch <- tiledb_array_schema(dom,
                                      tiledb_attr("int64",  type="INT64"),
                                      tiledb_attr("uint64", type="UINT64"),
                                      tiledb_attr("float64",type="FLOAT64")),
-                           sparse = FALSE)
+                           sparse = TRUE)
 tiledb_array_create(tmp, sch)
 
 ## create an arrow 'record batch' with a number of (correcsponding) columns
