@@ -586,7 +586,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT8"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "INT8")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -617,7 +617,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT8"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "UINT8")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -648,7 +648,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT16"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "INT16")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -679,7 +679,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT16"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "UINT16")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -710,7 +710,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT32"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "INT32")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -741,7 +741,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT32"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "UINT32")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -772,7 +772,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", as.integer64(c(1,4)), as.integer64(4), "INT64"),
                                 tiledb_dim("cols", as.integer64(c(1,4)), as.integer64(4), "INT64")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -804,7 +804,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", as.integer64(c(1,4)), as.integer64(4), "UINT64"),
                                 tiledb_dim("cols", as.integer64(c(1,4)), as.integer64(4), "UINT64")))
-  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=FALSE)
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")), sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)
@@ -846,7 +846,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
                                           tiledb_attr("a7", type = "INT64"),
                                           tiledb_attr("a8", type = "UINT64")
                                           ),
-                                sparse=FALSE)
+                                sparse=TRUE)
   tiledb_array_create(uri = tmp, schema)
   #print(schema)
   A <- tiledb_array(uri = tmp)

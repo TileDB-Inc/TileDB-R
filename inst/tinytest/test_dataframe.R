@@ -37,7 +37,7 @@ expect_equivalent(iris[, c("Petal.Length", "Petal.Width")], newdf) # skip attrib
 
 
 ## test list
-arr <- tiledb_array(uri)
+arr <- tiledb_array(uri, return_as="asis")
 res <- arr[]
 expect_equal(class(res), "list")
 expect_equal(length(res), 6)            # plus one for 'rows'

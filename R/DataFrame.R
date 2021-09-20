@@ -40,7 +40,7 @@
 ##' @param col_index An optional column index, either numeric with a column index,
 ##' or character with a column name, designating an index column; default is NULL
 ##' implying an index column is added when the array is created
-##' @param sparse A logical switch to select sparse or dense (the default)
+##' @param sparse A logical switch to select sparse (the default) or dense
 ##' @param allows_dups A logical switch to select if duplicate values
 ##' are allowed or not, default is the same value as \sQuote{sparse}.
 ##' @param cell_order A character variable with one of the TileDB cell order values,
@@ -71,7 +71,7 @@
 ##' all.equal(iris, newdf)
 ##' }
 ##' @export
-fromDataFrame <- function(obj, uri, col_index=NULL, sparse=FALSE, allows_dups=sparse,
+fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=sparse,
                           cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="ZSTD",
                           capacity = 10000L, tile_domain = NULL, tile_extent = NULL, debug = FALSE) {
 

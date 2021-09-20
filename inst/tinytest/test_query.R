@@ -158,7 +158,7 @@ dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 10L), 1L, type = "INT32"))
 schema <- tiledb_array_schema(dom,
                               attrs = c(tiledb_attr("vals", type = "INT32"),
                                         tiledb_attr("keys", type = "INT32", nullable = TRUE)),
-                              sparse=FALSE)
+                              sparse=TRUE)
 tiledb_array_create(tmp, schema)
 arr <- tiledb_array(tmp)
 qry <- tiledb_query(arr, "WRITE")
