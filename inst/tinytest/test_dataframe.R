@@ -266,3 +266,14 @@ arr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- arr[]
 if (getRversion() <  '4.0.0') chk$char <- as.character(chk$char)
 expect_equivalent(df, chk)              # skip attribute
+
+## explicit dense data.frame
+df <- data.frame(aa=1:26,
+                 bb=26:1,
+                 cc=letters,
+                 dd=LETTERS)
+uri <- tempfile()
+fromDataFrame(df, uri, sparse=FALSE)
+arr <- tiledb_array(uri, return_as="data.frame", extended=FALSE)  # skip row index on return
+res <- arr[]
+expect_equivalent(df, arr[])
