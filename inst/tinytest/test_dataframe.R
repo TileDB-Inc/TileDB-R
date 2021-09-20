@@ -276,4 +276,8 @@ uri <- tempfile()
 fromDataFrame(df, uri, sparse=FALSE)
 arr <- tiledb_array(uri, return_as="data.frame", extended=FALSE)  # skip row index on return
 res <- arr[]
-expect_equivalent(df, arr[])
+if (getRversion() < '4.0.0') {
+    res$cc <- as.character(res$cc)
+    res$dd <- as.character(res$dd)
+}
+expect_equivalent(df, res)
