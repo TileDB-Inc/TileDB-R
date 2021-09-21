@@ -7,6 +7,8 @@
 .parse_query_condition(ta, expr, debug = TRUE, strict = TRUE)
 }
 \arguments{
+\item{ta}{A \code{tiledb_array} object.}
+
 \item{expr}{An expression that is understood by the TileDB grammar for
 query conditions.}
 

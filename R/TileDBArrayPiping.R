@@ -20,11 +20,7 @@ setGeneric("tdb_select", function(x, ...) standardGeneric("tdb_select"))
 
 #' @export
 setMethod("tdb_select", signature("tiledb_array"), function(x, ...) {
-    sch <- schema(arr@uri)
-    zz <- list(names=tiledb_schema_get_names(sch),
-               types=tiledb_schema_get_types(sch),
-               status=tiledb_schema_get_dim_attr_status(sch)) # not yet in master for TileDB-R
-
+    if (length(x@sil) == 0) x@sil <- .fill_schema_info_list(x@uri)
     ## helper with a nod to data.table and its name_dots
     names_from_dots <- function(...) {
         dot_sub <- as.list(substitute(list(...)))[-1L]
@@ -39,9 +35,9 @@ setMethod("tdb_select", signature("tiledb_array"), function(x, ...) {
     }
 
     vec <- names_from_dots(...)
-    ind <- match(vec, zz$names)         # match against schema names
-    ind <- ind[zz$status[ind] == 2L]    # allow only attributes (where status == 2)
-    newvec <- na.omit(zz$names[ ind ])   # and create subset (filtering NA for wrong entry)
+    ind <- match(vec, x@sil$names)     		# match against schema names
+    ind <- ind[x@sil$status[ind] == 2L]  	# allow only attributes (where status == 2)
+    newvec <- na.omit(x@sil$names[ ind ])  	# and create subset (filtering NA for wrong entry)
     x@attrs <- newvec
     x
 })
@@ -54,13 +50,19 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
     x[]
 })
 
+.fill_schema_info_list <- function(uri) {
+    sch <- schema(uri)
+    list(names=tiledb_schema_get_names(sch),
+         types=tiledb_schema_get_types(sch),
+         status=tiledb_schema_get_dim_attr_status(sch))
+}
 
 #' Create a 'tiledb_query_condition' object for from an expression
 #'
 #' The grammar for query conditions is at present constraint to six operators
 #' and three boolean types.
 #'
-#' @param ta
+#' @param ta A \code{tiledb_array} object.
 #' @param expr An expression that is understood by the TileDB grammar for
 #' query conditions.
 #' @param debug A boolean toogle to enable more verbose operations, defaults
@@ -70,11 +72,7 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
 #' @return A `tiledb_query_condition` object
 #' @export
 .parse_query_condition <- function(ta, expr, debug=TRUE, strict=TRUE) {
-    sch <- schema(ta@uri)
-    zz <- list(names=tiledb_schema_get_names(sch),
-               types=tiledb_schema_get_types(sch),
-               status=tiledb_schema_get_dim_attr_status(sch)) # not yet in master for TileDB-R
-
+    if (length(ta@sil) == 0) ta@sil <- .fill_schema_info_list(ta@uri)
     .isComparisonOperator <- function(x) as.character(x) %in% c(">", ">=", "<", "<=", "==", "!=")
     .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!")
     .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
@@ -114,16 +112,16 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
             op <- as.character(x[1])
             attr <- as.character(x[2])
             ch <- as.character(x[3])
-            ind <- match(attr, zz$names)
+            ind <- match(attr, ta@sil$names)
             if (!is.finite(ind)) {
                 .errorFunction("No attibute '", attr, "' present.", call. = FALSE)
                 return(NULL)
             }
-            if (zz$status[ind] != 2) {
+            if (ta@sil$status[ind] != 2) {
                 .errorFunction("Argument '", attr, "' is not an attribute.", call. = FALSE)
                 return(NULL)
             }
-            dtype <- zz$types[ind]
+            dtype <- ta@sil$types[ind]
             if (debug) cat("   [", attr,"] ",
                            op, " (aka ", .mapOpToCharacter(op), ")",
                            " [",ch, "] ", dtype, "\n", sep="")

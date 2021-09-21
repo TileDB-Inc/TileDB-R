@@ -51,6 +51,8 @@
 #' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 #' query statistics are returned (as a JSON string) via the attribute
 #' \sQuote{query_statistics} of the return object.
+#' @slot sil An optional and internal list object with schema information, used for
+#' parsing queries.
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -72,6 +74,7 @@ setClass("tiledb_array",
                       timestamp_end = "POSIXct",
                       return_as = "character",
                       query_statistics = "logical",
+                      sil = "list",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -115,6 +118,8 @@ setClass("tiledb_array",
 #' @param query_statistics optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 #' query statistics are returned (as a JSON string) via the attribute
 #' \sQuote{query_statistics} of the return object.
+#' @param sil optional A list, by default empty to store schema information when query objects are
+#' parsed.
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
 #' @export
@@ -136,6 +141,7 @@ tiledb_array <- function(uri,
                          timestamp_end = as.POSIXct(double(), origin="1970-01-01"),
                          return_as = get_return_as_preference(),
                          query_statistics = FALSE,
+                         sil = list(),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -206,6 +212,7 @@ tiledb_array <- function(uri,
       timestamp_end = timestamp_end,
       return_as = return_as,
       query_statistics = query_statistics,
+      sil = sil,
       ptr = array_xptr)
 }
 
