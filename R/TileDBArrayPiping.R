@@ -70,7 +70,7 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
 #' @return A `tiledb_query_condition` object
 #' @export
 .parse_query_condition <- function(ta, expr, debug=TRUE, strict=TRUE) {
-    sch <- schema(arr@uri)
+    sch <- schema(ta@uri)
     zz <- list(names=tiledb_schema_get_names(sch),
                types=tiledb_schema_get_types(sch),
                status=tiledb_schema_get_dim_attr_status(sch)) # not yet in master for TileDB-R
@@ -100,20 +100,20 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
     .makeExpr <- function(x) {
         if (is.symbol(x)) {
             stop("Unexpected symbol in expression: ", format(x))
-        } else if (.isBooleanOperator(x[[1]])) {
-            if (debug) cat("-- [", as.character(x[[2]]), "]",
-                           " ", as.character(x[[1]]),
-                           " [", as.character(x[[3]]), "]\n", sep="")
-            .makeExpr(x[[2]])
-            .makeExpr(x[[3]])
-            tiledb_query_condition_combine(.makeExpr(x[[2]]),
-                                           .makeExpr(x[[3]]),
+        } else if (.isBooleanOperator(x[1])) {
+            if (debug) cat("-- [", as.character(x[2]), "]",
+                           " ", as.character(x[1]),
+                           " [", as.character(x[3]), "]\n", sep="")
+            .makeExpr(x[2])
+            .makeExpr(x[3])
+            tiledb_query_condition_combine(.makeExpr(x[2]),
+                                           .makeExpr(x[3]),
                                            .mapBoolToCharacter(as.character(x[1])))
 
-        } else if (.isComparisonOperator(x[[1]])) {
-            op <- as.character(x[[1]])
-            attr <- as.character(x[[2]])
-            ch <- as.character(x[[3]])
+        } else if (.isComparisonOperator(x[1])) {
+            op <- as.character(x[1])
+            attr <- as.character(x[2])
+            ch <- as.character(x[3])
             ind <- match(attr, zz$names)
             if (!is.finite(ind)) {
                 .errorFunction("No attibute '", attr, "' present.", call. = FALSE)
