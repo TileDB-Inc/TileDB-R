@@ -4,14 +4,19 @@
 \alias{parse_query_condition}
 \title{Create a 'tiledb_query_condition' object from an expression}
 \usage{
-parse_query_condition(expr, debug = FALSE)
+parse_query_condition(expr, ta = NULL, debug = FALSE, strict = TRUE)
 }
 \arguments{
 \item{expr}{An expression that is understood by the TileDB grammar for
 query conditions.}
 
+\item{ta}{An optional tiledb_array object that the query condition is applied to}
+
 \item{debug}{A boolean toogle to enable more verbose operations, defaults
 to 'FALSE'.}
+
+\item{strict}{A boolean toogle to, if set, errors if a non-existing attribute is selected
+or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.}
 }
 \value{
 A \code{tiledb_query_condition} object

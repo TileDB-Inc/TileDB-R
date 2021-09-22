@@ -100,8 +100,11 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #'
 #' @param expr An expression that is understood by the TileDB grammar for
 #' query conditions.
+#' @param ta An optional tiledb_array object that the query condition is applied to
 #' @param debug A boolean toogle to enable more verbose operations, defaults
 #' to 'FALSE'.
+#' @param strict A boolean toogle to, if set, errors if a non-existing attribute is selected
+#' or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.
 #' @return A `tiledb_query_condition` object
 #' @export
 parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE) {
