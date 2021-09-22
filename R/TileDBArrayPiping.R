@@ -4,7 +4,7 @@ setGeneric("tdb_filter", function(x, ...) standardGeneric("tdb_filter"))
 
 #' @export
 setMethod("tdb_filter", signature("tiledb_array"), function(x, ..., strict=TRUE) {
-    qc <- .parse_query_condition(x, ..., debug=FALSE, strict=strict)
+    qc <- parse_query_condition(..., ta=x, debug=FALSE, strict=strict)
     if (is.null(qc))
         return(x)
     if (isTRUE(x@query_condition@init)) {  # if prior qc exists, combine by AND
