@@ -14,5 +14,5 @@ An integer vector where each element corresponds to a schema entry,
 and a value of one signals dimension and a value of two an attribute.
 }
 \description{
-Get Dimension or Attribute Status
+Note that this function is an unexported internal function.
 }
