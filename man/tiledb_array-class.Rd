@@ -54,6 +54,9 @@ or \sQuote{tibble}; the latter two require the respective packages installed}
 query statistics are returned (as a JSON string) via the attribute
 \sQuote{query_statistics} of the return object.}
 
+\item{\code{sil}}{An optional and internal list object with schema information, used for
+parsing queries.}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 

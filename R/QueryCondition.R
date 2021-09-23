@@ -100,16 +100,22 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #'
 #' @param expr An expression that is understood by the TileDB grammar for
 #' query conditions.
+#' @param ta An optional tiledb_array object that the query condition is applied to
 #' @param debug A boolean toogle to enable more verbose operations, defaults
 #' to 'FALSE'.
+#' @param strict A boolean toogle to, if set, errors if a non-existing attribute is selected
+#' or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.
 #' @return A `tiledb_query_condition` object
 #' @export
-parse_query_condition <- function(expr, debug=FALSE) {
+parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE) {
+    .hasArray <- !is.null(ta) && is(ta, "tiledb_array")
+    if (.hasArray && length(ta@sil) == 0) ta@sil <- .fill_schema_info_list(ta@uri)
     .isComparisonOperator <- function(x) as.character(x) %in% c(">", ">=", "<", "<=", "==", "!=")
     .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!")
     .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
     .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
     .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
+    .errorFunction <- if (strict) stop else warning
     .getType <- function(x) {
         if (isTRUE(.isInteger(x))) "INT32"
         else if (isTRUE(.isDouble(x))) "FLOAT64"
@@ -126,7 +132,7 @@ parse_query_condition <- function(expr, debug=FALSE) {
                                               `&&` = "AND",
                                               `||` = "OR",
                                               `!`  = "NOT")
-    .makeExpr <- function(x) {
+    .makeExpr <- function(x, debug=FALSE) {
         if (is.symbol(x)) {
             stop("Unexpected symbol in expression: ", format(x))
         } else if (.isBooleanOperator(x[1])) {
@@ -140,20 +146,34 @@ parse_query_condition <- function(expr, debug=FALSE) {
                                            .mapBoolToCharacter(as.character(x[1])))
 
         } else if (.isComparisonOperator(x[1])) {
-            if (debug) cat("   [",as.character(x[2]),"] ",
-                           as.character(x[1]), " (aka ", .mapOpToCharacter(as.character(x[1])), ")",
-                           " [",as.character(x[3]), "] ", .getType(x[3]), "\n", sep="")
+            op <- as.character(x[1])
+            attr <- as.character(x[2])
             ch <- as.character(x[3])
             dtype <- .getType(ch)
-            tiledb_query_condition_init(attr = as.character(x[2]), # still need to check again schema
+            if (.hasArray) {
+                ind <- match(attr, ta@sil$names)
+                if (!is.finite(ind)) {
+                    .errorFunction("No attibute '", attr, "' present.", call. = FALSE)
+                    return(NULL)
+                }
+                if (ta@sil$status[ind] != 2) {
+                    .errorFunction("Argument '", attr, "' is not an attribute.", call. = FALSE)
+                    return(NULL)
+                }
+                dtype <- ta@sil$types[ind]
+            }
+            if (debug) cat("   [", attr,"] ",
+                           op, " (aka ", .mapOpToCharacter(op), ")",
+                           " [",ch, "] ", dtype, "\n", sep="")
+            tiledb_query_condition_init(attr = attr,
                                         value = if (dtype == "ASCII") ch else as.numeric(ch),
                                         dtype = dtype,
-                                        op = .mapOpToCharacter(as.character(x[1])))
+                                        op = .mapOpToCharacter(op))
         } else {
             stop("Unexpected token in expression: ", format(x))
         }
     }
 
     e <- substitute(expr)
-    .makeExpr(e)
+    .makeExpr(e, debug)
 }

@@ -497,10 +497,11 @@ tiledb_schema_get_types <- function(sch) {
 
 ##' Get Dimension or Attribute Status
 ##'
+##' Note that this function is an unexported internal function.
+##'
 ##' @param sch A TileDB Schema object
 ##' @return An integer vector where each element corresponds to a schema entry,
 ##' and a value of one signals dimension and a value of two an attribute.
-##' @export
 tiledb_schema_get_dim_attr_status <- function(sch) {
   stopifnot(`Argument must be a schema` = is(sch, "tiledb_array_schema"))
   dom <- tiledb::domain(sch)
