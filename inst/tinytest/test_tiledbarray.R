@@ -1410,15 +1410,23 @@ expect_false(query_statistics(arr))     # as not set
 query_statistics(arr) <- TRUE
 expect_true(query_statistics(arr))
 
-
 ## piped filtering and selection
 uri <- tempfile()
 fromDataFrame(penguins, uri, sparse = TRUE, col_index=1:2)
-res <- tiledb_array(uri, return_as="data.frame") |>
-    tdb_filter(body_mass_g >= 5500) |>
-    tdb_filter(bill_length_mm > 50) |>
-    tdb_select(body_mass_g, bill_length_mm, year, sex) |>
-    tdb_collect()
+## see the equivalence via
+## deparse(subsitute(
+##     res <- tiledb_array(uri, return_as="data.frame") |>
+##          tdb_filter(body_mass_g >= 5500) |>
+##          tdb_filter(bill_length_mm > 50) |>
+##          tdb_select(body_mass_g, bill_length_mm, year, sex) |>
+##          tdb_collect()
+## ))
+## to what follows, but the following works for R < 4.1.0 too
+arr <- tiledb_array(uri, return_as="data.frame")
+arr <- tdb_filter(arr, body_mass_g >= 5500)
+arr <- tdb_filter(arr, bill_length_mm > 50)
+arr <- tdb_select(arr, body_mass_g, bill_length_mm, year, sex)
+res <- tdb_collect(arr)
 expect_equal(dim(res), c(14,6))
 expect_true(min(res$body_mass_g) >= 5500)
 expect_true(min(res$bill_length_mm) > 50)
