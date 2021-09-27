@@ -66,7 +66,6 @@ fromSparseMatrix <- function(obj,
               `uri must character` = is.character(uri))
 
     dimnm <- dimnames(obj)
-
     classIn <- "dgTMatrix"
     if (class(obj)[1] != classIn) {
         classIn <- class(obj)[1]
@@ -89,30 +88,24 @@ fromSparseMatrix <- function(obj,
     else
         stop("Currently unsupported type: ", cl)
 
-
     filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
 
-    hasRownames <- !is.null(dimnm[[1]])
-    hasColnames <- !is.null(dimnm[[2]])
-
     attx <- tiledb_attr(name="x", type = tp, ncells = 1, filter_list = filterlist)
-    if (hasRownames) attr <- tiledb_attr(name="rownames__", type = "ASCII", ncells = 1, filter_list = filterlist)
-
     schema <- tiledb_array_schema(dom,
-                                  attrs = if (hasRownames) c(attx, attr) else attx,
+                                  attrs = attx,
                                   cell_order = cell_order,
                                   tile_order = tile_order,
                                   sparse = TRUE,
                                   capacity=capacity)
     tiledb_array_create(uri, schema)
     arr <- tiledb_array(uri)
+    arr[] <- data.frame(i = obj@i, j = obj@j, x = obj@x)
 
-    if (hasRownames)
-        arr[] <- data.frame(i = obj@i, j = obj@j, x = obj@x, rownames__ = dimnm[[1]])
-    else
-        arr[] <- data.frame(i = obj@i, j = obj@j, x = obj@x)
-
-    if (hasColnames) tiledb_put_metadata(arr, "colnames", dput(dimnm[[2]]))
+    if (!is.null(dimnm[[1]]) || !is.null(dimnm[[2]])) {
+        tiledb_array_open(arr, "WRITE")
+        tiledb_put_metadata(arr, "dimnames", rawToChar(serialize(dimnm, NULL, ascii = TRUE)))
+        tiledb_array_close(arr)
+    }
 
     invisible(NULL)
 }
