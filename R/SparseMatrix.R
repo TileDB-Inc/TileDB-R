@@ -117,9 +117,16 @@ toSparseMatrix <- function(uri) {
     arr <- tiledb_array(uri, as.data.frame=TRUE, query_layout="UNORDERED")
     obj <- arr[]
 
+    dimnm <- list(NULL, NULL)        # by default no dimnames
+    tiledb_array_open(arr, "READ")
+    if (tiledb_has_metadata(arr, "dimnames")) {
+        dimnm <- unserialize(charToRaw(tiledb_get_metadata(arr, "dimnames")))
+    }
+    tiledb_array_close(arr)
+
     dims <- dimensions(domain(schema(uri)))
-    d1 <- domain(dims[[1]]) #tiledb:::libtiledb_dim_get_domain(dims[[1]]@ptr) + 1
-    d2 <- domain(dims[[2]]) #tiledb:::libtiledb_dim_get_domain(dims[[2]]@ptr) + 2
+    d1 <- domain(dims[[1]])
+    d2 <- domain(dims[[2]])
     stopifnot(`No column i in data`=!is.na(match("i", colnames(obj))),
               `No column j in data`=!is.na(match("j", colnames(obj))),
               `No column x in data`=!is.na(match("x", colnames(obj))),
@@ -129,6 +136,7 @@ toSparseMatrix <- function(uri) {
                                j = obj$j + 1,
                                x = obj$x,
                                dims = c(d1[2] + 1, d2[2] + 1),
+                               dimnames = dimnm,
                                repr = "T")
 
     sp
