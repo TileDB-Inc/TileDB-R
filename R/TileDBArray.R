@@ -763,6 +763,13 @@ setMethod("[", "tiledb_array",
 
 ## helper functions
 .convertToMatrix <- function(res) {
+    ## special case of row and colnames and one attribute
+    if (typeof(res[,1]) == "character" && typeof(res[,2]) == "character" && ncol(res) == 3) {
+        dimnames <- list(unique(res[,1]), unique(res[,2]))
+        res <- matrix(res[,3], length(dimnames[[1]]), length(dimnames[[2]]),
+                      dimnames=dimnames, byrow=TRUE)
+        return(invisible(res))
+    }
     k <- match("__tiledb_rows", colnames(res))
     if (is.finite(k)) {
        res <- res[, -k]
