@@ -101,11 +101,8 @@ fromSparseMatrix <- function(obj,
     arr <- tiledb_array(uri)
     arr[] <- data.frame(i = obj@i, j = obj@j, x = obj@x)
 
-    if (!is.null(dimnm[[1]]) || !is.null(dimnm[[2]])) {
-        tiledb_array_open(arr, "WRITE")
-        tiledb_put_metadata(arr, "dimnames", rawToChar(serialize(dimnm, NULL, ascii = TRUE)))
-        tiledb_array_close(arr)
-    }
+    if (!is.null(dimnm[[1]])) fromDataFrame(data.frame(names=dimnm[[1]]), paste0(uri, "_rows"))
+    if (!is.null(dimnm[[2]])) fromDataFrame(data.frame(names=dimnm[[2]]), paste0(uri, "_cols"))
 
     invisible(NULL)
 }
@@ -118,11 +115,17 @@ toSparseMatrix <- function(uri) {
     obj <- arr[]
 
     dimnm <- list(NULL, NULL)        # by default no dimnames
-    tiledb_array_open(arr, "READ")
-    if (tiledb_has_metadata(arr, "dimnames")) {
-        dimnm <- unserialize(charToRaw(tiledb_get_metadata(arr, "dimnames")))
+    rowarr <- paste0(uri, "_rows")
+    vfs <- tiledb_get_vfs()
+    if (dir.exists(rowarr)) { # && tiledb_vfs_is_dir(rowarr, vfs)) {
+        arr <- tiledb_array(rowarr, extended=FALSE, return_as="data.frame")[]
+        dimnm[[1]] <- arr[,1]
     }
-    tiledb_array_close(arr)
+    colarr <- paste0(uri, "_cols")
+    if (dir.exists(colarr)) { # && tiledb_vfs_is_dir(colarr, vfs)) {
+        arr <- tiledb_array(colarr, extended=FALSE, return_as="data.frame")[]
+        dimnm[[2]] <- arr[,1]
+    }
 
     dims <- dimensions(domain(schema(uri)))
     d1 <- domain(dims[[1]])
