@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R], [0.9.3])
+AC_INIT([TileDB-R],[0.9.6])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -80,8 +80,7 @@ machine=`uname -m`
 ## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
 ## (and sets by autoconf standards the 'enable_building' variable to 'yes' or 'no')
 AC_ARG_ENABLE([building],
-          AC_HELP_STRING([--enable-building],
-                         [build TileDB library instead of downloading prebuilt]))
+          AS_HELP_STRING([--enable-building],[build TileDB library instead of downloading prebuilt]))
           #[building="${enable_building}"
           # AC_MSG_RESULT([Enabled chosen])],
           #[building="${enable_building}"
@@ -91,8 +90,7 @@ AC_ARG_ENABLE([building],
 ## Allow --with-tiledb if given (though system location is found too)
 ## (and sets by autconf standards the 'with_tiledb' variable)
 AC_ARG_WITH([tiledb],
-            AC_HELP_STRING([--with-tiledb=PATH],
-                       [absolute path to installed built of TileDB]),
+            AS_HELP_STRING([--with-tiledb=PATH],[absolute path to installed built of TileDB]),
             [TILEDB_INCLUDE="-I${with_tiledb}/include ${TILEDB_INCLUDE}"
              TILEDB_LIBS="-L${with_tiledb}/lib ${TILEDB_LIBS}"
              TILEDB_RPATH="-Wl,-rpath,${with_tiledb}/lib"],
@@ -108,8 +106,7 @@ fi
 ## Allow --with-download if given (though system location is found too)
 ## (and sets by autconf standards the 'with_download' variable)
 AC_ARG_WITH([download],
-            AC_HELP_STRING([--with-download=URL],
-                       [URL override for TileDB library to download]),
+            AS_HELP_STRING([--with-download=URL],[URL override for TileDB library to download]),
             [TILEDB_LIB_URL="${with_download}"],
             [])
 
