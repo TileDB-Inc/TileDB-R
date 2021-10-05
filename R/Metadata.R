@@ -99,22 +99,13 @@ tiledb_get_metadata <- function(arr, key) {
 ##'
 ##' @param arr A TileDB Array object, or a character URI describing one
 ##' @param key A character value describing a metadata key
-##' @param val An object to be store
+##' @param val An object to be stored
 ##' @return A boolean value indicating success
 ##' @export
 tiledb_put_metadata <- function(arr, key, val) {
-  if (!.isArray(arr)) {
-    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
-  }
-
-  ## Now deal with (default) case of an array object
-  ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open_for_writing(arr@ptr)) {
-    stop("Array is not open for writing, cannot access metadata.", call.=FALSE)
-  }
-
-  ## Run query
-  return(libtiledb_array_put_metadata(arr@ptr, key, val))
+    stopifnot(`Argument must be a (dense or sparse) TileDB array.` = .isArray(arr),
+              `Array is not open for writing.` = libtiledb_array_is_open_for_writing(arr@ptr))
+    libtiledb_array_put_metadata(arr@ptr, key, val)
 }
 
 

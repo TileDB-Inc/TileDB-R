@@ -65,7 +65,12 @@ fromSparseMatrix <- function(obj,
               `obj must be sparse` = is(obj, "sparseMatrix"),
               `uri must character` = is.character(uri))
 
-    if (class(obj)[1] != "dgTMatrix") obj <- as(obj, "dgTMatrix")
+    dimnm <- dimnames(obj)
+    classIn <- "dgTMatrix"
+    if (class(obj)[1] != classIn) {
+        classIn <- class(obj)[1]
+        obj <- as(obj, "dgTMatrix")
+    }
 
     dimi <- tiledb_dim(name="i", type = "FLOAT64",  # wider range
                        tile = as.numeric(obj@Dim[1]),
@@ -86,12 +91,19 @@ fromSparseMatrix <- function(obj,
     filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
 
     attx <- tiledb_attr(name="x", type = tp, ncells = 1, filter_list = filterlist)
-    schema <- tiledb_array_schema(dom, attrs=attx,
-                                  cell_order = cell_order, tile_order = tile_order,
-                                  sparse = TRUE, capacity=capacity)
+    schema <- tiledb_array_schema(dom,
+                                  attrs = attx,
+                                  cell_order = cell_order,
+                                  tile_order = tile_order,
+                                  sparse = TRUE,
+                                  capacity=capacity)
     tiledb_array_create(uri, schema)
     arr <- tiledb_array(uri)
     arr[] <- data.frame(i = obj@i, j = obj@j, x = obj@x)
+
+    if (!is.null(dimnm[[1]])) fromDataFrame(data.frame(names=dimnm[[1]]), paste0(uri, "_rows"))
+    if (!is.null(dimnm[[2]])) fromDataFrame(data.frame(names=dimnm[[2]]), paste0(uri, "_cols"))
+
     invisible(NULL)
 }
 
@@ -102,9 +114,22 @@ toSparseMatrix <- function(uri) {
     arr <- tiledb_array(uri, as.data.frame=TRUE, query_layout="UNORDERED")
     obj <- arr[]
 
+    dimnm <- list(NULL, NULL)        # by default no dimnames
+    rowarr <- paste0(uri, "_rows")
+    vfs <- tiledb_get_vfs()
+    if (dir.exists(rowarr)) { # && tiledb_vfs_is_dir(rowarr, vfs)) {
+        arr <- tiledb_array(rowarr, extended=FALSE, return_as="data.frame")[]
+        dimnm[[1]] <- arr[,1]
+    }
+    colarr <- paste0(uri, "_cols")
+    if (dir.exists(colarr)) { # && tiledb_vfs_is_dir(colarr, vfs)) {
+        arr <- tiledb_array(colarr, extended=FALSE, return_as="data.frame")[]
+        dimnm[[2]] <- arr[,1]
+    }
+
     dims <- dimensions(domain(schema(uri)))
-    d1 <- domain(dims[[1]]) #tiledb:::libtiledb_dim_get_domain(dims[[1]]@ptr) + 1
-    d2 <- domain(dims[[2]]) #tiledb:::libtiledb_dim_get_domain(dims[[2]]@ptr) + 2
+    d1 <- domain(dims[[1]])
+    d2 <- domain(dims[[2]])
     stopifnot(`No column i in data`=!is.na(match("i", colnames(obj))),
               `No column j in data`=!is.na(match("j", colnames(obj))),
               `No column x in data`=!is.na(match("x", colnames(obj))),
@@ -114,6 +139,7 @@ toSparseMatrix <- function(uri) {
                                j = obj$j + 1,
                                x = obj$x,
                                dims = c(d1[2] + 1, d2[2] + 1),
+                               dimnames = dimnm,
                                repr = "T")
 
     sp

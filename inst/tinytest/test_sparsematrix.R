@@ -1,4 +1,3 @@
-
 library(tinytest)
 library(tiledb)
 
@@ -24,9 +23,26 @@ spmat <- as(mat, "dgTMatrix")
 uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromSparseMatrix(spmat, uri)
-
 chk <- toSparseMatrix(uri)
 expect_true(is(chk, "sparseMatrix"))
 expect_true(inherits(chk, "dgTMatrix"))
-expect_true(all.equal(spmat, chk))
 expect_equivalent(spmat, chk)
+
+
+set.seed(123)                           # just to fix it
+n <- 25
+k <- 15
+mat <- matrix(0, nrow=n, ncol=k, dimnames=list(LETTERS[1:n], letters[1:k]))
+nelem <- 0.2 * n * k
+mat[sample(seq_len(n*k), nelem)] <- seq(1, nelem)
+## Convert dense matrix to sparse matrix
+spmat <- as(mat, "dgTMatrix")
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromSparseMatrix(spmat, uri)
+chk <- toSparseMatrix(uri)
+expect_true(is(chk, "sparseMatrix"))
+expect_true(inherits(chk, "dgTMatrix"))
+expect_equivalent(spmat, chk)
+expect_equal(rownames(spmat), rownames(chk))
+expect_equal(colnames(spmat), colnames(chk))
