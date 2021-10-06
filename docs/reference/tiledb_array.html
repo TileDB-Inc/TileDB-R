@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.7</span>
       </span>
     </div>
 
@@ -156,6 +156,8 @@
   timestamp_start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/double.html'>double</a></span><span class='op'>(</span><span class='op'>)</span>, origin <span class='op'>=</span> <span class='st'>"1970-01-01"</span><span class='op'>)</span>,
   timestamp_end <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/double.html'>double</a></span><span class='op'>(</span><span class='op'>)</span>, origin <span class='op'>=</span> <span class='st'>"1970-01-01"</span><span class='op'>)</span>,
   return_as <span class='op'>=</span> <span class='fu'><a href='save_return_as_preference.html'>get_return_as_preference</a></span><span class='op'>(</span><span class='op'>)</span>,
+  query_statistics <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  sil <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
   ctx <span class='op'>=</span> <span class='fu'><a href='tiledb_get_context.html'>tiledb_get_context</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
@@ -246,6 +248,17 @@ permitted values are &#8216;asis&#8217; (default, returning a list of columns), 
 &#8216;matrix&#8217;,&#8216;data.frame&#8217;, &#8216;data.table&#8217; or &#8216;tibble&#8217;; the latter
 two require the respective packages installed. The existing <code>as.*</code> arguments take precedent
 over this.</p></td>
+    </tr>
+    <tr>
+      <th>query_statistics</th>
+      <td><p>optional A logical value, defaults to &#8216;FALSE&#8217;; if &#8216;TRUE&#8217; the
+query statistics are returned (as a JSON string) via the attribute
+&#8216;query_statistics&#8217; of the return object.</p></td>
+    </tr>
+    <tr>
+      <th>sil</th>
+      <td><p>optional A list, by default empty to store schema information when query objects are
+parsed.</p></td>
     </tr>
     <tr>
       <th>ctx</th>

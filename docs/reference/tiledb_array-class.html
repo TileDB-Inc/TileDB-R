@@ -74,7 +74,7 @@ based on refactored implementation utilising newer TileDB features." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.7</span>
       </span>
     </div>
 
@@ -186,6 +186,13 @@ describes the (min,max) pair of ranges for dimension i</p></dd>
 permitted values are &#8216;asis&#8217; (default, returning a list of columns),
 &#8216;array&#8217;, &#8216;matrix&#8217;,&#8216;data.frame&#8217;, &#8216;data.table&#8217;
 or &#8216;tibble&#8217;; the latter two require the respective packages installed</p></dd>
+
+<dt><code>query_statistics</code></dt><dd><p>A logical value, defaults to &#8216;FALSE&#8217;; if &#8216;TRUE&#8217; the
+query statistics are returned (as a JSON string) via the attribute
+&#8216;query_statistics&#8217; of the return object.</p></dd>
+
+<dt><code>sil</code></dt><dd><p>An optional and internal list object with schema information, used for
+parsing queries.</p></dd>
 
 <dt><code>ptr</code></dt><dd><p>External pointer to the underlying implementation</p></dd>
 

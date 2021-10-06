@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.7</span>
       </span>
     </div>
 
@@ -175,6 +175,12 @@
           <p><code><a href="tiledb_ctx_set_tag.html">tiledb_ctx_set_tag()</a></code> </p>
         </td>
         <td><p>Sets a string:string "tag" on the Ctx</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_ctx_stats.html">tiledb_ctx_stats()</a></code> </p>
+        </td>
+        <td><p>Return context statistics as a JSON string</p></td>
       </tr><tr>
         
         <td>
@@ -432,6 +438,18 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="query_statistics-set-tiledb_array-method.html">`query_statistics&lt;-`()</a></code> </p>
+        </td>
+        <td><p>Set query_statistics toggle</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="query_statistics-tiledb_array-method.html">query_statistics()</a></code> </p>
+        </td>
+        <td><p>Retrieve query_statistics toggle</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="return.array-set-tiledb_array-method.html">`return.array&lt;-`()</a></code> </p>
         </td>
         <td><p>Set array return toggle</p></td>
@@ -522,6 +540,24 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="tdb_collect-tiledb_array-method.html">tdb_collect(<i>&lt;tiledb_array&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Collect the query results to finalize piped expression</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tdb_filter-tiledb_array-method.html">tdb_filter(<i>&lt;tiledb_array&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Filter from array for query via logical conditions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tdb_select-tiledb_array-method.html">tdb_select(<i>&lt;tiledb_array&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Select attributes from array for query</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tile_order-tiledb_array_schema-method.html">tile_order(<i>&lt;tiledb_array_schema&gt;</i>)</a></code> </p>
         </td>
         <td><p>Returns the tile layout string associated with the <code>tiledb_array_schema</code></p></td>
@@ -597,6 +633,36 @@
           <p><code><a href="tiledb_array_schema_check.html">check()</a></code> <code><a href="tiledb_array_schema_check.html">tiledb_array_schema_check()</a></code> </p>
         </td>
         <td><p>Check the schema for correctness</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution-class.html">tiledb_array_schema_evolution-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB ArraySchemaEvolution object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution.html">tiledb_array_schema_evolution()</a></code> </p>
+        </td>
+        <td><p>Creates a 'tiledb_array_schema_evolution' object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution_add_attribute.html">tiledb_array_schema_evolution_add_attribute()</a></code> </p>
+        </td>
+        <td><p>Add an Attribute to a TileDB Array Schema Evolution object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution_array_evolve.html">tiledb_array_schema_evolution_array_evolve()</a></code> </p>
+        </td>
+        <td><p>Evolve an Array Schema</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution_drop_attribute.html">tiledb_array_schema_evolution_drop_attribute()</a></code> </p>
+        </td>
+        <td><p>Drop an attribute given by name from a TileDB Array Schema Evolution object</p></td>
       </tr><tr>
         
         <td>
@@ -795,6 +861,36 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="tiledb_array_schema_evolution-class.html">tiledb_array_schema_evolution-class</a></code> </p>
+        </td>
+        <td><p>An S4 class for a TileDB ArraySchemaEvolution object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution.html">tiledb_array_schema_evolution()</a></code> </p>
+        </td>
+        <td><p>Creates a 'tiledb_array_schema_evolution' object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution_add_attribute.html">tiledb_array_schema_evolution_add_attribute()</a></code> </p>
+        </td>
+        <td><p>Add an Attribute to a TileDB Array Schema Evolution object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution_array_evolve.html">tiledb_array_schema_evolution_array_evolve()</a></code> </p>
+        </td>
+        <td><p>Evolve an Array Schema</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_array_schema_evolution_drop_attribute.html">tiledb_array_schema_evolution_drop_attribute()</a></code> </p>
+        </td>
+        <td><p>Drop an attribute given by name from a TileDB Array Schema Evolution object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tiledb_array_schema_get_allows_dups.html">allows_dups()</a></code> <code><a href="tiledb_array_schema_get_allows_dups.html">tiledb_array_schema_get_allows_dups()</a></code> </p>
         </td>
         <td><p>Returns logical value whether the array schema allows duplicate values or not.
@@ -848,6 +944,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_schema_get_types.html">tiledb_schema_get_types()</a></code> </p>
         </td>
         <td><p>Get all Dimension and Attribute Types</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_schema_get_dim_attr_status.html">tiledb_schema_get_dim_attr_status()</a></code> </p>
+        </td>
+        <td><p>Get Dimension or Attribute Status</p></td>
       </tr><tr>
         
         <td>
@@ -990,7 +1092,7 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> <code><a href="generics.html">tdb_filter()</a></code> <code><a href="generics.html">tdb_select()</a></code> <code><a href="generics.html">tdb_collect()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr><tr>
@@ -1129,7 +1231,7 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> <code><a href="generics.html">tdb_filter()</a></code> <code><a href="generics.html">tdb_select()</a></code> <code><a href="generics.html">tdb_collect()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr>
@@ -1214,7 +1316,7 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> <code><a href="generics.html">tdb_filter()</a></code> <code><a href="generics.html">tdb_select()</a></code> <code><a href="generics.html">tdb_collect()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr>
@@ -1263,7 +1365,7 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> <code><a href="generics.html">tdb_filter()</a></code> <code><a href="generics.html">tdb_select()</a></code> <code><a href="generics.html">tdb_collect()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr><tr>
@@ -1366,7 +1468,7 @@ This is only valid for sparse arrays.</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> </p>
+          <p><code><a href="generics.html">domain()</a></code> <code><a href="generics.html">dimensions()</a></code> <code><a href="generics.html">attrs()</a></code> <code><a href="generics.html">cell_order()</a></code> <code><a href="generics.html">tile_order()</a></code> <code><a href="generics.html">filter_list()</a></code> <code><a href="generics.html">`filter_list&lt;-`()</a></code> <code><a href="generics.html">is.sparse()</a></code> <code><a href="generics.html">tiledb_ndim()</a></code> <code><a href="generics.html">name()</a></code> <code><a href="generics.html">datatype()</a></code> <code><a href="generics.html">config()</a></code> <code><a href="generics.html">schema()</a></code> <code><a href="generics.html">tile()</a></code> <code><a href="generics.html">is.integral()</a></code> <code><a href="generics.html">nfilters()</a></code> <code><a href="generics.html">tdb_filter()</a></code> <code><a href="generics.html">tdb_select()</a></code> <code><a href="generics.html">tdb_collect()</a></code> </p>
         </td>
         <td><p>Generic Methods</p></td>
       </tr><tr>
@@ -1634,6 +1736,12 @@ This is only valid for sparse arrays.</p></td>
           <p><code><a href="tiledb_query_set_subarray.html">tiledb_query_set_subarray()</a></code> </p>
         </td>
         <td><p>Set subarray for TileDB Query object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tiledb_query_stats.html">tiledb_query_stats()</a></code> </p>
+        </td>
+        <td><p>Return query statistics as a JSON string</p></td>
       </tr><tr>
         
         <td>
@@ -2240,7 +2348,7 @@ This is only valid for sparse arrays.</p></td>
       <tr>
         <th colspan="2">
           <h2 id="section-sparsematrix" class="hasAnchor"><a href="#section-sparsematrix" class="anchor"></a>SparseMatrix</h2>
-          <p class="section-desc"><p>sparse matrices helper functions</p></p>
+          <p class="section-desc"><p>matrix and sparse matrices helper functions</p></p>
         </th>
       </tr>
       
@@ -2249,6 +2357,12 @@ This is only valid for sparse arrays.</p></td>
       
       
       <tr>
+        
+        <td>
+          <p><code><a href="fromMatrix.html">fromMatrix()</a></code> <code><a href="fromMatrix.html">toMatrix()</a></code> </p>
+        </td>
+        <td><p>Create a TileDB array from an R matrix, or return an R matrix</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="fromSparseMatrix.html">fromSparseMatrix()</a></code> <code><a href="fromSparseMatrix.html">toSparseMatrix()</a></code> </p>

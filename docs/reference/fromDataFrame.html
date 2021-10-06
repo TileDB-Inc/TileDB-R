@@ -74,7 +74,7 @@ with the R representations of Date, POSIXct and nanotime." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.7</span>
       </span>
     </div>
 
@@ -146,7 +146,7 @@ with the R representations of <code>Date</code>, <code>POSIXct</code> and <code>
   <span class='va'>obj</span>,
   <span class='va'>uri</span>,
   col_index <span class='op'>=</span> <span class='cn'>NULL</span>,
-  sparse <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  sparse <span class='op'>=</span> <span class='cn'>TRUE</span>,
   allows_dups <span class='op'>=</span> <span class='va'>sparse</span>,
   cell_order <span class='op'>=</span> <span class='st'>"COL_MAJOR"</span>,
   tile_order <span class='op'>=</span> <span class='st'>"COL_MAJOR"</span>,
@@ -176,7 +176,7 @@ implying an index column is added when the array is created</p></td>
     </tr>
     <tr>
       <th>sparse</th>
-      <td><p>A logical switch to select sparse or dense (the default)</p></td>
+      <td><p>A logical switch to select sparse (the default) or dense</p></td>
     </tr>
     <tr>
       <th>allows_dups</th>
