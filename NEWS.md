@@ -4,9 +4,9 @@
 
 ## Improvements
 
-* Accessors for context and query statisics were added (returning easily parseable JSON strings) (#293).
+* Accessors for context and query statistics were added (returning easily parseable JSON strings) (#293).
 
-* Initial support for schema evolution was added to add or drop atttributes (#294).
+* Initial support for schema evolution was added to add or drop attributes (#294).
 
 * Use of TileDB Embedded was upgraded to release 2.4.0 (#295)
 
@@ -30,7 +30,7 @@
 
 * Tests of piped expressions have been rewritten to be compatible with R versions earlier than 4.1.0 (#302).
 
-* A danglink documentation link in README.md was corrected, and another removed (#306).
+* A dangling documentation link in README.md was corrected, and another removed (#306).
 
 
 # tiledb 0.9.6
