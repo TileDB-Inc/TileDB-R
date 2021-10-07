@@ -34,6 +34,7 @@ reference:
   - matches("tiledb_schema_get_names")
   - matches("tiledb_schema_get_types")
   - matches("tiledb_schema_set_names")
+  - matches("tiledb_schema_get_dim_attr_status")
   - matches("schema,character-method")
 - title: Attribute
   contents:
@@ -102,8 +103,9 @@ reference:
   - starts_with("return.data.frame")
   - matches("data.frame")
 - title: SparseMatrix
-  desc:  sparse matrices helper functions
+  desc:  matrix and sparse matrices helper functions
   contents:
+  - matches("fromMatrix")
   - matches("fromSparseMatrix")
 - title: Arrow
   desc: interface to Arrow in-memory representation

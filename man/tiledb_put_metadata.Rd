@@ -11,7 +11,7 @@ tiledb_put_metadata(arr, key, val)
 
 \item{key}{A character value describing a metadata key}
 
-\item{val}{An object to be store}
+\item{val}{An object to be stored}
 }
 \value{
 A boolean value indicating success

@@ -1,6 +1,36 @@
-# Ongoing development
+# tiledb 0.9.7
 
 * This release of the R package builds against [TileDB 2.4.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.4.0), but has been tested against previous releases and the development version.
+
+## Improvements
+
+* Accessors for context and query statistics were added (returning easily parseable JSON strings) (#293).
+
+* Initial support for schema evolution was added to add or drop attributes (#294).
+
+* Use of TileDB Embedded was upgraded to release 2.4.0 (#295)
+
+* Windows builds under GitHub Actions now also include the newer UCRT variant (#296).
+
+* The internal memory allocation has been switched to `set_{data,offset,validity}_buffer` functions (#297).
+
+* A convenience accessor for schema information retrieving 'dimension' or 'attribute' status has been added (#299).
+
+* The default array type `fromDataFrame` has been change to sparse to match some optimizations in TileDB Embedded, some unit tests have been updated accordingly (#300).
+
+* TileDB arrays can now be queried in expression using pipes (for row-wise filtering and colunb-wise selection) (#301).
+
+* When matrices as well as sparse matrices are written to arrays, optional row and column names are now supported as well (#303, #304).
+
+* The configure script was update to the standards of autoconf 2.69 as requested by CRAN (#305).
+
+## Bug Fixes
+
+* Use of `set_{data,offset,validity}_buffer` is made conditional on TileDB 2.4.0 or later to continue builds on older versions (#298).
+
+* Tests of piped expressions have been rewritten to be compatible with R versions earlier than 4.1.0 (#302).
+
+* A dangling documentation link in README.md was corrected, and another removed (#306).
 
 
 # tiledb 0.9.6

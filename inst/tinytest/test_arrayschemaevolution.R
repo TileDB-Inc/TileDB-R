@@ -1,7 +1,8 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
+#isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
+if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip on Windows")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
