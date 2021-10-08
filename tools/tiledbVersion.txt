@@ -1,2 +1,2 @@
-version: 2.4.0
-sha: baf64e1
+version: 2.4.2
+sha: 81a0286
