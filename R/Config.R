@@ -252,7 +252,8 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
     cfg["vfs.file.max_parallel_ops"] <- ncores
     cfg["vfs.num_threads"] <- ncores
   }
-  if (tiledb_version(TRUE) >= "2.1.0" && isTRUE(Sys.getenv("TILEDB_USE_REFACTORED_READERS") == "true")) {
+  if (tiledb_version(TRUE) >= "2.4.0" &&
+      isTRUE(Sys.getenv("TILEDB_USE_REFACTORED_READERS") == "true")) {
       cfg["sm.use_refactored_readers"] <- "true"
       if (verbose) message("Enabling refactored readers.")
   }
