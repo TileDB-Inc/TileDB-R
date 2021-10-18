@@ -248,10 +248,14 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
     cfg["sm.io_concurrency_level"] <- ncores
   } else {
     cfg["sm.num_reader_threads"] <- ncores
-    ##cfg["sm.num_tbb_threads"] <- ncores
     cfg["sm.num_writer_threads"] <- ncores
     cfg["vfs.file.max_parallel_ops"] <- ncores
     cfg["vfs.num_threads"] <- ncores
+  }
+  if (tiledb_version(TRUE) >= "2.4.0" &&
+      isTRUE(Sys.getenv("TILEDB_USE_REFACTORED_READERS") == "true")) {
+      cfg["sm.use_refactored_readers"] <- "true"
+      if (verbose) message("Enabling refactored readers.")
   }
   if (verbose) message("Limiting TileDB to ",ncores," cores. See ?limitTileDBCores.")
   invisible(cfg)
