@@ -2,13 +2,6 @@
 
 # no trigger to so always run
 
-strategy:
-  matrix:
-    standard_readers:
-      refactored_readers: false
-    new_readers:
-      refactored_readers: true
-
 variables:
 - name: CRAN
   value: 'https://cloud.r-project.org'
@@ -18,8 +11,6 @@ variables:
   value: false
 - name: MAKEFLAGS
   value: '--jobs=4'
-- name: TILEDB_USE_REFACTORED_READERS
-  value: '$(refactored_readers)'
 
 jobs:
   - job: 'Linux'
