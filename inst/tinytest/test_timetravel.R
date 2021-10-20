@@ -22,9 +22,8 @@ uri <- tempfile()
 data <- data.frame(grp = rep(1:4, each=10), 				# 4 distinct groups
                    val = rep(1:4, each=10) * 100 + 1:10)    # and 4 sets of value (used as index)
 
-times <- Sys.time() + 0:3               # pre-allocate for four time stampps
+times <- Sys.time() + 0:3               # pre-allocate for four time stamps
 
-##twot <- 1 + isMacOS*5
 twot <- 0.125                           # start with this gap of '2 t'
 success <- FALSE
 
@@ -120,8 +119,6 @@ now1 <- Sys.time()
 A <- tiledb_array(uri = tmp, timestamp_start=now1)
 A[I, J] <- data
 
-#twot <- 1 + isMacOS*5
-#onet <- twot/2
 Sys.sleep(twot)
 
 now2 <- Sys.time()
