@@ -34,8 +34,6 @@ while (twot < 30) {
                   uri, sparse=TRUE,
                   col_index="val", tile_domain=list(val=range(data$val)))
 
-    Sys.sleep(twot)
-
     arr <- tiledb_array(uri)
     for (i in 2:4) {                        # in loop, write groups two to four
         Sys.sleep(twot)
@@ -49,7 +47,7 @@ while (twot < 30) {
     res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1]+onet)[]    		# end before 1st timestamp
     res3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+onet)[] 	# start after fourth
     res4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-onet)[]    # end before 3rd
-    res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-onet, timestamp_end=times[3])[]
+    res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-onet, timestamp_end=times[3]+onet)[]
 
     if (isTRUE(all.equal(NROW(res1), 40)) &&                    # all four groups
         isTRUE(all.equal(NROW(res2), 10)) &&		            # expect group one (10 elements)
@@ -81,7 +79,7 @@ res4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-onet)[]    
 expect_equal(NROW(res4), 20)            # expect 2 groups, 20 obs
 expect_equal(max(res4$grp), 2)          # with groups being 1 and 2
 
-res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-onet, timestamp_end=times[3])[]
+res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-onet, timestamp_end=times[3]+onet)[]
 expect_equal(NROW(res5), 20)            # expects 2 groups, 2 and 3, with 20 obs
 expect_equal(min(res5$grp), 2)
 expect_equal(max(res5$grp), 3)
