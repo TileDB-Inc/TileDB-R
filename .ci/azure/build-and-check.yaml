@@ -1,7 +1,8 @@
 steps:
   - bash: |
       R CMD build --no-build-vignettes --no-manual .
-      R CMD check --no-manual --no-vignettes tiledb_*.tar.gz
+      CI=true R CMD check --no-manual --no-vignettes tiledb_*.tar.gz
+      cat tiledb.Rcheck/tests/tinytest.Rout
     displayName: 'Run check'
   - bash: |
       R CMD build --no-build-vignettes --no-manual .
