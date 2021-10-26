@@ -58,6 +58,7 @@ if test x"${have_pkg_config}" != x"no"; then
         have_pkg_config="no"
     fi
 fi
+
 ## Otherwise use fallback values
 if test x"${have_pkg_config}" = x"no"; then
     ## Default values suitable for system install, overridde as needed below
@@ -65,6 +66,18 @@ if test x"${have_pkg_config}" = x"no"; then
     AC_SUBST([TILEDB_LIBS], "-ltiledb")
     AC_SUBST([TILEDB_RPATH], "")
 fi
+
+## If we have pkg-config, use it to test minimal version
+if test x"${have_pkg_config}" != x"no"; then
+    AC_MSG_CHECKING([pkg-config checking TileDB version])
+    if pkg-config --atleast-version=2.0.0 tiledb; then
+        AC_MSG_RESULT([>= 2.0.0])
+    else
+        AC_MSG_RESULT([insufficient])
+        AC_MSG_ERROR([TileDB Embedded 2.0.0 or later is required.])
+    fi
+fi
+
 
 ## Top-level system, possible values SunOS (Solaris), Darwin (macOS), Linux, ...
 ## Note that SunOS is not currently building; we would welcome help from anyone
@@ -215,30 +228,6 @@ if test x"${have_tiledb}" = x"no"; then
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
 fi
-
-dnl ## also check for minimum version
-dnl AC_MSG_CHECKING([if TileDB version >= 2.0.0])
-dnl AC_RUN_IFELSE([AC_LANG_SOURCE([[
-dnl #include <tiledb/tiledb_version.h>
-dnl #include <cstdlib>
-dnl int main() {
-dnl     int v = TILEDB_VERSION_MAJOR * 10000 + TILEDB_VERSION_MINOR * 100 + TILEDB_VERSION_PATCH;
-dnl     if (v >= 20000) {
-dnl         exit(0);
-dnl     } else {
-dnl         exit(1);
-dnl     }
-dnl }
-dnl ]])],
-dnl [pb_version_ok=yes],
-dnl [pb_version_ok=no],
-dnl [pb_version_ok=yes])
-dnl if test x"${pb_version_ok}" == x"no"; then
-dnl     AC_MSG_ERROR([need TileDB version >= 2.0.0])
-dnl else
-dnl     AC_MSG_RESULT([yes])
-dnl fi
-
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
