@@ -216,28 +216,28 @@ if test x"${have_tiledb}" = x"no"; then
 
 fi
 
-## also check for minimum version
-AC_MSG_CHECKING([if TileDB version >= 2.0.0])
-AC_RUN_IFELSE([AC_LANG_SOURCE([[
-#include <tiledb/tiledb_version.h>
-#include <cstdlib>
-int main() {
-    int v = TILEDB_VERSION_MAJOR * 10000 + TILEDB_VERSION_MINOR * 100 + TILEDB_VERSION_PATCH;
-    if (v >= 20000) {
-        exit(0);
-    } else {
-        exit(1);
-    }
-}
-]])],
-[pb_version_ok=yes],
-[pb_version_ok=no],
-[pb_version_ok=yes])
-if test x"${pb_version_ok}" == x"no"; then
-    AC_MSG_ERROR([need TileDB version >= 2.0.0])
-else
-    AC_MSG_RESULT([yes])
-fi
+dnl ## also check for minimum version
+dnl AC_MSG_CHECKING([if TileDB version >= 2.0.0])
+dnl AC_RUN_IFELSE([AC_LANG_SOURCE([[
+dnl #include <tiledb/tiledb_version.h>
+dnl #include <cstdlib>
+dnl int main() {
+dnl     int v = TILEDB_VERSION_MAJOR * 10000 + TILEDB_VERSION_MINOR * 100 + TILEDB_VERSION_PATCH;
+dnl     if (v >= 20000) {
+dnl         exit(0);
+dnl     } else {
+dnl         exit(1);
+dnl     }
+dnl }
+dnl ]])],
+dnl [pb_version_ok=yes],
+dnl [pb_version_ok=no],
+dnl [pb_version_ok=yes])
+dnl if test x"${pb_version_ok}" == x"no"; then
+dnl     AC_MSG_ERROR([need TileDB version >= 2.0.0])
+dnl else
+dnl     AC_MSG_RESULT([yes])
+dnl fi
 
 
 AC_CONFIG_FILES([src/Makevars])
