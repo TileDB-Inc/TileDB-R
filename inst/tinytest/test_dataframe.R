@@ -6,8 +6,6 @@ if (isOldWindows) exit_file("skip this file on old Windows releases")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.0.0") exit_file("TileDB Array types required TileDB 2.0.* or greater")
-
 #test_that("tiledb_fromdataframe", {
 uri <- tempfile()
 ## turn factor into character

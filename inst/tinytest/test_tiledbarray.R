@@ -7,8 +7,6 @@ isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.0.0") exit_file("TileDB Array types required TileDB 2.0.* or greater")
-
 hasDataTable <- requireNamespace("data.table", quietly=TRUE)
 hasTibble <- requireNamespace("tibble", quietly=TRUE)
 
