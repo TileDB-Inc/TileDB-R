@@ -118,12 +118,8 @@ expect_true(is(dom, "externalptr"))
 ctx <- tiledb_get_context()@ptr
 d1 <- tiledb:::libtiledb_dim(ctx, "d1", "INT32", c(1L, 100L), 10L)
 d2 <- tiledb:::libtiledb_dim(ctx, "d2", "FLOAT64", c(1, 100), 10)
-if (tiledb_version(compact=TRUE) < as.package_version("1.8.0")) {
-  expect_error(tiledb:::libtiledb_domain(ctx, c(d1, d2)))
-} else {
-  dom <- tiledb:::libtiledb_domain(ctx, c(d1, d2))
-  expect_true(is(dom, "externalptr"))
-}
+dom <- tiledb:::libtiledb_domain(ctx, c(d1, d2))
+expect_true(is(dom, "externalptr"))
 #})
 
 #test_that("basic integer libtiledb_attr constructor works", {

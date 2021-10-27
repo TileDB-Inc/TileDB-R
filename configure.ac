@@ -58,6 +58,7 @@ if test x"${have_pkg_config}" != x"no"; then
         have_pkg_config="no"
     fi
 fi
+
 ## Otherwise use fallback values
 if test x"${have_pkg_config}" = x"no"; then
     ## Default values suitable for system install, overridde as needed below
@@ -65,6 +66,18 @@ if test x"${have_pkg_config}" = x"no"; then
     AC_SUBST([TILEDB_LIBS], "-ltiledb")
     AC_SUBST([TILEDB_RPATH], "")
 fi
+
+## If we have pkg-config, use it to test minimal version
+if test x"${have_pkg_config}" != x"no"; then
+    AC_MSG_CHECKING([pkg-config checking TileDB version])
+    if pkg-config --atleast-version=2.0.0 tiledb; then
+        AC_MSG_RESULT([>= 2.0.0])
+    else
+        AC_MSG_RESULT([insufficient])
+        AC_MSG_ERROR([TileDB Embedded 2.0.0 or later is required.])
+    fi
+fi
+
 
 ## Top-level system, possible values SunOS (Solaris), Darwin (macOS), Linux, ...
 ## Note that SunOS is not currently building; we would welcome help from anyone

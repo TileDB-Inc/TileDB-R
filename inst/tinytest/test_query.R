@@ -55,8 +55,6 @@ expect_equal(tiledb_query_get_layout(tiledb_query_set_layout(query, "UNORDERED")
 unlink(tmp, recursive=TRUE)
 #})
 
-if (tiledb_version(TRUE) < "2.0.0") exit_file("Remaining tests require TileDB 2.0.* or later")
-
 #test_that("tiledb_query basic query", {
 tmp <- tempfile()
 dir.create(tmp)

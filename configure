@@ -2979,6 +2979,7 @@ $as_echo "no" >&6; }
         have_pkg_config="no"
     fi
 fi
+
 ## Otherwise use fallback values
 if test x"${have_pkg_config}" = x"no"; then
     ## Default values suitable for system install, overridde as needed below
@@ -2989,6 +2990,21 @@ if test x"${have_pkg_config}" = x"no"; then
     TILEDB_RPATH=""
 
 fi
+
+## If we have pkg-config, use it to test minimal version
+if test x"${have_pkg_config}" != x"no"; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config checking TileDB version" >&5
+$as_echo_n "checking pkg-config checking TileDB version... " >&6; }
+    if pkg-config --atleast-version=2.0.0 tiledb; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: >= 2.0.0" >&5
+$as_echo ">= 2.0.0" >&6; }
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: insufficient" >&5
+$as_echo "insufficient" >&6; }
+        as_fn_error $? "TileDB Embedded 2.0.0 or later is required." "$LINENO" 5
+    fi
+fi
+
 
 ## Top-level system, possible values SunOS (Solaris), Darwin (macOS), Linux, ...
 ## Note that SunOS is not currently building; we would welcome help from anyone

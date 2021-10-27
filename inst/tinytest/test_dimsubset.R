@@ -11,8 +11,6 @@ if (!requireNamespace("nycflights13", quietly=TRUE)) exit_file("Needed 'nycfligh
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.0.0") exit_file("TileDB Array types required TileDB 2.0.* or greater")
-
 op <- options()
 options(stringsAsFactors=FALSE)       # accomodate R 3.*
 dir.create(tmp <- tempfile())
