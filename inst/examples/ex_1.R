@@ -17,7 +17,7 @@ create_array <- function(uri) {
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 10L, "INT32"),
                                 tiledb_dim("cols", c(1L, 5L), 5L, "INT32")))
 
-  ## The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
+  ## The array will be dense with attributes "a", "b", "c"
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32"),
                                                tiledb_attr("b", type = "FLOAT64"),
                                                tiledb_attr("c", type = "CHAR", ncells=NA_integer_)))

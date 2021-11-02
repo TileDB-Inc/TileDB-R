@@ -47,7 +47,7 @@ create_array <- function(array_name) {
         tiledb_vfs_remove_dir(array_name)
     }
 
-    # The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
+    # The array will be 10x10 with dimensions "rows" and "cols", with domain [1,10].
     dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 5L, "INT32"),
                                   tiledb_dim("cols", c(1L, 10L), 5L, "INT32")))
 
