@@ -707,12 +707,16 @@ setMethod("[", "tiledb_array",
 
   ## get results
   getResult <- function(buf, name, varnum, resrv, qryptr) {
-    if (is.na(varnum)) {
-      vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
-      libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
-    } else {
-      libtiledb_query_get_buffer_ptr(buf, asint64)
-    }
+      if (is.na(varnum)) {
+          vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
+          cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
+          vlcbuf_to_shmem(name, buf);
+          libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+      } else {
+          cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
+          vecbuf_to_shmem(name, buf);
+          libtiledb_query_get_buffer_ptr(buf, asint64)
+      }
   }
   reslist <- mapply(getResult, buflist, allnames, allvarnum,
                     MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)

@@ -585,6 +585,14 @@ libtiledb_query_set_buffer_ptr <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_set_buffer_ptr`, query, attr, buf)
 }
 
+vecbuf_to_shmem <- function(name, buf) {
+    invisible(.Call(`_tiledb_vecbuf_to_shmem`, name, buf))
+}
+
+vlcbuf_to_shmem <- function(name, buf) {
+    invisible(.Call(`_tiledb_vlcbuf_to_shmem`, name, buf))
+}
+
 libtiledb_query_get_buffer_ptr <- function(buf, asint64 = FALSE) {
     .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf, asint64)
 }

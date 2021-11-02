@@ -1726,6 +1726,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// vecbuf_to_shmem
+void vecbuf_to_shmem(std::string name, XPtr<query_buf_t> buf);
+RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP nameSEXP, SEXP bufSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< XPtr<query_buf_t> >::type buf(bufSEXP);
+    vecbuf_to_shmem(name, buf);
+    return R_NilValue;
+END_RCPP
+}
+// vlcbuf_to_shmem
+void vlcbuf_to_shmem(std::string name, XPtr<vlc_buf_t> buf);
+RcppExport SEXP _tiledb_vlcbuf_to_shmem(SEXP nameSEXP, SEXP bufSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< XPtr<vlc_buf_t> >::type buf(bufSEXP);
+    vlcbuf_to_shmem(name, buf);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_query_get_buffer_ptr
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64);
 RcppExport SEXP _tiledb_libtiledb_query_get_buffer_ptr(SEXP bufSEXP, SEXP asint64SEXP) {
@@ -2822,6 +2844,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_buffer_alloc_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_alloc_ptr, 4},
     {"_tiledb_libtiledb_query_buffer_assign_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_assign_ptr, 4},
     {"_tiledb_libtiledb_query_set_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_ptr, 3},
+    {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 2},
+    {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 2},
     {"_tiledb_libtiledb_query_get_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_ptr, 2},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_submit_async", (DL_FUNC) &_tiledb_libtiledb_query_submit_async, 1},

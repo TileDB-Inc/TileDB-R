@@ -2844,10 +2844,67 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
     return query;
 }
 
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+// [[Rcpp::export]]
+void vecbuf_to_shmem(std::string name, XPtr<query_buf_t> buf) {
+    std::string bufferpath = std::string("/dev/shm/") + name;
+    Rcpp::Rcout << "Writing " << bufferpath << " ";
+    int mode = S_IRWXU | S_IRWXG | S_IRWXO;
+    int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
+    int n = buf->ncells * buf->size;
+    void *dest = mmap(NULL,      				// kernel picks address
+                      n + 1, 			   		// length
+                      PROT_READ | PROT_WRITE,
+                      MAP_SHARED,
+                      fd,
+                      0);
+    lseek (fd, n, SEEK_SET); 	 // seek to n+1
+    write (fd, "", 1);           // write dummy to 'claim' space
+    memcpy (dest, (void*) buf->vec.data(), n);
+    Rcpp::Rcout << " ... done\n";
+}
+// [[Rcpp::export]]
+void vlcbuf_to_shmem(std::string name, XPtr<vlc_buf_t> buf) {
+    std::string bufferpath = std::string("/dev/shm/") + name;
+    Rcpp::Rcout << "Writing char " << bufferpath << " ";
+    int mode = S_IRWXU | S_IRWXG | S_IRWXO;
+    int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
+    int n = buf->str.size();
+    void *dest = mmap(NULL,      				// kernel picks address
+                      n + 1, 			   		// length
+                      PROT_READ | PROT_WRITE,
+                      MAP_SHARED,
+                      fd,
+                      0);
+    lseek (fd, n, SEEK_SET);     // seek to n+1
+    write (fd, "", 1);           // write dummy to 'claim' space
+    memcpy (dest, (void*) buf->str.c_str(), n);
+
+    bufferpath = std::string("/dev/shm/") + name + ".offsets";
+    fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
+    n = buf->offsets.size() * sizeof(uint64_t);
+    dest = mmap(NULL,      				// kernel picks address
+                n + 1, 			   		// length
+                PROT_READ | PROT_WRITE,
+                MAP_SHARED,
+                fd,
+                0);
+    lseek (fd, n, SEEK_SET); 	 // seek to n+1
+    write (fd, "", 1);           // write dummy to 'claim' space
+    memcpy (dest, (void*) buf->offsets.data(), n);
+
+    Rcpp::Rcout << " ... done\n";
+}
+
+
 
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
+  Rcpp::Rcout << dtype << " " << buf->ncells << " " << buf->size << std::endl;
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
