@@ -13,14 +13,14 @@ create_array <- function(uri) {
     return(invisible(NULL))
   }
 
-  ## The array will be 10x5 with dimensions "rows" and "cols", with domains [1,10] and [1,5].
-  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1, #ISOdatetime(2010,1,1,0,0,0),
-                                                     1e15), #ISOdatetime(2029,12,31,23,59,59.999)),
+  ## The array will be sparse x 4 with dimensions "rows" and "cols", with domains [1,10] and [1,5].
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1262304000, #ISOdatetime(2010,1,1,0,0,0),
+                                                     1893455999), #ISOdatetime(2029,12,31,23,59,59.999)),
                                            10,
                                            #type = "DATETIME_MS"),
                                            type = "FLOAT64"),
                                 tiledb_dim("cols", c(1L,4L), 4L, "INT32") ) )
-  ## The array will be dense with a single attribute "a" so each (i,j) cell can store an integer.
+  ## The array will have four attributes a, b, d, e.
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32"),
                                                tiledb_attr("b", type = "FLOAT64"),
                                                tiledb_attr("d", type = "DATETIME_DAY"),
