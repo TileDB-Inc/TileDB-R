@@ -2862,7 +2862,7 @@ void vecbuf_to_shmem(std::string name, XPtr<query_buf_t> buf) {
                       fd,
                       0);
     lseek (fd, n, SEEK_SET); 	 // seek to n+1
-    write (fd, "", 1);           // write dummy to 'claim' space
+    if (write (fd, "", 1) != 1) Rcpp::stop("write error");
     memcpy (dest, (void*) buf->vec.data(), n);
     Rcpp::Rcout << " ... done\n";
 }
@@ -2880,7 +2880,7 @@ void vlcbuf_to_shmem(std::string name, XPtr<vlc_buf_t> buf) {
                       fd,
                       0);
     lseek (fd, n, SEEK_SET);     // seek to n+1
-    write (fd, "", 1);           // write dummy to 'claim' space
+    if (write (fd, "", 1) != 1) Rcpp::stop("write error");
     memcpy (dest, (void*) buf->str.c_str(), n);
 
     bufferpath = std::string("/dev/shm/") + name + ".offsets";
@@ -2893,10 +2893,52 @@ void vlcbuf_to_shmem(std::string name, XPtr<vlc_buf_t> buf) {
                 fd,
                 0);
     lseek (fd, n, SEEK_SET); 	 // seek to n+1
-    write (fd, "", 1);           // write dummy to 'claim' space
+    if (write (fd, "", 1) != 1) Rcpp::stop("write error");
     memcpy (dest, (void*) buf->offsets.data(), n);
 
     Rcpp::Rcout << " ... done\n";
+}
+// [[Rcpp::export]]
+XPtr<query_buf_t> querybuf_from_shmem(std::string path, R_xlen_t sz,
+                                      std::string dtype, bool nullable=false) {
+
+    // struct query_buffer {
+    //     //void *ptr;                    	// pointer to data as an alternative
+    //     std::vector<int8_t> vec;        	// vector of int8_t as a memory container
+    //     tiledb_datatype_t dtype;        	// data type
+    //     R_xlen_t ncells;                	// extent
+    //     size_t size;                    	// element size
+    //     std::vector<uint8_t> validity_map;  // for nullable vectors
+    //     bool nullable;                      // flag
+    // };
+    // typedef struct query_buffer query_buf_t;
+    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
+    registerXptrFinalizer(buf, libtiledb_query_buf_delete);
+
+    buf->size = sizeof(buf->dtype);
+    buf->dtype = _string_to_tiledb_datatype(dtype);
+    buf->ncells = sz / buf->size;
+    Rcpp::Rcout << path << " "
+                << " sizeof:" << buf->size
+                << " ncells:" << buf->ncells
+                << " vecsize:" << sz << std::endl;
+    buf->vec.resize(sz);
+    if (nullable) buf->validity_map.resize(buf->ncells);
+    buf->nullable = nullable;
+
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd < 0) Rcpp::stop("Cannot open %s for reading", path.c_str());
+    struct stat statbuf;
+    if (fstat (fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", path.c_str());
+    int n = statbuf.st_size;
+    if (n != sz) Rcpp::stop("File size %d not equal to expected size %d", n, sz);
+    void *src = mmap (0, n, PROT_READ, MAP_SHARED, fd, 0);
+    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
+    memcpy(buf->vec.data(), src, n);
+
+    //for (size_t i=0; i < buf->vec.size(); i++) Rcpp::Rcout << buf->vec[i] << ", ";
+    //Rcpp::Rcout << std::endl;
+    return buf;
 }
 
 

@@ -593,6 +593,10 @@ vlcbuf_to_shmem <- function(name, buf) {
     invisible(.Call(`_tiledb_vlcbuf_to_shmem`, name, buf))
 }
 
+querybuf_from_shmem <- function(path, sz, dtype, nullable = FALSE) {
+    .Call(`_tiledb_querybuf_from_shmem`, path, sz, dtype, nullable)
+}
+
 libtiledb_query_get_buffer_ptr <- function(buf, asint64 = FALSE) {
     .Call(`_tiledb_libtiledb_query_get_buffer_ptr`, buf, asint64)
 }

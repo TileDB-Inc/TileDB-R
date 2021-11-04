@@ -53,6 +53,9 @@
 #' \sQuote{query_statistics} of the return object.
 #' @slot sil An optional and internal list object with schema information, used for
 #' parsing queries.
+#' @slot dumpbuffers An optional and internal boolean toggle to determine if buffers should
+#' be written out for debugging / development purposes
+#' @slot buffers An optional list with pathnames of shared memory buffers to read data from
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -75,6 +78,8 @@ setClass("tiledb_array",
                       return_as = "character",
                       query_statistics = "logical",
                       sil = "list",
+                      dumpbuffers = "logical",
+                      buffers = "list",
                       ptr = "externalptr"))
 
 #' Constructs a tiledb_array object backed by a persisted tiledb array uri
@@ -120,6 +125,9 @@ setClass("tiledb_array",
 #' \sQuote{query_statistics} of the return object.
 #' @param sil optional A list, by default empty to store schema information when query objects are
 #' parsed.
+#' @slot dumpbuffers An optional and internal boolean toggle to determine if buffers should
+#' be written out for debugging / development purposes
+#' @slot buffers An optional list with pathnames of shared memory buffers to read data from
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
 #' @export
@@ -142,6 +150,8 @@ tiledb_array <- function(uri,
                          return_as = get_return_as_preference(),
                          query_statistics = FALSE,
                          sil = list(),
+                         dumpbuffers = FALSE,
+                         buffers = list(),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
   if (!is(ctx, "tiledb_ctx"))
@@ -213,6 +223,8 @@ tiledb_array <- function(uri,
       return_as = return_as,
       query_statistics = query_statistics,
       sil = sil,
+      dumpbuffers = dumpbuffers,
+      buffers = buffers,
       ptr = array_xptr)
 }
 
@@ -613,6 +625,52 @@ setMethod("[", "tiledb_array",
     }
   }
 
+  buflist <- vector(mode="list", length=length(allnames))
+
+  if (length(x@buffers) != 0) {
+      nm <- names(x@buffers)
+      message("Looking into buffers ", paste(nm, collapse=","))
+      print(allnames)
+      print(alltypes)
+      for (i in seq_along(allnames)) {
+          n <- allnames[i]
+          path <- file.path("/dev/shm", x@buffers[[n]])
+          fsz <- file.size(path)
+          ##cat(path, " -> ", fsz, "\n")
+          buflist[[i]] <- querybuf_from_shmem(path, fsz, alltypes[i])
+      }
+
+      ## get results (shmem variant)
+      getResult <- function(buf, name, varnum) { #, resrv, qryptr) {
+          ## if (is.na(varnum)) {
+          ##     vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
+          ##     if (x@dumpbuffers) {
+          ##         cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
+          ##         vlcbuf_to_shmem(name, buf)
+          ##     }
+          ##     libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+          ## } else {
+          ##     if (x@dumpbuffers) {
+          ##         cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
+          ##         vecbuf_to_shmem(name, buf)
+          ##     }
+              libtiledb_query_get_buffer_ptr(buf, asint64)
+          ## }
+      }
+      reslist <- mapply(getResult, buflist, allnames, allvarnum,
+                        ##MoreArgs=list(resrv=resrv, qryptr=qryptr),
+                        SIMPLIFY=FALSE)
+      ## convert list into data.frame (cheaply) and subset
+      res <- data.frame(reslist) #[seq_len(resrv),]
+      colnames(res) <- allnames
+
+  } else {
+      message("No buffers to read from")
+
+
+  ## OPEN BIG ELSE HERE
+
+
   ## retrieve est_result_size
   getEstimatedSize <- function(name, varnum, nullable, qryptr, datatype) {
     if (is.na(varnum) && !nullable)
@@ -709,12 +767,16 @@ setMethod("[", "tiledb_array",
   getResult <- function(buf, name, varnum, resrv, qryptr) {
       if (is.na(varnum)) {
           vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
-          cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
-          vlcbuf_to_shmem(name, buf);
+          if (x@dumpbuffers) {
+              cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
+              vlcbuf_to_shmem(name, buf)
+          }
           libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
       } else {
-          cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
-          vecbuf_to_shmem(name, buf);
+          if (x@dumpbuffers) {
+              cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
+              vecbuf_to_shmem(name, buf)
+          }
           libtiledb_query_get_buffer_ptr(buf, asint64)
       }
   }
@@ -723,6 +785,9 @@ setMethod("[", "tiledb_array",
   ## convert list into data.frame (cheaply) and subset
   res <- data.frame(reslist)[seq_len(resrv),]
   colnames(res) <- allnames
+  }  ## CLOSE BIG ELSE HERE
+
+
 
   ## reduce output if extended is false, or attrs given
   if (!x@extended) {
