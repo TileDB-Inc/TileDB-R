@@ -629,33 +629,32 @@ setMethod("[", "tiledb_array",
 
   if (length(x@buffers) != 0) {
       nm <- names(x@buffers)
-      message("Looking into buffers ", paste(nm, collapse=","))
-      print(allnames)
-      print(alltypes)
+      if (!all.equal(nm,allnames))
+          error("Expected ", paste(allnames, collapse=","), " got ", paste(nm, collapse=","))
+      message("Buffers: ", paste(allnames, collapse=","), " types: ", paste(alltypes, collapse=","))
       for (i in seq_along(allnames)) {
           n <- allnames[i]
           path <- file.path("/dev/shm", x@buffers[[n]])
-          fsz <- file.size(path)
-          ##cat(path, " -> ", fsz, "\n")
-          buflist[[i]] <- querybuf_from_shmem(path, fsz, alltypes[i])
+          if (!file.exists(path)) error("No buffer for ", n)
+          if (is.na(allvarnum[i])) {
+              opath <- gsub("/data/", "/offsets/", path)
+              #cat("Trying ", path, " ", opath, " ", alltypes[i], "\n", sep="")
+              buflist[[i]] <- vlcbuf_from_shmem(path, opath, alltypes[i], FALSE)
+          } else {
+              buflist[[i]] <- querybuf_from_shmem(path, alltypes[i])
+          }
       }
 
       ## get results (shmem variant)
       getResultShmem <- function(buf, name, varnum) { #, resrv, qryptr) {
-          ## if (is.na(varnum)) {
-          ##     vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
-          ##     if (x@dumpbuffers) {
-          ##         cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
-          ##         vlcbuf_to_shmem(name, buf)
-          ##     }
-          ##     libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
-          ## } else {
-          ##     if (x@dumpbuffers) {
-          ##         cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
-          ##         vecbuf_to_shmem(name, buf)
-          ##     }
+          if (is.na(varnum)) {
+              ##vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
+              vec <- length_from_vlcbuf(buf)
+              #print(vec)
+              libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+          } else {
               libtiledb_query_get_buffer_ptr(buf, asint64)
-          ## }
+          }
       }
       reslist <- mapply(getResultShmem, buflist, allnames, allvarnum,
                         ##MoreArgs=list(resrv=resrv, qryptr=qryptr),
@@ -769,13 +768,14 @@ setMethod("[", "tiledb_array",
           vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
           if (x@dumpbuffers) {
               cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
-              vlcbuf_to_shmem(name, buf)
+              vlcbuf_to_shmem("mtcars", name, buf, vec)
           }
+          #print(vec)
           libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
       } else {
           if (x@dumpbuffers) {
               cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
-              vecbuf_to_shmem(name, buf)
+              vecbuf_to_shmem("mtcars", name, buf, resrv)
           }
           libtiledb_query_get_buffer_ptr(buf, asint64)
       }

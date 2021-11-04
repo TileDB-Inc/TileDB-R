@@ -585,16 +585,24 @@ libtiledb_query_set_buffer_ptr <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_set_buffer_ptr`, query, attr, buf)
 }
 
-vecbuf_to_shmem <- function(name, buf) {
-    invisible(.Call(`_tiledb_vecbuf_to_shmem`, name, buf))
+vecbuf_to_shmem <- function(dir, name, buf, sz) {
+    invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz))
 }
 
-vlcbuf_to_shmem <- function(name, buf) {
-    invisible(.Call(`_tiledb_vlcbuf_to_shmem`, name, buf))
+vlcbuf_to_shmem <- function(dir, name, buf, vec) {
+    invisible(.Call(`_tiledb_vlcbuf_to_shmem`, dir, name, buf, vec))
 }
 
-querybuf_from_shmem <- function(path, sz, dtype, nullable = FALSE) {
-    .Call(`_tiledb_querybuf_from_shmem`, path, sz, dtype, nullable)
+querybuf_from_shmem <- function(path, dtype, nullable = FALSE) {
+    .Call(`_tiledb_querybuf_from_shmem`, path, dtype, nullable)
+}
+
+vlcbuf_from_shmem <- function(datapath, offsetspath, dtype, nullable = FALSE) {
+    .Call(`_tiledb_vlcbuf_from_shmem`, datapath, offsetspath, dtype, nullable)
+}
+
+length_from_vlcbuf <- function(buf) {
+    .Call(`_tiledb_length_from_vlcbuf`, buf)
 }
 
 libtiledb_query_get_buffer_ptr <- function(buf, asint64 = FALSE) {

@@ -1727,38 +1727,66 @@ BEGIN_RCPP
 END_RCPP
 }
 // vecbuf_to_shmem
-void vecbuf_to_shmem(std::string name, XPtr<query_buf_t> buf);
-RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP nameSEXP, SEXP bufSEXP) {
+void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz);
+RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP dirSEXP, SEXP nameSEXP, SEXP bufSEXP, SEXP szSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type dir(dirSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
     Rcpp::traits::input_parameter< XPtr<query_buf_t> >::type buf(bufSEXP);
-    vecbuf_to_shmem(name, buf);
+    Rcpp::traits::input_parameter< int >::type sz(szSEXP);
+    vecbuf_to_shmem(dir, name, buf, sz);
     return R_NilValue;
 END_RCPP
 }
 // vlcbuf_to_shmem
-void vlcbuf_to_shmem(std::string name, XPtr<vlc_buf_t> buf);
-RcppExport SEXP _tiledb_vlcbuf_to_shmem(SEXP nameSEXP, SEXP bufSEXP) {
+void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, IntegerVector vec);
+RcppExport SEXP _tiledb_vlcbuf_to_shmem(SEXP dirSEXP, SEXP nameSEXP, SEXP bufSEXP, SEXP vecSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type dir(dirSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
     Rcpp::traits::input_parameter< XPtr<vlc_buf_t> >::type buf(bufSEXP);
-    vlcbuf_to_shmem(name, buf);
+    Rcpp::traits::input_parameter< IntegerVector >::type vec(vecSEXP);
+    vlcbuf_to_shmem(dir, name, buf, vec);
     return R_NilValue;
 END_RCPP
 }
 // querybuf_from_shmem
-XPtr<query_buf_t> querybuf_from_shmem(std::string path, R_xlen_t sz, std::string dtype, bool nullable);
-RcppExport SEXP _tiledb_querybuf_from_shmem(SEXP pathSEXP, SEXP szSEXP, SEXP dtypeSEXP, SEXP nullableSEXP) {
+XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool nullable);
+RcppExport SEXP _tiledb_querybuf_from_shmem(SEXP pathSEXP, SEXP dtypeSEXP, SEXP nullableSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type sz(szSEXP);
     Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
     Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
-    rcpp_result_gen = Rcpp::wrap(querybuf_from_shmem(path, sz, dtype, nullable));
+    rcpp_result_gen = Rcpp::wrap(querybuf_from_shmem(path, dtype, nullable));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vlcbuf_from_shmem
+XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string offsetspath, std::string dtype, bool nullable);
+RcppExport SEXP _tiledb_vlcbuf_from_shmem(SEXP datapathSEXP, SEXP offsetspathSEXP, SEXP dtypeSEXP, SEXP nullableSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type datapath(datapathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type offsetspath(offsetspathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
+    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
+    rcpp_result_gen = Rcpp::wrap(vlcbuf_from_shmem(datapath, offsetspath, dtype, nullable));
+    return rcpp_result_gen;
+END_RCPP
+}
+// length_from_vlcbuf
+IntegerVector length_from_vlcbuf(XPtr<vlc_buf_t> buf);
+RcppExport SEXP _tiledb_length_from_vlcbuf(SEXP bufSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<vlc_buf_t> >::type buf(bufSEXP);
+    rcpp_result_gen = Rcpp::wrap(length_from_vlcbuf(buf));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2858,9 +2886,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_buffer_alloc_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_alloc_ptr, 4},
     {"_tiledb_libtiledb_query_buffer_assign_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_assign_ptr, 4},
     {"_tiledb_libtiledb_query_set_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_ptr, 3},
-    {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 2},
-    {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 2},
-    {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 4},
+    {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 4},
+    {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
+    {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 3},
+    {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 4},
+    {"_tiledb_length_from_vlcbuf", (DL_FUNC) &_tiledb_length_from_vlcbuf, 1},
     {"_tiledb_libtiledb_query_get_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_ptr, 2},
     {"_tiledb_libtiledb_query_submit", (DL_FUNC) &_tiledb_libtiledb_query_submit, 1},
     {"_tiledb_libtiledb_query_submit_async", (DL_FUNC) &_tiledb_libtiledb_query_submit_async, 1},
