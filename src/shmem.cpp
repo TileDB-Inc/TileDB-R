@@ -38,18 +38,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+static const bool debug = false;
 
 using namespace Rcpp;
-
-// forward declarations
-tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr);
-int32_t _tiledb_datatype_to_sizeof(tiledb_datatype_t dtype);
 
 // [[Rcpp::export]]
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz) {
 #ifndef _WIN32
     std::string bufferpath = std::string("/dev/shm/") + dir + std::string("/buffers/data/") + name;
-    Rcpp::Rcout << "Writing " << bufferpath << " ";
+    if (debug) Rcpp::Rcout << "Writing " << bufferpath << " ";
     int mode = S_IRWXU | S_IRWXG | S_IRWXO;
     int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
     //int n = buf->ncells * buf->size;
@@ -63,7 +60,7 @@ void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, i
     lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
     if (write (fd, "", 1) != 1) Rcpp::stop("write error");
     memcpy (dest, (void*) buf->vec.data(), n);
-    Rcpp::Rcout << " ... done\n";
+    if (debug) Rcpp::Rcout << " ... done\n";
 #endif
 }
 
@@ -71,13 +68,12 @@ void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, i
 void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, IntegerVector vec) {
 #ifndef _WIN32
     std::string bufferpath = std::string("/dev/shm/") + dir + std::string("/buffers/data/") + name;
-    Rcpp::Rcout << "Writing char to " << bufferpath << " " << buf->str.length() << " " << buf->offsets.size() << std::endl;
-    Rcpp::Rcout << buf->str << " (" << std::strlen(buf->str.c_str()) << ")\n";
+    if (debug) Rcpp::Rcout << "Writing char to " << bufferpath << " " << buf->str.length() << " " << buf->offsets.size() << std::endl;
+    if (debug) Rcpp::Rcout << buf->str << " (" << std::strlen(buf->str.c_str()) << ")\n";
     int mode = S_IRWXU | S_IRWXG | S_IRWXO;
     int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
     // int n = buf->str.size();
     int n = std::strlen(buf->str.c_str()); 		// NB: only write string length
-    //Rcpp::Rcout << "String size: " << n << " " << vec[1] << std::endl;
     void *dest = mmap(NULL,      				// kernel picks address
                       n,	 			   		// length
                       PROT_READ | PROT_WRITE,
@@ -92,7 +88,7 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
     fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
     //n = buf->offsets.size() * sizeof(uint64_t);
     n = vec[0] * sizeof(uint64_t);
-    Rcpp::Rcout << "Offsets (byte) size: " << n << " " << vec[0]*sizeof(uint64_t) << std::endl;
+    if (debug) Rcpp::Rcout << "Offsets (byte) size: " << n << " " << vec[0]*sizeof(uint64_t) << std::endl;
     //for (int z=0; z<40; z++) Rcpp::Rcout << buf->offsets[z] << " ";
     //Rcpp::Rcout << "--" << buf->offsets.size() << std::endl;
     dest = mmap(NULL,      				// kernel picks address
@@ -136,11 +132,11 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     buf->dtype = _string_to_tiledb_datatype(dtype);
     buf->size = _tiledb_datatype_to_sizeof(_string_to_tiledb_datatype(dtype));
     buf->ncells = sz / buf->size;
-    Rcpp::Rcout << path << " "
-                << " dtype " << dtype
-                << " sizeof:" << buf->size
-                << " ncells:" << buf->ncells
-                << " vecsize:" << sz << std::endl;
+    if (debug) Rcpp::Rcout << path << " "
+                           << " dtype " << dtype
+                           << " sizeof:" << buf->size
+                           << " ncells:" << buf->ncells
+                           << " vecsize:" << sz << std::endl;
     buf->vec.resize(sz);
     if (nullable) buf->validity_map.resize(buf->ncells); // TODO actually copy
     buf->nullable = nullable;
@@ -198,10 +194,10 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string offsetspath,
     if (nullable) buf->validity_map.resize(szo/sizeof(uint8_t)); // TODO actually copy
     buf->nullable = nullable;
 
-    Rcpp::Rcout << datapath << " " << offsetspath
-                << " data:" << szd
-                << " offsets:" << szo/sizeof(uint64_t)
-                << std::endl;
+    if (debug) Rcpp::Rcout << datapath << " " << offsetspath
+                           << " data:" << szd
+                           << " offsets:" << szo/sizeof(uint64_t)
+                           << std::endl;
     return buf;
 #else
     Rcpp::stop("This function is unavailable on Windows.");
