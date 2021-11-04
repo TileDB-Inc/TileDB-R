@@ -125,9 +125,9 @@ setClass("tiledb_array",
 #' \sQuote{query_statistics} of the return object.
 #' @param sil optional A list, by default empty to store schema information when query objects are
 #' parsed.
-#' @slot dumpbuffers An optional and internal boolean toggle to determine if buffers should
+#' @param dumpbuffers An optional and internal boolean toggle to determine if buffers should
 #' be written out for debugging / development purposes
-#' @slot buffers An optional list with pathnames of shared memory buffers to read data from
+#' @param buffers An optional list with pathnames of shared memory buffers to read data from
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
 #' @export
@@ -641,7 +641,7 @@ setMethod("[", "tiledb_array",
       }
 
       ## get results (shmem variant)
-      getResult <- function(buf, name, varnum) { #, resrv, qryptr) {
+      getResultShmem <- function(buf, name, varnum) { #, resrv, qryptr) {
           ## if (is.na(varnum)) {
           ##     vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
           ##     if (x@dumpbuffers) {
@@ -657,7 +657,7 @@ setMethod("[", "tiledb_array",
               libtiledb_query_get_buffer_ptr(buf, asint64)
           ## }
       }
-      reslist <- mapply(getResult, buflist, allnames, allvarnum,
+      reslist <- mapply(getResultShmem, buflist, allnames, allvarnum,
                         ##MoreArgs=list(resrv=resrv, qryptr=qryptr),
                         SIMPLIFY=FALSE)
       ## convert list into data.frame (cheaply) and subset
