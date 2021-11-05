@@ -1,0 +1,24 @@
+library(tinytest)
+library(tiledb)
+
+if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip on Windows")
+
+ctx <- tiledb_ctx(limitTileDBCores())
+
+if (tiledb_version(TRUE) < "2.4.0") exit_file("Needs TileDB 2.4.* or later")
+
+
+uri <- tempfile()
+fromDataFrame(mtcars, uri)              			# create an array
+arr <- tiledb_array(uri, return_as="data.frame")
+
+basepath <- file.path("/dev", "shm", "mtcars", "buffers", "data")
+if (!dir.exists(basepath)) dir.create(basepath, recursive=TRUE)
+
+arr@dumpbuffers <- "mtcars"             			# store buffers below mtcars
+v1 <- arr[]
+
+arr@dumpbuffers <- character()          			# turn buffer store off again
+arr@buffers <- sapply(colnames(v1), function(x) file.path("mtcars", "buffers", "data", x), simplify=FALSE)
+v2 <- arr[]
+expect_true(all.equal(v1, v2))

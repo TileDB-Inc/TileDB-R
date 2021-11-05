@@ -740,14 +740,14 @@ setMethod("[", "tiledb_array",
           if (is.na(varnum)) {
               vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
               if (has_dumpbuffers) {
-                  cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
+                  #cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
                   vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
               }
               ##print(vec)
               libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
           } else {
               if (has_dumpbuffers) {
-                  cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
+                  #cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
                   vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
               }
               libtiledb_query_get_buffer_ptr(buf, asint64)
