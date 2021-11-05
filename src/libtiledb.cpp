@@ -192,6 +192,11 @@ int32_t _tiledb_datatype_to_sizeof(tiledb_datatype_t dtype) {
 }
 
 // [[Rcpp::export]]
+int32_t tiledb_datatype_string_to_sizeof(const std::string str) {
+    return _tiledb_datatype_to_sizeof(_string_to_tiledb_datatype(str));
+}
+
+// [[Rcpp::export]]
 std::string tiledb_datatype_R_type(std::string datatype) {
   tiledb_datatype_t dtype = _string_to_tiledb_datatype(datatype);
   switch (dtype) {

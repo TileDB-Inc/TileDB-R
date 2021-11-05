@@ -630,12 +630,12 @@ setMethod("[", "tiledb_array",
   if (length(x@buffers) != 0) {         # if we were given buffers (as in the case of TileDB Cloud ops)
       nm <- names(x@buffers)
       if (!all.equal(nm,allnames))
-          error("Expected ", paste(allnames, collapse=","), " got ", paste(nm, collapse=","))
+          stop("Expected ", paste(allnames, collapse=","), " got ", paste(nm, collapse=","), call. = FALSE)
       #message("Buffers: ", paste(allnames, collapse=","), " types: ", paste(alltypes, collapse=","))
       for (i in seq_along(allnames)) {
           n <- allnames[i]
           path <- file.path("/dev/shm", x@buffers[[n]])
-          if (!file.exists(path)) error("No buffer for ", n)
+          if (!file.exists(path)) stop("No buffer for ", n, call. = FALSE)
           if (is.na(allvarnum[i])) {
               opath <- gsub("/data/", "/offsets/", path)
               #cat("Trying ", path, " ", opath, " ", alltypes[i], "\n", sep="")
@@ -677,31 +677,7 @@ setMethod("[", "tiledb_array",
           else if (!is.na(varnum) && nullable)
               res <- libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
           if (rangeunset && tiledb::tiledb_version(TRUE) >= "2.2.0") {
-              sz <- switch(datatype,
-                           "UINT8"   = ,
-                           "INT8"    = 1,
-                           "UINT16"  = ,
-                           "INT16"   = 2,
-                           "INT32"   = ,
-                           "UINT32"  = ,
-                           "FLOAT32" = 4,
-                           "UINT64"  = ,
-                           "INT64"   = ,
-                           "FLOAT64" = ,
-                           "DATETIME_YEAR" = ,
-                           "DATETIME_MONTH" = ,
-                           "DATETIME_WEEK" = ,
-                           "DATETIME_DAY" = ,
-                           "DATETIME_HR" = ,
-                           "DATETIME_MIN" = ,
-                           "DATETIME_SEC" = ,
-                           "DATETIME_MS" = ,
-                           "DATETIME_US" = ,
-                           "DATETIME_NS" = ,
-                           "DATETIME_PS" = ,
-                           "DATETIME_FS" = ,
-                           "DATETIME_AS" = 8,
-                           1)
+              sz <- tiledb_datatype_string_to_sizeof(datatype)
               res <- res / sz
           }
           res
