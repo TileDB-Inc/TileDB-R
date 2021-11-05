@@ -2,6 +2,7 @@ library(tinytest)
 library(tiledb)
 
 if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip on Windows")
+if (Sys.info()['sysname'] == "Darwin") exit_file("Skip on macOS")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
