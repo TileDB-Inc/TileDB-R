@@ -57,8 +57,8 @@ query statistics are returned (as a JSON string) via the attribute
 \item{\code{sil}}{An optional and internal list object with schema information, used for
 parsing queries.}
 
-\item{\code{dumpbuffers}}{An optional and internal boolean toggle to determine if buffers should
-be written out for debugging / development purposes}
+\item{\code{dumpbuffers}}{An optional character variable with a directory name (relative to
+\code{/dev/shm}) for writing out results buffers (for internal use / testing)}
 
 \item{\code{buffers}}{An optional list with pathnames of shared memory buffers to read data from}
 

@@ -53,8 +53,8 @@
 #' \sQuote{query_statistics} of the return object.
 #' @slot sil An optional and internal list object with schema information, used for
 #' parsing queries.
-#' @slot dumpbuffers An optional and internal boolean toggle to determine if buffers should
-#' be written out for debugging / development purposes
+#' @slot dumpbuffers An optional character variable with a directory name (relative to
+#' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
 #' @slot buffers An optional list with pathnames of shared memory buffers to read data from
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
@@ -78,7 +78,7 @@ setClass("tiledb_array",
                       return_as = "character",
                       query_statistics = "logical",
                       sil = "list",
-                      dumpbuffers = "logical",
+                      dumpbuffers = "character",
                       buffers = "list",
                       ptr = "externalptr"))
 
@@ -125,8 +125,8 @@ setClass("tiledb_array",
 #' \sQuote{query_statistics} of the return object.
 #' @param sil optional A list, by default empty to store schema information when query objects are
 #' parsed.
-#' @param dumpbuffers An optional and internal boolean toggle to determine if buffers should
-#' be written out for debugging / development purposes
+#' @param dumpbuffers An optional character variable with a directory name (relative to
+#' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
 #' @param buffers An optional list with pathnames of shared memory buffers to read data from
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
@@ -150,7 +150,7 @@ tiledb_array <- function(uri,
                          return_as = get_return_as_preference(),
                          query_statistics = FALSE,
                          sil = list(),
-                         dumpbuffers = FALSE,
+                         dumpbuffers = character(),
                          buffers = list(),
                          ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
@@ -736,18 +736,19 @@ setMethod("[", "tiledb_array",
 
       ## get results
       getResult <- function(buf, name, varnum, resrv, qryptr) {
+          has_dumpbuffers <- length(x@dumpbuffers) > 0
           if (is.na(varnum)) {
               vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
-              if (x@dumpbuffers) {
+              if (has_dumpbuffers) {
                   cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
-                  vlcbuf_to_shmem("mtcars", name, buf, vec)
+                  vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
               }
               ##print(vec)
               libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
           } else {
-              if (x@dumpbuffers) {
+              if (has_dumpbuffers) {
                   cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
-                  vecbuf_to_shmem("mtcars", name, buf, resrv)
+                  vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
               }
               libtiledb_query_get_buffer_ptr(buf, asint64)
           }
