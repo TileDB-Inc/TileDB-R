@@ -917,6 +917,6 @@ querybuf_from_shmem <- function(path, dtype, nullable = FALSE) {
     .Call(`_tiledb_querybuf_from_shmem`, path, dtype, nullable)
 }
 
-vlcbuf_from_shmem <- function(datapath, offsetspath, dtype, nullable = FALSE) {
-    .Call(`_tiledb_vlcbuf_from_shmem`, datapath, offsetspath, dtype, nullable)
+vlcbuf_from_shmem <- function(datapath, dtype, nullable = FALSE) {
+    .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype, nullable)
 }

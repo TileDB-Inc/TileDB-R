@@ -38,6 +38,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <filesystem>
+#include <regex>
 
 static const bool debug = false;
 
@@ -121,8 +122,6 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
     //n = buf->offsets.size() * sizeof(uint64_t);
     n = vec[0] * sizeof(uint64_t);
     if (debug) Rcpp::Rcout << "Offsets (byte) size: " << n << " " << vec[0]*sizeof(uint64_t);
-    //for (int z=0; z<40; z++) Rcpp::Rcout << buf->offsets[z] << " ";
-    //Rcpp::Rcout << "--" << buf->offsets.size() << std::endl;
     dest = mmap(NULL,      				// kernel picks address
                 n + 1, 			   		// length
                 PROT_READ | PROT_WRITE,
@@ -192,6 +191,9 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     memcpy(buf->vec.data(), src, sz);
     close(fd);
 
+    std::string validitypath = std::regex_replace(path, std::regex("/data/"), "/validity/");
+    if (std::filesystem::is_regular_file(validitypath)) Rcpp::Rcout << "Seeing " << validitypath << std::endl;
+
     return buf;
 #else
     Rcpp::stop("This function is unavailable on Windows.");
@@ -202,8 +204,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
 #endif
 }
 // [[Rcpp::export]]
-XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string offsetspath,
-                                  std::string dtype, bool nullable=false) {
+XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype, bool nullable=false) {
 #ifndef _WIN32
     // struct var_length_char_buffer {
     //     std::vector<uint64_t> offsets;  	// vector for offset values
@@ -224,6 +225,7 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string offsetspath,
     if (datasrc == (caddr_t) -1) Rcpp::stop("mmap error");
 
     // open shared memory region, and set up mmap for offsets
+    std::string offsetspath = std::regex_replace(datapath, std::regex("/data/"), "/offsets/");
     int fdo = open(offsetspath.c_str(), O_RDONLY);
     if (fdo < 0) Rcpp::stop("Cannot open %s for reading", offsetspath.c_str());
     struct stat statbufo;

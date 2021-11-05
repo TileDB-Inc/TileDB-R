@@ -637,9 +637,8 @@ setMethod("[", "tiledb_array",
           path <- file.path("/dev/shm", x@buffers[[n]])
           if (!file.exists(path)) stop("No buffer for ", n, call. = FALSE)
           if (is.na(allvarnum[i])) {
-              opath <- gsub("/data/", "/offsets/", path)
               #cat("Trying ", path, " ", opath, " ", alltypes[i], "\n", sep="")
-              buflist[[i]] <- vlcbuf_from_shmem(path, opath, alltypes[i], FALSE)
+              buflist[[i]] <- vlcbuf_from_shmem(path, alltypes[i], FALSE)
           } else {
               buflist[[i]] <- querybuf_from_shmem(path, alltypes[i])
           }
