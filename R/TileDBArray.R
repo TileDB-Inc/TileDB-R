@@ -740,7 +740,7 @@ setMethod("[", "tiledb_array",
           if (is.na(varnum)) {
               vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
               if (has_dumpbuffers) {
-                  #cat("Name: ", name, " (", paste0(vec, collapse=","), ")\n", sep="")
+                  #cat("Name: ", name, " (", paste0(vec, collapse=","), ") ", sep="")
                   vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
               }
               ##print(vec)

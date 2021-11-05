@@ -37,29 +37,60 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <filesystem>
 
 static const bool debug = false;
 
 using namespace Rcpp;
 
+static std::string _datafile(const std::string dir, const std::string name) {
+    std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/data/");
+    if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
+    return path + name;
+}
+
+static std::string _offsetsfile(const std::string dir, const std::string name) {
+    std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/offsets/");
+    if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
+    return path + name;
+}
+
+static std::string _validityfile(const std::string dir, const std::string name) {
+    std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/validity/");
+    if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
+    return path + name;
+}
+
 // [[Rcpp::export]]
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz) {
 #ifndef _WIN32
-    std::string bufferpath = std::string("/dev/shm/") + dir + std::string("/buffers/data/") + name;
+    std::string bufferpath = _datafile(dir, name);
     if (debug) Rcpp::Rcout << "Writing " << bufferpath << " ";
     int mode = S_IRWXU | S_IRWXG | S_IRWXO;
     int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
-    //int n = buf->ncells * buf->size;
     int n = sz * buf->size;
     void *dest = mmap(NULL,      				// kernel picks address
                       n, 				   		// length
-                      PROT_READ | PROT_WRITE,
-                      MAP_SHARED,
-                      fd,
-                      0);
+                      PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
     if (write (fd, "", 1) != 1) Rcpp::stop("write error");
     memcpy (dest, (void*) buf->vec.data(), n);
+    close(fd);
+
+    if (buf->nullable) {
+        std::string validitypath = _validityfile(dir, name);
+        if (debug) Rcpp::Rcout << " writing " << validitypath << " ";
+        mode = S_IRWXU | S_IRWXG | S_IRWXO;
+        fd = open(validitypath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
+        n = sz * sizeof(uint8_t);
+        void *dest = mmap(NULL,      				// kernel picks address
+                          n, 				   		// length
+                          PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
+        if (write (fd, "", 1) != 1) Rcpp::stop("write error");
+        memcpy (dest, (void*) buf->validity_map.data(), n);
+        close(fd);
+    }
     if (debug) Rcpp::Rcout << " ... done\n";
 #endif
 }
@@ -67,9 +98,9 @@ void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, i
 // [[Rcpp::export]]
 void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, IntegerVector vec) {
 #ifndef _WIN32
-    std::string bufferpath = std::string("/dev/shm/") + dir + std::string("/buffers/data/") + name;
-    if (debug) Rcpp::Rcout << "Writing char to " << bufferpath << " " << buf->str.length() << " " << buf->offsets.size() << std::endl;
-    if (debug) Rcpp::Rcout << buf->str << " (" << std::strlen(buf->str.c_str()) << ")\n";
+    std::string bufferpath = _datafile(dir, name);
+    if (debug) Rcpp::Rcout << "Writing char to " << bufferpath << " " << buf->str.length() << " " << buf->offsets.size() << " ";
+    //if (debug) Rcpp::Rcout << buf->str << " (" << std::strlen(buf->str.c_str()) << ")\n";
     int mode = S_IRWXU | S_IRWXG | S_IRWXO;
     int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
     // int n = buf->str.size();
@@ -81,14 +112,15 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
                       fd,
                       0);
     lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
-    if (write (fd, "", 1) != 1) Rcpp::stop("write error");
+    int res = write (fd, "", 1); if (res != 1) { Rcpp::Rcout << "Res: " << res << std::endl; Rcpp::stop("write error"); }
     memcpy (dest, (void*) buf->str.c_str(), n);
+    close(fd);
 
-    bufferpath = std::string("/dev/shm/") + dir + std::string("/buffers/offsets/") + name;
+    bufferpath = _offsetsfile(dir, name);
     fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
     //n = buf->offsets.size() * sizeof(uint64_t);
     n = vec[0] * sizeof(uint64_t);
-    if (debug) Rcpp::Rcout << "Offsets (byte) size: " << n << " " << vec[0]*sizeof(uint64_t) << std::endl;
+    if (debug) Rcpp::Rcout << "Offsets (byte) size: " << n << " " << vec[0]*sizeof(uint64_t);
     //for (int z=0; z<40; z++) Rcpp::Rcout << buf->offsets[z] << " ";
     //Rcpp::Rcout << "--" << buf->offsets.size() << std::endl;
     dest = mmap(NULL,      				// kernel picks address
@@ -100,6 +132,23 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
     lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
     if (write (fd, "", 1) != 1) Rcpp::stop("write error");
     memcpy (dest, (void*) buf->offsets.data(), n);
+    close(fd);
+
+    if (buf->nullable) {
+        std::string validitypath = _validityfile(dir, name);
+        if (debug) Rcpp::Rcout << " writing " << validitypath << " ";
+        mode = S_IRWXU | S_IRWXG | S_IRWXO;
+        fd = open(validitypath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
+        n = vec[0] * sizeof(uint8_t);
+        void *dest = mmap(NULL,      				// kernel picks address
+                          n, 				   		// length
+                          PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
+        if (write (fd, "", 1) != 1) Rcpp::stop("write error");
+        memcpy (dest, (void*) buf->validity_map.data(), n);
+        close(fd);
+    }
+    if (debug) Rcpp::Rcout << std::endl;
 #endif
 }
 
@@ -141,6 +190,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     if (nullable) buf->validity_map.resize(buf->ncells); // TODO actually copy
     buf->nullable = nullable;
     memcpy(buf->vec.data(), src, sz);
+    close(fd);
 
     return buf;
 #else
@@ -198,6 +248,8 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string offsetspath,
                            << " data:" << szd
                            << " offsets:" << szo/sizeof(uint64_t)
                            << std::endl;
+    close(fdd);
+    close(fdo);
     return buf;
 #else
     Rcpp::stop("This function is unavailable on Windows.");
