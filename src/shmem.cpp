@@ -112,6 +112,7 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
 
 
 void read_vec_buffer(std::string bufferpath, std::vector<int8_t> & vec) {
+#ifdef __linux__
     // // open shared memory region, and set up mmap
     int fd = open(bufferpath.c_str(), O_RDONLY);
     if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
@@ -124,9 +125,11 @@ void read_vec_buffer(std::string bufferpath, std::vector<int8_t> & vec) {
     vec.resize(sz);
     memcpy(vec.data(), src, sz);
     close(fd);
+#endif
 }
 
 void read_vmap_buffer(std::string bufferpath, std::vector<uint8_t> & vec) {
+#ifdef __linux__
     // // open shared memory region, and set up mmap
     int fd = open(bufferpath.c_str(), O_RDONLY);
     if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
@@ -139,6 +142,7 @@ void read_vmap_buffer(std::string bufferpath, std::vector<uint8_t> & vec) {
     vec.resize(sz);
     memcpy(vec.data(), src, sz);
     close(fd);
+#endif
 }
 
 // [[Rcpp::export]]
