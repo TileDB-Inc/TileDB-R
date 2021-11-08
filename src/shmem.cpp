@@ -44,67 +44,50 @@ static const bool debug = false;
 
 using namespace Rcpp;
 
-static std::string _datafile(const std::string dir, const std::string name) {
 #ifdef __linux__
+static std::string _datafile(const std::string dir, const std::string name) {
     std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/data/");
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
     return path + name;
-#else
-    return std::string();
-#endif
 }
 
 static std::string _offsetsfile(const std::string dir, const std::string name) {
-#ifdef __linux__
     std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/offsets/");
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
     return path + name;
-#else
-    return std::string();
-#endif
 }
 
 static std::string _validityfile(const std::string dir, const std::string name) {
-#ifdef __linux__
     std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/validity/");
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
     return path + name;
-#else
-    return std::string();
+}
 #endif
+
+void write_buffer(std::string bufferpath, int numelem, int elemsize, void *data_ptr) {
+    if (debug) Rcpp::Rcout << "Writing " << bufferpath << " ";
+    int mode = S_IRWXU | S_IRWXG | S_IRWXO;
+    int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
+    int bytes = numelem * elemsize;
+    void *dest = mmap(NULL,      				// kernel picks address
+                      bytes,  	 		   		// length
+                      PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    lseek (fd, bytes-1, SEEK_SET); 				// seek to n, write an empty char to allocate block, then memcpy in
+    if (write (fd, "", 1) != 1) Rcpp::stop("write error");
+    memcpy (dest, data_ptr, bytes);
+    close(fd);
+    if (debug) Rcpp::Rcout << " ... done\n";
 }
 
 // [[Rcpp::export]]
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz) {
 #ifdef __linux__
     std::string bufferpath = _datafile(dir, name);
-    if (debug) Rcpp::Rcout << "Writing " << bufferpath << " ";
-    int mode = S_IRWXU | S_IRWXG | S_IRWXO;
-    int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
-    int n = sz * buf->size;
-    void *dest = mmap(NULL,      				// kernel picks address
-                      n, 				   		// length
-                      PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
-    if (write (fd, "", 1) != 1) Rcpp::stop("write error");
-    memcpy (dest, (void*) buf->vec.data(), n);
-    close(fd);
-
+    write_buffer(bufferpath, sz, buf->size, buf->vec.data());
     if (buf->nullable) {
         std::string validitypath = _validityfile(dir, name);
-        if (debug) Rcpp::Rcout << " writing " << validitypath << " ";
-        mode = S_IRWXU | S_IRWXG | S_IRWXO;
-        fd = open(validitypath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
-        n = sz * sizeof(uint8_t);
-        void *dest = mmap(NULL,      				// kernel picks address
-                          n, 				   		// length
-                          PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-        lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
-        if (write (fd, "", 1) != 1) Rcpp::stop("write error");
-        memcpy (dest, (void*) buf->validity_map.data(), n);
-        close(fd);
+        write_buffer(validitypath, sz, sizeof(uint8_t), buf->validity_map.data());
     }
-    if (debug) Rcpp::Rcout << " ... done\n";
 #endif
 }
 
