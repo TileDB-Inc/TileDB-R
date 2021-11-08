@@ -45,26 +45,38 @@ static const bool debug = false;
 using namespace Rcpp;
 
 static std::string _datafile(const std::string dir, const std::string name) {
+#ifdef __linux__
     std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/data/");
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
     return path + name;
+#else
+    return std::string();
+#fi
 }
 
 static std::string _offsetsfile(const std::string dir, const std::string name) {
+#ifdef __linux__
     std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/offsets/");
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
     return path + name;
+#else
+    return std::string();
+#fi
 }
 
 static std::string _validityfile(const std::string dir, const std::string name) {
+#ifdef __linux__
     std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/validity/");
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
     return path + name;
+#else
+    return std::string();
+#fi
 }
 
 // [[Rcpp::export]]
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz) {
-#ifndef _WIN32
+#ifdef __linux__
     std::string bufferpath = _datafile(dir, name);
     if (debug) Rcpp::Rcout << "Writing " << bufferpath << " ";
     int mode = S_IRWXU | S_IRWXG | S_IRWXO;
@@ -98,7 +110,7 @@ void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, i
 
 // [[Rcpp::export]]
 void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, IntegerVector vec) {
-#ifndef _WIN32
+#ifdef __linux__
     std::string bufferpath = _datafile(dir, name);
     if (debug) Rcpp::Rcout << "Writing char to " << bufferpath << " " << buf->str.length() << " " << buf->offsets.size() << " ";
     //if (debug) Rcpp::Rcout << buf->str << " (" << std::strlen(buf->str.c_str()) << ")\n";
@@ -153,7 +165,7 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
 
 // [[Rcpp::export]]
 XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool nullable=false) {
-#ifndef _WIN32
+#ifdef __linux__
     // struct query_buffer {
     //     //void *ptr;                    	// pointer to data as an alternative
     //     std::vector<int8_t> vec;        	// vector of int8_t as a memory container
@@ -219,7 +231,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
 }
 // [[Rcpp::export]]
 XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype, bool nullable=false) {
-#ifndef _WIN32
+#ifdef __linux__
     // struct var_length_char_buffer {
     //     std::vector<uint64_t> offsets;  	// vector for offset values
     //     std::string str;              		// string for data values
