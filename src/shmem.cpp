@@ -51,7 +51,7 @@ static std::string _datafile(const std::string dir, const std::string name) {
     return path + name;
 #else
     return std::string();
-#fi
+#endif
 }
 
 static std::string _offsetsfile(const std::string dir, const std::string name) {
@@ -61,7 +61,7 @@ static std::string _offsetsfile(const std::string dir, const std::string name) {
     return path + name;
 #else
     return std::string();
-#fi
+#endif
 }
 
 static std::string _validityfile(const std::string dir, const std::string name) {
@@ -71,7 +71,7 @@ static std::string _validityfile(const std::string dir, const std::string name) 
     return path + name;
 #else
     return std::string();
-#fi
+#endif
 }
 
 // [[Rcpp::export]]
@@ -222,7 +222,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     if (debug) Rcpp::Rcout << std::endl;
     return buf;
 #else
-    Rcpp::stop("This function is unavailable on Windows.");
+    Rcpp::stop("This function is only available under Linux.");
     // not reached
     XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
     registerXptrFinalizer(buf, libtiledb_query_buf_delete);
@@ -298,7 +298,7 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype, bool 
     close(fdo);
     return buf;
 #else
-    Rcpp::stop("This function is unavailable on Windows.");
+    Rcpp::stop("This function is only available under Linux.");
     // not reached
     XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, false);
     registerXptrFinalizer(buf, libtiledb_vlc_buf_delete);
