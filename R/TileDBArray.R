@@ -55,7 +55,7 @@
 #' parsing queries.
 #' @slot dumpbuffers An optional character variable with a directory name (relative to
 #' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
-#' @slot buffers An optional list with pathnames of shared memory buffers to read data from
+#' @slot buffers An optional list with full pathnames of shared memory buffers to read data from
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -127,7 +127,7 @@ setClass("tiledb_array",
 #' parsed.
 #' @param dumpbuffers An optional character variable with a directory name (relative to
 #' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
-#' @param buffers An optional list with pathnames of shared memory buffers to read data from
+#' @param buffers An optional list with full pathnames of shared memory buffers to read data from
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
 #' @export
@@ -631,13 +631,11 @@ setMethod("[", "tiledb_array",
       nm <- names(x@buffers)
       if (!all.equal(nm,allnames))
           stop("Expected ", paste(allnames, collapse=","), " got ", paste(nm, collapse=","), call. = FALSE)
-      #message("Buffers: ", paste(allnames, collapse=","), " types: ", paste(alltypes, collapse=","))
       for (i in seq_along(allnames)) {
           n <- allnames[i]
-          path <- file.path("/dev/shm", x@buffers[[n]])
+          path <- x@buffers[[n]]
           if (!file.exists(path)) stop("No buffer for ", n, call. = FALSE)
           if (is.na(allvarnum[i])) {
-              #cat("Trying ", path, " ", opath, " ", alltypes[i], "\n", sep="")
               buflist[[i]] <- vlcbuf_from_shmem(path, alltypes[i])
           } else {
               buflist[[i]] <- querybuf_from_shmem(path, alltypes[i])
@@ -654,11 +652,9 @@ setMethod("[", "tiledb_array",
               libtiledb_query_get_buffer_ptr(buf, asint64)
           }
       }
-      reslist <- mapply(getResultShmem, buflist, allnames, allvarnum,
-                        ##MoreArgs=list(resrv=resrv, qryptr=qryptr),
-                        SIMPLIFY=FALSE)
-      ## convert list into data.frame (cheaply) and subset
-      res <- data.frame(reslist) #[seq_len(resrv),]
+      reslist <- mapply(getResultShmem, buflist, allnames, allvarnum, SIMPLIFY=FALSE)
+      ## convert list into data.frame (cheaply)
+      res <- data.frame(reslist)
       colnames(res) <- allnames
 
   } else {                         # -- start 'big else' of standard query build

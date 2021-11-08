@@ -16,7 +16,8 @@ if (!dir.exists(basepath)) dir.create(basepath, recursive=TRUE)
 arr@dumpbuffers <- "mtcars"             			# store buffers below mtcars
 v1 <- arr[]
 arr@dumpbuffers <- character()          			# turn buffer store off again
-arr@buffers <- sapply(colnames(v1), function(x) file.path("mtcars", "buffers", "data", x), simplify=FALSE)
+pathroot <- file.path("/", "dev", "shm", "mtcars", "buffers", "data")
+arr@buffers <- sapply(colnames(v1), function(x) file.path(pathroot, x), simplify=FALSE)
 v2 <- arr[]
 expect_true(all.equal(v1, v2))
 
@@ -28,6 +29,7 @@ arr <- tiledb_array(uri, return_as="data.frame")
 arr@dumpbuffers <- "penguins"             			# store buffers below mtcars
 v3 <- arr[]
 arr@dumpbuffers <- character()          			# turn buffer store off again
-arr@buffers <- sapply(colnames(v3), function(x) file.path("penguins", "buffers", "data", x), simplify=FALSE)
+pathroot <- file.path("/", "dev", "shm", "penguins", "buffers", "data")
+arr@buffers <- sapply(colnames(v3), function(x) file.path(pathroot, x), simplify=FALSE)
 v4 <- arr[]
 expect_true(all.equal(v3, v4))
