@@ -30,7 +30,7 @@
 
 void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map) {
     if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector and map.");
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int getter.", vec.size(), map.size());
 
     for (auto i=0; i < vec.size(); i++)
         map[i] = (vec[i] == R_NaInt) ? 0 : 1;
@@ -38,7 +38,7 @@ void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> &
 
 void setValidityMapForInteger(Rcpp::IntegerVector & vec, const std::vector<uint8_t> & map) {
     if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector and map.");
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int setter.", vec.size(), map.size());
 
     for (auto i=0; i < vec.size(); i++)
         if (map[i] == 0)
@@ -47,7 +47,7 @@ void setValidityMapForInteger(Rcpp::IntegerVector & vec, const std::vector<uint8
 
 void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map) {
     if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector and map.");
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in numeric getter.", vec.size(), map.size());
 
     for (auto i=0; i < vec.size(); i++) {
         // see R_ext/Arith.h: true for both NA and NaN
@@ -57,7 +57,7 @@ void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> &
 
 void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8_t> & map) {
     if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector and map.");
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in numeric setter.", vec.size(), map.size());
 
     for (auto i=0; i < vec.size(); i++)
         if (map[i] == 0)
@@ -70,7 +70,7 @@ void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8
 
 void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & map) {
     if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector and map.");
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int64 getter.", vec.size(), map.size());
 
     std::vector<int64_t> ivec = getInt64Vector(vec);
 
@@ -81,7 +81,7 @@ void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & m
 
 void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_t> & map) {
     if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector and map.");
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int64 setter.", vec.size(), map.size());
 
     for (size_t i=0; i < vec.size(); i++)
         if (map[i] == 0)

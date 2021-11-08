@@ -649,7 +649,6 @@ setMethod("[", "tiledb_array",
           if (is.na(varnum)) {
               ##vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
               vec <- length_from_vlcbuf(buf)
-              #print(vec)
               libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
           } else {
               libtiledb_query_get_buffer_ptr(buf, asint64)

@@ -8,7 +8,6 @@ ctx <- tiledb_ctx(limitTileDBCores())
 
 if (tiledb_version(TRUE) < "2.4.0") exit_file("Needs TileDB 2.4.* or later")
 
-
 uri <- tempfile()
 fromDataFrame(mtcars, uri)              			# create an array
 arr <- tiledb_array(uri, return_as="data.frame")
@@ -21,7 +20,6 @@ arr@buffers <- sapply(colnames(v1), function(x) file.path("mtcars", "buffers", "
 v2 <- arr[]
 expect_true(all.equal(v1, v2))
 
-if (FALSE) {
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 library(palmerpenguins)
 uri <- tempfile()
@@ -30,7 +28,6 @@ arr <- tiledb_array(uri, return_as="data.frame")
 arr@dumpbuffers <- "penguins"             			# store buffers below mtcars
 v3 <- arr[]
 arr@dumpbuffers <- character()          			# turn buffer store off again
-arr@buffers <- sapply(colnames(v1), function(x) file.path("penguins", "buffers", "data", x), simplify=FALSE)
+arr@buffers <- sapply(colnames(v3), function(x) file.path("penguins", "buffers", "data", x), simplify=FALSE)
 v4 <- arr[]
 expect_true(all.equal(v3, v4))
-}

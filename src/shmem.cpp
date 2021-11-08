@@ -180,20 +180,34 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     buf->dtype = _string_to_tiledb_datatype(dtype);
     buf->size = _tiledb_datatype_to_sizeof(_string_to_tiledb_datatype(dtype));
     buf->ncells = sz / buf->size;
+    buf->nullable = false; // default, overriden if buffer in validity path seen
     if (debug) Rcpp::Rcout << path << " "
                            << " dtype " << dtype
                            << " sizeof:" << buf->size
                            << " ncells:" << buf->ncells
-                           << " vecsize:" << sz << std::endl;
+                           << " vecsize:" << sz;
     buf->vec.resize(sz);
-    if (nullable) buf->validity_map.resize(buf->ncells); // TODO actually copy
-    buf->nullable = nullable;
     memcpy(buf->vec.data(), src, sz);
     close(fd);
 
     std::string validitypath = std::regex_replace(path, std::regex("/data/"), "/validity/");
-    if (std::filesystem::is_regular_file(validitypath)) Rcpp::Rcout << "Seeing " << validitypath << std::endl;
-
+    if (std::filesystem::is_regular_file(validitypath)) {
+        if (debug) Rcpp::Rcout << " seeing " << validitypath;
+        int fdv = open(validitypath.c_str(), O_RDONLY);
+        if (fdv < 0) Rcpp::stop("Cannot open %s for reading", validitypath.c_str());
+        struct stat statbufv;
+        if (fstat(fdv,&statbufv) < 0) Rcpp::stop("Cannot fstat %s", validitypath.c_str());
+        int szv = statbufv.st_size;
+        void *srcv = mmap (0, szv, PROT_READ, MAP_SHARED, fdv, 0);
+        if (srcv == (caddr_t) -1) Rcpp::stop("mmap error");
+        if (debug) Rcpp::Rcout << validitypath << " vecsize:" << szv;
+        buf->validity_map.resize(szv);
+        buf->nullable = true;
+        if (szv != buf->ncells) Rcpp::stop("Unexpected length mismatch for validity buffer");
+        memcpy(buf->validity_map.data(), srcv, szv);
+        close(fdv);
+    }
+    if (debug) Rcpp::Rcout << std::endl;
     return buf;
 #else
     Rcpp::stop("This function is unavailable on Windows.");
@@ -243,13 +257,31 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype, bool 
     memcpy(buf->offsets.data(), offsetssrc, szo);
     buf->str.resize(szd);
     memcpy(buf->str.data(), datasrc, szd);
-    if (nullable) buf->validity_map.resize(szo/sizeof(uint8_t)); // TODO actually copy
-    buf->nullable = nullable;
+    buf->nullable = false; // default, overriden if buffer in validity path seen
 
     if (debug) Rcpp::Rcout << datapath << " " << offsetspath
                            << " data:" << szd
-                           << " offsets:" << szo/sizeof(uint64_t)
-                           << std::endl;
+                           << " offsets:" << szo/sizeof(uint64_t);
+
+    std::string validitypath = std::regex_replace(datapath, std::regex("/data/"), "/validity/");
+    if (std::filesystem::is_regular_file(validitypath)) {
+        if (debug) Rcpp::Rcout << " seeing " << validitypath;
+        int fdv = open(validitypath.c_str(), O_RDONLY);
+        if (fdv < 0) Rcpp::stop("Cannot open %s for reading", validitypath.c_str());
+        struct stat statbufv;
+        if (fstat(fdv,&statbufv) < 0) Rcpp::stop("Cannot fstat %s", validitypath.c_str());
+        int szv = statbufv.st_size;
+        void *srcv = mmap (0, szv, PROT_READ, MAP_SHARED, fdv, 0);
+        if (srcv == (caddr_t) -1) Rcpp::stop("mmap error");
+        if (debug) Rcpp::Rcout << validitypath << " vecsize:" << szv;
+        buf->validity_map.resize(szv);
+        buf->nullable = true;
+        if (szv != buf->rows) Rcpp::stop("Unexpected length mismatch for validity buffer");
+        memcpy(buf->validity_map.data(), srcv, szv);
+        close(fdv);
+    }
+    if (debug) Rcpp::Rcout << std::endl;
+
     close(fdd);
     close(fdo);
     return buf;

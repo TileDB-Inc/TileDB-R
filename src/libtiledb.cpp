@@ -2891,7 +2891,7 @@ IntegerVector length_from_vlcbuf(XPtr<vlc_buf_t> buf) {
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
-  //Rcpp::Rcout << dtype << " " << buf->ncells << " " << buf->size << std::endl;
+  //Rcpp::Rcout << dtype << " " << buf->ncells << " " << buf->size << " " << buf->nullable << std::endl;
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
