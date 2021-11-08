@@ -62,10 +62,8 @@ static std::string _validityfile(const std::string dir, const std::string name) 
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
     return path + name;
 }
-#endif
 
 void write_buffer(std::string bufferpath, int numelem, int elemsize, void *data_ptr) {
-#ifdef __linux__
     if (debug) Rcpp::Rcout << "Writing " << bufferpath << " ";
     int mode = S_IRWXU | S_IRWXG | S_IRWXO;
     int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
@@ -78,8 +76,41 @@ void write_buffer(std::string bufferpath, int numelem, int elemsize, void *data_
     memcpy (dest, data_ptr, bytes);
     close(fd);
     if (debug) Rcpp::Rcout << " ... done\n";
-#endif
 }
+
+template <class T>
+void read_buffer(std::string bufferpath, std::vector<T> & vec) {
+    // // open shared memory region, and set up mmap
+    int fd = open(bufferpath.c_str(), O_RDONLY);
+    if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
+    struct stat statbuf;
+    if (fstat(fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", bufferpath.c_str());
+    int sz = statbuf.st_size;
+    void *src = mmap (0, sz, PROT_READ, MAP_SHARED, fd, 0);
+    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
+
+    vec.resize(sz / sizeof(T));
+    memcpy(vec.data(), src, sz);
+    close(fd);
+}
+
+void read_string(std::string bufferpath, std::string & str) {
+    // // open shared memory region, and set up mmap
+    int fd = open(bufferpath.c_str(), O_RDONLY);
+    if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
+    struct stat statbuf;
+    if (fstat(fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", bufferpath.c_str());
+    int sz = statbuf.st_size;
+    void *src = mmap (0, sz, PROT_READ, MAP_SHARED, fd, 0);
+    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
+
+    str.resize(sz);
+    memcpy(str.data(), src, sz);
+    close(fd);
+}
+
+#endif
+
 
 // [[Rcpp::export]]
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz) {
@@ -109,44 +140,8 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
 #endif
 }
 
-
-
-void read_vec_buffer(std::string bufferpath, std::vector<int8_t> & vec) {
-#ifdef __linux__
-    // // open shared memory region, and set up mmap
-    int fd = open(bufferpath.c_str(), O_RDONLY);
-    if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
-    struct stat statbuf;
-    if (fstat(fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", bufferpath.c_str());
-    int sz = statbuf.st_size;
-    void *src = mmap (0, sz, PROT_READ, MAP_SHARED, fd, 0);
-    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
-
-    vec.resize(sz);
-    memcpy(vec.data(), src, sz);
-    close(fd);
-#endif
-}
-
-void read_vmap_buffer(std::string bufferpath, std::vector<uint8_t> & vec) {
-#ifdef __linux__
-    // // open shared memory region, and set up mmap
-    int fd = open(bufferpath.c_str(), O_RDONLY);
-    if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
-    struct stat statbuf;
-    if (fstat(fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", bufferpath.c_str());
-    int sz = statbuf.st_size;
-    void *src = mmap (0, sz, PROT_READ, MAP_SHARED, fd, 0);
-    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
-
-    vec.resize(sz);
-    memcpy(vec.data(), src, sz);
-    close(fd);
-#endif
-}
-
 // [[Rcpp::export]]
-XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool nullable=false) {
+XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 #ifdef __linux__
     // allocate buffer, register finalizer, then set up buffer
     XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
@@ -154,7 +149,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     buf->dtype = _string_to_tiledb_datatype(dtype);
     buf->size = _tiledb_datatype_to_sizeof(_string_to_tiledb_datatype(dtype));
     buf->nullable = false; // default, overriden if buffer in validity path seen
-    read_vec_buffer(path, buf->vec);
+    read_buffer<int8_t>(path, buf->vec);
     buf->ncells = buf->vec.size() / buf->size;
     if (debug) Rcpp::Rcout << path << " " << " dtype " << dtype << " sizeof:" << buf->size
                            << " ncells:" << buf->ncells << " vecsize:" << buf->size * buf->ncells;
@@ -162,7 +157,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     std::string validitypath = std::regex_replace(path, std::regex("/data/"), "/validity/");
     if (std::filesystem::is_regular_file(validitypath)) {
         if (debug) Rcpp::Rcout << " seeing " << validitypath;
-        read_vmap_buffer(validitypath, buf->validity_map);
+        read_buffer<uint8_t>(validitypath, buf->validity_map);
         buf->nullable = true;
     }
     if (debug) Rcpp::Rcout << std::endl;
@@ -177,72 +172,28 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
 }
 
 // [[Rcpp::export]]
-XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype, bool nullable=false) {
+XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
 #ifdef __linux__
-    // struct var_length_char_buffer {
-    //     std::vector<uint64_t> offsets;  	// vector for offset values
-    //     std::string str;              		// string for data values
-    //     int32_t rows, cols;              	// dimension from subarray
-    //     bool nullable;                       // flag
-    //     std::vector<uint8_t> validity_map;   // for nullable vectors
-    // };
-    // typedef struct var_length_char_buffer vlc_buf_t;
-
-    // open shared memory region, and set up mmap for data
-    int fdd = open(datapath.c_str(), O_RDONLY);
-    if (fdd < 0) Rcpp::stop("Cannot open %s for reading", datapath.c_str());
-    struct stat statbufd;
-    if (fstat(fdd,&statbufd) < 0) Rcpp::stop("Cannot fstat %s", datapath.c_str());
-    int szd = statbufd.st_size;
-    void *datasrc = mmap (0, szd, PROT_READ, MAP_SHARED, fdd, 0);
-    if (datasrc == (caddr_t) -1) Rcpp::stop("mmap error");
-
-    // open shared memory region, and set up mmap for offsets
-    std::string offsetspath = std::regex_replace(datapath, std::regex("/data/"), "/offsets/");
-    int fdo = open(offsetspath.c_str(), O_RDONLY);
-    if (fdo < 0) Rcpp::stop("Cannot open %s for reading", offsetspath.c_str());
-    struct stat statbufo;
-    if (fstat(fdo,&statbufo) < 0) Rcpp::stop("Cannot fstat %s", offsetspath.c_str());
-    int szo = statbufo.st_size;
-    void *offsetssrc = mmap (0, szo, PROT_READ, MAP_SHARED, fdo, 0);
-    if (datasrc == (caddr_t) -1) Rcpp::stop("mmap error");
-
     // allocate buffer, register finalizer, then set up buffer
     XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, false);
     registerXptrFinalizer(buf, libtiledb_vlc_buf_delete);
-    buf->offsets.resize(szo/sizeof(uint64_t));
-    buf->rows = szo/sizeof(uint64_t);
+    read_string(datapath, buf->str);
+    std::string offsetspath = std::regex_replace(datapath, std::regex("/data/"), "/offsets/");
+    read_buffer<uint64_t>(offsetspath, buf->offsets);
+    buf->rows = buf->offsets.size();
     buf->cols = 2;              // value not used
-    memcpy(buf->offsets.data(), offsetssrc, szo);
-    buf->str.resize(szd);
-    memcpy(buf->str.data(), datasrc, szd);
-    buf->nullable = false; // default, overriden if buffer in validity path seen
 
     if (debug) Rcpp::Rcout << datapath << " " << offsetspath
-                           << " data:" << szd
-                           << " offsets:" << szo/sizeof(uint64_t);
+                           << " data:" << buf->str.size()
+                           << " offsets:" << buf->offsets.size();
 
     std::string validitypath = std::regex_replace(datapath, std::regex("/data/"), "/validity/");
     if (std::filesystem::is_regular_file(validitypath)) {
-        if (debug) Rcpp::Rcout << " seeing " << validitypath;
-        int fdv = open(validitypath.c_str(), O_RDONLY);
-        if (fdv < 0) Rcpp::stop("Cannot open %s for reading", validitypath.c_str());
-        struct stat statbufv;
-        if (fstat(fdv,&statbufv) < 0) Rcpp::stop("Cannot fstat %s", validitypath.c_str());
-        int szv = statbufv.st_size;
-        void *srcv = mmap (0, szv, PROT_READ, MAP_SHARED, fdv, 0);
-        if (srcv == (caddr_t) -1) Rcpp::stop("mmap error");
-        if (debug) Rcpp::Rcout << validitypath << " vecsize:" << szv;
-        buf->validity_map.resize(szv);
+        if (debug) Rcpp::Rcout << " validity: " << validitypath;
+        read_buffer<uint8_t>(validitypath, buf->validity_map);
         buf->nullable = true;
-        if (szv != buf->rows) Rcpp::stop("Unexpected length mismatch for validity buffer");
-        memcpy(buf->validity_map.data(), srcv, szv);
-        close(fdv);
     }
     if (debug) Rcpp::Rcout << std::endl;
-
-    close(fdd);
-    close(fdo);
     return buf;
 #else
     Rcpp::stop("This function is only available under Linux.");

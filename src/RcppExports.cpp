@@ -2712,28 +2712,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // querybuf_from_shmem
-XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool nullable);
-RcppExport SEXP _tiledb_querybuf_from_shmem(SEXP pathSEXP, SEXP dtypeSEXP, SEXP nullableSEXP) {
+XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype);
+RcppExport SEXP _tiledb_querybuf_from_shmem(SEXP pathSEXP, SEXP dtypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type path(pathSEXP);
     Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
-    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
-    rcpp_result_gen = Rcpp::wrap(querybuf_from_shmem(path, dtype, nullable));
+    rcpp_result_gen = Rcpp::wrap(querybuf_from_shmem(path, dtype));
     return rcpp_result_gen;
 END_RCPP
 }
 // vlcbuf_from_shmem
-XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype, bool nullable);
-RcppExport SEXP _tiledb_vlcbuf_from_shmem(SEXP datapathSEXP, SEXP dtypeSEXP, SEXP nullableSEXP) {
+XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype);
+RcppExport SEXP _tiledb_vlcbuf_from_shmem(SEXP datapathSEXP, SEXP dtypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type datapath(datapathSEXP);
     Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
-    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
-    rcpp_result_gen = Rcpp::wrap(vlcbuf_from_shmem(datapath, dtype, nullable));
+    rcpp_result_gen = Rcpp::wrap(vlcbuf_from_shmem(datapath, dtype));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2967,8 +2965,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_fragment_info_dump", (DL_FUNC) &_tiledb_libtiledb_fragment_info_dump, 1},
     {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 4},
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
-    {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 3},
-    {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 3},
+    {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
+    {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 2},
     {NULL, NULL, 0}
 };
 

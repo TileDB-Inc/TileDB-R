@@ -913,10 +913,10 @@ vlcbuf_to_shmem <- function(dir, name, buf, vec) {
     invisible(.Call(`_tiledb_vlcbuf_to_shmem`, dir, name, buf, vec))
 }
 
-querybuf_from_shmem <- function(path, dtype, nullable = FALSE) {
-    .Call(`_tiledb_querybuf_from_shmem`, path, dtype, nullable)
+querybuf_from_shmem <- function(path, dtype) {
+    .Call(`_tiledb_querybuf_from_shmem`, path, dtype)
 }
 
-vlcbuf_from_shmem <- function(datapath, dtype, nullable = FALSE) {
-    .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype, nullable)
+vlcbuf_from_shmem <- function(datapath, dtype) {
+    .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
 }
