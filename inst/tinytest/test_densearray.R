@@ -600,6 +600,7 @@ qryptr <- tiledb:::libtiledb_query_submit(qryptr)
 expect_equal(tiledb:::libtiledb_query_status(qryptr), "COMPLETE")
 tiledb:::libtiledb_array_close(arrptr)
 
+if (FALSE) {
 ## Read and test
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, array_name, "READ")
 
@@ -798,7 +799,6 @@ rl <- tiledb:::libtiledb_query_get_buffer_var_vec(qryptr, "a", bufptr)
 expect_equal(rl[[1]], offsets)
 expect_equal(rl[[2]], data)
 
-
 ## write subset
 data <- c(11L, 11L, 22L, 22L, 33L, 44L)
 offsets <- c(0L, 2L, 4L, 5L)
@@ -936,7 +936,6 @@ qryptr <- tiledb:::libtiledb_query_submit(qryptr)
 expect_equal(tiledb:::libtiledb_query_status(qryptr), "COMPLETE")
 tiledb:::libtiledb_array_close(arrptr)
 
-
 ## read and test again
 ##ctx <- tiledb_ctx()
 subarr <- c(2L,3L, 2L,3L)
@@ -964,7 +963,7 @@ expect_equal(rl[[1]], offsets)
 expect_equal(rl[[2]], data)
 
 #})
-
+}
 
 #test_that("low-level multi-range subarray read works", {
 array_name <- tempfile()
