@@ -65,6 +65,7 @@ static std::string _validityfile(const std::string dir, const std::string name) 
 #endif
 
 void write_buffer(std::string bufferpath, int numelem, int elemsize, void *data_ptr) {
+#ifdef __linux__
     if (debug) Rcpp::Rcout << "Writing " << bufferpath << " ";
     int mode = S_IRWXU | S_IRWXG | S_IRWXO;
     int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
@@ -77,6 +78,7 @@ void write_buffer(std::string bufferpath, int numelem, int elemsize, void *data_
     memcpy (dest, data_ptr, bytes);
     close(fd);
     if (debug) Rcpp::Rcout << " ... done\n";
+#endif
 }
 
 // [[Rcpp::export]]
@@ -95,112 +97,69 @@ void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, i
 void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, IntegerVector vec) {
 #ifdef __linux__
     std::string bufferpath = _datafile(dir, name);
-    if (debug) Rcpp::Rcout << "Writing char to " << bufferpath << " " << buf->str.length() << " " << buf->offsets.size() << " ";
-    //if (debug) Rcpp::Rcout << buf->str << " (" << std::strlen(buf->str.c_str()) << ")\n";
-    int mode = S_IRWXU | S_IRWXG | S_IRWXO;
-    int fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
-    // int n = buf->str.size();
-    int n = std::strlen(buf->str.c_str()); 		// NB: only write string length
-    void *dest = mmap(NULL,      				// kernel picks address
-                      n,	 			   		// length
-                      PROT_READ | PROT_WRITE,
-                      MAP_SHARED,
-                      fd,
-                      0);
-    lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
-    int res = write (fd, "", 1); if (res != 1) { Rcpp::Rcout << "Res: " << res << std::endl; Rcpp::stop("write error"); }
-    memcpy (dest, (void*) buf->str.c_str(), n);
-    close(fd);
+    write_buffer(bufferpath, std::strlen(buf->str.c_str()), 1L, (void*)buf->str.c_str());
 
     bufferpath = _offsetsfile(dir, name);
-    fd = open(bufferpath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
-    //n = buf->offsets.size() * sizeof(uint64_t);
-    n = vec[0] * sizeof(uint64_t);
-    if (debug) Rcpp::Rcout << "Offsets (byte) size: " << n << " " << vec[0]*sizeof(uint64_t);
-    dest = mmap(NULL,      				// kernel picks address
-                n + 1, 			   		// length
-                PROT_READ | PROT_WRITE,
-                MAP_SHARED,
-                fd,
-                0);
-    lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
-    if (write (fd, "", 1) != 1) Rcpp::stop("write error");
-    memcpy (dest, (void*) buf->offsets.data(), n);
-    close(fd);
+    write_buffer(bufferpath, vec[0], sizeof(uint64_t), buf->offsets.data());
 
     if (buf->nullable) {
         std::string validitypath = _validityfile(dir, name);
-        if (debug) Rcpp::Rcout << " writing " << validitypath << " ";
-        mode = S_IRWXU | S_IRWXG | S_IRWXO;
-        fd = open(validitypath.c_str(), O_RDWR | O_CREAT | O_TRUNC, mode);
-        n = vec[0] * sizeof(uint8_t);
-        void *dest = mmap(NULL,      				// kernel picks address
-                          n, 				   		// length
-                          PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-        lseek (fd, n-1, SEEK_SET); 	 // seek to n, write an empty char to allocate block, then memcpy in
-        if (write (fd, "", 1) != 1) Rcpp::stop("write error");
-        memcpy (dest, (void*) buf->validity_map.data(), n);
-        close(fd);
+        write_buffer(validitypath, vec[0], sizeof(uint8_t), buf->validity_map.data());
     }
-    if (debug) Rcpp::Rcout << std::endl;
 #endif
+}
+
+
+
+void read_vec_buffer(std::string bufferpath, std::vector<int8_t> & vec) {
+    // // open shared memory region, and set up mmap
+    int fd = open(bufferpath.c_str(), O_RDONLY);
+    if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
+    struct stat statbuf;
+    if (fstat(fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", bufferpath.c_str());
+    int sz = statbuf.st_size;
+    void *src = mmap (0, sz, PROT_READ, MAP_SHARED, fd, 0);
+    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
+
+    vec.resize(sz);
+    memcpy(vec.data(), src, sz);
+    close(fd);
+}
+
+void read_vmap_buffer(std::string bufferpath, std::vector<uint8_t> & vec) {
+    // // open shared memory region, and set up mmap
+    int fd = open(bufferpath.c_str(), O_RDONLY);
+    if (fd < 0) Rcpp::stop("Cannot open %s for reading", bufferpath.c_str());
+    struct stat statbuf;
+    if (fstat(fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", bufferpath.c_str());
+    int sz = statbuf.st_size;
+    void *src = mmap (0, sz, PROT_READ, MAP_SHARED, fd, 0);
+    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
+
+    vec.resize(sz);
+    memcpy(vec.data(), src, sz);
+    close(fd);
 }
 
 // [[Rcpp::export]]
 XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool nullable=false) {
 #ifdef __linux__
-    // struct query_buffer {
-    //     //void *ptr;                    	// pointer to data as an alternative
-    //     std::vector<int8_t> vec;        	// vector of int8_t as a memory container
-    //     tiledb_datatype_t dtype;        	// data type
-    //     R_xlen_t ncells;                	// extent
-    //     size_t size;                    	// element size
-    //     std::vector<uint8_t> validity_map;  // for nullable vectors
-    //     bool nullable;                      // flag
-    // };
-    // typedef struct query_buffer query_buf_t;
-
-    // open shared memory region, and set up mmap
-    int fd = open(path.c_str(), O_RDONLY);
-    if (fd < 0) Rcpp::stop("Cannot open %s for reading", path.c_str());
-    struct stat statbuf;
-    if (fstat(fd,&statbuf) < 0) Rcpp::stop("Cannot fstat %s", path.c_str());
-    int sz = statbuf.st_size;
-    void *src = mmap (0, sz, PROT_READ, MAP_SHARED, fd, 0);
-    if (src == (caddr_t) -1) Rcpp::stop("mmap error");
-
     // allocate buffer, register finalizer, then set up buffer
     XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
     registerXptrFinalizer(buf, libtiledb_query_buf_delete);
     buf->dtype = _string_to_tiledb_datatype(dtype);
     buf->size = _tiledb_datatype_to_sizeof(_string_to_tiledb_datatype(dtype));
-    buf->ncells = sz / buf->size;
     buf->nullable = false; // default, overriden if buffer in validity path seen
-    if (debug) Rcpp::Rcout << path << " "
-                           << " dtype " << dtype
-                           << " sizeof:" << buf->size
-                           << " ncells:" << buf->ncells
-                           << " vecsize:" << sz;
-    buf->vec.resize(sz);
-    memcpy(buf->vec.data(), src, sz);
-    close(fd);
+    read_vec_buffer(path, buf->vec);
+    buf->ncells = buf->vec.size() / buf->size;
+    if (debug) Rcpp::Rcout << path << " " << " dtype " << dtype << " sizeof:" << buf->size
+                           << " ncells:" << buf->ncells << " vecsize:" << buf->size * buf->ncells;
 
     std::string validitypath = std::regex_replace(path, std::regex("/data/"), "/validity/");
     if (std::filesystem::is_regular_file(validitypath)) {
         if (debug) Rcpp::Rcout << " seeing " << validitypath;
-        int fdv = open(validitypath.c_str(), O_RDONLY);
-        if (fdv < 0) Rcpp::stop("Cannot open %s for reading", validitypath.c_str());
-        struct stat statbufv;
-        if (fstat(fdv,&statbufv) < 0) Rcpp::stop("Cannot fstat %s", validitypath.c_str());
-        int szv = statbufv.st_size;
-        void *srcv = mmap (0, szv, PROT_READ, MAP_SHARED, fdv, 0);
-        if (srcv == (caddr_t) -1) Rcpp::stop("mmap error");
-        if (debug) Rcpp::Rcout << validitypath << " vecsize:" << szv;
-        buf->validity_map.resize(szv);
+        read_vmap_buffer(validitypath, buf->validity_map);
         buf->nullable = true;
-        if (szv != buf->ncells) Rcpp::stop("Unexpected length mismatch for validity buffer");
-        memcpy(buf->validity_map.data(), srcv, szv);
-        close(fdv);
     }
     if (debug) Rcpp::Rcout << std::endl;
     return buf;
@@ -212,6 +171,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype, bool 
     return buf;
 #endif
 }
+
 // [[Rcpp::export]]
 XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype, bool nullable=false) {
 #ifdef __linux__
