@@ -28,11 +28,12 @@
 #' based on refactored implementation utilising newer TileDB features.
 #'
 #' @slot ctx A TileDB context object
-#' @slot uri A character despription
-#' @slot is.sparse A logical value
+#' @slot uri A character despription with the array URI
+#' @slot is.sparse A logical value whether the array is sparse or not
 #' @slot as.data.frame A logical value
-#' @slot attrs A character vector
-#' @slot extended A logical value
+#' @slot attrs A character vector to select particular column \sQuote{attributes}
+#' @slot extended A logical value, defaults to \code{TRUE}, indicating whether index
+#' columns are returned as well.
 #' @slot selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
 #' @slot query_layout An optional character value
@@ -93,7 +94,7 @@ setClass("tiledb_array",
 #' @param attrs optional character vector to select attributes, default is
 #' empty implying all are selected
 #' @param extended optional logical switch selecting wide \sQuote{data.frame}
-#' format, defaults to "TRUE"
+#' format, defaults to \code{TRUE}
 #' @param selected_ranges optional A list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
 #' @param query_layout optional A value for the TileDB query layout, defaults to
@@ -510,10 +511,17 @@ setMethod("[", "tiledb_array",
     attrnullable <- attrnullable[ind]
   }
 
-  allnames <- c(dimnames, attrnames)
-  alltypes <- c(dimtypes, attrtypes)
-  allvarnum <- c(dimvarnum, attrvarnum)
-  allnullable <- c(dimnullable, attrnullable)
+  if (x@extended) {                     # if true return dimensions and attributes
+      allnames <- c(dimnames, attrnames)
+      alltypes <- c(dimtypes, attrtypes)
+      allvarnum <- c(dimvarnum, attrvarnum)
+      allnullable <- c(dimnullable, attrnullable)
+  } else {                              # otherwise only return attributes
+      allnames <- attrnames
+      alltypes <- attrtypes
+      allvarnum <- attrvarnum
+      allnullable <- attrnullable
+  }
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -753,7 +761,6 @@ setMethod("[", "tiledb_array",
       res <- data.frame(reslist)[seq_len(resrv),]
       colnames(res) <- allnames
   }                                     # end of 'big else' for query build, submission and read
-
 
   ## reduce output if extended is false, or attrs given
   if (!x@extended) {
