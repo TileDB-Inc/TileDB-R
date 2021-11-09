@@ -812,7 +812,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 
 #### Variable-length Attributes
 
-```{r readvarlength, eval=notWindows}
+```{r readvarlength, eval=FALSE}
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
 
