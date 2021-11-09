@@ -553,8 +553,8 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
-libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata, nullable) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata, nullable)
+libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata, nullable, cols = 1L) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata, nullable, cols)
 }
 
 convertStringVectorIntoOffsetsAndString <- function(vec, offsets) {
