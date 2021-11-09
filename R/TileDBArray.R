@@ -629,7 +629,7 @@ setMethod("[", "tiledb_array",
 
   if (length(x@buffers) != 0) {         # if we were given buffers (as in the case of TileDB Cloud ops)
       nm <- names(x@buffers)
-      if (!all.equal(nm,allnames))
+      if (!isTRUE(all.equal(nm,allnames)))
           stop("Expected ", paste(allnames, collapse=","), " got ", paste(nm, collapse=","), call. = FALSE)
       for (i in seq_along(allnames)) {
           n <- allnames[i]
@@ -994,7 +994,7 @@ setMethod("[<-", "tiledb_array",
   nc <- if (is.list(value)) length(value) else ncol(value)
   nm <- if (is.list(value)) names(value) else colnames(value)
 
-  if (all.equal(sort(allnames),sort(nm))) {
+  if (isTRUE(all.equal(sort(allnames),sort(nm)))) {
 
     if (libtiledb_array_is_open_for_writing(x@ptr)) { 			# if open for writing
       arrptr <- x@ptr                                           #   use array
