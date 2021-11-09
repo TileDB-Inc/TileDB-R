@@ -92,36 +92,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_buffer_var_char_alloc
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute, int szoffsets, int szdata);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP, SEXP szoffsetsSEXP, SEXP szdataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
-    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    Rcpp::traits::input_parameter< int >::type szoffsets(szoffsetsSEXP);
-    Rcpp::traits::input_parameter< int >::type szdata(szdataSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc(array, subarray, attribute, szoffsets, szdata));
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_query_buffer_var_vec_alloc
-XPtr<vlv_buf_t> libtiledb_query_buffer_var_vec_alloc(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute, int szoffsets, int szdata);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_var_vec_alloc(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP, SEXP szoffsetsSEXP, SEXP szdataSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
-    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    Rcpp::traits::input_parameter< int >::type szoffsets(szoffsetsSEXP);
-    Rcpp::traits::input_parameter< int >::type szdata(szdataSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_vec_alloc(array, subarray, attribute, szoffsets, szdata));
-    return rcpp_result_gen;
-END_RCPP
-}
 // libtiledb_coords
 std::string libtiledb_coords();
 RcppExport SEXP _tiledb_libtiledb_coords() {
@@ -2753,8 +2723,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
-    {"_tiledb_libtiledb_query_buffer_var_char_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc, 5},
-    {"_tiledb_libtiledb_query_buffer_var_vec_alloc", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_alloc, 5},
     {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},
     {"_tiledb_libtiledb_array_max_buffer_elements_with_type", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_with_type, 4},
     {"_tiledb_libtiledb_array_max_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements, 3},

@@ -241,7 +241,8 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
     if (type %in% c("integer", "double")) {
       buff <- vector(mode = type, length = ncells)
     } else if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
-      buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, as.integer(sub), aname)
+      ##buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, as.integer(sub), aname)
+      buff <- libtiledb_query_buffer_var_char_alloc_direct(ncells, ncells*8, FALSE, sub[4]-sub[3]+1)
     } else if (datatype %in% c("DATETIME_DAY", "DATETIME_SEC", "DATETIME_MS",
                                "DATETIME_US", "DATETIME_NS")) {
       buff <- libtiledb_query_buffer_alloc_ptr(array@ptr, datatype, ncells)

@@ -29,14 +29,6 @@ libtiledb_query_set_coordinates <- function(query, coords, dtype) {
     .Call(`_tiledb_libtiledb_query_set_coordinates`, query, coords, dtype)
 }
 
-libtiledb_query_buffer_var_char_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc`, array, subarray, attribute, szoffsets, szdata)
-}
-
-libtiledb_query_buffer_var_vec_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_vec_alloc`, array, subarray, attribute, szoffsets, szdata)
-}
-
 libtiledb_coords <- function() {
     .Call(`_tiledb_libtiledb_coords`)
 }
