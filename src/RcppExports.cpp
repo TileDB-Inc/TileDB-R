@@ -102,46 +102,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_array_max_buffer_elements_with_type
-R_xlen_t libtiledb_array_max_buffer_elements_with_type(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute, std::string typestr);
-RcppExport SEXP _tiledb_libtiledb_array_max_buffer_elements_with_type(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP, SEXP typestrSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
-    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_max_buffer_elements_with_type(array, subarray, attribute, typestr));
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_array_max_buffer_elements
-R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute);
-RcppExport SEXP _tiledb_libtiledb_array_max_buffer_elements(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
-    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_max_buffer_elements(array, subarray, attribute));
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_array_max_buffer_elements_vec
-NumericVector libtiledb_array_max_buffer_elements_vec(XPtr<tiledb::Array> array, SEXP subarray, std::string attribute);
-RcppExport SEXP _tiledb_libtiledb_array_max_buffer_elements_vec(SEXP arraySEXP, SEXP subarraySEXP, SEXP attributeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    Rcpp::traits::input_parameter< SEXP >::type subarray(subarraySEXP);
-    Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_max_buffer_elements_vec(array, subarray, attribute));
-    return rcpp_result_gen;
-END_RCPP
-}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -2724,9 +2684,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
     {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},
-    {"_tiledb_libtiledb_array_max_buffer_elements_with_type", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_with_type, 4},
-    {"_tiledb_libtiledb_array_max_buffer_elements", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements, 3},
-    {"_tiledb_libtiledb_array_max_buffer_elements_vec", (DL_FUNC) &_tiledb_libtiledb_array_max_buffer_elements_vec, 3},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},

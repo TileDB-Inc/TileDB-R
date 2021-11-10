@@ -33,18 +33,6 @@ libtiledb_coords <- function() {
     .Call(`_tiledb_libtiledb_coords`)
 }
 
-libtiledb_array_max_buffer_elements_with_type <- function(array, subarray, attribute, typestr) {
-    .Call(`_tiledb_libtiledb_array_max_buffer_elements_with_type`, array, subarray, attribute, typestr)
-}
-
-libtiledb_array_max_buffer_elements <- function(array, subarray, attribute) {
-    .Call(`_tiledb_libtiledb_array_max_buffer_elements`, array, subarray, attribute)
-}
-
-libtiledb_array_max_buffer_elements_vec <- function(array, subarray, attribute) {
-    .Call(`_tiledb_libtiledb_array_max_buffer_elements_vec`, array, subarray, attribute)
-}
-
 tiledb_datatype_R_type <- function(datatype) {
     .Call(`_tiledb_tiledb_datatype_R_type`, datatype)
 }

@@ -213,8 +213,7 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
 
   # first alloc coordinate buffer if we are returning a data.frame
   if(array@as.data.frame) {
-    ncells_coords <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
-                                                                   libtiledb_coords(), domaintype)
+    ncells_coords <- 2*ncells
     if (is.integral(dom)) {
       attributes[["coords"]] <- integer(length = ncells_coords)
     } else {
@@ -234,10 +233,6 @@ attribute_buffers <- function(array, sch, dom, sub, selected) {
     type <- tiledb_datatype_R_type(dtype)
     datatype <- libtiledb_attribute_get_type(attr@ptr)
     #cat("dtype:", dtype, " type:", type, " datatype:", datatype, "\n", sep="")
-    ## If getting it as a dataframe we need to use max buffer elements to get proper buffer size
-    if (array@as.data.frame) {
-      ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype)
-    }
     if (type %in% c("integer", "double")) {
       buff <- vector(mode = type, length = ncells)
     } else if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
