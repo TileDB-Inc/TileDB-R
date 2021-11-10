@@ -142,24 +142,24 @@ tiledb_query_alloc_buffer_ptr_char <- function(sizeoffsets, sizedata) {
   bufptr
 }
 
-#' Allocate a Query buffer for reading a character attribute using a subarray
-#'
-#' Note that this uses an API part that may be deprecated in the future.
-#' @param array A TileDB Array object
-#' @param attr A character value containing the attribute
-#' @param subarray A vector of length four describing the subarray required for dense arrays
-#' @param sizeoffsets An optional value of the size of the offsets vector
-#' @param sizedata An optional value of the size of the data string
-#' @return An external pointer to the allocated buffer object
-#' @export
-tiledb_query_alloc_buffer_ptr_char_subarray <- function(array, attr, subarray=NULL,
-                                                        sizeoffsets=0, sizedata=0) {
-  stopifnot(array_ptr=is(array@ptr, "externalptr"),
-            is_vector=is.vector(subarray),
-            attribute_string=is.character(attr))
-  bufptr <- libtiledb_query_buffer_var_char_alloc(array@ptr, subarray, attr, sizeoffsets, sizedata)
-  bufptr
-}
+# ' Allocate a Query buffer for reading a character attribute using a subarray
+# '
+# ' Note that this uses an API part that may be deprecated in the future.
+# ' @param array A TileDB Array object
+# ' @param attr A character value containing the attribute
+# ' @param subarray A vector of length four describing the subarray required for dense arrays
+# ' @param sizeoffsets An optional value of the size of the offsets vector
+# ' @param sizedata An optional value of the size of the data string
+# ' @return An external pointer to the allocated buffer object
+# ' @export
+## tiledb_query_alloc_buffer_ptr_char_subarray <- function(array, attr, subarray=NULL,
+##                                                         sizeoffsets=0, sizedata=0) {
+##   stopifnot(array_ptr=is(array@ptr, "externalptr"),
+##             is_vector=is.vector(subarray),
+##             attribute_string=is.character(attr))
+##   bufptr <- libtiledb_query_buffer_var_char_alloc(array@ptr, subarray, attr, sizeoffsets, sizedata)
+##   bufptr
+## }
 
 #' Assign a buffer to a Query attribute
 #'

@@ -29,14 +29,6 @@ libtiledb_query_set_coordinates <- function(query, coords, dtype) {
     .Call(`_tiledb_libtiledb_query_set_coordinates`, query, coords, dtype)
 }
 
-libtiledb_query_buffer_var_char_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc`, array, subarray, attribute, szoffsets, szdata)
-}
-
-libtiledb_query_buffer_var_vec_alloc <- function(array, subarray, attribute, szoffsets = 0L, szdata = 0L) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_vec_alloc`, array, subarray, attribute, szoffsets, szdata)
-}
-
 libtiledb_coords <- function() {
     .Call(`_tiledb_libtiledb_coords`)
 }
@@ -553,8 +545,8 @@ libtiledb_query_set_buffer <- function(query, attr, buffer) {
     .Call(`_tiledb_libtiledb_query_set_buffer`, query, attr, buffer)
 }
 
-libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata, nullable) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata, nullable)
+libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata, nullable, cols = 1L) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata, nullable, cols)
 }
 
 convertStringVectorIntoOffsetsAndString <- function(vec, offsets) {
