@@ -34,17 +34,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins(cpp11)]]
-
-
-// declarations needed
-XPtr<tiledb::ArraySchema> libtiledb_array_get_schema(XPtr<tiledb::Array> array);
-XPtr<tiledb::Domain> libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema);
-XPtr<tiledb::Attribute> libtiledb_array_schema_get_attribute_from_name(XPtr<tiledb::ArraySchema> schema, std::string name);
-std::string libtiledb_attribute_get_type(XPtr<tiledb::Attribute> attr);
-
-
-
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
                                                     SEXP coords,
@@ -77,78 +66,4 @@ XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
 // [[Rcpp::export]]
 std::string libtiledb_coords() {
   return tiledb_coords();
-}
-
-
-// using domain type information
-// [[Rcpp::export]]
-R_xlen_t libtiledb_array_max_buffer_elements_with_type(XPtr<tiledb::Array> array,
-                                                       SEXP subarray,
-                                                       std::string attribute,
-                                                       std::string typestr) {
-  if (typestr == "INT32") {
-    auto sub = as<std::vector<int32_t>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return max_elements[attribute].second;
-  } else if (typestr == "FLOAT64") {
-    auto sub = as<std::vector<double>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return max_elements[attribute].second;
-  } else if (typestr == "INT64" ||
-             typestr == "UINT64" ||
-             typestr == "UINT32" ||
-             typestr == "DATETIME_DAY" ||
-             typestr == "DATETIME_HR"  ||
-             typestr == "DATETIME_MIN" ||
-             typestr == "DATETIME_SEC" ||
-             typestr == "DATETIME_MS" ||
-             typestr == "DATETIME_US" ||
-             typestr == "DATETIME_NS") {
-    NumericVector svec(subarray);
-    std::vector<int64_t> v(svec.size());
-    for (int i=0; i<svec.size(); i++) {
-      v[i] = static_cast<int64_t>(svec[i]);
-    }
-    auto max_elements = array->max_buffer_elements(v);
-    return max_elements[attribute].second;
-  } else {
-    Rcpp::stop("Invalid subarray buffer type '%s' for domain: '%s'",
-               typestr.c_str(), Rcpp::type2name(subarray));
-  }
-}
-
-
-// [[Rcpp::export]]
-R_xlen_t libtiledb_array_max_buffer_elements(XPtr<tiledb::Array> array,
-                                             SEXP subarray,
-                                             std::string attribute) {
-  if (TYPEOF(subarray) == INTSXP) {
-    auto sub = as<std::vector<int32_t>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return max_elements[attribute].second;
-  } else if (TYPEOF(subarray) == REALSXP) {
-    auto sub = as<std::vector<double>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return max_elements[attribute].second;
-  } else {
-    Rcpp::stop("Invalid subarray buffer type for domain: '%s'", Rcpp::type2name(subarray));
-  }
-}
-
-
-// [[Rcpp::export]]
-NumericVector libtiledb_array_max_buffer_elements_vec(XPtr<tiledb::Array> array,
-                                                      SEXP subarray,
-                                                      std::string attribute) {
-  if (TYPEOF(subarray) == INTSXP) {
-    auto sub = as<std::vector<int32_t>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return NumericVector::create(max_elements[attribute].first, max_elements[attribute].second);
-  } else if (TYPEOF(subarray) == REALSXP) {
-    auto sub = as<std::vector<double>>(subarray);
-    auto max_elements = array->max_buffer_elements(sub);
-    return NumericVector::create(max_elements[attribute].first, max_elements[attribute].second);
-  } else {
-    Rcpp::stop("Invalid subarray buffer type for domain %s", Rcpp::type2name(subarray));
-  }
 }

@@ -96,7 +96,7 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
   return(tiledb_array_schema.from_ptr(schema_xptr))
 })
 
-sparse_attribute_buffers <- function(array, sch, dom, sub, selected) {
+sparse_attribute_buffers <- function(array, sch, dom, sub, selected, ncells=1000) {
   stopifnot(is(sch, "tiledb_array_schema"))
   stopifnot(is(dom, "tiledb_domain"))
   #domaintype <- libtiledb_domain_get_type(dom@ptr)
@@ -105,8 +105,8 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, selected) {
   attributes <- list()
   # first alloc coordinate buffer
   #print(domaintype)
-  ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
-                                                          libtiledb_coords(), domaintype[1])
+  #ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub,
+  #                                                        libtiledb_coords(), domaintype[1])
   attributes[["coords"]] <- libtiledb_query_buffer_alloc_ptr(array@ptr, domaintype[1], ncells)
   attrs <- tiledb::attrs(sch)
   if (length(selected) == 0) {          # no selection given -> use all
@@ -122,7 +122,7 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, selected) {
     type <- tiledb_datatype_R_type(dtype)
     datatype <- libtiledb_attribute_get_type(attr@ptr)
     #cat("dtype:", dtype, " type:", type, " datatype:", datatype, "\n", sep="")
-    ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype[1])
+    #ncells <- libtiledb_array_max_buffer_elements_with_type(array@ptr, sub, aname, domaintype[1])
     if (dtype %in% c("CHAR")) {  # TODO: add other char and date types
       #buff <- libtiledb_query_buffer_var_char_alloc(array@ptr, sub, aname)
       buff <- libtiledb_query_buffer_var_char_alloc_direct(ncells, ncells*8, FALSE, sub[4]-sub[3]+1)
