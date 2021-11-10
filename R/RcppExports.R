@@ -33,6 +33,10 @@ libtiledb_coords <- function() {
     .Call(`_tiledb_libtiledb_coords`)
 }
 
+tiledb_datatype_string_to_sizeof <- function(str) {
+    .Call(`_tiledb_tiledb_datatype_string_to_sizeof`, str)
+}
+
 tiledb_datatype_R_type <- function(datatype) {
     .Call(`_tiledb_tiledb_datatype_R_type`, datatype)
 }
@@ -920,3 +924,4 @@ querybuf_from_shmem <- function(path, dtype) {
 vlcbuf_from_shmem <- function(datapath, dtype) {
     .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
 }
+

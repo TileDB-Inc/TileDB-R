@@ -102,6 +102,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_datatype_string_to_sizeof
+int32_t tiledb_datatype_string_to_sizeof(const std::string str);
+RcppExport SEXP _tiledb_tiledb_datatype_string_to_sizeof(SEXP strSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type str(strSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_datatype_string_to_sizeof(str));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tiledb_datatype_R_type
 std::string tiledb_datatype_R_type(std::string datatype);
 RcppExport SEXP _tiledb_tiledb_datatype_R_type(SEXP datatypeSEXP) {
@@ -2745,6 +2756,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
     {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},
+    {"_tiledb_tiledb_datatype_string_to_sizeof", (DL_FUNC) &_tiledb_tiledb_datatype_string_to_sizeof, 1},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
