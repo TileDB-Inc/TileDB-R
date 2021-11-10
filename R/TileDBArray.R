@@ -765,11 +765,11 @@ setMethod("[", "tiledb_array",
   ## reduce output if extended is false, or attrs given
   if (!x@extended) {
       if (length(sel) > 0) {
-          res <- res[, if (sparse) allnames else attrnames]
+          res <- res[, if (sparse) allnames else attrnames, drop=FALSE]
       }
       k <- match("__tiledb_rows", colnames(res))
       if (is.finite(k)) {
-          res <- res[, -k]
+          res <- res[, -k, drop=FALSE]
       }
   }
 
