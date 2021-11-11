@@ -29,8 +29,6 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::plugins(cpp11)]]
-
 const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
   switch (dtype) {
     case TILEDB_INT8:
@@ -156,6 +154,11 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
   } else {
     Rcpp::stop("Unknown TileDB type '%s'", typestr.c_str());
   }
+}
+
+// [[Rcpp::export]]
+int32_t tiledb_datatype_string_to_sizeof(const std::string str) {
+    return static_cast<int32_t>(tiledb_datatype_size(_string_to_tiledb_datatype(str)));
 }
 
 // [[Rcpp::export]]
@@ -2533,18 +2536,18 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
 }
 
 // 'len' is the length of the query result set, i.e. buffer elements for standard columns
-// 'nchar' is the length of the result set for the particular column, i.e. actual (ex-pos)
+// 'nchar' is the length of the result set for the particular column, i.e. actual (ex-post)
 //    string length in bufptr (as opposed to ex-ante guess)
 // [[Rcpp::export]]
 CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
                                                     int32_t len=0, int32_t nchar=0) {
   size_t n = (len==0 ? bufptr->offsets.size() : len);
-  //Rprintf("n=%d, strsize=%d, row %d col %d, nchar %d, nullable %d\n",
-  //        n, bufptr->str.size(), bufptr->rows, bufptr->cols, nchar, bufptr->nullable);
+  //Rprintf("n=%d, strsize=%d, row %d col %d, nchar %d, nullable %d len=%d nchar=%d\n",
+  //        n, bufptr->str.size(), bufptr->rows, bufptr->cols, nchar, bufptr->nullable, len, nchar);
   std::vector<uint64_t> str_sizes(n);
   for (size_t i = 0; i < n - 1; i++) {                          // all but last
-    //Rprintf("%d %d %d\n", i, bufptr->offsets[i + 1] , bufptr->offsets[i]);
-    str_sizes[i] = bufptr->offsets[i + 1] - bufptr->offsets[i];
+      //  Rprintf("%d %d %d\n", i, bufptr->offsets[i + 1] , bufptr->offsets[i]);
+      str_sizes[i] = bufptr->offsets[i + 1] - bufptr->offsets[i];
   }                                                             // last is total size minus last start
   str_sizes[n-1] = (nchar==0 ? bufptr->str.size() * sizeof(char) : nchar) - bufptr->offsets[n-1];
   // Get the strings
@@ -2844,10 +2847,16 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
     return query;
 }
 
+// [[Rcpp::export]]
+IntegerVector length_from_vlcbuf(XPtr<vlc_buf_t> buf) {
+    IntegerVector v = IntegerVector::create(buf->offsets.size(), buf->str.length());
+    return v;
+}
 
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
+  //Rcpp::Rcout << dtype << " " << buf->ncells << " " << buf->size << " " << buf->nullable << std::endl;
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);

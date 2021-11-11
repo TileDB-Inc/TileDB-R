@@ -24,6 +24,8 @@ tiledb_array(
   return_as = get_return_as_preference(),
   query_statistics = FALSE,
   sil = list(),
+  dumpbuffers = character(),
+  buffers = list(),
   ctx = tiledb_get_context()
 )
 }
@@ -85,6 +87,11 @@ query statistics are returned (as a JSON string) via the attribute
 
 \item{sil}{optional A list, by default empty to store schema information when query objects are
 parsed.}
+
+\item{dumpbuffers}{An optional character variable with a directory name (relative to
+\code{/dev/shm}) for writing out results buffers (for internal use / testing)}
+
+\item{buffers}{An optional list with full pathnames of shared memory buffers to read data from}
 
 \item{ctx}{optional tiledb_ctx}
 }
