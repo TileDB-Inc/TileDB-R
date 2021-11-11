@@ -42,7 +42,7 @@ tiledb_array(
 empty implying all are selected}
 
 \item{extended}{optional logical switch selecting wide \sQuote{data.frame}
-format, defaults to "TRUE"}
+format, defaults to \code{TRUE}}
 
 \item{selected_ranges}{optional A list with matrices where each matrix i
 describes the (min,max) pair of ranges for dimension i}
