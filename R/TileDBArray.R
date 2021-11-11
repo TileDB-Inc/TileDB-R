@@ -666,7 +666,6 @@ setMethod("[", "tiledb_array",
       colnames(res) <- allnames
 
   } else {                         # -- start 'big else' of standard query build
-      ##message("No buffers to read from")
 
       ## retrieve est_result_size
       getEstimatedSize <- function(name, varnum, nullable, qryptr, datatype) {
@@ -758,7 +757,7 @@ setMethod("[", "tiledb_array",
       reslist <- mapply(getResult, buflist, allnames, allvarnum,
                         MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
       ## convert list into data.frame (cheaply) and subset
-      res <- data.frame(reslist)[seq_len(resrv),]
+      res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
       colnames(res) <- allnames
   }                                     # end of 'big else' for query build, submission and read
 
