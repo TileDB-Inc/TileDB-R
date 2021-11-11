@@ -1,2 +1,3 @@
 CRT=-ucrt
+CXX_STD = CXX17
 include Makevars.win
