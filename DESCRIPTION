@@ -17,12 +17,13 @@ Copyright: TileDB, Inc.
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
-SystemRequirements: A C++17 compiler is required. Optionally cmake
+SystemRequirements: A C++17 compiler is required, and on macOS
+ compilation for version 11.14 is required. Optionally cmake
  (only when TileDB source build selected), git (only when TileDB
- source build selected); on x86_64 platforms pre-built TileDB
- Embedded libraries are available at GitHub and are used if no
- TileDB installation is detected, and no other option to build
- or download was specified by the user.
+ source build selected); on x86_64 and M1 platforms pre-built
+ TileDB Embedded libraries are available at GitHub and are used
+ if no TileDB installation is detected, and no other option to
+ build or download was specified by the user.
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
 Suggests: tinytest, rmarkdown, knitr, minidown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble

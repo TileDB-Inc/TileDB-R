@@ -620,6 +620,7 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+CXX17_MACOS
 have_git
 have_cmake
 EGREP
@@ -2960,8 +2961,8 @@ fi
 
 ## If yes, also check for whether pkg-config knows tiledb
 if test x"${have_pkg_config}" != x"no"; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config knows TileDB" >&5
-$as_echo_n "checking pkg-config knows TileDB... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking if pkg-config knows TileDB" >&5
+$as_echo_n "checking if pkg-config knows TileDB... " >&6; }
     if pkg-config --exists tiledb; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
@@ -2993,8 +2994,8 @@ fi
 
 ## If we have pkg-config, use it to test minimal version
 if test x"${have_pkg_config}" != x"no"; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking pkg-config checking TileDB version" >&5
-$as_echo_n "checking pkg-config checking TileDB version... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pkg-config checking TileDB version" >&5
+$as_echo_n "checking for pkg-config checking TileDB version... " >&6; }
     if pkg-config --atleast-version=2.0.0 tiledb; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: >= 2.0.0" >&5
 $as_echo ">= 2.0.0" >&6; }
@@ -3072,6 +3073,14 @@ origCPPFLAGS="${CPPFLAGS}"
 origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
+if test x"${uname}" = x"Darwin"; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Darwin minimum version override" >&5
+$as_echo_n "checking for Darwin minimum version override... " >&6; }
+    CXX17_MACOS="-mmacosx-version-min=10.14"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${CXX17_MACOS}" >&5
+$as_echo "${CXX17_MACOS}" >&6; }
+fi
+
 
 ## -- Part 3: Check for TileDB --------------------------------------------------
 ##
@@ -3517,7 +3526,7 @@ $as_echo "installing TileDB for ${osrel}..." >&6; }
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: using inst/tiledb/{lib,include}" >&5
 $as_echo "using inst/tiledb/{lib,include}" >&6; }
     RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
-    TILEDB_INCLUDE="-I../inst/tiledb/include"
+    TILEDB_INCLUDE="-I../inst/tiledb/include ${CXX17_MACOS}"
 
     TILEDB_LIBS="-ltiledb -L../inst/tiledb/lib"
 
@@ -3528,6 +3537,8 @@ $as_echo "using inst/tiledb/{lib,include}" >&6; }
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
 fi
+
+
 
 ac_config_files="$ac_config_files src/Makevars"
 
