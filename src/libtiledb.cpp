@@ -156,44 +156,9 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
   }
 }
 
-int32_t _tiledb_datatype_to_sizeof(tiledb_datatype_t dtype) {
-  switch (dtype) {
-    case TILEDB_CHAR:
-    case TILEDB_INT8:
-    case TILEDB_UINT8:
-        return 1;
-    case TILEDB_INT16:
-    case TILEDB_UINT16:
-        return 2;
-    case TILEDB_INT32:
-    case TILEDB_UINT32:
-    case TILEDB_FLOAT32:
-        return 4;
-    case TILEDB_INT64:
-    case TILEDB_UINT64:
-    case TILEDB_FLOAT64:
-    case TILEDB_DATETIME_YEAR:
-    case TILEDB_DATETIME_MONTH:
-    case TILEDB_DATETIME_WEEK:
-    case TILEDB_DATETIME_DAY:
-    case TILEDB_DATETIME_HR:
-    case TILEDB_DATETIME_MIN:
-    case TILEDB_DATETIME_SEC:
-    case TILEDB_DATETIME_MS:
-    case TILEDB_DATETIME_US:
-    case TILEDB_DATETIME_NS:
-    case TILEDB_DATETIME_PS:
-    case TILEDB_DATETIME_FS:
-    case TILEDB_DATETIME_AS:
-        return 8;
-    default:
-      Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
-  }
-}
-
 // [[Rcpp::export]]
 int32_t tiledb_datatype_string_to_sizeof(const std::string str) {
-    return _tiledb_datatype_to_sizeof(_string_to_tiledb_datatype(str));
+    return static_cast<int32_t>(tiledb_datatype_size(_string_to_tiledb_datatype(str)));
 }
 
 // [[Rcpp::export]]

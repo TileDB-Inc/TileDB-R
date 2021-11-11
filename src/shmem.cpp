@@ -147,7 +147,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
     XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
     registerXptrFinalizer(buf, libtiledb_query_buf_delete);
     buf->dtype = _string_to_tiledb_datatype(dtype);
-    buf->size = _tiledb_datatype_to_sizeof(_string_to_tiledb_datatype(dtype));
+    buf->size = static_cast<int32_t>(tiledb_datatype_size(_string_to_tiledb_datatype(dtype)));
     buf->nullable = false; // default, overriden if buffer in validity path seen
     read_buffer<int8_t>(path, buf->vec);
     buf->ncells = buf->vec.size() / buf->size;

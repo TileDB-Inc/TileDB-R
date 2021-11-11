@@ -68,7 +68,6 @@ void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_
 
 // type and size helper
 tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr);
-int32_t _tiledb_datatype_to_sizeof(tiledb_datatype_t dtype);
 
 
 #endif
