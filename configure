@@ -2008,8 +2008,14 @@ if test -z "${R_HOME}"; then
     exit 1
 fi
 
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
+CXX=`"${R_HOME}/bin/R" CMD config CXX`
+if test -z "${CXX}"; then
+    as_fn_error $? "No C++ compiler available" "$LINENO" 5
+fi
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+CXX11FLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
+CXX17FLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
