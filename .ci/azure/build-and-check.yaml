@@ -3,7 +3,6 @@ steps:
       R CMD build --no-build-vignettes --no-manual .
       CI=true MACOSX_DEPLOYMENT_TARGET=10.13 R CMD check --no-manual --no-vignettes tiledb_*.tar.gz
       cat tiledb.Rcheck/00install.out
-      cat tiledb.Rcheck/tests/tinytest.Rout
     displayName: 'Run check'
   - bash: |
       R CMD build --no-build-vignettes --no-manual .
