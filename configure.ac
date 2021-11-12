@@ -143,8 +143,10 @@ origCPPFLAGS="${CPPFLAGS}"
 origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
-if test x"${uname}" = x"Darwin"; then
-    AC_MSG_CHECKING([for Darwin minimum version override])
+
+## Take care of 10.14 requirement for Intel macOS
+if test x"${uname}" = x"Darwin" -a x"${machine}" = x"x86_64"; then
+    AC_MSG_CHECKING([for Darwin x86_64 use minimum version override])
     CXX17_MACOS="-mmacosx-version-min=10.14"
     AC_MSG_RESULT([${CXX17_MACOS}])
 fi
