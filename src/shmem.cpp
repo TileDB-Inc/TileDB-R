@@ -24,16 +24,16 @@
 // 'handshakes' from the TileDB Cloud backend, which is not published as open source.
 // They simply constitute an alternate mechanism of filling result data structures taking
 // advantage of an auxiliary parallel query tp TileDB Embedded (that is done solely for
-// performance reasons in the context of TileDB Cloud).
+// performance reasons in the context of TileDB Cloud). They are also made conditional
+// on building on Linux as the shared memory inter-process communication is only use there.
 
 #include "libtiledb.h"
 #include "finalizers.h"
 #include "tiledb_version.h"
 
+#ifdef __linux__
 #include <sys/types.h>
-#ifndef _WIN32
 #include <sys/mman.h>
-#endif
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -42,9 +42,6 @@
 
 static const bool debug = false;
 
-using namespace Rcpp;
-
-#ifdef __linux__
 static std::string _datafile(const std::string dir, const std::string name) {
     std::string path = std::string("/dev/shm/") + dir + std::string("/buffers/data/");
     if (!std::filesystem::is_directory(path)) std::filesystem::create_directories(path);
