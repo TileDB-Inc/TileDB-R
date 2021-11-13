@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.8</span>
       </span>
     </div>
 
@@ -198,18 +198,18 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>schema</span> <span class='op'>&lt;-</span> <span class='fu'>tiledb_array_schema</span><span class='op'>(</span>
-              dom <span class='op'>=</span> <span class='fu'><a href='tiledb_domain.html'>tiledb_domain</a></span><span class='op'>(</span>
-                        dims <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span><span class='op'>(</span><span class='st'>"rows"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1L</span>, <span class='fl'>4L</span><span class='op'>)</span>, <span class='fl'>4L</span>, <span class='st'>"INT32"</span><span class='op'>)</span>,
-                                 <span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span><span class='op'>(</span><span class='st'>"cols"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1L</span>, <span class='fl'>4L</span><span class='op'>)</span>, <span class='fl'>4L</span>, <span class='st'>"INT32"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
-              attrs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span><span class='op'>(</span><span class='st'>"a"</span>, type <span class='op'>=</span> <span class='st'>"INT32"</span><span class='op'>)</span><span class='op'>)</span>,
-              cell_order <span class='op'>=</span> <span class='st'>"COL_MAJOR"</span>,
-              tile_order <span class='op'>=</span> <span class='st'>"COL_MAJOR"</span>,
-              sparse <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>schema</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>schema</span> <span class='op'>&lt;-</span> <span class='fu'>tiledb_array_schema</span><span class='op'>(</span></span>
+<span class='r-in'>              dom <span class='op'>=</span> <span class='fu'><a href='tiledb_domain.html'>tiledb_domain</a></span><span class='op'>(</span></span>
+<span class='r-in'>                        dims <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span><span class='op'>(</span><span class='st'>"rows"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1L</span>, <span class='fl'>4L</span><span class='op'>)</span>, <span class='fl'>4L</span>, <span class='st'>"INT32"</span><span class='op'>)</span>,</span>
+<span class='r-in'>                                 <span class='fu'><a href='tiledb_dim.html'>tiledb_dim</a></span><span class='op'>(</span><span class='st'>"cols"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1L</span>, <span class='fl'>4L</span><span class='op'>)</span>, <span class='fl'>4L</span>, <span class='st'>"INT32"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>              attrs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='tiledb_attr.html'>tiledb_attr</a></span><span class='op'>(</span><span class='st'>"a"</span>, type <span class='op'>=</span> <span class='st'>"INT32"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>              cell_order <span class='op'>=</span> <span class='st'>"COL_MAJOR"</span>,</span>
+<span class='r-in'>              tile_order <span class='op'>=</span> <span class='st'>"COL_MAJOR"</span>,</span>
+<span class='r-in'>              sparse <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>schema</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.8</span>
       </span>
     </div>
 
@@ -113,20 +113,20 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>TileDB Embedded needs to be present, and can be installed first (from a package or from source) for the TileDB R package to build and link correctly. Alternatively, if no system installation is found, a precompiled shared library is used during the installation of this R package.</p>
 <p>The TileDB R package has been published on <a href="https://cran.r-project.org/">CRAN</a> and be installed directly via</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">install.packages</span>(<span class="st">"tiledb"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(<span class="st">"tiledb"</span>)</span></code></pre></div>
 <p>as usual.</p>
 <p>The most recent released version can be installed from <a href="https://github.com/TileDB-Inc/TileDB-R">Github</a> using the package <a href="https://cran.r-project.org/package=remotes">remotes</a>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"remotes"</span>,<span class="at">quietly=</span><span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>...</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(tiledb)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">tiledb_version</span>()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>major minor patch</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>     <span class="dv">3</span>     <span class="dv">1</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">help</span>(<span class="at">package=</span>tiledb)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">"remotes"</span>,<span class="dt">quietly=</span><span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">"remotes"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>...</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(tiledb)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">tiledb_version</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>major minor patch</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>    <span class="dv">2</span>     <span class="dv">3</span>     <span class="dv">1</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">help</span>(<span class="dt">package=</span>tiledb)</span></code></pre></div>
 <p>If the TileDB library is installed in a custom location, you need to pass the explicit path:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>,</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>      <span class="dt">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"</span>)</span></code></pre></div>
 <p>Note that the TileDB R package is developed and tested against the latest stable (<code>v2.3.x</code>) version of TileDB, but should also build against the newest development version.</p>
 </div>
 <div id="quick-links" class="section level2">
