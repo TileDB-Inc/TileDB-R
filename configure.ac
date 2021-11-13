@@ -35,8 +35,14 @@ if test -z "${R_HOME}"; then
     exit 1
 fi
 
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
+CXX=`"${R_HOME}/bin/R" CMD config CXX`
+if test -z "${CXX}"; then
+    AC_MSG_ERROR([No C++ compiler available])
+fi
+CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
+CXX11FLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
+CXX17FLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
 AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
@@ -45,7 +51,7 @@ AC_PROG_CXX
 AC_PATH_PROG(have_pkg_config, pkg-config, no)
 ## If yes, also check for whether pkg-config knows tiledb
 if test x"${have_pkg_config}" != x"no"; then
-    AC_MSG_CHECKING([pkg-config knows TileDB])
+    AC_MSG_CHECKING([if pkg-config knows TileDB])
     if pkg-config --exists tiledb; then
         AC_MSG_RESULT([yes])
         tiledb_include=$(pkg-config --cflags tiledb)
@@ -69,7 +75,7 @@ fi
 
 ## If we have pkg-config, use it to test minimal version
 if test x"${have_pkg_config}" != x"no"; then
-    AC_MSG_CHECKING([pkg-config checking TileDB version])
+    AC_MSG_CHECKING([for pkg-config checking TileDB version])
     if pkg-config --atleast-version=2.0.0 tiledb; then
         AC_MSG_RESULT([>= 2.0.0])
     else
@@ -137,6 +143,14 @@ origCPPFLAGS="${CPPFLAGS}"
 origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
+
+## Take care of 10.14 requirement for Intel macOS
+if test x"${uname}" = x"Darwin" -a x"${machine}" = x"x86_64"; then
+    AC_MSG_CHECKING([for Darwin x86_64 use minimum version override])
+    CXX17_MACOS="-mmacosx-version-min=10.14"
+    AC_MSG_RESULT([${CXX17_MACOS}])
+fi
+
 
 ## -- Part 3: Check for TileDB --------------------------------------------------
 ##
@@ -220,7 +234,7 @@ if test x"${have_tiledb}" = x"no"; then
     #AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
     AC_MSG_RESULT([using inst/tiledb/{lib,include}])
     RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
-    AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include")
+    AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include ${CXX17_MACOS}")
     AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
     AC_SUBST([TILEDB_RPATH], "${RPATH}")
 
@@ -228,6 +242,8 @@ if test x"${have_tiledb}" = x"no"; then
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
 fi
+
+AC_SUBST([CXX17_MACOS])
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT

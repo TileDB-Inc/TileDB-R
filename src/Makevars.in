@@ -1,11 +1,14 @@
 ## We need C++17 to use TileDB's C++ API
 CXX_STD = CXX17
 
+## For macOS aka Darwin need to set minimum version 10.14 for macOS
+PKG_CXX17FLAGS = @CXX17_MACOS@
+
 ## We need the TileDB Headers
-PKG_CPPFLAGS =	-I../inst/include/ @TILEDB_INCLUDE@
+PKG_CPPFLAGS = -I../inst/include/ @TILEDB_INCLUDE@
 
 ## We also need the TileDB library
-PKG_LIBS = @TILEDB_LIBS@ @TILEDB_RPATH@
+PKG_LIBS = @CXX17_MACOS@ @TILEDB_LIBS@ @TILEDB_RPATH@
 
 all: $(SHLIB)
         # if we are
