@@ -36,10 +36,8 @@
 
 library(tiledb)
 
-# Name of the array to create.
-array_name <- "quickstart_dense"
-## Path is either current directory, or a local config value is found
-uri <- file.path(getOption("TileDB_Data_Path", "."), array_name)
+# Name of the array to create using the in-memory filesystem
+uri <- "mem://quickstart_dense"
 
 create_array <- function(uri) {
     # Check if the array already exists.
@@ -85,7 +83,7 @@ write_array_via_query_piped <- function(uri) {
     stopifnot(requireNamespace("magrittr", quietly=TRUE))
     library(magrittr)
     data <- 1:16
-    qry <- tiledb_array(uri = uri) |> tiledb_query("WRITE")
+    qry <- tiledb_array(uri = uri, "WRITE")
     qry |>
         tiledb_query_set_layout("ROW_MAJOR") |>  # also default, transpose if COL_MAJOR
         tiledb_query_set_buffer("a", data) |>
