@@ -1,2 +1,2 @@
-version: 2.5.0-rc1
-sha: ded43f7
+version: 2.5.0
+sha: d11292d
