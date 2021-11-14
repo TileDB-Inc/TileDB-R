@@ -1,4 +1,4 @@
-# tiledb 0.9.8
+# tiledb 0.10.0
 
 * This release of the R package builds against [TileDB 2.5.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.4.0), but has been tested against previous releases, and the development version.
 
@@ -17,6 +17,8 @@
 * The `extended` toggle and field for `tiledb_array()` can now select dimension-less returns from sparse arrays (#318)
 
 * Use of TileDB Embedded was upgraded to release 2.5.0 (#321) following earlier upgrades to 2.4.2 and 2.4.3 (#308, #312)
+
+* A new quickstart example using the 'memory filesystem' was added, and one another example updated (#323)
 
 ## Bug Fixes
 
