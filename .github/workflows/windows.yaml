@@ -11,10 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         include: [
-          { windows: windows-2019, r: release,    refactored_readers: false },
-          { windows: windows-2022, r: devel,      refactored_readers: false },
-          { windows: windows-2022, r: devel-ucrt, refactored_readers: false },
-          { windows: windows-2022, r: devel,      refactored_readers: true  }
+          { windows: windows-2019, r: release    },
+          { windows: windows-2022, r: devel      },
+          { windows: windows-2022, r: devel-ucrt }
         ]
     steps:
       - run: git config --global core.autocrlf false
@@ -35,6 +34,5 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
           _R_CHECK_FORCE_SUGGESTS_: false
-          TILEDB_USE_REFACTORED_READERS: ${{ matrix.refactored_readers }}
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-vignettes", "--as-cran"), build_args = c("--no-build-vignettes"), error_on = "error", check_dir = "check")
         shell: Rscript {0}
