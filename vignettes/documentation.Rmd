@@ -24,7 +24,7 @@ uridensewkey <- file.path(tdir, "denseenc")
 notWindows <- .Platform$OS.type != "windows"
 ```
 
-This document follows the [TileDB API usage examples](https://docs.tiledb.com/).
+This document follows the [TileDB API usage examples](https://docs.tiledb.com/main/how-to).
 A shorter [introductory vignette](introduction.html) is also available.
 
 # Prelimaries
