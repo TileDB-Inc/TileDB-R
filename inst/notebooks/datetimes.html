@@ -164,6 +164,26 @@ background-color: unset;
 color: unset;
 }
 </style>
+  <style type="text/css">@media screen and (max-width: 960px) {
+header, nav, article {
+padding: 0 3rem;
+}
+}
+#TOC {
+font-size: 0.9em;
+border: none;
+}
+#TOC > ul {
+box-sizing: border-box;
+}
+#TOC ul {
+margin: 0;
+}
+#TOC li, #TOC a {
+margin: 0;
+padding: 0;
+}
+</style>
   <style type="text/css">.tooltip {
 position: relative;
 display: inline-block;
@@ -218,133 +238,20 @@ margin-bottom: 1rem;
 margin-top: 1rem;
 }
 </style>
-  <style type="text/css">
-.collapse {
-width: calc(100% - 1rem);
-opacity: 1;
-display: flex;
-flex-direction: column;
-margin: 0.5rem;
-border-radius: 0.125rem;
-}
-.collapse > [type="radio"], .collapse > [type="checkbox"] {
-height: 1px;
-width: 1px;
-margin: -1px;
-overflow: hidden;
-position: absolute;
-clip: rect(0 0 0 0);
--webkit-clip-path: inset(100%);
-clip-path: inset(100%);
-}
-.collapse > label {
-flex-grow: 1;
-display: inline-block;
-height: 1.5rem;
-cursor: pointer;
-transition: background 0.3s;
-color: #212121;
-background: #e8e8e8;
-border: 0.0625rem solid #ddd;
-padding: 0.75rem;
-}
-.collapse > label:hover, .collapse > label:focus {
-background: #f0f0f0;
-}
-.collapse > label + div {
-flex-basis: auto;
-height: 1px;
-width: 1px;
-margin: -1px;
-overflow: hidden;
-position: absolute;
-clip: rect(0 0 0 0);
--webkit-clip-path: inset(100%);
-clip-path: inset(100%);
-transition: max-height 0.3s;
-max-height: 1px;
-}
-.collapse > :checked + label {
-background: #ececec;
-border-bottom-color: #ececec;
-}
-.collapse > :checked + label + div {
-box-sizing: border-box;
-position: relative;
-width: 100%;
-height: auto;
-overflow: auto;
-margin: 0;
-border: 0.0625rem solid #ddd;
-border-top: 0;
-padding: 0.5rem;
-clip: auto;
--webkit-clip-path: inset(0%);
-clip-path: inset(0%);
-max-height: 400px;
-}
-.collapse > label:not(:first-of-type) {
-border-top: 0;
-}
-.collapse > label:first-of-type {
-border-radius: 0.125rem 0.125rem 0 0;
-}
-.collapse > label:last-of-type:not(:first-of-type) {
-border-radius: 0 0 0.125rem 0.125rem;
-}
-.collapse > label:last-of-type:first-of-type {
-border-radius: 0.125rem;
-}
-.collapse > :checked:last-of-type:not(:first-of-type) + label {
-border-radius: 0;
-}
-.collapse > :checked:last-of-type + label + div {
-border-radius: 0 0 0.125rem 0.125rem;
-}
-</style>
-  <style type="text/css">@media screen and (max-width: 900px) {
-header, nav, article {
-padding: 0 3rem;
-}
-}
-</style>
-  <style type="text/css">
-a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
-a.anchor-section::before {content: '#';}
-.hasAnchor:hover a.anchor-section {visibility: visible;}
-</style>
-  <script>// Anchor sections v1.0 written by Atsushi Yasumoto on Oct 3rd, 2020.
+  <script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
 document.addEventListener('DOMContentLoaded', function() {
-  // Do nothing if AnchorJS is used
-  if (typeof window.anchors === 'object' && anchors.hasOwnProperty('hasAnchorJSLink')) {
-    return;
-  }
-
-  const h = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-  // Do nothing if sections are already anchored
-  if (Array.from(h).some(x => x.classList.contains('hasAnchor'))) {
-    return null;
-  }
-
-  // Use section id when pandoc runs with --section-divs
-  const section_id = function(x) {
-    return ((x.classList.contains('section') || (x.tagName === 'SECTION'))
-            ? x.id : '');
-  };
-
-  // Add anchors
-  h.forEach(function(x) {
-    const id = x.id || section_id(x.parentElement);
-    if (id === '') {
-      return null;
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
     }
-    let anchor = document.createElement('a');
-    anchor.href = '#' + id;
-    anchor.classList = ['anchor-section'];
-    x.classList.add('hasAnchor');
-    x.appendChild(anchor);
-  });
+  }
 });
 </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous" data-external="1">
@@ -370,36 +277,36 @@ document.addEventListener('DOMContentLoaded', function() {
 <article>
 <section id="overview" class="level2">
 <h2>Overview</h2>
-<p>TileDB supports a wide range of date and time types as shown in the <a href="https://docs.tiledb.com/main/solutions/tiledb-embedded/internal-mechanics/datetimes">documention for Datetimes</a>.</p>
+<p>TileDB supports a wide range of date and time types as shown in the <a href="https://docs.tiledb.com/main/concepts/internal-mechanics/datetimes">documention for Datetimes</a>.</p>
 <p>The supported range of dates and times correspond to the dates and times supported by the Python extension <em>numpy</em>, and is described <a href="https://numpy.org/doc/stable/reference/arrays.datetime.html">in its documentation</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>day <span class="op">=</span> <span class="st">&quot;1971-02-03 04:05:06&quot;</span>    <span class="co"># third day of second month of first year past epoch</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>[np.datetime64(day, <span class="st">&#39;Y&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),    <span class="co"># extract year, month, ... as an int64</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>np.datetime64(day, <span class="st">&#39;M&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>np.datetime64(day, <span class="st">&#39;D&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>np.datetime64(day, <span class="st">&#39;h&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>np.datetime64(day, <span class="st">&#39;m&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>np.datetime64(day, <span class="st">&#39;s&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>)]</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">## [1, 13, 398, 9556, 573365, 34401906]</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="im">import</span> datetime</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>day <span class="op">=</span> <span class="st">&quot;1971-02-03 04:05:06&quot;</span>    <span class="co"># third day of second month of first year past epoch</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>[np.datetime64(day, <span class="st">&#39;Y&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),    <span class="co"># extract year, month, ... as an int64</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>np.datetime64(day, <span class="st">&#39;M&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>np.datetime64(day, <span class="st">&#39;D&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>np.datetime64(day, <span class="st">&#39;h&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>np.datetime64(day, <span class="st">&#39;m&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>np.datetime64(day, <span class="st">&#39;s&#39;</span>).astype(<span class="st">&#39;int64&#39;</span>)]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="co">## [1, 13, 398, 9556, 573365, 34401906]</span></span></code></pre></div>
 <p>R has date and datetime support built-in. The <code>Date</code> supports dates using an integer count since the epoch, and matches the <code>D</code> value from the previous example. Similarly, the ‘compact’ <code>POSIXct</code> representation of a <code>Datetime</code> uses the number of seconds since the epoch and corresponds to the <code>s</code> value from the previous example.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.Date</span>(<span class="dv">398</span>, <span class="at">origin=</span><span class="st">&quot;1970-01-01&quot;</span>)  <span class="co"># conversion from numeric input requires &#39;origin&#39;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;1971-02-03&quot;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as.POSIXct</span>(<span class="dv">34401906</span>, <span class="at">origin=</span><span class="st">&quot;1970-01-01&quot;</span>, <span class="at">tz=</span><span class="st">&quot;UTC&quot;</span>, <span class="at">usetz=</span><span class="cn">TRUE</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;1971-02-03 04:05:06 UTC&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">as.Date</span>(<span class="dv">398</span>, <span class="dt">origin=</span><span class="st">&quot;1970-01-01&quot;</span>)  <span class="co"># conversion from numeric input requires &#39;origin&#39;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="co">## [1] &quot;1971-02-03&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">as.POSIXct</span>(<span class="dv">34401906</span>, <span class="dt">origin=</span><span class="st">&quot;1970-01-01&quot;</span>, <span class="dt">tz=</span><span class="st">&quot;UTC&quot;</span>, <span class="dt">usetz=</span><span class="ot">TRUE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="co">## [1] &quot;1971-02-03 04:05:06 UTC&quot;</span></span></code></pre></div>
 <p>R can reconstruct dates and times from the <em>numpy</em> representation using the epoch as a ‘base’ date along with time period calculations. This can be done using base R (adding to <code>Date</code> or <code>POSIXct</code> objects), by using the <em>lubridate</em> package for a number of intermediate formats and by using the <em>nanotime</em> package for higher-resolution periods and intervals.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(lubridate))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ymd</span>(<span class="st">&quot;1970-01-01&quot;</span>) <span class="sc">+</span>  <span class="fu">c</span>(<span class="fu">years</span>(<span class="dv">1</span>), <span class="fu">months</span>(<span class="dv">13</span>), <span class="fu">days</span>(<span class="dv">398</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;1971-01-01&quot; &quot;1971-02-01&quot; &quot;1971-02-03&quot;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ymd_hms</span>(<span class="st">&quot;1970-01-01 00:00:00&quot;</span>) <span class="sc">+</span> <span class="fu">c</span>(<span class="fu">hours</span>(<span class="dv">9556</span>), <span class="fu">minutes</span>(<span class="dv">573365</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;1971-02-03 04:00:00 UTC&quot; &quot;1971-02-03 04:05:00 UTC&quot;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(nanotime))</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">nanotime</span>(<span class="st">&quot;1970-01-01T00:00:00+00:00&quot;</span>) <span class="sc">+</span> <span class="fu">nanoduration</span>(<span class="at">hours=</span><span class="dv">2</span>, <span class="at">minutes=</span><span class="dv">3</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">seconds=</span><span class="dv">4</span>, <span class="at">nanoseconds=</span><span class="dv">5</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1970-01-01T02:03:04.000000005+00:00</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">suppressMessages</span>(<span class="kw">library</span>(lubridate))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">ymd</span>(<span class="st">&quot;1970-01-01&quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">c</span>(<span class="kw">years</span>(<span class="dv">1</span>), <span class="kw">months</span>(<span class="dv">13</span>), <span class="kw">days</span>(<span class="dv">398</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="co">## [1] &quot;1971-01-01&quot; &quot;1971-02-01&quot; &quot;1971-02-03&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">ymd_hms</span>(<span class="st">&quot;1970-01-01 00:00:00&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">c</span>(<span class="kw">hours</span>(<span class="dv">9556</span>), <span class="kw">minutes</span>(<span class="dv">573365</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co">## [1] &quot;1971-02-03 04:00:00 UTC&quot; &quot;1971-02-03 04:05:00 UTC&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="kw">suppressMessages</span>(<span class="kw">library</span>(nanotime))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">nanotime</span>(<span class="st">&quot;1970-01-01T00:00:00+00:00&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">nanoduration</span>(<span class="dt">hours=</span><span class="dv">2</span>, <span class="dt">minutes=</span><span class="dv">3</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>                                                     <span class="dt">seconds=</span><span class="dv">4</span>, <span class="dt">nanoseconds=</span><span class="dv">5</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="co">## [1] 1970-01-01T02:03:04.000000005+00:00</span></span></code></pre></div>
 <!-- Note that the is result is correct to the given precision: adding one year to the epoch gets us a
 date in 1971 (here the first one). Similarly, adding thirteen months gets us to the correct month
 but not yet date. A day can only be fully recovered via the 'days' period, here 398.
@@ -411,287 +318,287 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <h3>Coarsest: Year</h3>
 <section id="python" class="level4">
 <h4>Python</h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_year&quot;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;Y&#39;</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;Y&#39;</span>)))</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    tiledb.VFS().remove_dir(uri)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>tiledb.SparseArray.create(uri, schema)</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>),np.datetime64(<span class="st">&#39;2002-01-01&#39;</span>),np.datetime64(<span class="st">&#39;2003-01-01&#39;</span>)]</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="im">import</span> os</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="im">import</span> tiledb</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_year&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;Y&#39;</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;Y&#39;</span>)))</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a>    tiledb.VFS().remove_dir(uri)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a>tiledb.SparseArray.create(uri, schema)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>),np.datetime64(<span class="st">&#39;2002-01-01&#39;</span>),np.datetime64(<span class="st">&#39;2003-01-01&#39;</span>)]</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
 </section>
 <section id="r" class="level4">
 <h4>R</h4>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_year&quot;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">##         rows a</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 2001-01-01 1</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 2002-01-01 2</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 2003-01-01 3</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">## we can also look at &#39;raw&#39; int64 values:</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">datetimes_as_int64</span>(arr) <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   rows a</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 1   31 1</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2   32 2</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 3   33 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_year&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>arr[]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="co">##         rows a</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co">## 1 2001-01-01 1</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a><span class="co">## 2 2002-01-01 2</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="co">## 3 2003-01-01 3</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="co">## we can also look at &#39;raw&#39; int64 values:</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a><span class="kw">datetimes_as_int64</span>(arr) &lt;-<span class="st"> </span><span class="ot">TRUE</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>arr[]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a><span class="co">##   rows a</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="co">## 1   31 1</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a><span class="co">## 2   32 2</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a><span class="co">## 3   33 3</span></span></code></pre></div>
 </section>
 </section>
 <section id="day" class="level3">
 <h3>Day</h3>
 <section id="python-1" class="level4">
 <h4>Python</h4>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_day&quot;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;D&#39;</span>),</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;D&#39;</span>)))</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    tiledb.VFS().remove_dir(uri)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>tiledb.SparseArray.create(uri, schema)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>),np.datetime64(<span class="st">&#39;2001-01-02&#39;</span>),np.datetime64(<span class="st">&#39;2001-01-03&#39;</span>)]</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="im">import</span> os</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="im">import</span> tiledb</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_day&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;D&#39;</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;D&#39;</span>)))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a>    tiledb.VFS().remove_dir(uri)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>tiledb.SparseArray.create(uri, schema)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>),np.datetime64(<span class="st">&#39;2001-01-02&#39;</span>),np.datetime64(<span class="st">&#39;2001-01-03&#39;</span>)]</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
 </section>
 <section id="r-1" class="level4">
 <h4>R</h4>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_day&quot;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">##         rows a</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 2001-01-01 1</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 2001-01-02 2</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 2001-01-03 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_day&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>arr[]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="co">##         rows a</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a><span class="co">## 1 2001-01-01 1</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="co">## 2 2001-01-02 2</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a><span class="co">## 3 2001-01-03 3</span></span></code></pre></div>
 </section>
 </section>
 <section id="minute" class="level3">
 <h3>Minute</h3>
 <section id="python-2" class="level4">
 <h4>Python</h4>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_min&quot;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;m&#39;</span>),</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;m&#39;</span>)))</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    tiledb.VFS().remove_dir(uri)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>tiledb.SparseArray.create(uri, schema)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;2001-01-01 00:00&#39;</span>),</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2001-01-02 00:01&#39;</span>),</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2001-01-03 00:02&#39;</span>)]</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="im">import</span> os</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="im">import</span> tiledb</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_min&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;2001-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;m&#39;</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;m&#39;</span>)))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true"></a>    tiledb.VFS().remove_dir(uri)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true"></a>tiledb.SparseArray.create(uri, schema)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;2001-01-01 00:00&#39;</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2001-01-02 00:01&#39;</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2001-01-03 00:02&#39;</span>)]</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
 </section>
 <section id="r-2" class="level4">
 <h4>R</h4>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_min&quot;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                  rows a</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 2001-01-01 00:00:00 1</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 2001-01-02 00:01:00 2</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 2001-01-03 00:02:00 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_min&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>arr[]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="co">##                  rows a</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a><span class="co">## 1 2001-01-01 00:00:00 1</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a><span class="co">## 2 2001-01-02 00:01:00 2</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a><span class="co">## 3 2001-01-03 00:02:00 3</span></span></code></pre></div>
 </section>
 </section>
 <section id="millisecond" class="level3">
 <h3>Millisecond</h3>
 <section id="python-3" class="level4">
 <h4>Python</h4>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_ms&quot;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;1969-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;ms&#39;</span>),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;ms&#39;</span>)))</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    tiledb.VFS().remove_dir(uri)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>tiledb.SparseArray.create(uri, schema)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;1970-01-01 00:00:00.001&#39;</span>),</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;1980-01-01 00:00:00.002&#39;</span>),</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;1990-01-01 00:00:00.003&#39;</span>),</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2000-01-01 00:00:00.004&#39;</span>),</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2010-01-01 00:00:00.005&#39;</span>),</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2020-01-01 00:00:00.006&#39;</span>)]</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]))</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="im">import</span> os</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="im">import</span> tiledb</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_ms&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;1969-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;ms&#39;</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;ms&#39;</span>)))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true"></a>    tiledb.VFS().remove_dir(uri)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true"></a>tiledb.SparseArray.create(uri, schema)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;1970-01-01 00:00:00.001&#39;</span>),</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;1980-01-01 00:00:00.002&#39;</span>),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;1990-01-01 00:00:00.003&#39;</span>),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2000-01-01 00:00:00.004&#39;</span>),</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2010-01-01 00:00:00.005&#39;</span>),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2020-01-01 00:00:00.006&#39;</span>)]</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]))</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
 </section>
 <section id="r-3" class="level4">
 <h4>R</h4>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_ms&quot;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                      rows a</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 1970-01-01 00:00:00.001 1</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 1980-01-01 00:00:00.002 2</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 1990-01-01 00:00:00.003 3</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 2000-01-01 00:00:00.004 4</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 2010-01-01 00:00:00.005 5</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 2020-01-01 00:00:00.006 6</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ms&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>arr[]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a><span class="co">##                      rows a</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a><span class="co">## 1 1970-01-01 00:00:00.001 1</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a><span class="co">## 2 1980-01-01 00:00:00.002 2</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true"></a><span class="co">## 3 1990-01-01 00:00:00.003 3</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true"></a><span class="co">## 4 2000-01-01 00:00:00.004 4</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true"></a><span class="co">## 5 2010-01-01 00:00:00.005 5</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true"></a><span class="co">## 6 2020-01-01 00:00:00.006 6</span></span></code></pre></div>
 </section>
 </section>
 <section id="microsecond" class="level3">
 <h3>Microsecond</h3>
 <section id="python-4" class="level4">
 <h4>Python</h4>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_us&quot;</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;1969-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;us&#39;</span>),</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;us&#39;</span>)))</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    tiledb.VFS().remove_dir(uri)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>tiledb.SparseArray.create(uri, schema)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;1970-01-01 00:00:00.000001&#39;</span>),</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;1980-01-01 00:00:00.000002&#39;</span>),</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;1990-01-01 00:00:00.000003&#39;</span>),</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2000-01-01 00:00:00.000004&#39;</span>),</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2010-01-01 00:00:00.000005&#39;</span>),</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2020-01-01 00:00:00.000006&#39;</span>)]</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]))</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="im">import</span> os</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="im">import</span> tiledb</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_us&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;1969-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;us&#39;</span>),</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;us&#39;</span>)))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a>    tiledb.VFS().remove_dir(uri)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a>tiledb.SparseArray.create(uri, schema)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;1970-01-01 00:00:00.000001&#39;</span>),</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;1980-01-01 00:00:00.000002&#39;</span>),</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;1990-01-01 00:00:00.000003&#39;</span>),</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2000-01-01 00:00:00.000004&#39;</span>),</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2010-01-01 00:00:00.000005&#39;</span>),</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2020-01-01 00:00:00.000006&#39;</span>)]</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]))</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
 </section>
 <section id="r-4" class="level4">
 <h4>R</h4>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_us&quot;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                         rows a</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 1970-01-01 00:00:00.000001 1</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 1980-01-01 00:00:00.000001 2</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 1990-01-01 00:00:00.000002 3</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 2000-01-01 00:00:00.000003 4</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 2010-01-01 00:00:00.000005 5</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 2020-01-01 00:00:00.000005 6</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_us&quot;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>arr[]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="co">##                         rows a</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a><span class="co">## 1 1970-01-01 00:00:00.000001 1</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a><span class="co">## 2 1980-01-01 00:00:00.000001 2</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a><span class="co">## 3 1990-01-01 00:00:00.000002 3</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a><span class="co">## 4 2000-01-01 00:00:00.000003 4</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a><span class="co">## 5 2010-01-01 00:00:00.000005 5</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a><span class="co">## 6 2020-01-01 00:00:00.000005 6</span></span></code></pre></div>
 </section>
 </section>
 <section id="nanosecond" class="level3">
 <h3>Nanosecond</h3>
 <section id="python-5" class="level4">
 <h4>Python</h4>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_ns&quot;</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;1969-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;ns&#39;</span>),</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;ns&#39;</span>)))</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    tiledb.VFS().remove_dir(uri)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>tiledb.SparseArray.create(uri, schema)</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;1970-01-01 00:00:00.000000001&#39;</span>),</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;1980-01-01 00:00:00.000000002&#39;</span>),</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;1990-01-01 00:00:00.000000003&#39;</span>),</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2000-01-01 00:00:00.000000004&#39;</span>),</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2010-01-01 00:00:00.000000005&#39;</span>),</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>         np.datetime64(<span class="st">&#39;2020-01-01 00:00:00.000000006&#39;</span>)]</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]))</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="im">import</span> os</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="im">import</span> tiledb</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>uri <span class="op">=</span> <span class="st">&quot;/tmp/tiledb/dt_ns&quot;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>dom <span class="op">=</span> tiledb.Domain(tiledb.Dim(name<span class="op">=</span><span class="st">&quot;rows&quot;</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>                               domain<span class="op">=</span>(np.datetime64(<span class="st">&#39;1969-01-01&#39;</span>), np.datetime64(<span class="st">&#39;2030-12-31&#39;</span>)),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>                               tile<span class="op">=</span>np.timedelta64(<span class="dv">10</span>, <span class="st">&#39;ns&#39;</span>),</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>                               dtype<span class="op">=</span>np.datetime64(<span class="st">&#39;&#39;</span>, <span class="st">&#39;ns&#39;</span>)))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a>schema <span class="op">=</span> tiledb.ArraySchema(domain<span class="op">=</span>dom,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>                            sparse<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a>                            attrs<span class="op">=</span>[tiledb.Attr(name<span class="op">=</span><span class="st">&quot;a&quot;</span>, dtype<span class="op">=</span>np.int32)])</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a><span class="cf">if</span> (os.path.isdir(uri)):</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true"></a>    tiledb.VFS().remove_dir(uri)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true"></a>tiledb.SparseArray.create(uri, schema)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true"></a><span class="cf">with</span> tiledb.SparseArray(uri, mode<span class="op">=</span><span class="st">&#39;w&#39;</span>) <span class="im">as</span> A:</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true"></a>    I <span class="op">=</span> [np.datetime64(<span class="st">&#39;1970-01-01 00:00:00.000000001&#39;</span>),</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;1980-01-01 00:00:00.000000002&#39;</span>),</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;1990-01-01 00:00:00.000000003&#39;</span>),</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2000-01-01 00:00:00.000000004&#39;</span>),</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2010-01-01 00:00:00.000000005&#39;</span>),</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true"></a>         np.datetime64(<span class="st">&#39;2020-01-01 00:00:00.000000006&#39;</span>)]</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true"></a>    data <span class="op">=</span> np.array(([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]))</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true"></a>    A[I] <span class="op">=</span> data</span></code></pre></div>
 </section>
 <section id="r-5" class="level4">
 <h4>R</h4>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_ns&quot;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                                  rows a</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 1970-01-01T00:00:00.000000001+00:00 1</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 1980-01-01T00:00:00.000000002+00:00 2</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 1990-01-01T00:00:00.000000003+00:00 3</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 2000-01-01T00:00:00.000000004+00:00 4</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 2010-01-01T00:00:00.000000005+00:00 5</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 2020-01-01T00:00:00.000000006+00:00 6</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ns&quot;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>arr[]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="co">##                                  rows a</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a><span class="co">## 1 1970-01-01T00:00:00.000000001+00:00 1</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a><span class="co">## 2 1980-01-01T00:00:00.000000002+00:00 2</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a><span class="co">## 3 1990-01-01T00:00:00.000000003+00:00 3</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true"></a><span class="co">## 4 2000-01-01T00:00:00.000000004+00:00 4</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true"></a><span class="co">## 5 2010-01-01T00:00:00.000000005+00:00 5</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true"></a><span class="co">## 6 2020-01-01T00:00:00.000000006+00:00 6</span></span></code></pre></div>
 </section>
 </section>
 </section>
 <section id="use-integer64-directly" class="level2">
 <h2>Use integer64 Directly</h2>
 <p>Sometimes we may want to access the date or datetimes value in their native <code>integer64</code> format. To do so, we set a toggle when opening the array as shown in the following example which uses the array from the preceding example (at resolution of nanosecond).</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_ns&quot;</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>, <span class="at">datetimes_as_int64=</span><span class="cn">TRUE</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                  rows a</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                   1 1</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  315532800000000002 2</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  631152000000000003 3</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  946684800000000004 4</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 1262304000000000005 5</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 1577836800000000006 6</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ns&quot;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>, <span class="dt">datetimes_as_int64=</span><span class="ot">TRUE</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>arr[]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="co">##                  rows a</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a><span class="co">## 1                   1 1</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a><span class="co">## 2  315532800000000002 2</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a><span class="co">## 3  631152000000000003 3</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a><span class="co">## 4  946684800000000004 4</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a><span class="co">## 5 1262304000000000005 5</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a><span class="co">## 6 1577836800000000006 6</span></span></code></pre></div>
 <p>We can also write <code>integer64</code> types. The following example adds two extra rows:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tiledb)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">&lt;-</span> <span class="st">&quot;/tmp/tiledb/dt_ns&quot;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>arr <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(uri, <span class="at">as.data.frame=</span><span class="cn">TRUE</span>, <span class="at">datetimes_as_int64=</span><span class="cn">TRUE</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>arr[] <span class="ot">&lt;-</span> <span class="fu">data.frame</span>( <span class="at">rows=</span>bit64<span class="sc">::</span><span class="fu">as.integer64</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">a=</span><span class="dv">102</span><span class="sc">:</span><span class="dv">103</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>arr[]</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="do">##                  rows   a</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                   1   1</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                   2 102</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                   3 103</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  315532800000000002   2</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  631152000000000003   3</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  946684800000000004   4</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 7 1262304000000000005   5</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 8 1577836800000000006   6</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ns&quot;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>, <span class="dt">datetimes_as_int64=</span><span class="ot">TRUE</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>arr[] &lt;-<span class="st"> </span><span class="kw">data.frame</span>( <span class="dt">rows=</span>bit64<span class="op">::</span><span class="kw">as.integer64</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">a=</span><span class="dv">102</span><span class="op">:</span><span class="dv">103</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>arr[]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a><span class="co">##                  rows   a</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a><span class="co">## 1                   1   1</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a><span class="co">## 2                   2 102</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a><span class="co">## 3                   3 103</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a><span class="co">## 4  315532800000000002   2</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a><span class="co">## 5  631152000000000003   3</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true"></a><span class="co">## 6  946684800000000004   4</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true"></a><span class="co">## 7 1262304000000000005   5</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true"></a><span class="co">## 8 1577836800000000006   6</span></span></code></pre></div>
 </section>
 </article>
 </main>
