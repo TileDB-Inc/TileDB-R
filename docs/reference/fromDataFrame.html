@@ -74,7 +74,7 @@ with the R representations of Date, POSIXct and nanotime." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tiledb</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.0</span>
       </span>
     </div>
 
@@ -232,17 +232,17 @@ For a sparse array, one or more columns have to be designated as dimensions.</p>
 <p>At present, factor variable are converted to character.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>uri</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='co'>## turn factor into character</span>
-<span class='va'>irisdf</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>Species</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>Species</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>fromDataFrame</span><span class='op'>(</span><span class='va'>irisdf</span>, <span class='va'>uri</span><span class='op'>)</span>
-<span class='va'>arr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_array.html'>tiledb_array</a></span><span class='op'>(</span><span class='va'>uri</span>, as.data.frame<span class='op'>=</span><span class='cn'>TRUE</span>, sparse<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='va'>newdf</span> <span class='op'>&lt;-</span> <span class='va'>arr</span><span class='op'>[</span><span class='op'>]</span>
-<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>newdf</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>ctx</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_ctx.html'>tiledb_ctx</a></span><span class='op'>(</span><span class='fu'><a href='limitTileDBCores.html'>limitTileDBCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='va'>uri</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'>## turn factor into character</span></span>
+<span class='r-in'><span class='va'>irisdf</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/with.html'>within</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>Species</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>Species</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>fromDataFrame</span><span class='op'>(</span><span class='va'>irisdf</span>, <span class='va'>uri</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>arr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='tiledb_array.html'>tiledb_array</a></span><span class='op'>(</span><span class='va'>uri</span>, as.data.frame<span class='op'>=</span><span class='cn'>TRUE</span>, sparse<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>newdf</span> <span class='op'>&lt;-</span> <span class='va'>arr</span><span class='op'>[</span><span class='op'>]</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>iris</span>, <span class='va'>newdf</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

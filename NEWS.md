@@ -1,3 +1,36 @@
+# tiledb 0.10.0
+
+* This release of the R package builds against [TileDB 2.5.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.1), but has been tested against previous releases, and the development version.
+
+## Improvements
+
+* CI tests were expanded to also test refactored TileDB Embedded readers (#310), and now deactivated as this is now part of release 2.5.0 (#321)
+
+* The minimal version of TileDB Embedded that can be used with the R package is now release 2.0.0 (#313)
+
+* The package now compiles using the C++17 standard just like TileDB Embedded (#314)
+
+* Shared-memory interprocess communication is used to accelerate operation for TileDB Cloud (#316)
+
+* The long-deprecated `max_element_size` function has been removed from TileDB Embedded, and the R interface was updated accordingly (#317, #319)
+
+* The `extended` toggle and field for `tiledb_array()` can now select dimension-less returns from sparse arrays (#318)
+
+* Use of TileDB Embedded was upgraded to release 2.5.0 (#321) following earlier upgrades to 2.4.2 and 2.4.3 (#308, #312)
+
+* A new quickstart example using the 'memory filesystem' was added, and one another example updated (#323)
+
+## Bug Fixes
+
+* Tests for time-traveling were refactored and now in a separate test file (#311)
+
+* Read-queries no longer call `finalize()` required only on write-queries (#309)
+
+* Some examples were updated with copy/paste corrections (#317)
+
+* Single-column `data.frame` returns work via `drop=FALSE` where needed (#320)
+
+
 # tiledb 0.9.7
 
 * This release of the R package builds against [TileDB 2.4.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.4.0), but has been tested against previous releases and the development version.
