@@ -2696,6 +2696,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_error_message
+std::string libtiledb_error_message(XPtr<tiledb::Context> ctx);
+RcppExport SEXP _tiledb_libtiledb_error_message(SEXP ctxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_error_message(ctx));
+    return rcpp_result_gen;
+END_RCPP
+}
 // vecbuf_to_shmem
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz);
 RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP dirSEXP, SEXP nameSEXP, SEXP bufSEXP, SEXP szSEXP) {
@@ -2975,6 +2986,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_fragment_info_to_vacuum_num", (DL_FUNC) &_tiledb_libtiledb_fragment_info_to_vacuum_num, 1},
     {"_tiledb_libtiledb_fragment_info_to_vacuum_uri", (DL_FUNC) &_tiledb_libtiledb_fragment_info_to_vacuum_uri, 2},
     {"_tiledb_libtiledb_fragment_info_dump", (DL_FUNC) &_tiledb_libtiledb_fragment_info_dump, 1},
+    {"_tiledb_libtiledb_error_message", (DL_FUNC) &_tiledb_libtiledb_error_message, 1},
     {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 4},
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},

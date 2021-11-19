@@ -909,6 +909,10 @@ libtiledb_fragment_info_dump <- function(fi) {
     invisible(.Call(`_tiledb_libtiledb_fragment_info_dump`, fi))
 }
 
+libtiledb_error_message <- function(ctx) {
+    .Call(`_tiledb_libtiledb_error_message`, ctx)
+}
+
 vecbuf_to_shmem <- function(dir, name, buf, sz) {
     invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz))
 }

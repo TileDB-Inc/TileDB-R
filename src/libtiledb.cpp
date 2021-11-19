@@ -4161,3 +4161,14 @@ void libtiledb_fragment_info_dump(XPtr<tiledb::FragmentInfo> fi) {
     return fi->dump();
 #endif
 }
+
+// [[Rcpp::export]]
+std::string libtiledb_error_message(XPtr<tiledb::Context> ctx) {
+#if TILEDB_VERSION >= TileDB_Version(2,5,0)
+    tiledb::Error error(*ctx.get());
+    std::string txt(error.error_message());
+#else
+    std::string txt("This function requires TileDB 2.5.0 or later.");
+#endif
+    return txt;
+}
