@@ -30,7 +30,5 @@
 tiledb_error_message <- function(ctx = tiledb_get_context()) {
     stopifnot(`The 'ctx' variable must be a TileDB Context object` = is(ctx, "tiledb_ctx"),
               `TileDB 2.5.0 or later is required` = tiledb_version(TRUE) >= "2.5.0")
-    ## TileDB signals an error when this is called without error
-    tryCatch(libtiledb_error_message(ctx@ptr),
-             error = function(e) "(no error)")
+    libtiledb_error_message(ctx@ptr)
 }
