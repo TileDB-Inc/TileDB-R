@@ -190,7 +190,7 @@ tiledb_ctx_set_default_tags <- function(object) {
 #' @return A JSON-formatted string with context statistics
 #' @export
 tiledb_ctx_stats <- function(object = tiledb_get_context()) {
-    stopifnot(`The 'object' must be a TileDB Context object` = is(object, "tiledb_ctx"),
+    stopifnot(`The 'object' variable must be a TileDB Context object` = is(object, "tiledb_ctx"),
               `TileDB 2.4.0 or later is required` = tiledb_version(TRUE) >= "2.4.0")
     libtiledb_ctx_stats(object@ptr)
 }
