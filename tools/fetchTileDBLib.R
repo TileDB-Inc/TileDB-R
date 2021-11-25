@@ -30,9 +30,14 @@ dcf <- read.dcf(dcffile)
 ver <- dcf[[1, "version"]]
 sha <- dcf[[1, "sha"]]
 
+## on linux, we need to consider AVX2 vs non-AVX2 capabilities on the build machine
+avx2 <- if (arch == "linux" && any(grepl("avx2", readLines("/proc/cpuinfo")))) "" else "-noavx2"
+
+## downloads are from GitHub releases
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
+## now switch based on macOS or Linux, using version, architecture, avx2 if needed, version and sha
 dlurl <- switch(osarg,
-                linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s-%s-%s.tar.gz", ver, arch, ver, sha)),
+                linux = file.path(baseurl,sprintf("%s/tiledb-linux-%s%s-%s-%s.tar.gz", ver, arch, avx2, ver, sha)),
                 macos = file.path(baseurl,sprintf("%s/tiledb-macos-%s-%s-%s.tar.gz", ver, arch, ver, sha)),
                 url = urlarg)
 cat("downloading", dlurl, "\n")
