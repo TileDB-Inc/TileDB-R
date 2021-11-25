@@ -25,6 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
+          remotes::install_github("eddelbuettel/nanotime")
           remotes::install_deps(dependencies = NA)
           install.packages(c("palmerpenguins", "nycflights13", "tibble", "data.table"))
         shell: Rscript {0}
