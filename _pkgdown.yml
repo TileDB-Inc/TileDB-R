@@ -68,6 +68,7 @@ reference:
   - starts_with("tiledb_query")
   - matches("parse_query_condition")
   - matches("tiledb_get_query_status")
+  - matches("tiledb_error_message")
 - title: Group
   contents:
   - starts_with("tiledb_group")

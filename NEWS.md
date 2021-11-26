@@ -1,3 +1,16 @@
+# tiledb 0.10.1
+
+* This release of the R package builds against [TileDB 2.5.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.1), but has been tested against previous releases, and the development version.
+
+# Improvements
+
+* An accessor for the most-recent error message string has been added (#327)
+
+# Bug Fixes
+
+* On Linux, if a pre-made TileDB Embedded library is used, lack of AVX2 instructions is now detected and a suitable build is deployed (#328)
+
+
 # tiledb 0.10.0
 
 * This release of the R package builds against [TileDB 2.5.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.1), but has been tested against previous releases, and the development version.
