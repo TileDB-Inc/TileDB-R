@@ -179,6 +179,7 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
     read_buffer<uint64_t>(offsetspath, buf->offsets);
     buf->rows = buf->offsets.size();
     buf->cols = 2;              // value not used
+    buf->nullable = false;      // default, overridden below if validity path used
 
     if (debug) Rcpp::Rcout << datapath << " " << offsetspath
                            << " data:" << buf->str.size()
