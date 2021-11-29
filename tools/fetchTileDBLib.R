@@ -31,7 +31,7 @@ ver <- dcf[[1, "version"]]
 sha <- dcf[[1, "sha"]]
 
 ## on linux, we need to consider AVX2 vs non-AVX2 capabilities on the build machine
-avx2 <- if (arch == "linux" && any(grepl("avx2", readLines("/proc/cpuinfo")))) "" else "-noavx2"
+avx2 <- if (osarg == "linux" && any(grepl("avx2", readLines("/proc/cpuinfo")))) "" else "-noavx2"
 
 ## downloads are from GitHub releases
 baseurl <- "https://github.com/TileDB-Inc/TileDB/releases/download"
