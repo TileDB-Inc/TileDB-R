@@ -39,8 +39,8 @@
 #'
 #' @export
 tiledb_array_create <- function(uri, schema, encryption_key) {
-    stopifnot(`argument 'uri' must be a string scalar` = !missing(uri) && is.scalar(uri, "character"),
-              `argument 'schema' must a tiledb_array_schema object` = !missing(schema) && is(schema, "tiledb_array_schema"))
+    stopifnot(`The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri, "character"),
+              `The 'schema' argument must a tiledb_array_schema object` = !missing(schema) && is(schema, "tiledb_array_schema"))
     if (missing(encryption_key)) {
         return(libtiledb_array_create(uri, schema@ptr))
     } else {
@@ -56,7 +56,7 @@ tiledb_array_create <- function(uri, schema, encryption_key) {
 ##' @importFrom methods .hasSlot
 ##' @export
 tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
-  stopifnot(`argument 'arr' must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
+  stopifnot(`The 'arr' argument must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
   type <- match.arg(type)
 
   if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
@@ -76,8 +76,8 @@ tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
 ##' @return The TileDB Array object but opened for reading or writing
 ##' @export
 tiledb_array_open_at <- function(arr, type=c("READ","WRITE"), timestamp) {
-  stopifnot(`argument 'arr' must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"),
-            `argument 'timestamp' must a time object` = inherits(timestamp, "POSIXct"))
+  stopifnot(`The 'arr' argument must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"),
+            `The 'timestamp' argument must a time object` = inherits(timestamp, "POSIXct"))
   type <- match.arg(type)
   ctx <- tiledb_get_context()
   if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
@@ -95,7 +95,7 @@ tiledb_array_open_at <- function(arr, type=c("READ","WRITE"), timestamp) {
 ##' @return The TileDB Array object but closed
 ##' @export
 tiledb_array_close <- function(arr) {
-  stopifnot(`argument 'arr' must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
+  stopifnot(`The 'arr' argument must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
   libtiledb_array_close(arr@ptr)
   arr
 }
@@ -106,7 +106,7 @@ tiledb_array_close <- function(arr) {
 ##' @return A boolean indicating if the array has homogeneous domains
 ##' @export
 tiledb_array_is_homogeneous <- function(arr) {
-  stopifnot(`argument 'arr' must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
+  stopifnot(`The argument 'arr' must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
   ## there is a non-exported call at the C level we could use instead
   sch <- schema(arr)
   dom <- domain(sch)
@@ -122,7 +122,7 @@ tiledb_array_is_homogeneous <- function(arr) {
 ##' @return A boolean indicating if the array has heterogenous domains
 ##' @export
 tiledb_array_is_heterogeneous <- function(arr) {
-  stopifnot(`argument 'arr' must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
+  stopifnot(`The 'arr' argument must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
   ## there is a non-exported call at the C level we could use instead
   sch <- schema(arr)
   dom <- domain(sch)
