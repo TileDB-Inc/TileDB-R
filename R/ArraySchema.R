@@ -28,7 +28,7 @@ setClass("tiledb_array_schema",
          slots = list(ptr = "externalptr"))
 
 tiledb_array_schema.from_ptr <- function(ptr) {
-  stopifnot(`The 'ptr' argument must be a non NULL externalptr to a tiledb_array_schema instance` = { !missing(ptr), typeof(ptr) == "externalptr", !is.null(ptr) })
+  stopifnot(`The 'ptr' argument must be a non NULL externalptr to a tiledb_array_schema instance` = !missing(ptr) && typeof(ptr) == "externalptr" && !is.null(ptr) )
   new("tiledb_array_schema", ptr = ptr)
 }
 
@@ -433,7 +433,7 @@ setMethod("allows_dups", signature = "tiledb_array_schema", function(x) {
 #' @return the logical value
 #' @export
 tiledb_array_schema_get_allows_dups <- function(x) {
-  stopifnot(`The 'x' argument must be a tiledb_array object` = is(x, "tiledb_array") || is(x, "tiledb_sparse"))
+  stopifnot(`The 'x' argument must be a tiledb_array_schema object` = is(x, "tiledb_array_schema"))
   libtiledb_array_schema_get_allows_dups(x@ptr)
 }
 
