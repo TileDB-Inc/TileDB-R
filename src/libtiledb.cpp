@@ -1245,8 +1245,8 @@ XPtr<tiledb::FilterList> libtiledb_filter_list(XPtr<tiledb::Context> ctx, List f
 }
 
 //[[Rcpp::export]]
-void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_sie) {
-  filterList->set_max_chunk_size(max_chunk_sie);
+void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_size) {
+  filterList->set_max_chunk_size(max_chunk_size);
 }
 
 //[[Rcpp::export]]

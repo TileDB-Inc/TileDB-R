@@ -28,7 +28,7 @@ setClass("tiledb_array_schema",
          slots = list(ptr = "externalptr"))
 
 tiledb_array_schema.from_ptr <- function(ptr) {
-  stopifnot(`The 'ptr' argument must be a non NULL externalptr to a tiledb_array_schema instance` = !missing(ptr) && typeof(ptr) == "externalptr" && !is.null(ptr) )
+  stopifnot(`The 'ptr' argument must be a non NULL externalptr to a tiledb_array_schema instance` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr) )
   new("tiledb_array_schema", ptr = ptr)
 }
 

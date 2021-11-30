@@ -29,7 +29,7 @@ setClass("tiledb_config",
 
 #' @importFrom methods new
 tiledb_config.from_ptr <- function(ptr) {
-    stopifnot(`ptr must be a non-NULL externalptr to a tiledb_config instance` = typeof(ptr) == "externalptr" && !is.null(ptr))
+    stopifnot(`ptr must be a non-NULL externalptr to a tiledb_config instance` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
     new("tiledb_config", ptr = ptr)
 }
 

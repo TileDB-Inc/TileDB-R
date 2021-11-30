@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ setClass("tiledb_filter_list",
          slots = list(ptr = "externalptr"))
 
 tiledb_filter_list.from_ptr <- function(ptr) {
-  stopifnot(is(ptr, "externalptr"))
+  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_filter_list` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   return(new("tiledb_filter_list", ptr = ptr))
 }
 
@@ -47,9 +47,7 @@ tiledb_filter_list.from_ptr <- function(ptr) {
 #'
 #' @export tiledb_filter_list
 tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("argument ctx must be a tiledb_ctx")
-  }
+  stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
   is_filter <- function(obj) is(obj, "tiledb_filter")
   if (is_filter(filters)) {             # if a filters object given:
     filters <- list(filters)            # make it a list so that lapply works below
@@ -80,7 +78,7 @@ setMethod("set_max_chunk_size",
 #' Set the filter_list's max_chunk_size
 #'
 #' @param object tiledb_filter_list
-#' @param value string
+#' @param value A numeric value
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' flt <- tiledb_filter("ZSTD")
@@ -89,6 +87,8 @@ setMethod("set_max_chunk_size",
 #' set_max_chunk_size(filter_list, 10)
 #' @export
 tiledb_filter_list_set_max_chunk_size <- function(object, value) {
+  stopifnot(`The 'object' argument must be a tiledb_filter_list` = is(object, "tiledb_filter_list"),
+            `The 'value' argument must be numeric` = is.numeric(value))
   libtiledb_filter_list_set_max_chunk_size(object@ptr, value)
 }
 
@@ -115,6 +115,7 @@ setMethod("max_chunk_size", signature(object = "tiledb_filter_list"), function(o
 #'
 #' @export
 tiledb_filter_list_get_max_chunk_size <- function(object) {
+  stopifnot(`The 'object' argument must be a tiledb_filter_list` = is(object, "tiledb_filter_list"))
   libtiledb_filter_list_get_max_chunk_size(object@ptr)
 }
 

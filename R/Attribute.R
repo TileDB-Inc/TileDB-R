@@ -29,8 +29,7 @@ setClass("tiledb_attr",
 
 tiledb_attr.from_ptr <- function(ptr) {
   stopifnot(`The 'ptr' argument must be a non-NULL external pointer to an Attribute instance` =
-                typeof(ptr) == "externalptr" && !is.null(ptr))
-
+                !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   new("tiledb_attr", ptr = ptr)
 }
 

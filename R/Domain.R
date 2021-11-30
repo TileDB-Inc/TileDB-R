@@ -28,7 +28,7 @@ setClass("tiledb_domain",
          slots = list(ptr = "externalptr"))
 
 tiledb_domain.from_ptr <- function(ptr) {
-  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_domain` = !missing(ptr) && typeof(ptr) == "externalptr" && !is.null(ptr))
+  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_domain` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   return(new("tiledb_domain", ptr = ptr))
 }
 

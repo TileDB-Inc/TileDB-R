@@ -29,7 +29,7 @@ setClass("tiledb_dim",
 
 #' @importFrom methods new
 tiledb_dim.from_ptr <- function(ptr) {
-  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_dim` = !missing(ptr) && typeof(ptr) == "externalptr" && !is.null(ptr))
+  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_dim` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   return(new("tiledb_dim", ptr = ptr))
 }
 
