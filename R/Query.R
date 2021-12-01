@@ -206,7 +206,7 @@ tiledb_query_buffer_alloc_ptr <- function(query, datatype, ncells) {
 #' @export
 tiledb_query_create_buffer_ptr <- function(query, datatype, object) {
   stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
-            `Argument 'object' must be a vector` = is.vector(object),
+            #`Argument 'object' must be a vector` = is.vector(object),
             `Argument 'datatype' must be a character object` = is.character(datatype))
   ncells <- length(object)
   bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
