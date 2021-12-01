@@ -39,8 +39,8 @@ fromMatrix <- function(obj,
                        filter="ZSTD",
                        capacity = 10000L) {
 
-    stopifnot(`obj must be matrix object` = inherits(obj, "matrix"),
-              `uri must character` = is.character(uri))
+    stopifnot(`Argument 'obj' must be matrix object` = inherits(obj, "matrix"),
+              `Argument 'uri' must be character` = is.character(uri))
 
     dims <- dim(obj)
     dimnm <- dimnames(obj)
@@ -83,5 +83,6 @@ fromMatrix <- function(obj,
 ##' @rdname fromMatrix
 ##' @export
 toMatrix <- function(uri) {
+    stopifnot(`Argument 'uri' must be character` = is.character(uri))
     tiledb_array(uri, return_as="matrix")[]
 }
