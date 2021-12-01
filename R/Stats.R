@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,7 @@ tiledb_stats_reset <- function() {
 #'
 #' @export
 tiledb_stats_dump <- function(path) {
+  stopifnot(`Argument 'path' must be character` = is.character(path))
   libtiledb_stats_dump(path)
 }
 
@@ -81,7 +82,8 @@ tiledb_stats_print <- function() {
 #' }
 #' @export
 tiledb_stats_raw_dump <- function(path) {
-  if (tiledb_version(TRUE) < "2.0.3") stop("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
+  stopifnot(`Argument 'path' must be character` = is.character(path),
+            `Raw statistics are available with TileDB Embedded verion 2.0.3 or later` = tiledb_version(TRUE) >= "2.0.3")
   libtiledb_stats_raw_dump(path)
 }
 
@@ -91,7 +93,7 @@ tiledb_stats_raw_dump <- function(path) {
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_print <- function() {
-  if (tiledb_version(TRUE) < "2.0.3") stop("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
+  stopifnot(`Raw statistics are available with TileDB Embedded verion 2.0.3 or later` = tiledb_version(TRUE) >= "2.0.3")
   libtiledb_stats_raw_dump("")
 }
 
@@ -102,6 +104,6 @@ tiledb_stats_raw_print <- function() {
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_get <- function() {
-  if (tiledb_version(TRUE) < "2.0.3") stop("Raw statistics are available with TileDB Embedded verion 2.0.3 or later")
+  stopifnot(`Raw statistics are available with TileDB Embedded verion 2.0.3 or later` = tiledb_version(TRUE) >= "2.0.3")
   libtiledb_stats_raw_get()
 }
