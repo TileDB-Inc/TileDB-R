@@ -199,7 +199,8 @@ subarray_dim <- function(sub) {
 }
 
 attribute_buffers <- function(array, sch, dom, sub, selected) {
-  stopifnot(`The 'dom' argument must be a tiledb_domain object` = is(dom, "tiledb_domain"),
+  stopifnot(`The 'array' argument must be a tiledb_array` = .isArray(array),
+            `The 'dom' argument must be a tiledb_domain object` = is(dom, "tiledb_domain"),
             `The 'sch' argument must be a tiledb_array_schema` = is(sch, "tiledb_array_schema"))
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)

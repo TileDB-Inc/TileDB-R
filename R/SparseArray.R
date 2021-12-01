@@ -66,11 +66,8 @@ tiledb_sparse <- function(uri,
                           extended = TRUE,
                           ctx = tiledb_get_context()) {
   query_type = match.arg(query_type)
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("argument ctx must be a tiledb_ctx")
-  } else if (missing(uri) || !is.scalar(uri, "character")) {
-    stop("argument uri must be a string scalar")
-  }
+  stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
+            `Argument 'uri' must be a string scalar` = !missing(uri) && is.scalar(uri, "character"))
   .Deprecated("tiledb_array")
   array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
@@ -97,9 +94,9 @@ setMethod("schema", "tiledb_sparse", function(object, ...) {
 })
 
 sparse_attribute_buffers <- function(array, sch, dom, sub, selected, ncells=1000) {
-  stopifnot(is(sch, "tiledb_array_schema"))
-  stopifnot(is(dom, "tiledb_domain"))
-  #domaintype <- libtiledb_domain_get_type(dom@ptr)
+  stopifnot(`The 'array' argument must be a tiledb_array` = .isArray(array),
+            `The 'dom' argument must be a tiledb_domain object` = is(dom, "tiledb_domain"),
+            `The 'sch' argument must be a tiledb_array_schema` = is(sch, "tiledb_array_schema"))
   domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
                        libtiledb_dim_get_datatype)
   attributes <- list()
@@ -145,9 +142,7 @@ sparse_attribute_buffers <- function(array, sch, dom, sub, selected, ncells=1000
 #' @return data.frame object constructed from `data`
 #' @export
 as_data_frame <- function(dom, data, extended=FALSE) {
-  if (!is(dom, "tiledb_domain")) {
-    stop("as_data_frame must be called with a tiledb_domain object")
-  }
+  stopifnot(`Argument 'dom' must be a tiledb_domain object` = is(dom, "tiledb_domain"))
   # If coordinates are present convert to columns in the data.frame
   if (!is.null(data[["coords"]])) {
     if (extended) {
@@ -463,9 +458,7 @@ setMethod("is.sparse", "tiledb_sparse", function(object) TRUE)
 #' @return list of attributes being returned with query results
 #' @export
 tiledb_subarray <- function(A, subarray_vector, attrs=c()) {
-  if (!is(A, "tiledb_sparse") && !is(A, "tiledb_dense")) {
-    stop("tiledb_subarray must be called with a tiledb_dense or tiledb_sparse object")
-  }
+  stopifnot(`First argument must be a tiledb_dense or tiledb_sparse object` = is(A, "tiledb_sparse") || is(A, "tiledb_dense"))
   ctx <- A@ctx
   uri <- A@uri
   schema <- tiledb::schema(A)
