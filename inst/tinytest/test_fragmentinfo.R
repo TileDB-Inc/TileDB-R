@@ -48,7 +48,7 @@ rng <- tiledb_fragment_info_get_timestamp_range(fraginf, 0)
 expect_true(inherits(rng, "POSIXt"))
 expect_equal(length(rng), 2)
 expect_equal(as.Date(rng[1]), as.Date(as.POSIXlt(Sys.time(), tz="UTC")))  # very coarse :)
-expect_true(as.numeric(difftime(Sys.time(), rng[1], "secs")) < 0.5 + 1.0*isMacOS) # at most 0.5 sec after array creation (plus extra for maxOS which failed here randomly)
+expect_true(as.numeric(difftime(Sys.time(), rng[1], "secs")) < 10) # ten is very conservative but when this runs under valgrind it can be slooooooooow
 expect_equal(tiledb_fragment_info_get_cell_num(fraginf, 0), 10)
 
 expect_true(tiledb_fragment_info_get_version(fraginf, 0) > 5) # we may test with older core libs
