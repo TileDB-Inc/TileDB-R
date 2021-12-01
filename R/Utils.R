@@ -136,3 +136,13 @@ r_to_tiledb_type <- function(x) {
     }
     type
 }
+
+## was in file MetaData.R
+
+.isArray <- function(arr) {
+    is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array")
+}
+
+.assertArray <- function(arr) {
+    stopifnot(is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array"))
+}
