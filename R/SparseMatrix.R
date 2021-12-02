@@ -61,9 +61,9 @@ fromSparseMatrix <- function(obj,
                              filter="ZSTD",
                              capacity = 10000L) {
 
-    stopifnot(`obj must be Matrix object` = inherits(obj, "Matrix"),
-              `obj must be sparse` = is(obj, "sparseMatrix"),
-              `uri must character` = is.character(uri))
+    stopifnot(`Argument 'obj' must be Matrix object` = inherits(obj, "Matrix"),
+              `Argument 'obj' must be sparse` = is(obj, "sparseMatrix"),
+              `Argument 'uri' must be character` = is.character(uri))
 
     dimnm <- dimnames(obj)
     classIn <- "dgTMatrix"
@@ -110,6 +110,7 @@ fromSparseMatrix <- function(obj,
 ##' @rdname fromSparseMatrix
 ##' @export
 toSparseMatrix <- function(uri) {
+    stopifnot(`Argument 'uri' must be character` = is.character(uri))
 
     arr <- tiledb_array(uri, as.data.frame=TRUE, query_layout="UNORDERED")
     obj <- arr[]

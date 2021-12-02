@@ -37,8 +37,8 @@ setClass("tiledb_query_condition",
 #' @return A 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition <- function(ctx = tiledb_get_context()) {
-    stopifnot(`needs ctx object` = is(ctx, "tiledb_ctx"),
-              `needs TileDB 2.3.0 or newer` = tiledb_version(TRUE) >= "2.3.0")
+    stopifnot(`The argument must be a ctx object` = is(ctx, "tiledb_ctx"),
+              `This function needs TileDB 2.3.0 or newer` = tiledb_version(TRUE) >= "2.3.0")
     ptr <- libtiledb_query_condition(ctx@ptr)
     query_condition <- new("tiledb_query_condition", ptr = ptr, init = FALSE)
     invisible(query_condition)
@@ -61,11 +61,11 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 #' @return The initialized 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
-    stopifnot(`needs query condition object`=is(qc, "tiledb_query_condition"),
-              `attr must be character`=is.character(attr),
-              `value must be of length one`=is.vector(value) && all.equal(length(value),1),
-              `dtype must be character`=is.character(dtype),
-              `op must be character`=is.character(op))
+    stopifnot(`Argument 'qc' with query condition object required` = is(qc, "tiledb_query_condition"),
+              `Argument 'attr' must be character` = is.character(attr),
+              `Argument 'value' must be of length one` = is.vector(value) && all.equal(length(value),1),
+              `Argument 'dtype' must be character` = is.character(dtype),
+              `Argument 'op' must be character` = is.character(op))
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
     ## maybe check dtype too
     libtiledb_query_condition_init(qc@ptr, attr, value, dtype, op)
@@ -83,9 +83,9 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
 #' @return The combined 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_combine <- function(lhs, rhs, op) {
-    stopifnot(`needs query condition object on lhs`=is(lhs, "tiledb_query_condition"),
-              `needs query condition object on rhs`=is(rhs, "tiledb_query_condition"),
-              `op must be character`=is.character(op))
+    stopifnot(`Argument 'lhs' must be a query condition object` = is(lhs, "tiledb_query_condition"),
+              `Argument 'rhs' must be a query condition object` = is(rhs, "tiledb_query_condition"),
+              `Argument 'op' must be a character` = is.character(op))
     op <- match.arg(op, c("AND", "OR", "NOT"))
     qc <- tiledb_query_condition()
     qc@ptr <- libtiledb_query_condition_combine(lhs@ptr, rhs@ptr, op)

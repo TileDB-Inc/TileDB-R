@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,7 @@ setClass("tiledb_domain",
          slots = list(ptr = "externalptr"))
 
 tiledb_domain.from_ptr <- function(ptr) {
-  if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
-    stop("ptr argument must be a non NULL externalptr to a tiledb_domain instance")
-  }
+  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_domain` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   return(new("tiledb_domain", ptr = ptr))
 }
 
@@ -49,9 +47,7 @@ tiledb_domain.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export tiledb_domain
 tiledb_domain <- function(dims, ctx = tiledb_get_context()) {
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("argument ctx must be a tiledb_ctx")
-  }
+  stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
   is_dim <- function(obj) is(obj, "tiledb_dim")
   if (is_dim(dims)) {                   # if a dim object given:
     dims <- list(dims)                  # make it a vector so that lapply works below
@@ -183,8 +179,8 @@ dim.tiledb_domain <- function(x) {
 #' @return TileDB Dimension object
 #' @export
 tiledb_domain_get_dimension_from_index <- function(domain, idx) {
-  stopifnot(domain_argument=is(domain, "tiledb_domain"),
-            idx_argument=is.numeric(idx))
+  stopifnot(`The 'domain' argument must be a tiledb_domain` = is(domain, "tiledb_domain"),
+            `The 'idx' argument must be numeric` = is.numeric(idx))
   return(new("tiledb_dim", ptr=libtiledb_domain_get_dimension_from_index(domain@ptr, idx)))
 }
 
@@ -195,8 +191,8 @@ tiledb_domain_get_dimension_from_index <- function(domain, idx) {
 #' @return TileDB Dimension object
 #' @export
 tiledb_domain_get_dimension_from_name <- function(domain, name) {
-  stopifnot(domain_argument=is(domain, "tiledb_domain"),
-            name_argument=is.character(name))
+  stopifnot(`The 'domain' argument must be a tiledb_domain` = is(domain, "tiledb_domain"),
+            `The 'name' argument must be character` = is.character(name))
   return(new("tiledb_dim", ptr=libtiledb_domain_get_dimension_from_name(domain@ptr, name)))
 }
 
@@ -207,7 +203,7 @@ tiledb_domain_get_dimension_from_name <- function(domain, name) {
 #' @return A boolean value indicating if the dimension exists in the domain
 #' @export
 tiledb_domain_has_dimension <- function(domain, name) {
-  stopifnot(domain_argument=is(domain, "tiledb_domain"),
-            name_argument=is.character(name))
+  stopifnot(`The 'domain' argument must be a tiledb_domain` = is(domain, "tiledb_domain"),
+            `The 'name' argument must be character` = is.character(name))
   libtiledb_domain_has_dimension(domain@ptr, name)
 }

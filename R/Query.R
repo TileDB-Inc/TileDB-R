@@ -35,9 +35,8 @@ setClass("tiledb_query",
 #' @return 'tiledb_query' object
 #' @export tiledb_query
 tiledb_query <- function(array, type = c("READ", "WRITE"), ctx = tiledb_get_context()) {
+  stopifnot(`Argument 'arr' must be a tiledb_array object` = .isArray(array))
   type <- match.arg(type)
-  stopifnot(valid_array=is(array, "tiledb_array") ||
-              is(array, "tiledb_dense") || is(array, "tiledb_sparse"))
   array <- tiledb_array_open(array, type)
   ptr <- libtiledb_query(ctx@ptr, array@ptr, type)
   query <- new("tiledb_query", ptr = ptr)
@@ -50,7 +49,7 @@ tiledb_query <- function(array, type = c("READ", "WRITE"), ctx = tiledb_get_cont
 #' @return A character value, either 'READ' or 'WRITE'
 #' @export
 tiledb_query_type <- function(query) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   libtiledb_query_type(query@ptr)
 }
 
@@ -63,8 +62,8 @@ tiledb_query_type <- function(query) {
 #' @export
 tiledb_query_set_layout <- function(query, layout=c("COL_MAJOR", "ROW_MAJOR",
                                                     "GLOBAL_ORDER", "UNORDERED")) {
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   layout <- match.arg(layout)
-  stopifnot(query_object=is(query, "tiledb_query"))
   libtiledb_query_set_layout(query@ptr, layout)
   invisible(query)
 }
@@ -75,7 +74,7 @@ tiledb_query_set_layout <- function(query, layout=c("COL_MAJOR", "ROW_MAJOR",
 #' @return The TileDB Query layout as a string
 #' @export
 tiledb_query_get_layout <- function(query) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   libtiledb_query_layout(query@ptr)
 }
 
@@ -88,7 +87,7 @@ tiledb_query_get_layout <- function(query) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_subarray <- function(query, subarray, type) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   if (missing(type)) {
     libtiledb_query_set_subarray(query@ptr, subarray)
   } else {
@@ -109,8 +108,9 @@ tiledb_query_set_subarray <- function(query, subarray, type) {
 #' @return The modified query object, invisisibly
 #' @export
 tiledb_query_set_buffer <- function(query, attr, buffer) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            attr_variable=is.character(attr))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'attr' must be character_variable` = is.character(attr),
+            `Argument 'buffer' must be integer, numeric or logical` = is.numeric(buffer) || is.logical(buffer))
   libtiledb_query_set_buffer(query@ptr, attr, buffer)
   invisible(query)
 }
@@ -122,8 +122,8 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_create_buffer_ptr_char <- function(query, varvec) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            is_vector=is.vector(varvec))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'varvec' must be a character vector` = is.vector(varvec) && is.character(varvec))
   n <- length(varvec)
   offsets <- integer(n)
   data <- convertStringVectorIntoOffsetsAndString(varvec, offsets)
@@ -133,11 +133,13 @@ tiledb_query_create_buffer_ptr_char <- function(query, varvec) {
 
 #' Allocate a Query buffer for reading a character attribute
 #'
-#' @param sizeoffsets An optional value of the size of the offsets vector
-#' @param sizedata An optional value of the size of the data string
+#' @param sizeoffsets A numeric value with the size of the offsets vector
+#' @param sizedata A numeric value of the size of the data string
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_alloc_buffer_ptr_char <- function(sizeoffsets, sizedata) {
+  stopifnot(`Argument 'sizeoffset' must be numeric` = is.numeric(sizeoffsets),
+            `Argument 'sizedata' must be numeric` = is.numeric(sizedata))
   bufptr <- libtiledb_query_buffer_var_char_alloc_direct(sizeoffsets, sizedata)
   bufptr
 }
@@ -169,9 +171,9 @@ tiledb_query_alloc_buffer_ptr_char <- function(sizeoffsets, sizedata) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_buffer_ptr_char <- function(query, attr, bufptr) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            attribute_string=is.character(attr),
-            bufptr=is(bufptr, "externalptr"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'attr' must be a character object` = is.character(attr),
+            `Argument 'bufptr' must be an external pointer` = is(bufptr, "externalptr"))
   libtiledb_query_set_buffer_var_char(query@ptr, attr, bufptr)
   invisible(query)
 
@@ -186,9 +188,11 @@ tiledb_query_set_buffer_ptr_char <- function(query, attr, bufptr) {
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_buffer_alloc_ptr <- function(query, datatype, ncells) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            datatype_string=is.character(datatype))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'datatype' must be a character object` = is.character(datatype),
+            `Argument 'ncells' must be numeric` = is.numeric(ncells))
   bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
+  bufptr
 }
 
 #' Allocate and populate a Query buffer for a given object of a given data type.
@@ -201,9 +205,9 @@ tiledb_query_buffer_alloc_ptr <- function(query, datatype, ncells) {
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_create_buffer_ptr <- function(query, datatype, object) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            #is_vector=is.vector(object),
-            datatype_string=is.character(datatype))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            #`Argument 'object' must be a vector` = is.vector(object),
+            `Argument 'datatype' must be a character object` = is.character(datatype))
   ncells <- length(object)
   bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
   bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, datatype, object)
@@ -219,9 +223,9 @@ tiledb_query_create_buffer_ptr <- function(query, datatype, object) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_buffer_ptr <- function(query, attr, bufptr) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            attribute_string=is.character(attr),
-            bufptr=is(bufptr, "externalptr"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'attr' must be a character object` = is.character(attr),
+            `Argument 'bufptr' must be an external pointer` = is(bufptr, "externalptr"))
   libtiledb_query_set_buffer_ptr(query@ptr, attr, bufptr)
   invisible(query)
 }
@@ -233,7 +237,7 @@ tiledb_query_set_buffer_ptr <- function(query, attr, bufptr) {
 #' @return An R object as resulting from the query
 #' @export
 tiledb_query_get_buffer_ptr <- function(bufptr) {
-  stopifnot(bufptr=is(bufptr, "externalptr"))
+  stopifnot(`Argument 'bufptr' must be an external pointer` = is(bufptr, "externalptr"))
   libtiledb_query_get_buffer_ptr(bufptr)
 }
 
@@ -247,7 +251,7 @@ tiledb_query_get_buffer_ptr <- function(bufptr) {
 #' @return An R object as resulting from the query
 #' @export
 tiledb_query_get_buffer_char <- function(bufptr, sizeoffsets=0, sizestring=0) {
-  stopifnot(bufptr=is(bufptr, "externalptr"))
+  stopifnot(`Argument 'bufptr' must be an external pointer` = is(bufptr, "externalptr"))
   libtiledb_query_get_buffer_var_char(bufptr, sizeoffsets, sizestring)
 }
 
@@ -260,7 +264,7 @@ tiledb_query_get_buffer_char <- function(bufptr, sizeoffsets=0, sizestring=0) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_submit <- function(query) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   libtiledb_query_submit(query@ptr)
   invisible(query)
 }
@@ -273,7 +277,7 @@ tiledb_query_submit <- function(query) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_submit_async <- function(query) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   libtiledb_query_submit_async(query@ptr)
   invisible(query)
 }
@@ -284,7 +288,7 @@ tiledb_query_submit_async <- function(query) {
 #' @return A character value, either 'READ' or 'WRITE'
 #' @export
 tiledb_query_finalize <- function(query) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   libtiledb_query_finalize(query@ptr)
   .pkgenv[["query_status"]] <- libtiledb_query_status(query@ptr)
   invisible(query)
@@ -296,7 +300,7 @@ tiledb_query_finalize <- function(query) {
 #' @return A character value describing the query status
 #' @export
 tiledb_query_status <- function(query) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   libtiledb_query_status(query@ptr)
 }
 
@@ -319,8 +323,8 @@ tiledb_query_status <- function(query) {
 #' @seealso tiledb_query_result_buffer_elements_vec
 #' @export
 tiledb_query_result_buffer_elements <- function(query, attr) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            attr_variable=is.character(attr))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'attr' must be a character object` = is.character(attr))
   libtiledb_query_result_buffer_elements(query@ptr, attr, 1) # request 2nd el in pair
 }
 
@@ -346,9 +350,9 @@ tiledb_query_result_buffer_elements <- function(query, attr) {
 #' @seealso tiledb_query_result_buffer_elements
 #' @export
 tiledb_query_result_buffer_elements_vec <- function(query, attr, nullable = FALSE) {
-  stopifnot(`query must be a query_object` = is(query, "tiledb_query"),
-            `attr must be a string` = is.character(attr),
-            `nullable must be a logical` = is.logical(nullable))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'attr' must be a character object` = is.character(attr),
+            `Argument 'nullable' must be a logical` = is.logical(nullable))
   libtiledb_query_result_buffer_elements_vec(query@ptr, attr, nullable)
 }
 
@@ -363,9 +367,12 @@ tiledb_query_result_buffer_elements_vec <- function(query, attr, nullable = FALS
 #' @return The query object, invisibly
 #' @export
 tiledb_query_add_range <- function(query, schema, attr, lowval, highval, stride=NULL) {
-  stopifnot(schema_object=is(schema, "tiledb_array_schema"),
-            query_object=is(query, "tiledb_query"),
-            datatype_variable=is.character(attr))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'schema' must be a tiledb_array_schema object` = is(schema, "tiledb_array_schema"),
+            `Argument 'attr' must be a character object` = is.character(attr),
+            `Argument 'lowval' must be numeric` = is.numeric(lowval),
+            `Argument 'highval' must be numeric` = is.numeric(highval),
+            `Argument 'stride' must be numeric (or NULL)` = is.null(stride) || is.numeric(lowval))
   names <- tiledb_schema_get_names(schema)
   types <- tiledb_schema_get_types(schema)
   idx <- which(names == attr)
@@ -384,8 +391,12 @@ tiledb_query_add_range <- function(query, schema, attr, lowval, highval, stride=
 #' @return The query object, invisibly
 #' @export
 tiledb_query_add_range_with_type <- function(query, idx, datatype, lowval, highval, stride=NULL) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            datatype_variable=is.character(datatype))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'idx' must be integer` = is.integer(idx),
+            `Argument 'datatype' must be character` = is.character(datatype),
+            `Argument 'lowval' must be numeric` = is.numeric(lowval),
+            `Argument 'highval' must be numeric` = is.numeric(highval),
+            `Argument 'stride' must be numeric (or NULL)` = is.null(stride) || is.numeric(lowval))
   query@ptr <- libtiledb_query_add_range_with_type(query@ptr, idx, datatype, lowval, highval, stride)
   invisible(query)
 }
@@ -398,7 +409,7 @@ tiledb_query_add_range_with_type <- function(query, idx, datatype, lowval, highv
 #' @return An integer with the number of fragments for the given query
 #' @export
 tiledb_query_get_fragment_num <- function(query) {
-  stopifnot(query_object=is(query, "tiledb_query"))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   libtiledb_query_get_fragment_num(query@ptr)
 }
 
@@ -410,8 +421,8 @@ tiledb_query_get_fragment_num <- function(query) {
 #' @return An character value with the fragment URI
 #' @export
 tiledb_query_get_fragment_uri <- function(query, idx) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            idx_numeric=is.numeric(idx))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'idx' must be numeric` = is.numeric(idx))
   libtiledb_query_get_fragment_uri(query@ptr, idx)
 }
 
@@ -424,9 +435,9 @@ tiledb_query_get_fragment_uri <- function(query, idx) {
 #' @return A two-element datetime vector with the start and end time of the fragment write.
 #' @export
 tiledb_query_get_fragment_timestamp_range <- function(query, idx) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            idx_numeric=is.numeric(idx))
-  libtiledb_query_get_fragment_uri(query@ptr, idx)
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'idx' must be numeric` = is.numeric(idx))
+  libtiledb_query_get_fragment_timestamp_range(query@ptr, idx)
 }
 
 
@@ -442,8 +453,8 @@ tiledb_query_get_fragment_timestamp_range <- function(query, idx) {
 #' @return An estimate of the query result size
 #' @export
 tiledb_query_get_est_result_size <- function(query, name) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            name_argument=is.character(name))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'name' must be character` = is.character(name))
   libtiledb_query_get_est_result_size(query@ptr, name)
 }
 
@@ -459,36 +470,36 @@ tiledb_query_get_est_result_size <- function(query, name) {
 #' @return An estimate of the query result size
 #' @export
 tiledb_query_get_est_result_size_var <- function(query, name) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            name_argument=is.character(name))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'name' must be character` = is.character(name))
   libtiledb_query_get_est_result_size_var(query@ptr, name)
 }
 
 #' Retrieve the number of ranges for a query dimension
 #'
 #' @param query A TileDB Query object
-#' @param idx An integer index selecting the dimension
+#' @param idx An integer or numeric index selecting the dimension
 #' @return An integer with the number of query range for the
 #' given dimensions
 #' @export
 tiledb_query_get_range_num <- function(query, idx) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            idx_argument=is.numeric(idx))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'idx' must be numeric` = is.numeric(idx))
   libtiledb_query_get_range_num(query@ptr, idx-1)
 }
 
 #' Retrieve the query range for a query dimension and range index
 #'
 #' @param query A TileDB Query object
-#' @param dimidx An integer index selecting the dimension
-#' @param rngidx An integer index selection the given range for the dimension
+#' @param dimidx An integer or numeric index selecting the dimension
+#' @param rngidx An integer or numeric index selection the given range for the dimension
 #' @return An integer vector with elements start, end and stride for the query
 #' range for the given dimension and range index
 #' @export
 tiledb_query_get_range <- function(query, dimidx, rngidx) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            dimidx_argument=is.numeric(dimidx),
-            rngidx_argument=is.numeric(rngidx))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'dimidx' must be numeric` = is.numeric(dimidx),
+            `Argument 'rngidx' must be numeric` = is.numeric(rngidx))
   libtiledb_query_get_range(query@ptr, dimidx-1, rngidx-1)
 }
 
@@ -501,9 +512,9 @@ tiledb_query_get_range <- function(query, dimidx, rngidx) {
 #' range for the given dimension and range index
 #' @export
 tiledb_query_get_range <- function(query, dimidx, rngidx) {
-  stopifnot(query_object=is(query, "tiledb_query"),
-            dimidx_argument=is.numeric(dimidx),
-            rngidx_argument=is.numeric(rngidx))
+  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+            `Argument 'dimidx' must be numeric` = is.numeric(dimidx),
+            `Argument 'rngidx' must be numeric` = is.numeric(rngidx))
   libtiledb_query_get_range_var(query@ptr, dimidx-1, rngidx-1)
 }
 
@@ -514,8 +525,8 @@ tiledb_query_get_range <- function(query, dimidx, rngidx) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_condition <- function(query, qc) {
-    stopifnot(`needs query object`=is(query, "tiledb_query"),
-              `needs query condition object`=is(qc, "tiledb_query_condition"))
+    stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
+              `Argument 'qc' must be a query_condition object` = is(qc, "tiledb_query_condition"))
     query@ptr <- libtiledb_query_set_condition(query@ptr, qc@ptr)
     invisible(query)
 }

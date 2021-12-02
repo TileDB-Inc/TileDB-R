@@ -31,8 +31,8 @@
 ##' pointers to the Arrow array and schema
 ##' @export
 tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) {
-    stopifnot(`query argument`=is(query, "tiledb_query"),
-              `name argument`=is.character(name))
+    stopifnot(`The 'query' argument must be a tiledb query` = is(query, "tiledb_query"),
+              `The 'name' argument must be character` = is.character(name))
     res <- libtiledb_query_export_buffer(ctx@ptr, query@ptr, name)
     res
 }
@@ -49,10 +49,9 @@ tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) 
 ##' @return The update Query external pointer is returned
 ##' @export
 tiledb_query_import_buffer <- function(query, name, arrowpointers, ctx = tiledb_get_context()) {
-    stopifnot(`query argument` = is(query, "tiledb_query"),
-              `name argument` = is.character(name),
-              `arrow pointers` = is.numeric(arrowpointers),
-              `length of arrow pointers vectors` = length(arrowpointers)==2)
+    stopifnot(`The 'query' argument must be a tiledb query` = is(query, "tiledb_query"),
+              `The 'name' argument must be character` = is.character(name),
+              `The 'arrowpointers' argument must be length-2 vector` = is.numeric(arrowpointers) && is.vector(arrowpointers) && length(arrowpointers)==2)
     query@ptr <- libtiledb_query_import_buffer(ctx@ptr, query@ptr, name, arrowpointers)
     query
 }

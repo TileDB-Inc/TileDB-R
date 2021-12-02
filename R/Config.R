@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -29,10 +29,8 @@ setClass("tiledb_config",
 
 #' @importFrom methods new
 tiledb_config.from_ptr <- function(ptr) {
-  if (typeof(ptr) != "externalptr" || is.null(ptr)) {
-    stop("ptr must be a non NULL externalptr to a tiledb_config instance")
-  }
-  new("tiledb_config", ptr = ptr)
+    stopifnot(`ptr must be a non-NULL externalptr to a tiledb_config instance` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
+    new("tiledb_config", ptr = ptr)
 }
 
 #' Creates a `tiledb_config` object
@@ -58,9 +56,7 @@ tiledb_config.from_ptr <- function(ptr) {
 #' @export tiledb_config
 tiledb_config <- function(config = NA_character_) {
   if (!is.na(config)) {
-    if (typeof(config) != "character" || is.null(names(config))) {
-      stop("config argument must be a name, value character vector")
-    }
+    stopifnot(`If given, the 'config' argument must be a name, value character vector` = is.character(config) && !is.null(names(config)))
     ptr <- libtiledb_config(config)
   } else {
     ptr <- libtiledb_config()
@@ -86,12 +82,8 @@ tiledb_config <- function(config = NA_character_) {
 #' @aliases [,tiledb_config,ANY,tiledb_config-method
 #' @aliases [,tiledb_config,ANY,ANY,tiledb_config-method
 setMethod("[", "tiledb_config", function(x, i, j, ..., drop=FALSE) {
-  if (!is.character(i)) {
-    stop("tiledb_config subscript must be of type 'character'")
-  }
-  if (!missing(j)) {
-    stop("incorrect number of subscripts")
-  }
+  stopifnot(`The first subscript in tiledb_config subscript must be of type 'character'` = is.character(i),
+            `The second subscript is currently unused` = missing(j))
   tryCatch(libtiledb_config_get(x@ptr, i), error = function(e) NA)
 })
 
@@ -116,18 +108,13 @@ setMethod("[", "tiledb_config", function(x, i, j, ..., drop=FALSE) {
 #' @aliases [<-,tiledb_config,ANY,tiledb_config-method
 #' @aliases [<-,tiledb_config,ANY,ANY,tiledb_config-method
 setMethod("[<-", "tiledb_config", function(x, i, j, value) {
-  if (!is.character(i)) {
-    stop("tiledb_config subscript must be of type 'character'")
-  } else if (!missing(j)) {
-    stop("incorrect number of subscripts")
-  } else if (!is.character(value)) {
-    if (is.double(value) || is.integer(value)) {
-      value <- as.character(value)
-    } else if (is.logical(value)) {
-      value <- if (isTRUE(value)) "true" else "false"
-    } else {
-      stop("tiledb_config parameter value must be a 'character', 'double', 'integer' or 'logical'")
-    }
+  stopifnot(`The first subscript in tiledb_config subscript must be of type 'character'` = is.character(i),
+            `The second subscript is currently unused` = missing(j),
+            `The value argument must be be int, numeric, character or logical` = is.logical(value) || is.character(value) || is.numeric(value))
+  if (is.logical(value)) {
+    value <- if (isTRUE(value)) "true" else "false"
+  } else {
+    value <- as.character(value)
   }
   libtiledb_config_set(x@ptr, i, value)
   x
@@ -160,8 +147,8 @@ setMethod("show", signature(object = "tiledb_config"), function(object) {
 #'
 #' @export
 tiledb_config_save <- function(config, path) {
-  stopifnot(class(config) == "tiledb_config")
-  stopifnot(typeof(path) == "character")
+  stopifnot(`The 'config' argument must be a tiledb_config object` = is(config, "tiledb_config"),
+            `The 'path' argument must be of type character` = is.character(path))
   libtiledb_config_save_to_file(config@ptr, path)
 }
 
@@ -178,7 +165,7 @@ tiledb_config_save <- function(config, path) {
 #'
 #' @export
 tiledb_config_load <- function(path) {
-  stopifnot(typeof(path) == "character")
+  stopifnot(`The 'path' argument must be of type character` = is.character(path))
   ptr <- libtiledb_config_load_from_file(path)
   tiledb_config.from_ptr(ptr)
 }
@@ -195,6 +182,7 @@ tiledb_config_load <- function(path) {
 #'
 #' @export
 as.vector.tiledb_config <- function(x, mode="any") {
+  stopifnot(`The 'x' argument must be a tiledb_config object` = is(x, "tiledb_config"))
   libtiledb_config_vector(x@ptr)
 }
 
@@ -208,10 +196,11 @@ as.vector.tiledb_config <- function(x, mode="any") {
 #'
 #' @export
 as.data.frame.tiledb_config <- function(x, ...) {
+  stopifnot(`The 'x' argument must be a tiledb_config object` = is(x, "tiledb_config"))
   v <- libtiledb_config_vector(x@ptr)
   params <- names(v)
   values <- as.vector(v)
-  return(data.frame("parameter" = params, "value" = values, stringsAsFactors = FALSE))
+  data.frame("parameter" = params, "value" = values, stringsAsFactors = FALSE)
 }
 
 #' Limit TileDB core use to a given number of cores
@@ -242,6 +231,7 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
     ## and then keep the smaller
     ncores <- min(na.omit(c(ncores, ompcores)))
   }
+  stopifnot(`The 'ncores' argument must be numeric or character` = is.numeric(ncores) || is.character(ncores))
   cfg <- tiledb_config()
   if (tiledb_version(TRUE) >= "2.1.0") {
     cfg["sm.compute_concurrency_level"] <- ncores
@@ -251,11 +241,6 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
     cfg["sm.num_writer_threads"] <- ncores
     cfg["vfs.file.max_parallel_ops"] <- ncores
     cfg["vfs.num_threads"] <- ncores
-  }
-  if (tiledb_version(TRUE) >= "2.4.0" &&
-      isTRUE(Sys.getenv("TILEDB_USE_REFACTORED_READERS") == "true")) {
-      cfg["sm.use_refactored_readers"] <- "true"
-      if (verbose) message("Enabling refactored readers.")
   }
   if (verbose) message("Limiting TileDB to ",ncores," cores. See ?limitTileDBCores.")
   invisible(cfg)
@@ -268,7 +253,7 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
 #' @return The modified TileDB Config object
 #' @export
 tiledb_config_unset <- function(config, param) {
-  stopifnot(config_object=is(config, "tiledb_config"),
-            param_argument=is.character(param))
+  stopifnot(`The 'config' argument must be a tiledb_config object` = is(config, "tiledb_config"),
+            `The 'param' argument must be of type character` = is.character(param))
   libtiledb_config_unset(config@ptr, param)
 }

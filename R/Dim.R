@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,7 @@ setClass("tiledb_dim",
 
 #' @importFrom methods new
 tiledb_dim.from_ptr <- function(ptr) {
-  if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
-    stop("ptr argument must be a non NULL externalptr to a tiledb::Dim instance")
-  }
+  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_dim` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   return(new("tiledb_dim", ptr = ptr))
 }
 
@@ -54,12 +52,9 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export tiledb_dim
 tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
-  if (missing(name)) {
-    stop("'name' argument must be supplied when creating a dimension object.")
-  }
-  if (!is.scalar(name, "character")) {
-    stop("'name' argument must be a scalar string when creating a dimension object.")
-  }
+  stopifnot(`Argument 'name' must be supplied when creating a dimension object` = !missing(name),
+            `Argument 'name' must be a scalar string when creating a dimension object` = is.scalar(name, "character"),
+            `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
   if (missing(type)) {
     type <- ifelse(is.integer(domain), "INT32", "FLOAT64")
   } else if (!type %in% c("INT8", "INT16", "INT32", "INT64",
@@ -85,9 +80,6 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
       options("warn" = -1)              # suppress warnings
       domain <- as.numeric(domain)      # for this lossy conversion
       options("warn" = w)               # restore warning levels
-  }
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("ctx argument must be a tiledb_ctx")
   }
   # by default, tile extent should span the whole domain
   if (missing(tile)) {
@@ -199,6 +191,7 @@ setMethod("tiledb_ndim", "tiledb_dim",
 #'
 #' @export
 is.anonymous.tiledb_dim <- function(object) {
+  stopifnot(`Argument 'object' must a tiledb_dim object` = is(object, "tiledb_dim"))
   name <- libtiledb_dim_get_name(object@ptr)
   return(nchar(name) == 0)
 }

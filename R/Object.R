@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,6 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
-check_object_arguments <- function(uri, ctx = tiledb_get_context()) {
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("argument ctx must a a tiledb_ctx")
-  }
-  if (missing(uri) || !is.scalar(uri, "character")) {
-    stop("argument uri must be a string scalar ")
-  }
-  return(TRUE)
-}
-
 #' Creates a TileDB group object at given uri path
 #'
 #' @param uri path which to create group
@@ -44,8 +34,9 @@ check_object_arguments <- function(uri, ctx = tiledb_get_context()) {
 #' }
 #'@export
 tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
-  check_object_arguments(uri, ctx)
-  return(libtiledb_group_create(ctx@ptr, uri))
+    stopifnot(`The 'ctx' argument must a tiledb_ctx` = is(ctx, "tiledb_ctx"),
+              `The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri,"character"))
+    libtiledb_group_create(ctx@ptr, uri)
 }
 
 #' Return the TileDB object type string of a TileDB resource
@@ -61,8 +52,9 @@ tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
 #'
 #' @export
 tiledb_object_type <- function(uri, ctx = tiledb_get_context()) {
-  check_object_arguments(uri, ctx)
-  return(libtiledb_object_type(ctx@ptr, uri))
+    stopifnot(`The 'ctx' argument must a tiledb_ctx` = is(ctx, "tiledb_ctx"),
+              `The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri,"character"))
+    libtiledb_object_type(ctx@ptr, uri)
 }
 
 #' Removes a TileDB resource
@@ -74,8 +66,9 @@ tiledb_object_type <- function(uri, ctx = tiledb_get_context()) {
 #' @return uri of removed TileDB resource
 #' @export
 tiledb_object_rm <- function(uri, ctx = tiledb_get_context()) {
-  check_object_arguments(uri, ctx)
-  return(libtiledb_object_remove(ctx@ptr, uri))
+    stopifnot(`The 'ctx' argument must a tiledb_ctx` = is(ctx, "tiledb_ctx"),
+              `The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri,"character"))
+    libtiledb_object_remove(ctx@ptr, uri)
 }
 
 #' Move a TileDB resource to new uri path
@@ -88,16 +81,10 @@ tiledb_object_rm <- function(uri, ctx = tiledb_get_context()) {
 #' @return new uri of moved tiledb resource
 #' @export
 tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb_get_context()) {
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("argument ctx must a a tiledb_ctx")
-  }
-  if (missing(old_uri) || !is.scalar(old_uri, "character")) {
-    stop("argument old_uri must be a string scalar ")
-  }
-  if (missing(new_uri) || !is.scalar(new_uri, "character")) {
-    stop("argument old_uri must be a string scalar ")
-  }
-  return(libtiledb_object_move(ctx@ptr, old_uri, new_uri))
+    stopifnot(`The 'ctx' argument must a tiledb_ctx` = is(ctx, "tiledb_ctx"),
+              `The 'old_uri' argument must be a string scalar` = !missing(old_uri) && is.scalar(old_uri,"character"),
+              `The 'new_uri' argument must be a string scalar` = !missing(new_uri) && is.scalar(new_uri,"character"))
+    libtiledb_object_move(ctx@ptr, old_uri, new_uri)
 }
 
 #' List TileDB resources at a given root URI path
@@ -108,8 +95,9 @@ tiledb_object_mv <- function(old_uri, new_uri, ctx = tiledb_get_context()) {
 #' @return a dataframe with object type, object uri string columns
 #' @export
 tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb_get_context()) {
-  check_object_arguments(uri, ctx)
-  return(libtiledb_object_walk(ctx@ptr, uri, order = "PREORDER"))
+    stopifnot(`The 'ctx' argument must a tiledb_ctx` = is(ctx, "tiledb_ctx"),
+              `The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri,"character"))
+    libtiledb_object_walk(ctx@ptr, uri, order = "PREORDER")
 }
 
 #' Recursively discover TileDB resources at a given root URI path
@@ -120,6 +108,7 @@ tiledb_object_ls <- function(uri, filter = NULL, ctx = tiledb_get_context()) {
 #' @return a dataframe with object type, object uri string columns
 #' @export
 tiledb_object_walk <- function(uri, order = "PREORDER", ctx = tiledb_get_context()) {
-  check_object_arguments(uri, ctx)
-  return(libtiledb_object_walk(ctx@ptr, uri, order = order, recursive = TRUE))
+    stopifnot(`The 'ctx' argument must a tiledb_ctx` = is(ctx, "tiledb_ctx"),
+              `The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri,"character"))
+    libtiledb_object_walk(ctx@ptr, uri, order = order, recursive = TRUE)
 }

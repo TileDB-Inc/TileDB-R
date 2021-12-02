@@ -75,8 +75,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                           cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="ZSTD",
                           capacity = 10000L, tile_domain = NULL, tile_extent = NULL, debug = FALSE) {
 
-    if (!inherits(obj, "data.frame")) stop("Argument 'obj' should be a 'data.frame' (or a related object).", call. = FALSE)
-    if (!is.character(uri)) stop("Argument 'uri' should be a character variable.", call. = FALSE)
+    stopifnot(`Argument 'obj' should be a 'data.frame' (or a related object)` = inherits(obj, "data.frame"),
+              `Argument 'uri' should be a character variable` = is.character(uri))
     if (!is.null(col_index) && is.character(col_index)) col_index <- match(col_index, colnames(obj))
     dims <- dim(obj)
 
@@ -224,7 +224,6 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
 }
 
 .testWithDate <- function(df, uri) {
-  #df <- read.csv("~/git/tiledb-data/csv-pandas/banklist.csv", stringsAsFactors = FALSE)
   bkdf <- within(df, {
     Closing.Date <- as.Date(Closing.Date, "%d-%b-%y")
     Updated.Date <- as.Date(Updated.Date, "%d-%b-%y")

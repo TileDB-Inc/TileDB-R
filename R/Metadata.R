@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,6 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
-.isArray <- function(arr) {
-  is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array")
-}
-
-.assertArray <- function(arr) {
-  stopifnot(is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array"))
-}
-
 ##' Test if TileDB Array has Metadata
 ##'
 ##' @param arr A TileDB Array object
@@ -36,18 +28,11 @@
 ##'   metdata of the given array
 ##' @export
 tiledb_has_metadata <- function(arr, key) {
-  if (!.isArray(arr)) {
-    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
-  }
-
-  ## Now deal with (default) case of an array object
-  ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
-    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
-  }
-
+  stopifnot(`Argument 'arr' must be a (dense or sparse) TileDB array` = .isArray(arr),
+            `Argument 'key' must be a scalar character` = is.scalar(key, "character"),
+            `Array must be open for reading to access metadata` = libtiledb_array_is_open_for_reading(arr@ptr))
   res <- libtiledb_array_get_metadata_list(arr@ptr)
-  return(key %in% names(res))
+  key %in% names(res)
 }
 
 ##' Return count of TileDB Array Metadata objects
@@ -56,18 +41,9 @@ tiledb_has_metadata <- function(arr, key) {
 ##' @return A integer variable with the number of Metadata objects
 ##' @export
 tiledb_num_metadata <- function(arr) {
-  if (!.isArray(arr)) {
-    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
-  }
-
-  ## Now deal with (default) case of an array object
-  ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
-    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
-  }
-
-  ## Run query
-  return(libtiledb_array_get_metadata_num(arr@ptr))
+  stopifnot(`Argument 'arr' must be a (dense or sparse) TileDB array` = .isArray(arr),
+            `Array must be open for reading to access metadata` = libtiledb_array_is_open_for_reading(arr@ptr))
+  libtiledb_array_get_metadata_num(arr@ptr)
 }
 
 ##' Return a TileDB Array Metadata object given by key
@@ -78,21 +54,13 @@ tiledb_num_metadata <- function(arr) {
 ##' or \sQuote{NULL} if none found.
 ##' @export
 tiledb_get_metadata <- function(arr, key) {
-  if (!.isArray(arr)) {
-    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
-  }
-
-  ## Now deal with (default) case of an array object
-  ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
-    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
-  }
-
+  stopifnot(`Argument 'arr' must be a (dense or sparse) TileDB array` = .isArray(arr),
+            `Array must be open for reading to access metadata` = libtiledb_array_is_open_for_reading(arr@ptr))
   res <- libtiledb_array_get_metadata_list(arr@ptr)
   if (key %in% names(res))
-    return(res[[key]])
+    res[[key]]
   else
-    return(NULL)
+    NULL
 }
 
 ##' Store an object in TileDB Array Metadata under given key
@@ -115,20 +83,11 @@ tiledb_put_metadata <- function(arr, key, val) {
 ##' @return A object stored in the Metadata under the given key
 ##' @export
 tiledb_get_all_metadata <- function(arr) {
-  if (!.isArray(arr)) {
-    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
-  }
-
-  ## Now deal with (default) case of an array object
-  ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open_for_reading(arr@ptr)) {
-    stop("Array is not open for reading, cannot access metadata.", call.=FALSE)
-  }
-
-  ## Run query
+  stopifnot(`Argument 'arr' must be a (dense or sparse) TileDB array` = .isArray(arr),
+            `Array must be open for reading to access metadata` = libtiledb_array_is_open_for_reading(arr@ptr))
   res <- libtiledb_array_get_metadata_list(arr@ptr)
   class(res) <- "tiledb_metadata"
-  return(res)
+  res
 }
 
 ##' Print a TileDB Array Metadata object
@@ -154,17 +113,8 @@ print.tiledb_metadata <- function(x, width=NULL, ...) {
 ##' @return A boolean indicating success
 ##' @export
 tiledb_delete_metadata <- function(arr, key) {
-  if (!.isArray(arr)) {
-    stop("Argument must be a (dense or sparse) TileDB array.", call.=FALSE)
-  }
-
-  ## Now deal with (default) case of an array object
-  ## Check for 'is it open' ?
-  if (!libtiledb_array_is_open_for_writing(arr@ptr)) {
-    stop("Array is not open for writing, cannot access metadata.", call.=FALSE)
-  }
-
-  ## Run metadata removal
-  libtiledb_array_delete_metadata(arr@ptr, key);
-  invisible(TRUE)
+  stopifnot(`Argument must be a (dense or sparse) TileDB array.` = .isArray(arr),
+            `Array is not open for writing.` = libtiledb_array_is_open_for_writing(arr@ptr))
+  libtiledb_array_delete_metadata(arr@ptr, key)
+  TRUE                                  # we get NULL from C++
 }

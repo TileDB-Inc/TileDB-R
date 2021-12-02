@@ -57,6 +57,7 @@ getContext <- function() tiledb_get_context()
 #' storing the VFS object.
 #' @export
 tiledb_set_context <- function(ctx) {
+  stopifnot(`The 'ctx' argument must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
   ## set the ctx entry from the package environment (a lightweight hash)
   .pkgenv[["ctx"]] <- ctx
   invisible(NULL)
@@ -152,7 +153,9 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #'
 #' @export
 tiledb_is_supported_fs <- function(scheme, object = tiledb_get_context()) {
-            libtiledb_ctx_is_supported_fs(object@ptr, scheme)
+  stopifnot(`The 'object' argument must be a tiledb_ctx object` = is(object, "tiledb_ctx"),
+            `The 'scheme' argument must be of type character` = is.character(scheme))
+  libtiledb_ctx_is_supported_fs(object@ptr, scheme)
 }
 
 #' Sets a string:string "tag" on the Ctx
@@ -167,7 +170,9 @@ tiledb_is_supported_fs <- function(scheme, object = tiledb_get_context()) {
 #'
 #' @export
 tiledb_ctx_set_tag <- function(object, key, value) {
-  stopifnot(is(object, "tiledb_ctx"))
+  stopifnot(`The 'object' argument must be a tiledb_ctx object` = is(object, "tiledb_ctx"),
+            `The 'key' argument must be of type character` = is.character(key),
+            `The 'value' argument must be of type character` = is.character(key))
   return(libtiledb_ctx_set_tag(object@ptr, key, value))
 }
 
@@ -176,8 +181,7 @@ tiledb_ctx_set_tag <- function(object, key, value) {
 #' @param object `tiledb_ctx` object
 #' @importFrom utils packageVersion
 tiledb_ctx_set_default_tags <- function(object) {
-  stopifnot(is(object, "tiledb_ctx"))
-
+  stopifnot(`The 'object' argument must be a tiledb_ctx object` = is(object, "tiledb_ctx"))
   tiledb_ctx_set_tag(object, "x-tiledb-api-language", "r")
   tiledb_ctx_set_tag(object, "x-tiledb-api-language-version", as.character(packageVersion("tiledb")))
   info <- Sys.info()

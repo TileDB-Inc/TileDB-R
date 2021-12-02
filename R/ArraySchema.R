@@ -28,9 +28,7 @@ setClass("tiledb_array_schema",
          slots = list(ptr = "externalptr"))
 
 tiledb_array_schema.from_ptr <- function(ptr) {
-  if (missing(ptr) || typeof(ptr) != "externalptr" || is.null(ptr)) {
-    stop("ptr argument must be a non NULL externalptr to a tiledb_array_schema instance")
-  }
+  stopifnot(`The 'ptr' argument must be a non NULL externalptr to a tiledb_array_schema instance` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr) )
   new("tiledb_array_schema", ptr = ptr)
 }
 
@@ -122,11 +120,8 @@ tiledb_array_schema <- function(domain,
 }
 
 tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("ctx argument must be a tiledb_ctx")
-  } else if (missing(x) || !is.array(x)) {
-    stop("x argument must be a valid array object")
-  }
+  stopifnot(`The 'ctx' argument must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
+            `The 'x' argument must be a valid array object` = !missing(x) && is.array(x))
   xdim <- dim(x)
   dims <- lapply(seq_len(xdim), function(i) {
     tiledb_dim(c(1L, xdim[i]), type = "INT32", ctx)
@@ -339,6 +334,8 @@ setMethod("filter_list", "tiledb_array_schema", function(object) {
 #' @return The modified Array Schema object
 #' @export
 tiledb_array_schema_set_coords_filter_list <- function(sch, fl) {
+  stopifnot(`The 'sch' argument must be a tiledb_array_schema object` = is(sch, "tiledb_array_schema"),
+            `The 'fl' argument must be a tiledb_filter_list object` = is(fl, "tiledb_filter_list"))
   sch@ptr <- libtiledb_array_schema_set_coords_filter_list(sch@ptr, fl@ptr)
   sch
 }
@@ -350,6 +347,8 @@ tiledb_array_schema_set_coords_filter_list <- function(sch, fl) {
 #' @return The modified Array Schema object
 #' @export
 tiledb_array_schema_set_offsets_filter_list <- function(sch, fl) {
+  stopifnot(`The 'sch' argument must be a tiledb_array_schema object` = is(sch, "tiledb_array_schema"),
+            `The 'fl' argument must be a tiledb_filter_list object` = is(fl, "tiledb_filter_list"))
   sch@ptr <- libtiledb_array_schema_set_offsets_filter_list(sch@ptr, fl@ptr)
   sch
 }
@@ -434,6 +433,7 @@ setMethod("allows_dups", signature = "tiledb_array_schema", function(x) {
 #' @return the logical value
 #' @export
 tiledb_array_schema_get_allows_dups <- function(x) {
+  stopifnot(`The 'x' argument must be a tiledb_array_schema object` = is(x, "tiledb_array_schema"))
   libtiledb_array_schema_get_allows_dups(x@ptr)
 }
 
@@ -456,6 +456,8 @@ setMethod("allows_dups<-", signature = "tiledb_array_schema", function(x, value)
 #' @return the tiledb_array_schema object
 #' @export
 tiledb_array_schema_set_allows_dups <- function(x, value) {
+  stopifnot(`The 'x' argument must be a tiledb_array_schema object` = is(x, "tiledb_array_schema"),
+            `The 'value' argument must be a boolean` = is.logical(value))
   libtiledb_array_schema_set_allows_dups(x@ptr, value)
 }
 
@@ -465,7 +467,7 @@ tiledb_array_schema_set_allows_dups <- function(x, value) {
 ##' @return A character vector of dimension and attribute names
 ##' @export
 tiledb_schema_get_names <- function(sch) {
-  stopifnot(`Argument must be a schema` = is(sch, "tiledb_array_schema"))
+  stopifnot(`The 'sch' argument must be a schema` = is(sch, "tiledb_array_schema"))
   dom <- tiledb::domain(sch)
   dims <- tiledb::dimensions(dom)
   ndims <- length(dims)
@@ -483,7 +485,7 @@ tiledb_schema_get_names <- function(sch) {
 ##' @return A character vector of dimension and attribute data types
 ##' @export
 tiledb_schema_get_types <- function(sch) {
-  stopifnot(`Argument must be a schema` = is(sch, "tiledb_array_schema"))
+  stopifnot(`The 'sch' argument must be a schema` = is(sch, "tiledb_array_schema"))
   dom <- tiledb::domain(sch)
   dims <- tiledb::dimensions(dom)
   ndims <- length(dims)
@@ -503,7 +505,7 @@ tiledb_schema_get_types <- function(sch) {
 ##' @return An integer vector where each element corresponds to a schema entry,
 ##' and a value of one signals dimension and a value of two an attribute.
 tiledb_schema_get_dim_attr_status <- function(sch) {
-  stopifnot(`Argument must be a schema` = is(sch, "tiledb_array_schema"))
+  stopifnot(`The 'sch' argument must be a schema` = is(sch, "tiledb_array_schema"))
   dom <- tiledb::domain(sch)
   dims <- tiledb::dimensions(dom)
   attrs <- tiledb::attrs(sch)
@@ -541,6 +543,7 @@ setReplaceMethod("capacity", signature = "tiledb_array_schema", function(x, valu
 #' @return The tile capacity value
 #' @export
 tiledb_array_schema_get_capacity <- function(object) {
+  stopifnot(`The argument must be a tiledb_array_schema object` = is(object, "tiledb_array_schema"))
   libtiledb_array_schema_get_capacity(object@ptr)
 }
 
@@ -552,6 +555,8 @@ tiledb_array_schema_get_capacity <- function(object) {
 #' @return The modified \code{array_schema} object
 #' @export
 tiledb_array_schema_set_capacity <- function(x, value) {
+  stopifnot(`The first argument must be a tiledb_array_schema object` = is(x, "tiledb_array_schema"),
+            `The second argumebt must a int or numeric value` = is.numeric(value))
   libtiledb_array_schema_set_capacity(x@ptr, value)
   x
 }
@@ -579,6 +584,7 @@ setMethod("check", signature = "tiledb_array_schema", function(object) {
 #' schema; for an incorrect schema an error condition is triggered.
 #' @export
 tiledb_array_schema_check <- function(object) {
+  stopifnot(`The argument must be a tiledb_array_schema object` = is(object, "tiledb_array_schema"))
   libtiledb_array_schema_check(object@ptr)
 }
 
@@ -592,7 +598,7 @@ tiledb_array_schema_check <- function(object) {
 #' @return A boolean value indicating if the attribute exists in the schema
 #' @export
 has_attribute <- function(schema, attr) {
-  stopifnot(schema_argument=is(schema, "tiledb_array_schema"),
-            attr_argument=is.character(attr))
+  stopifnot(`The 'schema' argument must be an array schema` = is(schema, "tiledb_array_schema"),
+            `The 'attr' argument must be a character` = is.character(attr))
   libtiledb_array_schema_has_attribute(schema@ptr, attr)
 }

@@ -28,7 +28,7 @@ setClass("tiledb_fragment_info",
          slots = list(ptr = "externalptr"))
 
 tiledb_fragment_info.from_ptr <- function(ptr) {
-    stopifnot(is(ptr, "externalptr"))
+    stopifnot(`ptr must be a non-NULL externalptr to a tiledb_fragment_info` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
     return(new("tiledb_fragment_info", ptr = ptr))
 }
 
@@ -40,9 +40,8 @@ tiledb_fragment_info.from_ptr <- function(ptr) {
 #' @return tiledb_fragment_info object
 #' @export tiledb_fragment_info
 tiledb_fragment_info <- function(uri, ctx = tiledb_get_context()) {
-    stopifnot(`argument ctx must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
-              `argument uri must be a string scalar` = is.scalar(uri, "character"))
-
+    stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
+              `Argument 'uri' must be a string scalar` = is.scalar(uri, "character"))
     ptr <- libtiledb_fragment_info(ctx@ptr, uri)
     return(new("tiledb_fragment_info", ptr = ptr))
 }
@@ -54,6 +53,8 @@ tiledb_fragment_info <- function(uri, ctx = tiledb_get_context()) {
 #' @return A character variable with URI
 #' @export
 tiledb_fragment_info_uri <- function(object, fid) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid))
     libtiledb_fragment_info_uri(object@ptr, fid)
 }
 
@@ -65,10 +66,13 @@ tiledb_fragment_info_uri <- function(object, fid) {
 #' @param fid A fragment object index
 #' @param did A domain index
 #' @param typestr An optional character variable describing the data type which will
-#' be accessed from the schema if missinh
+#' be accessed from the schema if missing
 #' @return A TileDB Domain object
 #' @export
 tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did, typestr) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid),
+              `Argument did must be a numeric` = is.numeric(did))
     if (missing(typestr)) {
         uri <- dirname(libtiledb_fragment_info_uri(object@ptr, fid))
         typestr <- datatype( dimensions(domain(schema(uri)))[[did+1]] )
@@ -88,6 +92,9 @@ tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did, ty
 #' @return A TileDB Domain object
 #' @export
 tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name, typestr) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid),
+              `Argument dim_name must be a scalar character` = is.scalar(dim_name, "character"))
     if (missing(typestr)) {
         uri <- dirname(libtiledb_fragment_info_uri(object@ptr, fid))
         names <- sapply(dimensions(domain(schema(uri))), name)
@@ -105,6 +112,9 @@ tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name
 #' @return A character vector with two elements
 #' @export
 tiledb_fragment_info_get_non_empty_domain_var_index <- function(object, fid, did) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid),
+              `Argument did must be a numeric` = is.numeric(did))
     libtiledb_fragment_info_get_non_empty_domain_var_index(object@ptr, fid, did)
 }
 
@@ -116,6 +126,9 @@ tiledb_fragment_info_get_non_empty_domain_var_index <- function(object, fid, did
 #' @return A character vector with two elements
 #' @export
 tiledb_fragment_info_get_non_empty_domain_var_name <- function(object, fid, dim_name) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid),
+              `Argument dim_name must be a scalar character` = is.scalar(dim_name, "character"))
     libtiledb_fragment_info_get_non_empty_domain_var_name(object@ptr, fid, dim_name)
 }
 
@@ -125,6 +138,7 @@ tiledb_fragment_info_get_non_empty_domain_var_name <- function(object, fid, dim_
 #' @return A numeric variable with the number of fragments
 #' @export
 tiledb_fragment_info_get_num <- function(object) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"))
     libtiledb_fragment_info_num(object@ptr)
 }
 
@@ -135,6 +149,8 @@ tiledb_fragment_info_get_num <- function(object) {
 #' @return A numeric variable with the number of fragments
 #' @export
 tiledb_fragment_info_get_size <- function(object, fid) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid))
     libtiledb_fragment_info_size(object@ptr, fid)
 }
 
@@ -145,6 +161,8 @@ tiledb_fragment_info_get_size <- function(object, fid) {
 #' @return A logical value indicating if the fragment is dense
 #' @export
 tiledb_fragment_info_dense <- function(object, fid) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid))
     libtiledb_fragment_info_dense(object@ptr, fid)
 }
 
@@ -155,6 +173,8 @@ tiledb_fragment_info_dense <- function(object, fid) {
 #' @return A logical value indicating if the fragment is sparse
 #' @export
 tiledb_fragment_info_sparse <- function(object, fid) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid))
     libtiledb_fragment_info_sparse(object@ptr, fid)
 }
 
@@ -175,6 +195,8 @@ tiledb_fragment_info_get_timestamp_range <- function(object, fid) {
 #' @return A numeric value with the number of cells
 #' @export
 tiledb_fragment_info_get_cell_num <- function(object, fid) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid))
     libtiledb_fragment_info_cell_num(object@ptr, fid)
 }
 
@@ -195,6 +217,8 @@ tiledb_fragment_info_get_version <- function(object, fid) {
 #' @return A logical value indicating consolidated metadata
 #' @export
 tiledb_fragment_info_has_consolidated_metadata <- function(object, fid) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid))
     libtiledb_fragment_info_has_consolidated_metadata(object@ptr, fid)
 }
 
@@ -204,6 +228,7 @@ tiledb_fragment_info_has_consolidated_metadata <- function(object, fid) {
 #' @return A numeric value with the number of unconsolidated metadata
 #' @export
 tiledb_fragment_info_get_unconsolidated_metadata_num <- function(object) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"))
     libtiledb_fragment_info_unconsolidated_metadata_num(object@ptr)
 }
 
@@ -213,6 +238,7 @@ tiledb_fragment_info_get_unconsolidated_metadata_num <- function(object) {
 #' @return A numeric value with the number of to be vacuumed fragments
 #' @export
 tiledb_fragment_info_get_to_vacuum_num <- function(object) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"))
     libtiledb_fragment_info_to_vacuum_num(object@ptr)
 }
 
@@ -223,6 +249,8 @@ tiledb_fragment_info_get_to_vacuum_num <- function(object) {
 #' @return A character variable with the URI of the be vacuumed index
 #' @export
 tiledb_fragment_info_get_to_vacuum_uri <- function(object, fid) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"),
+              `Argument fid must be a numeric` = is.numeric(fid))
     libtiledb_fragment_info_to_vacuum_uri(object@ptr, fid)
 }
 
@@ -232,5 +260,6 @@ tiledb_fragment_info_get_to_vacuum_uri <- function(object, fid) {
 #' @return Nothing is returned, as a side effect the fragment info is displayed
 #' @export
 tiledb_fragment_info_dump <- function(object) {
+    stopifnot(`Argument object mustbe a tiledb_fragment_info` = is(object, "tiledb_fragment_info"))
     libtiledb_fragment_info_dump(object@ptr)
 }

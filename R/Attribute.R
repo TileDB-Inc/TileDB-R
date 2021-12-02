@@ -28,9 +28,8 @@ setClass("tiledb_attr",
          slots = list(ptr = "externalptr"))
 
 tiledb_attr.from_ptr <- function(ptr) {
-   if (typeof(ptr) != "externalptr" || is.null(ptr)) {
-    stop("ptr argument must be a non NULL externalptr to a tiledb::Attribute instance")
-  }
+  stopifnot(`The 'ptr' argument must be a non-NULL external pointer to an Attribute instance` =
+                !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   new("tiledb_attr", ptr = ptr)
 }
 
@@ -61,19 +60,11 @@ tiledb_attr <- function(name,
                         nullable = FALSE,
                         ctx = tiledb_get_context()
                         ) {
-    if (missing(name)) {
-        name <- ""
-    }
-    if (missing(type)) {
-        stop("The 'type' argument for tiledb_attr() is mandatory")
-    }
-    if (!is(ctx, "tiledb_ctx")) {
-        stop("ctx argument must be a tiledb_ctx")
-    } else if (!is.scalar(name, "character")) {
-        stop("name argument must be a scalar string")
-    } else if(!is(filter_list, "tiledb_filter_list")) {
-        stop("filter_list argument must be a tiledb_filter_list instance")
-    }
+    if (missing(name)) name <- ""
+    stopifnot(`The 'type' argument for is mandatory` = !missing(type),
+              `The 'ctx' argument must be a tiledb_ctx` = is(ctx, "tiledb_ctx"),
+              `The 'name' argument must be a scalar string` = is.scalar(name, "character"),
+              `The 'filter_list' argument must be a tiledb_filter_list instance` = is(filter_list, "tiledb_filter_list"))
     ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells, nullable)
     new("tiledb_attr", ptr = ptr)
 }
@@ -251,8 +242,8 @@ tiledb_attribute_get_fill_value <- function(attr) {
 #' @return \code{NULL} is returned invisibly
 #' @export
 tiledb_attribute_set_fill_value <- function(attr, value) {
-  stopifnot(attr_object=is(attr, "tiledb_attr"),
-            value_type=is.integer(value) || is.numeric(value) || is.character(value))
+  stopifnot(`The first argument must be an attribute` = is(attr, "tiledb_attr"),
+            `The second argument must be int, numeric or char` = is.integer(value) || is.numeric(value) || is.character(value))
   libtiledb_attribute_set_fill_value(attr@ptr, value)
   invisible()
 }
@@ -263,7 +254,7 @@ tiledb_attribute_set_fill_value <- function(attr, value) {
 #' @return A boolean value indicating variable-size or not
 #' @export
 tiledb_attribute_is_variable_sized <- function(attr) {
-  stopifnot(attr_object=is(attr, "tiledb_attr"))
+  stopifnot(`The argument must be an attribute` = is(attr, "tiledb_attr"))
   libtiledb_attribute_is_variable_sized(attr@ptr)
 }
 
@@ -273,7 +264,7 @@ tiledb_attribute_is_variable_sized <- function(attr) {
 #' @return A numeric value with the cell size
 #' @export
 tiledb_attribute_get_cell_size <- function(attr) {
-  stopifnot(attr_object=is(attr, "tiledb_attr"))
+  stopifnot(`The argument must be an attribute` = is(attr, "tiledb_attr"))
   libtiledb_attribute_get_cell_size(attr@ptr)
 }
 
@@ -284,9 +275,9 @@ tiledb_attribute_get_cell_size <- function(attr) {
 #' @return Nothing is returned
 #' @export
 tiledb_attribute_set_nullable <- function(attr, flag) {
-    stopifnot(attr_object=is(attr, "tiledb_attr"),
-              flag_boolean_not_na=is.logical(flag) & !is.na(flag))
-    libtiledb_attribute_set_nullable(attr@ptr, flag)
+  stopifnot(`The first argument must be an attribute` = is(attr, "tiledb_attr"),
+            `The second argument must be a logical` = is.logical(flag) && !is.na(flag))
+  libtiledb_attribute_set_nullable(attr@ptr, flag)
 }
 
 #' Get the TileDB Attribute Nullable flag value
@@ -295,6 +286,6 @@ tiledb_attribute_set_nullable <- function(attr, flag) {
 #' @return A boolean value with the \sQuote{Nullable} status
 #' @export
 tiledb_attribute_get_nullable <- function(attr) {
-    stopifnot(attr_object=is(attr, "tiledb_attr"))
+    stopifnot(`The argument must be an attribute` = is(attr, "tiledb_attr"))
     libtiledb_attribute_get_nullable(attr@ptr)
 }

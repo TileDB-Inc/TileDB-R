@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -108,11 +108,11 @@ nd_index_from_syscall <- function(call, env_frame) {
 }
 
 isNestedList <- function(l) {
-  stopifnot(is.list(l))
-  for (i in l) {
-    if (is.list(i)) return(TRUE)
-  }
-  return(FALSE)
+    stopifnot(`Argument 'l' must be a list` = is.list(l))
+    for (i in l) {
+        if (is.list(i)) return(TRUE)
+    }
+    return(FALSE)
 }
 
 ##' Look up TileDB type corresponding to the type of an R object
@@ -122,17 +122,27 @@ isNestedList <- function(l) {
 ##' @return single character, e.g. INT32
 ##' @export
 r_to_tiledb_type <- function(x) {
-    storage_mode = storage.mode(x)
+    storage_mode <- storage.mode(x)
     if (storage_mode == "list")
-        storage_mode = storage.mode(x[[1]])
+        storage_mode <- storage.mode(x[[1]])
     if (storage_mode == "integer" || storage_mode == "logical") {
-        type = "INT32"
+        type <- "INT32"
     } else if (storage_mode == "double"){
-        type = "FLOAT64"
+        type <- "FLOAT64"
     } else if (storage_mode == "character"){
-        type = "UTF8"
+        type <- "UTF8"
     } else {
         message("Data type ", storage_mode, " not supported for now.")
     }
     type
+}
+
+## next two were in file MetaData.R
+
+.isArray <- function(arr) {
+    is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array")
+}
+
+.assertArray <- function(arr) {
+    stopifnot(is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array"))
 }

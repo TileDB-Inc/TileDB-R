@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,9 @@
 #' tiledb_version(compact = TRUE)
 #' @export
 tiledb_version <- function(compact = FALSE) {
-  if (compact)
-    as.package_version(paste(unname(tiledb_version()), collapse="."))
-  else
-    libtiledb_version()
+    stopifnot(`Argument 'compact' must be logical` = is.logical(compact))
+    if (compact)
+        as.package_version(paste(unname(tiledb_version()), collapse="."))
+    else
+        libtiledb_version()
 }

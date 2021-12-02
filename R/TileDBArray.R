@@ -154,24 +154,18 @@ tiledb_array <- function(uri,
                          dumpbuffers = character(),
                          buffers = list(),
                          ctx = tiledb_get_context()) {
-  query_type = match.arg(query_type)
-  if (!is(ctx, "tiledb_ctx"))
-    stop("argument ctx must be a tiledb_ctx", call. = FALSE)
-  if (missing(uri) || !is.scalar(uri, "character"))
-    stop("argument uri must be a string scalar", call. = FALSE)
-  if (sum(as.data.frame, as.matrix, as.array) > 1)
-    stop("at most one argument of as.data.frame, as.matrix and as.array can be selected", call. = FALSE)
-  if (isTRUE(is.sparse) && as.matrix)
-    stop("argument as.matrix cannot be selected for sparse arrays", call. = FALSE)
+  stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
+            `Argument 'uri' must be a string scalar` = !missing(uri) && is.scalar(uri, "character"),
+            `At most one argument of as.data.frame, as.matrix and as.array can be selected` = sum(as.data.frame, as.matrix, as.array) <= 1,
+            `Argument 'as.matrix' cannot be selected for sparse arrays` = !(isTRUE(is.sparse) && as.matrix))
+  query_type <- match.arg(query_type)
   if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
-    return_as <- "asis"
-
+      return_as <- "asis"
   if (length(encryption_key) > 0) {
     if (!is.character(encryption_key))
       stop("if used, argument aes_key must be character", call. = FALSE)
     if (length(timestamp) > 0) {
-      array_xptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, query_type,
-                                                     encryption_key, timestamp)
+      array_xptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, query_type, encryption_key, timestamp)
     } else {
       array_xptr <- libtiledb_array_open_with_key(ctx@ptr, uri, query_type, encryption_key)
     }
@@ -1337,19 +1331,20 @@ setReplaceMethod("datetimes_as_int64",
 array_consolidate <- function(uri, cfg = NULL,
                               start_time, end_time,
                               ctx = tiledb_get_context()) {
+    stopifnot(`Argument 'uri' must be character` = is.character(uri))
     if (is.null(cfg)) {
         cfg <- tiledb_config()
     }
 
     if (!missing(start_time)) {
-        stopifnot(`start_time must be datetime object` = inherits(start_time, "POSIXt"),
+        stopifnot(`Argument 'start_time' must be datetime object` = inherits(start_time, "POSIXt"),
                   `TileDB 2.3.0 or later is required`  = tiledb_version(TRUE) >= "2.3.0")
         start_time_int64 <- bit64::as.integer64(as.numeric(start_time) * 1000)
         cfg["sm.consolidation.timestamp_start"] = as.character(start_time_int64)
     }
 
     if (!missing(end_time)) {
-        stopifnot(`end_time must be datetime object`  = inherits(end_time, "POSIXt"),
+        stopifnot(`Argument 'end_time' must be datetime object`  = inherits(end_time, "POSIXt"),
                   `TileDB 2.3.0 or later is required` = tiledb_version(TRUE) >= "2.3.0")
         end_time_int64 <- bit64::as.integer64(as.numeric(end_time) * 1000)
         cfg["sm.consolidation.timestamp_end"] = as.character(end_time_int64)
@@ -1380,19 +1375,20 @@ array_vacuum <- function(uri, cfg = NULL,
                          start_time, end_time,
                          ctx = tiledb_get_context()) {
 
+    stopifnot(`Argument 'uri' must be character` = is.character(uri))
     if (is.null(cfg)) {
         cfg <- tiledb_config()
     }
 
     if (!missing(start_time)) {
-        stopifnot(`start_time must be datetime object` = inherits(start_time, "POSIXt"),
+        stopifnot(`Argument 'start_time' must be datetime object` = inherits(start_time, "POSIXt"),
                   `TileDB 2.3.0 or later is required`  = tiledb_version(TRUE) >= "2.3.0")
         start_time_int64 <- bit64::as.integer64(as.numeric(start_time) * 1000)
         cfg["sm.consolidation.timestamp_start"] = as.character(start_time_int64)
     }
 
     if (!missing(end_time)) {
-        stopifnot(`end_time must be datetime object` = inherits(end_time, "POSIXt"),
+        stopifnot(`Argument 'end_time' must be datetime object` = inherits(end_time, "POSIXt"),
                   `TileDB 2.3.0 or later is required` = tiledb_version(TRUE) >= "2.3.0")
         end_time_int64 <- bit64::as.integer64(as.numeric(end_time) * 1000)
         cfg["sm.consolidation.timestamp_end"] = as.character(end_time_int64)
@@ -1414,10 +1410,8 @@ array_vacuum <- function(uri, cfg = NULL,
 #' fixed-sized dimensions, or a characer vector for a variable-sized one.
 #' @export
 tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
-  stopifnot(arr_argument=is(arr, "tiledb_array"),
-            idx_argument=is.numeric(idx),
-            idx_nonnegative=idx > 0)
-
+  stopifnot(`Argument 'arr' must be a tiledb_array` = is(arr, "tiledb_array"),
+            `Argument 'idx' must be numeric and positive` = is.numeric(idx) && idx > 0)
   arr <- tiledb_array_close(arr)
   arr <- tiledb_array_open(arr, "READ")
   sch <- schema(arr)
@@ -1444,18 +1438,18 @@ tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
 #' fixed-sized dimensions, or a characer vector for a variable-sized one.
 #' @export
 tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
-  stopifnot(arr_argument=is(arr, "tiledb_array"),
-            name_argument=is.character(name))
+    stopifnot(`Argument 'arr' must be a tiledb_array` = is(arr, "tiledb_array"),
+              `Argument 'name' must be character` = is.character(name))
 
-  sch <- schema(arr)
-  dom <- domain(sch)
-  dims <- dimensions(dom)
-  dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
+    sch <- schema(arr)
+    dom <- domain(sch)
+    dims <- dimensions(dom)
+    dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
 
-  idx <- match(name, dimnames)
-  if (is.na(idx)) stop("Argument '", name, "' not among domain names for array.", call.=FALSE)
+    idx <- match(name, dimnames)
+    if (is.na(idx)) stop("Argument '", name, "' not among domain names for array.", call.=FALSE)
 
-  tiledb_array_get_non_empty_domain_from_index(arr, idx)
+    tiledb_array_get_non_empty_domain_from_index(arr, idx)
 }
 
 ## -- matrix return accessors

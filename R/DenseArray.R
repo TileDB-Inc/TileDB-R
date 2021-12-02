@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2021 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -63,12 +63,9 @@ tiledb_dense <- function(uri,
                          attrs = character(),
                          extended = FALSE,
                          ctx = tiledb_get_context()) {
-  query_type = match.arg(query_type)
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("argument ctx must be a tiledb_ctx")
-  } else if (missing(uri) || !is.scalar(uri, "character")) {
-    stop("argument uri must be a string scalar")
-  }
+  query_type <- match.arg(query_type)
+  stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
+            `Argument 'uri' must be a string scalar` = !missing(uri) && is.scalar(uri, "character"))
   .Deprecated("tiledb_array")
   array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   schema_xptr <- libtiledb_array_get_schema(array_xptr)
@@ -152,7 +149,7 @@ setMethod("schema", "tiledb_dense", function(object, ...) {
 })
 
 domain_subarray <- function(dom, index = NULL) {
-  stopifnot(is(dom, "tiledb_domain"))
+  stopifnot(`The 'dom' argument must be a tiledb_domain object` = is(dom, "tiledb_domain"))
   nd <- tiledb_ndim(dom)
   dims <- tiledb::dimensions(dom)
   # return the whole domain
@@ -202,8 +199,9 @@ subarray_dim <- function(sub) {
 }
 
 attribute_buffers <- function(array, sch, dom, sub, selected) {
-  stopifnot(is(sch, "tiledb_array_schema"))
-  stopifnot(is(dom, "tiledb_domain"))
+  stopifnot(`The 'array' argument must be a tiledb_array` = .isArray(array),
+            `The 'dom' argument must be a tiledb_domain object` = is(dom, "tiledb_domain"),
+            `The 'sch' argument must be a tiledb_array_schema` = is(sch, "tiledb_array_schema"))
   sub_dim <- subarray_dim(sub)
   ncells <- prod(sub_dim)
   is_scalar <- all(sub_dim == 1L)
@@ -520,7 +518,7 @@ setMethod("[<-", "tiledb_dense",
 
 #' @export
 as.array.tiledb_dense <- function(x, ...) {
- return(x[])
+  return(x[])
 }
 
 #' @export
