@@ -56,13 +56,6 @@ tiledb_vfs <- function(config = NULL, ctx = tiledb_get_context()) {
   invisible(vfs)
 }
 
-## version prior to 0.8.3 still had vfs as the first argument
-## just like the signature of this internal function -- if called
-## this way we just revert argument with a warbubf
-.uri_arg_vfs_arg_reversed <- function(vfs, uri) {
-    is(vfs, "tiledb_vfs") && is.character(uri)
-}
-
 #' Create a VFS Bucket
 #'
 #' @param uri Character variable with a URI describing a cloud bucket
@@ -70,12 +63,6 @@ tiledb_vfs <- function(config = NULL, ctx = tiledb_get_context()) {
 #' @return The uri value
 #' @export
 tiledb_vfs_create_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_create_bucket(vfs@ptr, uri)
@@ -88,12 +75,6 @@ tiledb_vfs_create_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value
 #' @export
 tiledb_vfs_remove_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_remove_bucket(vfs@ptr, uri)
@@ -115,12 +96,6 @@ tiledb_vfs_remove_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' tiledb_vfs_is_bucket(vfs, "s3://tiledb-public-us-west-1/test-array-4x4")
 #' }
 tiledb_vfs_is_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_is_bucket(vfs@ptr, uri)
@@ -142,12 +117,6 @@ tiledb_vfs_is_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' tiledb_vfs_is_empty_bucket(vfs, "s3://tiledb-public-us-west-1/test-array-4x4")
 #' }
 tiledb_vfs_is_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_is_empty_bucket(vfs@ptr, uri)
@@ -160,12 +129,6 @@ tiledb_vfs_is_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The URI value that was emptied
 #' @export
 tiledb_vfs_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_empty_bucket(vfs@ptr, uri)
@@ -178,12 +141,6 @@ tiledb_vfs_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value of the created directory
 #' @export
 tiledb_vfs_create_dir <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_create_dir(vfs@ptr, uri)
@@ -196,12 +153,6 @@ tiledb_vfs_create_dir <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return A boolean value indicating if it is a directory
 #' @export
 tiledb_vfs_is_dir <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_is_dir(vfs@ptr, uri)
@@ -214,12 +165,6 @@ tiledb_vfs_is_dir <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value of the removed directory
 #' @export
 tiledb_vfs_remove_dir <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   invisible(libtiledb_vfs_remove_dir(vfs@ptr, uri))
@@ -232,12 +177,6 @@ tiledb_vfs_remove_dir <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return A boolean value indicating if it is a file
 #' @export
 tiledb_vfs_is_file <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_is_file(vfs@ptr, uri)
@@ -250,12 +189,6 @@ tiledb_vfs_is_file <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value of the removed file
 #' @export
 tiledb_vfs_remove_file <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_remove_file(vfs@ptr, uri)
@@ -268,12 +201,6 @@ tiledb_vfs_remove_file <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The size of the file
 #' @export
 tiledb_vfs_file_size <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_file_size(vfs@ptr, uri)
@@ -287,15 +214,6 @@ tiledb_vfs_file_size <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The newuri value of the moved file
 #' @export
 tiledb_vfs_move_file <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(olduri, vfs)) {
-     warning("Deprecated signature detected, adjusting vfs and (new,old)uri arguments")
-     ## was:  v o n
-     ## mow:  o n v
-     tmp <- vfs
-     vfs <- olduri
-     olduri <- newuri
-     newuri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'olduri' must be character` = is.character(olduri),
             `Argument 'newuri' must be character` = is.character(newuri))
@@ -310,13 +228,6 @@ tiledb_vfs_move_file <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
 #' @return The newuri value of the moved directory
 #' @export
 tiledb_vfs_move_dir <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(olduri, vfs)) {
-     warning("Deprecated signature detected, adjusting vfs and (new,old)uri arguments")
-     tmp <- vfs
-     vfs <- olduri
-     olduri <- newuri
-     newuri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'olduri' must be character` = is.character(olduri),
             `Argument 'newuri' must be character` = is.character(newuri))
@@ -330,12 +241,6 @@ tiledb_vfs_move_dir <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
 #' @return The uri value
 #' @export
 tiledb_vfs_touch <- function(uri, vfs = tiledb_get_vfs()) {
-  if (.uri_arg_vfs_arg_reversed(uri, vfs)) {
-     warning("Deprecated signature detected, reversing vfs and uri arguments")
-     tmp <- vfs
-     vfs <- uri
-     uri <- tmp
-  }
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_touch(vfs@ptr, uri)
