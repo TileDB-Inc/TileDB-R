@@ -109,11 +109,11 @@ if (!(isOldWindows)) {
   ## for now calling into function
   tiledb:::libtiledb_array_create_with_key(uri, schema@ptr, key)
 
-  ctx <- tiledb_ctx()
-  arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", key)
-  A <- new("tiledb_dense", ctx=ctx, uri=uri, as.data.frame=FALSE, ptr=arrptr)
+#  ctx <- tiledb_ctx()
+#  arrptr <- tiledb:::libtiledb_array_open_with_key(ctx@ptr, uri, "WRITE", key)
+#  A <- new("tiledb_dense", ctx=ctx, uri=uri, as.data.frame=FALSE, ptr=arrptr)
 
-  expect_true(is(A, "tiledb_dense"))
+#  expect_true(is(A, "tiledb_dense"))
   ##expect_true(is(schema(A), "tiledb_dense"))
   ## can't yet read / write as scheme getter not generalized for encryption
 

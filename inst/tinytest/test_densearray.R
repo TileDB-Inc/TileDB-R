@@ -1,6 +1,6 @@
 library(tinytest)
 library(tiledb)
-
+exit_file("Obsolete")
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
 

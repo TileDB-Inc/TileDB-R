@@ -16,7 +16,6 @@
 \alias{name}
 \alias{datatype}
 \alias{config}
-\alias{schema}
 \alias{tile}
 \alias{is.integral}
 \alias{nfilters}
@@ -51,8 +50,6 @@ name(object)
 datatype(object)
 
 config(object, ...)
-
-schema(object, ...)
 
 tile(object)
 

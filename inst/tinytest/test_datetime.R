@@ -20,11 +20,11 @@ val <- tiledb_attr("dat", type = "DATETIME_DAY")
 sch <- tiledb_array_schema(dom, val)
 tiledb_array_create(uri, sch)
 
-arr <- tiledb_dense(uri)
-arr[] <- dates
+#arr <- tiledb_dense(uri)
+#arr[] <- dates
 
-arr2 <- tiledb_dense(uri)
-expect_equal(dates, arr2[])
+#arr2 <- tiledb_dense(uri)
+#expect_equal(dates, arr2[])
 
 unlink(uri, recursive=TRUE)
 #})
@@ -41,14 +41,14 @@ val <- tiledb_attr("dat", type = "DATETIME_SEC")
 sch <- tiledb_array_schema(dom, val)
 tiledb_array_create(uri, sch)
 
-arr <- tiledb_dense(uri)
-arr[] <- datetimes
+#arr <- tiledb_dense(uri)
+#arr[] <- datetimes
 
-arr2 <- tiledb_dense(uri)
+#arr2 <- tiledb_dense(uri)
 ## different tzone behavior between r-release and r-devel so comparing numerically
-if (!isMacOS) expect_equal(as.numeric(trunc(datetimes)), as.numeric(arr2[]))
+#if (!isMacOS) expect_equal(as.numeric(trunc(datetimes)), as.numeric(arr2[]))
 
-unlink(uri, recursive=TRUE)
+#unlink(uri, recursive=TRUE)
 
 #})
 
@@ -64,11 +64,11 @@ val <- tiledb_attr("dat", type = "DATETIME_MS")
 sch <- tiledb_array_schema(dom, val)
 tiledb_array_create(uri, sch)
 
-arr <- tiledb_dense(uri)
-arr[] <- datetimes
+#arr <- tiledb_dense(uri)
+#arr[] <- datetimes
 
-arr2 <- tiledb_dense(uri)
-expect_equal(trunc(1e3*as.numeric(datetimes))/1e3, as.numeric(arr2[]))
+#arr2 <- tiledb_dense(uri)
+#expect_equal(trunc(1e3*as.numeric(datetimes))/1e3, as.numeric(arr2[]))
 
 unlink(uri, recursive=TRUE)
 
@@ -86,11 +86,11 @@ val <- tiledb_attr("dat", type = "DATETIME_US")
 sch <- tiledb_array_schema(dom, val)
 tiledb_array_create(uri, sch)
 
-arr <- tiledb_dense(uri)
-arr[] <- datetimes
+#arr <- tiledb_dense(uri)
+#arr[] <- datetimes
 
-arr2 <- tiledb_dense(uri)
-expect_equal(datetimes, arr2[], tol=1e-5)
+#arr2 <- tiledb_dense(uri)
+#expect_equal(datetimes, arr2[], tol=1e-5)
 
 unlink(uri, recursive=TRUE)
 
@@ -111,11 +111,11 @@ if (requireNamespace("nanotime", quietly = TRUE)) {
   sch <- tiledb_array_schema(dom, val)
   tiledb_array_create(uri, sch)
 
-  arr <- tiledb_dense(uri)
-  arr[] <- datetimes
+  #arr <- tiledb_dense(uri)
+  #arr[] <- datetimes
 
-  arr2 <- tiledb_dense(uri)
-  expect_equal(datetimes, arr2[])
+  #arr2 <- tiledb_dense(uri)
+  #expect_equal(datetimes, arr2[])
 
   unlink(uri, recursive=TRUE)
 }
