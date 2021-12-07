@@ -23,9 +23,9 @@
 
 #' An S4 class for a TileDB Array
 #'
-#' This class aims to eventually replace \code{\link{tiledb_dense}}
-#' and \code{\link{tiledb_sparse}} provided equivalent functionality
-#' based on refactored implementation utilising newer TileDB features.
+#' This class replaces the earlier (and now removed) \code{tiledb_dense}
+#' and \code{tiledb_sparse} and provides equivalent functionality
+#' based on a refactored implementation utilising newer TileDB features.
 #'
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription with the array URI

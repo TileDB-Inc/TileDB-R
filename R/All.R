@@ -1,3 +1,4 @@
+#' @rdname schema-tiledb_array-method
 #' @export
 setGeneric("schema", function(object, ...) standardGeneric("schema"))
 
@@ -37,16 +38,16 @@ domain_subarray <- function(dom, index = NULL) {
   return(unlist(dim_subarray))
 }
 
-#' @rdname return.data.frame-tiledb_dense-method
+#' @rdname return.data.frame-tiledb_array-method
 #' @param ... Currently unused
 # ' @export
 setGeneric("return.data.frame", function(object, ...) standardGeneric("return.data.frame"))
 
 
-#' @rdname return.data.frame-set-tiledb_dense-method
+#' @rdname return.data.frame-set-tiledb_array-method
 # ' @export
 setGeneric("return.data.frame<-", function(x, value) standardGeneric("return.data.frame<-"))
 
-#' @rdname attrs-set-tiledb_dense-method
+#' @rdname attrs-set-tiledb_array-method
 #' @export
 setGeneric("attrs<-", function(x, value) standardGeneric("attrs<-"))
