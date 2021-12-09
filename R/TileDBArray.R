@@ -1821,3 +1821,28 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
          types=tiledb_schema_get_types(sch),
          status=tiledb_schema_get_dim_attr_status(sch))
 }
+
+
+## Entry points for tiledb_dense and tiledb_sparse
+
+#' @rdname tiledb_array
+#' @export
+tiledb_dense <- function(...) {
+    if (isFALSE("tiledb_dense_called" %in% names(.pkgenv))) {
+        message("The 'tiledb_dense' function has been removed following a long deprecation. ",
+                "This call will be forwarded to 'tiledb_array(..., is.sparse=FALSE)'.")
+        .pkgenv[["tiledb_dense_called"]] <- TRUE 	# ensure we nag only once per session
+    }
+    tiledb_array(..., is.sparse = FALSE)
+}
+
+#' @rdname tiledb_array
+#' @export
+tiledb_sparse <- function(...) {
+    if (isFALSE("tiledb_sparse_called" %in% names(.pkgenv))) {
+        message("The 'tiledb_sparse' function has been removed following a long deprecation. ",
+                "This call will be forwarded to 'tiledb_array(..., is.sparse=TRUE)'.")
+        .pkgenv[["tiledb_sparse_called"]] <- TRUE 	# ensure we nag only once per session
+    }
+    tiledb_array(..., is.sparse = TRUE)
+}
