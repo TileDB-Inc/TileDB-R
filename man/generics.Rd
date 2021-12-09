@@ -4,6 +4,12 @@
 %   R/generics.R
 \name{raw_dump}
 \alias{raw_dump}
+\name{generics}
+\alias{generics}
+\alias{schema}
+\alias{return.data.frame}
+\alias{return.data.frame<-}
+\alias{attrs<-}
 \alias{domain}
 \alias{dimensions}
 \alias{attrs}
@@ -22,10 +28,17 @@
 \alias{tdb_filter}
 \alias{tdb_select}
 \alias{tdb_collect}
-\alias{generics}
 \title{Generic Methods}
 \usage{
 raw_dump(object, ...)
+
+schema(object, ...)
+
+return.data.frame(object, ...)
+
+return.data.frame(x) <- value
+
+attrs(x) <- value
 
 domain(object, ...)
 
@@ -66,13 +79,13 @@ tdb_collect(x, ...)
 \arguments{
 \item{object}{A TileDB object}
 
-\item{...}{Variable argument}
-
-\item{idx}{An index argument}
+\item{...}{Currently unused}
 
 \item{x}{A TileDB Object}
 
 \item{value}{A value to be assigned}
+
+\item{idx}{An index argument}
 }
 \description{
 Definition of generic methods

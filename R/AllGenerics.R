@@ -34,19 +34,22 @@
 NULL
 
 
-#' @rdname schema-tiledb_array-method
+#' @rdname generics
+#' @param ... Currently unused
 #' @export
 setGeneric("schema", function(object, ...) standardGeneric("schema"))
 
-#' @rdname return.data.frame-tiledb_array-method
+#' @rdname generics
 #' @param ... Currently unused
 # ' @export
 setGeneric("return.data.frame", function(object, ...) standardGeneric("return.data.frame"))
 
-#' @rdname return.data.frame-set-tiledb_array-method
+#' @rdname generics
 # ' @export
 setGeneric("return.data.frame<-", function(x, value) standardGeneric("return.data.frame<-"))
 
-#' @rdname attrs-set-tiledb_array-method
+#' @rdname generics
 #' @export
 setGeneric("attrs<-", function(x, value) standardGeneric("attrs<-"))
+
+## TODO: bring other generics here
