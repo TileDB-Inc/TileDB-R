@@ -2,13 +2,13 @@
 
 * This release of the R package builds against [TileDB 2.5.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.3), but has been tested against previous releases, and the development version.
 
-# Improvements
+## Improvements
 
 * The `stopifnot()` assertions now use consistent error messages across all functions (#331)
 
 * A helper function matching TileDB data types to R types is now exported (#336)
 
-# Bug Fixes
+## Bug Fixes
 
 * The boolean variable for 'nullable' is now set with a default value (#329)
 
@@ -19,11 +19,11 @@
 
 * This release of the R package builds against [TileDB 2.5.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.2), but has been tested against previous releases, and the development version.
 
-# Improvements
+## Improvements
 
 * An accessor for the most-recent error message string has been added (#327)
 
-# Bug Fixes
+## Bug Fixes
 
 * On Linux, if a pre-made TileDB Embedded library is used, lack of AVX2 instructions is now detected and a suitable build is deployed (#328)
 
