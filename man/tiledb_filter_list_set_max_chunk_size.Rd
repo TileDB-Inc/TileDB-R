@@ -15,7 +15,7 @@ tiledb_filter_list_set_max_chunk_size(object, value)
 \arguments{
 \item{object}{tiledb_filter_list}
 
-\item{value}{string}
+\item{value}{A numeric value}
 }
 \description{
 Set the filter_list's max_chunk_size

@@ -13,5 +13,5 @@ tiledb_error_message(ctx = tiledb_get_context())
 A character variable with the error message
 }
 \description{
-Return the error message for a given context
+Note that this function requires an actual error to have occurred.
 }

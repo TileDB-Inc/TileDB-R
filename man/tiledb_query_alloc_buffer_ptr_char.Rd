@@ -7,9 +7,9 @@
 tiledb_query_alloc_buffer_ptr_char(sizeoffsets, sizedata)
 }
 \arguments{
-\item{sizeoffsets}{An optional value of the size of the offsets vector}
+\item{sizeoffsets}{A numeric value with the size of the offsets vector}
 
-\item{sizedata}{An optional value of the size of the data string}
+\item{sizedata}{A numeric value of the size of the data string}
 }
 \value{
 An external pointer to the allocated buffer object
