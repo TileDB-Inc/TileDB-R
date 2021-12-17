@@ -196,8 +196,8 @@ libtiledb_filter_list <- function(ctx, filters) {
     .Call(`_tiledb_libtiledb_filter_list`, ctx, filters)
 }
 
-libtiledb_filter_list_set_max_chunk_size <- function(filterList, max_chunk_sie) {
-    invisible(.Call(`_tiledb_libtiledb_filter_list_set_max_chunk_size`, filterList, max_chunk_sie))
+libtiledb_filter_list_set_max_chunk_size <- function(filterList, max_chunk_size) {
+    invisible(.Call(`_tiledb_libtiledb_filter_list_set_max_chunk_size`, filterList, max_chunk_size))
 }
 
 libtiledb_filter_list_get_max_chunk_size <- function(filterList) {

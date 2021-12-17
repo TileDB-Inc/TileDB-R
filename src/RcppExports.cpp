@@ -539,13 +539,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_filter_list_set_max_chunk_size
-void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_sie);
-RcppExport SEXP _tiledb_libtiledb_filter_list_set_max_chunk_size(SEXP filterListSEXP, SEXP max_chunk_sieSEXP) {
+void libtiledb_filter_list_set_max_chunk_size(XPtr<tiledb::FilterList> filterList, uint32_t max_chunk_size);
+RcppExport SEXP _tiledb_libtiledb_filter_list_set_max_chunk_size(SEXP filterListSEXP, SEXP max_chunk_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type filterList(filterListSEXP);
-    Rcpp::traits::input_parameter< uint32_t >::type max_chunk_sie(max_chunk_sieSEXP);
-    libtiledb_filter_list_set_max_chunk_size(filterList, max_chunk_sie);
+    Rcpp::traits::input_parameter< uint32_t >::type max_chunk_size(max_chunk_sizeSEXP);
+    libtiledb_filter_list_set_max_chunk_size(filterList, max_chunk_size);
     return R_NilValue;
 END_RCPP
 }

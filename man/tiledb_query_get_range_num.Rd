@@ -9,7 +9,7 @@ tiledb_query_get_range_num(query, idx)
 \arguments{
 \item{query}{A TileDB Query object}
 
-\item{idx}{An integer index selecting the dimension}
+\item{idx}{An integer or numeric index selecting the dimension}
 }
 \value{
 An integer with the number of query range for the
