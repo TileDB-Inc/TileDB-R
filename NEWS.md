@@ -1,6 +1,23 @@
+# tiledb 0.10.2
+
+* This release of the R package builds against [TileDB 2.5.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.3), but has been tested against previous releases, and the development version.
+
+# Improvements
+
+* The `stopifnot()` assertions now use consistent error messages across all functions (#331)
+
+* A helper function matching TileDB data types to R types is now exported (#336)
+
+# Bug Fixes
+
+* The boolean variable for 'nullable' is now set with a default value (#329)
+
+* A test for accessing shared memory segements is now correctly checking for TileDB 2.6.0 (#332)
+
+
 # tiledb 0.10.1
 
-* This release of the R package builds against [TileDB 2.5.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.1), but has been tested against previous releases, and the development version.
+* This release of the R package builds against [TileDB 2.5.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.2), but has been tested against previous releases, and the development version.
 
 # Improvements
 
