@@ -1,4 +1,7 @@
 
+template:
+  bootstrap: 5
+
 reference:
 - title: Ctx
   contents:
@@ -26,6 +29,7 @@ reference:
   - matches(",tiledb_sparse")
   - matches("tiledb_subarray")
   - matches("save_return_as_preference")
+  - matches("tiledb_datatype_R_type")
 - title: ArraySchema
   contents:
   - starts_with("tiledb_array_schema")
