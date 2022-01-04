@@ -517,6 +517,13 @@ setMethod("[", "tiledb_array",
       allnullable <- attrnullable
   }
 
+  cfg <- tiledb_config()
+  ## use an 'informed' guess for a memory budget 'per column' by scaling the
+  ## configuration limit by the number of columns (and to be a little conservative
+  ## we use 'memory_budget' and not 'memory_budget_var'. This heuristic could be
+  ## refined further as needed.
+  memory_budget <- as.numeric(unname(cfg["sm.memory_budget"])) / length(allnames)
+
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
       arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "READ", enckey, tstamp)
@@ -647,7 +654,6 @@ setMethod("[", "tiledb_array",
       ## get results (shmem variant)
       getResultShmem <- function(buf, name, varnum) { #, resrv, qryptr) {
           if (is.na(varnum)) {
-              ##vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
               vec <- length_from_vlcbuf(buf)
               libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
           } else {
@@ -684,7 +690,9 @@ setMethod("[", "tiledb_array",
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                  buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, resrv*8, nullable)
+                  memsz <- max(resrv*8, memory_budget/resrv) # larger of old value or budget/row
+                  #cat("Running with resrv =", resrv, "and memsz =", memsz, "\n")
+                  buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memsz, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
               } else {
