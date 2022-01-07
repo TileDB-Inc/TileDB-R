@@ -131,15 +131,6 @@ attr <- tiledb:::libtiledb_attribute(ctx, "a1", "INT32", filter_list, 1, FALSE)
 expect_true(is(attr, "externalptr"))
 #})
 
-#test_that("basic integer libtiledb_attr constructor works", {
-##ctx <- tiledb:::libtiledb_ctx()
-ctx <- tiledb_get_context()@ptr
-filter <- tiledb:::libtiledb_filter(ctx, "NONE")
-filter_list <- tiledb:::libtiledb_filter_list(ctx, c(filter))
-attr <- tiledb:::libtiledb_attribute(ctx, "a1", "UINT32", filter_list, 1, FALSE)
-expect_true(is(attr, "externalptr"))
-#})
-
 #test_that("basic float64 libtiledb_attr constructor works", {
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
