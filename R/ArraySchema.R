@@ -145,17 +145,17 @@ tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           function(object) {
-            cat("- Array type:", if (is.sparse(sch)) "sparse" else "dense", "\n")
-            cat("- Cell order:", cell_order(sch), "\n")
-            cat("- Tile order:", tile_order(sch), "\n")
-            cat("- Capacity:", capacity(sch), "\n")
-            if (is.sparse(sch)) {
-              cat("- Allows duplicates:", allows_dups(sch), "\n")
+            cat("- Array type:", if (is.sparse(object)) "sparse" else "dense", "\n")
+            cat("- Cell order:", cell_order(object), "\n")
+            cat("- Tile order:", tile_order(object), "\n")
+            cat("- Capacity:", capacity(object), "\n")
+            if (is.sparse(object)) {
+              cat("- Allows duplicates:", allows_dups(object), "\n")
             } else {
               cat("- Allows duplicates:", FALSE, "\n")
             }
 
-            fl <- filter_list(sch)
+            fl <- filter_list(object)
 
             flc <- fl$coords
             cat("- Coordinates filters:", nfilters(flc), "\n")
@@ -169,10 +169,10 @@ setMethod("show", signature(object = "tiledb_array_schema"),
 
             show(domain(object))
 
-            nattr <- length(attrs(sch))
+            nattr <- length(attrs(object))
             for (i in 1:nattr) {
               cat("\n")
-              show(attrs(sch, i))
+              show(attrs(object, i))
             }
           })
 
