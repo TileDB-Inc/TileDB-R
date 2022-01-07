@@ -2,13 +2,13 @@
 % Please edit documentation in R/Domain.R
 \name{show,tiledb_domain-method}
 \alias{show,tiledb_domain-method}
-\title{Prints an domain object}
+\title{Prints a domain object}
 \usage{
 \S4method{show}{tiledb_domain}(object)
 }
 \arguments{
-\item{object}{An domain object}
+\item{object}{A domain object}
 }
 \description{
-Prints an domain object
+Prints a domain object
 }
