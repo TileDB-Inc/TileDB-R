@@ -144,9 +144,26 @@ tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {
 #' @param object An array_schema object
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
-          function(object) {
-            libtiledb_array_schema_dump(object@ptr)
-          })
+          definition = function(object) {
+    cat("- Array type:", if (is.sparse(object)) "sparse" else "dense", "\n")
+    cat("- Cell order:", cell_order(object), "\n")
+    cat("- Tile order:", tile_order(object), "\n")
+    cat("- Capacity:", capacity(object), "\n")
+    cat("- Allows duplicates:", if (is.sparse(object)) allows_dups(object) else FALSE, "\n")
+
+    fl <- filter_list(object)
+    cat("- Coordinates filters:", nfilters(fl$coords), "\n")
+    show(fl$coords)
+    cat("- Offsets filters:", nfilters(fl$offsets), "\n")
+    show(fl$offsets)
+    ## Validity filters are not currently exposed in either the Python or R API
+    cat("\n")
+
+    show(domain(object))
+
+    ## attrs() returns a list, could make it proper tiledb_* object with its show() method
+    sapply(attrs(object), show)
+})
 
 #' @rdname generics
 #' @export

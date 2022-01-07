@@ -73,10 +73,22 @@ tiledb_attr <- function(name,
 #'
 #' @param object An attribute object
 #' @export
-setMethod("show", "tiledb_attr",
-          function(object) {
-            libtiledb_attribute_dump(object@ptr)
-          })
+setMethod("show", signature(object = "tiledb_attr"),
+          definition = function(object) {
+    cat("### Attribute ###\n")
+    cat("- Name:", name(object), "\n")
+    cat("- Type:", datatype(object), "\n")
+    cat("- Nullable:", tiledb_attribute_get_nullable(object), "\n")
+    cat("- Cell val num:", cell_val_num(object), "\n")
+    fl <- filter_list(object)
+    cat("- Filters: ", nfilters(fl), "\n", sep="")
+    show(fl)
+    ## NB: prints NA whereas core shows -2147483648 as core does not know about R's NA
+    cat("- Fill value: ",
+        if (tiledb_attribute_get_nullable(object)) ""
+        else format(tiledb_attribute_get_fill_value(object)), "\n")
+    cat("\n")
+})
 
 
 #' @rdname generics

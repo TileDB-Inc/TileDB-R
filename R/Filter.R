@@ -65,6 +65,27 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
   return(new("tiledb_filter", ptr = ptr))
 }
 
+#' Prints a filter object
+#'
+#' @param object A filter object
+#' @export
+setMethod("show", signature(object = "tiledb_filter"),
+          definition = function(object) {
+    flt <- tiledb_filter_type(object)
+    .getAndShow <- function(obj, arg) cat(paste0(arg, "=", tiledb_filter_get_option(obj, arg)))
+    cat("  > ", flt, ": ", sep="")
+    if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2")) {
+        .getAndShow(object, "COMPRESSION_LEVEL")
+    } else if (flt %in% "BIT_WIDTH_REDUCTION") {
+        .getAndShow(object, "BIT_WIDTH_MAX_WINDOW")
+    } else if (flt %in% "POSITIVE_DELTA") {
+        .getAndShow(object, "POSITIVE_DELTA_MAX_WINDOW")
+    } else {
+        cat("NA")
+    }
+    cat("\n")
+})
+
 #' Returns the type of the filter used
 #'
 #' @param object tiledb_filter
