@@ -65,6 +65,23 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
   return(new("tiledb_filter", ptr = ptr))
 }
 
+#' Prints a filter object
+#'
+#' @param object A filter object
+#' @export
+setMethod("show", signature(object = "tiledb_filter"),
+          function(object) {
+            cat("  > ")
+            cat(tiledb_filter_type(object), ": ", sep="")
+            for (option in c("COMPRESSION_LEVEL", "BIT_WIDTH_MAX_WINDOW", "POSITIVE_DELTA_MAX_WINDOW")) {
+              tryCatch(
+                cat(option, "=", tiledb_filter_get_option(object, option), sep=""),
+                error=function(x){}
+              )
+            }
+            cat("\n")
+          })
+
 #' Returns the type of the filter used
 #'
 #' @param object tiledb_filter

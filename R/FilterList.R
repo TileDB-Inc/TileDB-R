@@ -63,6 +63,23 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
   return(new("tiledb_filter_list", ptr = ptr))
 }
 
+#' Prints a filter_list object
+#'
+#' @param object A filter_list object
+#' @export
+setMethod("show", signature(object = "tiledb_filter_list"),
+          function(object) {
+            nfi <- nfilters(object)
+            # This is necessary to avoid out-of-bounds error on nfi == 0 case.
+            # That's because these are 0-up indexed (unusually for R), and 1:0 is
+            # the two-element sequence (1,0).
+            if (nfi > 0) {
+              for (i in 1:nfi) {
+                show(object[i-1])
+              }
+            }
+          })
+
 #' @rdname tiledb_filter_list_set_max_chunk_size
 #' @export
 setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_max_chunk_size"))

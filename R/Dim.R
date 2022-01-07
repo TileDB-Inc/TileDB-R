@@ -93,6 +93,34 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
   return(new("tiledb_dim", ptr = ptr))
 }
 
+#' Prints a dimension object
+#'
+#' @param object An array_schema object
+#' @export
+setMethod("show", signature(object = "tiledb_dim"),
+          function(object) {
+            cat("### Dimension ###\n")
+            cat("- Name:", name(object), "\n")
+            cat("- Type:", datatype(object), "\n")
+
+            cat("- Cell val num: ")
+            try( cat(tiledb:::libtiledb_dim_get_cell_val_num(object@ptr), "\n") )
+
+            cell_val_num <- tiledb:::libtiledb_dim_get_cell_val_num(object@ptr)
+            cat("- Domain: ")
+            cat(ifelse(is.na(cell_val_num), "(null)", domain(object)), "\n")
+
+            cat("- Tile extent: ")
+            cat(ifelse(is.na(cell_val_num), "(null)", tile(object)), "\n")
+
+            show(filter_list(object))
+
+            cat("- Cell val num: ")
+            try( cat(tiledb:::libtiledb_dim_get_cell_val_num(object@ptr), "\n") )
+
+            show(filter_list(object))
+          })
+
 #' Return the `tiledb_dim` name
 #'
 #' @param object `tiledb_dim` object

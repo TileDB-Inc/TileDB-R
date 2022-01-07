@@ -75,7 +75,15 @@ tiledb_attr <- function(name,
 #' @export
 setMethod("show", "tiledb_attr",
           function(object) {
-            libtiledb_attribute_dump(object@ptr)
+            cat("### Attribute ###\n")
+            cat("- Name:", name(object), "\n")
+            cat("- Type:", datatype(object), "\n")
+            cat("- Nullable:", tiledb_attribute_get_nullable(object), "\n")
+            cat("- Cell val num:", cell_val_num(object), "\n")
+            show(filter_list(object))
+            # TODO: prints as NA but core says -2147483648
+            cat("- Fill value: ")
+            try(cat(tiledb_attribute_get_fill_value(object), "\n"))
           })
 
 
