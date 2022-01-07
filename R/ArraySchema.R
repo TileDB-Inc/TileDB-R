@@ -631,36 +631,76 @@ has_attribute <- function(schema, attr) {
 tiledb_schema_object <- function(array) {
     stopifnot(`Argument must a 'tiledb_array'` = is(array, "tiledb_array"))
 
+    ## internal helper function
+    .getFilterOption <- function(fltobj) {
+        flt <- tiledb_filter_type(fltobj)
+        if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2")) {
+            paste0("COMPRESSION_LEVEL", "=", tiledb_filter_get_option(fltobj, "COMPRESSION_LEVEL"))
+        } else if (flt %in% "BIT_WIDTH_REDUCTION") {
+            paste0("BIT_WIDTH_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "BIT_WIDTH_MAX_WINDOW"))
+        } else if (flt %in% "POSITIVE_DELTA") {
+            paste0("POSITIVE_DELTA_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "POSITIVE_DELTA_MAX_WINDOW"))
+        } else {
+            paste0("NA")
+        }
+    }
+
     ctx <- array@ctx
     uri <- array@uri
     sch <- schema(array)
     dom <- domain(sch)
-    ##layout <- query_layout(array)
-    #asint64 <- array@datetimes_as_int64
-    #enckey <- array@encryption_key
-    #tstamp <- array@timestamp
-    sparse <- libtiledb_array_schema_sparse(sch@ptr)
+    sparse <- is.sparse(sch)
     cell_order <- cell_order(sch)
     tile_order <- tile_order(sch)
     capacity <- tiledb_array_schema_get_capacity(sch)
-    arrdesc <- data.frame(type = if (sparse) "sparse" else "dense",
+    dupes <- if (sparse) allows_dups(sch) else FALSE
+    filterlist <- filter_list(sch)
+    n_coord <- nfilters(filterlist$coords)
+    n_offsets <- nfilters(filterlist$offsets)
+    coords <- sapply(seq_len(n_coord), function(i) tiledb_filter_type(filterlist$coords[i-1]))
+    offsets <- sapply(seq_len(n_offsets), function(i) tiledb_filter_type(filterlist$offsets[i-1]))
+    coordopts <- sapply(seq_len(n_coord), function(i) .getFilterOption(filterlist$coords[i-1]))
+    offsetopts <- sapply(seq_len(n_coord), function(i) .getFilterOption(filterlist$offsets[i-1]))
+
+    arrdesc <- data.frame(uri = uri,
+                          type = if (sparse) "sparse" else "dense",
                           cell_order = cell_order,
                           tile_order = tile_order,
-                          capacity = capacity)
-
-    #                      layout = if (length(layout) == 0) "(none)" else layout)
+                          capacity = capacity,
+                          allow_dupes = dupes,
+                          coord_filters = paste0(coords, collapse=","),
+                          coord_options = paste0(coordopts, collapse=","),
+                          offset_filters = paste0(offsets, collapse=","),
+                          offset_filters = paste0(offsetopts, collapse=","))
 
     dims <- dimensions(dom)
     dimnames <- sapply(dims, name)
     dimtypes <- sapply(dims, datatype)
     dimvarnum <- sapply(dims, cell_val_num)
     dimnullable <- sapply(dims, function(d) FALSE)
+    dimdomains <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "(null,null)"
+                                           else paste0("[", paste0(domain(d), collapse=","), "]"))
+    dimextent <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "null" else dim(d))
+    dimnfilt <- sapply(dims, function(d) nfilters(filter_list(d)))
 
     attrs <- attrs(sch)
     attrnames <- sapply(attrs, name)
     attrtypes <- sapply(attrs, datatype)
     attrvarnum <- sapply(attrs, cell_val_num)
     attrnullable <- sapply(attrs, tiledb_attribute_get_nullable)
+    attrnfilt <- sapply(attrs, function(a) nfilters(filter_list(a)))
+    attrfltrs <- unname(sapply(attrs, function(a) {
+        fltlst <- filter_list(a)
+        if (nfilters(fltlst) == 0) ""
+        else sapply(seq_len(nfilters(fltlst)), function(i) tiledb_filter_type(fltlst[i-1]))
+    }))
+    attrfltropts <- unname(sapply(attrs, function(a) {
+        fltlst <- filter_list(a)
+        if (nfilters(fltlst) == 0) ""
+        else sapply(seq_len(nfilters(fltlst)), function(i) .getFilterOption(fltlst[i-1]))
+    }))
+    attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a)) ""
+                                              else format(tiledb_attribute_get_fill_value(a)))
 
     allnames <- c(dimnames, attrnames)
     alltypes <- c(dimtypes, attrtypes)
@@ -671,7 +711,14 @@ tiledb_schema_object <- function(array) {
                                   rep("attribute", length(attrs))),
                        names = allnames,
                        datatypes = alltypes,
+                       nullable = allnullable,
                        varnum = allvarnum,
-                       nullable = allnullable)
+                       domains = c(dimdomains, rep("", length(attrs))),
+                       extend = c(dimextent, rep("", length(attrs))),
+                       nfilters = c(dimnfilt, attrnfilt),
+                       filters = c(rep("", length(dims)), attrfltrs),
+                       filtopts = c(rep("", length(dims)), attrfltropts),
+                       fillvalue = c(rep("", length(dims)), attrfillvals)
+                       )
     list(array=arrdesc, data=data)
 }
