@@ -86,6 +86,19 @@ val <- arr[]
 expect_equal(val, array(rep(42, 4)))
 expect_equal(tiledb_attribute_get_fill_value(attr), 42)
 
+dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "UINT32"))
+attr <- tiledb_attr("a", type = "UINT32")
+tiledb_attribute_set_fill_value(attr, 42L)
+sch <- tiledb_array_schema(dom, attr)
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+tiledb_array_create(uri, sch)
+arr <- tiledb_dense(uri)
+val <- arr[]
+## when fill value has been set, expect value
+expect_equal(val, array(rep(42, 4)))
+expect_equal(tiledb_attribute_get_fill_value(attr), 42)
+
 attr <- tiledb_attr("b", type = "CHAR", ncells = NA)
 tiledb_attribute_set_fill_value(attr, "abc")
 sch <- tiledb_array_schema(dom, attr)

@@ -985,7 +985,7 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       return IntegerVector({static_cast<int32_t>(t),});
     }
     default:
-      Rcpp::stop("invalid tiledb_dim domain type");
+      Rcpp::stop("invalid tiledb_dim domain type (%d)", dim_type);
   }
 }
 
@@ -1298,6 +1298,9 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     if (attr_dtype == TILEDB_INT32) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+    } else if (attr_dtype == TILEDB_UINT32) {
+        using DType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
     } else if (attr_dtype == TILEDB_FLOAT64) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
         attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
@@ -1423,6 +1426,10 @@ void libtiledb_attribute_set_fill_value(XPtr<tiledb::Attribute> attr, SEXP val) 
     IntegerVector v(val);
     if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
     attr->set_fill_value((void*) &(v[0]), static_cast<uint64_t>(sizeof(int32_t)));
+  } else if (dtype == TILEDB_UINT32) {
+    IntegerVector v(val);
+    if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
+    attr->set_fill_value((void*) &(v[0]), static_cast<uint64_t>(sizeof(uint32_t)));
   } else if (dtype == TILEDB_FLOAT64) {
     NumericVector v(val);
     if (v.size() > 1) Rcpp::stop("Setting fill values only supports scalar values for now.");
@@ -1450,6 +1457,9 @@ SEXP libtiledb_attribute_get_fill_value(XPtr<tiledb::Attribute> attr) {
   attr->get_fill_value(&valptr, &size);
   if (dtype == TILEDB_INT32) {
     int32_t v = *(const int32_t*)valptr;
+    return wrap(v);
+  } else if (dtype == TILEDB_UINT32) {
+    uint32_t v = *(const uint32_t*)valptr;
     return wrap(v);
   } else if (dtype == TILEDB_FLOAT64) {
     double v = *(const double*)valptr;
