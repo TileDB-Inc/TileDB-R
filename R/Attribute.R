@@ -80,7 +80,9 @@ setMethod("show", "tiledb_attr",
             cat("- Type:", datatype(object), "\n")
             cat("- Nullable:", tiledb_attribute_get_nullable(object), "\n")
             cat("- Cell val num:", cell_val_num(object), "\n")
-            show(filter_list(object))
+            fl <- filter_list(object)
+            cat("- Filters: ", nfilters(fl), "\n", sep="")
+            show(fl)
             # TODO: prints as NA but core says -2147483648
             cat("- Fill value: ")
             try(cat(tiledb_attribute_get_fill_value(object), "\n"))

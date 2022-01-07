@@ -106,18 +106,26 @@ setMethod("show", signature(object = "tiledb_dim"),
             cell_val_num <- tiledb_dim_get_cell_val_num(object)
             cat("- Cell val num: ", cell_val_num, "\n")
 
+            # Example output: "1 4". If we do
+            #   cat(ifelse(is.na(cell_val_num), "(null)", domain(object)), "\n")
+            # then only the "1" prints.
             cat("- Domain: ")
-            cat(ifelse(is.na(cell_val_num), "(null)", domain(object)), "\n")
+            if (is.na(cell_val_num)) {
+              cat("(null)\n")
+            } else {
+              cat(domain(object), "\n", sep="")
+            }
 
             cat("- Tile extent: ")
-            cat(ifelse(is.na(cell_val_num), "(null)", tile(object)), "\n")
+            if (is.na(cell_val_num)) {
+              cat("(null)\n")
+            } else {
+              cat(tile(object), "\n", sep="")
+            }
 
-            show(filter_list(object))
-
-            cat("- Cell val num: ")
-            try( cat(tiledb:::libtiledb_dim_get_cell_val_num(object@ptr), "\n") )
-
-            show(filter_list(object))
+            fl <- filter_list(object)
+            cat("- Filters: ", nfilters(fl), "\n", sep="")
+            show(fl)
           })
 
 #' Return the `tiledb_dim` name
