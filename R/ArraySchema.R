@@ -269,7 +269,7 @@ setMethod("attrs", signature("tiledb_array_schema", "character"),
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
-#'                                                tiledb_attr("a2", type = "FLOAT64")))
+#'                                           tiledb_attr("a2", type = "FLOAT64")))
 #' attrs(sch, 2)
 #'
 #' @export
@@ -618,4 +618,60 @@ has_attribute <- function(schema, attr) {
   stopifnot(`The 'schema' argument must be an array schema` = is(schema, "tiledb_array_schema"),
             `The 'attr' argument must be a character` = is.character(attr))
   libtiledb_array_schema_has_attribute(schema@ptr, attr)
+}
+
+## gather data about a scheme (SC 13273)
+
+#' Succinctly describe a TileDB array schema
+#'
+#' @param array A TileDB Array object
+#' @return A list containing two data frames, one describing the overall array as well as one
+#' with descriptions about dimensions and attributes in the schema
+#' @export
+tiledb_schema_object <- function(array) {
+    stopifnot(`Argument must a 'tiledb_array'` = is(array, "tiledb_array"))
+
+    ctx <- array@ctx
+    uri <- array@uri
+    sch <- schema(array)
+    dom <- domain(sch)
+    ##layout <- query_layout(array)
+    #asint64 <- array@datetimes_as_int64
+    #enckey <- array@encryption_key
+    #tstamp <- array@timestamp
+    sparse <- libtiledb_array_schema_sparse(sch@ptr)
+    cell_order <- cell_order(sch)
+    tile_order <- tile_order(sch)
+    capacity <- tiledb_array_schema_get_capacity(sch)
+    arrdesc <- data.frame(type = if (sparse) "sparse" else "dense",
+                          cell_order = cell_order,
+                          tile_order = tile_order,
+                          capacity = capacity)
+
+    #                      layout = if (length(layout) == 0) "(none)" else layout)
+
+    dims <- dimensions(dom)
+    dimnames <- sapply(dims, name)
+    dimtypes <- sapply(dims, datatype)
+    dimvarnum <- sapply(dims, cell_val_num)
+    dimnullable <- sapply(dims, function(d) FALSE)
+
+    attrs <- attrs(sch)
+    attrnames <- sapply(attrs, name)
+    attrtypes <- sapply(attrs, datatype)
+    attrvarnum <- sapply(attrs, cell_val_num)
+    attrnullable <- sapply(attrs, tiledb_attribute_get_nullable)
+
+    allnames <- c(dimnames, attrnames)
+    alltypes <- c(dimtypes, attrtypes)
+    allvarnum <- c(dimvarnum, attrvarnum)
+    allnullable <- c(dimnullable, attrnullable)
+
+    data <- data.frame(column = c(rep("dimension", length(dims)),
+                                  rep("attribute", length(attrs))),
+                       names = allnames,
+                       datatypes = alltypes,
+                       varnum = allvarnum,
+                       nullable = allnullable)
+    list(array=arrdesc, data=data)
 }
