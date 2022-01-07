@@ -103,10 +103,9 @@ setMethod("show", signature(object = "tiledb_dim"),
             cat("- Name:", name(object), "\n")
             cat("- Type:", datatype(object), "\n")
 
-            cat("- Cell val num: ")
-            try( cat(tiledb:::libtiledb_dim_get_cell_val_num(object@ptr), "\n") )
+            cell_val_num <- tiledb_dim_get_cell_val_num(object)
+            cat("- Cell val num: ", cell_val_num, "\n")
 
-            cell_val_num <- tiledb:::libtiledb_dim_get_cell_val_num(object@ptr)
             cat("- Domain: ")
             cat(ifelse(is.na(cell_val_num), "(null)", domain(object)), "\n")
 
