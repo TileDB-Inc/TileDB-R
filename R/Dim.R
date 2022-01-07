@@ -240,3 +240,20 @@ setReplaceMethod("filter_list", "tiledb_dim", function(x, value) {
   x@ptr <- libtiledb_dimension_set_filter_list(x@ptr, value@ptr)
   x
 })
+
+## Generic in Attribute.R
+
+#' @rdname tiledb_dim_get_cell_val_num
+#' @export
+setMethod("cell_val_num", signature(object = "tiledb_dim"), function(object) {
+    libtiledb_dim_get_cell_val_num(object@ptr)
+})
+
+#' Return the number of scalar values per dimension cell
+#'
+#' @param object `tiledb_dim` object
+#' @return integer number of cells
+#' @export
+tiledb_dim_get_cell_val_num <- function(object) {
+    libtiledb_dim_get_cell_val_num(object@ptr)
+}
