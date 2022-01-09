@@ -98,35 +98,19 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
 #' @param object An array_schema object
 #' @export
 setMethod("show", signature(object = "tiledb_dim"),
-          function(object) {
-            cat("### Dimension ###\n")
-            cat("- Name:", name(object), "\n")
-            cat("- Type:", datatype(object), "\n")
-
-            cell_val_num <- tiledb_dim_get_cell_val_num(object)
-            cat("- Cell val num: ", cell_val_num, "\n")
-
-            # Example output: "1 4". If we do
-            #   cat(ifelse(is.na(cell_val_num), "(null)", domain(object)), "\n")
-            # then only the "1" prints.
-            cat("- Domain: ")
-            if (is.na(cell_val_num)) {
-              cat("(null)\n")
-            } else {
-              cat(domain(object), "\n", sep="")
-            }
-
-            cat("- Tile extent: ")
-            if (is.na(cell_val_num)) {
-              cat("(null)\n")
-            } else {
-              cat(tile(object), "\n", sep="")
-            }
-
-            fl <- filter_list(object)
-            cat("- Filters: ", nfilters(fl), "\n", sep="")
-            show(fl)
-          })
+          definition = function(object) {
+    cat("### Dimension ###\n")
+    cat("- Name:", name(object), "\n")
+    cat("- Type:", datatype(object), "\n")
+    cells <- cell_val_num(object)
+    cat("- Cell val num:", cells, "\n")
+    cat("- Domain:", if (is.na(cells)) "(null,null)"
+                     else paste0("[", paste0(domain(object), collapse=","), "]"), "\n")
+    cat("- Tile extent:", if (is.na(cells)) "(null)" else dim(object), "\n")
+    fl <- filter_list(object)
+    cat("- Filters: ", nfilters(fl), "\n", sep="")
+    show(fl)
+})
 
 #' Return the `tiledb_dim` name
 #'
