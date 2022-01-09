@@ -110,6 +110,7 @@ setMethod("show", signature(object = "tiledb_dim"),
     fl <- filter_list(object)
     cat("- Filters: ", nfilters(fl), "\n", sep="")
     show(fl)
+    cat("\n")
 })
 
 #' Return the `tiledb_dim` name

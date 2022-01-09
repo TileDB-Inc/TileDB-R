@@ -87,6 +87,7 @@ setMethod("show", signature(object = "tiledb_attr"),
     cat("- Fill value: ",
         if (tiledb_attribute_get_nullable(object)) ""
         else format(tiledb_attribute_get_fill_value(object)), "\n")
+    cat("\n")
 })
 
 

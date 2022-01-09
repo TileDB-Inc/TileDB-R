@@ -157,11 +157,12 @@ setMethod("show", signature(object = "tiledb_array_schema"),
     cat("- Offsets filters:", nfilters(fl$offsets), "\n")
     show(fl$offsets)
     ## Validity filters are not currently exposed in either the Python or R API
+    cat("\n")
 
     show(domain(object))
 
     ## attrs() returns a list, could make it proper tiledb_* object with its show() method
-    sapply(seq_along(attrs(object)), function(i) { cat("\n"); show(attrs(object, i)) } )
+    sapply(attrs(object), show)
 })
 
 #' @rdname generics
