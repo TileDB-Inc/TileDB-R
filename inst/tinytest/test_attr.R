@@ -93,10 +93,10 @@ sch <- tiledb_array_schema(dom, attr)
 uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 tiledb_array_create(uri, sch)
-arr <- tiledb_dense(uri)
-val <- arr[]
+arr <- tiledb_array(uri, return_as="asis", extended=FALSE)
+val <- arr[1:4][[1]]
 ## when fill value has been set, expect value
-expect_equal(val, array(rep(42, 4)))
+expect_equal(val, rep(42, 4))
 expect_equal(tiledb_attribute_get_fill_value(attr), 42)
 
 attr <- tiledb_attr("b", type = "CHAR", ncells = NA)

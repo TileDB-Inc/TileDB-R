@@ -65,14 +65,9 @@ tiledb_domain <- function(dims, ctx = tiledb_get_context()) {
 #' @param object A domain object
 #' @export
 setMethod("show", "tiledb_domain",
-          function(object) {
-            ndim <- tiledb_ndim(object)
-            dims <- dimensions(object)
-            for (i in 1:ndim) {
-              cat("\n")
-              show(dims[[i]])
-            }
-          })
+          definition = function(object) {
+    sapply(dimensions(object), show)
+})
 
 #' Returns a list of the tiledb_domain dimension objects
 #'
