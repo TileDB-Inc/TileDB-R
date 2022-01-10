@@ -702,23 +702,23 @@ tiledb_schema_object <- function(array) {
     attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a)) ""
                                               else format(tiledb_attribute_get_fill_value(a)))
 
-    allnames <- c(dimnames, attrnames)
-    alltypes <- c(dimtypes, attrtypes)
-    allvarnum <- c(dimvarnum, attrvarnum)
-    allnullable <- c(dimnullable, attrnullable)
 
-    data <- data.frame(column = c(rep("dimension", length(dims)),
-                                  rep("attribute", length(attrs))),
-                       names = allnames,
-                       datatypes = alltypes,
-                       nullable = allnullable,
-                       varnum = allvarnum,
-                       domains = c(dimdomains, rep("", length(attrs))),
-                       extend = c(dimextent, rep("", length(attrs))),
-                       nfilters = c(dimnfilt, attrnfilt),
-                       filters = c(rep("", length(dims)), attrfltrs),
-                       filtopts = c(rep("", length(dims)), attrfltropts),
-                       fillvalue = c(rep("", length(dims)), attrfillvals)
-                       )
-    list(array=arrdesc, data=data)
+    dimdesc <- data.frame(names = dimnames,
+                          datatypes = dimtypes,
+                          nullable = dimnullable,
+                          varnum = dimvarnum,
+                          domains = dimdomains,
+                          extent = dimextent,
+                          nfilters = dimnfilt)
+
+    attrdesc <- data.frame(names = attrnames,
+                           datatypes = attrtypes,
+                           nullable = attrnullable,
+                           varnum = attrvarnum,
+                           nfilters = attrnfilt,
+                           filters = attrfltrs,
+                           filtopts = attrfltropts,
+                           fillvalue = attrfillvals)
+
+    list(array=arrdesc, dim=dimdesc, attr=attrdesc)
 }
