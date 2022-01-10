@@ -517,12 +517,10 @@ setMethod("[", "tiledb_array",
       allnullable <- attrnullable
   }
 
-  cfg <- tiledb_config()
-  ## use an 'informed' guess for a memory budget 'per column' by scaling the
-  ## configuration limit by the number of columns (and to be a little conservative
-  ## we use 'memory_budget' and not 'memory_budget_var'. This heuristic could be
-  ## refined further as needed.
-  memory_budget <- as.numeric(unname(cfg["sm.memory_budget"])) / length(allnames)
+  ## A preference can be set in a local per-user configuration file; if not value
+  ## is set a fallback from the TileDB config object is used. As that value is fairly
+  ## large we scale by the number of columns not use this amount per buffer
+  memory_budget <- get_allocation_size_preference() / length(allnames)
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -690,9 +688,7 @@ setMethod("[", "tiledb_array",
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                  memsz <- max(resrv*8, memory_budget/resrv) # larger of old value or budget/row
-                  #cat("Running with resrv =", resrv, "and memsz =", memsz, "\n")
-                  buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memsz, nullable)
+                  buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
               } else {

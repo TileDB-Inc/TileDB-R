@@ -79,10 +79,96 @@ get_return_as_preference <- function() .pkgenv[["return_as"]]
 ##' @rdname save_return_as_preference
 ##' @export
 set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.frame",
-                                                          "data.table", "tibble")) {
+                                               "data.table", "tibble")) {
     value <- match.arg(value)
     .pkgenv[["return_as"]] <- value
 }
+
+
+##' Save (or load) allocation size default preference in an optional
+##' config file
+##'
+##' When retrieving data from sparse arrays, allocation sizes cannot
+##' be determined \emph{ex ante} as the degree of sparsity is unknown.
+##' A configuration value can aide in providing an allocation size
+##' value. These functions let the user store such a value for
+##' retrieval by the package code.  The preference will be enconded in
+##' a configuration file as R (version 4.0.0 or later) allows a user-
+##' and package specific configuration files.  These helper functions
+##' sets and retrieve the value, respectively, or retrieve the cached
+##' value from the package environment where is it set at package
+##' load.
+##'
+##' The value will be stored as a character value and reparsed so
+##' \sQuote{1e6} and \sQuote{1000000} are equivalent, and the fixed
+##' (but adjustable) number of digits for numerical precision
+##' \emph{use for formatting} will impact the writing. This should
+##' have no effect on standard allocation sizes.
+##'
+##' @note This function requires R version 4.0.0 or later to utilise the per-user
+##' config directory accessor function. For older R versions, a fallback from the
+##' TileDB configuration object is used.
+##' @title Store allocation size preference
+##' @param value A numeric value with the desired allocation size (in bytes).
+##' @return For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
+##' side effect of storing the value. For the getters, the value as a numeric.
+##' @export
+save_allocation_size_preference <- function(value) {
+    stopifnot(`This function relies on R version 4.0.0 or later.` = R.version.string >= "4.0.0",
+              `The 'value' has to be numeric` = is.numeric(value))
+
+    cfgdir <- tools::R_user_dir(packageName())
+    if (!dir.exists(cfgdir)) dir.create(cfgdir)
+    fname <- file.path(cfgdir, "config.dcf")
+    con <- file(fname, "w+")
+    cat("allocation_size:", value, "\n", file=con)
+    close(con)
+    set_allocation_size_preference(value)
+    invisible(TRUE)
+}
+
+##' @rdname save_allocation_size_preference
+##' @export
+load_allocation_size_preference <- function() {
+    value <- NA_integer_                       # flag as unset
+    ## we cannot set this from the TileDB config at package load time as we
+    ## cannot yet call a package function (to access TileDB configuration)
+    ## while the package is loaded
+    cfgfile <- .defaultConfigFile()
+    if (cfgfile != "" && file.exists(cfgfile)) {
+        cfg <- read.dcf(cfgfile)
+        if ("allocation_size" %in% colnames(cfg))
+            value <- as.numeric(cfg[[1, "allocation_size"]])
+    }
+    set_allocation_size_preference(value)
+    value
+}
+
+##' @rdname save_allocation_size_preference
+##' @export
+get_allocation_size_preference <- function() {
+    val <- .pkgenv[["allocation_size"]]
+    if (is.na(val)) {                   # no value was stored
+        ## we cannot set this from the TileDB config at package load time as we
+        ## cannot yet call a package function (to access TileDB configuration)
+        ## while the package is loaded
+        cfg <- tiledb_config()
+        val <- as.numeric(cfg["sm.memory_budget"])
+        if (is.na(val)) val <- 1e5
+        set_allocation_size_preference(val)
+    }
+    val
+}
+
+##' @rdname save_allocation_size_preference
+##' @export
+set_allocation_size_preference <- function(value) {
+    stopifnot(`The 'value' has to be numeric` = is.numeric(value))
+    .pkgenv[["allocation_size"]] <- value
+}
+
+
+
 
 is.scalar <- function(x, typestr) {
     (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
