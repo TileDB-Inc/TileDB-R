@@ -515,15 +515,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_filter_set_option
-void libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value);
+XPtr<tiledb::Filter> libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value);
 RcppExport SEXP _tiledb_libtiledb_filter_set_option(SEXP filterSEXP, SEXP filter_option_strSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Filter> >::type filter(filterSEXP);
     Rcpp::traits::input_parameter< std::string >::type filter_option_str(filter_option_strSEXP);
     Rcpp::traits::input_parameter< int >::type value(valueSEXP);
-    libtiledb_filter_set_option(filter, filter_option_str, value);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filter_set_option(filter, filter_option_str, value));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_filter_list
