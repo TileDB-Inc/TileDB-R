@@ -711,7 +711,7 @@ tiledb_schema_object <- function(array) {
                                               else format(tiledb_attribute_get_fill_value(a)))
 
     attrdesc <- data.frame(names = attrnames,
-                           datatypes = attrtypes,
+                           datatype = attrtypes,
                            nullable = attrnullable,
                            varnum = attrvarnum,
                            nfilters = attrnfilt,
@@ -722,16 +722,38 @@ tiledb_schema_object <- function(array) {
     list(array=arrdesc, dim=dimdesc, attr=attrdesc)
 }
 
-dc_domain <- function(dim) {
-    cat("dom <- tiledb_domain(dims = c(", "\n")
-    sapply(seq_len(nrow(dim)), function(i) {
-        d <- dim[i,,drop=TRUE]
-        cat("    tiledb_dim(name=\"", d$name,
-            "\", domain=c(", d$domain,
-            "), tile=", d$extent,
-            ", type=\"", d$datatype,
-            "\")", ifelse(i < nrow(dim), ",", "))"), "\n",
+## 'describe/create' hence dc. name is work in progress.  not exported yet
+dc_domain <- function(dom) {
+    #cat("dom <- tiledb_domain(dims = c(", "\n")
+    cat("dims <- c(")
+    sapply(seq_len(nrow(dom)), function(i) {
+        d <- dom[i,,drop=TRUE]
+        cat(ifelse(i == 1, "", "          "),
+            "tiledb_dim(name=\"", d$name, "\", ",
+            "domain=c(", d$domain, "), ",
+            "tile=", d$extent, ", ",
+            "type=\"", d$datatype, "\")",
+            ifelse(i < nrow(dom), ",", "))"),
+            "\n",
             sep="")
     })
+    cat("dom <- tiledb_domain(dims=dims)\n")
+    invisible(NULL)
+}
+
+dc_attrs <- function(attr) {
+    cat("attr <- c(")
+    sapply(seq_len(nrow(attr)), function(i) {
+        a <- attr[i,,drop=TRUE]
+        cat(ifelse(i == 1, "", "          "),
+            "tiledb_attr(name=\"", a$name, "\", ",
+            "type=\"", a$datatype, "\", ",
+            "ncells=", a$varnum, ", ",
+            "nullable=", a$nullable,
+            ifelse(i < nrow(attr), "),", "))"),
+            "\n",
+            sep="")
+    })
+    #ncells = 1, nullable = FALSE
     invisible(NULL)
 }
