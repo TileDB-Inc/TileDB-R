@@ -85,7 +85,7 @@ setMethod("show", signature(object = "tiledb_attr"),
     show(fl)
     ## NB: prints NA whereas core shows -2147483648 as core does not know about R's NA
     cat("- Fill value: ",
-        if (tiledb_attribute_get_nullable(object)) ""
+        if (tiledb_attribute_get_nullable(object) || tiledb_version(TRUE) < "2.1.0") ""
         else format(tiledb_attribute_get_fill_value(object)), "\n")
     cat("\n")
 })
