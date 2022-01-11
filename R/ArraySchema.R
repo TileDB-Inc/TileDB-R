@@ -699,7 +699,7 @@ tiledb_schema_object <- function(array) {
         if (nfilters(fltlst) == 0) ""
         else sapply(seq_len(nfilters(fltlst)), function(i) .getFilterOption(fltlst[i-1]))
     }))
-    attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a)) ""
+    attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a) || tiledb_version(TRUE) < "2.1.0") ""
                                               else format(tiledb_attribute_get_fill_value(a)))
 
 
