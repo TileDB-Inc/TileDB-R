@@ -678,10 +678,18 @@ tiledb_schema_object <- function(array) {
     dimtypes <- sapply(dims, datatype)
     dimvarnum <- sapply(dims, cell_val_num)
     dimnullable <- sapply(dims, function(d) FALSE)
-    dimdomains <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "(null,null)"
-                                           else paste0("[", paste0(domain(d), collapse=","), "]"))
-    dimextent <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "null" else dim(d))
+    dimdomains <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "NULL,NULL"
+                                           else paste0(domain(d), collapse=","))
+    dimextent <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "NULL" else dim(d))
     dimnfilt <- sapply(dims, function(d) nfilters(filter_list(d)))
+
+    dimdesc <- data.frame(names = dimnames,
+                          datatype = dimtypes,
+                          nullable = dimnullable,
+                          varnum = dimvarnum,
+                          domain = dimdomains,
+                          extent = dimextent,
+                          nfilters = dimnfilt)
 
     attrs <- attrs(sch)
     attrnames <- sapply(attrs, name)
@@ -702,15 +710,6 @@ tiledb_schema_object <- function(array) {
     attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a) || tiledb_version(TRUE) < "2.1.0") ""
                                               else format(tiledb_attribute_get_fill_value(a)))
 
-
-    dimdesc <- data.frame(names = dimnames,
-                          datatypes = dimtypes,
-                          nullable = dimnullable,
-                          varnum = dimvarnum,
-                          domains = dimdomains,
-                          extent = dimextent,
-                          nfilters = dimnfilt)
-
     attrdesc <- data.frame(names = attrnames,
                            datatypes = attrtypes,
                            nullable = attrnullable,
@@ -721,4 +720,18 @@ tiledb_schema_object <- function(array) {
                            fillvalue = attrfillvals)
 
     list(array=arrdesc, dim=dimdesc, attr=attrdesc)
+}
+
+dc_domain <- function(dim) {
+    cat("dom <- tiledb_domain(dims = c(", "\n")
+    sapply(seq_len(nrow(dim)), function(i) {
+        d <- dim[i,,drop=TRUE]
+        cat("    tiledb_dim(name=\"", d$name,
+            "\", domain=c(", d$domain,
+            "), tile=", d$extent,
+            ", type=\"", d$datatype,
+            "\")", ifelse(i < nrow(dim), ",", "))"), "\n",
+            sep="")
+    })
+    invisible(NULL)
 }
