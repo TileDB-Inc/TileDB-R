@@ -749,11 +749,16 @@ dc_attrs <- function(attr) {
             "tiledb_attr(name=\"", a$name, "\", ",
             "type=\"", a$datatype, "\", ",
             "ncells=", a$varnum, ", ",
-            "nullable=", a$nullable,
-            ifelse(i < nrow(attr), "),", "))"),
+            "nullable=", a$nullable, ", ", sep="")
+        if (a$filters != "") {
+            fltopt <- strsplit(a$filtopts, "=")[[1]]
+            cat("filter_list=c(tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter(\"",
+                a$filters, "\"),\"", fltopt[1], "\",", fltopt[2], "))))", sep="")
+        }
+        cat(")",
+            ifelse(i < nrow(attr), ",", ")"),
             "\n",
             sep="")
     })
-    #ncells = 1, nullable = FALSE
     invisible(NULL)
 }
