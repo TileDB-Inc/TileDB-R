@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -517,10 +517,10 @@ setMethod("[", "tiledb_array",
       allnullable <- attrnullable
   }
 
-  ## A preference can be set in a local per-user configuration file; if not value
-  ## is set a fallback from the TileDB config object is used. As that value is fairly
-  ## large we scale by the number of columns not use this amount per buffer
-  memory_budget <- get_allocation_size_preference() / length(allnames)
+  ## A preference can be set in a local per-user configuration file; if no value
+  ## is set a fallback from the TileDB config object is used. Note that this memory
+  ## budget (currently, at least) applies only to character columns.
+  memory_budget <- get_allocation_size_preference()
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {

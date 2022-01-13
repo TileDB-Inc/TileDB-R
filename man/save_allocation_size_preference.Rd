@@ -43,6 +43,9 @@ The value will be stored as a character value and reparsed so
 (but adjustable) number of digits for numerical precision
 \emph{use for formatting} will impact the writing. This should
 have no effect on standard allocation sizes.
+
+Note that this memory budget (currently, at least) applies only to
+character columns.
 }
 \note{
 This function requires R version 4.0.0 or later to utilise the per-user

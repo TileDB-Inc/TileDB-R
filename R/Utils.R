@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -104,6 +104,9 @@ set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.
 ##' (but adjustable) number of digits for numerical precision
 ##' \emph{use for formatting} will impact the writing. This should
 ##' have no effect on standard allocation sizes.
+##'
+##' Note that this memory budget (currently, at least) applies only to
+##' character columns.
 ##'
 ##' @note This function requires R version 4.0.0 or later to utilise the per-user
 ##' config directory accessor function. For older R versions, a fallback from the
