@@ -1225,10 +1225,10 @@ R_xlen_t libtiledb_filter_get_option(XPtr<tiledb::Filter> filter, std::string fi
 }
 
 //[[Rcpp::export]]
-void libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value) {
+XPtr<tiledb::Filter> libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value) {
   tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
   filter->set_option(filter_option, &value);
-  return;
+  return filter;
 }
 
 

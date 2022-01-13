@@ -101,11 +101,12 @@ tiledb_filter_type <- function(object) {
   return(libtiledb_filter_get_type(object@ptr))
 }
 
-#' Set the filter's option
+#' Set the option for a filter
 #'
 #' @param object tiledb_filter
 #' @param option string
 #' @param value int
+#' @return The modified filter object is returned.
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' c <- tiledb_filter("ZSTD")
@@ -116,7 +117,9 @@ tiledb_filter_set_option <- function(object, option, value) {
   stopifnot(`The 'object' argument must be a tiledb_filter` = is(object, "tiledb_filter"),
             `The 'option' argument must be character` = is.character(option),
             `The 'value' argument must be numeric or character or logical` = is.numeric(value) || is.character(value) || is.logical(value))
-  return(libtiledb_filter_set_option(object@ptr, option, value))
+
+  object@ptr <- libtiledb_filter_set_option(object@ptr, option, value)
+  return(object)
 }
 
 #' Returns the filter's option

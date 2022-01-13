@@ -269,7 +269,7 @@ setMethod("attrs", signature("tiledb_array_schema", "character"),
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
-#'                                                tiledb_attr("a2", type = "FLOAT64")))
+#'                                           tiledb_attr("a2", type = "FLOAT64")))
 #' attrs(sch, 2)
 #'
 #' @export
@@ -618,4 +618,179 @@ has_attribute <- function(schema, attr) {
   stopifnot(`The 'schema' argument must be an array schema` = is(schema, "tiledb_array_schema"),
             `The 'attr' argument must be a character` = is.character(attr))
   libtiledb_array_schema_has_attribute(schema@ptr, attr)
+}
+
+## gather data about a scheme (SC 13273)
+
+#' Succinctly describe a TileDB array schema
+#'
+#' This is an internal function that is not exported.
+#'
+#' @param array A TileDB Array object
+#' @return A list containing two data frames, one describing the overall array as well as one
+#' with descriptions about dimensions and attributes in the schema
+tiledb_schema_object <- function(array) {
+    stopifnot(`Argument must a 'tiledb_array'` = is(array, "tiledb_array"))
+
+    ## internal helper function
+    .getFilterOption <- function(fltobj) {
+        flt <- tiledb_filter_type(fltobj)
+        if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2")) {
+            paste0("COMPRESSION_LEVEL", "=", tiledb_filter_get_option(fltobj, "COMPRESSION_LEVEL"))
+        } else if (flt %in% "BIT_WIDTH_REDUCTION") {
+            paste0("BIT_WIDTH_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "BIT_WIDTH_MAX_WINDOW"))
+        } else if (flt %in% "POSITIVE_DELTA") {
+            paste0("POSITIVE_DELTA_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "POSITIVE_DELTA_MAX_WINDOW"))
+        } else {
+            paste0("NA")
+        }
+    }
+
+    ctx <- array@ctx
+    uri <- array@uri
+    sch <- schema(array)
+    dom <- domain(sch)
+    sparse <- is.sparse(sch)
+    cell_order <- cell_order(sch)
+    tile_order <- tile_order(sch)
+    capacity <- tiledb_array_schema_get_capacity(sch)
+    dupes <- if (sparse) allows_dups(sch) else FALSE
+    filterlist <- filter_list(sch)
+    n_coord <- nfilters(filterlist$coords)
+    n_offsets <- nfilters(filterlist$offsets)
+    coords <- sapply(seq_len(n_coord), function(i) tiledb_filter_type(filterlist$coords[i-1]))
+    offsets <- sapply(seq_len(n_offsets), function(i) tiledb_filter_type(filterlist$offsets[i-1]))
+    coordopts <- sapply(seq_len(n_coord), function(i) .getFilterOption(filterlist$coords[i-1]))
+    offsetopts <- sapply(seq_len(n_coord), function(i) .getFilterOption(filterlist$offsets[i-1]))
+
+    arrdesc <- data.frame(uri = uri,
+                          type = if (sparse) "sparse" else "dense",
+                          cell_order = cell_order,
+                          tile_order = tile_order,
+                          capacity = capacity,
+                          allow_dupes = dupes,
+                          coord_filters = paste0(coords, collapse=","),
+                          coord_options = paste0(coordopts, collapse=","),
+                          offset_filters = paste0(offsets, collapse=","),
+                          offset_options = paste0(offsetopts, collapse=","))
+
+    dims <- dimensions(dom)
+    dimnames <- sapply(dims, name)
+    dimtypes <- sapply(dims, datatype)
+    dimvarnum <- sapply(dims, cell_val_num)
+    dimnullable <- sapply(dims, function(d) FALSE)
+    dimdomains <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "NULL,NULL"
+                                           else paste0(domain(d), collapse=","))
+    dimextent <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "NULL" else dim(d))
+    dimnfilt <- sapply(dims, function(d) nfilters(filter_list(d)))
+
+    dimdesc <- data.frame(names = dimnames,
+                          datatype = dimtypes,
+                          nullable = dimnullable,
+                          varnum = dimvarnum,
+                          domain = dimdomains,
+                          extent = dimextent,
+                          nfilters = dimnfilt)
+
+    attrs <- attrs(sch)
+    attrnames <- sapply(attrs, name)
+    attrtypes <- sapply(attrs, datatype)
+    attrvarnum <- sapply(attrs, cell_val_num)
+    attrnullable <- sapply(attrs, tiledb_attribute_get_nullable)
+    attrnfilt <- sapply(attrs, function(a) nfilters(filter_list(a)))
+    attrfltrs <- unname(sapply(attrs, function(a) {
+        fltlst <- filter_list(a)
+        if (nfilters(fltlst) == 0) ""
+        else sapply(seq_len(nfilters(fltlst)), function(i) tiledb_filter_type(fltlst[i-1]))
+    }))
+    attrfltropts <- unname(sapply(attrs, function(a) {
+        fltlst <- filter_list(a)
+        if (nfilters(fltlst) == 0) ""
+        else sapply(seq_len(nfilters(fltlst)), function(i) .getFilterOption(fltlst[i-1]))
+    }))
+    attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a) || tiledb_version(TRUE) < "2.1.0") ""
+                                              else format(tiledb_attribute_get_fill_value(a)))
+
+    attrdesc <- data.frame(names = attrnames,
+                           datatype = attrtypes,
+                           nullable = attrnullable,
+                           varnum = attrvarnum,
+                           nfilters = attrnfilt,
+                           filters = attrfltrs,
+                           filtopts = attrfltropts,
+                           fillvalue = attrfillvals)
+
+    list(array=arrdesc, dom=dimdesc, attr=attrdesc)
+}
+
+## 'describe/create' hence dc. name is work in progress.  not exported yet
+.describe_domain <- function(dom) {
+    cat("dims <- c(")
+    sapply(seq_len(nrow(dom)), function(i) {
+        d <- dom[i,,drop=TRUE]
+        cat(ifelse(i == 1, "", "          "),
+            "tiledb_dim(name=\"", d$name, "\", ",
+            "domain=c(", d$domain, "), ",
+            "tile=", d$extent, ", ",
+            "type=\"", d$datatype, "\")",
+            ifelse(i < nrow(dom), ",", ")"),
+            "\n",
+            sep="")
+    })
+    cat("dom <- tiledb_domain(dims=dims)\n")
+    invisible(NULL)
+}
+
+.show_filter_list <- function(filter, fltopts, prefix="") {
+    fo <- strsplit(fltopts, "=")[[1]]
+    paste0(prefix, "filter_list=c(tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter(\"",
+           filter, "\"),\"", fo[1], "\",", fo[2], "))))")
+}
+
+.describe_attrs <- function(attr) {
+    cat("attrs <- c(")
+    sapply(seq_len(nrow(attr)), function(i) {
+        a <- attr[i,,drop=TRUE]
+        cat(ifelse(i == 1, "", "           "),
+            "tiledb_attr(name=\"", a$name, "\", ",
+            "type=\"", a$datatype, "\", ",
+            "ncells=", a$varnum, ", ",
+            "nullable=", a$nullable, ", ",
+            ifelse(a$filters != "", .show_filter_list(a$filters, a$filtopts), ""),
+            ")",
+            ifelse(i < nrow(attr), ",", ")"),
+            "\n",
+            sep="")
+    })
+    invisible(NULL)
+}
+
+.describe_schema <- function(sch) {
+    cat("sch <- tiledb_array_schema(domain=dom, attrs=attrs, ",
+        "cell_order=\"", sch$cell_order, "\", ",
+        "tile_order=\"", sch$tile_order, "\", ",
+        "sparse=", if (sch$type=="sparse") "TRUE" else "FALSE", ", ",
+        "capacity=", sch$capacity, ", ",
+        "allow_dupes=", sch$allow_dupes, ", ",
+        ifelse(sch$coord_filters != "",
+               .show_filter_list(sch$coord_filters, sch$coord_options, "\n\t\t\t   coord_filters="),
+               "coord_filters=NULL"), ", ",
+        ifelse(sch$offset_filters != "",
+               .show_filter_list(sch$offset_filters, sch$offset_options, "\n\t\t\t   offset_filters="),
+               "offset_filters=NULL"), "",
+        ")\n", sep="")
+}
+
+#' Describe a TileDB array schema via code to create it
+#'
+#' @param array A TileDB Array object
+#' @return Nothing is returned as the function is invoked for the side effect
+#' of printing the schema via a sequence of R instructions to re-create it.
+#' @export
+describe <- function(arr) {
+    stopifnot(`Argument must be a 'tiledb_array' object` = is(arr, "tiledb_array"))
+    obj <- tiledb_schema_object(arr)
+    .describe_domain(obj$dom)
+    .describe_attrs(obj$attr)
+    .describe_schema(obj$array)
 }

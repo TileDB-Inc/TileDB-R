@@ -2,7 +2,7 @@
 % Please edit documentation in R/Filter.R
 \name{tiledb_filter_set_option}
 \alias{tiledb_filter_set_option}
-\title{Set the filter's option}
+\title{Set the option for a filter}
 \usage{
 tiledb_filter_set_option(object, option, value)
 }
@@ -13,8 +13,11 @@ tiledb_filter_set_option(object, option, value)
 
 \item{value}{int}
 }
+\value{
+The modified filter object is returned.
+}
 \description{
-Set the filter's option
+Set the option for a filter
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
