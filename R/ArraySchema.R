@@ -671,7 +671,7 @@ tiledb_schema_object <- function(array) {
                           coord_filters = paste0(coords, collapse=","),
                           coord_options = paste0(coordopts, collapse=","),
                           offset_filters = paste0(offsets, collapse=","),
-                          offset_filters = paste0(offsetopts, collapse=","))
+                          offset_options = paste0(offsetopts, collapse=","))
 
     dims <- dimensions(dom)
     dimnames <- sapply(dims, name)
@@ -724,7 +724,6 @@ tiledb_schema_object <- function(array) {
 
 ## 'describe/create' hence dc. name is work in progress.  not exported yet
 dc_domain <- function(dom) {
-    #cat("dom <- tiledb_domain(dims = c(", "\n")
     cat("dims <- c(")
     sapply(seq_len(nrow(dom)), function(i) {
         d <- dom[i,,drop=TRUE]
@@ -741,24 +740,42 @@ dc_domain <- function(dom) {
     invisible(NULL)
 }
 
+.show_filter_list <- function(filter, fltopts) {
+    fo <- strsplit(fltopts, "=")[[1]]
+    paste0("filter_list=c(tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter(\"",
+           filter, "\"),\"", fo[1], "\",", fo[2], "))))")
+}
+
 dc_attrs <- function(attr) {
-    cat("attr <- c(")
+    cat("attrs <- c(")
     sapply(seq_len(nrow(attr)), function(i) {
         a <- attr[i,,drop=TRUE]
-        cat(ifelse(i == 1, "", "          "),
+        cat(ifelse(i == 1, "", "           "),
             "tiledb_attr(name=\"", a$name, "\", ",
             "type=\"", a$datatype, "\", ",
             "ncells=", a$varnum, ", ",
-            "nullable=", a$nullable, ", ", sep="")
-        if (a$filters != "") {
-            fltopt <- strsplit(a$filtopts, "=")[[1]]
-            cat("filter_list=c(tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter(\"",
-                a$filters, "\"),\"", fltopt[1], "\",", fltopt[2], "))))", sep="")
-        }
-        cat(")",
+            "nullable=", a$nullable, ", ",
+            ifelse(a$filters != "", .show_filter_list(a$filters, a$filtopts), ""),
+            ")",
             ifelse(i < nrow(attr), ",", ")"),
             "\n",
             sep="")
     })
     invisible(NULL)
+}
+
+dc_schema <- function(sch) {
+    cat("sch <- tiledb_array_schema(domain=dom, attrs=attrs, ",
+        "cell_order=\"", sch$cell_order, "\", ",
+        "tile_order=\"", sch$tile_order, "\", ",
+        "sparse=", sch$type, ", ",
+        "capacity=", sch$capacity, ", ",
+        "allow_dups=", sch$allow_dups, ", ",
+        "coord_filters=", ifelse(sch$coord_filters != "",
+                                 .show_filter_list(sch$coord_filters, sch$coord_options),
+                                 "NULL"), "), ",
+        "offset_filters=", ifelse(sch$offset_filters != "",
+                                 .show_filter_list(sch$offset_filters, sch$offset_options),
+                                 "NULL"), ")",
+        ")\n", sep="")
 }
