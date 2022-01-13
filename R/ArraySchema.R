@@ -733,7 +733,7 @@ tiledb_schema_object <- function(array) {
             "domain=c(", d$domain, "), ",
             "tile=", d$extent, ", ",
             "type=\"", d$datatype, "\")",
-            ifelse(i < nrow(dom), ",", "))"),
+            ifelse(i < nrow(dom), ",", ")"),
             "\n",
             sep="")
     })
@@ -774,10 +774,10 @@ tiledb_schema_object <- function(array) {
         "allow_dupes=", sch$allow_dupes, ", ",
         ifelse(sch$coord_filters != "",
                .show_filter_list(sch$coord_filters, sch$coord_options, "\n\t\t\t   coord_filters="),
-               "coord_filters=NULL"), "), ",
+               "coord_filters=NULL"), ", ",
         ifelse(sch$offset_filters != "",
                .show_filter_list(sch$offset_filters, sch$offset_options, "\n\t\t\t   offset_filters="),
-               "offset_filters=NULL"), ")",
+               "offset_filters=NULL"), "",
         ")\n", sep="")
 }
 
