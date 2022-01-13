@@ -1,2 +1,2 @@
-version: 2.5.3
-sha: dd6a41b
+version: 2.6.0
+sha: 66f4b41
