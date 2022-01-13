@@ -624,10 +624,11 @@ has_attribute <- function(schema, attr) {
 
 #' Succinctly describe a TileDB array schema
 #'
+#' This is an internal function that is not exported.
+#'
 #' @param array A TileDB Array object
 #' @return A list containing two data frames, one describing the overall array as well as one
 #' with descriptions about dimensions and attributes in the schema
-#' @export
 tiledb_schema_object <- function(array) {
     stopifnot(`Argument must a 'tiledb_array'` = is(array, "tiledb_array"))
 
@@ -719,11 +720,11 @@ tiledb_schema_object <- function(array) {
                            filtopts = attrfltropts,
                            fillvalue = attrfillvals)
 
-    list(array=arrdesc, dim=dimdesc, attr=attrdesc)
+    list(array=arrdesc, dom=dimdesc, attr=attrdesc)
 }
 
 ## 'describe/create' hence dc. name is work in progress.  not exported yet
-dc_domain <- function(dom) {
+.describe_domain <- function(dom) {
     cat("dims <- c(")
     sapply(seq_len(nrow(dom)), function(i) {
         d <- dom[i,,drop=TRUE]
@@ -740,13 +741,13 @@ dc_domain <- function(dom) {
     invisible(NULL)
 }
 
-.show_filter_list <- function(filter, fltopts) {
+.show_filter_list <- function(filter, fltopts, prefix="") {
     fo <- strsplit(fltopts, "=")[[1]]
-    paste0("filter_list=c(tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter(\"",
+    paste0(prefix, "filter_list=c(tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter(\"",
            filter, "\"),\"", fo[1], "\",", fo[2], "))))")
 }
 
-dc_attrs <- function(attr) {
+.describe_attrs <- function(attr) {
     cat("attrs <- c(")
     sapply(seq_len(nrow(attr)), function(i) {
         a <- attr[i,,drop=TRUE]
@@ -764,18 +765,32 @@ dc_attrs <- function(attr) {
     invisible(NULL)
 }
 
-dc_schema <- function(sch) {
+.describe_schema <- function(sch) {
     cat("sch <- tiledb_array_schema(domain=dom, attrs=attrs, ",
         "cell_order=\"", sch$cell_order, "\", ",
         "tile_order=\"", sch$tile_order, "\", ",
-        "sparse=", sch$type, ", ",
+        "sparse=", if (sch$type=="sparse") "TRUE" else "FALSE", ", ",
         "capacity=", sch$capacity, ", ",
-        "allow_dups=", sch$allow_dups, ", ",
-        "coord_filters=", ifelse(sch$coord_filters != "",
-                                 .show_filter_list(sch$coord_filters, sch$coord_options),
-                                 "NULL"), "), ",
-        "offset_filters=", ifelse(sch$offset_filters != "",
-                                 .show_filter_list(sch$offset_filters, sch$offset_options),
-                                 "NULL"), ")",
+        "allow_dupes=", sch$allow_dupes, ", ",
+        ifelse(sch$coord_filters != "",
+               .show_filter_list(sch$coord_filters, sch$coord_options, "\n\t\t\t   coord_filters="),
+               "coord_filters=NULL"), "), ",
+        ifelse(sch$offset_filters != "",
+               .show_filter_list(sch$offset_filters, sch$offset_options, "\n\t\t\t   offset_filters="),
+               "offset_filters=NULL"), ")",
         ")\n", sep="")
+}
+
+#' Describe a TileDB array schema via code to create it
+#'
+#' @param array A TileDB Array object
+#' @return Nothing is returned as the function is invoked for the side effect
+#' of printing the schema via a sequence of R instructions to re-create it.
+#' @export
+describe <- function(arr) {
+    stopifnot(`Argument must be a 'tiledb_array' object` = is(arr, "tiledb_array"))
+    obj <- tiledb_schema_object(arr)
+    .describe_domain(obj$dom)
+    .describe_attrs(obj$attr)
+    .describe_schema(obj$array)
 }

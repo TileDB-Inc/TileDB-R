@@ -14,5 +14,5 @@ A list containing two data frames, one describing the overall array as well as o
 with descriptions about dimensions and attributes in the schema
 }
 \description{
-Succinctly describe a TileDB array schema
+This is an internal function that is not exported.
 }
