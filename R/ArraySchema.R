@@ -41,6 +41,7 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param sparse (default FALSE)
 #' @param coords_filter_list (optional)
 #' @param offsets_filter_list (optional)
+#' @param validity_filter_list (optional)
 #' @param capacity (optional)
 #' @param allows_dups (optional, requires \sQuote{spars} to be TRUE)
 #' @param ctx tiledb_ctx object (optional)
@@ -64,6 +65,7 @@ tiledb_array_schema <- function(domain,
                                 sparse = FALSE,
                                 coords_filter_list = NULL,
                                 offsets_filter_list = NULL,
+                                validity_filter_list = NULL,
                                 capacity = 10000L,
                                 allows_dups = FALSE,
                                 ctx = tiledb_get_context()) {
@@ -92,6 +94,10 @@ tiledb_array_schema <- function(domain,
   if (!is.null(offsets_filter_list) && !is(offsets_filter_list, "tiledb_filter_list")) {
     stop("offsets_filter_list argument must be a tiledb_filter_list instance")
   }
+  if (tiledb_version(TRUE) >= "2.6.0" &&
+      !is.null(validity_filter_list) && !is(validity_filter_list, "tiledb_filter_list")) {
+    stop("validity_filter_list argument must be a tiledb_filter_list instance")
+  }
   if (!is.logical(sparse)) {
     stop("sparse argument must be a logical TRUE or FALSE")
   }
@@ -110,8 +116,13 @@ tiledb_array_schema <- function(domain,
   if (!is.null(offsets_filter_list)) {
     offsets_filter_list_ptr <- offsets_filter_list@ptr
   }
+  validity_filter_list_ptr <- NULL
+  if (tiledb_version(TRUE) >= "2.6.0" && !is.null(validity_filter_list)) {
+    validity_filter_list_ptr <- validity_filter_list@ptr
+  }
   ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order,
-                                coords_filter_list_ptr, offsets_filter_list_ptr, sparse)
+                                coords_filter_list_ptr, offsets_filter_list_ptr,
+                                validity_filter_list_ptr, sparse)
   libtiledb_array_schema_set_capacity(ptr, capacity)
   if (allows_dups) {
       libtiledb_array_schema_set_allows_dups(ptr, TRUE)
@@ -200,7 +211,7 @@ setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
-#'                                    tiledb_dim("d2", c(1L, 50L), type = "INT32")))
+#'                               tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
 #' dimensions(dom)
 #'
@@ -416,7 +427,7 @@ setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
-#'                                                tiledb_attr("a2", type = "FLOAT64")))
+#'                                           tiledb_attr("a2", type = "FLOAT64")))
 #' tiledb_ndim(sch)
 #'
 #' @export
@@ -436,7 +447,7 @@ setMethod("tiledb_ndim", "tiledb_array_schema",
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
 #' sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
-#'                                                tiledb_attr("a2", type = "FLOAT64")))
+#'                                           tiledb_attr("a2", type = "FLOAT64")))
 #' dim(sch)
 #'
 #' @export
