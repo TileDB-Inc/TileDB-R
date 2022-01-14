@@ -783,7 +783,7 @@ tiledb_schema_object <- function(array) {
 
 #' Describe a TileDB array schema via code to create it
 #'
-#' @param array A TileDB Array object
+#' @param arr A TileDB Array object
 #' @return Nothing is returned as the function is invoked for the side effect
 #' of printing the schema via a sequence of R instructions to re-create it.
 #' @export
