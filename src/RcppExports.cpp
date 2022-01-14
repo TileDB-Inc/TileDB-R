@@ -988,6 +988,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_schema_get_validity_filter_list
+XPtr<tiledb::FilterList> libtiledb_array_schema_get_validity_filter_list(XPtr<tiledb::ArraySchema> schema);
+RcppExport SEXP _tiledb_libtiledb_array_schema_get_validity_filter_list(SEXP schemaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_get_validity_filter_list(schema));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_schema_set_validity_filter_list
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_validity_filter_list(XPtr<tiledb::ArraySchema> schema, XPtr<tiledb::FilterList> fltlst);
+RcppExport SEXP _tiledb_libtiledb_array_schema_set_validity_filter_list(SEXP schemaSEXP, SEXP fltlstSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::FilterList> >::type fltlst(fltlstSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_set_validity_filter_list(schema, fltlst));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_schema_get_attribute_num
 int libtiledb_array_schema_get_attribute_num(XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_libtiledb_array_schema_get_attribute_num(SEXP schemaSEXP) {
@@ -2845,6 +2868,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_schema_set_coords_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_coords_filter_list, 2},
     {"_tiledb_libtiledb_array_schema_get_offsets_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_offsets_filter_list, 1},
     {"_tiledb_libtiledb_array_schema_set_offsets_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_offsets_filter_list, 2},
+    {"_tiledb_libtiledb_array_schema_get_validity_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_validity_filter_list, 1},
+    {"_tiledb_libtiledb_array_schema_set_validity_filter_list", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_validity_filter_list, 2},
     {"_tiledb_libtiledb_array_schema_get_attribute_num", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_attribute_num, 1},
     {"_tiledb_libtiledb_array_schema_get_attribute_from_index", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_attribute_from_index, 2},
     {"_tiledb_libtiledb_array_schema_get_attribute_from_name", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_attribute_from_name, 2},

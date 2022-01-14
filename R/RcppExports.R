@@ -352,6 +352,14 @@ libtiledb_array_schema_set_offsets_filter_list <- function(schema, fltlst) {
     .Call(`_tiledb_libtiledb_array_schema_set_offsets_filter_list`, schema, fltlst)
 }
 
+libtiledb_array_schema_get_validity_filter_list <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_get_validity_filter_list`, schema)
+}
+
+libtiledb_array_schema_set_validity_filter_list <- function(schema, fltlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_validity_filter_list`, schema, fltlst)
+}
+
 libtiledb_array_schema_get_attribute_num <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_attribute_num`, schema)
 }

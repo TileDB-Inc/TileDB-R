@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2021 TileDB Inc.
+//  Copyright (c) 2017-20227 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -1695,6 +1695,27 @@ libtiledb_array_schema_set_offsets_filter_list(XPtr<tiledb::ArraySchema> schema,
                                                XPtr<tiledb::FilterList> fltlst) {
   schema->set_offsets_filter_list(*fltlst);
   return schema;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::FilterList>
+libtiledb_array_schema_get_validity_filter_list(XPtr<tiledb::ArraySchema> schema) {
+#if TILEDB_VERSION >= TileDB_Version(2,6,0)
+    return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->validity_filter_list()));
+#else
+    return XPtr<tiledb::FilterList>(R_NilValue);
+#endif
+
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema>
+libtiledb_array_schema_set_validity_filter_list(XPtr<tiledb::ArraySchema> schema,
+                                                XPtr<tiledb::FilterList> fltlst) {
+#if TILEDB_VERSION >= TileDB_Version(2,6,0)
+    schema->set_validity_filter_list(*fltlst);
+#endif
+    return schema;
 }
 
 

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -71,6 +71,7 @@ setMethod("show", signature(object = "tiledb_filter_list"),
           definition = function(object) {
     ## This is necessary as these are 0-up indexed (unusually for R, a leftover from older code here)
     sapply(seq_len(nfilters(object)), function(i) show(object[i-1]))
+    invisible()
 })
 
 #' @rdname tiledb_filter_list_set_max_chunk_size
