@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2021 TileDB Inc.
+//  Copyright (c) 2017-20227 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -1507,6 +1507,7 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
                        std::string tile_order,
                        Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue,
                        Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue,
+                       Nullable<XPtr<tiledb::FilterList>> validity_filter_list = R_NilValue,
                        bool sparse = false) {
   // check that external pointers are supported
   R_xlen_t nattr = attributes.length();
@@ -1539,6 +1540,12 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
   if (offsets_filter_list.isNotNull()) {
     XPtr<tiledb::FilterList> xptr_offsets(offsets_filter_list);
     schema->set_offsets_filter_list(*xptr_offsets);
+  }
+  if (validity_filter_list.isNotNull()) {
+#if TILEDB_VERSION >= TileDB_Version(2,6,0)
+    XPtr<tiledb::FilterList> xptr_validity(validity_filter_list);
+    schema->set_validity_filter_list(*xptr_validity);
+#endif
   }
   schema->check();
   return schema;
@@ -1695,6 +1702,27 @@ libtiledb_array_schema_set_offsets_filter_list(XPtr<tiledb::ArraySchema> schema,
                                                XPtr<tiledb::FilterList> fltlst) {
   schema->set_offsets_filter_list(*fltlst);
   return schema;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::FilterList>
+libtiledb_array_schema_get_validity_filter_list(XPtr<tiledb::ArraySchema> schema) {
+#if TILEDB_VERSION >= TileDB_Version(2,6,0)
+    return XPtr<tiledb::FilterList>(new tiledb::FilterList(schema->validity_filter_list()));
+#else
+    return XPtr<tiledb::FilterList>(R_NilValue);
+#endif
+
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema>
+libtiledb_array_schema_set_validity_filter_list(XPtr<tiledb::ArraySchema> schema,
+                                                XPtr<tiledb::FilterList> fltlst) {
+#if TILEDB_VERSION >= TileDB_Version(2,6,0)
+    schema->set_validity_filter_list(*fltlst);
+#endif
+    return schema;
 }
 
 

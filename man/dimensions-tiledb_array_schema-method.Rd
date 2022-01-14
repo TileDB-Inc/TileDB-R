@@ -18,7 +18,7 @@ Returns a list of \code{tiledb_dim} objects associated with the \code{tiledb_arr
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
-                                   tiledb_dim("d2", c(1L, 50L), type = "INT32")))
+                              tiledb_dim("d2", c(1L, 50L), type = "INT32")))
 sch <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32")))
 dimensions(dom)
 

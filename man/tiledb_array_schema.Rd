@@ -12,6 +12,7 @@ tiledb_array_schema(
   sparse = FALSE,
   coords_filter_list = NULL,
   offsets_filter_list = NULL,
+  validity_filter_list = NULL,
   capacity = 10000L,
   allows_dups = FALSE,
   ctx = tiledb_get_context()
@@ -31,6 +32,8 @@ tiledb_array_schema(
 \item{coords_filter_list}{(optional)}
 
 \item{offsets_filter_list}{(optional)}
+
+\item{validity_filter_list}{(optional)}
 
 \item{capacity}{(optional)}
 

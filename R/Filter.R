@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2020 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ setMethod("show", signature(object = "tiledb_filter"),
     flt <- tiledb_filter_type(object)
     .getAndShow <- function(obj, arg) cat(paste0(arg, "=", tiledb_filter_get_option(obj, arg)))
     cat("  > ", flt, ": ", sep="")
-    if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2")) {
+    if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2", "RLE")) {
         .getAndShow(object, "COMPRESSION_LEVEL")
     } else if (flt %in% "BIT_WIDTH_REDUCTION") {
         .getAndShow(object, "BIT_WIDTH_MAX_WINDOW")
@@ -84,6 +84,7 @@ setMethod("show", signature(object = "tiledb_filter"),
         cat("NA")
     }
     cat("\n")
+    invisible()
 })
 
 #' Returns the type of the filter used
