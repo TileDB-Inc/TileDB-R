@@ -7,7 +7,7 @@
 describe(arr)
 }
 \arguments{
-\item{array}{A TileDB Array object}
+\item{arr}{A TileDB Array object}
 }
 \value{
 Nothing is returned as the function is invoked for the side effect

@@ -106,7 +106,8 @@ set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.
 ##' have no effect on standard allocation sizes.
 ##'
 ##' Note that this memory budget (currently, at least) applies only to
-##' character columns.
+##' character columns.  A fallback value of 50mb is used if no user
+##' value is set.
 ##'
 ##' @note This function requires R version 4.0.0 or later to utilise the per-user
 ##' config directory accessor function. For older R versions, a fallback from the
@@ -133,11 +134,8 @@ save_allocation_size_preference <- function(value) {
 ##' @rdname save_allocation_size_preference
 ##' @export
 load_allocation_size_preference <- function() {
-    value <- NA_integer_                       # flag as unset
-    ## we cannot set this from the TileDB config at package load time as we
-    ## cannot yet call a package function (to access TileDB configuration)
-    ## while the package is loaded
-    cfgfile <- .defaultConfigFile()
+    value <- 50 * 1024 * 1024           # fallback value is 50mb
+    cfgfile <- .defaultConfigFile()     # but check config file
     if (cfgfile != "" && file.exists(cfgfile)) {
         cfg <- read.dcf(cfgfile)
         if ("allocation_size" %in% colnames(cfg))
@@ -149,19 +147,7 @@ load_allocation_size_preference <- function() {
 
 ##' @rdname save_allocation_size_preference
 ##' @export
-get_allocation_size_preference <- function() {
-    val <- .pkgenv[["allocation_size"]]
-    if (is.na(val)) {                   # no value was stored
-        ## we cannot set this from the TileDB config at package load time as we
-        ## cannot yet call a package function (to access TileDB configuration)
-        ## while the package is loaded
-        cfg <- tiledb_config()
-        val <- as.numeric(cfg["sm.memory_budget"])
-        if (is.na(val)) val <- 1e5
-        set_allocation_size_preference(val)
-    }
-    val
-}
+get_allocation_size_preference <- function() .pkgenv[["allocation_size"]]
 
 ##' @rdname save_allocation_size_preference
 ##' @export
