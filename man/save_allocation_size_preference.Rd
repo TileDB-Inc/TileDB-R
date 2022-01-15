@@ -46,7 +46,7 @@ have no effect on standard allocation sizes.
 
 Note that this memory budget (currently, at least) applies only to
 character columns.  A fallback value of 50mb is used if no user
-value is set.
+value is set, and is used for all columns (rather than per column).
 }
 \note{
 This function requires R version 4.0.0 or later to utilise the per-user
