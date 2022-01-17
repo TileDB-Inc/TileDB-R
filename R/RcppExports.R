@@ -704,6 +704,10 @@ libtiledb_query_stats <- function(query) {
     .Call(`_tiledb_libtiledb_query_stats`, query)
 }
 
+libtiledb_query_get_ctx <- function(query) {
+    .Call(`_tiledb_libtiledb_query_get_ctx`, query)
+}
+
 libtiledb_query_condition <- function(ctx) {
     .Call(`_tiledb_libtiledb_query_condition`, ctx)
 }

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -551,4 +551,15 @@ tiledb_query_stats <- function(query) {
     stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"),
               `TileDB 2.4.0 or later is required` = tiledb_version(TRUE) >= "2.4.0")
     libtiledb_query_stats(query@ptr)
+}
+
+#' Return query context object
+#'
+#' @param query A TileDB Query object
+#' @return A TileDB Context object retrieved from the query
+#' @export
+tiledb_query_ctx <- function(query) {
+    stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"),
+              `TileDB 2.6.0 or later is required` = tiledb_version(TRUE) >= "2.6.0")
+    new("tiledb_ctx", ptr = tiledb_query_ctx(query@ptr))
 }
