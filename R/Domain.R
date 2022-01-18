@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -59,6 +59,17 @@ tiledb_domain <- function(dims, ctx = tiledb_get_context()) {
   ptr <- libtiledb_domain(ctx@ptr, dims_ptrs)
   return(new("tiledb_domain", ptr = ptr))
 }
+
+#' Raw display of a domain object
+#'
+#' This method used the display method provided by the underlying
+#' library.
+#'
+#' @param object A domain object
+#' @export
+setMethod("raw_dump",
+          signature(object = "tiledb_domain"),
+          definition = function(object) libtiledb_domain_dump(object@ptr))
 
 #' Prints a domain object
 #'

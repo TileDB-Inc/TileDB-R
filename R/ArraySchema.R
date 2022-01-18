@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -149,6 +149,21 @@ tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {
   val <- tiledb_attr("", type = typestr, ctx)
   return(tiledb_array_schema(dom, c(val), ctx))
 }
+
+#' @rdname generics
+#' @export
+setGeneric("raw_dump", function(object, ...) standardGeneric("raw_dump"))
+
+#' Raw display of an array schema object
+#'
+#' This method used the display method provided by the underlying
+#' library.
+#'
+#' @param object An array_schema object
+#' @export
+setMethod("raw_dump",
+          signature(object = "tiledb_array_schema"),
+          definition = function(object) libtiledb_array_schema_dump(object@ptr))
 
 #' Prints an array schema object
 #'

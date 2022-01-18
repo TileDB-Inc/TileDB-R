@@ -2,7 +2,8 @@
 % Please edit documentation in R/ArraySchema.R, R/Attribute.R, R/Ctx.R,
 %   R/DenseArray.R, R/Dim.R, R/Domain.R, R/FilterList.R, R/TileDBArray.R,
 %   R/generics.R
-\name{domain}
+\name{raw_dump}
+\alias{raw_dump}
 \alias{domain}
 \alias{dimensions}
 \alias{attrs}
@@ -25,6 +26,8 @@
 \alias{generics}
 \title{Generic Methods}
 \usage{
+raw_dump(object, ...)
+
 domain(object, ...)
 
 dimensions(object, ...)
