@@ -51,7 +51,7 @@ save_return_as_preference <- function(value = c("asis", "array", "matrix", "data
     cfgdir <- tools::R_user_dir(packageName())
     if (!dir.exists(cfgdir)) dir.create(cfgdir)
     fname <- file.path(cfgdir, "config.dcf")
-    con <- file(fname, "w+")
+    con <- file(fname, "a+")
     cat("return_as:", value, "\n", file=con)
     close(con)
     set_return_as_preference(value)
@@ -107,7 +107,7 @@ set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.
 ##'
 ##' Note that this memory budget (currently, at least) applies only to
 ##' character columns.  A fallback value of 50mb is used if no user
-##' value is set.
+##' value is set, and is used for all columns (rather than per column).
 ##'
 ##' @note This function requires R version 4.0.0 or later to utilise the per-user
 ##' config directory accessor function. For older R versions, a fallback from the
@@ -124,7 +124,7 @@ save_allocation_size_preference <- function(value) {
     cfgdir <- tools::R_user_dir(packageName())
     if (!dir.exists(cfgdir)) dir.create(cfgdir)
     fname <- file.path(cfgdir, "config.dcf")
-    con <- file(fname, "w+")
+    con <- file(fname, "a+")
     cat("allocation_size:", value, "\n", file=con)
     close(con)
     set_allocation_size_preference(value)
