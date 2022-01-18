@@ -781,9 +781,21 @@ tiledb_schema_object <- function(array) {
 }
 
 .show_filter_list <- function(filter, filter_options, prefix="") {
-    option <- strsplit(filter_options, "=")[[1]]
-    paste0(prefix, "filter_list=c(tiledb_filter_list(c(tiledb_filter_set_option(tiledb_filter(\"",
-           filter, "\"),\"", option[1], "\",", option[2], "))))")
+    fltrs <- strsplit(filter, ",")[[1]]
+    opts <- strsplit(filter_options, ",")[[1]]
+    txt <- paste0(prefix, "filter_list(c(")
+    for (i in seq_along(fltrs)) {
+        if (opts[i] == "NA") {
+            txt <- paste0(txt, "tiledb_filter(\"", fltrs[i], "\")")
+        } else {
+            option <- strsplit(opts[i], "=")[[1]]
+            txt <- paste0(txt, "tiledb_filter_set_option(tiledb_filter(\"", fltrs[i],
+                          "\"),\"", option[1], "\",", option[2], ")")
+        }
+        txt <- paste0(txt, if (i != length(fltrs)) ", " else ")")
+    }
+    txt <- paste0(txt, ")")
+    txt
 }
 
 .describe_attrs <- function(attr) {
