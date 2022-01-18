@@ -718,9 +718,11 @@ tiledb_schema_object <- function(array) {
     dimtypes <- sapply(dims, datatype)
     dimvarnum <- sapply(dims, cell_val_num)
     dimnullable <- sapply(dims, function(d) FALSE)
-    dimdomains <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "NULL,NULL"
-                                           else paste0(domain(d), collapse=","))
-    dimextent <- sapply(dims, function(d) if (is.na(cell_val_num(d))) "NULL" else dim(d))
+    dimdomains <- mapply(function(d, dtype) if (is.na(cell_val_num(d))) "NULL,NULL"
+                                            else paste0(paste0(domain(d), if (grepl("INT", dtype)) "L" else ""), collapse=","),
+                         dims, dimtypes)
+    dimextent <- mapply(function(d, dtype) if (is.na(cell_val_num(d))) "NULL" else paste0(dim(d), if (grepl("INT", dtype)) "L" else ""),
+                        dims, dimtypes)
     dimnfilt <- sapply(dims, function(d) nfilters(filter_list(d)))
 
     dimdesc <- data.frame(names = dimnames,
@@ -730,7 +732,7 @@ tiledb_schema_object <- function(array) {
                           domain = dimdomains,
                           extent = dimextent,
                           nfilters = dimnfilt)
-
+c
     attrs <- attrs(sch)
     attrnames <- sapply(attrs, name)
     attrtypes <- sapply(attrs, datatype)
@@ -783,7 +785,7 @@ tiledb_schema_object <- function(array) {
 .show_filter_list <- function(filter, filter_options, prefix="") {
     fltrs <- strsplit(filter, ",")[[1]]
     opts <- strsplit(filter_options, ",")[[1]]
-    txt <- paste0(prefix, "filter_list(c(")
+    txt <- paste0(prefix, "tiledb_filter_list(c(")
     for (i in seq_along(fltrs)) {
         if (opts[i] == "NA") {
             txt <- paste0(txt, "tiledb_filter(\"", fltrs[i], "\")")
@@ -822,16 +824,16 @@ tiledb_schema_object <- function(array) {
         "tile_order=\"", sch$tile_order, "\", ",
         "sparse=", if (sch$type=="sparse") "TRUE" else "FALSE", ", ",
         "capacity=", sch$capacity, ", ",
-        "allow_dupes=", sch$allow_dupes, ", ",
+        "allows_dups=", sch$allow_dupes, ", ",
         ifelse(sch$coord_filters != "",
-               .show_filter_list(sch$coord_filters, sch$coord_options, "\n\t\t\t   coord_filters="),
+               .show_filter_list(sch$coord_filters, sch$coord_options, "\n\t\t\t   coords_filter_list="),
                "coord_filters=NULL"), ", ",
         ifelse(sch$offset_filters != "",
-               .show_filter_list(sch$offset_filters, sch$offset_options, "\n\t\t\t   offset_filters="),
+               .show_filter_list(sch$offset_filters, sch$offset_options, "\n\t\t\t   offsets_filter_list="),
                "offset_filters=NULL"), ", ",
         ifelse(tiledb_version(TRUE) >= "2.6.0",
                ifelse(sch$validity_filters != "",
-                      .show_filter_list(sch$validity_filters, sch$validity_options, "\n\t\t\t   validity_filters="),
+                      .show_filter_list(sch$validity_filters, sch$validity_options, "\n\t\t\t   validity_filter_list="),
                       "validity_filters=NULL"),
                ""),
         ")\n", sep="")
