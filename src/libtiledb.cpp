@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-20227 TileDB Inc.
+//  Copyright (c) 2017-2022 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -3429,6 +3429,17 @@ std::string libtiledb_query_stats(XPtr<tiledb::Query> query) {
     return std::string("");
 #endif
 }
+
+// [[Rcpp::export]]
+XPtr<tiledb::Context> libtiledb_query_get_ctx(XPtr<tiledb::Query> query) {
+#if TILEDB_VERSION >= TileDB_Version(2,6,0)
+    auto ctx = query->ctx();
+    return XPtr<tiledb::Context>(&ctx, false);
+#else
+    return XPtr<tiledb::Context>(R_NilValue);
+#endif
+}
+
 
 /**
  * Query Condition
