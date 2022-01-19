@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -68,6 +68,17 @@ tiledb_attr <- function(name,
     ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells, nullable)
     new("tiledb_attr", ptr = ptr)
 }
+
+#' Raw display of an attribute object
+#'
+#' This method used the display method provided by the underlying
+#' library.
+#'
+#' @param object An attribute object
+#' @export
+setMethod("raw_dump",
+          signature(object = "tiledb_attr"),
+          definition = function(object) libtiledb_attribute_dump(object@ptr))
 
 #' Prints an attribute object
 #'
