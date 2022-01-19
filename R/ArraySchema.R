@@ -851,7 +851,9 @@ c
                       .show_filter_list(sch$validity_filters, sch$validity_options, "\n\t\t\t   validity_filter_list="),
                       "validity_filters=NULL"),
                ""),
-        ")\n", sep="")
+        ")\n",
+        "tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n",
+        sep="")
 }
 
 #' Describe a TileDB array schema via code to create it
