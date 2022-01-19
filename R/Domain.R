@@ -78,6 +78,7 @@ setMethod("raw_dump",
 setMethod("show", "tiledb_domain",
           definition = function(object) {
     sapply(dimensions(object), show)
+    invisible()
 })
 
 #' Returns a list of the tiledb_domain dimension objects
