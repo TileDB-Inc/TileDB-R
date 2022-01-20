@@ -2190,7 +2190,7 @@ bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
       Rcpp::CharacterVector v(obj);
       std::string s(v[0]);
       // We use TILEDB_CHAR interchangeably with TILEDB_STRING_ASCII is this best string type?
-      array->put_metadata(key.c_str(), TILEDB_CHAR, s.length(), s.c_str());
+      array->put_metadata(key.c_str(), TILEDB_STRING_ASCII, s.length(), s.c_str());
       break;
     }
     case LGLSXP: {              // experimental: map R logical (ie TRUE, FALSE, NA) to int8
