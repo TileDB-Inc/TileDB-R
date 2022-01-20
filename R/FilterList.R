@@ -67,10 +67,16 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
 #'
 #' @param object A filter_list object
 #' @export
-setMethod("show", signature(object = "tiledb_filter_list"),
+setMethod("show",
+          signature(object = "tiledb_filter_list"),
           definition = function(object) {
-    ## This is necessary as these are 0-up indexed (unusually for R, a leftover from older code here)
-    sapply(seq_len(nfilters(object)), function(i) show(object[i-1]))
+    n <- nfilters(object)
+    cat("tiledb_filter_list(c(", sep="")
+    sapply(seq_len(n), function(i) {
+        ## This is necessary as these are 0-up indexed (unusual for R, a leftover from older code)
+        show(object[i-1])
+        cat(if (i == n) "))\n" else "), ", sep="")
+    })
     invisible()
 })
 

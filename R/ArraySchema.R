@@ -171,28 +171,55 @@ setMethod("raw_dump",
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           definition = function(object) {
-    cat("- Array type:", if (is.sparse(object)) "sparse" else "dense", "\n")
-    cat("- Cell order:", cell_order(object), "\n")
-    cat("- Tile order:", tile_order(object), "\n")
-    cat("- Capacity:", capacity(object), "\n")
-    cat("- Allows duplicates:", if (is.sparse(object)) allows_dups(object) else FALSE, "\n")
+    if (FALSE) {
+        cat("- Array type:", if (is.sparse(object)) "sparse" else "dense", "\n")
+        cat("- Cell order:", cell_order(object), "\n")
+        cat("- Tile order:", tile_order(object), "\n")
+        cat("- Capacity:", capacity(object), "\n")
+        cat("- Allows duplicates:", if (is.sparse(object)) allows_dups(object) else FALSE, "\n")
+
+        fl <- filter_list(object)
+        cat("- Coordinates filters:", nfilters(fl$coords), "\n")
+        show(fl$coords)
+        cat("- Offsets filters:", nfilters(fl$offsets), "\n")
+        show(fl$offsets)
+        if (tiledb_version(TRUE) >= "2.6.0") {
+            cat("- Validity filters:", nfilters(fl$validity), "\n")
+            show(fl$validity)
+        }
+        cat("\n")
+
+        show(domain(object))
+
+        ## attrs() returns a list, could make it proper tiledb_* object with its show() method
+        sapply(attrs(object), show)
+        invisible()
+    }
 
     fl <- filter_list(object)
-    cat("- Coordinates filters:", nfilters(fl$coords), "\n")
-    show(fl$coords)
-    cat("- Offsets filters:", nfilters(fl$offsets), "\n")
-    show(fl$offsets)
-    if (tiledb_version(TRUE) >= "2.6.0") {
-        cat("- Validity filters:", nfilters(fl$validity), "\n")
+    cat("sch <- tiledb_array_schema(domain=dom, attrs=attrs, ",
+        "cell_order=\"", cell_order(object), "\", ",
+        "tile_order=\"", tile_order(object), "\", ",
+        "capacity=", capacity(object), ", ",
+        "sparse=",if (is.sparse(object)) "TRUE" else "FALSE", ", ",
+        "allows_dups=", if (is.sparse(object)) allows_dups(object) else FALSE, ", ",
+        "\n", sep="")
+    if (nfilters(fl$coords) > 0) {
+        cat("\tcoords_filter_list=", sep="")
+        show(fl$coords)
+        cat(", ")
+    }
+    if (nfilters(fl$offsets) > 0) {
+        cat("\toffsets_filter_list=", sep="")
+        show(fl$offsets)
+        cat(", ")
+    }
+    if (nfilters(fl$validity) > 0) {
+        cat("\tvalidity_filter_list=", sep="")
         show(fl$validity)
     }
-    cat("\n")
+    cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
 
-    show(domain(object))
-
-    ## attrs() returns a list, could make it proper tiledb_* object with its show() method
-    sapply(attrs(object), show)
-    invisible()
 })
 
 #' @rdname generics
@@ -668,6 +695,20 @@ has_attribute <- function(schema, attr) {
 
 ## gather data about a scheme (SC 13273)
 
+## internal helper function
+.getFilterOption <- function(fltobj) {
+    flt <- tiledb_filter_type(fltobj)
+    if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2", "RLE")) {
+        paste0("COMPRESSION_LEVEL", "=", tiledb_filter_get_option(fltobj, "COMPRESSION_LEVEL"))
+    } else if (flt %in% "BIT_WIDTH_REDUCTION") {
+        paste0("BIT_WIDTH_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "BIT_WIDTH_MAX_WINDOW"))
+    } else if (flt %in% "POSITIVE_DELTA") {
+        paste0("POSITIVE_DELTA_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "POSITIVE_DELTA_MAX_WINDOW"))
+    } else {
+        paste0("NA")
+    }
+}
+
 #' Succinctly describe a TileDB array schema
 #'
 #' This is an internal function that is not exported.
@@ -677,20 +718,6 @@ has_attribute <- function(schema, attr) {
 #' with descriptions about dimensions and attributes in the schema
 tiledb_schema_object <- function(array) {
     stopifnot(`Argument must a 'tiledb_array'` = is(array, "tiledb_array"))
-
-    ## internal helper function
-    .getFilterOption <- function(fltobj) {
-        flt <- tiledb_filter_type(fltobj)
-        if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2", "RLE")) {
-            paste0("COMPRESSION_LEVEL", "=", tiledb_filter_get_option(fltobj, "COMPRESSION_LEVEL"))
-        } else if (flt %in% "BIT_WIDTH_REDUCTION") {
-            paste0("BIT_WIDTH_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "BIT_WIDTH_MAX_WINDOW"))
-        } else if (flt %in% "POSITIVE_DELTA") {
-            paste0("POSITIVE_DELTA_MAX_WINDOW", "=", tiledb_filter_get_option(fltobj, "POSITIVE_DELTA_MAX_WINDOW"))
-        } else {
-            paste0("NA")
-        }
-    }
 
     ctx <- array@ctx
     uri <- array@uri

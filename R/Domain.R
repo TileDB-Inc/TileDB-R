@@ -77,8 +77,13 @@ setMethod("raw_dump",
 #' @export
 setMethod("show", "tiledb_domain",
           definition = function(object) {
-    sapply(dimensions(object), show)
-    invisible()
+    cat("tiledb_domain(c(", sep="")
+    dims <- dimensions(object)
+    nd <- length(dims)
+    for (i in seq_len(nd)) {
+        show(dims[[i]])
+        if (i == nd) cat("))\n", sep="") else cat(", ", sep="")
+    }
 })
 
 #' Returns a list of the tiledb_domain dimension objects

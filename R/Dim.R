@@ -95,22 +95,30 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
 
 #' Prints a dimension object
 #'
-#' @param object An array_schema object
+#' @param object A dimension object
 #' @export
-setMethod("show", signature(object = "tiledb_dim"),
+setMethod("show",
+          signature(object = "tiledb_dim"),
           definition = function(object) {
-    cat("### Dimension ###\n")
-    cat("- Name:", name(object), "\n")
-    cat("- Type:", datatype(object), "\n")
     cells <- cell_val_num(object)
-    cat("- Cell val num:", cells, "\n")
-    cat("- Domain:", if (is.na(cells)) "(null,null)"
-                     else paste0("[", paste0(domain(object), collapse=","), "]"), "\n")
-    cat("- Tile extent:", if (is.na(cells)) "(null)" else dim(object), "\n")
     fl <- filter_list(object)
-    cat("- Filters: ", nfilters(fl), "\n", sep="")
-    show(fl)
-    cat("\n")
+    nf <- nfilters(fl)
+    tp <- datatype(object)
+    dm <- paste0(domain(object), if (grepl("INT", tp)) "L" else "", collape="")
+    ex <- paste0(dim(object), if (grepl("INT", tp)) "L" else "", collape="")
+    cat("tiledb_dim(name=\"", name(object), "\", ",
+        "domain=c(", if (is.na(cells)) "(null,null)"
+                     else paste0(dm, collapse=","), "), ",
+        "tile=", if (is.na(cells)) "(null)" else ex, ", ",
+        "type=\"", datatype(object), "\", ",
+        "cellvalnum=", cells,
+        if (nf == 0) ")" else ", ",
+        sep="")
+    if (nf > 0) {
+        cat("filters=", sep="")
+        show(fl)
+        cat(")", sep="")
+    }
 })
 
 #' Return the `tiledb_dim` name
