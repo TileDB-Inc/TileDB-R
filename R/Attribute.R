@@ -80,6 +80,21 @@ setMethod("raw_dump",
           signature(object = "tiledb_attr"),
           definition = function(object) libtiledb_attribute_dump(object@ptr))
 
+# internal function returning text use here and in other higher-level show() methods
+.as_text_attribute <- function(object) {
+    fl <- filter_list(object)
+    txt <- paste0("tiledb_attr(name=\"", name(object), "\", ",
+                  "type=\"", datatype(object), "\", ",
+                  "ncells=", cell_val_num(object), ", ",
+                  "nullable=", tiledb_attribute_get_nullable(object),
+                  if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)))
+    txt <- paste0(txt, ", fillvalue=",
+                  if (tiledb_attribute_get_nullable(object) || tiledb_version(TRUE) < "2.1.0") "NA"
+                  else format(tiledb_attribute_get_fill_value(object)),
+                  ")")
+    txt
+}
+
 #' Prints an attribute object
 #'
 #' @param object An attribute object
@@ -87,20 +102,7 @@ setMethod("raw_dump",
 setMethod("show",
           signature(object = "tiledb_attr"),
           definition = function(object) {
-    fl <- filter_list(object)
-    cat("tiledb_attr(name=\"", name(object), "\", ",
-        "type=\"", datatype(object), "\", ",
-        "ncells=", cell_val_num(object), ", ",
-        "nullable=", tiledb_attribute_get_nullable(object),
-        if (nfilters(fl) == 0) ")" else ",",
-        sep="")
-    #cat("- Filters: ", nfilters(fl), "\n", sep="")
-    #show(fl)
-    ## NB: prints NA whereas core shows -2147483648 as core does not know about R's NA
-    #cat("- Fill value: ",
-    #    if (tiledb_attribute_get_nullable(object) || tiledb_version(TRUE) < "2.1.0") ""
-    #    else format(tiledb_attribute_get_fill_value(object)), "\n")
-    cat("\n")
+    cat(.as_text_attribute(object), "\n")
 })
 
 

@@ -171,53 +171,18 @@ setMethod("raw_dump",
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           definition = function(object) {
-    if (FALSE) {
-        cat("- Array type:", if (is.sparse(object)) "sparse" else "dense", "\n")
-        cat("- Cell order:", cell_order(object), "\n")
-        cat("- Tile order:", tile_order(object), "\n")
-        cat("- Capacity:", capacity(object), "\n")
-        cat("- Allows duplicates:", if (is.sparse(object)) allows_dups(object) else FALSE, "\n")
-
-        fl <- filter_list(object)
-        cat("- Coordinates filters:", nfilters(fl$coords), "\n")
-        show(fl$coords)
-        cat("- Offsets filters:", nfilters(fl$offsets), "\n")
-        show(fl$offsets)
-        if (tiledb_version(TRUE) >= "2.6.0") {
-            cat("- Validity filters:", nfilters(fl$validity), "\n")
-            show(fl$validity)
-        }
-        cat("\n")
-
-        show(domain(object))
-
-        ## attrs() returns a list, could make it proper tiledb_* object with its show() method
-        sapply(attrs(object), show)
-        invisible()
-    }
-
-    fl <- filter_list(object)
-    cat("sch <- tiledb_array_schema(domain=dom, attrs=attrs, ",
-        "cell_order=\"", cell_order(object), "\", ",
+    cat("sch <- tiledb_array_schema(domain=", .as_text_domain(domain(object)), ",\n",
+        "\tattrs=c(", paste(sapply(attrs(object), .as_text_attribute), collapse=", "), "),\n",
+        "\tcell_order=\"", cell_order(object), "\", ",
         "tile_order=\"", tile_order(object), "\", ",
         "capacity=", capacity(object), ", ",
         "sparse=",if (is.sparse(object)) "TRUE" else "FALSE", ", ",
         "allows_dups=", if (is.sparse(object)) allows_dups(object) else FALSE, ", ",
         "\n", sep="")
-    if (nfilters(fl$coords) > 0) {
-        cat("\tcoords_filter_list=", sep="")
-        show(fl$coords)
-        cat(", ")
-    }
-    if (nfilters(fl$offsets) > 0) {
-        cat("\toffsets_filter_list=", sep="")
-        show(fl$offsets)
-        cat(", ")
-    }
-    if (nfilters(fl$validity) > 0) {
-        cat("\tvalidity_filter_list=", sep="")
-        show(fl$validity)
-    }
+    fl <- filter_list(object)
+    if (nfilters(fl$coords) > 0) cat("\tcoords_filter_list=", .as_text_filter_list(fl$coords), ",\n", sep="")
+    if (nfilters(fl$offsets) > 0) cat("\toffsets_filter_list=", .as_text_filter_list(fl$offsets), ",\n", sep="")
+    if (nfilters(fl$validity) > 0) cat("\tvalidity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
     cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
 
 })

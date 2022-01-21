@@ -65,6 +65,20 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
   return(new("tiledb_filter", ptr = ptr))
 }
 
+# internal function returning text use here and in other higher-level show() methods
+.as_text_filter <- function(object) {
+    flt <- tiledb_filter_type(object)
+    opt <- .getFilterOption(object)
+    if (opt == "NA") {
+        txt <- paste0("tiledb_filter(\"", flt, "\")")
+    } else {
+        prt <- strsplit(opt, "=")[[1]]
+        txt <- paste0("tiledb_filter_set_option(tiledb_filter(",
+                      flt, "\"),\"", prt[1], "\",", prt[2], ")")
+    }
+    txt
+}
+
 #' Prints a filter object
 #'
 #' @param object A filter object
@@ -72,15 +86,7 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
 setMethod("show",
           signature(object = "tiledb_filter"),
           definition = function(object) {
-    flt <- tiledb_filter_type(object)
-    opt <- .getFilterOption(object)
-    if (opt == "NA") {
-        cat("tiledb_filter(\"", flt, "\")", sep="")
-    } else {
-        prt <- strsplit(opt, "=")[[1]]
-        cat("tiledb_filter_set_option(tiledb_filter(",
-            flt, "\"),\"", prt[1], "\",", prt[2], ")", sep="")
-    }
+    cat(.as_text_filter(object), "\n")
 })
 
 #' Returns the type of the filter used

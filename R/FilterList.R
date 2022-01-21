@@ -63,6 +63,17 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
   return(new("tiledb_filter_list", ptr = ptr))
 }
 
+# internal function returning text use here and in other higher-level show() methods
+.as_text_filter_list <- function(object) {
+   n <- nfilters(object)
+   txt <- "tiledb_filter_list(c("
+   for (i in seq_len(n)) {
+       ## The i-1 is necessary as these are 0-up indexed (unusual for R, a leftover from older code)
+       txt <- paste0(txt, .as_text_filter(object[i-1]), if (i == n) "))" else "), ")
+   }
+   txt
+}
+
 #' Prints a filter_list object
 #'
 #' @param object A filter_list object
@@ -70,14 +81,7 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
 setMethod("show",
           signature(object = "tiledb_filter_list"),
           definition = function(object) {
-    n <- nfilters(object)
-    cat("tiledb_filter_list(c(", sep="")
-    sapply(seq_len(n), function(i) {
-        ## This is necessary as these are 0-up indexed (unusual for R, a leftover from older code)
-        show(object[i-1])
-        cat(if (i == n) "))\n" else "), ", sep="")
-    })
-    invisible()
+    cat(.as_text_filter_list(object), "\n")
 })
 
 #' @rdname tiledb_filter_list_set_max_chunk_size

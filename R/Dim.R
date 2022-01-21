@@ -93,6 +93,28 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
   return(new("tiledb_dim", ptr = ptr))
 }
 
+
+# internal function returning text use here and in other higher-level show() methods
+.as_text_dimension <- function(object) {
+    cells <- cell_val_num(object)
+    fl <- filter_list(object)
+    nf <- nfilters(fl)
+    tp <- datatype(object)
+    dm <- paste0(domain(object), if (grepl("INT", tp)) "L" else "", collape="")
+    ex <- paste0(dim(object), if (grepl("INT", tp)) "L" else "", collape="")
+    txt <- paste0("tiledb_dim(name=\"", name(object), "\", ",
+                  "domain=c(", if (is.na(cells)) "(null,null)"
+                               else paste0(dm, collapse=","), "), ",
+                  "tile=", if (is.na(cells)) "(null)" else ex, ", ",
+                  "type=\"", datatype(object), "\", ",
+                  "cellvalnum=", cells,
+                  if (nf == 0) ")" else ", ")
+    if (nf > 0) {
+        txt <- paste0(txt, "filters=", .as_text_filter_list(fl), ")")
+    }
+    txt
+}
+
 #' Prints a dimension object
 #'
 #' @param object A dimension object
@@ -100,25 +122,7 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
 setMethod("show",
           signature(object = "tiledb_dim"),
           definition = function(object) {
-    cells <- cell_val_num(object)
-    fl <- filter_list(object)
-    nf <- nfilters(fl)
-    tp <- datatype(object)
-    dm <- paste0(domain(object), if (grepl("INT", tp)) "L" else "", collape="")
-    ex <- paste0(dim(object), if (grepl("INT", tp)) "L" else "", collape="")
-    cat("tiledb_dim(name=\"", name(object), "\", ",
-        "domain=c(", if (is.na(cells)) "(null,null)"
-                     else paste0(dm, collapse=","), "), ",
-        "tile=", if (is.na(cells)) "(null)" else ex, ", ",
-        "type=\"", datatype(object), "\", ",
-        "cellvalnum=", cells,
-        if (nf == 0) ")" else ", ",
-        sep="")
-    if (nf > 0) {
-        cat("filters=", sep="")
-        show(fl)
-        cat(")", sep="")
-    }
+    cat(.as_text_dimension(object), "\n")
 })
 
 #' Return the `tiledb_dim` name
