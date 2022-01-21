@@ -88,10 +88,7 @@ setMethod("raw_dump",
                   "ncells=", cell_val_num(object), ", ",
                   "nullable=", tiledb_attribute_get_nullable(object),
                   if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)))
-    txt <- paste0(txt, ", fillvalue=",
-                  if (tiledb_attribute_get_nullable(object) || tiledb_version(TRUE) < "2.1.0") "NA"
-                  else format(tiledb_attribute_get_fill_value(object)),
-                  ")")
+    txt <- paste0(txt, ")")
     txt
 }
 

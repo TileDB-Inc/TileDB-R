@@ -106,8 +106,7 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
                   "domain=c(", if (is.na(cells)) "NULL,NULL"
                                else paste0(dm, collapse=","), "), ",
                   "tile=", if (is.na(cells)) "NULL" else ex, ", ",
-                  "type=\"", datatype(object), "\", ",
-                  "cellvalnum=", cells,
+                  "type=\"", datatype(object), "\"",
                   if (nf == 0) ")" else ", ")
     if (nf > 0) {
         txt <- paste0(txt, "filters=", .as_text_filter_list(fl), ")")

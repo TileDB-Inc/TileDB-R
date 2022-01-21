@@ -42,9 +42,9 @@ tiledb_array_create <- function(uri, schema, encryption_key) {
     stopifnot(`The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri, "character"),
               `The 'schema' argument must a tiledb_array_schema object` = !missing(schema) && is(schema, "tiledb_array_schema"))
     if (missing(encryption_key)) {
-        return(libtiledb_array_create(uri, schema@ptr))
+        invisible(libtiledb_array_create(uri, schema@ptr))
     } else {
-        return(libtiledb_array_create_with_key(uri, schema@ptr, encryption_key))
+        invisible(libtiledb_array_create_with_key(uri, schema@ptr, encryption_key))
     }
 }
 
