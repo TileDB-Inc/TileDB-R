@@ -171,9 +171,9 @@ setMethod("raw_dump",
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           definition = function(object) {
-    cat("sch <- tiledb_array_schema(domain=", .as_text_domain(domain(object)), ",\n",
-        "\tattrs=c(", paste(sapply(attrs(object), .as_text_attribute), collapse=", "), "),\n",
-        "\tcell_order=\"", cell_order(object), "\", ",
+    cat("tiledb_array_schema(\n    domain=", .as_text_domain(domain(object)), ",\n",
+        "    attrs=c(", paste(sapply(attrs(object), .as_text_attribute), collapse=", "), "),\n",
+        "    cell_order=\"", cell_order(object), "\", ",
         "tile_order=\"", tile_order(object), "\", ",
         "capacity=", capacity(object), ", ",
         "sparse=",if (is.sparse(object)) "TRUE" else "FALSE", ", ",
@@ -181,11 +181,12 @@ setMethod("show", signature(object = "tiledb_array_schema"),
         "\n", sep="")
     fl <- filter_list(object)
     if (nfilters(fl$coords) > 0)
-        cat("\tcoords_filter_list=", .as_text_filter_list(fl$coords), ",\n", sep="")
+        cat("    coords_filter_list=", .as_text_filter_list(fl$coords), ",\n", sep="")
     if (nfilters(fl$offsets) > 0)
-        cat("\toffsets_filter_list=", .as_text_filter_list(fl$offsets), ",\n", sep="")
+        cat("    offsets_filter_list=", .as_text_filter_list(fl$offsets), ",\n", sep="")
     if (tiledb_version(TRUE) >= "2.6.0" && nfilters(fl$validity) > 0)
-        cat("\tvalidity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
+        cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
+    cat(")\n", sep="")
     #cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
 
 })

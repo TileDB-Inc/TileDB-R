@@ -73,7 +73,7 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
         txt <- paste0("tiledb_filter(\"", flt, "\")")
     } else {
         prt <- strsplit(opt, "=")[[1]]
-        txt <- paste0("tiledb_filter_set_option(tiledb_filter(",
+        txt <- paste0("tiledb_filter_set_option(tiledb_filter(\"",
                       flt, "\"),\"", prt[1], "\",", prt[2], ")")
     }
     txt
