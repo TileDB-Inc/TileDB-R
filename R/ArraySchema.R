@@ -180,10 +180,13 @@ setMethod("show", signature(object = "tiledb_array_schema"),
         "allows_dups=", if (is.sparse(object)) allows_dups(object) else FALSE, ", ",
         "\n", sep="")
     fl <- filter_list(object)
-    if (nfilters(fl$coords) > 0) cat("\tcoords_filter_list=", .as_text_filter_list(fl$coords), ",\n", sep="")
-    if (nfilters(fl$offsets) > 0) cat("\toffsets_filter_list=", .as_text_filter_list(fl$offsets), ",\n", sep="")
-    if (nfilters(fl$validity) > 0) cat("\tvalidity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
-    cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
+    if (nfilters(fl$coords) > 0)
+        cat("\tcoords_filter_list=", .as_text_filter_list(fl$coords), ",\n", sep="")
+    if (nfilters(fl$offsets) > 0)
+        cat("\toffsets_filter_list=", .as_text_filter_list(fl$offsets), ",\n", sep="")
+    if (tiledb_version(TRUE) >= "2.6.0" && nfilters(fl$validity) > 0)
+        cat("\tvalidity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
+    #cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
 
 })
 
