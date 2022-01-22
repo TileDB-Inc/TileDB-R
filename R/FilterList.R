@@ -65,13 +65,14 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
 
 # internal function returning text use here and in other higher-level show() methods
 .as_text_filter_list <- function(object) {
-   n <- nfilters(object)
-   txt <- "tiledb_filter_list(c("
-   for (i in seq_len(n)) {
-       ## The i-1 is necessary as these are 0-up indexed (unusual for R, a leftover from older code)
-       txt <- paste0(txt, .as_text_filter(object[i-1]), if (i == n) ")" else ", ")
-   }
-   txt <- paste0(txt, ")")
+    n <- nfilters(object)
+    if (n == 0) return("")
+    txt <- "tiledb_filter_list(c("
+    for (i in seq_len(n)) {
+        ## The i-1 is necessary as these are 0-up indexed (unusual for R, a leftover from older code)
+        txt <- paste0(txt, .as_text_filter(object[i-1]), if (i == n) ")" else ", ")
+    }
+    txt <- paste0(txt, ")")
 }
 
 #' Prints a filter_list object
