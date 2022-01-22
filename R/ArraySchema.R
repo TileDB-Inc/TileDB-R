@@ -171,20 +171,22 @@ setMethod("raw_dump",
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           definition = function(object) {
+    fl <- filter_list(object)
+    nfc <- nfilters(fl$coords)
+    nfo <- nfilters(fl$offsets)
+    nfv <- if (tiledb_version(TRUE) >= "2.6.0") nfilters(fl$validity) else 0
     cat("tiledb_array_schema(\n    domain=", .as_text_domain(domain(object)), ",\n",
         "    attrs=c(", paste(sapply(attrs(object), .as_text_attribute), collapse=", "), "),\n",
         "    cell_order=\"", cell_order(object), "\", ",
         "tile_order=\"", tile_order(object), "\", ",
         "capacity=", capacity(object), ", ",
         "sparse=",if (is.sparse(object)) "TRUE" else "FALSE", ", ",
-        "allows_dups=", if (is.sparse(object)) allows_dups(object) else FALSE, ", ",
-        "\n", sep="")
-    fl <- filter_list(object)
-    if (nfilters(fl$coords) > 0)
-        cat("    coords_filter_list=", .as_text_filter_list(fl$coords), ",\n", sep="")
-    if (nfilters(fl$offsets) > 0)
-        cat("    offsets_filter_list=", .as_text_filter_list(fl$offsets), ",\n", sep="")
-    if (tiledb_version(TRUE) >= "2.6.0" && nfilters(fl$validity) > 0)
+        "allows_dups=", if (is.sparse(object)) allows_dups(object) else FALSE,
+        if (nfc + nfo + nfv > 0) ",\n" else "\n",
+        sep="")
+    if (nfc > 0) cat("    coords_filter_list=", .as_text_filter_list(fl$coords), if (nfo + nfv > 0) "," else "", "\n", sep="")
+    if (nfo > 0) cat("    offsets_filter_list=", .as_text_filter_list(fl$offsets), if (nfv > 0) ",\n" else "", sep="")
+    if (tiledb_version(TRUE) >= "2.6.0" && nfv > 0)
         cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
     cat(")\n", sep="")
     #cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
