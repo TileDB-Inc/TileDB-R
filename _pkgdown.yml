@@ -19,6 +19,7 @@ reference:
   - starts_with("as.data.frame.tiledb_config")
   - ends_with("tiledb_config-method")
   - matches(",tiledb_config,ANY")
+  - matches("save_allocation_size_preference")
 - title: Array
   contents:
   - starts_with("tiledb_array_create")
@@ -40,6 +41,8 @@ reference:
   - matches("tiledb_schema_set_names")
   - matches("tiledb_schema_get_dim_attr_status")
   - matches("schema,character-method")
+  - matches("tiledb_schema_object")
+  - matches("describe")
 - title: Attribute
   contents:
   - starts_with("tiledb_attr")
@@ -50,6 +53,7 @@ reference:
   contents:
   - starts_with("tiledb_filter")
   - starts_with("filter")
+  - matches("show,tiledb_filter-method")
 - title: FilterList
   contents:
   - matches("tiledb_filter_list")

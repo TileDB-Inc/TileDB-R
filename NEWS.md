@@ -1,3 +1,32 @@
+# tiledb 0.11.0
+
+* This release of the R package builds against [TileDB 2.6.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.6.1), but has also been tested against previous releases, and the development version.
+
+## Improvements
+
+* Use of TileDB Embedded was upgraded to release 2.6.1 (#354) following an earlier upgrade to 2.6.0 (#340)
+
+* A cell value getter for dimension was added (#341)
+
+* Getter and setter functions for validity filter lists have been added (#349)
+
+* Memory budget use has been refined via a configurable budget setting (#346, #350)
+
+* A context getter function was added for query objects (#351)
+
+* The schema display functionality was refactored and extended (#342, #343, #344, #345, #352, #355)
+
+* Use of `TILEDB_CHAR` is deprecated in favor of `TILEDB_STRING_ASCII` (#353)
+
+## Bug Fixes
+
+* A `.nojekyll` file was added to prevent unnecessary GitHub Pages builds (#339)
+
+* A getter for fill values is only called with TileDB 2.1.0 or later (#347)
+
+* GitHub Actions on Windows no longer install `qpdf` which was never used (#348)
+
+
 # tiledb 0.10.2
 
 * This release of the R package builds against [TileDB 2.5.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.5.3), but has been tested against previous releases, and the development version.
