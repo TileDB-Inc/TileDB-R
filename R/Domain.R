@@ -71,14 +71,25 @@ setMethod("raw_dump",
           signature(object = "tiledb_domain"),
           definition = function(object) libtiledb_domain_dump(object@ptr))
 
+# internal function returning text use here and in other higher-level show() methods
+.as_text_domain <- function(object) {
+    txt <- "tiledb_domain(c("
+    dims <- dimensions(object)
+    nd <- length(dims)
+    for (i in seq_len(nd)) {
+        txt <- paste0(txt, .as_text_dimension(dims[[i]]),
+                      if (i == nd) "))" else ", ")
+    }
+    txt
+}
+
 #' Prints a domain object
 #'
 #' @param object A domain object
 #' @export
 setMethod("show", "tiledb_domain",
           definition = function(object) {
-    sapply(dimensions(object), show)
-    invisible()
+    cat(.as_text_domain(object), "\n")
 })
 
 #' Returns a list of the tiledb_domain dimension objects

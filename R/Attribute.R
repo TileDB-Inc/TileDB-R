@@ -80,25 +80,26 @@ setMethod("raw_dump",
           signature(object = "tiledb_attr"),
           definition = function(object) libtiledb_attribute_dump(object@ptr))
 
+# internal function returning text use here and in other higher-level show() methods
+.as_text_attribute <- function(object) {
+    fl <- filter_list(object)
+    txt <- paste0("tiledb_attr(name=\"", name(object), "\", ",
+                  "type=\"", datatype(object), "\", ",
+                  "ncells=", cell_val_num(object), ", ",
+                  "nullable=", tiledb_attribute_get_nullable(object),
+                  if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)))
+    txt <- paste0(txt, ")")
+    txt
+}
+
 #' Prints an attribute object
 #'
 #' @param object An attribute object
 #' @export
-setMethod("show", signature(object = "tiledb_attr"),
+setMethod("show",
+          signature(object = "tiledb_attr"),
           definition = function(object) {
-    cat("### Attribute ###\n")
-    cat("- Name:", name(object), "\n")
-    cat("- Type:", datatype(object), "\n")
-    cat("- Nullable:", tiledb_attribute_get_nullable(object), "\n")
-    cat("- Cell val num:", cell_val_num(object), "\n")
-    fl <- filter_list(object)
-    cat("- Filters: ", nfilters(fl), "\n", sep="")
-    show(fl)
-    ## NB: prints NA whereas core shows -2147483648 as core does not know about R's NA
-    cat("- Fill value: ",
-        if (tiledb_attribute_get_nullable(object) || tiledb_version(TRUE) < "2.1.0") ""
-        else format(tiledb_attribute_get_fill_value(object)), "\n")
-    cat("\n")
+    cat(.as_text_attribute(object), "\n")
 })
 
 

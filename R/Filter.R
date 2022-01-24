@@ -65,26 +65,28 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
   return(new("tiledb_filter", ptr = ptr))
 }
 
+# internal function returning text use here and in other higher-level show() methods
+.as_text_filter <- function(object) {
+    flt <- tiledb_filter_type(object)
+    opt <- .getFilterOption(object)
+    if (opt == "NA") {
+        txt <- paste0("tiledb_filter(\"", flt, "\")")
+    } else {
+        prt <- strsplit(opt, "=")[[1]]
+        txt <- paste0("tiledb_filter_set_option(tiledb_filter(\"",
+                      flt, "\"),\"", prt[1], "\",", prt[2], ")")
+    }
+    txt
+}
+
 #' Prints a filter object
 #'
 #' @param object A filter object
 #' @export
-setMethod("show", signature(object = "tiledb_filter"),
+setMethod("show",
+          signature(object = "tiledb_filter"),
           definition = function(object) {
-    flt <- tiledb_filter_type(object)
-    .getAndShow <- function(obj, arg) cat(paste0(arg, "=", tiledb_filter_get_option(obj, arg)))
-    cat("  > ", flt, ": ", sep="")
-    if (flt %in% c("GZIP", "ZSTD", "LZ4", "BZIP2", "RLE")) {
-        .getAndShow(object, "COMPRESSION_LEVEL")
-    } else if (flt %in% "BIT_WIDTH_REDUCTION") {
-        .getAndShow(object, "BIT_WIDTH_MAX_WINDOW")
-    } else if (flt %in% "POSITIVE_DELTA") {
-        .getAndShow(object, "POSITIVE_DELTA_MAX_WINDOW")
-    } else {
-        cat("NA")
-    }
-    cat("\n")
-    invisible()
+    cat(.as_text_filter(object), "\n")
 })
 
 #' Returns the type of the filter used
