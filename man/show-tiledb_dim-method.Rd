@@ -7,7 +7,7 @@
 \S4method{show}{tiledb_dim}(object)
 }
 \arguments{
-\item{object}{An array_schema object}
+\item{object}{A dimension object}
 }
 \description{
 Prints a dimension object

@@ -745,7 +745,7 @@ tiledb_schema_object <- function(array) {
                           domain = dimdomains,
                           extent = dimextent,
                           nfilters = dimnfilt)
-c
+
     attrs <- attrs(sch)
     attrnames <- sapply(attrs, name)
     attrtypes <- sapply(attrs, datatype)
@@ -859,7 +859,6 @@ c
 #' @param arr A TileDB Array object
 #' @return Nothing is returned as the function is invoked for the side effect
 #' of printing the schema via a sequence of R instructions to re-create it.
-#' @export
 describe <- function(arr) {
     stopifnot(`Argument must be a 'tiledb_array' object` = is(arr, "tiledb_array"))
     obj <- tiledb_schema_object(arr)
