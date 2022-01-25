@@ -4,7 +4,7 @@
 %\VignetteEncoding{UTF-8}
 -->
 ---
-title: "TileDB Ingestion Example from SQL"
+title: "TileDB Ingestion from SQL: A Commented Example"
 date: "2022-01-25"
 css: "water.css"
 ---
@@ -26,8 +26,9 @@ connection packages that adhere to, and utilise, the DBI framework.  Some exampl
 [RPostgres](https://cran.r-project.org/web/packages/RPostgres/index.html),
 [RPostgreSQL](https://cran.r-project.org/web/packages/RPostgreSQL/index.html),
 [RPresto](https://cran.r-project.org/web/packages/RPresto/index.html),
-[RRedshiftSQL](https://cran.r-project.org/web/packages/RRedshiftSQL/index.html), and
-[RSQLite](https://cran.r-project.org/web/packages/RSQLite/index.html).
+[RRedshiftSQL](https://cran.r-project.org/web/packages/RRedshiftSQL/index.html),
+[RSQLite](https://cran.r-project.org/web/packages/RSQLite/index.html), and many more as seen via the
+[CRAN page](https://cran.r-project.org/package=DBI).
 
 We provide a simple example using
 [RPostgreSQL](https://cran.r-project.org/web/packages/RPostgreSQL/index.html) and an existing
