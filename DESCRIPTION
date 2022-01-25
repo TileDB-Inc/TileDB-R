@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.11.0
+Version: 0.11.0.1
 Title: Universal Storage Engine for Sparse and Dense Multidimensional Arrays
 Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
  person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
@@ -26,8 +26,8 @@ SystemRequirements: A C++17 compiler is required, and on macOS
  build or download was specified by the user.
 Imports: methods, Rcpp, nanotime
 LinkingTo: Rcpp
-Suggests: tinytest, rmarkdown, knitr, minidown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble
-VignetteBuilder: knitr
+Suggests: tinytest, rmarkdown, knitr, minidown, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble
+VignetteBuilder: knitr, simplermarkdown
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Encoding: UTF-8
