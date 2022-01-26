@@ -1226,13 +1226,13 @@ expect_equal(array_consolidate(uri), NULL)
 expect_error(array_consolidate(uri, start_time="abc")) # not a datetime
 expect_error(array_consolidate(uri, end_time="def"))   # not a datetime
 now <- Sys.time()
-expect_equal(array_consolidate(uri, start_time=now-60, end_time=now), NULL)
+if (tiledb_version(TRUE) >= "2.3.0") expect_equal(array_consolidate(uri, start_time=now-60, end_time=now), NULL)
 
 ## vaccum
 expect_equal(array_vacuum(uri), NULL)
 expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
 expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
-expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
+if (tiledb_version(TRUE) >= "2.3.0") expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
 
 
 
