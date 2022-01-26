@@ -76,15 +76,15 @@ install.packages("tiledb_0.11.0.tar.gz", repos=NULL,
 
 ## Conda
 
-TileDB supports installation from miniconda.  Using for example the current
-`continuuum/miniconda3` container, we can do
+Using for example the current [`condaforge/mambaforge`](https://hub.docker.com/r/condaforge/mambaforge) container
+from the [conda-forge project](https://github.com/conda-forge/miniforge), we can do
+
 
 ```sh
-conda install -c conda-forge mamba                   # to take advantage of the mamba installer
-# ...several lines omitted, also answer 'y' once
-mamba install -c conda-forge r-tiledb				 # installs R, tiledb and dependencies
-# ...several more lines omitted, another 'y'
+mamba install -y r-tiledb				 # installs R, tiledb and deps without extra prompt
+# ...several lines of installation detail omitted
 R
+# ... several lines of R startup output omitted
 > library(tiledb)
 ```
 
