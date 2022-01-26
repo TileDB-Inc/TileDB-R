@@ -1,3 +1,3 @@
 steps:
-  - script: Rscript -e 'install.packages(c("Rcpp", "nanotime", "tinytest", "curl", "bit64", "knitr", "rmarkdown", "minidown", "Matrix", "palmerpenguins", "nycflights13", "tibble", "data.table"))'
+  - script: Rscript -e 'install.packages(c("Rcpp", "nanotime", "tinytest", "curl", "bit64", "knitr", "rmarkdown", "minidown", "Matrix", "palmerpenguins", "nycflights13", "tibble", "data.table", "simplermarkdown"))'
     displayName: 'Install dependencies'
