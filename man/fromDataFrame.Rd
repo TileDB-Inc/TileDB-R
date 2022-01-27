@@ -16,6 +16,7 @@ fromDataFrame(
   capacity = 10000L,
   tile_domain = NULL,
   tile_extent = NULL,
+  mode = c("ingest", "schema_only", "append"),
   debug = FALSE
 )
 }
@@ -53,7 +54,12 @@ dimension of the \code{obj} is used.}
 if \code{NULL} the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
 cannot exceed the tile domain.}
 
-\item{debug}{Logical flag to select additional output}
+\item{mode}{A character variable with possible values \sQuote{ingest} (for schema creation and
+data ingestion, the default behavior), \sQuote{schema_only} (to create the array schema without
+writing to the newly-created array) and \sQuote{append} (to only append to an already existing
+array).}
+
+\item{debug}{Logical flag to select additional output.}
 }
 \value{
 Null, invisibly.

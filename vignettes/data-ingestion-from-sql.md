@@ -105,6 +105,10 @@ storeDataTDB <- function(dat, uri) {
 }
 ```
 
+The `mode="append"` argument of `fromDataFrame` can be used to append to an existing array to
+support chunked operation.
+
+
 ### Reading Data Back In
 
 Reading data from TileDB is a very standard operation of opening the URI, possibly specifying the
@@ -127,7 +131,6 @@ chk <- getDataTDB(uri)
 print(dim(chk))
 cat("Done!\n")
 ```
-
 
 ## See Also
 
