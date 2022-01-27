@@ -57,7 +57,11 @@
 ##' @param tile_extent An integer value for the tile extent of the row dimensions;
 ##' if \code{NULL} the row dimension of the \code{obj} is used. Note that the \code{tile_extent}
 ##' cannot exceed the tile domain.
-##' @param debug Logical flag to select additional output
+##' @param mode A character variable with possible values \sQuote{ingest} (for schema creation and
+##' data ingestion, the default behavior), \sQuote{schema_only} (to create the array schema without
+##' writing to the newly-created array) and \sQuote{append} (to only append to an already existing
+##' array).
+##' @param debug Logical flag to select additional output.
 ##' @return Null, invisibly.
 ##' @examples
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -73,12 +77,14 @@
 ##' @export
 fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=sparse,
                           cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="ZSTD",
-                          capacity = 10000L, tile_domain = NULL, tile_extent = NULL, debug = FALSE) {
+                          capacity = 10000L, tile_domain = NULL, tile_extent = NULL,
+                          mode = c("ingest", "schema_only", "append"), debug = FALSE) {
 
     stopifnot(`Argument 'obj' should be a 'data.frame' (or a related object)` = inherits(obj, "data.frame"),
               `Argument 'uri' should be a character variable` = is.character(uri))
     if (!is.null(col_index) && is.character(col_index)) col_index <- match(col_index, colnames(obj))
     dims <- dim(obj)
+    mode <- match.arg(mode)
 
     if (class(obj)[1] != "data.frame") obj <- as.data.frame(obj)
 
@@ -204,14 +210,17 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                                   cell_order = cell_order, tile_order = tile_order,
                                   sparse=sparse, capacity=capacity)
     allows_dups(schema) <- allows_dups
-    tiledb_array_create(uri, schema)
+    if (mode != "append")
+        tiledb_array_create(uri, schema)
 
-    df <- tiledb_array(uri, query_type = "WRITE")
-    ## when setting an index when likely want 'sparse write to dense array
-    if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
-    if (is.null(col_index) && sparse)
-        useobj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), useobj)
-    df[] <- useobj
+    if (mode != "schema_only") {
+        df <- tiledb_array(uri, query_type = "WRITE")
+        ## when setting an index when likely want 'sparse write to dense array
+        if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
+        if (is.null(col_index) && sparse)
+            useobj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), useobj)
+        df[] <- useobj
+    }
     invisible(NULL)
 }
 

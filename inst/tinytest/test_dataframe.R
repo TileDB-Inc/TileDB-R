@@ -279,3 +279,30 @@ if (getRversion() < '4.0.0') {
     res$dd <- as.character(res$dd)
 }
 expect_equivalent(df, res)
+
+
+## test ingest vs schema_only vs append
+if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
+library(palmerpenguins)
+data <- penguins
+
+uri <- tempfile()
+
+fromDataFrame(data, uri, col_index=1:2, mode="schema_only")
+arr <- tiledb_array(uri, return_as="data.frame")
+chk <- arr[]
+expect_equal(nrow(chk), 0)              # no data
+expect_equal(ncol(chk), ncol(data))     # but all columns
+
+fromDataFrame(data, uri, col_index=1:2, mode="append")
+arr <- tiledb_array(uri, return_as="data.frame")
+chk <- arr[]
+expect_equal(nrow(chk), nrow(data))     # all data
+expect_equal(ncol(chk), ncol(data))     # all columns
+
+tiledb_vfs_remove_dir(uri)
+fromDataFrame(data, uri, col_index=1:2) # default mode
+arr <- tiledb_array(uri, return_as="data.frame")
+chk <- arr[]
+expect_equal(nrow(chk), nrow(data))     # all data
+expect_equal(ncol(chk), ncol(data))     # all columns
