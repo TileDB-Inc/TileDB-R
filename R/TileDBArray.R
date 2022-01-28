@@ -1418,7 +1418,7 @@ array_vacuum <- function(uri, cfg = NULL,
 tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
   stopifnot(`Argument 'arr' must be a tiledb_array` = is(arr, "tiledb_array"),
             `Argument 'idx' must be numeric and positive` = is.numeric(idx) && idx > 0)
-  arr <- tiledb_array_close(arr)
+  if (libtiledb_array_is_open(arr@ptr)) arr <- tiledb_array_close(arr)
   arr <- tiledb_array_open(arr, "READ")
   sch <- schema(arr)
   dom <- domain(sch)
