@@ -937,7 +937,6 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
-
 ## test encrypted arrays via high-level accessor
 ## (lower-level tests in test_densearray and test_arrayschema)
 tmp <- tempfile()
@@ -977,7 +976,7 @@ dir.create(tmp)
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 4L), 4L, "INT32"),
                               tiledb_dim("d2", NULL, NULL, "ASCII")))
 schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
-invisible( tiledb_array_create(tmp, schema) )
+tiledb_array_create(tmp, schema)
 
 ## write
 I <- c(1L, 2L, 3L)
