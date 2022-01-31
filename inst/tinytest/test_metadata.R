@@ -21,7 +21,9 @@ unlink_and_create_simple <- function(tmp) {
 
   arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
 
-  tiledb_array_close(arr)
+  if (tiledb:::libtiledb_array_is_open(arr@ptr)) {
+      tiledb_array_close(arr)
+  }
   tiledb_array_open(arr, "WRITE")
 
   ## write one record directly to (text) URI
@@ -97,7 +99,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #test_that("Can put metadata", {
 arr <- unlink_and_create_ptr(tmp)
 
-tiledb_array_close(arr)
+if (tiledb:::libtiledb_array_is_open(arr@ptr)) tiledb_array_close(arr)
 arr <- tiledb_array_open(arr, "WRITE")
 
 expect_true(tiledb_put_metadata(arr, "foo", "the quick brown fox"))

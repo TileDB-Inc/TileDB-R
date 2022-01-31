@@ -1417,9 +1417,8 @@ array_vacuum <- function(uri, cfg = NULL,
 #' @export
 tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
   stopifnot(`Argument 'arr' must be a tiledb_array` = is(arr, "tiledb_array"),
-            `Argument 'idx' must be numeric and positive` = is.numeric(idx) && idx > 0)
-  arr <- tiledb_array_close(arr)
-  arr <- tiledb_array_open(arr, "READ")
+            `Argument 'idx' must be numeric and positive` = is.numeric(idx) && idx > 0,
+            `Argument 'arr' must be open` = libtiledb_array_is_open(arr@ptr))
   sch <- schema(arr)
   dom <- domain(sch)
   dims <- dimensions(dom)
@@ -1445,7 +1444,8 @@ tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
 #' @export
 tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
     stopifnot(`Argument 'arr' must be a tiledb_array` = is(arr, "tiledb_array"),
-              `Argument 'name' must be character` = is.character(name))
+              `Argument 'name' must be character` = is.character(name),
+              `Argument 'arr' must be open` = libtiledb_array_is_open(arr@ptr))
 
     sch <- schema(arr)
     dom <- domain(sch)
