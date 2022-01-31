@@ -1,15 +1,11 @@
+<!--
+%\VignetteIndexEntry{Introduction to TileDB}
+%\VignetteEngine{simplermarkdown::mdweave_to_html}
+%\VignetteEncoding{UTF-8}
+-->
 ---
 title: "First Steps with TileDB"
-output:
-  minidown::mini_document:
-    framework: water
-    toc: yes
-    toc_float: true
-vignette: |
-  %\VignetteIndexEntry{Introduction to TileDB}
-  %\VignettePackage{tiledb}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+css: "water.css"
 ---
 
 This document introduces TileDB via several simple examples. A corresponding
@@ -56,11 +52,13 @@ The first example extracts rows 1 to 2 and column 2 from an array. It also limit
 just one attribute (via `attrs`), asks for the return to be a `data.frame` (instead of a simpler list)
 and for the (row and column, if present as here) indices to not be printed (via `extended=FALSE`).
 
-    > A <- tiledb_array(uri = uri, attrs = "b",
-    +                   as.data.frame=TRUE, extended=FALSE))
-    > A[1:2,2]
-    [1] 101.5 104.0
-    >
+```r
+> A <- tiledb_array(uri = uri, attrs = "b",
++                   as.data.frame=TRUE, extended=FALSE))
+> A[1:2,2]
+[1] 101.5 104.0
+>
+```
 
 Note that the examples create three two-dimensional attributes. The attributes can be selected via
 the `attrs` argument, or the `attrs()` method on the array object.  The square-bracket indexing then
@@ -70,52 +68,57 @@ If multiple objects are returned (as `list` or `data.frame`), subsetting on the
 returned object works via `[[var]]` or `$var`.  A numeric index also works (but needs to account for
 `rows` and `cols`).
 
-    > A <- tiledb_array(uri = uri, attrs = c("a","b"),
-    +                   as.data.frame = TRUE)
-    > A[1:2,2][["a"]]
-    [1] 2 7
-    > A[1:2,2]$a
-    [1] 2 7
-    >
-
+```r
+> A <- tiledb_array(uri = uri, attrs = c("a","b"),
++                   as.data.frame = TRUE)
+> A[1:2,2][["a"]]
+[1] 2 7
+> A[1:2,2]$a
+[1] 2 7
+>
+```
 
 *Read 2-D*
 
 This works analogously.  Note that the results are generally returned as vectors, or as a columns of
 a `data.frame` object in case that option was set.
 
-    > A[6:9,3:4]
-    $a
-    [1] 28 29 33 34 38 39 43 44
+```r
+> A[6:9,3:4]
+$a
+[1] 28 29 33 34 38 39 43 44
 
-    $b
-    [1] 114.5 115.0 117.0 117.5 119.5 120.0 122.0 122.5
+$b
+[1] 114.5 115.0 117.0 117.5 119.5 120.0 122.0 122.5
 
-    $c
-    [1] "fox" "A"   "E"   "F"   "J"   "K"   "O"   "P"
-    >
+$c
+[1] "fox" "A"   "E"   "F"   "J"   "K"   "O"   "P"
+>
+```
 
 ## Read 2-D with attribute selection
 
 We can restrict the selection to a subset of attributes when opening the array.
 
-    > A <- tiledb_dense(uri = uri, attrs = c("b","c"),
-    +                   as.data.frame = TRUE, extended=FALSE)
-    > A[6:9,2:4]
-           b     c
-    1  114.0 brown
-    2  114.5   fox
-    3  115.0     A
-    4  116.5     D
-    5  117.0     E
-    6  117.5     F
-    7  119.0     I
-    8  119.5     J
-    9  120.0     K
-    10 121.5     N
-    11 122.0     O
-    12 122.5     P
-    >
+```r
+> A <- tiledb_dense(uri = uri, attrs = c("b","c"),
++                   as.data.frame = TRUE, extended=FALSE)
+> A[6:9,2:4]
+       b     c
+1  114.0 brown
+2  114.5   fox
+3  115.0     A
+4  116.5     D
+5  117.0     E
+6  117.5     F
+7  119.0     I
+8  119.5     J
+9  120.0     K
+10 121.5     N
+11 122.0     O
+12 122.5     P
+>
+```
 
 This also illustrated the effect of setting `as.data.frame=TRUE` when opening the array.
 
@@ -126,20 +129,23 @@ The column types correspond to the attribute typed in the array schema, subject 
 mentioned above on R types.  (The char comes in as a factor variable as is still the R 3.6.* default
 which is about to change. We can also override, users can too.)
 
-    > A <- tiledb_array("/tmp/tiledb/ex_1/", attrs=c("b","c"),
-    +                   as.data.frame = TRUE, extended=TRUE)
-    > sapply(A[6:9, 3:4], "class")
-           rows        cols           b           c
-      "integer"   "integer"   "numeric" "character"
-    >
+```r
+> A <- tiledb_array("/tmp/tiledb/ex_1/", attrs=c("b","c"),
++                   as.data.frame = TRUE, extended=TRUE)
+> sapply(A[6:9, 3:4], "class")
+       rows        cols           b           c
+  "integer"   "integer"   "numeric" "character"
+>
+```
 
 Consistent with the `data.frame` semantics, *now* requesting a named column *reduces to a vector* as
 this happens at the R side:
 
-    > A[6:9, 3:4]$b
-    [1] 114.5 115.0 117.0 117.5 119.5 120.0 122.0 122.5
-    >
-
+```
+> A[6:9, 3:4]$b
+[1] 114.5 115.0 117.0 117.5 119.5 120.0 122.0 122.5
+>
+```
 
 
 # Sparse Arrays
@@ -151,52 +157,59 @@ this happens at the R side:
 Basic reading returns the coordinates and any attributes.  The following examples use the array
 created by the [quickstart_sparse][qs_sparse] example.
 
-    > A <- tiledb_array(uri = uri, is.sparse = TRUE)
-    > A[]
-    $rows
-    [1] 1 2 2
+```r
+> A <- tiledb_array(uri = uri, is.sparse = TRUE)
+> A[]
+$rows
+[1] 1 2 2
 
-    $cols
-    [1] 1 3 4
+$cols
+[1] 1 3 4
 
-    $a
-    [1] 1 3 2
+$a
+[1] 1 3 2
 
-    >
-
+>
+```
 We can also request a `data.frame` object, either when opening or by changing this object characteristic on the fly:
 
-    > return.data.frame(A) <- TRUE
-    > A[]
-      a rows cols
-    1 1    1    1
-    2 3    2    3
-    3 2    2    4
+```r
+> return.data.frame(A) <- TRUE
+> A[]
+  a rows cols
+1 1    1    1
+2 3    2    3
+3 2    2    4
+```
 
 For sparse arrays, the return type is by default ‘extended’ showing rows and column but this can be overridden.
 
 Assignment works similarly:
 
-    > A[4,2] <- 42L
-    > A[]
-    > A[]
-      rows cols  a
-    1    1    1  1
-    2    2    3  3
-    3    2    4  2
-    4    4    2 42
-    >
+```r
+> A[4,2] <- 42L
+> A[]
+> A[]
+  rows cols  a
+1    1    1  1
+2    2    3  3
+3    2    4  2
+4    4    2 42
+>
+```
 
 Reads can select rows and or columns:
 
-    > A[2,]
-      rows cols a
-    1    2    3 3
-    2    2    4 2
-    > A[,2]
-      rows cols  a
-    1    4    2 42
-    >
+```r
+> A[2,]
+  rows cols a
+1    2    3 3
+2    2    4 2
+> A[,2]
+  rows cols  a
+1    4    2 42
+>
+```
 
 Attributes can be selected similarly.
 
@@ -206,28 +219,32 @@ Similar to the dense array case described earlier, the file [ex_2.R][ex_2]
 illustrates some basic operations on sparse arrays. It also shows date and datetime types instead of
 just integer and double precision floats.
 
-    > A <- tiledb_array(uri = uri, as.data.frame = TRUE)
-    > A[1577858403:1577858408]
-            rows cols a   b          d                       e
-    1 1577858403    1 3 103 2020-01-11 2020-01-02 18:24:33.844
-    2 1577858404    1 4 104 2020-01-15 2020-01-05 02:28:36.214
-    3 1577858405    1 5 105 2020-01-19 2020-01-05 00:44:04.805
-    4 1577858406    1 6 106 2020-01-21 2020-01-06 12:58:51.770
-    5 1577858407    1 7 107 2020-01-25 2020-01-09 04:29:56.309
-    6 1577858408    1 8 108 2020-01-26 2020-01-07 13:55:10.240
-    >
+```r
+> A <- tiledb_array(uri = uri, as.data.frame = TRUE)
+> A[1577858403:1577858408]
+        rows cols a   b          d                       e
+1 1577858403    1 3 103 2020-01-11 2020-01-02 18:24:33.844
+2 1577858404    1 4 104 2020-01-15 2020-01-05 02:28:36.214
+3 1577858405    1 5 105 2020-01-19 2020-01-05 00:44:04.805
+4 1577858406    1 6 106 2020-01-21 2020-01-06 12:58:51.770
+5 1577858407    1 7 107 2020-01-25 2020-01-09 04:29:56.309
+6 1577858408    1 8 108 2020-01-26 2020-01-07 13:55:10.240
+>
+```
 
 The row coordinate is currently a floating point representation of the underlying time type.  We can
 both select attributes (here we excluded the “a” column) and select rows by time (as the time stamps
 get converted to the required floating point value).
 
-    > attrs(A) <- c("b", "d", "e")
-    > A[as.POSIXct("2020-01-01"):as.POSIXct("2020-01-01 00:00:03")]
-            rows cols   b          d                       e
-    1 1577858401    1 101 2020-01-05 2020-01-01 03:03:07.548
-    2 1577858402    1 102 2020-01-10 2020-01-02 21:02:19.747
-    3 1577858403    1 103 2020-01-11 2020-01-02 18:24:33.844
-    >
+```r
+> attrs(A) <- c("b", "d", "e")
+> A[as.POSIXct("2020-01-01"):as.POSIXct("2020-01-01 00:00:03")]
+        rows cols   b          d                       e
+1 1577858401    1 101 2020-01-05 2020-01-01 03:03:07.548
+2 1577858402    1 102 2020-01-10 2020-01-02 21:02:19.747
+3 1577858403    1 103 2020-01-11 2020-01-02 18:24:33.844
+>
+```
 
 More extended examples are available showing indexing by date(time) as well as character dimension.
 

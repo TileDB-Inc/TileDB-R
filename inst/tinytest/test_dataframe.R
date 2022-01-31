@@ -282,6 +282,7 @@ expect_equivalent(df, res)
 
 
 ## test ingest vs schema_only vs append
+if (tiledb_version(TRUE) < "2.4.0") exit_file("Neeeds TileDB 2.4.* or later")
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 library(palmerpenguins)
 data <- penguins

@@ -1,21 +1,11 @@
+<!--
+%\VignetteIndexEntry{TileDB RMariaDB Examples}
+%\VignetteEngine{simplermarkdown::mdweave_to_html}
+%\VignetteEncoding{UTF-8}
+-->
 ---
 title: "TileDB and (R)MariaDB Examples"
-output:
-  minidown::mini_document:
-    framework: water
-    toc: true
-    toc_float: true
-    code_folding:
-      source: show
-      output: show
-      message: hide
-      warning: hide
-      error: hide
-vignette: >
-  %\VignetteIndexEntry{TileDB RMariaDB Examples}
-  %\VignettePackage{tiledb}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+css: "water.css"
 ---
 
 ## Introduction
@@ -51,7 +41,8 @@ MariaDB to accept an empty password (using an older MySQL variable setting), and
 name the running image 'tiledb-mariadb-r':
 
 ```sh
-docker run --name tiledb-mariadb-r -it -d --rm -e MYSQL_ALLOW_EMPTY_PASSWORD=1 tiledb/tiledb-mariadb-r
+docker run --name tiledb-mariadb-r -it -d --rm \
+       -e MYSQL_ALLOW_EMPTY_PASSWORD=1 tiledb/tiledb-mariadb-r
 ```
 
 #### Access Container Once to Write via TileDB
