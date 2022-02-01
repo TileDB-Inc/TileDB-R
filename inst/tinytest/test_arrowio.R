@@ -178,4 +178,6 @@ for (i in c(1:7,9:10)) {
 }
 expect_equivalent(df[,8], as.integer64(1:10))
 
-#detach(package:arrow, unload=TRUE)
+## detaching arrow should not be necessary as we generally do not need to unload
+## packages but had been seen as beneficial in some instanced so there is now an option
+if (Sys.getenv("R_TESTING_CLEANUP", "") == "yes") detach(package:arrow, unload=TRUE)
