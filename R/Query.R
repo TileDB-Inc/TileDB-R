@@ -376,7 +376,7 @@ tiledb_query_add_range <- function(query, schema, attr, lowval, highval, stride=
   names <- tiledb_schema_get_names(schema)
   types <- tiledb_schema_get_types(schema)
   idx <- which(names == attr)
-  query <- tiledb_query_add_range_with_type(query, idx-1, types[idx], lowval, highval, stride)
+  query <- tiledb_query_add_range_with_type(query, idx-1L, types[idx], lowval, highval, stride)
   invisible(query)
 }
 

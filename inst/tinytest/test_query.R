@@ -85,7 +85,7 @@ unlink(tmp, recursive=TRUE)
 #})
 
 #test_that("tiledb_query alloc and range", {
-if (FALSE && requireNamespace("nanotime", quietly=TRUE)) {
+if (requireNamespace("nanotime", quietly=TRUE)) {
   suppressMessages({
     library(bit64)
     library(nanotime)
