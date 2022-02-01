@@ -178,4 +178,4 @@ for (i in c(1:7,9:10)) {
 }
 expect_equivalent(df[,8], as.integer64(1:10))
 
-detach(package:arrow, unload=TRUE)
+#detach(package:arrow, unload=TRUE)
