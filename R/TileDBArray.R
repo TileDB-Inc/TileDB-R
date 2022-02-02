@@ -470,6 +470,16 @@ setMethod("[", "tiledb_array",
   ## add defaults
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
+  k <- NULL
+
+  ## deal with possible n-dim indexing
+  ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
+  if (length(ndlist) >= 0) {
+    if (length(ndlist) >= 1 && !is.null(ndlist[[1]])) i <- ndlist[[1]]
+    if (length(ndlist) >= 2 && !is.null(ndlist[[2]])) j <- ndlist[[2]]
+    if (length(ndlist) >= 3 && !is.null(ndlist[[3]])) k <- ndlist[[3]]
+    if (length(ndlist) >= 4) message("Indices beyond the third dimension not supported in [i,j,k] form. Use selected_ranges().")
+  }
 
   ctx <- x@ctx
   uri <- x@uri
@@ -608,6 +618,15 @@ setMethod("[", "tiledb_array",
       }
       x@selected_ranges[[2]] <- j
   }
+
+  if (!is.null(k)) {
+      if (!is.null(x@selected_ranges[[3]])) {
+          stop("Cannot set both 'k' and second element of 'selected_ranges'.", call. = FALSE)
+      }
+      x@selected_ranges[[3]] <- k
+  }
+  ## (i,j,k) are now done and transferred to x@select_ranges
+
 
   ## if ranges selected, use those
   for (k in seq_len(length(x@selected_ranges))) {
