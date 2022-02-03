@@ -1355,10 +1355,22 @@ res <- A[2,2,2]
 expect_equal(res[, "a", drop=TRUE], 22)
 res <- A[2,2:3,2]
 expect_equal(res[, "a", drop=TRUE], c(22,26))
+res <- A[2,]
+expect_true(all(res[, "rows", drop=TRUE] == 2))
+expect_equal(res[, "a", drop=TRUE], c(2L, 18L, 34L, 50L, 6L, 22L, 38L, 54L, 10L, 26L, 42L, 58L, 14L,
+30L, 46L, 62L))
+res <- A[,2]
+expect_true(all(res[, "cols", drop=TRUE] == 2))
+expect_equal(res[, "a", drop=TRUE], c(5L, 21L, 37L, 53L, 6L, 22L, 38L, 54L, 7L, 23L, 39L, 55L, 8L, 24L, 40L, 56L))
+res <- A[,,2]
+expect_true(all(res[, "depth", drop=TRUE] == 2))
+expect_equal(res[, "a", drop=TRUE], c(17L, 21L, 25L, 29L, 18L, 22L, 26L, 30L, 19L, 23L, 27L, 31L, 20L, 24L, 28L, 32L))
 selected_ranges(A) <- list(cbind(2,2), cbind(2,2), cbind(2,2))
 res <- A[]
 expect_equal(res[, "a", drop=TRUE], 22)
-
+selected_ranges(A) <- list(cbind(2,2), cbind(2,3), cbind(2,2))
+res <- A[]
+expect_equal(res[, "a", drop=TRUE], c(22,26))
 
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
@@ -1380,4 +1392,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   selected_ranges(A) <- list(cbind(2,2), cbind(2,2), cbind(2,2))
   res <- A[]
   expect_equal(res[, "a", drop=TRUE], as.integer64(22))
+  selected_ranges(A) <- list(cbind(2,2), cbind(2,3), cbind(2,2))
+  res <- A[]
+  expect_equal(res[, "a", drop=TRUE], as.integer64(c(22,26)))
 }
