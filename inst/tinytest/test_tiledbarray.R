@@ -1337,3 +1337,47 @@ expect_equal(dim(res), c(14,6))
 expect_true(min(res$body_mass_g) >= 5500)
 expect_true(min(res$bill_length_mm) > 50)
 expect_equal(colnames(res), c("species", "island", "body_mass_g", "bill_length_mm", "year", "sex"))
+
+
+## new 3d index, and int64 domain conversion
+uri <- tempfile()
+dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                              tiledb_dim("cols", c(1L, 4L), 4L, "INT32"),
+                              tiledb_dim("depth", c(1L, 4L), 4L, "INT32")))
+schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
+tiledb_array_create(uri, schema)
+data <- array(1:64, dim = c(4,4,4))
+A <- tiledb_array(uri = uri)
+A[] <- data
+
+A <- tiledb_array(uri = uri, return_as="data.frame")
+res <- A[2,2,2]
+expect_equal(res[, "a", drop=TRUE], 22)
+res <- A[2,2:3,2]
+expect_equal(res[, "a", drop=TRUE], c(22,26))
+selected_ranges(A) <- list(cbind(2,2), cbind(2,2), cbind(2,2))
+res <- A[]
+expect_equal(res[, "a", drop=TRUE], 22)
+
+
+if (requireNamespace("bit64", quietly=TRUE)) {
+  suppressMessages(library(bit64))
+  uri <- tempfile()
+  dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(as.integer64(1), as.integer64(4)), as.integer64(4), "INT64"),
+                                tiledb_dim("cols", c(as.integer64(1), as.integer64(4)), as.integer64(4), "INT64"),
+                                tiledb_dim("depth", c(as.integer64(1), as.integer64(4)), as.integer64(4), "INT64")))
+  schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT64")))
+  tiledb_array_create(uri, schema)
+  data <- array(as.integer64(1:64), dim = c(4,4,4))
+  A <- tiledb_array(uri = uri)
+  A[] <- data
+
+  A <- tiledb_array(uri = uri, return_as="data.frame")
+  res <- A[2,2,2]
+  expect_equal(res[, "a", drop=TRUE], as.integer64(22))
+  res <- A[2,2:3,2]
+  expect_equal(res[, "a", drop=TRUE], as.integer64(c(22,26)))
+  selected_ranges(A) <- list(cbind(2,2), cbind(2,2), cbind(2,2))
+  res <- A[]
+  expect_equal(res[, "a", drop=TRUE], as.integer64(22))
+}
