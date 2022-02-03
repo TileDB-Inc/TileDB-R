@@ -420,9 +420,9 @@ setValidity("tiledb_array", function(object) {
 ## as.numeric(as.Date("2021-01-01")) yields 18628.
 ##
 ## We also convert the value to integer64 because that is the internal storage format
-.mapDatetime2integer64 <- function(val, dtype) {
-    ## in case it is not a datetime type, or already an int64, return unchanged
-    if (!grepl("^DATETIME_", dtype) || inherits(val, "integer64"))
+.map2integer64 <- function(val, dtype) {
+    ## in case it is not a (datetime or (u)int64) type), or already an int64, return unchanged
+    if ((!grepl("^DATETIME_", dtype) && !grepl("INT64$", dtype)) || inherits(val, "integer64"))
         return(val)
 
     val <- switch(dtype,
@@ -438,10 +438,11 @@ setValidity("tiledb_array", function(object) {
                   "DATETIME_NS" = as.numeric(val),
                   "DATETIME_PS" = as.numeric(val) * 1e3,
                   "DATETIME_FS" = as.numeric(val) * 1e6,
-                  "DATETIME_AS" = as.numeric(val) * 1e9)
+                  "DATETIME_AS" = as.numeric(val) * 1e9,
+                  "UINT64"      = val,
+                  "INT64"       = val)
     bit64::as.integer64(val)
 }
-
 
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
@@ -469,6 +470,16 @@ setMethod("[", "tiledb_array",
   ## add defaults
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
+  k <- NULL
+
+  ## deal with possible n-dim indexing
+  ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
+  if (length(ndlist) >= 0) {
+    if (length(ndlist) >= 1 && !is.null(ndlist[[1]])) i <- ndlist[[1]]
+    if (length(ndlist) >= 2 && !is.null(ndlist[[2]])) j <- ndlist[[2]]
+    if (length(ndlist) >= 3 && !is.null(ndlist[[3]])) k <- ndlist[[3]]
+    if (length(ndlist) >= 4) message("Indices beyond the third dimension not supported in [i,j,k] form. Use selected_ranges().")
+  }
 
   ctx <- x@ctx
   uri <- x@uri
@@ -608,25 +619,35 @@ setMethod("[", "tiledb_array",
       x@selected_ranges[[2]] <- j
   }
 
+  if (!is.null(k)) {
+      if (!is.null(x@selected_ranges[[3]])) {
+          stop("Cannot set both 'k' and second element of 'selected_ranges'.", call. = FALSE)
+      }
+      x@selected_ranges[[3]] <- k
+  }
+  ## (i,j,k) are now done and transferred to x@select_ranges
+
+
   ## if ranges selected, use those
   for (k in seq_len(length(x@selected_ranges))) {
     if (is.null(x@selected_ranges[[k]])) {
-      #cat("Adding null dim", k, "on", dimtypes[[k]], "\n")
-      vec <- .mapDatetime2integer64(nonemptydom[[k]], dimtypes[k])
+      #cat("Adding null dim", k, "on", dimtypes[k], "\n")
+      vec <- .map2integer64(nonemptydom[[k]], dimtypes[k])
       if (vec[1] != 0 && vec[2] != 0) { # corner case of A[] on empty array
           qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
           rangeunset <- FALSE
       }
     } else if (is.null(nrow(x@selected_ranges[[k]]))) {
-      #cat("Adding nrow null dim", k, "on", dimtypes[[k]], "\n")
+      #cat("Adding nrow null dim", k, "on", dimtypes[k], "\n")
       vec <- x@selected_ranges[[k]]
+      vec <- .map2integer64(vec, dimtypes[k])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], min(vec), max(vec))
       rangeunset <- FALSE
     } else {
-      #cat("Adding non-zero dim", k, "on", dimtypes[[k]], "\n")
+      #cat("Adding non-zero dim", k, "on", dimtypes[k], "\n")
       m <- x@selected_ranges[[k]]
       for (i in seq_len(nrow(m))) {
-        vec <- .mapDatetime2integer64(c(m[i,1], m[i,2]), dimtypes[k])
+        vec <- .map2integer64(c(m[i,1], m[i,2]), dimtypes[k])
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
