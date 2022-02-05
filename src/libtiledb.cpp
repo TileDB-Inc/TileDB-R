@@ -21,7 +21,6 @@
 //  SOFTWARE.
 
 #include "libtiledb.h"
-#include "finalizers.h"
 #include "tiledb_version.h"
 
 #include <fstream>
