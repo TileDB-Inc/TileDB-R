@@ -160,8 +160,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 #else
     Rcpp::stop("This function is only available under Linux.");
     // not reached
-    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
-    registerXptrFinalizer(buf, libtiledb_query_buf_delete);
+    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
     return buf;
 #endif
 }
