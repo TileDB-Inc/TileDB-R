@@ -7,6 +7,7 @@
 #include <tiledb/tiledb_experimental>
 #endif
 
+#define RCPP_USE_FINALIZE_ON_EXIT
 #define STRICT_R_HEADERS
 #include "Rcpp.h"
 
