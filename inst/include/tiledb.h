@@ -8,7 +8,6 @@
 #endif
 
 #define RCPP_USE_FINALIZE_ON_EXIT
-#define STRICT_R_HEADERS
 #include "Rcpp.h"
 
 #ifndef __tiledb_h__
