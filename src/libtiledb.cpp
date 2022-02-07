@@ -21,7 +21,6 @@
 //  SOFTWARE.
 
 #include "libtiledb.h"
-#include "finalizers.h"
 #include "tiledb_version.h"
 
 #include <fstream>
@@ -428,21 +427,18 @@ NumericVector libtiledb_version() {
 // [[Rcpp::export]]
 XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
   if (config.isNull()) {
-    auto ptr = XPtr<tiledb::Context>(new tiledb::Context(), false);
-    registerXptrFinalizer(ptr, libtiledb_ctx_delete);
+    auto ptr = XPtr<tiledb::Context>(new tiledb::Context());
     return ptr;
   } else {
     XPtr<tiledb::Config> config_xptr(config);
-    auto ptr = XPtr<tiledb::Context>(new tiledb::Context(*config_xptr.get()), false);
-    registerXptrFinalizer(ptr, libtiledb_ctx_delete);
+    auto ptr = XPtr<tiledb::Context>(new tiledb::Context(*config_xptr.get()));
     return ptr;
   }
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_ctx_config(XPtr<tiledb::Context> ctx) {
-  auto ptr = XPtr<tiledb::Config>(new tiledb::Config(ctx.get()->config()), false);
-  registerXptrFinalizer(ptr, libtiledb_config_delete);
+  auto ptr = XPtr<tiledb::Config>(new tiledb::Config(ctx.get()->config()));
   return ptr;
 }
 
@@ -487,8 +483,7 @@ std::string libtiledb_ctx_stats(XPtr<tiledb::Context> ctx) {
 
 // [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_config(Nullable<CharacterVector> config = R_NilValue) {
-  XPtr<tiledb::Config> ptr(new tiledb::Config(), false);
-  registerXptrFinalizer(ptr, libtiledb_config_delete);
+  XPtr<tiledb::Config> ptr(new tiledb::Config());
   if (config.isNotNull()) {
     auto config_vec = config.as();
     auto config_names = as<CharacterVector>(config_vec.names());
@@ -509,8 +504,7 @@ std::string libtiledb_config_save_to_file(XPtr<tiledb::Config> config, std::stri
 
 // [[Rcpp::export]]
 XPtr<tiledb::Config> libtiledb_config_load_from_file(std::string filename) {
-  XPtr<tiledb::Config> ptr(new tiledb::Config(filename), false);
-  registerXptrFinalizer(ptr, libtiledb_config_delete);
+  XPtr<tiledb::Config> ptr(new tiledb::Config(filename));
   return ptr;
 }
 
@@ -617,8 +611,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     }
     std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
     std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
-    auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])),false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0])));
     return ptr;
 
   } else if (dtype == TILEDB_UINT32) {
@@ -631,8 +624,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 2> _domain = {static_cast<uint32_t>(domain_vec[0]), static_cast<uint32_t>(domain_vec[1])};
     std::array<Dtype, 1> _tile_extent = {static_cast<uint32_t>(extent_vec[0])};
     auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_INT16) {
@@ -645,8 +637,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 2> _domain = {static_cast<int16_t>(domain_vec[0]), static_cast<int16_t>(domain_vec[1])};
     std::array<Dtype, 1> _tile_extent = {static_cast<int16_t>(extent_vec[0])};
     auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_UINT16) {
@@ -659,8 +650,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 2> _domain = {static_cast<uint16_t>(domain_vec[0]), static_cast<uint16_t>(domain_vec[1])};
     std::array<Dtype, 1> _tile_extent = {static_cast<uint16_t>(extent_vec[0])};
     auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_INT8) {
@@ -673,8 +663,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 2> _domain = {static_cast<int8_t>(domain_vec[0]), static_cast<int8_t>(domain_vec[1])};
     std::array<Dtype, 1> _tile_extent = {static_cast<int8_t>(extent_vec[0])};
     auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_UINT8) {
@@ -687,8 +676,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 2> _domain = {static_cast<uint8_t>(domain_vec[0]), static_cast<uint8_t>(domain_vec[1])};
     std::array<Dtype, 1> _tile_extent = {static_cast<uint8_t>(extent_vec[0])};
     auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_INT64) {
@@ -708,8 +696,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     }
     int64_t extent = makeScalarInteger64(ext[0]);
     auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype, domain, &extent));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_UINT64) {
@@ -729,8 +716,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     }
     uint64_t extent = static_cast<uint64_t>(makeScalarInteger64(ext[0]));
     auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype, domain, &extent));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_FLOAT32) {
@@ -746,8 +732,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 2> _domain = {static_cast<float>(domain_vec[0]), static_cast<float>(domain_vec[1])};
     std::array<Dtype, 1> _tile_extent = {static_cast<float>(tile_extent_vec[0])};
     auto d = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
-    auto ptr = XPtr<tiledb::Dimension>(d, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(d);
     return ptr;
 
   } else if (dtype == TILEDB_FLOAT64) {
@@ -763,8 +748,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
     std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
     auto d = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
-    auto ptr = XPtr<tiledb::Dimension>(d, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(d);
     return ptr;
 
   } else if (dtype == TILEDB_DATETIME_YEAR ||
@@ -787,16 +771,14 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     int64_t domain[] = {domain_vec[0], domain_vec[1]};
     int64_t extent = Rcpp::as<int64_t>(tile_extent);
     auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype, domain, &extent));
-    auto ptr = XPtr<tiledb::Dimension>(dim, false);
-    registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+    auto ptr = XPtr<tiledb::Dimension>(dim);
     return ptr;
 
   } else if (dtype == TILEDB_STRING_ASCII) {
     if (Rf_isNull(domain) && Rf_isNull(tile_extent)) {
       auto d = tiledb::Dimension::create(*ctx.get(), name, TILEDB_STRING_ASCII, nullptr, nullptr);
       auto dim = new tiledb::Dimension(d);
-      auto ptr = XPtr<tiledb::Dimension>(dim, false);
-      registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+      auto ptr = XPtr<tiledb::Dimension>(dim);
       return ptr;
 
     } else {
@@ -1083,13 +1065,12 @@ XPtr<tiledb::Domain> libtiledb_domain(XPtr<tiledb::Context> ctx, List dims) {
       Rcpp::stop("Invalid tiledb_dim object at index %d (type %s)", i, Rcpp::type2name(d));
     }
   }
-  XPtr<tiledb::Domain> domain(new tiledb::Domain(*ctx.get()), false);
+  XPtr<tiledb::Domain> domain(new tiledb::Domain(*ctx.get()));
   for (auto& val : dims) {
     // TODO: we can't do much type checking for the cast here until we wrap EXTPTRSXP in S4 classes
     auto dim = as<XPtr<tiledb::Dimension>>(val);
     domain->add_dimension(*dim.get());
   }
-  registerXptrFinalizer(domain, libtiledb_domain_delete);
   return domain;
 }
 
@@ -1111,8 +1092,7 @@ int libtiledb_domain_get_ndim(XPtr<tiledb::Domain> domain) {
 // [[Rcpp::export]]
 XPtr<tiledb::Dimension> libtiledb_domain_get_dimension_from_index(XPtr<tiledb::Domain> dom, int idx) {
   auto dim = dom->dimension(idx);
-  auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(dim), false);
-  registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+  auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(dim));
   return ptr;
 }
 
@@ -1120,8 +1100,7 @@ XPtr<tiledb::Dimension> libtiledb_domain_get_dimension_from_index(XPtr<tiledb::D
 XPtr<tiledb::Dimension> libtiledb_domain_get_dimension_from_name(XPtr<tiledb::Domain> dom,
                                                                  std::string name) {
   auto dim = dom->dimension(name.c_str());
-  auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(dim), false);
-  registerXptrFinalizer(ptr, libtiledb_dimension_delete);
+  auto ptr = XPtr<tiledb::Dimension>(new tiledb::Dimension(dim));
   return ptr;
 }
 
@@ -1297,26 +1276,26 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
 
     if (attr_dtype == TILEDB_INT32) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     } else if (attr_dtype == TILEDB_UINT32) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     } else if (attr_dtype == TILEDB_FLOAT64) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     } else if (attr_dtype == TILEDB_FLOAT32) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
     } else if (attr_dtype == TILEDB_CHAR) {
         using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
         uint64_t num = static_cast<uint64_t>(ncells);
         if (ncells == R_NaInt) {
             num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
         }
         attr->set_cell_val_num(num);
     } else if (attr_dtype == TILEDB_STRING_ASCII) {
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, TILEDB_STRING_ASCII), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, TILEDB_STRING_ASCII));
         uint64_t num = static_cast<uint64_t>(ncells);
         if (ncells == R_NaInt) {
             num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
@@ -1335,7 +1314,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                attr_dtype == TILEDB_DATETIME_PS  ||
                attr_dtype == TILEDB_DATETIME_FS  ||
                attr_dtype == TILEDB_DATETIME_AS) {
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     } else if (attr_dtype == TILEDB_INT64  ||
                attr_dtype == TILEDB_UINT64 ||
                attr_dtype == TILEDB_UINT32 ||
@@ -1343,7 +1322,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                attr_dtype == TILEDB_UINT16 ||
                attr_dtype == TILEDB_INT8   ||
                attr_dtype == TILEDB_UINT8    ) {
-        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype), false);
+        attr = XPtr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
     } else {
         Rcpp::Rcout << type << std::endl;
         Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT{32,64}), "
@@ -1355,7 +1334,6 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     attr->set_nullable(nullable);
 #endif
-    registerXptrFinalizer(attr, libtiledb_attribute_delete);
     return attr;
 }
 
@@ -1524,8 +1502,7 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
   auto _tile_order = _string_to_tiledb_layout(tile_order);
   auto schptr = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(),
                                                             sparse ? TILEDB_SPARSE : TILEDB_DENSE));
-  auto schema = XPtr<tiledb::ArraySchema>(schptr, false);
-  registerXptrFinalizer(schema, libtiledb_arrayschema_delete);
+  auto schema = XPtr<tiledb::ArraySchema>(schptr);
   schema->set_domain(*domain.get());
   for (SEXP a : attributes) {
     auto attr = as<XPtr<tiledb::Attribute>>(a);
@@ -1555,16 +1532,14 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string atstr) {
   auto at = _string_to_tiledb_array_type(atstr);
   auto p = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), at));
-  auto ptr = XPtr<tiledb::ArraySchema>(p, false);
-  registerXptrFinalizer(ptr, libtiledb_arrayschema_delete);
+  auto ptr = XPtr<tiledb::ArraySchema>(p);
   return ptr;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx, std::string uri) {
   auto ptr = XPtr<tiledb::ArraySchema>(new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(),
-                                                                                   uri)), false);
-  registerXptrFinalizer(ptr, libtiledb_arrayschema_delete);
+                                                                                   uri)));
   return ptr;
 }
 
@@ -1574,8 +1549,7 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
                                                                std::string key) {
   auto p = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
                                                        key.data(), (uint32_t) key.size()));
-  auto ptr = XPtr<tiledb::ArraySchema>(p, false);
-  registerXptrFinalizer(ptr, libtiledb_arrayschema_delete);
+  auto ptr = XPtr<tiledb::ArraySchema>(p);
   return ptr;
 }
 
@@ -1587,8 +1561,7 @@ void libtiledb_array_schema_set_domain(XPtr<tiledb::ArraySchema> schema,
 
 // [[Rcpp::export]]
 XPtr<tiledb::Domain> libtiledb_array_schema_get_domain(XPtr<tiledb::ArraySchema> schema) {
-  auto ptr = XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()), false);
-  registerXptrFinalizer(ptr, libtiledb_domain_delete);
+  auto ptr = XPtr<tiledb::Domain>(new tiledb::Domain(schema->domain()));
   return ptr;
 }
 
@@ -1780,8 +1753,7 @@ XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx) {
 #if TILEDB_VERSION >= TileDB_Version(2,4,0)
     auto p = new tiledb::ArraySchemaEvolution(tiledb::ArraySchemaEvolution(*ctx.get()));
-    auto ptr = XPtr<tiledb::ArraySchemaEvolution>(p, false);
-    registerXptrFinalizer(ptr, libtiledb_arrayschemaevolution_delete);
+    auto ptr = XPtr<tiledb::ArraySchemaEvolution>(p);
 #else
     auto p = new tiledb::ArraySchemaEvolution(tiledb::ArraySchemaEvolution()); // placeholder
     auto ptr = XPtr<tiledb::ArraySchemaEvolution>(p);
@@ -1796,8 +1768,7 @@ libtiledb_array_schema_evolution_add_attribute(XPtr<tiledb::ArraySchemaEvolution
 #if TILEDB_VERSION >= TileDB_Version(2,4,0)
     tiledb::ArraySchemaEvolution res = ase->add_attribute(*attr.get());
     auto ptr = new tiledb::ArraySchemaEvolution(res);
-    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
-    registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
+    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr);
     return xptr;
 #else
     return ase;
@@ -1811,8 +1782,7 @@ libtiledb_array_schema_evolution_drop_attribute(XPtr<tiledb::ArraySchemaEvolutio
 #if TILEDB_VERSION >= TileDB_Version(2,4,0)
     tiledb::ArraySchemaEvolution res = ase->drop_attribute(attrname);
     auto ptr = new tiledb::ArraySchemaEvolution(res);
-    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
-    registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
+    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr);
     return xptr;
 #else
     return ase;
@@ -1826,8 +1796,7 @@ libtiledb_array_schema_evolution_array_evolve(XPtr<tiledb::ArraySchemaEvolution>
 #if TILEDB_VERSION >= TileDB_Version(2,4,0)
     tiledb::ArraySchemaEvolution res = ase->array_evolve(uri);
     auto ptr = new tiledb::ArraySchemaEvolution(res);
-    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr, false);
-    registerXptrFinalizer(xptr, libtiledb_arrayschemaevolution_delete);
+    auto xptr = XPtr<tiledb::ArraySchemaEvolution>(ptr);
     return xptr;
 #else
     return ase;
@@ -2488,8 +2457,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 // [[Rcpp::export]]
 XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata,
                                                              bool nullable, int cols=1) {
-  XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, false);
-  registerXptrFinalizer(buf, libtiledb_vlc_buf_delete);
+  XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t);
   buf->offsets.resize(szoffsets);
   buf->str.resize(szdata);
   buf->rows = szoffsets/cols;           // guess for number of elements
@@ -2708,8 +2676,7 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
                                                    std::string domaintype,
                                                    R_xlen_t ncells,
                                                    bool nullable = false) {
-  XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
-  registerXptrFinalizer(buf, libtiledb_query_buf_delete);
+  XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32"  || domaintype == "UINT32") {
      buf->size = sizeof(int32_t);
   } else if (domaintype == "INT16"  || domaintype == "UINT16") {
@@ -3511,11 +3478,10 @@ tiledb_query_condition_combination_op_t _tiledb_query_string_to_condition_combin
 // [[Rcpp::export]]
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx) {
 #if TILEDB_VERSION >= TileDB_Version(2,3,0)
-    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()), false);
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(*ctx.get()));
 #else
-    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(), false);
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition());
 #endif
-    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
 
@@ -3554,11 +3520,10 @@ XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::Quer
 #if TILEDB_VERSION >= TileDB_Version(2,3,0)
     tiledb_query_condition_combination_op_t op = _tiledb_query_string_to_condition_combination_op(str);
     tiledb::QueryCondition res = lhs->combine(*rhs.get(), op);
-    auto query_cond = XPtr<tiledb::QueryCondition>(new tiledb::QueryCondition(res), false);
+    auto query_cond = XPtr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
 #else
-    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition(), false);
+    XPtr<tiledb::QueryCondition> query_cond(new tiledb::QueryCondition());
 #endif
-    registerXptrFinalizer(query_cond, libtiledb_query_condition_delete);
     return query_cond;
 }
 
@@ -3693,13 +3658,11 @@ DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx,
 XPtr<tiledb::VFS> libtiledb_vfs(XPtr<tiledb::Context> ctx,
                                 Nullable<XPtr<tiledb::Config>> config=R_NilValue) {
   if (config.isNull()) {
-    auto ptr = XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get()), false);
-    registerXptrFinalizer(ptr, libtiledb_vfs_delete);
+    auto ptr = XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get()));
     return ptr;
   } else {
     XPtr<tiledb::Config> config_xptr(config);
-    auto ptr = XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get(), *config_xptr.get()), false);
-    registerXptrFinalizer(ptr, libtiledb_vfs_delete);
+    auto ptr = XPtr<tiledb::VFS>(new tiledb::VFS(*ctx.get(), *config_xptr.get()));
     return ptr;
   }
 }
@@ -3801,8 +3764,7 @@ XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb::VFS>
    tiledb_vfs_fh_t *fh = nullptr;
    tiledb_vfs_mode_t vfsmode = _string_to_tiledb_vfs_mode_t(mode);
    tiledb_vfs_open(ctx.get(), vfs.get(), uri.c_str(), vfsmode, &fh);
-   XPtr<vfs_fh_t> ptr = XPtr<vfs_fh_t>(new vfs_fh_t, false);
-   registerXptrFinalizer(ptr, libtiledb_vfs_fh_delete);
+   XPtr<vfs_fh_t> ptr = XPtr<vfs_fh_t>(new vfs_fh_t);
    ptr->fh = static_cast<void*>(fh);
    return ptr;
 }
@@ -3920,8 +3882,7 @@ std::string libtiledb_stats_raw_get() {
 XPtr<tiledb::FragmentInfo> libtiledb_fragment_info(XPtr<tiledb::Context> ctx,
                                                    const std::string& uri) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo(*ctx.get(), uri), false);
-    registerXptrFinalizer(ptr, libtiledb_fragment_info_delete);
+    auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo(*ctx.get(), uri));
     ptr->load();                // also load
 #else
     auto ptr = XPtr<tiledb::FragmentInfo>(new tiledb::FragmentInfo()); // placeholder class to permit compilation

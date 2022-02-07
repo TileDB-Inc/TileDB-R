@@ -24,7 +24,7 @@ SystemRequirements: A C++17 compiler is required, and on macOS
  TileDB Embedded libraries are available at GitHub and are used
  if no TileDB installation is detected, and no other option to
  build or download was specified by the user.
-Imports: methods, Rcpp, nanotime
+Imports: methods, Rcpp (>= 1.0.8), nanotime
 LinkingTo: Rcpp
 Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble
 VignetteBuilder: simplermarkdown

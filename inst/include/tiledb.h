@@ -7,7 +7,12 @@
 #include <tiledb/tiledb_experimental>
 #endif
 
-#define STRICT_R_HEADERS
+// Use the 'finalizer on exit' toggle in the XPtr template to ensure
+// we do in fact finalize on exit too (and not only on garbage
+// collection / object removal which may leave some TileDB object around)
+// Usage of this toggle requires Rcpp 1.0.8 or later so a versioned Depends
+// has been added to the DESCRIPTION file.
+#define RCPP_USE_FINALIZE_ON_EXIT
 #include "Rcpp.h"
 
 #ifndef __tiledb_h__

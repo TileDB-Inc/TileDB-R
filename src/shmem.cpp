@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2021 TileDB Inc.
+//  Copyright (c) 2021-2022 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@
 // on building on Linux as the shared memory inter-process communication is only use there.
 
 #include "libtiledb.h"
-#include "finalizers.h"
 #include "tiledb_version.h"
 
 #ifdef __linux__
@@ -140,9 +139,8 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
 // [[Rcpp::export]]
 XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 #ifdef __linux__
-    // allocate buffer, register finalizer, then set up buffer
-    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
-    registerXptrFinalizer(buf, libtiledb_query_buf_delete);
+    // allocate buffer, then set up buffer
+    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, true);
     buf->dtype = _string_to_tiledb_datatype(dtype);
     buf->size = static_cast<int32_t>(tiledb_datatype_size(_string_to_tiledb_datatype(dtype)));
     buf->nullable = false; // default, overriden if buffer in validity path seen
@@ -162,8 +160,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 #else
     Rcpp::stop("This function is only available under Linux.");
     // not reached
-    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, false);
-    registerXptrFinalizer(buf, libtiledb_query_buf_delete);
+    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
     return buf;
 #endif
 }
@@ -171,9 +168,8 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 // [[Rcpp::export]]
 XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
 #ifdef __linux__
-    // allocate buffer, register finalizer, then set up buffer
-    XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, false);
-    registerXptrFinalizer(buf, libtiledb_vlc_buf_delete);
+    // allocate buffer, then set up buffer
+    XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, true);
     read_string(datapath, buf->str);
     std::string offsetspath = std::regex_replace(datapath, std::regex("/data/"), "/offsets/");
     read_buffer<uint64_t>(offsetspath, buf->offsets);
@@ -196,8 +192,7 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
 #else
     Rcpp::stop("This function is only available under Linux.");
     // not reached
-    XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, false);
-    registerXptrFinalizer(buf, libtiledb_vlc_buf_delete);
+    XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, true);
     return buf;
 #endif
 }

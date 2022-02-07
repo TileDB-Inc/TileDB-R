@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2020 TileDB Inc.
+//  Copyright (c) 2020-2022 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#define STRICT_R_HEADERS
-#include <Rcpp.h>
-
-#include <tiledb.h>
+#include "libtiledb.h"
 #include "tiledb_version.h"
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
 #include <tiledb/arrowio>
