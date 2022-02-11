@@ -1,2 +1,2 @@
-version: 2.6.2
-sha: bf10e49
+version: 2.7.0-rc0
+sha: c7053ca
