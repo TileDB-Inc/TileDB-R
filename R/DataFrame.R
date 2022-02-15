@@ -216,7 +216,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
     if (mode != "schema_only") {
         df <- tiledb_array(uri, query_type = "WRITE")
         ## when setting an index when likely want 'sparse write to dense array
-        if (!is.null(col_index) && !sparse) query_layout(df) <- "UNORDERED"
+        if (!is.null(col_index) && !sparse)
+            query_layout(df) <- "UNORDERED"
         if (is.null(col_index) && sparse)
             useobj <- cbind(data.frame(`__tiledb_rows`=seq(1,dims[1]), check.names=FALSE), useobj)
         df[] <- useobj

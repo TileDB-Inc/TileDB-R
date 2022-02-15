@@ -63,6 +63,8 @@ parsing queries.}
 
 \item{\code{buffers}}{An optional list with full pathnames of shared memory buffers to read data from}
 
+\item{\code{strings_as_factors}}{An optional logical to convert character columns to factor type}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 
