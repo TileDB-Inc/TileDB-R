@@ -23,6 +23,7 @@ tiledb_array(
   timestamp_end = as.POSIXct(double(), origin = "1970-01-01"),
   return_as = get_return_as_preference(),
   query_statistics = FALSE,
+  strings_as_factors = getOption("stringsAsFactors", FALSE),
   sil = list(),
   dumpbuffers = character(),
   buffers = list(),
@@ -84,6 +85,9 @@ over this.}
 \item{query_statistics}{optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 query statistics are returned (as a JSON string) via the attribute
 \sQuote{query_statistics} of the return object.}
+
+\item{strings_as_factors}{An optional logical to convert character columns to factor type; defaults
+to the value of \code{getOption("stringsAsFactors", FALSE)}.}
 
 \item{sil}{optional A list, by default empty to store schema information when query objects are
 parsed.}

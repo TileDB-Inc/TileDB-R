@@ -1173,6 +1173,15 @@ res2 <- arr[]
 expect_equal(nrow(res2), 2)
 expect_equal(res1, res2)
 
+## check for strings_as_factors
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+res <- arr[]
+expect_equal(class(res[,"species"]), "character")
+expect_equal(class(res[,"sex"]), "character")
+arr <- tiledb_array(uri, as.data.frame=TRUE, strings_as_factors=TRUE)
+res <- arr[]
+expect_equal(class(res[,"species"]), "factor")
+expect_equal(class(res[,"sex"]), "factor")
 
 
 ## issue 255

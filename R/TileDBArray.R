@@ -57,6 +57,7 @@
 #' @slot dumpbuffers An optional character variable with a directory name (relative to
 #' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
 #' @slot buffers An optional list with full pathnames of shared memory buffers to read data from
+#' @slot strings_as_factors An optional logical to convert character columns to factor type
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -78,6 +79,7 @@ setClass("tiledb_array",
                       timestamp_end = "POSIXct",
                       return_as = "character",
                       query_statistics = "logical",
+                      strings_as_factors = "logical",
                       sil = "list",
                       dumpbuffers = "character",
                       buffers = "list",
@@ -124,6 +126,8 @@ setClass("tiledb_array",
 #' @param query_statistics optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 #' query statistics are returned (as a JSON string) via the attribute
 #' \sQuote{query_statistics} of the return object.
+#' @param strings_as_factors An optional logical to convert character columns to factor type; defaults
+#' to the value of \code{getOption("stringsAsFactors", FALSE)}.
 #' @param sil optional A list, by default empty to store schema information when query objects are
 #' parsed.
 #' @param dumpbuffers An optional character variable with a directory name (relative to
@@ -150,6 +154,7 @@ tiledb_array <- function(uri,
                          timestamp_end = as.POSIXct(double(), origin="1970-01-01"),
                          return_as = get_return_as_preference(),
                          query_statistics = FALSE,
+                         strings_as_factors = getOption("stringsAsFactors", FALSE),
                          sil = list(),
                          dumpbuffers = character(),
                          buffers = list(),
@@ -217,6 +222,7 @@ tiledb_array <- function(uri,
       timestamp_end = timestamp_end,
       return_as = return_as,
       query_statistics = query_statistics,
+      strings_as_factors = strings_as_factors,
       sil = sil,
       dumpbuffers = dumpbuffers,
       buffers = buffers,
@@ -287,6 +293,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  timestamp_end      = ", if (length(object@timestamp_end) == 0) "(none)" else format(object@timestamp_end), "\n"
      ,"  return_as          = '", object@return_as, "'\n"
      ,"  query_statistics   = ", if (object@query_statistics) "TRUE" else "FALSE", "\n"
+     ,"  strings_as_factors = ", if (object@strings_as_factors) "TRUE" else "FALSE", "\n"
      ,sep="")
 })
 
@@ -405,6 +412,11 @@ setValidity("tiledb_array", function(object) {
   if (!is.logical(object@query_statistics)) {
     valid <- FALSE
     msg <- c(msg, "The 'query_statistics' slot does not contain a logical value.")
+  }
+
+  if (!is.logical(object@strings_as_factors)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'strings_as_factors' slot does not contain a logical value.")
   }
 
   if (valid) TRUE else msg
@@ -762,14 +774,11 @@ setMethod("[", "tiledb_array",
           if (is.na(varnum)) {
               vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
               if (has_dumpbuffers) {
-                  #cat("Name: ", name, " (", paste0(vec, collapse=","), ") ", sep="")
                   vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
               }
-              ##print(vec)
               libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
           } else {
               if (has_dumpbuffers) {
-                  #cat("Name: ", name, " ", asint64, " ", resrv, " ", sep="")
                   vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
               }
               libtiledb_query_get_buffer_ptr(buf, asint64)
@@ -781,6 +790,13 @@ setMethod("[", "tiledb_array",
       res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
       colnames(res) <- allnames
   }                                     # end of 'big else' for query build, submission and read
+
+  ## convert to factor if that was asked
+  if (x@strings_as_factors) {
+      for (n in colnames(res))
+          if (class(res[[n]])=="character")
+              res[[n]] <- as.factor(res[[n]])
+  }
 
   ## reduce output if extended is false, or attrs given
   if (!x@extended) {
@@ -1685,8 +1701,46 @@ setReplaceMethod("query_statistics",
 })
 
 
-## piped query support
+## -- strings_as_factors getter/setter
 
+#' @rdname strings_as_factors-tiledb_array-method
+#' @export
+setGeneric("strings_as_factors", function(object) standardGeneric("strings_as_factors"))
+
+#' @rdname strings_as_factors-set-tiledb_array-method
+#' @export
+setGeneric("strings_as_factors<-", function(x, value) standardGeneric("strings_as_factors<-"))
+
+#' Retrieve strings_as_factors conversion toggle
+#'
+#' A \code{tiledb_array} object containing character column can have those converted to
+#' factors variables. This methods returns the selection value for \sQuote{strings_as_factors}.
+#' @param object A \code{tiledb_array} object
+#' @return A logical value indicating whether an \code{strings_as_factors} return is selected
+#' @export
+setMethod("strings_as_factors",
+          signature = "tiledb_array",
+          function(object) object@strings_as_factors)
+
+#' Set strings_as_factors return toggle
+#'
+#' A \code{tiledb_array} object containing character column can have those converted to
+#' factors variables. This methods sets the selection value for \sQuote{strings_as_factors}.
+#' @param x A \code{tiledb_array} object
+#' @param value A logical value with the selection
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("strings_as_factors",
+                 signature = "tiledb_array",
+                 function(x, value) {
+  x@strings_as_factors <- value
+  validObject(x)
+  x
+})
+
+
+
+## piped query support
 
 #' @rdname generics
 #' @export

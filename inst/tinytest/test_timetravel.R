@@ -144,10 +144,10 @@ A[I, J] <- data
 
 Sys.sleep(deltat)
 
-now2 <- Sys.time()
 I <- c(8, 6, 9)
 J <- c(5, 7, 8)
 data <- c(11L, 22L, 33L)
+now2 <- Sys.time()
 A <- tiledb_array(uri = tmp, timestamp_start=now2)
 A[I, J] <- data
 
@@ -156,7 +156,7 @@ A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now1 - epst)
 expect_equal(nrow(A[]), 0)
 A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_start=now1 + epst)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 - epst)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_start=now1 - epst, timestamp_end=now2 - epst)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 + epst)
-expect_equal(nrow(A[]), 6)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_start=now1 - epst, timestamp_end=now2 + epst)
+expect_true(nrow(A[]) >= 3)
