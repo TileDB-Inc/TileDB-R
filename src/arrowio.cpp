@@ -26,19 +26,6 @@
 #include <tiledb/arrowio>
 #endif
 
-
-// // borrowed from arrow R package (version 2.0.0 ?) (licensed under Apache-2.0) and slightly extended
-template <typename T>
-struct Pointer_v1 {
-    Pointer_v1() : ptr_(new T()) {}
-    explicit Pointer_v1(SEXP x) : ptr_(reinterpret_cast<T*>(static_cast<uintptr_t>(REAL(x)[0]))) {}
-    inline operator SEXP() const { return Rf_ScalarReal(static_cast<double>(reinterpret_cast<uintptr_t>(ptr_)));  }
-    inline operator T*()   const { return ptr_; }
-    inline void finalize()       { delete ptr_; }
-    inline T* get()        const { return ptr_; }
-    T* ptr_;
-};
-
 // borrowed from arrow R package (version 7.0.0)  (licensed under Apache-2.0) and slightly extended/adapted
 template <typename T>
 struct Pointer {
@@ -102,43 +89,6 @@ void delete_arrow_array(Pointer<ArrowArray> ptr)   { ptr.finalize(); }
 void delete_arrow_schema(Pointer<ArrowSchema> ptr) { ptr.finalize(); }
 #endif
 
-// [[Rcpp::export(.allocate_arrow_array_as_double)]]
-double allocate_arrow_array_as_double() {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    return Rcpp::as<double>(allocate_arrow_array());
-    //Pointer<ArrowArray> *ptr = allocate_arrow_array();
-    //Rf_ScalarReal(static_cast<double>(reinterpret_cast<uintptr_t>(ptr->get())));
-#else
-    return NA_REAL;
-#endif
-}
-
-// [[Rcpp::export(.allocate_arrow_schema_as_double)]]
-double allocate_arrow_schema_as_double() {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    return Rcpp::as<double>(allocate_arrow_schema());
-#else
-    return NA_REAL;
-#endif
-}
-
-// [[Rcpp::export(.delete_arrow_array_from_double)]]
-void delete_arrow_array_from_double(double dbl) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    Pointer<ArrowArray> ptr(Rcpp::wrap(dbl));
-    delete_arrow_array(ptr);
-#endif
-}
-
-// [[Rcpp::export(.delete_arrow_schema_from_double)]]
-void delete_arrow_schema_from_double(double dbl) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
-    Pointer<ArrowSchema> ptr(Rcpp::wrap(dbl));
-    delete_arrow_schema(ptr);
-#endif
-}
-
-// -- xptr variants
 // [[Rcpp::export(.allocate_arrow_array_as_xptr)]]
 SEXP allocate_arrow_array_as_xptr() {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
@@ -172,7 +122,6 @@ void delete_arrow_schema_from_xptr(SEXP sxp) {
     delete_arrow_schema(ptr);
 #endif
 }
-
 
 // [[Rcpp::export]]
 Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,

@@ -23,10 +23,8 @@ expect_true(is(as.data.frame(batch), "data.frame"))
 
 
 ## allocate two structures (and release at end)
-#aa <- tiledb:::.allocate_arrow_array_as_double()
-#as <- tiledb:::.allocate_arrow_schema_as_double()
-aa <- tiledb:::.allocate_arrow_array_as_xptr()
-as <- tiledb:::.allocate_arrow_schema_as_xptr()
+aa <- tiledb_arrow_array_ptr()
+as <- tiledb_arrow_schema_ptr()
 arrow:::ExportRecordBatch(batch, aa, as)
 
 newrb <- arrow:::ImportRecordBatch(aa, as)
@@ -34,10 +32,8 @@ expect_true(is(newrb, "RecordBatch"))
 expect_true(is(as.data.frame(newrb), "data.frame"))
 expect_equal(batch, newrb)
 
-#tiledb:::.delete_arrow_schema_from_double(as)
-#tiledb:::.delete_arrow_array_from_double(aa)
-tiledb:::.delete_arrow_schema_from_xptr(as)
-tiledb:::.delete_arrow_array_from_xptr(aa)
+tiledb_arrow_schema_del(as)
+tiledb_arrow_array_del(aa)
 
 
 ## round-turn test 1: write tiledb first, create arrow object via zero-copy
@@ -97,20 +93,17 @@ tiledb_query_finalize(qry)
 
 res <- tiledb_query_export_buffer(qry, "rows")
 v <- Array$create(arrow:::ImportArray(res[[1]], res[[2]]))
-#tiledb:::.delete_arrow_array_from_double(res[1])
-#tiledb:::.delete_arrow_schema_from_double(res[2])
-tiledb:::.delete_arrow_array_from_xptr(res[[1]])
-tiledb:::.delete_arrow_schema_from_xptr(res[[2]])
+tiledb_arrow_array_del(res[[1]])
+tiledb_arrow_schema_del(res[[2]])
+
 expect_equal(v$as_vector(), 4:7)
 
 for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "uint64", "float64")) {
     qry <- tiledb_query_set_buffer_ptr(qry, col, attrlst[[col]])
     res <- tiledb_query_export_buffer(qry, col)
     v <- Array$create(arrow:::ImportArray(res[[1]], res[[2]]))
-    #tiledb:::.delete_arrow_array_from_double(res[[1]])
-    #tiledb:::.delete_arrow_schema_from_double(res[[2]])
-    tiledb:::.delete_arrow_array_from_xptr(res[[1]])
-    tiledb:::.delete_arrow_schema_from_xptr(res[[2]])
+    tiledb_arrow_array_del(res[[1]])
+    tiledb_arrow_schema_del(res[[2]])
 
     expect_equal(v$as_vector(), 4:7)
 }
@@ -157,10 +150,8 @@ nms <- rb$names()
 lst <- list()
 for (nam in nms) {
     vec <- rb[[nam]]                    # can access by name
-    #aa <- tiledb:::.allocate_arrow_array_as_double()
-    #as <- tiledb:::.allocate_arrow_schema_as_double()
-    aa <- tiledb:::.allocate_arrow_array_as_xptr()
-    as <- tiledb:::.allocate_arrow_schema_as_xptr()
+    aa <- tiledb_arrow_array_ptr()
+    as <- tiledb_arrow_schema_ptr()
     arrow:::ExportArray(vec, aa, as)
 
     qry <- tiledb_query_import_buffer(qry, nam, list(aa, as))
@@ -176,10 +167,8 @@ df <- arr[]
 
 for (i in 1:10) {
   l <- lst[[i]]
-  #tiledb:::.delete_arrow_array_from_double(l[[1]])
-  #tiledb:::.delete_arrow_schema_from_double(l[[2]])
-  tiledb:::.delete_arrow_array_from_xptr(l[[1]])
-  tiledb:::.delete_arrow_schema_from_xptr(l[[2]])
+  tiledb_arrow_array_del(l[[1]])
+  tiledb_arrow_schema_del(l[[2]])
 }
 
 expect_true(is(df, "data.frame"))
