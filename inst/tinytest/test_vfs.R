@@ -47,10 +47,4 @@ expect_equal(tiledb_vfs_move_file(uri, newuri), newuri)
 expect_equal(tiledb_vfs_remove_file(newuri), newuri)
 expect_false(file.exists(newuri))
 
-## same with old interface
-newuri <- tempfile()
-expect_equal(tiledb_vfs_touch(vfs, uri), uri)
-expect_equal(tiledb_vfs_move_file(vfs, uri, newuri), newuri)
-expect_equal(tiledb_vfs_remove_file(vfs, newuri), newuri)
-expect_false(file.exists(newuri))
 #})
