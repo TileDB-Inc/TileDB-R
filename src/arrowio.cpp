@@ -183,7 +183,6 @@ Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
 
     auto arrptr = allocate_arrow_array(); 	// external pointer object
     auto schptr = allocate_arrow_schema();
-    //Rcpp::Rcerr << "Is arrptr xptr: " << ((TYPEOF((SEXP)arrptr) == EXTPTRSXP) ? "yes" : "no") << std::endl;
     adapter.export_buffer(name.c_str(),
                           static_cast<void*>(R_ExternalPtrAddr(arrptr)),
                           static_cast<void*>(R_ExternalPtrAddr(schptr)));
@@ -202,11 +201,9 @@ XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    Pointer<ArrowArray> arrptr(arrowpointers[0]);
-    Pointer<ArrowSchema> schptr(arrowpointers[1]);
     adapter.import_buffer(name.c_str(),
-                          static_cast<void*>(arrptr.get()),
-                          static_cast<void*>(schptr.get()));
+                          R_ExternalPtrAddr(arrowpointers[0]),
+                          R_ExternalPtrAddr(arrowpointers[1]));
 #else
     Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
 #endif
