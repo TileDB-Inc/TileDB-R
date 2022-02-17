@@ -6,6 +6,7 @@ if (tiledb_version(TRUE) < "2.2.0") exit_file("Needs TileDB 2.2.* or later")
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
 isMacOS <- (Sys.info()['sysname'] == "Darwin")
+isWindows <- Sys.info()[["sysname"]] == "Windows"
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
@@ -47,8 +48,10 @@ expect_true(tiledb_fragment_info_sparse(fraginf, 0))
 rng <- tiledb_fragment_info_get_timestamp_range(fraginf, 0)
 expect_true(inherits(rng, "POSIXt"))
 expect_equal(length(rng), 2)
-expect_equal(as.Date(rng[1]), as.Date(as.POSIXlt(Sys.time(), tz="UTC")))  # very coarse :)
-expect_true(as.numeric(difftime(Sys.time(), rng[1], "secs")) < 10) # ten is very conservative but when this runs under valgrind it can be slooooooooow
+if (Sys.getenv("CI") != "true" || !isWindows) {
+    expect_equal(as.Date(rng[1]), as.Date(as.POSIXlt(Sys.time(), tz="UTC")))  # very coarse :)
+    expect_true(as.numeric(difftime(Sys.time(), rng[1], "secs")) < 10) # ten is very conservative but when this runs under valgrind it can be slooooooooow
+}
 expect_equal(tiledb_fragment_info_get_cell_num(fraginf, 0), 10)
 
 expect_true(tiledb_fragment_info_get_version(fraginf, 0) > 5) # we may test with older core libs
