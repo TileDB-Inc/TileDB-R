@@ -51,7 +51,7 @@ tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) 
 tiledb_query_import_buffer <- function(query, name, arrowpointers, ctx = tiledb_get_context()) {
     stopifnot(`The 'query' argument must be a tiledb query` = is(query, "tiledb_query"),
               `The 'name' argument must be character` = is.character(name),
-              `The 'arrowpointers' argument must be length-2 vector` = is.numeric(arrowpointers) && is.vector(arrowpointers) && length(arrowpointers)==2)
+              `The 'arrowpointers' argument must be list of length two` = is.list(arrowpointers) && length(arrowpointers)==2)
     query@ptr <- libtiledb_query_import_buffer(ctx@ptr, query@ptr, name, arrowpointers)
     query
 }

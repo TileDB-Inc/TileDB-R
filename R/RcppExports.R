@@ -17,6 +17,22 @@
     invisible(.Call(`_tiledb_delete_arrow_schema_from_double`, dbl))
 }
 
+.allocate_arrow_array_as_xptr <- function() {
+    .Call(`_tiledb_allocate_arrow_array_as_xptr`)
+}
+
+.allocate_arrow_schema_as_xptr <- function() {
+    .Call(`_tiledb_allocate_arrow_schema_as_xptr`)
+}
+
+.delete_arrow_array_from_xptr <- function(sxp) {
+    invisible(.Call(`_tiledb_delete_arrow_array_from_xptr`, sxp))
+}
+
+.delete_arrow_schema_from_xptr <- function(sxp) {
+    invisible(.Call(`_tiledb_delete_arrow_schema_from_xptr`, sxp))
+}
+
 libtiledb_query_export_buffer <- function(ctx, query, name) {
     .Call(`_tiledb_libtiledb_query_export_buffer`, ctx, query, name)
 }

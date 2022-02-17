@@ -28,16 +28,16 @@
 
 
 // // borrowed from arrow R package (version 2.0.0 ?) (licensed under Apache-2.0) and slightly extended
-// template <typename T>
-// struct Pointer {
-//     Pointer() : ptr_(new T()) {}
-//     explicit oldPointer(SEXP x) : ptr_(reinterpret_cast<T*>(static_cast<uintptr_t>(REAL(x)[0]))) {}
-//     inline operator SEXP() const { return Rf_ScalarReal(static_cast<double>(reinterpret_cast<uintptr_t>(ptr_)));  }
-//     inline operator T*()   const { return ptr_; }
-//     inline void finalize()       { delete ptr_; }
-//     inline T* get()        const { return ptr_; }
-//     T* ptr_;
-// };
+template <typename T>
+struct Pointer_v1 {
+    Pointer_v1() : ptr_(new T()) {}
+    explicit Pointer_v1(SEXP x) : ptr_(reinterpret_cast<T*>(static_cast<uintptr_t>(REAL(x)[0]))) {}
+    inline operator SEXP() const { return Rf_ScalarReal(static_cast<double>(reinterpret_cast<uintptr_t>(ptr_)));  }
+    inline operator T*()   const { return ptr_; }
+    inline void finalize()       { delete ptr_; }
+    inline T* get()        const { return ptr_; }
+    T* ptr_;
+};
 
 // borrowed from arrow R package (version 7.0.0)  (licensed under Apache-2.0) and slightly extended/adapted
 template <typename T>
@@ -78,7 +78,7 @@ struct Pointer {
             ptr_ = reinterpret_cast<T*>(static_cast<uintptr_t>(REAL(x)[0]));
 
         } else {
-            Rcpp::stop("Can't convert input object to pointer");
+            Rcpp::stop("Can't convert input object to pointer: %d", TYPEOF(x));
         }
     }
 
@@ -106,6 +106,8 @@ void delete_arrow_schema(Pointer<ArrowSchema> ptr) { ptr.finalize(); }
 double allocate_arrow_array_as_double() {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return Rcpp::as<double>(allocate_arrow_array());
+    //Pointer<ArrowArray> *ptr = allocate_arrow_array();
+    //Rf_ScalarReal(static_cast<double>(reinterpret_cast<uintptr_t>(ptr->get())));
 #else
     return NA_REAL;
 #endif
@@ -136,23 +138,56 @@ void delete_arrow_schema_from_double(double dbl) {
 #endif
 }
 
+// -- xptr variants
+// [[Rcpp::export(.allocate_arrow_array_as_xptr)]]
+SEXP allocate_arrow_array_as_xptr() {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    return allocate_arrow_array();
+#else
+    return NA_REAL;
+#endif
+}
+
+// [[Rcpp::export(.allocate_arrow_schema_as_xptr)]]
+SEXP allocate_arrow_schema_as_xptr() {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    return allocate_arrow_schema();
+#else
+    return NA_REAL;
+#endif
+}
+
+// [[Rcpp::export(.delete_arrow_array_from_xptr)]]
+void delete_arrow_array_from_xptr(SEXP sxp) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    Pointer<ArrowArray> ptr(sxp);
+    delete_arrow_array(ptr);
+#endif
+}
+
+// [[Rcpp::export(.delete_arrow_schema_from_xptr)]]
+void delete_arrow_schema_from_xptr(SEXP sxp) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    Pointer<ArrowSchema> ptr(sxp);
+    delete_arrow_schema(ptr);
+#endif
+}
+
 
 // [[Rcpp::export]]
-Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
-                                                  XPtr<tiledb::Query> query,
-                                                  std::string name) {
+Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
+                                         XPtr<tiledb::Query> query,
+                                         std::string name) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    auto arrptr = allocate_arrow_array(); 	// manage outside and pass in?
+    auto arrptr = allocate_arrow_array(); 	// external pointer object
     auto schptr = allocate_arrow_schema();
+    //Rcpp::Rcerr << "Is arrptr xptr: " << ((TYPEOF((SEXP)arrptr) == EXTPTRSXP) ? "yes" : "no") << std::endl;
     adapter.export_buffer(name.c_str(),
-                          static_cast<void*>(arrptr.get()),
-                          static_cast<void*>(schptr.get()));
-
-    // use same trick as arrow as send the pointer as a double converted to SEXP
-    return Rcpp::NumericVector::create(Rcpp::as<double>(arrptr),
-                                       Rcpp::as<double>(schptr));
+                          static_cast<void*>(R_ExternalPtrAddr(arrptr)),
+                          static_cast<void*>(R_ExternalPtrAddr(schptr)));
+    return Rcpp::List::create(arrptr, schptr);
 #else
     Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
     return Rcpp::NumericVector::create(0, 0); // not reached
@@ -163,12 +198,12 @@ Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
 XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
                                                   XPtr<tiledb::Query> query,
                                                   std::string name,
-                                                  Rcpp::NumericVector arrowpointers) {
+                                                  Rcpp::List arrowpointers) {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    Pointer<ArrowArray> arrptr(Rcpp::wrap(arrowpointers[0]));
-    Pointer<ArrowSchema> schptr(Rcpp::wrap(arrowpointers[1]));
+    Pointer<ArrowArray> arrptr(arrowpointers[0]);
+    Pointer<ArrowSchema> schptr(arrowpointers[1]);
     adapter.import_buffer(name.c_str(),
                           static_cast<void*>(arrptr.get()),
                           static_cast<void*>(schptr.get()));
