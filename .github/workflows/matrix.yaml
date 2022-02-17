@@ -44,7 +44,7 @@ jobs:
           extra-packages: |
             rcmdcheck
             palmerpenguins
-            nycflights
+            nycflights13
             tibble
             data.table
             arrow
