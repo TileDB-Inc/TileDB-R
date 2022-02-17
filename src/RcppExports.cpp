@@ -12,48 +12,48 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// allocate_arrow_array_as_double
-double allocate_arrow_array_as_double();
-RcppExport SEXP _tiledb_allocate_arrow_array_as_double() {
+// allocate_arrow_array_as_xptr
+SEXP allocate_arrow_array_as_xptr();
+RcppExport SEXP _tiledb_allocate_arrow_array_as_xptr() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(allocate_arrow_array_as_double());
+    rcpp_result_gen = Rcpp::wrap(allocate_arrow_array_as_xptr());
     return rcpp_result_gen;
 END_RCPP
 }
-// allocate_arrow_schema_as_double
-double allocate_arrow_schema_as_double();
-RcppExport SEXP _tiledb_allocate_arrow_schema_as_double() {
+// allocate_arrow_schema_as_xptr
+SEXP allocate_arrow_schema_as_xptr();
+RcppExport SEXP _tiledb_allocate_arrow_schema_as_xptr() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(allocate_arrow_schema_as_double());
+    rcpp_result_gen = Rcpp::wrap(allocate_arrow_schema_as_xptr());
     return rcpp_result_gen;
 END_RCPP
 }
-// delete_arrow_array_from_double
-void delete_arrow_array_from_double(double dbl);
-RcppExport SEXP _tiledb_delete_arrow_array_from_double(SEXP dblSEXP) {
+// delete_arrow_array_from_xptr
+void delete_arrow_array_from_xptr(SEXP sxp);
+RcppExport SEXP _tiledb_delete_arrow_array_from_xptr(SEXP sxpSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type dbl(dblSEXP);
-    delete_arrow_array_from_double(dbl);
+    Rcpp::traits::input_parameter< SEXP >::type sxp(sxpSEXP);
+    delete_arrow_array_from_xptr(sxp);
     return R_NilValue;
 END_RCPP
 }
-// delete_arrow_schema_from_double
-void delete_arrow_schema_from_double(double dbl);
-RcppExport SEXP _tiledb_delete_arrow_schema_from_double(SEXP dblSEXP) {
+// delete_arrow_schema_from_xptr
+void delete_arrow_schema_from_xptr(SEXP sxp);
+RcppExport SEXP _tiledb_delete_arrow_schema_from_xptr(SEXP sxpSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type dbl(dblSEXP);
-    delete_arrow_schema_from_double(dbl);
+    Rcpp::traits::input_parameter< SEXP >::type sxp(sxpSEXP);
+    delete_arrow_schema_from_xptr(sxp);
     return R_NilValue;
 END_RCPP
 }
 // libtiledb_query_export_buffer
-Rcpp::NumericVector libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name);
+Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name);
 RcppExport SEXP _tiledb_libtiledb_query_export_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -66,7 +66,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_import_buffer
-XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name, Rcpp::NumericVector arrowpointers);
+XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name, Rcpp::List arrowpointers);
 RcppExport SEXP _tiledb_libtiledb_query_import_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP, SEXP arrowpointersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -74,7 +74,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type arrowpointers(arrowpointersSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type arrowpointers(arrowpointersSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_query_import_buffer(ctx, query, name, arrowpointers));
     return rcpp_result_gen;
 END_RCPP
@@ -2795,10 +2795,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tiledb_allocate_arrow_array_as_double", (DL_FUNC) &_tiledb_allocate_arrow_array_as_double, 0},
-    {"_tiledb_allocate_arrow_schema_as_double", (DL_FUNC) &_tiledb_allocate_arrow_schema_as_double, 0},
-    {"_tiledb_delete_arrow_array_from_double", (DL_FUNC) &_tiledb_delete_arrow_array_from_double, 1},
-    {"_tiledb_delete_arrow_schema_from_double", (DL_FUNC) &_tiledb_delete_arrow_schema_from_double, 1},
+    {"_tiledb_allocate_arrow_array_as_xptr", (DL_FUNC) &_tiledb_allocate_arrow_array_as_xptr, 0},
+    {"_tiledb_allocate_arrow_schema_as_xptr", (DL_FUNC) &_tiledb_allocate_arrow_schema_as_xptr, 0},
+    {"_tiledb_delete_arrow_array_from_xptr", (DL_FUNC) &_tiledb_delete_arrow_array_from_xptr, 1},
+    {"_tiledb_delete_arrow_schema_from_xptr", (DL_FUNC) &_tiledb_delete_arrow_schema_from_xptr, 1},
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@
 ##' @param query A TileDB Query object
 ##' @param name A character variable identifying the buffer
 ##' @param ctx tiledb_ctx object (optional)
-##' @return A two-element numeric vector where the two elements are
-##' pointers to the Arrow array and schema
+##' @return A two-element vector where the two elements are
+##' external pointers to the Arrow array and schema
 ##' @export
 tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) {
     stopifnot(`The 'query' argument must be a tiledb query` = is(query, "tiledb_query"),
@@ -40,10 +40,10 @@ tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) 
 ##' Import to Query Buffer from Pair of Arrow IO Pointers
 ##'
 ##' This function imports to the named buffer for a \sQuote{WRITE} query
-##' from two Arrow C pointers.
+##' from two Arrow exerternal pointers.
 ##' @param query A TileDB Query object
 ##' @param name A character variable identifying the buffer
-##' @param arrowpointers A two-element numeric vector with two pointers
+##' @param arrowpointers A two-element list vector with two external pointers
 ##' to an Arrow Array and Schema, respectively
 ##' @param ctx tiledb_ctx object (optional)
 ##' @return The update Query external pointer is returned
@@ -51,7 +51,7 @@ tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) 
 tiledb_query_import_buffer <- function(query, name, arrowpointers, ctx = tiledb_get_context()) {
     stopifnot(`The 'query' argument must be a tiledb query` = is(query, "tiledb_query"),
               `The 'name' argument must be character` = is.character(name),
-              `The 'arrowpointers' argument must be length-2 vector` = is.numeric(arrowpointers) && is.vector(arrowpointers) && length(arrowpointers)==2)
+              `The 'arrowpointers' argument must be list of length two` = is.list(arrowpointers) && length(arrowpointers)==2)
     query@ptr <- libtiledb_query_import_buffer(ctx@ptr, query@ptr, name, arrowpointers)
     query
 }
@@ -60,27 +60,27 @@ tiledb_query_import_buffer <- function(query, name, arrowpointers, ctx = tiledb_
 ##'
 ##' These functions allocate (and free) appropriate pointer objects
 ##' for, respectively, Arrow array and schema objects.
-##' @param ptr A pointer object previously allocated with these functions
+##' @param ptr A external pointer object previously allocated with these functions
 ##' @return The allocating functions return the requested pointer
 ##' @export
 tiledb_arrow_array_ptr <- function() {
-    res <- .allocate_arrow_array_as_double()
+    res <- .allocate_arrow_array_as_xptr()
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_schema_ptr <- function() {
-    res <- .allocate_arrow_schema_as_double()
+    res <- .allocate_arrow_schema_as_xptr()
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_array_del <- function(ptr) {
-    .delete_arrow_array_from_double(ptr)
+    .delete_arrow_array_from_xptr(ptr)
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_schema_del <- function(ptr) {
-    .delete_arrow_schema_from_double(ptr)
+    .delete_arrow_schema_from_xptr(ptr)
 }
