@@ -16,7 +16,7 @@ tiledb_arrow_array_del(ptr)
 tiledb_arrow_schema_del(ptr)
 }
 \arguments{
-\item{ptr}{A pointer object previously allocated with these functions}
+\item{ptr}{A external pointer object previously allocated with these functions}
 }
 \value{
 The allocating functions return the requested pointer

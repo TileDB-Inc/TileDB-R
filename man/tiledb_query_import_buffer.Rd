@@ -16,7 +16,7 @@ tiledb_query_import_buffer(
 
 \item{name}{A character variable identifying the buffer}
 
-\item{arrowpointers}{A two-element numeric vector with two pointers
+\item{arrowpointers}{A two-element list vector with two external pointers
 to an Arrow Array and Schema, respectively}
 
 \item{ctx}{tiledb_ctx object (optional)}
@@ -26,5 +26,5 @@ The update Query external pointer is returned
 }
 \description{
 This function imports to the named buffer for a \sQuote{WRITE} query
-from two Arrow C pointers.
+from two Arrow exerternal pointers.
 }

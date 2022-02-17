@@ -14,8 +14,8 @@ tiledb_query_export_buffer(query, name, ctx = tiledb_get_context())
 \item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
-A two-element numeric vector where the two elements are
-pointers to the Arrow array and schema
+A two-element vector where the two elements are
+external pointers to the Arrow array and schema
 }
 \description{
 This function exports the named buffer from a \sQuote{READ} query
