@@ -2,6 +2,8 @@
 % Please edit documentation in R/TileDBArray.R
 \name{tiledb_array}
 \alias{tiledb_array}
+\alias{tiledb_dense}
+\alias{tiledb_sparse}
 \title{Constructs a tiledb_array object backed by a persisted tiledb array uri}
 \usage{
 tiledb_array(
@@ -29,6 +31,10 @@ tiledb_array(
   buffers = list(),
   ctx = tiledb_get_context()
 )
+
+tiledb_dense(...)
+
+tiledb_sparse(...)
 }
 \arguments{
 \item{uri}{uri path to the tiledb dense array}

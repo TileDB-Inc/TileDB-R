@@ -32,3 +32,24 @@
 #' @param idx An index argument
 #' @param ... Variable argument
 NULL
+
+
+#' @rdname generics
+#' @param ... Currently unused
+#' @export
+setGeneric("schema", function(object, ...) standardGeneric("schema"))
+
+#' @rdname generics
+#' @param ... Currently unused
+# ' @export
+setGeneric("return.data.frame", function(object, ...) standardGeneric("return.data.frame"))
+
+#' @rdname generics
+# ' @export
+setGeneric("return.data.frame<-", function(x, value) standardGeneric("return.data.frame<-"))
+
+#' @rdname generics
+#' @export
+setGeneric("attrs<-", function(x, value) standardGeneric("attrs<-"))
+
+## TODO: bring other generics here

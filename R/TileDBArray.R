@@ -23,9 +23,9 @@
 
 #' An S4 class for a TileDB Array
 #'
-#' This class aims to eventually replace \code{\link{tiledb_dense}}
-#' and \code{\link{tiledb_sparse}} provided equivalent functionality
-#' based on refactored implementation utilising newer TileDB features.
+#' This class replaces the earlier (and now removed) \code{tiledb_dense}
+#' and \code{tiledb_sparse} and provides equivalent functionality
+#' based on a refactored implementation utilising newer TileDB features.
 #'
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription with the array URI
@@ -1820,4 +1820,29 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
     list(names=tiledb_schema_get_names(sch),
          types=tiledb_schema_get_types(sch),
          status=tiledb_schema_get_dim_attr_status(sch))
+}
+
+
+## Entry points for tiledb_dense and tiledb_sparse
+
+#' @rdname tiledb_array
+#' @export
+tiledb_dense <- function(...) {
+    if (isFALSE("tiledb_dense_called" %in% names(.pkgenv))) {
+        message("The 'tiledb_dense' function has been removed following a long deprecation. ",
+                "This call will be forwarded to 'tiledb_array(..., is.sparse=FALSE)'.")
+        .pkgenv[["tiledb_dense_called"]] <- TRUE 	# ensure we nag only once per session
+    }
+    tiledb_array(..., is.sparse = FALSE)
+}
+
+#' @rdname tiledb_array
+#' @export
+tiledb_sparse <- function(...) {
+    if (isFALSE("tiledb_sparse_called" %in% names(.pkgenv))) {
+        message("The 'tiledb_sparse' function has been removed following a long deprecation. ",
+                "This call will be forwarded to 'tiledb_array(..., is.sparse=TRUE)'.")
+        .pkgenv[["tiledb_sparse_called"]] <- TRUE 	# ensure we nag only once per session
+    }
+    tiledb_array(..., is.sparse = TRUE)
 }
