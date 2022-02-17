@@ -27,6 +27,8 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
+      - run: git config --global core.autocrlf false
+
       - uses: actions/checkout@v2
 
       #- uses: r-lib/actions/setup-pandoc@v1
@@ -39,7 +41,13 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          extra-packages: rcmdcheck
+          extra-packages: |
+            rcmdcheck
+            palmerpenguins
+            nycflights
+            tibble
+            data.table
+            arrow
 
       #- uses: r-lib/actions/check-r-package@v1
       - name: Check
