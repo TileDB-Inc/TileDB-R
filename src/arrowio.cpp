@@ -94,7 +94,7 @@ SEXP allocate_arrow_array_as_xptr() {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return allocate_arrow_array();
 #else
-    return NA_REAL;
+    return R_NilValue;
 #endif
 }
 
@@ -103,7 +103,7 @@ SEXP allocate_arrow_schema_as_xptr() {
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return allocate_arrow_schema();
 #else
-    return NA_REAL;
+    return R_NilValue;
 #endif
 }
 
@@ -138,7 +138,7 @@ Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
     return Rcpp::List::create(arrptr, schptr);
 #else
     Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
-    return Rcpp::NumericVector::create(0, 0); // not reached
+    return Rcpp::List::create(R_NilValue, R_NilValue); // not reached
 #endif
 }
 

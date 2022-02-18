@@ -104,6 +104,9 @@ parsed.}
 \item{buffers}{An optional list with full pathnames of shared memory buffers to read data from}
 
 \item{ctx}{optional tiledb_ctx}
+
+\item{...}{Used as a pass-through for \code{tiledb_dense}
+and \code{tiledb_sparse} aliasing}
 }
 \value{
 tiledb_array object

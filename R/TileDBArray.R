@@ -1826,6 +1826,8 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
 ## Entry points for tiledb_dense and tiledb_sparse
 
 #' @rdname tiledb_array
+#' @param ... Used as a pass-through for \code{tiledb_dense}
+#' and \code{tiledb_sparse} aliasing
 #' @export
 tiledb_dense <- function(...) {
     if (isFALSE("tiledb_dense_called" %in% names(.pkgenv))) {

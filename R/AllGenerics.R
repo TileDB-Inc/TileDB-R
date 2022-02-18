@@ -53,3 +53,6 @@ setGeneric("return.data.frame<-", function(x, value) standardGeneric("return.dat
 setGeneric("attrs<-", function(x, value) standardGeneric("attrs<-"))
 
 ## TODO: bring other generics here
+#' @rdname generics
+#' @export
+setGeneric("raw_dump", function(object, ...) standardGeneric("raw_dump"))
