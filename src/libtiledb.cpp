@@ -858,7 +858,9 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
       auto d2 = dim->domain<DataType>().second;
       if (d1 <= R_NaInt || d1 > std::numeric_limits<int64_t>::max() ||
           d2 <= R_NaInt || d2 > std::numeric_limits<int64_t>::max()) {
-        Rcpp::stop("tiledb_dim domain INT64 value not representable as an R integer64 type");
+          //Rcpp::stop("tiledb_dim domain INT64 value not representable as an R integer64 type");
+          return NumericVector({static_cast<double>(d1), static_cast<double>(d2)});
+
       }
       std::vector<int64_t> v = { d1, d2 };
       return makeInteger64(v);
@@ -869,7 +871,8 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
       auto d2 = dim->domain<DataType>().second;
       if (d1 > std::numeric_limits<int64_t>::max() ||
           d2 > std::numeric_limits<int64_t>::max()) {
-          Rcpp::stop("tiledb_dim domain UINT64 value not representable as an R integer64 type");
+          //Rcpp::stop("tiledb_dim domain UINT64 value not representable as an R integer64 type");
+          return NumericVector({static_cast<double>(d1), static_cast<double>(d2)});
       }
       std::vector<int64_t> v = { static_cast<int64_t>(d1), static_cast<int64_t>(d2) };
       return makeInteger64(v);
