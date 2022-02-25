@@ -544,7 +544,9 @@ setMethod("[", "tiledb_array",
   ## is set a fallback from the TileDB config object is used. Note that this memory
   ## budget (currently, at least) applies only to character columns. We scale the total
   ## budget by the number of variable sized column (where 'varnum' is NA)
-  memory_budget <- get_allocation_size_preference() / max(1, sum(is.na(allvarnum)), na.rm=TRUE)
+  #memory_budget <- get_allocation_size_preference() / max(1, sum(is.na(allvarnum)), na.rm=TRUE)
+  memory_budget <- trunc(get_allocation_size_preference() / length(allnames))
+  message("Setting memory budget (per buffer) to ", memory_budget)
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -730,7 +732,10 @@ setMethod("[", "tiledb_array",
                   message("Non-char var.num columns are not currently supported.")
               }
           } else {
+              #message("Allocating with ", resrv, " and ", memory_budget)
               buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
+              #message("Allocating with ", memory_budget)
+              #buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, memory_budget, nullable)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
           }
@@ -744,51 +749,65 @@ setMethod("[", "tiledb_array",
           qryptr <- libtiledb_query_set_condition(qryptr, x@query_condition@ptr)
       }
 
-      ## fire off query
-      qryptr <- libtiledb_query_submit(qryptr)
+      overallresults <- NULL
+      finished <- FALSE
+      while (!finished) {
 
-      ## check status
-      status <- libtiledb_query_status(qryptr)
-      if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
+          ## fire off query
+          qryptr <- libtiledb_query_submit(qryptr)
 
-      ## close array
-      libtiledb_array_close(arrptr)
+          ## check status
+          status <- libtiledb_query_status(qryptr)
+          #if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
 
-      ## retrieve actual result size (from fixed size element columns)
-      getResultSize <- function(name, varnum, qryptr) {
-          if (is.na(varnum))                  # symbols come up with higher count
-              libtiledb_query_result_buffer_elements(qryptr, name, 0)
-          else
-              libtiledb_query_result_buffer_elements(qryptr, name)
-      }
-      estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-      if (any(!is.na(estsz))) {
-          resrv <- max(estsz, na.rm=TRUE)
-      } else {
-          resrv <- resrv/8                  # character case where bytesize of offset vector was used
-      }
-
-      ## get results
-      getResult <- function(buf, name, varnum, resrv, qryptr) {
-          has_dumpbuffers <- length(x@dumpbuffers) > 0
-          if (is.na(varnum)) {
-              vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
-              if (has_dumpbuffers) {
-                  vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
-              }
-              libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
-          } else {
-              if (has_dumpbuffers) {
-                  vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
-              }
-              libtiledb_query_get_buffer_ptr(buf, asint64)
+          ## close array
+          if (status == "COMPLETE") {
+              libtiledb_array_close(arrptr)
+              .pkgenv[["query_status"]] <- status
+              finished <- TRUE
           }
+
+          ## retrieve actual result size (from fixed size element columns)
+          getResultSize <- function(name, varnum, qryptr) {
+              if (is.na(varnum))                  # symbols come up with higher count
+                  libtiledb_query_result_buffer_elements(qryptr, name, 0)
+              else
+                  libtiledb_query_result_buffer_elements(qryptr, name)
+          }
+          estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
+          if (any(!is.na(estsz))) {
+              resrv <- max(estsz, na.rm=TRUE)
+          } else {
+              resrv <- resrv/8                  # character case where bytesize of offset vector was used
+          }
+          message("Expected size ", resrv)
+          ## get results
+          getResult <- function(buf, name, varnum, resrv, qryptr) {
+              has_dumpbuffers <- length(x@dumpbuffers) > 0
+              if (is.na(varnum)) {
+                  vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
+                  if (has_dumpbuffers) {
+                      vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
+                  }
+                  x <- libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+              } else {
+                  if (has_dumpbuffers) {
+                      vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
+                  }
+                  x <- libtiledb_query_get_buffer_ptr(buf, asint64)
+              }
+              x[1:resrv]
+
+          }
+          reslist <- mapply(getResult, buflist, allnames, allvarnum,
+                            MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
+          ## convert list into data.frame (cheaply) and subset
+          res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
+          colnames(res) <- allnames
+          cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
+          overallresults <- if (is.null(overallresults)) res else rbind(overallresults, res)
       }
-      reslist <- mapply(getResult, buflist, allnames, allvarnum,
-                        MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-      ## convert list into data.frame (cheaply) and subset
-      res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
-      colnames(res) <- allnames
+      res <- overallresults
   }                                     # end of 'big else' for query build, submission and read
 
   ## convert to factor if that was asked
