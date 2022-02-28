@@ -2673,6 +2673,7 @@ List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string a
 XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
                                                    std::string domaintype,
                                                    R_xlen_t ncells,
+                                                   R_xlen_t memory_budget,
                                                    bool nullable = false) {
   XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32"  || domaintype == "UINT32") {
@@ -2705,6 +2706,9 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
      Rcpp::stop("Currently unsupported domain type '%s'", domaintype.c_str());
   }
   buf->dtype = _string_to_tiledb_datatype(domaintype);
+  if (ncells * static_cast<R_xlen_t>(buf->size) > memory_budget) { 	// respect memory_budget
+      ncells = std::trunc(memory_budget / buf->size);   			// and reset ncells if needed
+  }
   buf->ncells = ncells;
   buf->vec.resize(ncells * buf->size);
   if (nullable) buf->validity_map.resize(ncells);

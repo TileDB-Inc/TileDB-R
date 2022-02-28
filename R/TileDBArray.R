@@ -484,6 +484,8 @@ setMethod("[", "tiledb_array",
   if (missing(j)) j <- NULL
   k <- NULL
 
+  verbose <- getOption("verbose", FALSE)
+
   ## deal with possible n-dim indexing
   ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
   if (length(ndlist) >= 0) {
@@ -544,9 +546,8 @@ setMethod("[", "tiledb_array",
   ## is set a fallback from the TileDB config object is used. Note that this memory
   ## budget (currently, at least) applies only to character columns. We scale the total
   ## budget by the number of variable sized column (where 'varnum' is NA)
-  #memory_budget <- get_allocation_size_preference() / max(1, sum(is.na(allvarnum)), na.rm=TRUE)
   memory_budget <- trunc(get_allocation_size_preference() / length(allnames))
-  message("Setting memory budget (per buffer) to ", memory_budget)
+  if (verbose) message("Setting memory budget (per buffer) to ", memory_budget)
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -724,7 +725,7 @@ setMethod("[", "tiledb_array",
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                  #message("Allocating with ", resrv, " and ", memory_budget)
+                  if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
                   buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
@@ -732,10 +733,8 @@ setMethod("[", "tiledb_array",
                   message("Non-char var.num columns are not currently supported.")
               }
           } else {
-              #message("Allocating with ", resrv, " and ", memory_budget)
-              buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
-              #message("Allocating with ", memory_budget)
-              #buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, memory_budget, nullable)
+              if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
+              buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, memory_budget, nullable)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
           }
@@ -780,7 +779,7 @@ setMethod("[", "tiledb_array",
           } else {
               resrv <- resrv/8                  # character case where bytesize of offset vector was used
           }
-          message("Expected size ", resrv)
+          if (verbose) message("Expected size ", resrv)
           ## get results
           getResult <- function(buf, name, varnum, resrv, qryptr) {
               has_dumpbuffers <- length(x@dumpbuffers) > 0
@@ -804,7 +803,7 @@ setMethod("[", "tiledb_array",
           ## convert list into data.frame (cheaply) and subset
           res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
           colnames(res) <- allnames
-          cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
+          if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
           overallresults <- if (is.null(overallresults)) res else rbind(overallresults, res)
       }
       res <- overallresults
