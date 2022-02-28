@@ -2673,8 +2673,51 @@ List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string a
 XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(XPtr<tiledb::Array> array,
                                                    std::string domaintype,
                                                    R_xlen_t ncells,
-                                                   R_xlen_t memory_budget,
                                                    bool nullable = false) {
+  XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
+  if (domaintype == "INT32"  || domaintype == "UINT32") {
+     buf->size = sizeof(int32_t);
+  } else if (domaintype == "INT16"  || domaintype == "UINT16") {
+     buf->size = sizeof(int16_t);
+  } else if (domaintype == "INT8"   || domaintype == "UINT8") {
+     buf->size = sizeof(int8_t);
+  } else if (domaintype == "INT64" ||
+             domaintype == "UINT64" ||
+             domaintype == "DATETIME_YEAR" ||
+             domaintype == "DATETIME_MONTH" ||
+             domaintype == "DATETIME_WEEK" ||
+             domaintype == "DATETIME_DAY" ||
+             domaintype == "DATETIME_HR" ||
+             domaintype == "DATETIME_MIN" ||
+             domaintype == "DATETIME_SEC" ||
+             domaintype == "DATETIME_MS" ||
+             domaintype == "DATETIME_US" ||
+             domaintype == "DATETIME_NS" ||
+             domaintype == "DATETIME_PS" ||
+             domaintype == "DATETIME_FS" ||
+             domaintype == "DATETIME_AS") {
+     buf->size = sizeof(int64_t);
+  } else if (domaintype == "FLOAT64") {
+     buf->size = sizeof(double);
+  } else if (domaintype == "FLOAT32") {
+     buf->size = sizeof(float);
+  } else {
+     Rcpp::stop("Currently unsupported domain type '%s'", domaintype.c_str());
+  }
+  buf->dtype = _string_to_tiledb_datatype(domaintype);
+  buf->ncells = ncells;
+  buf->vec.resize(ncells * buf->size);
+  if (nullable) buf->validity_map.resize(ncells);
+  buf->nullable = nullable;
+  return buf;
+}
+
+// [[Rcpp::export]]
+XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr_mb(XPtr<tiledb::Array> array,
+                                                      std::string domaintype,
+                                                      R_xlen_t ncells,
+                                                      R_xlen_t memory_budget,
+                                                      bool nullable = false) {
   XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32"  || domaintype == "UINT32") {
      buf->size = sizeof(int32_t);

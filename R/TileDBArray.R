@@ -734,7 +734,7 @@ setMethod("[", "tiledb_array",
               }
           } else {
               if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
-              buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, memory_budget, nullable)
+              buf <- libtiledb_query_buffer_alloc_ptr_mb(arrptr, type, resrv, memory_budget, nullable)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
           }
