@@ -543,12 +543,9 @@ setMethod("[", "tiledb_array",
   }
 
   ## A preference can be set in a local per-user configuration file; if no value
-  ## is set a fallback from the TileDB config object is used. Note that this memory
-  ## budget (currently, at least) applies only to character columns. We scale the total
-  ## budget by the number of variable sized column (where 'varnum' is NA)
-  #memory_budget <- trunc(get_allocation_size_preference() / length(allnames))
+  ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
-  if (verbose) message("Setting memory budget (per buffer) to ", memory_budget)
+  if (verbose) message("Memory budget to ", memory_budget, " bytes or ", memory_budget/8, " rows")
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -721,12 +718,12 @@ setMethod("[", "tiledb_array",
       }
       ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable, alltypes,
                          MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-      resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
+      resrv <- max(1, min(memory_budget/8, ressizes)) # ensure >0 for correct handling of zero-length outputs
       ## allocate and set buffers
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                  if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
+                  #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
                   buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
@@ -734,7 +731,7 @@ setMethod("[", "tiledb_array",
                   message("Non-char var.num columns are not currently supported.")
               }
           } else {
-              if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
+              #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
               buf <- libtiledb_query_buffer_alloc_ptr_mb(arrptr, type, resrv, memory_budget, nullable)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
