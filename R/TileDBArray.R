@@ -546,7 +546,8 @@ setMethod("[", "tiledb_array",
   ## is set a fallback from the TileDB config object is used. Note that this memory
   ## budget (currently, at least) applies only to character columns. We scale the total
   ## budget by the number of variable sized column (where 'varnum' is NA)
-  memory_budget <- trunc(get_allocation_size_preference() / length(allnames))
+  #memory_budget <- trunc(get_allocation_size_preference() / length(allnames))
+  memory_budget <- get_allocation_size_preference()
   if (verbose) message("Setting memory budget (per buffer) to ", memory_budget)
 
   if (length(enckey) > 0) {
@@ -779,7 +780,12 @@ setMethod("[", "tiledb_array",
           } else {
               resrv <- resrv/8                  # character case where bytesize of offset vector was used
           }
-          if (verbose) message("Expected size ", resrv)
+          #if (verbose) message("Expected size ", resrv)
+	  if (resrv == 0) {
+              finished <- TRUE
+              if (verbose) message("Breaking loop at zero length expected")
+              break
+          }
           ## get results
           getResult <- function(buf, name, varnum, resrv, qryptr) {
               has_dumpbuffers <- length(x@dumpbuffers) > 0
