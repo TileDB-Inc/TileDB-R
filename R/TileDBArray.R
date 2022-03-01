@@ -746,7 +746,8 @@ setMethod("[", "tiledb_array",
           qryptr <- libtiledb_query_set_condition(qryptr, x@query_condition@ptr)
       }
 
-      overallresults <- NULL
+      overallresults <- list()
+      counter <- 1L
       finished <- FALSE
       while (!finished) {
 
@@ -779,7 +780,7 @@ setMethod("[", "tiledb_array",
           }
           #if (verbose) message("Expected size ", resrv)
           ## Permit one pass to allow zero-row schema read
-          if (resrv == 0 && !is.null(overallresults)) {
+          if (resrv == 0 && counter > 1L) {
               finished <- TRUE
               #if (verbose) message("Breaking loop at zero length expected")
               break
@@ -806,9 +807,15 @@ setMethod("[", "tiledb_array",
           res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
           colnames(res) <- allnames
           #if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
-          overallresults <- if (is.null(overallresults)) res else rbind(overallresults, res)
+          overallresults[[counter]] <- res
+          counter <- counter + 1L
       }
-      res <- overallresults
+      if (requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
+          res <- as.data.frame(data.table::rbindlist(overallresults))
+      } else {
+          res <- do.call(rbind, overallresults)
+      }
+      res
   }                                     # end of 'big else' for query build, submission and read
 
   ## convert to factor if that was asked
