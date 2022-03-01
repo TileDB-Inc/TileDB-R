@@ -1,2 +1,2 @@
-version: 2.7.0-rc1
+version: 2.7.0
 sha: 4f39c6c
