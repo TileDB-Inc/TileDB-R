@@ -92,12 +92,12 @@ set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.
 ##' be determined \emph{ex ante} as the degree of sparsity is unknown.
 ##' A configuration value can aide in providing an allocation size
 ##' value. These functions let the user store such a value for
-##' retrieval by the package code.  The preference will be enconded in
-##' a configuration file as R (version 4.0.0 or later) allows a user-
-##' and package specific configuration files.  These helper functions
-##' sets and retrieve the value, respectively, or retrieve the cached
-##' value from the package environment where is it set at package
-##' load.
+##' retrieval by their package or script code.  The preference will be
+##' encoded in a configuration file as R (version 4.0.0 or later)
+##' allows a user- and package specific configuration files.  These
+##' helper functions sets and retrieve the value, respectively, or
+##' retrieve the cached value from the package environment where is it
+##' set at package load.
 ##'
 ##' The value will be stored as a character value and reparsed so
 ##' \sQuote{1e6} and \sQuote{1000000} are equivalent, and the fixed
@@ -105,9 +105,11 @@ set_return_as_preference <- function(value = c("asis", "array", "matrix", "data.
 ##' \emph{use for formatting} will impact the writing. This should
 ##' have no effect on standard allocation sizes.
 ##'
-##' Note that this memory budget (currently, at least) applies only to
-##' character columns.  A fallback value of 50mb is used if no user
-##' value is set, and is used for all columns (rather than per column).
+##' The value is used as a limit \emph{per column} so total memory use
+##' per query will a multiple of this value, and increasing in
+##' dimension and attribute count.
+##'
+##' A fallback value of 10 mb is used if no user value is set.
 ##'
 ##' @note This function requires R version 4.0.0 or later to utilise the per-user
 ##' config directory accessor function. For older R versions, a fallback from the
@@ -134,7 +136,7 @@ save_allocation_size_preference <- function(value) {
 ##' @rdname save_allocation_size_preference
 ##' @export
 load_allocation_size_preference <- function() {
-    value <- 50 * 1024 * 1024           # fallback value is 50mb
+    value <- 10 * 1024 * 1024           # fallback value is 10mb
     cfgfile <- .defaultConfigFile()     # but check config file
     if (cfgfile != "" && file.exists(cfgfile)) {
         cfg <- read.dcf(cfgfile)
