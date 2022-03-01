@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.11.0
+Version: 0.11.0.10
 Title: Universal Storage Engine for Sparse and Dense Multidimensional Arrays
 Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
  person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
