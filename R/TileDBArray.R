@@ -483,8 +483,7 @@ setMethod("[", "tiledb_array",
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
   k <- NULL
-
-  verbose <- getOption("verbose", FALSE)
+  #verbose <- getOption("verbose", FALSE)
 
   ## deal with possible n-dim indexing
   ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -545,7 +544,7 @@ setMethod("[", "tiledb_array",
   ## A preference can be set in a local per-user configuration file; if no value
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
-  if (verbose) message("Memory budget set to ", memory_budget, " bytes or ", memory_budget/8, " rows")
+  #if (verbose) message("Memory budget set to ", memory_budget, " bytes or ", memory_budget/8, " rows")
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -782,7 +781,7 @@ setMethod("[", "tiledb_array",
           ## Permit one pass to allow zero-row schema read
           if (resrv == 0 && !is.null(overallresults)) {
               finished <- TRUE
-              if (verbose) message("Breaking loop at zero length expected")
+              #if (verbose) message("Breaking loop at zero length expected")
               break
           }
           ## get results
@@ -806,7 +805,7 @@ setMethod("[", "tiledb_array",
           ## convert list into data.frame (cheaply) and subset
           res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
           colnames(res) <- allnames
-          if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
+          #if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
           overallresults <- if (is.null(overallresults)) res else rbind(overallresults, res)
       }
       res <- overallresults
