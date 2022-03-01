@@ -600,10 +600,6 @@ libtiledb_query_buffer_alloc_ptr <- function(array, domaintype, ncells, nullable
     .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, array, domaintype, ncells, nullable)
 }
 
-libtiledb_query_buffer_alloc_ptr_mb <- function(array, domaintype, ncells, memory_budget, nullable = FALSE) {
-    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr_mb`, array, domaintype, ncells, memory_budget, nullable)
-}
-
 libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec, asint64 = FALSE) {
     .Call(`_tiledb_libtiledb_query_buffer_assign_ptr`, buf, dtype, vec, asint64)
 }

@@ -545,7 +545,7 @@ setMethod("[", "tiledb_array",
   ## A preference can be set in a local per-user configuration file; if no value
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
-  if (verbose) message("Memory budget to ", memory_budget, " bytes or ", memory_budget/8, " rows")
+  if (verbose) message("Memory budget set to ", memory_budget, " bytes or ", memory_budget/8, " rows")
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -718,7 +718,8 @@ setMethod("[", "tiledb_array",
       }
       ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable, alltypes,
                          MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-      resrv <- max(1, min(memory_budget/8, ressizes)) # ensure >0 for correct handling of zero-length outputs
+      ## ensure > 0 for correct handling of zero-length outputs, ensure respecting memory budget
+      resrv <- max(1, min(memory_budget/8, ressizes))
       ## allocate and set buffers
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
@@ -732,7 +733,7 @@ setMethod("[", "tiledb_array",
               }
           } else {
               #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
-              buf <- libtiledb_query_buffer_alloc_ptr_mb(arrptr, type, resrv, memory_budget, nullable)
+              buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
           }
@@ -778,7 +779,8 @@ setMethod("[", "tiledb_array",
               resrv <- resrv/8                  # character case where bytesize of offset vector was used
           }
           #if (verbose) message("Expected size ", resrv)
-	  if (resrv == 0) {
+          ## Permit one pass to allow zero-row schema read
+          if (resrv == 0 && !is.null(overallresults)) {
               finished <- TRUE
               if (verbose) message("Breaking loop at zero length expected")
               break
@@ -791,15 +793,13 @@ setMethod("[", "tiledb_array",
                   if (has_dumpbuffers) {
                       vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
                   }
-                  x <- libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+                  libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
               } else {
                   if (has_dumpbuffers) {
                       vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
                   }
-                  x <- libtiledb_query_get_buffer_ptr(buf, asint64)
+                  libtiledb_query_get_buffer_ptr(buf, asint64)
               }
-              x[1:resrv]
-
           }
           reslist <- mapply(getResult, buflist, allnames, allvarnum,
                             MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)

@@ -1735,21 +1735,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_buffer_alloc_ptr_mb
-XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr_mb(XPtr<tiledb::Array> array, std::string domaintype, R_xlen_t ncells, R_xlen_t memory_budget, bool nullable);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_alloc_ptr_mb(SEXP arraySEXP, SEXP domaintypeSEXP, SEXP ncellsSEXP, SEXP memory_budgetSEXP, SEXP nullableSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
-    Rcpp::traits::input_parameter< std::string >::type domaintype(domaintypeSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type ncells(ncellsSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type memory_budget(memory_budgetSEXP);
-    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_alloc_ptr_mb(array, domaintype, ncells, memory_budget, nullable));
-    return rcpp_result_gen;
-END_RCPP
-}
 // libtiledb_query_buffer_assign_ptr
 XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::string dtype, SEXP vec, bool asint64);
 RcppExport SEXP _tiledb_libtiledb_query_buffer_assign_ptr(SEXP bufSEXP, SEXP dtypeSEXP, SEXP vecSEXP, SEXP asint64SEXP) {
@@ -2957,7 +2942,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_vec, 3},
     {"_tiledb_libtiledb_query_buffer_alloc_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_alloc_ptr, 4},
-    {"_tiledb_libtiledb_query_buffer_alloc_ptr_mb", (DL_FUNC) &_tiledb_libtiledb_query_buffer_alloc_ptr_mb, 5},
     {"_tiledb_libtiledb_query_buffer_assign_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_assign_ptr, 4},
     {"_tiledb_libtiledb_query_set_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_ptr, 3},
     {"_tiledb_length_from_vlcbuf", (DL_FUNC) &_tiledb_length_from_vlcbuf, 1},
