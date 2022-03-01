@@ -483,6 +483,7 @@ setMethod("[", "tiledb_array",
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
   k <- NULL
+  #verbose <- getOption("verbose", FALSE)
 
   ## deal with possible n-dim indexing
   ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -541,10 +542,9 @@ setMethod("[", "tiledb_array",
   }
 
   ## A preference can be set in a local per-user configuration file; if no value
-  ## is set a fallback from the TileDB config object is used. Note that this memory
-  ## budget (currently, at least) applies only to character columns. We scale the total
-  ## budget by the number of variable sized column (where 'varnum' is NA)
-  memory_budget <- get_allocation_size_preference() / max(1, sum(is.na(allvarnum)), na.rm=TRUE)
+  ## is set a fallback from the TileDB config object is used.
+  memory_budget <- get_allocation_size_preference()
+  #if (verbose) message("Memory budget set to ", memory_budget, " bytes or ", memory_budget/8, " rows")
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -717,12 +717,13 @@ setMethod("[", "tiledb_array",
       }
       ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable, alltypes,
                          MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-      resrv <- max(1, ressizes) # ensure >0 for correct handling of zero-length outputs
+      ## ensure > 0 for correct handling of zero-length outputs, ensure respecting memory budget
+      resrv <- max(1, min(memory_budget/8, ressizes))
       ## allocate and set buffers
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                  #message("Allocating with ", resrv, " and ", memory_budget)
+                  #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
                   buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
@@ -730,6 +731,7 @@ setMethod("[", "tiledb_array",
                   message("Non-char var.num columns are not currently supported.")
               }
           } else {
+              #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
               buf <- libtiledb_query_buffer_alloc_ptr(arrptr, type, resrv, nullable)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
@@ -744,51 +746,76 @@ setMethod("[", "tiledb_array",
           qryptr <- libtiledb_query_set_condition(qryptr, x@query_condition@ptr)
       }
 
-      ## fire off query
-      qryptr <- libtiledb_query_submit(qryptr)
+      overallresults <- list()
+      counter <- 1L
+      finished <- FALSE
+      while (!finished) {
 
-      ## check status
-      status <- libtiledb_query_status(qryptr)
-      if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
+          ## fire off query
+          qryptr <- libtiledb_query_submit(qryptr)
 
-      ## close array
-      libtiledb_array_close(arrptr)
+          ## check status
+          status <- libtiledb_query_status(qryptr)
+          #if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
 
-      ## retrieve actual result size (from fixed size element columns)
-      getResultSize <- function(name, varnum, qryptr) {
-          if (is.na(varnum))                  # symbols come up with higher count
-              libtiledb_query_result_buffer_elements(qryptr, name, 0)
-          else
-              libtiledb_query_result_buffer_elements(qryptr, name)
-      }
-      estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-      if (any(!is.na(estsz))) {
-          resrv <- max(estsz, na.rm=TRUE)
-      } else {
-          resrv <- resrv/8                  # character case where bytesize of offset vector was used
-      }
-
-      ## get results
-      getResult <- function(buf, name, varnum, resrv, qryptr) {
-          has_dumpbuffers <- length(x@dumpbuffers) > 0
-          if (is.na(varnum)) {
-              vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
-              if (has_dumpbuffers) {
-                  vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
-              }
-              libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
-          } else {
-              if (has_dumpbuffers) {
-                  vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
-              }
-              libtiledb_query_get_buffer_ptr(buf, asint64)
+          ## close array
+          if (status == "COMPLETE") {
+              libtiledb_array_close(arrptr)
+              .pkgenv[["query_status"]] <- status
+              finished <- TRUE
           }
+
+          ## retrieve actual result size (from fixed size element columns)
+          getResultSize <- function(name, varnum, qryptr) {
+              if (is.na(varnum))                  # symbols come up with higher count
+                  libtiledb_query_result_buffer_elements(qryptr, name, 0)
+              else
+                  libtiledb_query_result_buffer_elements(qryptr, name)
+          }
+          estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
+          if (any(!is.na(estsz))) {
+              resrv <- max(estsz, na.rm=TRUE)
+          } else {
+              resrv <- resrv/8                  # character case where bytesize of offset vector was used
+          }
+          #if (verbose) message("Expected size ", resrv)
+          ## Permit one pass to allow zero-row schema read
+          if (resrv == 0 && counter > 1L) {
+              finished <- TRUE
+              #if (verbose) message("Breaking loop at zero length expected")
+              break
+          }
+          ## get results
+          getResult <- function(buf, name, varnum, resrv, qryptr) {
+              has_dumpbuffers <- length(x@dumpbuffers) > 0
+              if (is.na(varnum)) {
+                  vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
+                  if (has_dumpbuffers) {
+                      vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
+                  }
+                  libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+              } else {
+                  if (has_dumpbuffers) {
+                      vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
+                  }
+                  libtiledb_query_get_buffer_ptr(buf, asint64)
+              }
+          }
+          reslist <- mapply(getResult, buflist, allnames, allvarnum,
+                            MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
+          ## convert list into data.frame (cheaply) and subset
+          res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
+          colnames(res) <- allnames
+          #if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
+          overallresults[[counter]] <- res
+          counter <- counter + 1L
       }
-      reslist <- mapply(getResult, buflist, allnames, allvarnum,
-                        MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-      ## convert list into data.frame (cheaply) and subset
-      res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
-      colnames(res) <- allnames
+      if (requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
+          res <- as.data.frame(data.table::rbindlist(overallresults))
+      } else {
+          res <- do.call(rbind, overallresults)
+      }
+      res
   }                                     # end of 'big else' for query build, submission and read
 
   ## convert to factor if that was asked
