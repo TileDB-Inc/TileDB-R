@@ -75,6 +75,7 @@ tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did, ty
               `Argument did must be a numeric` = is.numeric(did))
     if (missing(typestr)) {
         uri <- dirname(libtiledb_fragment_info_uri(object@ptr, fid))
+        if (grepl("__fragments$", uri)) uri <- dirname(uri)
         typestr <- datatype( dimensions(domain(schema(uri)))[[did+1]] )
     }
     libtiledb_fragment_info_get_non_empty_domain_index(object@ptr, fid, did, typestr)
@@ -97,6 +98,7 @@ tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name
               `Argument dim_name must be a scalar character` = is.scalar(dim_name, "character"))
     if (missing(typestr)) {
         uri <- dirname(libtiledb_fragment_info_uri(object@ptr, fid))
+        if (grepl("__fragments$", uri)) uri <- dirname(uri)
         names <- sapply(dimensions(domain(schema(uri))), name)
         ind <- which(names == dim_name)
         typestr <- datatype( dimensions(domain(schema(uri)))[[ind]] )
