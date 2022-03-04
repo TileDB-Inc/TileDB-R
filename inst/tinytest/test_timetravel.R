@@ -71,8 +71,8 @@ if (!success) exit_file("Issue with time traveling")
 res1 <- tiledb_array(uri, as.data.frame=TRUE)[] 		# no limits
 expect_equal(NROW(res1), 40)                            # all four observations
 
-res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1]+epst)[]    # end before 1st timestamp
-expect_equal(NROW(res2), 10)            # expect group one (10 elements)
+res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[1]-epst, timestamp_end=times[2]+epst)[]    # end before 1st timestamp
+expect_equal(NROW(res2), 20)            # expect group one and two (20 elements)
 
 res3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+epst)[] # start after fourth
 expect_equal(NROW(res3), 0)             # expect zero data
@@ -116,7 +116,7 @@ expect_equal(max(res5$grp), 3)
 
 ## time-travel vaccum test
 vfs <- tiledb_vfs()
-uridir <- if (tiledb_version(TRUE) >= "2.7.0") file.path(uri, "__fragments") else uri
+uridir <- if (tiledb_vfs_is_dir(file.path(uri, "__fragments"))) file.path(uri, "__fragments") else uri
 ndirfull <- tiledb_vfs_ls(uridir, vfs=vfs)
 array_consolidate(uri, start_time=times[2]-epst, end_time=times[3]+epst)
 array_vacuum(uri, start_time=times[2]-epst, end_time=times[3]+epst)
