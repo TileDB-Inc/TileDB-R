@@ -10,6 +10,9 @@ ctx <- tiledb_ctx(limitTileDBCores())
 hasDataTable <- requireNamespace("data.table", quietly=TRUE)
 hasTibble <- requireNamespace("tibble", quietly=TRUE)
 
+## GitHub Actions had some jobs killed on the larger data portion so we dial mem use down
+if (Sys.getenv("CI") != "") set_allocation_size_preference(1024*1014)
+
 #test_that("test tiledb_array read/write sparse array with heterogenous date domains", {
 op <- options()
 options(stringsAsFactors=FALSE)       # accomodate R 3.*
