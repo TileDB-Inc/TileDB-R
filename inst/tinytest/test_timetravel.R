@@ -93,12 +93,12 @@ n <- tiledb_fragment_info_get_num(fi)
 expect_equal(n, 4)
 times <- do.call(c, lapply(seq_len(n), function(i) tiledb_fragment_info_get_timestamp_range(fi, i-1)[1]))
 
-epst <- 0.005
-res1 <- tiledb_array(uri, as.data.frame=TRUE)[]							 		# no limits
-res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1]+epst)[]    # end before 1st timestamp
-res3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+epst)[] 	# start after fourth
-res4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-epst)[]    # end before 3rd
-res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-epst, timestamp_end=times[3]+epst)[]
+epstsml <- 0.005
+res1 <- tiledb_array(uri, as.data.frame=TRUE)[]						# no limits
+res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1]+epstsml)[]    	# end after 1st timestamp
+res3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+epstsml)[]  	# start after fourth
+res4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-epstsml)[]    	# end before 3rd
+res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-epstsml, timestamp_end=times[3]+epstsml)[]
 expect_equal(NROW(res1), 40)
 expect_equal(NROW(res2), 10)		            # expect group one (10 elements)
 expect_equal(NROW(res3), 0)			            # expect zero data
@@ -153,7 +153,6 @@ now2 <- Sys.time()
 A <- tiledb_array(uri = tmp, timestamp_start=now2)
 A[I, J] <- data
 
-epst <- 0.1
 A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now1 - epst)
 expect_equal(nrow(A[]), 0)
 A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_start=now1 + epst)
