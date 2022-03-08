@@ -1,9 +1,9 @@
 name: valgrind
 
 on:
-  push:
   schedule:
     - cron: "17 01 * * *"
+  # push:
 
 jobs:
   valgrind:
