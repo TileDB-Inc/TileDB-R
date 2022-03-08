@@ -1,0 +1,35 @@
+name: valgrind
+
+on:
+  schedule:
+    - cron: "17 01 * * *"
+  # push:
+
+jobs:
+  valgrind:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.tag }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: [ 2.6.4, 2.7.1, dev ]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: sudo tools/ci/valgrind/installDependencies.sh
+
+    - name: Build TileDB
+      run: sudo tools/ci/valgrind/buildTileDB.sh ${{ matrix.tag }}
+
+    - name: Build and Check Package
+      run: tools/ci/valgrind/buildAndCheckPackage.sh
+
+    - name: Show Test Log
+      run: tools/ci/valgrind/showTestLogs.sh
+
+    - name: Show Valgrind Summary
+      run: tools/ci/valgrind/valgrindSummary.sh
