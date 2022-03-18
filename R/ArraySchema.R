@@ -100,7 +100,7 @@ tiledb_array_schema <- function(domain,
                                   validity_filter_list_ptr, sparse)
     libtiledb_array_schema_set_capacity(ptr, capacity)
     if (allows_dups) libtiledb_array_schema_set_allows_dups(ptr, TRUE)
-    return(new("tiledb_array_schema", ptr = ptr))
+    invisible(new("tiledb_array_schema", ptr = ptr))
 }
 
 tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {
