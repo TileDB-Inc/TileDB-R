@@ -205,7 +205,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]
-    attributes <- sapply(cols, makeAttr)
+    attributes <- if (length(cols) > 0) sapply(cols, makeAttr) else list()
     schema <- tiledb_array_schema(dom, attrs = attributes,
                                   cell_order = cell_order, tile_order = tile_order,
                                   sparse=sparse, capacity=capacity)

@@ -69,65 +69,38 @@ tiledb_array_schema <- function(domain,
                                 capacity = 10000L,
                                 allows_dups = FALSE,
                                 ctx = tiledb_get_context()) {
-  if (!is(ctx, "tiledb_ctx")) {
-    stop("ctx argument must be a tiledb_ctx")
-  }
-  if (missing(domain) || !is(domain, "tiledb_domain")) {
-    stop("domain argument must be a tiledb::Domain")
-  }
-  is_attr <- function(obj) is(obj, "tiledb_attr")
-  if (is_attr(attrs)) {                 # if an attrs object given:
-    attrs <- list(attrs)                # make it a list so that lapply works below
-  }
-  if (missing(attrs) || length(attrs) == 0 || !all(vapply(attrs, is_attr, logical(1)))) {
-    stop("attrs argument must be a list of one or tiled_attr objects")
-  }
-  if (!is.scalar(cell_order, "character")) {
-     stop("cell_order argument must be a scalar string")
-  }
-  if (!is.scalar(tile_order, "character")) {
-    stop("tile_order argument must be a scalar string")
-  }
-  if (!is.null(coords_filter_list) && !is(coords_filter_list, "tiledb_filter_list")) {
-    stop("coords_filter_list argument must be a tiledb_filter_list instance")
-  }
-  if (!is.null(offsets_filter_list) && !is(offsets_filter_list, "tiledb_filter_list")) {
-    stop("offsets_filter_list argument must be a tiledb_filter_list instance")
-  }
-  if (tiledb_version(TRUE) >= "2.6.0" &&
-      !is.null(validity_filter_list) && !is(validity_filter_list, "tiledb_filter_list")) {
-    stop("validity_filter_list argument must be a tiledb_filter_list instance")
-  }
-  if (!is.logical(sparse)) {
-    stop("sparse argument must be a logical TRUE or FALSE")
-  }
-  if (!is.logical(allows_dups)) {
-    stop("allows_dups argument must be a logical TRUE or FALSE")
-  }
-  if (allows_dups && !sparse) {
-    stop("allows_dups argument requires sparse argument")
-  }
-  attr_ptrs <- lapply(attrs, function(obj) slot(obj, "ptr"))
-  coords_filter_list_ptr <- NULL
-  if (!is.null(coords_filter_list)) {
-    coords_filter_list_ptr <- coords_filter_list@ptr
-  }
-  offsets_filter_list_ptr <- NULL
-  if (!is.null(offsets_filter_list)) {
-    offsets_filter_list_ptr <- offsets_filter_list@ptr
-  }
-  validity_filter_list_ptr <- NULL
-  if (tiledb_version(TRUE) >= "2.6.0" && !is.null(validity_filter_list)) {
-    validity_filter_list_ptr <- validity_filter_list@ptr
-  }
-  ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptrs, cell_order, tile_order,
-                                coords_filter_list_ptr, offsets_filter_list_ptr,
-                                validity_filter_list_ptr, sparse)
-  libtiledb_array_schema_set_capacity(ptr, capacity)
-  if (allows_dups) {
-      libtiledb_array_schema_set_allows_dups(ptr, TRUE)
-  }
-  return(new("tiledb_array_schema", ptr = ptr))
+    if (!missing(attrs) && length(attrs) != 0) {
+        is_attr <- function(obj) is(obj, "tiledb_attr")
+        if (is_attr(attrs))             # if an attrs object given:
+            attrs <- list(attrs) 		# make it a list so that lapply works below
+        stopifnot("length of 'attrs' cannot be zero" = length(attrs) > 0,
+                  "'attrs' must be a list of one or tiled_attr objects" = all(vapply(attrs, is_attr, logical(1))))
+    } else {
+        attrs <- NULL
+    }
+    stopifnot("ctx argument must be a tiledb_ctx"           = is(ctx, "tiledb_ctx"),
+              "domain argument must be a tiledb::Domain"    = !missing(domain) && is(domain, "tiledb_domain"),
+              "cell_order argument must be a scalar string" = is.scalar(cell_order, "character"),
+              "tile_order argument must be a scalar string" = is.scalar(tile_order, "character"),
+              "coords_filter_list must be a filter list"    = is.null(coords_filter_list) || is(coords_filter_list, "tiledb_filter_list"),
+              "offsets_filter_list must be a filter_list"   = is.null(offsets_filter_list) || is(offsets_filter_list, "tiledb_filter_list"),
+              "validity_filter_list must be a_filter_list"  = is.null(validity_filter_list) || is(validity_filter_list, "tiledb_filter_list") || (tiledb_version(TRUE) < "2.6.0"),
+              "'sparse' must be TRUE or FALSE"              = is.logical(sparse),
+              "'allows_dups' must be TRUE or FALSE"         = is.logical(allows_dups),
+              "'allows_dups' requires 'sparse' TRUE"        = !allows_dups || sparse)
+    #if (allows_dups && !sparse) stop("'allows_dups' requires 'sparse' TRUE")
+
+    attr_ptr_list <- if (is.list(attrs)) lapply(attrs, function(obj) slot(obj, "ptr")) else list()
+    coords_filter_list_ptr <- if (!is.null(coords_filter_list)) coords_filter_list@ptr else NULL
+    offsets_filter_list_ptr <- if (!is.null(offsets_filter_list)) offsets_filter_list@ptr else NULL
+    validity_filter_list_ptr <- if (tiledb_version(TRUE) >= "2.6.0" && !is.null(validity_filter_list)) validity_filter_list@ptr else NULL
+
+    ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptr_list, cell_order, tile_order,
+                                  coords_filter_list_ptr, offsets_filter_list_ptr,
+                                  validity_filter_list_ptr, sparse)
+    libtiledb_array_schema_set_capacity(ptr, capacity)
+    if (allows_dups) libtiledb_array_schema_set_allows_dups(ptr, TRUE)
+    invisible(new("tiledb_array_schema", ptr = ptr))
 }
 
 tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {

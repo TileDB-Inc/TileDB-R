@@ -989,10 +989,17 @@ setMethod("[<-", "tiledb_array",
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
 
-  allnames <- c(dimnames, attrnames)
-  alltypes <- c(dimtypes, attrtypes)
-  allvarnum <- c(dimvarnum, attrvarnum)
-  allnullable <- c(dimnullable, attrnullable)
+  if (length(attrnames) > 0) {
+      allnames <- c(dimnames, attrnames)
+      alltypes <- c(dimtypes, attrtypes)
+      allvarnum <- c(dimvarnum, attrvarnum)
+      allnullable <- c(dimnullable, attrnullable)
+  } else {
+      allnames <- dimnames
+      alltypes <- dimtypes
+      allvarnum <- dimvarnum
+      allnullable <- dimnullable
+  }
 
   ## we will recognize two standard cases
   ##  1) arr[]    <- value    where value contains two columns with the dimnames
@@ -1005,7 +1012,7 @@ setMethod("[<-", "tiledb_array",
       if (length(intersect(colnames(value), allnames)) == length(allnames)) {
           ## all good, proceed
           #message("Yay all columns found")
-          value <- value[, allnames]    # reordering helps with append case
+          value <- value[, allnames, drop=FALSE]    # reordering helps with append case
       } else {
           stop("Assigned data.frame does not contain all required attribute and dimension columns.")
       }
