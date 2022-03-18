@@ -1487,9 +1487,6 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
                        bool sparse = false) {
     // check that external pointers are supported
     R_xlen_t nattr = attributes.length();
-    //if (nattr == 0) {
-    //  Rcpp::stop("libtiledb_array_schema requires one or more attributes");
-    //}
     if (nattr > 0) {
         for (R_xlen_t i=0; i < nattr; i++)  {
             SEXP attr = attributes[i];

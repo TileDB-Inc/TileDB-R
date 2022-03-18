@@ -20,7 +20,9 @@ based on a refactored implementation utilising newer TileDB features.
 
 \item{\code{as.data.frame}}{A logical value}
 
-\item{\code{attrs}}{A character vector to select particular column \sQuote{attributes}}
+\item{\code{attrs}}{A character vector to select particular column \sQuote{attributes};
+default is an empty character vector implying \sQuote{all} columns, the special
+value \code{NA_character_} has the opposite effect and selects \sQuote{none}.}
 
 \item{\code{extended}}{A logical value, defaults to \code{TRUE}, indicating whether index
 columns are returned as well.}

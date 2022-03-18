@@ -11,7 +11,7 @@
 }
 \value{
 An empty character vector if no attributes have been selected or else
-a vector with attributes.
+a vector with attributes; \code{NA} means no attributes will be returned.
 }
 \description{
 By default, all attributes will be selected. But if a subset of attribute
