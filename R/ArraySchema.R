@@ -69,7 +69,7 @@ tiledb_array_schema <- function(domain,
                                 capacity = 10000L,
                                 allows_dups = FALSE,
                                 ctx = tiledb_get_context()) {
-    if (!missing(attrs)) {
+    if (!missing(attrs) && length(attrs) != 0) {
         is_attr <- function(obj) is(obj, "tiledb_attr")
         if (is_attr(attrs))             # if an attrs object given:
             attrs <- list(attrs) 		# make it a list so that lapply works below
