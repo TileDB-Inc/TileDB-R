@@ -1485,45 +1485,48 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
                        Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue,
                        Nullable<XPtr<tiledb::FilterList>> validity_filter_list = R_NilValue,
                        bool sparse = false) {
-  // check that external pointers are supported
-  R_xlen_t nattr = attributes.length();
-  if (nattr == 0) {
-    Rcpp::stop("libtiledb_array_schema requires one or more attributes");
-  }
-  for (R_xlen_t i=0; i < nattr; i++)  {
-    SEXP attr = attributes[i];
-    if (TYPEOF(attr) != EXTPTRSXP) {
-      Rcpp::stop("Invalid attribute object at index %d (type %s)", i, Rcpp::type2name(attr));
+    // check that external pointers are supported
+    R_xlen_t nattr = attributes.length();
+    //if (nattr == 0) {
+    //  Rcpp::stop("libtiledb_array_schema requires one or more attributes");
+    //}
+    if (nattr > 0) {
+        for (R_xlen_t i=0; i < nattr; i++)  {
+            SEXP attr = attributes[i];
+            if (TYPEOF(attr) != EXTPTRSXP) {
+                Rcpp::stop("Invalid attribute object at index %d (type %s)", i, Rcpp::type2name(attr));
+            }
+        }
     }
-  }
-  auto _cell_order = _string_to_tiledb_layout(cell_order);
-  auto _tile_order = _string_to_tiledb_layout(tile_order);
-  auto schptr = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(),
-                                                            sparse ? TILEDB_SPARSE : TILEDB_DENSE));
-  auto schema = XPtr<tiledb::ArraySchema>(schptr);
-  schema->set_domain(*domain.get());
-  for (SEXP a : attributes) {
-    auto attr = as<XPtr<tiledb::Attribute>>(a);
-    schema->add_attribute(*attr.get());
-  }
-  schema->set_cell_order(_cell_order);
-  schema->set_tile_order(_tile_order);
-  if (coords_filter_list.isNotNull()) {
-    XPtr<tiledb::FilterList> xptr_coords(coords_filter_list);
-    schema->set_coords_filter_list(*xptr_coords);
-  }
-  if (offsets_filter_list.isNotNull()) {
-    XPtr<tiledb::FilterList> xptr_offsets(offsets_filter_list);
-    schema->set_offsets_filter_list(*xptr_offsets);
-  }
-  if (validity_filter_list.isNotNull()) {
+    auto _cell_order = _string_to_tiledb_layout(cell_order);
+    auto _tile_order = _string_to_tiledb_layout(tile_order);
+    auto schptr = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), sparse ? TILEDB_SPARSE : TILEDB_DENSE));
+    auto schema = XPtr<tiledb::ArraySchema>(schptr);
+    schema->set_domain(*domain.get());
+    if (nattr > 0) {
+        for (SEXP a : attributes) {
+            auto attr = as<XPtr<tiledb::Attribute>>(a);
+            schema->add_attribute(*attr.get());
+        }
+    }
+    schema->set_cell_order(_cell_order);
+    schema->set_tile_order(_tile_order);
+    if (coords_filter_list.isNotNull()) {
+        XPtr<tiledb::FilterList> xptr_coords(coords_filter_list);
+        schema->set_coords_filter_list(*xptr_coords);
+    }
+    if (offsets_filter_list.isNotNull()) {
+        XPtr<tiledb::FilterList> xptr_offsets(offsets_filter_list);
+        schema->set_offsets_filter_list(*xptr_offsets);
+    }
+    if (validity_filter_list.isNotNull()) {
 #if TILEDB_VERSION >= TileDB_Version(2,6,0)
-    XPtr<tiledb::FilterList> xptr_validity(validity_filter_list);
-    schema->set_validity_filter_list(*xptr_validity);
+        XPtr<tiledb::FilterList> xptr_validity(validity_filter_list);
+        schema->set_validity_filter_list(*xptr_validity);
 #endif
-  }
-  schema->check();
-  return schema;
+    }
+    schema->check();
+    return schema;
 }
 
 // [[Rcpp::export]]
