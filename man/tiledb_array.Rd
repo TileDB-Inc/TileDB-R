@@ -46,7 +46,8 @@ tiledb_sparse(...)
 \item{as.data.frame}{optional logical switch, defaults to "FALSE"}
 
 \item{attrs}{optional character vector to select attributes, default is
-empty implying all are selected}
+empty implying all are selected, the special value \code{NA_character_}
+has the opposite effect and implies no attributes are returned.}
 
 \item{extended}{optional logical switch selecting wide \sQuote{data.frame}
 format, defaults to \code{TRUE}}

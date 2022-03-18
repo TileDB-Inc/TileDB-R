@@ -9,7 +9,9 @@
 \arguments{
 \item{x}{A \code{tiledb_array} object}
 
-\item{value}{A character vector with attributes}
+\item{value}{A character vector with attributes; the value \code{NA_character_}
+signals no attributes should be returned; default is an empty character vector
+implying all columns are returned.}
 }
 \value{
 The modified \code{tiledb_array} object

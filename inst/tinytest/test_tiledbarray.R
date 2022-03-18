@@ -1408,3 +1408,13 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   res <- A[]
   expect_equal(res[, "a", drop=TRUE], as.integer64(c(22,26)))
 }
+
+
+## test for no attributes
+library(palmerpenguins)
+uri <- tempfile()
+fromDataFrame(penguins, uri, sparse = TRUE, col_index = c("species", "year"))
+arr <- tiledb_array(uri, as.data.frame = TRUE, attrs = NA_character_)
+res <- arr[]
+expect_equal(NCOL(res), 2)
+expect_equal(colnames(res), c("species", "year"))

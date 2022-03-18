@@ -31,7 +31,9 @@
 #' @slot uri A character despription with the array URI
 #' @slot is.sparse A logical value whether the array is sparse or not
 #' @slot as.data.frame A logical value
-#' @slot attrs A character vector to select particular column \sQuote{attributes}
+#' @slot attrs A character vector to select particular column \sQuote{attributes};
+#' default is an empty character vector implying \sQuote{all} columns, the special
+#' value \code{NA_character_} has the opposite effect and selects \sQuote{none}.
 #' @slot extended A logical value, defaults to \code{TRUE}, indicating whether index
 #' columns are returned as well.
 #' @slot selected_ranges An optional list with matrices where each matrix i
@@ -94,7 +96,8 @@ setClass("tiledb_array",
 #' @param is.sparse optional logical switch, defaults to "NA" letting array determine it
 #' @param as.data.frame optional logical switch, defaults to "FALSE"
 #' @param attrs optional character vector to select attributes, default is
-#' empty implying all are selected
+#' empty implying all are selected, the special value \code{NA_character_}
+#' has the opposite effect and implies no attributes are returned.
 #' @param extended optional logical switch selecting wide \sQuote{data.frame}
 #' format, defaults to \code{TRUE}
 #' @param selected_ranges optional A list with matrices where each matrix i
@@ -517,8 +520,14 @@ setMethod("[", "tiledb_array",
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
+  if (length(sel)==1 && is.na(sel[1])) {            # special case of NA selecting no attrs
+    attrnames <- character()
+    attrtypes <- character()
+    attrvarnum <- integer()
+    attrnullable <- logical()
+  }
 
-  if (length(sel) != 0) {
+  if (length(sel) != 0 && !any(is.na(sel))) {
     ind <- match(sel, attrnames)
     if (length(ind) == 0) {
       stop("Only non-existing columns selected.", call.=FALSE)
@@ -540,7 +549,6 @@ setMethod("[", "tiledb_array",
       allvarnum <- attrvarnum
       allnullable <- attrnullable
   }
-
   ## A preference can be set in a local per-user configuration file; if no value
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
@@ -1187,7 +1195,7 @@ setReplaceMethod("return.data.frame",
 #' will be queried.  This methods accesses the slot.
 #' @param object A \code{tiledb_array} object
 #' @return An empty character vector if no attributes have been selected or else
-#' a vector with attributes.
+#' a vector with attributes; \code{NA} means no attributes will be returned.
 #' @importFrom methods validObject
 #' @export
 setMethod("attrs",
@@ -1197,7 +1205,9 @@ setMethod("attrs",
 #' Selects attributes for the given TileDB array
 #'
 #' @param x A \code{tiledb_array} object
-#' @param value A character vector with attributes
+#' @param value A character vector with attributes; the value \code{NA_character_}
+#' signals no attributes should be returned; default is an empty character vector
+#' implying all columns are returned.
 #' @return The modified \code{tiledb_array} object
 #' @export
 setReplaceMethod("attrs",
