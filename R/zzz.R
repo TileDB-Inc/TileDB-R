@@ -52,6 +52,19 @@
 
     ## set a preference for allocation size defaults
     .pkgenv[["allocation_size"]] <- load_allocation_size_preference()
+
+    ## find library and header directories from either an env var, or pkg-config
+    ## used only by the Rcpp 'plugin' facilitating quick experimentation with short C++ files
+    .pkgenv[["tiledb_cppflag"]] <- ""
+    .pkgenv[["tiledb_ldflag"]] <- ""
+    pkgcfg <- unname(Sys.which("pkg-config"))
+    if ((tiledb <- Sys.getenv("TILEDB_INSTALL_DIR", "")) != "") {
+        .pkgenv[["tiledb_cppflag"]] <- sprintf("-I%s/include", tiledb)
+        .pkgenv[["tiledb_ldflag"]] <- sprintf("-L%s -ltiledb", tiledb)
+    } else if (pkgcfg != "") {
+        .pkgenv[["tiledb_cppflag"]] <- system2(pkgcfg, c("tiledb", "--cflags"), stdout = TRUE)
+        .pkgenv[["tiledb_ldflag"]] <- system2(pkgcfg, c("tiledb", "--libs"), stdout = TRUE)
+    }
 }
 
 .onAttach <- function(libname, pkgName) {
@@ -60,4 +73,16 @@
                               " with TileDB Embedded ", format(tiledb_version(TRUE)),
                               ". See https://tiledb.com for more information.")
     }
+}
+
+## this uses an interface offered by the Rcpp package which, when seeing 'Rcpp::depends(pkgname)'
+## will look for a pkgname::inlineCxxPlugin callback to learn about compile + link options
+inlineCxxPlugin <- function(...) {
+    plugin <- Rcpp::Rcpp.plugin.maker(libs = .pkgenv$tiledb_ldflag,
+                                      package = "tiledb",
+                                      Makevars = NULL,
+                                      Makevars.win = NULL)
+    settings <- plugin()
+    settings$env$PKG_CPPFLAGS <- .pkgenv[["tiledb_cppflag"]]
+    settings
 }
