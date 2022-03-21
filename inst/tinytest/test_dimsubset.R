@@ -100,7 +100,8 @@ expect_equal(unique(dat$dest), "BOS")
 daterange <- c(as.POSIXct("2013-01-10 00:00:00"), as.POSIXct("2013-01-19 23:59:99"))
 selected_ranges(newarr) <- list(time_hour = cbind(daterange[1], daterange[2]))
 dat <- newarr[]
-expect_true(dat$time_hour >= daterange[1] && dat$time_hour <= daterange[2])
+expect_true(all(dat$time_hour >= daterange[1]))
+expect_true(all(dat$time_hour <= daterange[2]))
 
 
 ## test named lists of two
