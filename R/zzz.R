@@ -53,18 +53,8 @@
     ## set a preference for allocation size defaults
     .pkgenv[["allocation_size"]] <- load_allocation_size_preference()
 
-    ## find library and header directories from either an env var, or pkg-config
-    ## used only by the Rcpp 'plugin' facilitating quick experimentation with short C++ files
-    .pkgenv[["tiledb_cppflag"]] <- ""
-    .pkgenv[["tiledb_ldflag"]] <- ""
-    pkgcfg <- unname(Sys.which("pkg-config"))
-    if ((tiledb <- Sys.getenv("TILEDB_INSTALL_DIR", "")) != "") {
-        .pkgenv[["tiledb_cppflag"]] <- sprintf("-I%s/include", tiledb)
-        .pkgenv[["tiledb_ldflag"]] <- sprintf("-L%s -ltiledb", tiledb)
-    } else if (pkgcfg != "") {
-        .pkgenv[["tiledb_cppflag"]] <- system2(pkgcfg, c("tiledb", "--cflags"), stdout = TRUE)
-        .pkgenv[["tiledb_ldflag"]] <- system2(pkgcfg, c("tiledb", "--libs"), stdout = TRUE)
-    }
+    ## call setter for Rcpp plugin support
+    .set_compile_link_options()
 }
 
 .onAttach <- function(libname, pkgName) {
@@ -85,4 +75,22 @@ inlineCxxPlugin <- function(...) {
     settings <- plugin()
     settings$env$PKG_CPPFLAGS <- .pkgenv[["tiledb_cppflag"]]
     settings
+}
+
+## find library and header directories from either an env var, or pkg-config
+## used only by the Rcpp 'plugin' facilitating quick experimentation with short C++ files
+.set_compile_link_options <- function(cppflag, ldflag) {
+    if (missing(cppflag) && missing(ldflag)) {
+        pkgcfg <- unname(Sys.which("pkg-config"))
+        if ((tiledb <- Sys.getenv("TILEDB_INSTALL_DIR", "")) != "") {
+            .pkgenv[["tiledb_cppflag"]] <- sprintf("-I%s/include", tiledb)
+            .pkgenv[["tiledb_ldflag"]] <- sprintf("-L%s -ltiledb", tiledb)
+        } else if (pkgcfg != "") {
+            .pkgenv[["tiledb_cppflag"]] <- system2(pkgcfg, c("tiledb", "--cflags"), stdout = TRUE)
+            .pkgenv[["tiledb_ldflag"]] <- system2(pkgcfg, c("tiledb", "--libs"), stdout = TRUE)
+        }
+    } else {
+        .pkgenv[["tiledb_cppflag"]] <- cppflag
+        .pkgenv[["tiledb_ldflag"]] <- ldflag
+    }
 }
