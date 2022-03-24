@@ -32,4 +32,4 @@ jobs:
       run: tools/ci/valgrind/showTestLogs.sh
 
     - name: Show Valgrind Summary
-      run: tools/ci/valgrind/valgrindSummary.sh
+      run: tools/ci/valgrind/valgrindSummary.sh ${{ matrix.tag }}
