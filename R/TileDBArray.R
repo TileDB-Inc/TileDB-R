@@ -829,7 +829,7 @@ setMethod("[", "tiledb_array",
   ## convert to factor if that was asked
   if (x@strings_as_factors) {
       for (n in colnames(res))
-          if (class(res[[n]])=="character")
+          if (is.character(res[[n]]))
               res[[n]] <- as.factor(res[[n]])
   }
 
