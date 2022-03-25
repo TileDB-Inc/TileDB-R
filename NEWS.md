@@ -1,3 +1,60 @@
+# tiledb 0.11.1
+
+* This release of the R package builds against [TileDB 2.6.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.6.4), but has also been tested against earlier releases, and the development version.
+
+## Improvements
+
+* Use of TileDB Embedded was upgraded to release 2.6.4 (#384) following an earlier upgrade to 2.6.2 (#359)
+
+* Creations of arrays from `data.frame` objects now supports a `mode=` argument with values 'ingest', 'schema_only', and 'append' (#360)
+
+* Some unit test and continuous integration code was refactored (#364, #375)
+
+* Finalizer use is now simplified taking advantage of an [Rcpp](https://cran.r-project.org/package=Rcpp) change (#366)
+
+* A new option `strings\_as\_factors` was added for `data.frame` retrieval (#367)
+
+* The [arrow](https://cran.r-project.org/package=arrow) C-level interface now uses external pointer objects following Arrow 7.0 (#368)
+
+* Support for memory limits has been extended, and partial reads are using with iterations to complete (#371)
+
+* Fragment info reading now account for the `__fragments` object (#373)
+
+* A nightly test under [valgrind](https://valgrind.org/) has been added; results are reported to slack (#382, #383)
+
+* UTF-8 string in metadata are now supported (#377)
+
+* Attribute-less arrays can now be created, written, and read (#378), also via higher-level accessors (#379)
+
+* A plugin for [Rcpp](https://cran.r-project.org/package=Rcpp) has been added (#380)
+
+## Bug Fixes
+
+* Array status is now checked before closing (#362)
+
+* Signed and unsigned `int64` dimensions are now mapped correctly from 'square-bracket indexing', and the third dimension is recognised (#365)
+
+* Domain information could overflow `int64_t` if an unsigned value was used, this now flips to `double` (#370)
+
+* Unit tests for consolidation and vacuuming were update to account for `__fragments` too (#374)
+
+* A unit test was corrected to ensure logical expressions are of length one (#381)
+
+## Documentation
+
+* A new vignette on data ingestion has been added (#357)
+
+* A new vignette on installation options has been added (#358)
+
+* The vignettes are now built using package [simplermarkdown](https://cran.r-project.org/package=simplermarkdown) (#361)
+
+* Help pages were polished (#369)
+
+## Deprecations
+
+* The `tiledb_dense` and `tiledb_sparse` functions which were deprecated in February 2021 have been removed after a twelve-month grace period.
+
+
 # tiledb 0.11.0
 
 * This release of the R package builds against [TileDB 2.6.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.6.1), but has also been tested against previous releases, and the development version.
