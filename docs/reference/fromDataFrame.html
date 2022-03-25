@@ -14,7 +14,7 @@ with the R representations of Date, POSIXct and nanotime."><!-- mathjax --><scri
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,14 +24,6 @@ with the R representations of Date, POSIXct and nanotime."><!-- mathjax --><scri
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/documentation.html">TileDB API Documentation</a>
-    <a class="dropdown-item" href="../articles/introduction.html">First Steps with TileDB</a>
-    <a class="dropdown-item" href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
-  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -77,6 +69,7 @@ with the R representations of <code>Date</code>, <code>POSIXct</code> and <code>
   capacity <span class="op">=</span> <span class="fl">10000L</span>,
   tile_domain <span class="op">=</span> <span class="cn">NULL</span>,
   tile_extent <span class="op">=</span> <span class="cn">NULL</span>,
+  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ingest"</span>, <span class="st">"schema_only"</span>, <span class="st">"append"</span><span class="op">)</span>,
   debug <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -116,8 +109,13 @@ dimension of the <code>obj</code> is used.</p></dd>
 <dd><p>An integer value for the tile extent of the row dimensions;
 if <code>NULL</code> the row dimension of the <code>obj</code> is used. Note that the <code>tile_extent</code>
 cannot exceed the tile domain.</p></dd>
+<dt>mode</dt>
+<dd><p>A character variable with possible values ‘ingest’ (for schema creation and
+data ingestion, the default behavior), ‘schema_only’ (to create the array schema without
+writing to the newly-created array) and ‘append’ (to only append to an already existing
+array).</p></dd>
 <dt>debug</dt>
-<dd><p>Logical flag to select additional output</p></dd>
+<dd><p>Logical flag to select additional output.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

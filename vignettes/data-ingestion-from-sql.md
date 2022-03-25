@@ -16,30 +16,30 @@ variety of ways. Users sometimes wonder how to transfer data from existing datab
 vignettes shows an example relying on the [DBI](https://cran.r-project.org/package=DBI) package for
 R. It offers a powerful and convenient abstraction layer on top a number of database backends with
 connection packages that adhere to, and utilise, the DBI framework.  Some examples are the packages
-(listed in alphabetical order) [duckdb](https://cran.r-project.org/web/packages/duckdb/index.html),
-[RClickhouse](https://cran.r-project.org/web/packages/RClickhouse/index.html),
-[RGreenplum](https://cran.r-project.org/web/packages/RGreenplum/index.html),
-[RJDBC](https://cran.r-project.org/web/packages/RJDBC/index.html),
-[RMariaDB](https://cran.r-project.org/web/packages/RMariaDB/index.html),
-[RMySQL](https://cran.r-project.org/web/packages/RMySQL/index.html),
-[ROracle](https://cran.r-project.org/web/packages/ROracle/index.html),
-[RPostgres](https://cran.r-project.org/web/packages/RPostgres/index.html),
-[RPostgreSQL](https://cran.r-project.org/web/packages/RPostgreSQL/index.html),
-[RPresto](https://cran.r-project.org/web/packages/RPresto/index.html),
-[RRedshiftSQL](https://cran.r-project.org/web/packages/RRedshiftSQL/index.html),
-[RSQLite](https://cran.r-project.org/web/packages/RSQLite/index.html), and many more as seen via the
+(listed in alphabetical order) [duckdb](https://cran.r-project.org/package=duckdb),
+[RClickhouse](https://cran.r-project.org/package=RClickhouse),
+[RGreenplum](https://cran.r-project.org/package=RGreenplum),
+[RJDBC](https://cran.r-project.org/package=RJDBC),
+[RMariaDB](https://cran.r-project.org/package=RMariaDB),
+[RMySQL](https://cran.r-project.org/package=RMySQL),
+[ROracle](https://cran.r-project.org/package=ROracle),
+[RPostgres](https://cran.r-project.org/package=RPostgres),
+[RPostgreSQL](https://cran.r-project.org/package=RPostgreSQL),
+[RPresto](https://cran.r-project.org/package=RPresto),
+[RRedshiftSQL](https://cran.r-project.org/package=RRedshiftSQL),
+[RSQLite](https://cran.r-project.org/package=RSQLite), and many more as seen via the
 [CRAN page](https://cran.r-project.org/package=DBI).
 
 We provide a simple example using
-[RPostgreSQL](https://cran.r-project.org/web/packages/RPostgreSQL/index.html) and an existing
+[RPostgreSQL](https://cran.r-project.org/package=RPostgreSQL) and an existing
 database of historical stockmarket price data.
 
 ## Load Required Packages
 
 The basic setup is straightforward. We load the required package
-[RPostgreSQL](https://cran.r-project.org/web/packages/RPostgreSQL/index.html) which in turn imports
-[DBI]([RPostgreSQL](https://cran.r-project.org/web/packages/DBI/index.html)) as well as
-[tiledb](https://cran.r-project.org/web/packages/tiledb/index.html). We use
+[RPostgreSQL](https://cran.r-project.org/package=RPostgreSQL) which in turn imports
+[DBI](https://cran.r-project.org/package=DBI) as well as
+[tiledb](https://cran.r-project.org/package=tiledb). We use
 [data.table](https://cran.r-project.org/package=data.table) for its print method, the
 [tibble](https://cran.r-project.org/package=tibble) package offers an alternative):
 
@@ -56,7 +56,7 @@ connection can be established via `dbConnect` using appropriate arguments `dbnam
 `password`, `host`, and `port`, as needed, with proper dispatching the implementation provided by
 the driver.  The details depend on the chosen backend, this can be as simple as `con <-
 dbConnect(RSQLite::SQLite(), ":memory:")` in the case of
-[RSQLite](https://cran.r-project.org/web/packages/RSQLite/index.html) and an in-memory (and likely
+[RSQLite](https://cran.r-project.org/package=RSQLite) and an in-memory (and likely
 transient) database.
 
 ```r
@@ -137,8 +137,7 @@ cat("Done!\n")
 The vignette [TileDB MariaDB Examples](tiledb-mariadb-examples.html) shows to
 use MariaDB via the MyTile integration of TileDB as a direct backend.
 
-The [TileDB R Tutorial at useR!
-2021](https://github.com/TileDB-Inc/tiledb-r-tutorials/blob/master/2021-06-user-slides/) contained a
+The [TileDB R Tutorial at useR! 2021](https://dirk.eddelbuettel.com/papers/useR2021_tiledb_tutorial.pdf) contained a
 worked example of writing _much_ larger data set in chunks.  The process is very similar to the
 simple example we showed here -- and in addition requires a suffient domain range for the dimension
 along with a (sequential or parallel) loop of reading chunks and writing them to TileDB.
