@@ -32,4 +32,6 @@ jobs:
       run: tools/ci/valgrind/showTestLogs.sh
 
     - name: Show Valgrind Summary
-      run: tools/ci/valgrind/valgrindSummary.sh ${{ matrix.tag }}
+      env:
+        slack_web_hook: ${{ secrets.SLACK_WEBHOOK_SECRET }}
+      run: tools/ci/valgrind/valgrindSummary.sh ${{ matrix.tag }} "${slack_web_hook}"
