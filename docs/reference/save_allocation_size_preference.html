@@ -12,7 +12,7 @@ config file"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,14 +22,6 @@ config file"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/documentation.html">TileDB API Documentation</a>
-    <a class="dropdown-item" href="../articles/introduction.html">First Steps with TileDB</a>
-    <a class="dropdown-item" href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
-  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -87,20 +79,21 @@ side effect of storing the value. For the getters, the value as a numeric.</p>
 be determined <em>ex ante</em> as the degree of sparsity is unknown.
 A configuration value can aide in providing an allocation size
 value. These functions let the user store such a value for
-retrieval by the package code.  The preference will be enconded in
-a configuration file as R (version 4.0.0 or later) allows a user-
-and package specific configuration files.  These helper functions
-sets and retrieve the value, respectively, or retrieve the cached
-value from the package environment where is it set at package
-load.</p>
+retrieval by their package or script code.  The preference will be
+encoded in a configuration file as R (version 4.0.0 or later)
+allows a user- and package specific configuration files.  These
+helper functions sets and retrieve the value, respectively, or
+retrieve the cached value from the package environment where is it
+set at package load.</p>
 <p>The value will be stored as a character value and reparsed so
 ‘1e6’ and ‘1000000’ are equivalent, and the fixed
 (but adjustable) number of digits for numerical precision
 <em>use for formatting</em> will impact the writing. This should
 have no effect on standard allocation sizes.</p>
-<p>Note that this memory budget (currently, at least) applies only to
-character columns.  A fallback value of 50mb is used if no user
-value is set, and is used for all columns (rather than per column).</p>
+<p>The value is used as a limit <em>per column</em> so total memory use
+per query will a multiple of this value, and increasing in
+dimension and attribute count.</p>
+<p>A fallback value of 10 mb is used if no user value is set.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>

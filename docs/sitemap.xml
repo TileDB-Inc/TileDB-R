@@ -331,6 +331,12 @@
     <loc>/reference/show-tiledb_sparse-method.html</loc>
   </url>
   <url>
+    <loc>/reference/strings_as_factors-set-tiledb_array-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/strings_as_factors-tiledb_array-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/sub-tiledb_array-ANY-method.html</loc>
   </url>
   <url>

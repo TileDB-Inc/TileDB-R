@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,14 +20,6 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/documentation.html">TileDB API Documentation</a>
-    <a class="dropdown-item" href="../articles/introduction.html">First Steps with TileDB</a>
-    <a class="dropdown-item" href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
-  </div>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -52,6 +44,44 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.11.1" id="tiledb-0111">tiledb 0.11.1<a class="anchor" aria-label="anchor" href="#tiledb-0111"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.6.4" class="external-link">TileDB 2.6.4</a>, but has also been tested against earlier releases, and the development version.</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-11-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-11-1"></a></h3>
+<ul><li><p>Use of TileDB Embedded was upgraded to release 2.6.4 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/384" class="external-link">#384</a>) following an earlier upgrade to 2.6.2 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/359" class="external-link">#359</a>)</p></li>
+<li><p>Creations of arrays from <code>data.frame</code> objects now supports a <code>mode=</code> argument with values ‘ingest’, ‘schema_only’, and ‘append’ (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/360" class="external-link">#360</a>)</p></li>
+<li><p>Some unit test and continuous integration code was refactored (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/364" class="external-link">#364</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/375" class="external-link">#375</a>)</p></li>
+<li><p>Finalizer use is now simplified taking advantage of an <a href="https://cran.r-project.org/package=Rcpp" class="external-link">Rcpp</a> change (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/366" class="external-link">#366</a>)</p></li>
+<li><p>A new option <code>strings\_as\_factors</code> was added for <code>data.frame</code> retrieval (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/367" class="external-link">#367</a>)</p></li>
+<li><p>The <a href="https://cran.r-project.org/package=arrow" class="external-link">arrow</a> C-level interface now uses external pointer objects following Arrow 7.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/368" class="external-link">#368</a>)</p></li>
+<li><p>Support for memory limits has been extended, and partial reads are using with iterations to complete (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/371" class="external-link">#371</a>)</p></li>
+<li><p>Fragment info reading now account for the <code>__fragments</code> object (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/373" class="external-link">#373</a>)</p></li>
+<li><p>A nightly test under <a href="https://valgrind.org/" class="external-link">valgrind</a> has been added; results are reported to slack (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/382" class="external-link">#382</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/383" class="external-link">#383</a>)</p></li>
+<li><p>UTF-8 string in metadata are now supported (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/377" class="external-link">#377</a>)</p></li>
+<li><p>Attribute-less arrays can now be created, written, and read (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/378" class="external-link">#378</a>), also via higher-level accessors (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/379" class="external-link">#379</a>)</p></li>
+<li><p>A plugin for <a href="https://cran.r-project.org/package=Rcpp" class="external-link">Rcpp</a> has been added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/380" class="external-link">#380</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-11-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-11-1"></a></h3>
+<ul><li><p>Array status is now checked before closing (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/362" class="external-link">#362</a>)</p></li>
+<li><p>Signed and unsigned <code>int64</code> dimensions are now mapped correctly from ‘square-bracket indexing’, and the third dimension is recognised (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/365" class="external-link">#365</a>)</p></li>
+<li><p>Domain information could overflow <code>int64_t</code> if an unsigned value was used, this now flips to <code>double</code> (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/370" class="external-link">#370</a>)</p></li>
+<li><p>Unit tests for consolidation and vacuuming were update to account for <code>__fragments</code> too (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/374" class="external-link">#374</a>)</p></li>
+<li><p>A unit test was corrected to ensure logical expressions are of length one (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/381" class="external-link">#381</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-11-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-11-1"></a></h3>
+<ul><li><p>A new vignette on data ingestion has been added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/357" class="external-link">#357</a>)</p></li>
+<li><p>A new vignette on installation options has been added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/358" class="external-link">#358</a>)</p></li>
+<li><p>The vignettes are now built using package <a href="https://cran.r-project.org/package=simplermarkdown" class="external-link">simplermarkdown</a> (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/361" class="external-link">#361</a>)</p></li>
+<li><p>Help pages were polished (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/369" class="external-link">#369</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecations-0-11-1">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-11-1"></a></h3>
+<ul><li>The <code>tiledb_dense</code> and <code>tiledb_sparse</code> functions which were deprecated in February 2021 have been removed after a twelve-month grade period.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.0" id="tiledb-0110">tiledb 0.11.0<a class="anchor" aria-label="anchor" href="#tiledb-0110"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.6.1" class="external-link">TileDB 2.6.1</a>, but has also been tested against previous releases, and the development version.</li>
