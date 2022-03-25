@@ -3,6 +3,11 @@
 ver="<unknown>"
 hook="${SLACK_WEBHOOK_SECRET}"
 
+if [ $# -ge 1 ]; then
+     ver=$1
+     #echo "Version is ${ver}."
+fi
+
 ## check for successful, or unsuccessful, output and use either
 for suffix in Rout Rout.fail; do
     file="tiledb.Rcheck/tests/tinytest.${suffix}"
