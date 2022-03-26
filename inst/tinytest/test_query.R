@@ -133,7 +133,7 @@ if (requireNamespace("nanotime", quietly=TRUE)) {
   d1ptr <- tiledb_query_buffer_alloc_ptr(qry, "DATETIME_US", 6)
   qry <- tiledb_query_set_buffer_ptr(qry, "d1", d1ptr)
 
-  qry <- tiledb_query_add_range(qry, schema(arr), "rows", as.integer64(4), as.integer64(7))
+  qry <- tiledb_query_add_range(qry, tiledb::schema(arr), "rows", as.integer64(4), as.integer64(7))
 
   tiledb_query_submit(qry)
   tiledb_query_finalize(qry)

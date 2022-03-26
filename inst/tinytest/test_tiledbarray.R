@@ -995,12 +995,12 @@ expect_equal(tiledb_array_get_non_empty_domain_from_index(arr, 2), c("a", "c"))
 expect_equal(tiledb_array_get_non_empty_domain_from_name(arr, "d2"), c("a", "c"))
 
 ## access schema from uri
-schema2 <- schema(tmp)
+schema2 <- tiledb::schema(tmp)
 expect_true(is(schema2, "tiledb_array_schema"))
 expect_equal(schema, schema2)
 
 ## access schema from array
-schema3 <- schema(arr)
+schema3 <- tiledb::schema(arr)
 expect_true(is(schema3, "tiledb_array_schema"))
 expect_equal(schema, schema3)
 
