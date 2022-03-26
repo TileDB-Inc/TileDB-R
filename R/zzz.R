@@ -83,11 +83,11 @@ inlineCxxPlugin <- function(...) {
 .set_compile_link_options <- function(cppflag, ldflag) {
     if (missing(cppflag) && missing(ldflag)) {
         pkgcfg <- unname(Sys.which("pkg-config"))
-        have_tiledb_pkgcfg <- isTRUE(pkgcfg != "") && isTRUE(system2("pkg-config", c("tiledb", "--exists"))==0)
+        have_tiledb_pkgcfg <- isTRUE(pkgcfg != "" && system2(pkgcfg, c("tiledb", "--exists")) == 0)
         if ((tiledb <- Sys.getenv("TILEDB_INSTALL_DIR", "")) != "") {
             .pkgenv[["tiledb_cppflag"]] <- sprintf("-I%s/include", tiledb)
             .pkgenv[["tiledb_ldflag"]] <- sprintf("-L%s -ltiledb", tiledb)
-        } else if (have_tiledb_pkgcfg != "") {
+        } else if (have_tiledb_pkgcfg) {
             .pkgenv[["tiledb_cppflag"]] <- system2(pkgcfg, c("tiledb", "--cflags"), stdout = TRUE)
             .pkgenv[["tiledb_ldflag"]] <- system2(pkgcfg, c("tiledb", "--libs"), stdout = TRUE)
         } else {
