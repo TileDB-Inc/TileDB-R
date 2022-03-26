@@ -1,2 +1,2 @@
-version: 2.6.4
-sha: 477532b
+version: 2.8.0-rc0
+sha: 2296107
