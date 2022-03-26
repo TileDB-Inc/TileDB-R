@@ -1,3 +1,10 @@
+# Under development
+
+## Bug Fixes
+
+* The detection of TileDB headers and library is now more robust for cases where `pkg-config` is present but does not know about TileDB (#385)
+
+
 # tiledb 0.11.1
 
 * This release of the R package builds against [TileDB 2.6.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.6.4), but has also been tested against earlier releases, and the development version.

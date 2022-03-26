@@ -120,9 +120,7 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_AS"     # attosecond
               )
 for (dtype in dimtypes) {
-    if (tiledb_vfs_is_dir(uri)) {
-        tiledb_vfs_remove_dir(uri)
-    }
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     dom <- switch(dtype,
                   "ASCII"          = NULL,
                   "INT8"           =,

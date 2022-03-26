@@ -68,7 +68,8 @@
 ## this uses an interface offered by the Rcpp package which, when seeing 'Rcpp::depends(pkgname)'
 ## will look for a pkgname::inlineCxxPlugin callback to learn about compile + link options
 inlineCxxPlugin <- function(...) {
-    plugin <- Rcpp::Rcpp.plugin.maker(libs = .pkgenv$tiledb_ldflag,
+    stopifnot("No TileDB installation found." = .pkgenv[["tiledb_ldflag"]] != "")
+    plugin <- Rcpp::Rcpp.plugin.maker(libs = .pkgenv[["tiledb_ldflag"]],
                                       package = "tiledb",
                                       Makevars = NULL,
                                       Makevars.win = NULL)
@@ -82,12 +83,16 @@ inlineCxxPlugin <- function(...) {
 .set_compile_link_options <- function(cppflag, ldflag) {
     if (missing(cppflag) && missing(ldflag)) {
         pkgcfg <- unname(Sys.which("pkg-config"))
+        have_tiledb_pkgcfg <- isTRUE(pkgcfg != "" && system2(pkgcfg, c("tiledb", "--exists")) == 0)
         if ((tiledb <- Sys.getenv("TILEDB_INSTALL_DIR", "")) != "") {
             .pkgenv[["tiledb_cppflag"]] <- sprintf("-I%s/include", tiledb)
             .pkgenv[["tiledb_ldflag"]] <- sprintf("-L%s -ltiledb", tiledb)
-        } else if (pkgcfg != "") {
+        } else if (have_tiledb_pkgcfg) {
             .pkgenv[["tiledb_cppflag"]] <- system2(pkgcfg, c("tiledb", "--cflags"), stdout = TRUE)
             .pkgenv[["tiledb_ldflag"]] <- system2(pkgcfg, c("tiledb", "--libs"), stdout = TRUE)
+        } else {
+            .pkgenv[["tiledb_cppflag"]] <- ""
+            .pkgenv[["tiledb_ldflag"]] <- ""
         }
     } else {
         .pkgenv[["tiledb_cppflag"]] <- cppflag
