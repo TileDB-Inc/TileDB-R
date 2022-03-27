@@ -2,6 +2,15 @@
 template:
   bootstrap: 5
 
+articles:
+- title: TileDB R
+  contents:
+  - IntroductionToTileDB
+  - InstallationOptions
+  - TileDBAPIDocumentation
+  - DataIngestionFromSQL
+  - TileDBRMariaDBExamples
+
 reference:
 - title: Ctx
   contents:

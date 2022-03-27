@@ -4,7 +4,7 @@
 %\VignetteEncoding{UTF-8}
 -->
 ---
-title: "TileDB Ingestion from SQL: A Commented Example"
+title: "Date Ingestion from SQL: A Commented Example"
 date: "2022-01-25"
 css: "water.css"
 ---
