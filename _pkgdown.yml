@@ -3,13 +3,20 @@ template:
   bootstrap: 5
 
 articles:
-- title: TileDB R
+- title: TileDB R Introduction
+  navbar: Introduction
   contents:
-  - IntroductionToTileDB
-  - InstallationOptions
-  - TileDBAPIDocumentation
-  - DataIngestionFromSQL
-  - TileDBRMariaDBExamples
+  - introduction
+  - installation-options
+- title: TileDB R API
+  navbar: API
+  contents:
+  - documentation
+- title: Working with SQL
+  navbar: SQL
+  contents:
+  - data-ingestion-from-sql
+  - tiledb-mariadb-examples
 
 reference:
 - title: Ctx

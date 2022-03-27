@@ -21,3 +21,5 @@
 ^\.ci
 ^\.github
 ^\.nojekyll
+^vignettes/md
+^vignettes/rmd
