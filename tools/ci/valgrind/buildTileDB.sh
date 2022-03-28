@@ -11,10 +11,15 @@ fi
 ## cmdline arg gives us desired release version, most recent could be read off GitHub Releases tag too
 version="$1"
 
+## check if version is of the form release-*; use grep here to not use bash [[ ]] notation
+echo "${version}" | grep -q "^release-" -
+isrelease=$?
 
+## fetch appropriate sources
 echo "::group::Setup sources"
-## standard build off source, enabling s3 and serialization
-if [ ${version} = "dev" ]; then
+if [ ${isrelease} -eq 0 ]; then
+    git clone --single-branch --branch ${version} https://github.com/TileDB-Inc/TileDB.git TileDB-${version}
+elif [ ${version} = "dev" ]; then
     wget https://github.com/TileDB-Inc/TileDB/archive/refs/heads/${version}.zip
     unzip ${version}.zip
     rm ${version}.zip
@@ -28,6 +33,7 @@ cd tiledb
 echo "::endgroup::"
 
 
+## standard build off source, enabling s3 and serialization
 echo "::group::Build from source"
 mkdir build
 cd build
