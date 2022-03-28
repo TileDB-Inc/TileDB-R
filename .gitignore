@@ -42,3 +42,7 @@ local*
 GPATH
 GRTAGS
 GTAGS
+docs/articles/md/
+docs/articles/rmd/
+docs/articles/water.css
+vignettes/md/

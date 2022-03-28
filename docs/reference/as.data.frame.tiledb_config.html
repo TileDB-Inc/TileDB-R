@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,21 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <h6 class="dropdown-header" data-toc-skip>Introduction</h6>
+    <a class="dropdown-item" href="../articles/introduction.html">First Steps with TileDB</a>
+    <a class="dropdown-item" href="../articles/installation-options.html">Installation Options for the TileDB R Package</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>API</h6>
+    <a class="dropdown-item" href="../articles/documentation.html">TileDB API Documentation</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>SQL</h6>
+    <a class="dropdown-item" href="../articles/data-ingestion-from-sql.html">Date Ingestion from SQL: A Commented Example</a>
+    <a class="dropdown-item" href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -147,44 +162,45 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 73                                 vfs.hdfs.kerb_ticket_cache_path</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 74                                          vfs.hdfs.name_node_uri</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 75                                               vfs.hdfs.username</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76                                               vfs.min_batch_gap</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77                                              vfs.min_batch_size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78                                           vfs.min_parallel_size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 79                                       vfs.read_ahead_cache_size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80                                             vfs.read_ahead_size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81                                        vfs.s3.aws_access_key_id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 82                                          vfs.s3.aws_external_id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 83                                       vfs.s3.aws_load_frequency</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 84                                             vfs.s3.aws_role_arn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 85                                    vfs.s3.aws_secret_access_key</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86                                         vfs.s3.aws_session_name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87                                        vfs.s3.aws_session_token</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88                                        vfs.s3.bucket_canned_acl</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89                                                  vfs.s3.ca_file</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90                                                  vfs.s3.ca_path</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91                                        vfs.s3.connect_max_tries</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92                                     vfs.s3.connect_scale_factor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93                                       vfs.s3.connect_timeout_ms</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94                                        vfs.s3.endpoint_override</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95                                            vfs.s3.logging_level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96                                         vfs.s3.max_parallel_ops</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 97                                      vfs.s3.multipart_part_size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98                                        vfs.s3.object_canned_acl</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 99                                               vfs.s3.proxy_host</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 100                                          vfs.s3.proxy_password</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 101                                              vfs.s3.proxy_port</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 102                                            vfs.s3.proxy_scheme</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 103                                          vfs.s3.proxy_username</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 104                                                  vfs.s3.region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 105                                      vfs.s3.request_timeout_ms</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 106                                          vfs.s3.requester_pays</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 107                                                  vfs.s3.scheme</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 108                                               vfs.s3.skip_init</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 109                                                     vfs.s3.sse</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 110                                          vfs.s3.sse_kms_key_id</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 111                                    vfs.s3.use_multipart_upload</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 112                                  vfs.s3.use_virtual_addressing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 113                                              vfs.s3.verify_ssl</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76                                              vfs.max_batch_size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77                                               vfs.min_batch_gap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78                                              vfs.min_batch_size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79                                           vfs.min_parallel_size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80                                       vfs.read_ahead_cache_size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81                                             vfs.read_ahead_size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82                                        vfs.s3.aws_access_key_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83                                          vfs.s3.aws_external_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84                                       vfs.s3.aws_load_frequency</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85                                             vfs.s3.aws_role_arn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86                                    vfs.s3.aws_secret_access_key</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87                                         vfs.s3.aws_session_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88                                        vfs.s3.aws_session_token</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89                                        vfs.s3.bucket_canned_acl</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90                                                  vfs.s3.ca_file</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91                                                  vfs.s3.ca_path</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92                                        vfs.s3.connect_max_tries</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93                                     vfs.s3.connect_scale_factor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94                                       vfs.s3.connect_timeout_ms</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95                                        vfs.s3.endpoint_override</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96                                            vfs.s3.logging_level</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97                                         vfs.s3.max_parallel_ops</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98                                      vfs.s3.multipart_part_size</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99                                        vfs.s3.object_canned_acl</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100                                              vfs.s3.proxy_host</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101                                          vfs.s3.proxy_password</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102                                              vfs.s3.proxy_port</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 103                                            vfs.s3.proxy_scheme</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 104                                          vfs.s3.proxy_username</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 105                                                  vfs.s3.region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 106                                      vfs.s3.request_timeout_ms</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 107                                          vfs.s3.requester_pays</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 108                                                  vfs.s3.scheme</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 109                                               vfs.s3.skip_init</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110                                                     vfs.s3.sse</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 111                                          vfs.s3.sse_kms_key_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 112                                    vfs.s3.use_multipart_upload</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 113                                  vfs.s3.use_virtual_addressing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 114                                              vfs.s3.verify_ssl</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                  TILEDB_</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                  DEFAULT</span>
@@ -261,44 +277,45 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 73                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 74                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 75                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 76                  512000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 77                20971520</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 78                10485760</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76    18446744073709551615</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77                  512000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78                20971520</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 79                10485760</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 80                  102400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 81                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80                10485760</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81                  102400</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 82                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 83                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 84                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 85                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 86                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 87                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88                 NOT_SET</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89                 NOT_SET</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 90                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91                       5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 92                      25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 93                   10800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95                     Off</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96                      12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 97                 5242880</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98                 NOT_SET</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 99                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92                       5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93                      25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94                   10800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96                     Off</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97                      12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98                 5242880</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99                 NOT_SET</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 100                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 101                      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 102                   http</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 103                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 104              us-east-1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 105                   3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 106                  false</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 107                  https</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 108                  false</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 109                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102                      0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 103                   http</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 104                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 105              us-east-1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 106                   3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 107                  false</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 108                  https</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 109                  false</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 110                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 111                   true</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 111                       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 112                   true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 113                   true</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 114                   true</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

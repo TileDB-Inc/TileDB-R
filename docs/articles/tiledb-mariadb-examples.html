@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,8 +41,15 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/documentation.html">TileDB API Documentation</a>
+    <h6 class="dropdown-header" data-toc-skip>Introduction</h6>
     <a class="dropdown-item" href="../articles/introduction.html">First Steps with TileDB</a>
+    <a class="dropdown-item" href="../articles/installation-options.html">Installation Options for the TileDB R Package</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>API</h6>
+    <a class="dropdown-item" href="../articles/documentation.html">TileDB API Documentation</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>SQL</h6>
+    <a class="dropdown-item" href="../articles/data-ingestion-from-sql.html">Date Ingestion from SQL: A Commented Example</a>
     <a class="dropdown-item" href="../articles/tiledb-mariadb-examples.html">TileDB and (R)MariaDB Examples</a>
   </div>
 </li>
@@ -97,7 +104,8 @@
 <h4 id="launch-container-in-background">Launch Container in Background<a class="anchor" aria-label="anchor" href="#launch-container-in-background"></a>
 </h4>
 <p>We launch the container ‘tiledb/tiledb-mariadb-r’ as a daemon, allowing MariaDB to accept an empty password (using an older MySQL variable setting), and name the running image ‘tiledb-mariadb-r’:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> tiledb-mariadb-r <span class="at">-it</span> <span class="at">-d</span> <span class="at">--rm</span> <span class="at">-e</span> MYSQL_ALLOW_EMPTY_PASSWORD=1 tiledb/tiledb-mariadb-r</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> tiledb-mariadb-r <span class="at">-it</span> <span class="at">-d</span> <span class="at">--rm</span> <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">-e</span> MYSQL_ALLOW_EMPTY_PASSWORD=1 tiledb/tiledb-mariadb-r</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="access-container-once-to-write-via-tiledb">Access Container Once to Write via TileDB<a class="anchor" aria-label="anchor" href="#access-container-once-to-write-via-tiledb"></a>

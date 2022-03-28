@@ -7,13 +7,49 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
+    <loc>/articles/data-ingestion-from-sql.html</loc>
+  </url>
+  <url>
     <loc>/articles/documentation.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/installation-options.html</loc>
+  </url>
+  <url>
     <loc>/articles/introduction.html</loc>
+  </url>
+  <url>
+    <loc>/articles/md/data-ingestion-from-sql.html</loc>
+  </url>
+  <url>
+    <loc>/articles/md/documentation.html</loc>
+  </url>
+  <url>
+    <loc>/articles/md/installation-options.html</loc>
+  </url>
+  <url>
+    <loc>/articles/md/introduction.html</loc>
+  </url>
+  <url>
+    <loc>/articles/md/tiledb-mariadb-examples.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rmd/data-ingestion-from-sql.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rmd/documentation.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rmd/installation-options.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rmd/introduction.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rmd/tiledb-mariadb-examples.html</loc>
   </url>
   <url>
     <loc>/articles/tiledb-mariadb-examples.html</loc>
