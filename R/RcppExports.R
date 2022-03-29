@@ -728,8 +728,8 @@ libtiledb_zip_coords_integer <- function(coords, coord_length) {
     .Call(`_tiledb_libtiledb_zip_coords_integer`, coords, coord_length)
 }
 
-libtiledb_group_create <- function(ctx, uri) {
-    .Call(`_tiledb_libtiledb_group_create`, ctx, uri)
+libtiledb_create_group <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_create_group`, ctx, uri)
 }
 
 libtiledb_object_type <- function(ctx, uri) {
@@ -944,6 +944,10 @@ libtiledb_group_open <- function(grp, querytypestr) {
     .Call(`_tiledb_libtiledb_group_open`, grp, querytypestr)
 }
 
+libtiledb_group_open2 <- function(ctx, grp, querytypestr) {
+    .Call(`_tiledb_libtiledb_group_open2`, ctx, grp, querytypestr)
+}
+
 libtiledb_group_set_config <- function(grp, cfg) {
     .Call(`_tiledb_libtiledb_group_set_config`, grp, cfg)
 }
@@ -956,8 +960,8 @@ libtiledb_group_close <- function(grp) {
     .Call(`_tiledb_libtiledb_group_close`, grp)
 }
 
-libtiledb_group_create_ <- function(ctx, uri) {
-    .Call(`_tiledb_libtiledb_group_create_`, ctx, uri)
+libtiledb_group_create <- function(ctx, uri) {
+    .Call(`_tiledb_libtiledb_group_create`, ctx, uri)
 }
 
 libtiledb_group_is_open <- function(grp) {
@@ -977,7 +981,7 @@ libtiledb_group_put_metadata <- function(grp, key, obj) {
 }
 
 libtiledb_group_delete_metadata <- function(grp, key) {
-    invisible(.Call(`_tiledb_libtiledb_group_delete_metadata`, grp, key))
+    .Call(`_tiledb_libtiledb_group_delete_metadata`, grp, key)
 }
 
 libtiledb_group_get_metadata <- function(grp, key) {

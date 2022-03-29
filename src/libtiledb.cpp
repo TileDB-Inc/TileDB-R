@@ -3570,7 +3570,7 @@ IntegerVector libtiledb_zip_coords_integer(List coords, R_xlen_t coord_length) {
  * Object functionality
  */
 // [[Rcpp::export]]
-std::string libtiledb_group_create(XPtr<tiledb::Context> ctx, std::string uri) {
+std::string libtiledb_create_group(XPtr<tiledb::Context> ctx, std::string uri) {
   tiledb::create_group(*ctx.get(), uri);
   return uri;
 }
@@ -4203,8 +4203,7 @@ XPtr<tiledb::Group> libtiledb_group(XPtr<tiledb::Context> ctx,
                                     const std::string& querytypestr) {
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
     tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
-    auto p = new tiledb::Group(*ctx.get(), uri, querytype);
-    XPtr<tiledb::Group> ptr = XPtr<tiledb::Group>(p);
+    XPtr<tiledb::Group> ptr = XPtr<tiledb::Group>(new tiledb::Group(*ctx.get(), uri, querytype));
 #else
     XPtr<tiledb::Group> ptr(new tiledb::Group()); // placeholder
 #endif
@@ -4216,10 +4215,22 @@ XPtr<tiledb::Group> libtiledb_group_open(XPtr<tiledb::Group> grp,
                                          const std::string& querytypestr) {
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
     tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
+    Rcpp::Rcerr << "In libtiledb_group_open with " << querytypestr << std::endl;
     grp->open(querytype);
-#else
-    return grp;
 #endif
+    return grp;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Group> libtiledb_group_open2(XPtr<tiledb::Context> ctx,
+                                          XPtr<tiledb::Group> grp,
+                                          const std::string& querytypestr) {
+#if TILEDB_VERSION == TileDB_Version(2,8,0)
+    tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
+    Rcpp::Rcerr << "In libtiledb_group_open2 with " << querytypestr << std::endl;
+    // LOCAL ACCESS FUNCTION  grp->open2(*ctx.get(), querytype);
+#endif
+    return grp;
 }
 
 // [[Rcpp::export]]
@@ -4248,9 +4259,8 @@ XPtr<tiledb::Group> libtiledb_group_close(XPtr<tiledb::Group> grp) {
     return grp;
 }
 
-// we need a suffix _ here as libtiledb_group_create alreadyy exists under object functionality
 // [[Rcpp::export]]
-std::string libtiledb_group_create_(XPtr<tiledb::Context> ctx, const std::string& uri) {
+std::string libtiledb_group_create(XPtr<tiledb::Context> ctx, const std::string& uri) {
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
     tiledb::Group::create(*ctx.get(), uri);
 #endif
@@ -4325,9 +4335,10 @@ bool libtiledb_group_put_metadata(XPtr<tiledb::Group> grp, std::string key, SEXP
 }
 
 // [[Rcpp::export]]
-void libtiledb_group_delete_metadata(XPtr<tiledb::Group> grp, std::string key) {
+XPtr<tiledb::Group> libtiledb_group_delete_metadata(XPtr<tiledb::Group> grp, std::string key) {
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
     grp->delete_metadata(key);
+    return grp;
 #endif
 }
 
@@ -4342,7 +4353,7 @@ SEXP libtiledb_group_get_metadata(XPtr<tiledb::Group> grp, std::string key) {
         return R_NilValue;
     }
     RObject vec = _metadata_to_sexp(v_type, v_num, v);
-    vec.attr("names") = Rcpp::CharacterVector::create(key);
+    vec.attr("key") = Rcpp::CharacterVector::create(key);
     return vec;
 #else
     return R_NilValue;
@@ -4380,7 +4391,7 @@ SEXP libtiledb_group_get_metadata_from_index(XPtr<tiledb::Group> grp, int idx) {
         return R_NilValue;
     }
     RObject vec = _metadata_to_sexp(v_type, v_num, v);
-    vec.attr("names") = Rcpp::CharacterVector::create(key);
+    vec.attr("key") = Rcpp::CharacterVector::create(key);
     return vec;
 #else
     return R_NilValue;
