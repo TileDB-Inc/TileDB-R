@@ -86,8 +86,16 @@ tiledb_group_set_config <- function(grp, cfg) {
     cfg
 }
 
-## TODO close
-
+##' Close a TileDB Group
+##'
+##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @return The TileDB Group object but closed for reading or writing
+##' @export
+tiledb_group_close <- function(grp) {
+    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"))
+    grp@ptr <- libtiledb_group_close(grp@ptr)
+    grp
+}
 
 #' Create a TileDB Group
 #'
@@ -102,4 +110,14 @@ tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
               "This function needs TileDB 2.8.0 or newer" = tiledb_version(TRUE) >= "2.8.0")
     libtiledb_group_create_(ctx@ptr, uri)
     invisible(uri)
+}
+
+##' Test if TileDB Group is open
+##'
+##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @return A boolean indicating whether the TileDB Group object is open
+##' @export
+tiledb_group_is_open <- function(grp) {
+    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"))
+    libtiledb_group_is_open(grp@ptr)
 }
