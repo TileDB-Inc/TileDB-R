@@ -944,10 +944,6 @@ libtiledb_group_open <- function(grp, querytypestr) {
     .Call(`_tiledb_libtiledb_group_open`, grp, querytypestr)
 }
 
-libtiledb_group_open2 <- function(ctx, grp, querytypestr) {
-    .Call(`_tiledb_libtiledb_group_open2`, ctx, grp, querytypestr)
-}
-
 libtiledb_group_set_config <- function(grp, cfg) {
     .Call(`_tiledb_libtiledb_group_set_config`, grp, cfg)
 }

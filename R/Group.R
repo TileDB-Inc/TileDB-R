@@ -58,7 +58,7 @@ tiledb_group_open <- function(grp, type=c("READ","WRITE"), ctx = tiledb_get_cont
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "This function needs TileDB 2.8.*" = .tiledb28())
     type <- match.arg(type)
-    grp@ptr <- libtiledb_group_open(ctx@ptr, type)
+    grp@ptr <- libtiledb_group_open(grp@ptr, type)
     grp
 }
 
@@ -279,5 +279,5 @@ tiledb_group_member_count <- function(grp) {
 tiledb_group_member_dump <- function(grp, recursive) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_dump(grp@ptr,)
+    libtiledb_group_dump(grp@ptr, recursive)
 }

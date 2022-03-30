@@ -4215,20 +4215,7 @@ XPtr<tiledb::Group> libtiledb_group_open(XPtr<tiledb::Group> grp,
                                          const std::string& querytypestr) {
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
     tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
-    Rcpp::Rcerr << "In libtiledb_group_open with " << querytypestr << std::endl;
     grp->open(querytype);
-#endif
-    return grp;
-}
-
-// [[Rcpp::export]]
-XPtr<tiledb::Group> libtiledb_group_open2(XPtr<tiledb::Context> ctx,
-                                          XPtr<tiledb::Group> grp,
-                                          const std::string& querytypestr) {
-#if TILEDB_VERSION == TileDB_Version(2,8,0)
-    tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
-    Rcpp::Rcerr << "In libtiledb_group_open2 with " << querytypestr << std::endl;
-    // LOCAL ACCESS FUNCTION  grp->open2(*ctx.get(), querytype);
 #endif
     return grp;
 }
@@ -4338,8 +4325,8 @@ bool libtiledb_group_put_metadata(XPtr<tiledb::Group> grp, std::string key, SEXP
 XPtr<tiledb::Group> libtiledb_group_delete_metadata(XPtr<tiledb::Group> grp, std::string key) {
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
     grp->delete_metadata(key);
-    return grp;
 #endif
+    return grp;
 }
 
 // [[Rcpp::export]]
