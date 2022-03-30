@@ -5,8 +5,6 @@
 \title{Set a TileDB Config for a TileDB Group}
 \usage{
 tiledb_group_set_config(grp, cfg)
-
-tiledb_group_set_config(grp, cfg)
 }
 \arguments{
 \item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
@@ -15,11 +13,7 @@ tiledb_group_set_config(grp, cfg)
 }
 \value{
 The TileDB Group object with added Config
-
-The TileDB Config object of the TileDB Group object
 }
 \description{
 Set a TileDB Config for a TileDB Group
-
-Get a TileDB Config from a TileDB Group
 }

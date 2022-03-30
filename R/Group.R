@@ -81,10 +81,10 @@ tiledb_group_set_config <- function(grp, cfg) {
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
 ##' @return The TileDB Config object of the TileDB Group object
 ##' @export
-tiledb_group_set_config <- function(grp, cfg) {
+tiledb_group_get_config <- function(grp) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "This function needs TileDB 2.8.*" = .tiledb28())
-    ptr <- libtiledb_group_set_config(grp@ptr, cfg@ptr)
+    ptr <- libtiledb_group_get_config(grp@ptr)
     cfg <- new("tiledb_config", ptr = ptr)
     cfg
 }
