@@ -2955,6 +2955,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_group_member
+CharacterVector libtiledb_group_member(XPtr<tiledb::Group> grp, int idx);
+RcppExport SEXP _tiledb_libtiledb_group_member(SEXP grpSEXP, SEXP idxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Group> >::type grp(grpSEXP);
+    Rcpp::traits::input_parameter< int >::type idx(idxSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_group_member(grp, idx));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_group_dump
 std::string libtiledb_group_dump(XPtr<tiledb::Group> grp, bool recursive);
 RcppExport SEXP _tiledb_libtiledb_group_dump(SEXP grpSEXP, SEXP recursiveSEXP) {
@@ -3268,6 +3280,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_group_add_member", (DL_FUNC) &_tiledb_libtiledb_group_add_member, 3},
     {"_tiledb_libtiledb_group_remove_member", (DL_FUNC) &_tiledb_libtiledb_group_remove_member, 2},
     {"_tiledb_libtiledb_group_member_count", (DL_FUNC) &_tiledb_libtiledb_group_member_count, 1},
+    {"_tiledb_libtiledb_group_member", (DL_FUNC) &_tiledb_libtiledb_group_member, 2},
     {"_tiledb_libtiledb_group_dump", (DL_FUNC) &_tiledb_libtiledb_group_dump, 2},
     {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 4},
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},

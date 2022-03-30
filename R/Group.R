@@ -54,7 +54,7 @@ tiledb_group <- function(uri, type = c("READ", "WRITE"), ctx = tiledb_get_contex
 ##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
 ##' @return The TileDB Group object but opened for reading or writing
 ##' @export
-tiledb_group_open <- function(grp, type=c("READ","WRITE"), ctx = tiledb_get_context()) {
+tiledb_group_open <- function(grp, type=c("READ","WRITE")) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "This function needs TileDB 2.8.*" = .tiledb28())
     type <- match.arg(type)
@@ -249,6 +249,7 @@ tiledb_group_add_member <- function(grp, uri, relative) {
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
 ##' @param uri A character value with a new URI
+##' @param relative A boolean variables describing absolute or relative (to group) uri use
 ##' @return The TileDB Group object, invisibly
 ##' @export
 tiledb_group_remove_member <- function(grp, uri, relative) {
@@ -268,6 +269,22 @@ tiledb_group_member_count <- function(grp) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "This function needs TileDB 2.8.*" = .tiledb28())
     libtiledb_group_member_count(grp@ptr)
+}
+
+##' Get a Member (Description) by Index from TileDB Group
+##'
+##' This function returns a two-element character vector with the member object translated to
+##' character, and the uri.
+##'
+##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param idx A numeric value with the index of the metadata object to be retrieved
+##' @return A character vector with two elements: the member type, and its uri.
+##' @export
+tiledb_group_member <- function(grp, idx) {
+    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+              "The 'idx' argument must be numeric" = is.numeric(idx),
+              "This function needs TileDB 2.8.*" = .tiledb28())
+    libtiledb_group_member(grp@ptr, idx)
 }
 
 ##' Dump the TileDB Group to String

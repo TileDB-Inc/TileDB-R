@@ -86,9 +86,6 @@ grp <- tiledb_group_add_member(grp, "cloe", TRUE)
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 3)
-txt <- tiledb_group_member_dump(grp, TRUE)
-dat <- read.csv(text=txt, sep=' ', header=FALSE)
-expect_equal(nrow(dat), 1+3)              # one for header 'filename GROUP'
 
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "WRITE")
@@ -96,3 +93,12 @@ grp <- tiledb_group_remove_member(grp, "bob")
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 2)
+
+obj <- tiledb_group_member(grp, 0)
+expect_true(is.character(obj[1]))
+expect_equal(obj[1], "INVALID")
+expect_true(is.character(obj[2]))
+
+txt <- tiledb_group_member_dump(grp, TRUE)
+dat <- read.csv(text=txt, sep=' ', header=FALSE)
+expect_equal(nrow(dat), 1+2)              # one for header 'filename GROUP'

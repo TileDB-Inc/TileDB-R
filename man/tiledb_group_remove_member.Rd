@@ -10,6 +10,8 @@ tiledb_group_remove_member(grp, uri, relative)
 \item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
 
 \item{uri}{A character value with a new URI}
+
+\item{relative}{A boolean variables describing absolute or relative (to group) uri use}
 }
 \value{
 The TileDB Group object, invisibly

@@ -1008,6 +1008,10 @@ libtiledb_group_member_count <- function(grp) {
     .Call(`_tiledb_libtiledb_group_member_count`, grp)
 }
 
+libtiledb_group_member <- function(grp, idx) {
+    .Call(`_tiledb_libtiledb_group_member`, grp, idx)
+}
+
 libtiledb_group_dump <- function(grp, recursive) {
     .Call(`_tiledb_libtiledb_group_dump`, grp, recursive)
 }

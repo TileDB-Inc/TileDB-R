@@ -4411,7 +4411,16 @@ double libtiledb_group_member_count(XPtr<tiledb::Group> grp) {
 #endif
 }
 
-// member returns an Object, not sure we have that covered as a return
+// [[Rcpp::export]]
+CharacterVector libtiledb_group_member(XPtr<tiledb::Group> grp, int idx) {
+#if TILEDB_VERSION == TileDB_Version(2,8,0)
+    tiledb::Object obj = grp->member(idx);
+    CharacterVector v = CharacterVector::create(_object_type_to_string(obj.type()), obj.uri());
+#else
+    CharacterVector v = CharacterVector::create("", "");
+#endif
+    return v;
+}
 
 // [[Rcpp::export]]
 std::string libtiledb_group_dump(XPtr<tiledb::Group> grp, bool recursive) {

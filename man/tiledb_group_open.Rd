@@ -4,7 +4,7 @@
 \alias{tiledb_group_open}
 \title{Open a TileDB Group}
 \usage{
-tiledb_group_open(grp, type = c("READ", "WRITE"), ctx = tiledb_get_context())
+tiledb_group_open(grp, type = c("READ", "WRITE"))
 }
 \arguments{
 \item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
