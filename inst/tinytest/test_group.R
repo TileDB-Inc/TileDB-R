@@ -65,6 +65,15 @@ expect_equivalent(tiledb_group_get_metadata_from_index(grp, 0), "quick brown fox
 expect_equivalent(tiledb_group_get_metadata_from_index(grp, 1), 42L)
 expect_equivalent(tiledb_group_get_metadata_from_index(grp, 2), 1.2345)
 
+lst <- tiledb_group_get_all_metadata(grp)
+expect_equal(length(lst), 3)
+expect_true("mykey" %in% names(lst))
+expect_true("otherkey" %in% names(lst))
+expect_true("lastkey" %in% names(lst))
+expect_equivalent(lst[["mykey"]], 42L)
+expect_equivalent(lst[["otherkey"]], 1.2345)
+expect_equivalent(lst[["lastkey"]], "quick brown fox")
+
 ## close, re-open to write, delete one
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "WRITE")

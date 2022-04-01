@@ -229,6 +229,25 @@ tiledb_group_get_metadata_from_index <- function(grp, idx) {
 }
 
 
+##' Return all Metadata from a TileDB Group
+##'
+##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @return A named List with all Metadata objects index
+##' @export
+tiledb_group_get_all_metadata <- function(grp) {
+    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+              "This function needs TileDB 2.8.*" = .tiledb28())
+    n <- tiledb_group_metadata_num(grp)
+    res <- vector(mode="list", length=n)
+    for (i in seq_len(n)) {
+        obj <- tiledb_group_get_metadata_from_index(grp, i-1)
+        res[[i]] <- obj
+        names(res)[i] <- attr(obj, "key")
+    }
+    res
+}
+
+
 ##' Add Member to TileDB Group
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
