@@ -85,7 +85,7 @@ namespace tiledb {
 #endif
 
 #if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 3
-// we need a placeholder as tiledb::QueryCondition is in at least one function signature
+// we need a placeholder as tiledb::QueryCondition as it is in at least one function signature
 namespace tiledb {
     class QueryCondition {
     };
@@ -93,9 +93,17 @@ namespace tiledb {
 #endif
 
 #if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 4
-// we need a placeholder as tiledb::ArraySchemaEvolution is in function signatures
+// we need a placeholder as tiledb::ArraySchemaEvolution as it is in function signatures
 namespace tiledb {
     class ArraySchemaEvolution {
+    };
+}
+#endif
+
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR != 8
+// we need a placeholder as tiledb::Group as it is in function signatures
+namespace tiledb {
+    class Group {
     };
 }
 #endif

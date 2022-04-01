@@ -68,7 +68,9 @@
 ## this uses an interface offered by the Rcpp package which, when seeing 'Rcpp::depends(pkgname)'
 ## will look for a pkgname::inlineCxxPlugin callback to learn about compile + link options
 inlineCxxPlugin <- function(...) {
-    stopifnot("No TileDB installation found." = .pkgenv[["tiledb_ldflag"]] != "")
+    txt <- paste("No TileDB system-wide installation found. Consider setting TILEDB_INSTALL_DIR",
+                 "if have you an installation.")
+    stopifnot(txt = .pkgenv[["tiledb_ldflag"]] != "")
     plugin <- Rcpp::Rcpp.plugin.maker(libs = .pkgenv[["tiledb_ldflag"]],
                                       package = "tiledb",
                                       Makevars = NULL,
