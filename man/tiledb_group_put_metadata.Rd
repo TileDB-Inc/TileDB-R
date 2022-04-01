@@ -4,14 +4,14 @@
 \alias{tiledb_group_put_metadata}
 \title{Write Metadata to a TileDB Group}
 \usage{
-tiledb_group_put_metadata(grp, key, obj)
+tiledb_group_put_metadata(grp, key, val)
 }
 \arguments{
 \item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
 
 \item{key}{A character value with they index under which the data will be written}
 
-\item{obj}{An R object (numeric, int, or char vector) that will be stored}
+\item{val}{An R object (numeric, int, or char vector) that will be stored}
 }
 \value{
 On success boolean \sQuote{TRUE} is returned

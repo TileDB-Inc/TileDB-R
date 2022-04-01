@@ -32,8 +32,8 @@ setClass("tiledb_group",
 #' Creates a 'tiledb_group' object
 #'
 #' @param uri Character variable with the URI of the new group object
-#' @param type Character variable with the query type value: one of \sQuote{READ}
-#' or \sQuote{WRITE}
+#' @param type Character variable with the query type value: one of \dQuote{READ}
+#' or \dQuote{WRITE}
 #' @param ctx (optional) A TileDB Ctx object; if not supplied the default
 #' context object is retrieved
 #' @return A 'group' object
@@ -141,7 +141,7 @@ tiledb_group_uri <- function(grp) {
 ##' Return a TileDB Group query type
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @return A character value with the query type
+##' @return A character value with the query type i.e. one of \dQuote{READ} or \dQuote{WRITE}.
 ##' @export
 tiledb_group_query_type <- function(grp) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
@@ -153,14 +153,14 @@ tiledb_group_query_type <- function(grp) {
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
 ##' @param key A character value with they index under which the data will be written
-##' @param obj An R object (numeric, int, or char vector) that will be stored
+##' @param val An R object (numeric, int, or char vector) that will be stored
 ##' @return On success boolean \sQuote{TRUE} is returned
 ##' @export
-tiledb_group_put_metadata <- function(grp, key, obj) {
+tiledb_group_put_metadata <- function(grp, key, val) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "The 'key' argument must be character" = is.character(key),
               "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_put_metadata(grp@ptr, key, obj)
+    libtiledb_group_put_metadata(grp@ptr, key, val)
 }
 
 ##' Deletes Metadata from a TileDB Group
