@@ -72,26 +72,32 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr);
 
 // enum for TileDB XPtr Object type using int32_t payload (for R)
 enum tiledb_xptr_object : int32_t {};
-const tiledb_xptr_object tiledb_xptr_object_array     { 10 };
-const tiledb_xptr_object tiledb_xptr_object_config    { 20 };
-const tiledb_xptr_object tiledb_xptr_object_context   { 30 };
-const tiledb_xptr_object tiledb_xptr_object_dimension { 40 };
-const tiledb_xptr_object tiledb_xptr_object_domain    { 50 };
-const tiledb_xptr_object tiledb_xptr_object_filter    { 60 };
-const tiledb_xptr_object tiledb_xptr_object_filterlist{ 70 };
-const tiledb_xptr_object tiledb_xptr_object_query     { 80 };
-const tiledb_xptr_object tiledb_xptr_object_group     { 90 };
+const tiledb_xptr_object tiledb_xptr_object_array                { 10 };
+const tiledb_xptr_object tiledb_xptr_object_arrayschema          { 20 };
+const tiledb_xptr_object tiledb_xptr_object_arrayschemaevolution { 30 };
+const tiledb_xptr_object tiledb_xptr_object_attribute            { 40 };
+const tiledb_xptr_object tiledb_xptr_object_config               { 50 };
+const tiledb_xptr_object tiledb_xptr_object_context              { 60 };
+const tiledb_xptr_object tiledb_xptr_object_dimension            { 70 };
+const tiledb_xptr_object tiledb_xptr_object_domain               { 80 };
+const tiledb_xptr_object tiledb_xptr_object_filter               { 90 };
+const tiledb_xptr_object tiledb_xptr_object_filterlist           { 100 };
+const tiledb_xptr_object tiledb_xptr_object_query                { 110 };
+const tiledb_xptr_object tiledb_xptr_object_group                { 120 };
 // templated checkers for external pointer tags
 template <typename T> const int32_t XPtrTagType;
-template <> const int32_t XPtrTagType<tiledb::Array>     = tiledb_xptr_object_array;
-template <> const int32_t XPtrTagType<tiledb::Config>    = tiledb_xptr_object_config;
-template <> const int32_t XPtrTagType<tiledb::Context>   = tiledb_xptr_object_context;
-template <> const int32_t XPtrTagType<tiledb::Dimension> = tiledb_xptr_object_dimension;
-template <> const int32_t XPtrTagType<tiledb::Domain>    = tiledb_xptr_object_domain;
-template <> const int32_t XPtrTagType<tiledb::Filter>    = tiledb_xptr_object_filter;
-template <> const int32_t XPtrTagType<tiledb::FilterList> = tiledb_xptr_object_filterlist;
-template <> const int32_t XPtrTagType<tiledb::Query>     = tiledb_xptr_object_query;
-template <> const int32_t XPtrTagType<tiledb::Group>     = tiledb_xptr_object_group;
+template <> const int32_t XPtrTagType<tiledb::Array>                = tiledb_xptr_object_array;
+template <> const int32_t XPtrTagType<tiledb::ArraySchema>          = tiledb_xptr_object_arrayschema;
+template <> const int32_t XPtrTagType<tiledb::ArraySchemaEvolution> = tiledb_xptr_object_arrayschemaevolution;
+template <> const int32_t XPtrTagType<tiledb::Attribute>            = tiledb_xptr_object_attribute;
+template <> const int32_t XPtrTagType<tiledb::Config>               = tiledb_xptr_object_config;
+template <> const int32_t XPtrTagType<tiledb::Context>              = tiledb_xptr_object_context;
+template <> const int32_t XPtrTagType<tiledb::Dimension>            = tiledb_xptr_object_dimension;
+template <> const int32_t XPtrTagType<tiledb::Domain>               = tiledb_xptr_object_domain;
+template <> const int32_t XPtrTagType<tiledb::Filter>               = tiledb_xptr_object_filter;
+template <> const int32_t XPtrTagType<tiledb::FilterList>           = tiledb_xptr_object_filterlist;
+template <> const int32_t XPtrTagType<tiledb::Query>                = tiledb_xptr_object_query;
+template <> const int32_t XPtrTagType<tiledb::Group>                = tiledb_xptr_object_group;
 
 template <typename T> XPtr<T> make_xptr(T* p) {
     return XPtr<T>(p, true, Rcpp::wrap(XPtrTagType<T>), R_NilValue);
