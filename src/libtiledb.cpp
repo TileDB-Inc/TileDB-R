@@ -1389,7 +1389,7 @@ double libtiledb_attribute_get_cell_size(XPtr<tiledb::Attribute> attr) {
 // [[Rcpp::export]]
 XPtr<tiledb::FilterList> libtiledb_attribute_get_filter_list(XPtr<tiledb::Attribute> attr) {
   check_xptr_tag<tiledb::Attribute>(attr);
-  return XPtr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
+  return make_xptr<tiledb::FilterList>(new tiledb::FilterList(attr->filter_list()));
 }
 
 // [[Rcpp::export]]
@@ -3544,9 +3544,9 @@ XPtr<tiledb::Context> libtiledb_query_get_ctx(XPtr<tiledb::Query> query) {
     check_xptr_tag<tiledb::Query>(query);
 #if TILEDB_VERSION >= TileDB_Version(2,6,0)
     auto ctx = query->ctx();
-    return XPtr<tiledb::Context>(new tiledb::Context(ctx), false);
+    return make_xptr<tiledb::Context>(new tiledb::Context(ctx));
 #else
-    return XPtr<tiledb::Context>(R_NilValue);
+    return make_xptr<tiledb::Context>(R_NilValue);
 #endif
 }
 
@@ -4428,10 +4428,10 @@ XPtr<tiledb::Group> libtiledb_group_set_config(XPtr<tiledb::Group> grp, XPtr<til
 XPtr<tiledb::Config> libtiledb_group_get_config(XPtr<tiledb::Group> grp) {
     check_xptr_tag<tiledb::Group>(grp);
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
-    auto ptr = XPtr<tiledb::Config>(new tiledb::Config(grp.get()->config()));
+    auto ptr = make_xptr<tiledb::Config>(new tiledb::Config(grp.get()->config()));
     return ptr;
 #else
-    return XPtr<tiledb::Config>(new tiledb::Config());
+    return make_xptr<tiledb::Config>(new tiledb::Config());
 #endif
 }
 

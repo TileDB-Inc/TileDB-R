@@ -119,12 +119,9 @@ template <typename T> XPtr<T> make_xptr(T* p) {
 }
 
 template<typename T> void check_xptr_tag(XPtr<T> ptr) {
-    // we can have some remaining external pointer from operations at the R level
-    // the different *.from_ptr functions which we could enhance call into new C++ helpers
-    // to produce properly tagged pointers -- so for now we 'tolerate' some tagless pointer
-    // if (R_ExternalPtrTag(ptr) == R_NilValue) {
-    //    Rcpp::warning("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
-    // }
+    if (R_ExternalPtrTag(ptr) == R_NilValue) {
+        Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
+    }
     if (R_ExternalPtrTag(ptr) != R_NilValue) {
         int32_t tag = Rcpp::as<int32_t>(R_ExternalPtrTag(ptr));
         if (XPtrTagType<T> != tag) {
