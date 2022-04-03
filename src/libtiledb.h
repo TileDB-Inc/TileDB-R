@@ -83,7 +83,11 @@ const tiledb_xptr_object tiledb_xptr_object_domain               { 80 };
 const tiledb_xptr_object tiledb_xptr_object_filter               { 90 };
 const tiledb_xptr_object tiledb_xptr_object_filterlist           { 100 };
 const tiledb_xptr_object tiledb_xptr_object_query                { 110 };
-const tiledb_xptr_object tiledb_xptr_object_group                { 120 };
+const tiledb_xptr_object tiledb_xptr_object_group                { 130 };
+const tiledb_xptr_object tiledb_xptr_vlc_buf_t                   { 140 };
+const tiledb_xptr_object tiledb_xptr_vlv_buf_t                   { 150 };
+const tiledb_xptr_object tiledb_xptr_query_buf_t                 { 160 };
+
 // templated checkers for external pointer tags
 template <typename T> const int32_t XPtrTagType;
 template <> const int32_t XPtrTagType<tiledb::Array>                = tiledb_xptr_object_array;
@@ -98,6 +102,9 @@ template <> const int32_t XPtrTagType<tiledb::Filter>               = tiledb_xpt
 template <> const int32_t XPtrTagType<tiledb::FilterList>           = tiledb_xptr_object_filterlist;
 template <> const int32_t XPtrTagType<tiledb::Query>                = tiledb_xptr_object_query;
 template <> const int32_t XPtrTagType<tiledb::Group>                = tiledb_xptr_object_group;
+template <> const int32_t XPtrTagType<vlc_buf_t>                    = tiledb_xptr_vlc_buf_t;
+template <> const int32_t XPtrTagType<vlv_buf_t>                    = tiledb_xptr_vlv_buf_t;
+template <> const int32_t XPtrTagType<query_buf_t>                  = tiledb_xptr_query_buf_t;
 
 template <typename T> XPtr<T> make_xptr(T* p) {
     return XPtr<T>(p, true, Rcpp::wrap(XPtrTagType<T>), R_NilValue);

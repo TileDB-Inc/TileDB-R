@@ -169,7 +169,7 @@ vals <- seq(101,110)
 qry <- tiledb_query_set_buffer(qry, "vals", vals)
 
 keys <- c(201:204, NA_integer_, 206L, NA_integer_, 208:210)
-buf <- tiledb:::libtiledb_query_buffer_alloc_ptr(arr@ptr, "INT32", 10, TRUE)
+buf <- tiledb:::libtiledb_query_buffer_alloc_ptr("INT32", 10, TRUE)
 buf <- tiledb:::libtiledb_query_buffer_assign_ptr(buf, "INT32", keys, FALSE)
 qry@ptr <- tiledb:::libtiledb_query_set_buffer_ptr(qry@ptr, "keys", buf)
 
@@ -187,7 +187,7 @@ qry <- tiledb_query_set_buffer(qry, "rows", rowdat)
 valdat <- integer(10)
 qry <- tiledb_query_set_buffer(qry, "vals", valdat)
 
-buf <- tiledb:::libtiledb_query_buffer_alloc_ptr(arr@ptr, "INT32", 10, TRUE)
+buf <- tiledb:::libtiledb_query_buffer_alloc_ptr("INT32", 10, TRUE)
 buf <- tiledb:::libtiledb_query_buffer_assign_ptr(buf, "INT32", keys, FALSE)
 qry@ptr <- tiledb:::libtiledb_query_set_buffer_ptr(qry@ptr, "keys", buf)
 

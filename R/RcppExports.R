@@ -140,8 +140,8 @@ libtiledb_dimension_get_filter_list <- function(dim) {
     .Call(`_tiledb_libtiledb_dimension_get_filter_list`, dim)
 }
 
-libtiledb_dimension_set_filter_list <- function(dim, filter_list) {
-    .Call(`_tiledb_libtiledb_dimension_set_filter_list`, dim, filter_list)
+libtiledb_dimension_set_filter_list <- function(dim, fltrlst) {
+    .Call(`_tiledb_libtiledb_dimension_set_filter_list`, dim, fltrlst)
 }
 
 libtiledb_domain <- function(ctx, dims) {
@@ -212,8 +212,8 @@ libtiledb_filter_list_get_filter_from_index <- function(filterList, filter_index
     .Call(`_tiledb_libtiledb_filter_list_get_filter_from_index`, filterList, filter_index)
 }
 
-libtiledb_attribute <- function(ctx, name, type, filter_list, ncells, nullable) {
-    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, filter_list, ncells, nullable)
+libtiledb_attribute <- function(ctx, name, type, fltrlst, ncells, nullable) {
+    .Call(`_tiledb_libtiledb_attribute`, ctx, name, type, fltrlst, ncells, nullable)
 }
 
 libtiledb_attribute_get_name <- function(attr) {
@@ -232,8 +232,8 @@ libtiledb_attribute_get_filter_list <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_filter_list`, attr)
 }
 
-libtiledb_attribute_set_filter_list <- function(attr, filter_list) {
-    .Call(`_tiledb_libtiledb_attribute_set_filter_list`, attr, filter_list)
+libtiledb_attribute_set_filter_list <- function(attr, fltrlst) {
+    .Call(`_tiledb_libtiledb_attribute_set_filter_list`, attr, fltrlst)
 }
 
 libtiledb_attribute_get_cell_val_num <- function(attr) {
@@ -340,24 +340,24 @@ libtiledb_array_schema_get_coords_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_coords_filter_list`, schema)
 }
 
-libtiledb_array_schema_set_coords_filter_list <- function(schema, fltlst) {
-    .Call(`_tiledb_libtiledb_array_schema_set_coords_filter_list`, schema, fltlst)
+libtiledb_array_schema_set_coords_filter_list <- function(schema, fltrlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_coords_filter_list`, schema, fltrlst)
 }
 
 libtiledb_array_schema_get_offsets_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_offsets_filter_list`, schema)
 }
 
-libtiledb_array_schema_set_offsets_filter_list <- function(schema, fltlst) {
-    .Call(`_tiledb_libtiledb_array_schema_set_offsets_filter_list`, schema, fltlst)
+libtiledb_array_schema_set_offsets_filter_list <- function(schema, fltrlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_offsets_filter_list`, schema, fltrlst)
 }
 
 libtiledb_array_schema_get_validity_filter_list <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_get_validity_filter_list`, schema)
 }
 
-libtiledb_array_schema_set_validity_filter_list <- function(schema, fltlst) {
-    .Call(`_tiledb_libtiledb_array_schema_set_validity_filter_list`, schema, fltlst)
+libtiledb_array_schema_set_validity_filter_list <- function(schema, fltrlst) {
+    .Call(`_tiledb_libtiledb_array_schema_set_validity_filter_list`, schema, fltrlst)
 }
 
 libtiledb_array_schema_get_attribute_num <- function(schema) {
@@ -596,8 +596,8 @@ libtiledb_query_get_buffer_var_vec <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, query, attr, buf)
 }
 
-libtiledb_query_buffer_alloc_ptr <- function(array, domaintype, ncells, nullable = FALSE) {
-    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, array, domaintype, ncells, nullable)
+libtiledb_query_buffer_alloc_ptr <- function(domaintype, ncells, nullable = FALSE) {
+    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, domaintype, ncells, nullable)
 }
 
 libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec, asint64 = FALSE) {
