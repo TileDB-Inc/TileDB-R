@@ -106,6 +106,7 @@ template <typename T> XPtr<T> make_xptr(T* p) {
 template<typename T> void check_xptr_tag(XPtr<T> ptr) {
     if (R_ExternalPtrTag(ptr) == R_NilValue) {
         Rcpp::warning("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
+        //Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
     } else {
         int32_t tag = Rcpp::as<int32_t>(R_ExternalPtrTag(ptr));
         if (XPtrTagType<T> != tag) {
