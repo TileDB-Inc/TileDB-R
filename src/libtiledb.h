@@ -82,11 +82,15 @@ const tiledb_xptr_object tiledb_xptr_object_dimension            { 70 };
 const tiledb_xptr_object tiledb_xptr_object_domain               { 80 };
 const tiledb_xptr_object tiledb_xptr_object_filter               { 90 };
 const tiledb_xptr_object tiledb_xptr_object_filterlist           { 100 };
-const tiledb_xptr_object tiledb_xptr_object_query                { 110 };
-const tiledb_xptr_object tiledb_xptr_object_group                { 130 };
-const tiledb_xptr_object tiledb_xptr_vlc_buf_t                   { 140 };
-const tiledb_xptr_object tiledb_xptr_vlv_buf_t                   { 150 };
-const tiledb_xptr_object tiledb_xptr_query_buf_t                 { 160 };
+const tiledb_xptr_object tiledb_xptr_object_fragmentinfo         { 110 };
+const tiledb_xptr_object tiledb_xptr_object_group                { 120 };
+const tiledb_xptr_object tiledb_xptr_object_query                { 130 };
+const tiledb_xptr_object tiledb_xptr_object_querycondition       { 140 };
+const tiledb_xptr_object tiledb_xptr_object_vfs                  { 150 };
+const tiledb_xptr_object tiledb_xptr_vfs_fh_t              		 { 160 };
+const tiledb_xptr_object tiledb_xptr_vlc_buf_t                   { 170 };
+const tiledb_xptr_object tiledb_xptr_vlv_buf_t                   { 180 };
+const tiledb_xptr_object tiledb_xptr_query_buf_t                 { 190 };
 
 // templated checkers for external pointer tags
 template <typename T> const int32_t XPtrTagType;
@@ -100,8 +104,12 @@ template <> const int32_t XPtrTagType<tiledb::Dimension>            = tiledb_xpt
 template <> const int32_t XPtrTagType<tiledb::Domain>               = tiledb_xptr_object_domain;
 template <> const int32_t XPtrTagType<tiledb::Filter>               = tiledb_xptr_object_filter;
 template <> const int32_t XPtrTagType<tiledb::FilterList>           = tiledb_xptr_object_filterlist;
-template <> const int32_t XPtrTagType<tiledb::Query>                = tiledb_xptr_object_query;
+template <> const int32_t XPtrTagType<tiledb::FragmentInfo>         = tiledb_xptr_object_fragmentinfo;
 template <> const int32_t XPtrTagType<tiledb::Group>                = tiledb_xptr_object_group;
+template <> const int32_t XPtrTagType<tiledb::Query>                = tiledb_xptr_object_query;
+template <> const int32_t XPtrTagType<tiledb::QueryCondition>       = tiledb_xptr_object_query;
+template <> const int32_t XPtrTagType<tiledb::VFS>                  = tiledb_xptr_object_vfs;
+template <> const int32_t XPtrTagType<vfs_fh_t>                     = tiledb_xptr_vfs_fh_t;
 template <> const int32_t XPtrTagType<vlc_buf_t>                    = tiledb_xptr_vlc_buf_t;
 template <> const int32_t XPtrTagType<vlv_buf_t>                    = tiledb_xptr_vlv_buf_t;
 template <> const int32_t XPtrTagType<query_buf_t>                  = tiledb_xptr_query_buf_t;
@@ -111,10 +119,13 @@ template <typename T> XPtr<T> make_xptr(T* p) {
 }
 
 template<typename T> void check_xptr_tag(XPtr<T> ptr) {
-    if (R_ExternalPtrTag(ptr) == R_NilValue) {
-        Rcpp::warning("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
-        //Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
-    } else {
+    // we can have some remaining external pointer from operations at the R level
+    // the different *.from_ptr functions which we could enhance call into new C++ helpers
+    // to produce properly tagged pointers -- so for now we 'tolerate' some tagless pointer
+    // if (R_ExternalPtrTag(ptr) == R_NilValue) {
+    //    Rcpp::warning("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
+    // }
+    if (R_ExternalPtrTag(ptr) != R_NilValue) {
         int32_t tag = Rcpp::as<int32_t>(R_ExternalPtrTag(ptr));
         if (XPtrTagType<T> != tag) {
             Rcpp::stop("Wrong tag type: expected %d but received %d\n", XPtrTagType<T>, tag);
