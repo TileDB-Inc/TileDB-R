@@ -118,6 +118,10 @@ template <typename T> XPtr<T> make_xptr(T* p) {
     return XPtr<T>(p, true, Rcpp::wrap(XPtrTagType<T>), R_NilValue);
 }
 
+template <typename T> XPtr<T> make_xptr(SEXP p) {
+    return XPtr<T>(p); 	// the default XPtr ctor with deleter on and tag and prot nil
+}
+
 template<typename T> void check_xptr_tag(XPtr<T> ptr) {
     if (R_ExternalPtrTag(ptr) == R_NilValue) {
         Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);

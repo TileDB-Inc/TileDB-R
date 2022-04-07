@@ -1,54 +1,61 @@
 ---
-title: "TileDB and (R)MariaDB Examples"
-vignette: |
-  %\VignetteIndexEntry{TileDB RMariaDB Examples}
-  %\VignetteEngine{simplermarkdown::mdweave_to_html}
-  %\VignetteEncoding{UTF-8}
+css: water.css
+title: TileDB and (R)MariaDB Examples
 ---
 
+```{=html}
+<!--
+%\VignetteIndexEntry{TileDB RMariaDB Examples}
+%\VignetteEngine{simplermarkdown::mdweave_to_html}
+%\VignetteEncoding{UTF-8}
+-->
+```
 ## Introduction
 
-[TileDB](https://www.tiledb.com/) provides the _Universal Data Engine_ that
-can be accessed in a variety of ways. The C/C++ library offered by [TileDB
-Embedded](https://www.tiledb.com/embedded) is one approach, and the [R
-package](https://github.com/TileDB-Inc/TileDB-R), as well as the [Python
-package](https://github.com/TileDB-Inc/TileDB-Py) and other language
-bindings use it. Another interface is provided by the [MariaDB Integration
-via the MyTile storage plugin](https://docs.tiledb.com/mariadb/).
+[TileDB](https://www.tiledb.com/) provides the *Universal Data Engine*
+that can be accessed in a variety of ways. The C/C++ library offered by
+[TileDB Embedded](https://www.tiledb.com/embedded) is one approach, and
+the [R package](https://github.com/TileDB-Inc/TileDB-R), as well as the
+[Python package](https://github.com/TileDB-Inc/TileDB-Py) and other
+language bindings use it. Another interface is provided by the [MariaDB
+Integration via the MyTile storage
+plugin](https://docs.tiledb.com/mariadb/).
 
 This provides TileDB integration with any frontend that interfaces with
 MariaDB---such as the
-[RMariaDB](https://cran.r-project.org/package=RMariaDB) package for R.  So
-this vignette illustrates the use of TileDB via MariaDB using R and the
-RMariaDB packages.
+[RMariaDB](https://cran.r-project.org/package=RMariaDB) package for R.
+So this vignette illustrates the use of TileDB via MariaDB using R and
+the RMariaDB packages.
 
 ## Installation or Using Docker
 
 In order to use the MyTile storage plugin, one has to compile both the
-storage plugin itself and the MariaDB server with consistent compiler flags.
-As the build also requires the TileDB Embedded library and headers, using a
-Docker container may be easiest.  The Dockerfile also provides a concrete
-example of the build setup.
+storage plugin itself and the MariaDB server with consistent compiler
+flags. As the build also requires the TileDB Embedded library and
+headers, using a Docker container may be easiest. The Dockerfile also
+provides a concrete example of the build setup.
 
-So here we will use the [`tiledb/tiledb-mariadb-r`](https://hub.docker.com/r/tiledb/tiledb-mariadb-r) container.
+So here we will use the
+[`tiledb/tiledb-mariadb-r`](https://hub.docker.com/r/tiledb/tiledb-mariadb-r)
+container.
 
 #### Launch Container in Background
 
 We launch the container 'tiledb/tiledb-mariadb-r' as a daemon, allowing
-MariaDB to accept an empty password (using an older MySQL variable setting), and
-name the running image 'tiledb-mariadb-r':
+MariaDB to accept an empty password (using an older MySQL variable
+setting), and name the running image 'tiledb-mariadb-r':
 
-```sh
+``` sh
 docker run --name tiledb-mariadb-r -it -d --rm \
        -e MYSQL_ALLOW_EMPTY_PASSWORD=1 tiledb/tiledb-mariadb-r
 ```
 
 #### Access Container Once to Write via TileDB
 
-Using the name given to the running instance, we start an R session to write
-data with TileDB:
+Using the name given to the running instance, we start an R session to
+write data with TileDB:
 
-```sh
+``` sh
 docker exec -it -u root tiledb-mariadb-r R
 ```
 
@@ -56,28 +63,29 @@ docker exec -it -u root tiledb-mariadb-r R
 
 ### Palmer Penguins
 
-With the sessions started as in the previous section, we start an R session.
+With the sessions started as in the previous section, we start an R
+session.
 
-```r
+``` r
 > library(tiledb)
 > library(palmerpenguins)
 > praw <- penguins_raw
 > fromDataFrame(praw, "/tmp/penguinsraw")
 ```
 
-
 #### Access Container Again to Read via RMariaDB
 
-In another shell, we can access the container once more and launch another R
-process:
+In another shell, we can access the container once more and launch
+another R process:
 
-```sh
+``` sh
 docker exec -it -u root tiledb-mariadb-r R
 ```
 
-where we use RMariaDB to access the data via a `tibble` object and `magrittr` pipe
+where we use RMariaDB to access the data via a `tibble` object and
+`magrittr` pipe
 
-```r
+``` r
 > library(RMariaDB)
 > library(dplyr, warn.conflicts=FALSE)
 > con <- DBI::dbConnect(RMariaDB::MariaDB(), dbname="test")
@@ -101,15 +109,15 @@ where we use RMariaDB to access the data via a `tibble` object and `magrittr` pi
 ```
 
 Note that this R session uses TileDB only via the MyTile plugin which is
-activated implicitly via the 'table location' (here `/tmp/penguinsraw`) of
-the test database enabling plugins.
+activated implicitly via the 'table location' (here `/tmp/penguinsraw`)
+of the test database enabling plugins.
 
-Also note that the query is still 'lazy': only column names
-and the first ten observations have been retrieved, and the total size is still
-unknown as indicated by `lazy query [?? x 2]`.  Adding a `collect()` verb
+Also note that the query is still 'lazy': only column names and the
+first ten observations have been retrieved, and the total size is still
+unknown as indicated by `lazy query [?? x 2]`. Adding a `collect()` verb
 materialized the full subset.
 
-```r
+``` r
 > tbl(con, "/tmp/penguinsraw")  %>%
 +     dplyr::select(contains("Length")) %>%
 +     collect()
@@ -130,11 +138,12 @@ materialized the full subset.
 >
 ```
 
-We now see that all 344 rows of this particular result set have been accessed.
+We now see that all 344 rows of this particular result set have been
+accessed.
 
 Similarly, we can also run summaries on selected column:
 
-```r
+``` r
 > tbl(con, "/tmp/penguinsraw") %>%
 +     group_by(Species) %>%
 +     summarise(across(starts_with("Flipper"),
@@ -151,10 +160,10 @@ Similarly, we can also run summaries on selected column:
 
 ### DBI
 
-We can connect directly using the `DBI` package along with the `RMariaDB`
-package and its MyTile bindings:
+We can connect directly using the `DBI` package along with the
+`RMariaDB` package and its MyTile bindings:
 
-```r
+``` r
 library(DBI)
 con <- dbConnect(RMariaDB::MariaDB(), dbname="test")
 res <- dbSendQuery(con, "select * from `/work/penguins` as `q91` limit 10")
@@ -166,9 +175,10 @@ dbDisconnect(con)
 
 ### S3
 
-When using Docker, the container setup needs to be modified to include the required AWS access environment variables:
+When using Docker, the container setup needs to be modified to include
+the required AWS access environment variables:
 
-```sh
+``` sh
 docker run --name tiledb-mariadb-r \
        -it -d --rm \
        -v $PWD:/work -w /work \
@@ -178,14 +188,15 @@ docker run --name tiledb-mariadb-r \
        tiledb/tiledb-mariadb-r
 ```
 
-This exports the current working directory (accessed as `$PWD` in the shell)
-as `/work` inside the container (via the `-v` switch), and instructs the
-container to start in directory `/work` (via the `-w` switch).
+This exports the current working directory (accessed as `$PWD` in the
+shell) as `/work` inside the container (via the `-v` switch), and
+instructs the container to start in directory `/work` (via the `-w`
+switch).
 
-In the following example we also set a TileDB configuration option to switch
-AWS regions.
+In the following example we also set a TileDB configuration option to
+switch AWS regions.
 
-```r
+``` r
 > library(dplyr, warn.conflicts=FALSE)
 > # connect as usual
 > con <- DBI::dbConnect(RMariaDB::MariaDB(), dbname="test")
@@ -219,17 +230,17 @@ AWS regions.
 
 ### NYC Taxis
 
-We can write the New York taxi data into TileDB (in the current directory)
-after reading it as a csv:
+We can write the New York taxi data into TileDB (in the current
+directory) after reading it as a csv:
 
-```r
+``` r
 > nyc <- data.table::fread("trip_data_1.csv")
 > tiledb::fromDataFrame(nyc, "trip_data_1")
 ```
 
 Then we can access it via the path `/work/trip_data_1` via RMariaDB.
 
-```r
+``` r
 > library(dplyr, warn.conflicts=FALSE)
 > con <- DBI::dbConnect(RMariaDB::MariaDB(), dbname="test")
 > # list column names
@@ -292,5 +303,5 @@ GROUP BY `passenger_count`
 
 ## Summary
 
-This short vignette demonstrates the use of TileDB-stored data from R using
-RMariaDB via the MyTile storage extension to MariaBD.
+This short vignette demonstrates the use of TileDB-stored data from R
+using RMariaDB via the MyTile storage extension to MariaBD.
