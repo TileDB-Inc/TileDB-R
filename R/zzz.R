@@ -71,7 +71,8 @@ inlineCxxPlugin <- function(...) {
     txt <- paste("No TileDB system-wide installation found. Consider setting TILEDB_INSTALL_DIR",
                  "if have you an installation.")
     stopifnot(txt = .pkgenv[["tiledb_ldflag"]] != "")
-    plugin <- Rcpp::Rcpp.plugin.maker(libs = .pkgenv[["tiledb_ldflag"]],
+    plugin <- Rcpp::Rcpp.plugin.maker(include.before = "#include <tiledb/tiledb>",
+                                      libs = .pkgenv[["tiledb_ldflag"]],
                                       package = "tiledb",
                                       Makevars = NULL,
                                       Makevars.win = NULL)
