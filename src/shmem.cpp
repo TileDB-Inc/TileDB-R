@@ -111,6 +111,7 @@ void read_string(std::string bufferpath, std::string & str) {
 // [[Rcpp::export]]
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz) {
 #ifdef __linux__
+    check_xptr_tag<query_buf_t>(buf);
     std::string bufferpath = _datafile(dir, name);
     write_buffer(bufferpath, sz, buf->size, buf->vec.data());
     if (buf->nullable) {
@@ -123,6 +124,7 @@ void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, i
 // [[Rcpp::export]]
 void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, IntegerVector vec) {
 #ifdef __linux__
+    check_xptr_tag<vlc_buf_t>(buf);
     std::string bufferpath = _datafile(dir, name);
     write_buffer(bufferpath, std::strlen(buf->str.c_str()), 1L, (void*)buf->str.c_str());
 
@@ -140,7 +142,7 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
 XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 #ifdef __linux__
     // allocate buffer, then set up buffer
-    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t, true);
+    XPtr<query_buf_t> buf = make_xptr<query_buf_t>(new query_buf_t);
     buf->dtype = _string_to_tiledb_datatype(dtype);
     buf->size = static_cast<int32_t>(tiledb_datatype_size(_string_to_tiledb_datatype(dtype)));
     buf->nullable = false; // default, overriden if buffer in validity path seen
@@ -160,7 +162,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 #else
     Rcpp::stop("This function is only available under Linux.");
     // not reached
-    XPtr<query_buf_t> buf = XPtr<query_buf_t>(new query_buf_t);
+    XPtr<query_buf_t> buf = make_xptr<query_buf_t>(new query_buf_t);
     return buf;
 #endif
 }
@@ -169,7 +171,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
 #ifdef __linux__
     // allocate buffer, then set up buffer
-    XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, true);
+    XPtr<vlc_buf_t> buf = make_xptr<vlc_buf_t>(new vlc_buf_t);
     read_string(datapath, buf->str);
     std::string offsetspath = std::regex_replace(datapath, std::regex("/data/"), "/offsets/");
     read_buffer<uint64_t>(offsetspath, buf->offsets);
@@ -192,7 +194,7 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
 #else
     Rcpp::stop("This function is only available under Linux.");
     // not reached
-    XPtr<vlc_buf_t> buf = XPtr<vlc_buf_t>(new vlc_buf_t, true);
+    XPtr<vlc_buf_t> buf = make_xptr<vlc_buf_t>(new vlc_buf_t);
     return buf;
 #endif
 }

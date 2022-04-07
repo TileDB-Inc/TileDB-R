@@ -34,7 +34,7 @@ write_array_lowlevel <- function(uri) {
 
   rows <- 1:10 #ISOdatetime(2020,1,1,0,0,0) + (1:10)*60*60 - as.numeric(ISOdatetime(2020,1,1,0,0,0))
   rows <- nanotime(1) + 0:9
-  bufptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domrowtype, 10)
+  bufptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(domrowtype, 10)
   bufptr <-tiledb:::libtiledb_query_buffer_assign_ptr(bufptr, domrowtype, rows)
   qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "rows", bufptr)
 
@@ -46,11 +46,11 @@ write_array_lowlevel <- function(uri) {
                    DATETIME_MS = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123,
                    DATETIME_US = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123456)
 
-  buf1ptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, "INT32", 10)
+  buf1ptr <-tiledb:::libtiledb_query_buffer_alloc_ptr("INT32", 10)
   buf1ptr <-tiledb:::libtiledb_query_buffer_assign_ptr(buf1ptr, "INT32", a1data)
   qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "a1", buf1ptr)
 
-  buf2ptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, attrowtype, 10)
+  buf2ptr <-tiledb:::libtiledb_query_buffer_alloc_ptr(attrowtype, 10)
   buf2ptr <-tiledb:::libtiledb_query_buffer_assign_ptr(buf2ptr, attrowtype, d1data)
   qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "d1", buf2ptr)
 
@@ -111,7 +111,7 @@ read_array_lowlevel <- function(uri) {
   qryptr <- tiledb:::libtiledb_query_add_range_with_type(qryptr, 0, domrowtype, as.integer64(2), as.integer64(7))
 
   ## allocate and set rows
-  bufptr0 <- tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, domrowtype, 10)
+  bufptr0 <- tiledb:::libtiledb_query_buffer_alloc_ptr(domrowtype, 10)
   qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "rows", bufptr0)
 
   ## allocate and set a1, easier as int
@@ -119,7 +119,7 @@ read_array_lowlevel <- function(uri) {
   qryptr <- tiledb:::libtiledb_query_set_buffer(qryptr, "a1", d1r)
 
   ## allocate and set d1, easier as int
-  bufptr <- tiledb:::libtiledb_query_buffer_alloc_ptr(arrptr, attrowtype, 10)
+  bufptr <- tiledb:::libtiledb_query_buffer_alloc_ptr(attrowtype, 10)
   qryptr <- tiledb:::libtiledb_query_set_buffer_ptr(qryptr, "d1", bufptr)
 
   ## fire off query

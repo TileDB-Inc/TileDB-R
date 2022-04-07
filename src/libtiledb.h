@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2020 TileDB Inc.
+//  Copyright (c) 2017-2022 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -68,6 +68,67 @@ void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_
 
 // type and size helper
 tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr);
+
+
+// enum for TileDB XPtr Object type using int32_t payload (for R)
+enum tiledb_xptr_object : int32_t {};
+const tiledb_xptr_object tiledb_xptr_object_array                { 10 };
+const tiledb_xptr_object tiledb_xptr_object_arrayschema          { 20 };
+const tiledb_xptr_object tiledb_xptr_object_arrayschemaevolution { 30 };
+const tiledb_xptr_object tiledb_xptr_object_attribute            { 40 };
+const tiledb_xptr_object tiledb_xptr_object_config               { 50 };
+const tiledb_xptr_object tiledb_xptr_object_context              { 60 };
+const tiledb_xptr_object tiledb_xptr_object_dimension            { 70 };
+const tiledb_xptr_object tiledb_xptr_object_domain               { 80 };
+const tiledb_xptr_object tiledb_xptr_object_filter               { 90 };
+const tiledb_xptr_object tiledb_xptr_object_filterlist           { 100 };
+const tiledb_xptr_object tiledb_xptr_object_fragmentinfo         { 110 };
+const tiledb_xptr_object tiledb_xptr_object_group                { 120 };
+const tiledb_xptr_object tiledb_xptr_object_query                { 130 };
+const tiledb_xptr_object tiledb_xptr_object_querycondition       { 140 };
+const tiledb_xptr_object tiledb_xptr_object_vfs                  { 150 };
+const tiledb_xptr_object tiledb_xptr_vfs_fh_t              		 { 160 };
+const tiledb_xptr_object tiledb_xptr_vlc_buf_t                   { 170 };
+const tiledb_xptr_object tiledb_xptr_vlv_buf_t                   { 180 };
+const tiledb_xptr_object tiledb_xptr_query_buf_t                 { 190 };
+
+// templated checkers for external pointer tags
+template <typename T> const int32_t XPtrTagType;
+template <> const int32_t XPtrTagType<tiledb::Array>                = tiledb_xptr_object_array;
+template <> const int32_t XPtrTagType<tiledb::ArraySchema>          = tiledb_xptr_object_arrayschema;
+template <> const int32_t XPtrTagType<tiledb::ArraySchemaEvolution> = tiledb_xptr_object_arrayschemaevolution;
+template <> const int32_t XPtrTagType<tiledb::Attribute>            = tiledb_xptr_object_attribute;
+template <> const int32_t XPtrTagType<tiledb::Config>               = tiledb_xptr_object_config;
+template <> const int32_t XPtrTagType<tiledb::Context>              = tiledb_xptr_object_context;
+template <> const int32_t XPtrTagType<tiledb::Dimension>            = tiledb_xptr_object_dimension;
+template <> const int32_t XPtrTagType<tiledb::Domain>               = tiledb_xptr_object_domain;
+template <> const int32_t XPtrTagType<tiledb::Filter>               = tiledb_xptr_object_filter;
+template <> const int32_t XPtrTagType<tiledb::FilterList>           = tiledb_xptr_object_filterlist;
+template <> const int32_t XPtrTagType<tiledb::FragmentInfo>         = tiledb_xptr_object_fragmentinfo;
+template <> const int32_t XPtrTagType<tiledb::Group>                = tiledb_xptr_object_group;
+template <> const int32_t XPtrTagType<tiledb::Query>                = tiledb_xptr_object_query;
+template <> const int32_t XPtrTagType<tiledb::QueryCondition>       = tiledb_xptr_object_query;
+template <> const int32_t XPtrTagType<tiledb::VFS>                  = tiledb_xptr_object_vfs;
+template <> const int32_t XPtrTagType<vfs_fh_t>                     = tiledb_xptr_vfs_fh_t;
+template <> const int32_t XPtrTagType<vlc_buf_t>                    = tiledb_xptr_vlc_buf_t;
+template <> const int32_t XPtrTagType<vlv_buf_t>                    = tiledb_xptr_vlv_buf_t;
+template <> const int32_t XPtrTagType<query_buf_t>                  = tiledb_xptr_query_buf_t;
+
+template <typename T> XPtr<T> make_xptr(T* p) {
+    return XPtr<T>(p, true, Rcpp::wrap(XPtrTagType<T>), R_NilValue);
+}
+
+template<typename T> void check_xptr_tag(XPtr<T> ptr) {
+    if (R_ExternalPtrTag(ptr) == R_NilValue) {
+        Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
+    }
+    if (R_ExternalPtrTag(ptr) != R_NilValue) {
+        int32_t tag = Rcpp::as<int32_t>(R_ExternalPtrTag(ptr));
+        if (XPtrTagType<T> != tag) {
+            Rcpp::stop("Wrong tag type: expected %d but received %d\n", XPtrTagType<T>, tag);
+        }
+    }
+}
 
 
 #endif

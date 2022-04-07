@@ -26,6 +26,9 @@
 #' @exportClass tiledb_query
 setClass("tiledb_query",
          slots = list(ptr = "externalptr"))
+         ##           arr = "ANY"))
+         ## could add arr of type 'ANY' (using shortcut to not have to deal with collate order)
+         ## if array was needed for query object
 
 #' Creates a 'tiledb_query' object
 #'
@@ -191,7 +194,7 @@ tiledb_query_buffer_alloc_ptr <- function(query, datatype, ncells) {
   stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
             `Argument 'datatype' must be a character object` = is.character(datatype),
             `Argument 'ncells' must be numeric` = is.numeric(ncells))
-  bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
+  bufptr <- libtiledb_query_buffer_alloc_ptr(datatype, ncells)
   bufptr
 }
 
@@ -209,7 +212,7 @@ tiledb_query_create_buffer_ptr <- function(query, datatype, object) {
             #`Argument 'object' must be a vector` = is.vector(object),
             `Argument 'datatype' must be a character object` = is.character(datatype))
   ncells <- length(object)
-  bufptr <- libtiledb_query_buffer_alloc_ptr(query@ptr, datatype, ncells)
+  bufptr <- libtiledb_query_buffer_alloc_ptr(datatype, ncells)
   bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, datatype, object)
   bufptr
 }
@@ -548,7 +551,7 @@ tiledb_get_query_status <- function() {
 #' @return A JSON-formatted string with context statistics
 #' @export
 tiledb_query_stats <- function(query) {
-    stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"),
+    stopifnot(`The 'query' argument must be a TileDB Query object` = is(query, "tiledb_query"),
               `TileDB 2.4.0 or later is required` = tiledb_version(TRUE) >= "2.4.0")
     libtiledb_query_stats(query@ptr)
 }
@@ -559,7 +562,20 @@ tiledb_query_stats <- function(query) {
 #' @return A TileDB Context object retrieved from the query
 #' @export
 tiledb_query_ctx <- function(query) {
-    stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"),
+    stopifnot(`The 'query' argument must be a TileDB Query object` = is(query, "tiledb_query"),
               `TileDB 2.6.0 or later is required` = tiledb_version(TRUE) >= "2.6.0")
-    new("tiledb_ctx", ptr = tiledb_query_ctx(query@ptr))
+    new("tiledb_ctx", ptr = libtiledb_query_get_ctx(query@ptr))
 }
+
+## The next function could be used to extract an 'tiledb_array' object from a query object
+## if we added it, but the only use so far as been in one test so there was not a strong enough
+## case to extend the tiledb_query object with
+# ' Return query array object
+# '
+# ' @param query A TileDB Query object
+# ' @return A TileDB Array object retrieved from the query
+# ' @ export
+#tiledb_query_array <- function(query) {
+#    stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"))
+#    query@arr
+#}
