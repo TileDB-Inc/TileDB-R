@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -19,25 +19,6 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
-
-#' Creates a TileDB group object at given uri path
-#'
-#' @param uri path which to create group
-#' @param ctx tiledb_ctx object (optional)
-#' @return uri of created group
-#' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' \dontrun{
-#' pth <- tempdir()
-#' tiledb_group_create(pth)
-#' tiledb_object_type(pth)
-#' }
-#'@export
-tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
-    stopifnot(`The 'ctx' argument must a tiledb_ctx` = is(ctx, "tiledb_ctx"),
-              `The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri,"character"))
-    libtiledb_group_create(ctx@ptr, uri)
-}
 
 #' Return the TileDB object type string of a TileDB resource
 #'
