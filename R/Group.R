@@ -101,12 +101,19 @@ tiledb_group_close <- function(grp) {
     grp
 }
 
-#' Create a TileDB Group
+#' Create a TileDB Group at the given path
 #'
 #' @param uri Character variable with the URI of the new group
 #' @param ctx (optional) A TileDB Ctx object; if not supplied the default
 #' context object is retrieved
 #' @return The uri path, invisibly
+#' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontrun{
+#' pth <- tempdir()
+#' tiledb_group_create(pth)
+#' tiledb_object_type(pth)
+#' }
 #' @export
 tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
     stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
