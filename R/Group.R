@@ -119,7 +119,7 @@ tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
     stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
               "The 'uri' argument must be character" = is.character(uri),
               "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_create_(ctx@ptr, uri)
+    libtiledb_group_create(ctx@ptr, uri)
     invisible(uri)
 }
 
