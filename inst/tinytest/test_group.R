@@ -84,7 +84,7 @@ grp <- tiledb_group_close(grp)
 #grp2 <- tiledb_group(uri)
 #expect_equal(tiledb_group_metadata_num(grp2), 2)
 #expect_false(tiledb_group_has_metadata(grp2, "otherkey"))
-
+exit_file("Exiting before member tests")
 ## add member
 grp <- tiledb_group_open(grp, "WRITE")
 grp <- tiledb_group_add_member(grp, "anny", TRUE)
