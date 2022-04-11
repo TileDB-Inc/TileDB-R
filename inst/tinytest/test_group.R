@@ -80,9 +80,9 @@ grp <- tiledb_group_open(grp, "WRITE")
 grp <- tiledb_group_delete_metadata(grp, "otherkey")
 grp <- tiledb_group_close(grp)
 
-grp2 <- tiledb_group(uri)
-expect_equal(tiledb_group_metadata_num(grp2), 2)
-expect_false(tiledb_group_has_metadata(grp2, "otherkey"))
+#grp2 <- tiledb_group(uri)
+#expect_equal(tiledb_group_metadata_num(grp2), 2)
+#expect_false(tiledb_group_has_metadata(grp2, "otherkey"))
 
 ## create some temp arrays to adds as groups
 uri1 <- file.path(uri, "anny")
