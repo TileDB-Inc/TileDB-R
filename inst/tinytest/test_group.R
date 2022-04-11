@@ -80,25 +80,38 @@ grp <- tiledb_group_open(grp, "WRITE")
 grp <- tiledb_group_delete_metadata(grp, "otherkey")
 grp <- tiledb_group_close(grp)
 
-## close, re-open to read -- this is flaky: sometimes we pass, sometimes we do not
-#grp2 <- tiledb_group(uri)
-#expect_equal(tiledb_group_metadata_num(grp2), 2)
-#expect_false(tiledb_group_has_metadata(grp2, "otherkey"))
+grp2 <- tiledb_group(uri)
+expect_equal(tiledb_group_metadata_num(grp2), 2)
+expect_false(tiledb_group_has_metadata(grp2, "otherkey"))
+
+## create some temp arrays to adds as groups
+uri1 <- file.path(uri, "anny")
+uri2 <- file.path(uri, "bob")
+uri3 <- file.path(uri, "chloe")
+df1 <- data.frame(val=seq(100, 200, by=10))
+df2 <- data.frame(letters=letters)
+df3 <- data.frame(nine=rep(9L, 9))
+tiledb::fromDataFrame(df1, uri1)
+tiledb::fromDataFrame(df2, uri2)
+tiledb::fromDataFrame(df3, uri3)
 
 ## add member
 grp <- tiledb_group_open(grp, "WRITE")
-grp <- tiledb_group_add_member(grp, "anny", TRUE)
+grp <- tiledb_group_add_member(grp, uri1, FALSE) 	# use absolute URL
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 1)
 
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "WRITE")
-grp <- tiledb_group_add_member(grp, "bob", TRUE)
-grp <- tiledb_group_add_member(grp, "cloe", TRUE)
+grp <- tiledb_group_add_member(grp, "bob", TRUE) 	# use relative URL
+grp <- tiledb_group_add_member(grp, "chloe", TRUE)
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 3)
+
+## adding a member that is not a group or an array errors
+expect_error(tiledb_group_add_member(grp, "doesNotExist", TRUE))
 
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "WRITE")
@@ -109,7 +122,7 @@ expect_equal(tiledb_group_member_count(grp), 2)
 
 obj <- tiledb_group_member(grp, 0)
 expect_true(is.character(obj[1]))
-expect_equal(obj[1], "INVALID")
+expect_equal(obj[1], "ARRAY")
 expect_true(is.character(obj[2]))
 
 txt <- tiledb_group_member_dump(grp, TRUE)
