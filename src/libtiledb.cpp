@@ -4595,10 +4595,17 @@ SEXP libtiledb_group_get_metadata_from_index(XPtr<tiledb::Group> grp, int idx) {
 
 // [[Rcpp::export]]
 XPtr<tiledb::Group> libtiledb_group_add_member(XPtr<tiledb::Group> grp,
-                                               std::string uri, bool relative) {
+                                               std::string uri, bool relative,
+                                               Nullable<Rcpp::String> optional_name = R_NilValue) {
     check_xptr_tag<tiledb::Group>(grp);
 #if TILEDB_VERSION == TileDB_Version(2,8,0)
-    grp->add_member(uri, relative);
+    if (optional_name.isNotNull()) {
+        Rcpp::String string_name(optional_name);
+        std::string name(string_name);
+        grp->add_member(uri, relative, name);
+    } else {
+        grp->add_member(uri, relative);
+    }
 #endif
     return grp;
 }

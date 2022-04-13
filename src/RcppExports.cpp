@@ -2919,15 +2919,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_group_add_member
-XPtr<tiledb::Group> libtiledb_group_add_member(XPtr<tiledb::Group> grp, std::string uri, bool relative);
-RcppExport SEXP _tiledb_libtiledb_group_add_member(SEXP grpSEXP, SEXP uriSEXP, SEXP relativeSEXP) {
+XPtr<tiledb::Group> libtiledb_group_add_member(XPtr<tiledb::Group> grp, std::string uri, bool relative, Nullable<Rcpp::String> optional_name);
+RcppExport SEXP _tiledb_libtiledb_group_add_member(SEXP grpSEXP, SEXP uriSEXP, SEXP relativeSEXP, SEXP optional_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Group> >::type grp(grpSEXP);
     Rcpp::traits::input_parameter< std::string >::type uri(uriSEXP);
     Rcpp::traits::input_parameter< bool >::type relative(relativeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_group_add_member(grp, uri, relative));
+    Rcpp::traits::input_parameter< Nullable<Rcpp::String> >::type optional_name(optional_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_group_add_member(grp, uri, relative, optional_name));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3276,7 +3277,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_group_has_metadata", (DL_FUNC) &_tiledb_libtiledb_group_has_metadata, 2},
     {"_tiledb_libtiledb_group_metadata_num", (DL_FUNC) &_tiledb_libtiledb_group_metadata_num, 1},
     {"_tiledb_libtiledb_group_get_metadata_from_index", (DL_FUNC) &_tiledb_libtiledb_group_get_metadata_from_index, 2},
-    {"_tiledb_libtiledb_group_add_member", (DL_FUNC) &_tiledb_libtiledb_group_add_member, 3},
+    {"_tiledb_libtiledb_group_add_member", (DL_FUNC) &_tiledb_libtiledb_group_add_member, 4},
     {"_tiledb_libtiledb_group_remove_member", (DL_FUNC) &_tiledb_libtiledb_group_remove_member, 2},
     {"_tiledb_libtiledb_group_member_count", (DL_FUNC) &_tiledb_libtiledb_group_member_count, 1},
     {"_tiledb_libtiledb_group_member", (DL_FUNC) &_tiledb_libtiledb_group_member, 2},

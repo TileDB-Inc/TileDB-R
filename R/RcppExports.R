@@ -996,8 +996,8 @@ libtiledb_group_get_metadata_from_index <- function(grp, idx) {
     .Call(`_tiledb_libtiledb_group_get_metadata_from_index`, grp, idx)
 }
 
-libtiledb_group_add_member <- function(grp, uri, relative) {
-    .Call(`_tiledb_libtiledb_group_add_member`, grp, uri, relative)
+libtiledb_group_add_member <- function(grp, uri, relative, optional_name = NULL) {
+    .Call(`_tiledb_libtiledb_group_add_member`, grp, uri, relative, optional_name)
 }
 
 libtiledb_group_remove_member <- function(grp, uri) {

@@ -260,21 +260,24 @@ tiledb_group_get_all_metadata <- function(grp) {
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
 ##' @param uri A character value with a new URI
 ##' @param relative A logical value indicating whether URI is relative to the group
+##' @param name An optional character providing a name for the object, defaults to \code{NULL}
 ##' @return The TileDB Group object, invisibly
 ##' @export
-tiledb_group_add_member <- function(grp, uri, relative) {
+tiledb_group_add_member <- function(grp, uri, relative, name=NULL) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "The 'uri' argument must be character" = is.character(uri),
               "The 'relative' argument must be logical" = is.logical(relative),
+              "The 'name' argument must be NULL or character" = is.null(name) || is.character(name),
               "This function needs TileDB 2.8.*" = .tiledb28())
-    grp@ptr <- libtiledb_group_add_member(grp@ptr, uri, relative)
+    grp@ptr <- libtiledb_group_add_member(grp@ptr, uri, relative, name)
     invisible(grp)
 }
 
 ##' Remove Member from TileDB Group
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param uri A character value with a new URI
+##' @param uri A character value with a the URI of the member to be removed, or (if added
+##' with a name) the name of the member
 ##' @param relative A boolean variables describing absolute or relative (to group) uri use
 ##' @return The TileDB Group object, invisibly
 ##' @export
