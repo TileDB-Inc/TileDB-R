@@ -1,8 +1,32 @@
-# Under development
+# tiledb 0.12.0
+
+* This release of the R package builds against [TileDB 2.8.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.8.0), and has also been tested against earlier releases as well as the development version.
+
+## Improvements
+
+* A schedule nightly continuous action now checks current and release-candidate branches of TileDB with the R package under valgrind (#387)
+
+* Support for Groups was added (#388, #392, #395)
+
+* All external pointers are now tagged and valided at compile- and run-time (#389)
+
+* A now-redundant group-creation method has been removed (#391)
+
+* Unit tests for group member addition were added and updated (#393)
+
+* Group members can also be added or removed by name (#395)
 
 ## Bug Fixes
 
 * The detection of TileDB headers and library is now more robust for cases where `pkg-config` is present but does not know about TileDB (#385)
+
+* The package documentation website was updated (#386)
+
+* A fallback was added for external pointer creation to support compilation without group support in TileDB Embedded (#390)
+
+* An incorrectly specified function call was corrected (#392)
+
+* The templated initialization for external pointer is now inlined to satisfy all compilers (#394)
 
 
 # tiledb 0.11.1
