@@ -16,6 +16,8 @@
 
 * Group members can also be added or removed by name (#395)
 
+* Use of TileDB Embedded was upgraded to release 2.8.0 (#396) following an earlier upgrades to 2.7.0 (#372) and 2.7.1 (#384)
+
 ## Bug Fixes
 
 * The detection of TileDB headers and library is now more robust for cases where `pkg-config` is present but does not know about TileDB (#385)
