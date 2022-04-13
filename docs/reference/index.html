@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1385,9 +1385,114 @@ This is only valid for sparse arrays.</dd>
 
       <dl><dt>
           
+          <code><a href="tiledb_group-class.html">tiledb_group-class</a></code> 
+        </dt>
+        <dd>An S4 class for a TileDB Group object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group.html">tiledb_group()</a></code> 
+        </dt>
+        <dd>Creates a 'tiledb_group' object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_add_member.html">tiledb_group_add_member()</a></code> 
+        </dt>
+        <dd>Add Member to TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_close.html">tiledb_group_close()</a></code> 
+        </dt>
+        <dd>Close a TileDB Group</dd>
+      </dl><dl><dt>
+          
           <code><a href="tiledb_group_create.html">tiledb_group_create()</a></code> 
         </dt>
-        <dd>Creates a TileDB group object at given uri path</dd>
+        <dd>Create a TileDB Group at the given path</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_delete_metadata.html">tiledb_group_delete_metadata()</a></code> 
+        </dt>
+        <dd>Deletes Metadata from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_get_all_metadata.html">tiledb_group_get_all_metadata()</a></code> 
+        </dt>
+        <dd>Return all Metadata from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_get_config.html">tiledb_group_get_config()</a></code> 
+        </dt>
+        <dd>Get a TileDB Config from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_get_metadata.html">tiledb_group_get_metadata()</a></code> 
+        </dt>
+        <dd>Accesses Metadata from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_get_metadata_from_index.html">tiledb_group_get_metadata_from_index()</a></code> 
+        </dt>
+        <dd>Accesses Metadata by Index from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_has_metadata.html">tiledb_group_has_metadata()</a></code> 
+        </dt>
+        <dd>Checks for Metadata in a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_is_open.html">tiledb_group_is_open()</a></code> 
+        </dt>
+        <dd>Test if TileDB Group is open</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_member.html">tiledb_group_member()</a></code> 
+        </dt>
+        <dd>Get a Member (Description) by Index from TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_member_count.html">tiledb_group_member_count()</a></code> 
+        </dt>
+        <dd>Get Member Count from TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_member_dump.html">tiledb_group_member_dump()</a></code> 
+        </dt>
+        <dd>Dump the TileDB Group to String</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_metadata_num.html">tiledb_group_metadata_num()</a></code> 
+        </dt>
+        <dd>Returns Number of Metadata Objects a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_open.html">tiledb_group_open()</a></code> 
+        </dt>
+        <dd>Open a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_put_metadata.html">tiledb_group_put_metadata()</a></code> 
+        </dt>
+        <dd>Write Metadata to a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_query_type.html">tiledb_group_query_type()</a></code> 
+        </dt>
+        <dd>Return a TileDB Group query type</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_remove_member.html">tiledb_group_remove_member()</a></code> 
+        </dt>
+        <dd>Remove Member from TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_set_config.html">tiledb_group_set_config()</a></code> 
+        </dt>
+        <dd>Set a TileDB Config for a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_uri.html">tiledb_group_uri()</a></code> 
+        </dt>
+        <dd>Return a TileDB Group URI</dd>
       </dl></div><div class="section level2">
       <h2 id="object">Object<a class="anchor" aria-label="anchor" href="#object"></a></h2>
       
@@ -1480,6 +1585,31 @@ This is only valid for sparse arrays.</dd>
           <code><a href="tiledb_get_metadata.html">tiledb_get_metadata()</a></code> 
         </dt>
         <dd>Return a TileDB Array Metadata object given by key</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_delete_metadata.html">tiledb_group_delete_metadata()</a></code> 
+        </dt>
+        <dd>Deletes Metadata from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_get_all_metadata.html">tiledb_group_get_all_metadata()</a></code> 
+        </dt>
+        <dd>Return all Metadata from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_get_metadata.html">tiledb_group_get_metadata()</a></code> 
+        </dt>
+        <dd>Accesses Metadata from a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_has_metadata.html">tiledb_group_has_metadata()</a></code> 
+        </dt>
+        <dd>Checks for Metadata in a TileDB Group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_group_put_metadata.html">tiledb_group_put_metadata()</a></code> 
+        </dt>
+        <dd>Write Metadata to a TileDB Group</dd>
       </dl><dl><dt>
           
           <code><a href="tiledb_has_metadata.html">tiledb_has_metadata()</a></code> 
