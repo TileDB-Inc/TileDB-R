@@ -88,34 +88,40 @@ grp <- tiledb_group_close(grp)
 uri1 <- file.path(uri, "anny")
 uri2 <- file.path(uri, "bob")
 uri3 <- file.path(uri, "chloe")
+uri4 <- file.path(uri, "dave")
 df1 <- data.frame(val=seq(100, 200, by=10))
 df2 <- data.frame(letters=letters)
 df3 <- data.frame(nine=rep(9L, 9))
+df4 <- data.frame(dat=c(1.1, 2.2, 3.3))
 tiledb::fromDataFrame(df1, uri1)
 tiledb::fromDataFrame(df2, uri2)
 tiledb::fromDataFrame(df3, uri3)
+tiledb::fromDataFrame(df4, uri4)
 
 ## add member
 grp <- tiledb_group_open(grp, "WRITE")
-grp <- tiledb_group_add_member(grp, uri1, FALSE) 	# use absolute URL
+grp <- tiledb_group_add_member(grp, uri1, FALSE) 					# use absolute URL
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 1)
 
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "WRITE")
-grp <- tiledb_group_add_member(grp, "bob", TRUE) 	# use relative URL
-grp <- tiledb_group_add_member(grp, "chloe", TRUE)
+grp <- tiledb_group_add_member(grp, "bob", TRUE) 					# use relative URL
+grp <- tiledb_group_add_member(grp, "chloe", TRUE, "name_is_chloe") # and an optional name
+grp <- tiledb_group_add_member(grp, "dave", TRUE, "name_is_dave") 	# and an optional name
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
-expect_equal(tiledb_group_member_count(grp), 3)
+expect_equal(tiledb_group_member_count(grp), 4)
 
 ## adding a member that is not a group or an array errors
 expect_error(tiledb_group_add_member(grp, "doesNotExist", TRUE))
 
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "WRITE")
-grp <- tiledb_group_remove_member(grp, "bob")
+grp <- tiledb_group_remove_member(grp, "bob") 						# remove by (rel.) uri
+grp <- tiledb_group_remove_member(grp, "name_is_dave") 				# remove by name
+expect_error(tiledb_remove_member(grp, "does_not_exists"))
 grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 2)
