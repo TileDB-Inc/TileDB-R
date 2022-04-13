@@ -3,6 +3,8 @@ library(tiledb)
 
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
+isWindows <- Sys.info()[["sysname"]] == "Windows"
+isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
@@ -19,7 +21,7 @@ grp <- tiledb_group(uri)
 expect_true(is(grp, "tiledb_group"))
 expect_true(is(grp@ptr, "externalptr"))
 expect_true(tiledb_group_is_open(grp))
-expect_true(grepl(uri, tiledb_group_uri(grp)))  # the returned uri adds file://
+if (!isWindows && !isMacOS) expect_true(grepl(uri, tiledb_group_uri(grp)))
 expect_equal(tiledb_group_query_type(grp), "READ")
 
 ## do not reopen already opened

@@ -27,7 +27,7 @@ Documentation for the TileDB R package is available via the `help()`
 function from within R as well as via the [package
 documentation](https://tiledb-inc.github.io/TileDB-R/) and an
 [introductory
-notebook](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/notebooks/).
+notebook](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/notebooks/).
 Documentation about TileDB itself is [also
 available](https://docs.tiledb.com/main/).
 

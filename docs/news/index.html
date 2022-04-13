@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,27 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.12.0" id="tiledb-0120">tiledb 0.12.0<a class="anchor" aria-label="anchor" href="#tiledb-0120"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.8.0" class="external-link">TileDB 2.8.0</a>, and has also been tested against earlier releases as well as the development version.</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-12-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-12-0"></a></h3>
+<ul><li><p>A schedule nightly continuous action now checks current and release-candidate branches of TileDB with the R package under valgrind (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/387" class="external-link">#387</a>)</p></li>
+<li><p>Support for Groups was added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/388" class="external-link">#388</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/392" class="external-link">#392</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/395" class="external-link">#395</a>)</p></li>
+<li><p>All external pointers are now tagged and valided at compile- and run-time (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/389" class="external-link">#389</a>)</p></li>
+<li><p>A now-redundant group-creation method has been removed (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/391" class="external-link">#391</a>)</p></li>
+<li><p>Unit tests for group member addition were added and updated (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/393" class="external-link">#393</a>)</p></li>
+<li><p>Group members can also be added or removed by name (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/395" class="external-link">#395</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-12-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-12-0"></a></h3>
+<ul><li><p>The detection of TileDB headers and library is now more robust for cases where <code>pkg-config</code> is present but does not know about TileDB (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/385" class="external-link">#385</a>)</p></li>
+<li><p>The package documentation website was updated (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/386" class="external-link">#386</a>)</p></li>
+<li><p>A fallback was added for external pointer creation to support compilation without group support in TileDB Embedded (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/390" class="external-link">#390</a>)</p></li>
+<li><p>An incorrectly specified function call was corrected (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/392" class="external-link">#392</a>)</p></li>
+<li><p>The templated initialization for external pointer is now inlined to satisfy all compilers (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/394" class="external-link">#394</a>)</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.1" id="tiledb-0111">tiledb 0.11.1<a class="anchor" aria-label="anchor" href="#tiledb-0111"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.6.4" class="external-link">TileDB 2.6.4</a>, but has also been tested against earlier releases, and the development version.</li>
