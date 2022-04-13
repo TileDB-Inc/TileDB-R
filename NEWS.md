@@ -8,7 +8,7 @@
 
 * Support for Groups was added (#388, #392, #395)
 
-* All external pointers are now tagged and valided at compile- and run-time (#389)
+* All external pointers are now tagged and validated at compile- and run-time (#389)
 
 * A now-redundant group-creation method has been removed (#391)
 
