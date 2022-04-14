@@ -27,7 +27,7 @@
 setClass("tiledb_group",
          slots = list(ptr = "externalptr"))
 
-.tiledb28 <- function() tiledb_version(TRUE) >= "2.8.0" && tiledb_version(TRUE) < "2.9.0"
+.tiledb28 <- function() tiledb_version(TRUE) >= "2.8.0"
 
 #' Creates a 'tiledb_group' object
 #'

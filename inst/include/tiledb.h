@@ -100,7 +100,7 @@ namespace tiledb {
 }
 #endif
 
-#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR != 8
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 8
 // we need a placeholder as tiledb::Group as it is in function signatures
 namespace tiledb {
     class Group {

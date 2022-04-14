@@ -8,7 +8,7 @@ isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.8.0" || tiledb_version(TRUE) >= "2.9.0") exit_file("TileDB Group required TileDB 2.8.*")
+if (tiledb_version(TRUE) < "2.8.0") exit_file("TileDB Group requires TileDB 2.8.* or later")
 
 uri <- tempfile()
 
