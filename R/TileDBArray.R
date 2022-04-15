@@ -1113,10 +1113,14 @@ setMethod("[<-", "tiledb_array",
       if (alltypes[k] %in% c("CHAR", "ASCII")) { # variable length
           if (!allnullable[k]) {
               txtvec <- as.character(value[[k]])
-              offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
-              data <- paste(txtvec, collapse="")
-              ##cat("Alloc char buffer", k, "for", colnam, ":", alltypes[k], "\n")
-              buflist[[k]] <- libtiledb_query_buffer_var_char_create(offsets, data)
+              #offsets <- c(0L, cumsum(nchar(txtvec[-length(txtvec)])))
+              #offsets <- integer(length(txtvec))
+              #message("Have offsets A")
+              #data <- paste(txtvec, collapse="")
+              #data <- convertStringVectorIntoOffsetsAndString(txtvec, offsets)
+              #cat("Alloc char buffer", k, "for", colnam, ":", alltypes[k], "\n")
+              #buflist[[k]] <- libtiledb_query_buffer_var_char_create(offsets, data)
+              buflist[[k]] <- libtiledb_query_buffer_var_char_create_large(txtvec)
               qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[k]])
           } else { # variable length and nullable
               txtvec <- as.character(value[[k]])

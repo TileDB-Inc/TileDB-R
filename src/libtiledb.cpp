@@ -2578,7 +2578,8 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int 
   return buf;
 }
 
-// helper function to turn a vector of strings
+// helper function to turn a vector of strings into long string and offsets vector
+// note that offsets is returned here too
 // [[Rcpp::export]]
 std::string convertStringVectorIntoOffsetsAndString(Rcpp::CharacterVector vec,
                                                     Rcpp::IntegerVector offsets) {
@@ -2612,6 +2613,26 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
   bufptr->nullable = false;
   return(bufptr);
 }
+// [[Rcpp::export]]
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create_large(CharacterVector vec) {
+    size_t n = vec.size();
+    XPtr<vlc_buf_t> bufptr = make_xptr<vlc_buf_t>(new vlc_buf_t);
+    bufptr->offsets.resize(n);
+    bufptr->str = "";
+    uint64_t cumlen = 0;
+    for (size_t i=0; i<n; i++) {
+        std::string s(vec[i]);
+        bufptr->offsets[i] = cumlen;
+        bufptr->str += s;
+        cumlen += s.length();
+    }
+    bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
+    bufptr->validity_map.resize(n);  // validity_map resized but not used
+    bufptr->nullable = false;
+    return(bufptr);
+}
+
+
 
 // assigning (for a write) allocates with nullable vector
 // [[Rcpp::export]]

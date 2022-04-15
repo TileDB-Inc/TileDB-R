@@ -568,6 +568,10 @@ libtiledb_query_buffer_var_char_create <- function(intoffsets, data) {
     .Call(`_tiledb_libtiledb_query_buffer_var_char_create`, intoffsets, data)
 }
 
+libtiledb_query_buffer_var_char_create_large <- function(vec) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_create_large`, vec)
+}
+
 libtiledb_query_buffer_var_char_create_nullable <- function(intoffsets, data, nullable, navec) {
     .Call(`_tiledb_libtiledb_query_buffer_var_char_create_nullable`, intoffsets, data, nullable, navec)
 }
