@@ -129,9 +129,16 @@ grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 2)
 
 obj <- tiledb_group_member(grp, 0)
+expect_equal(length(obj), 3)
 expect_true(is.character(obj[1]))
 expect_equal(obj[1], "ARRAY")
 expect_true(is.character(obj[2]))
+expect_equal(obj[2], file.path(tiledb_group_uri(grp), "chloe"))
+expect_true(is.character(obj[3]))
+expect_equal(obj[3], "name_is_chloe")
+
+obj <- tiledb_group_member(grp, 1) 									# group member with no name
+expect_equal(obj[3], "")
 
 txt <- tiledb_group_member_dump(grp, TRUE)
 dat <- read.csv(text=txt, sep=' ', header=FALSE)

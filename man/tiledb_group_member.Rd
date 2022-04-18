@@ -12,9 +12,10 @@ tiledb_group_member(grp, idx)
 \item{idx}{A numeric value with the index of the metadata object to be retrieved}
 }
 \value{
-A character vector with two elements: the member type, and its uri.
+A character vector with three elements: the member type, its uri, and name
+(or \code{""} if the member is unnamed).
 }
 \description{
-This function returns a two-element character vector with the member object translated to
-character, and the uri.
+This function returns a three-element character vector with the member object translated to
+character, uri, and optional name.
 }
