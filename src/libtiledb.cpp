@@ -4634,9 +4634,9 @@ CharacterVector libtiledb_group_member(XPtr<tiledb::Group> grp, int idx) {
     check_xptr_tag<tiledb::Group>(grp);
 #if TILEDB_VERSION >= TileDB_Version(2,8,0)
     tiledb::Object obj = grp->member(idx);
-    CharacterVector v = CharacterVector::create(_object_type_to_string(obj.type()), obj.uri());
+    CharacterVector v = CharacterVector::create(_object_type_to_string(obj.type()), obj.uri(), obj.name().value_or(""));
 #else
-    CharacterVector v = CharacterVector::create("", "");
+    CharacterVector v = CharacterVector::create("", "", "");
 #endif
     return v;
 }

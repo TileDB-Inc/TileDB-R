@@ -302,12 +302,13 @@ tiledb_group_member_count <- function(grp) {
 
 ##' Get a Member (Description) by Index from TileDB Group
 ##'
-##' This function returns a two-element character vector with the member object translated to
-##' character, and the uri.
+##' This function returns a three-element character vector with the member object translated to
+##' character, uri, and optional name.
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
 ##' @param idx A numeric value with the index of the metadata object to be retrieved
-##' @return A character vector with two elements: the member type, and its uri.
+##' @return A character vector with three elements: the member type, its uri, and name
+##' (or \code{""} if the member is unnamed).
 ##' @export
 tiledb_group_member <- function(grp, idx) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
