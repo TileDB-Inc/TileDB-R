@@ -125,12 +125,9 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_create_buffer_ptr_char <- function(query, varvec) {
-  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
-            `Argument 'varvec' must be a character vector` = is.vector(varvec) && is.character(varvec))
-  n <- length(varvec)
-  offsets <- integer(n)
-  data <- convertStringVectorIntoOffsetsAndString(varvec, offsets)
-  bufptr <- libtiledb_query_buffer_var_char_create(offsets, data)
+  stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"),
+            "Argument 'varvec' must be a character vector" = is.vector(varvec) && is.character(varvec))
+  bufptr <- libtiledb_query_buffer_var_char_create(varvec, TRUE)
   bufptr
 }
 

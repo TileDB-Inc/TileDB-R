@@ -2578,24 +2578,6 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int 
   return buf;
 }
 
-// helper function to turn a vector of strings into long string and offsets vector
-// note that offsets is returned here too
-// [[Rcpp::export]]
-std::string convertStringVectorIntoOffsetsAndString(Rcpp::CharacterVector vec,
-                                                    Rcpp::IntegerVector offsets) {
-  size_t n = vec.size();
-  if (offsets.size() != (R_xlen_t)n) Rcpp::stop("offsets needs to be of same size as vec");
-  std::string data = "";
-  int cumlen = 0;
-  for (size_t i=0; i<n; i++) {
-    std::string s(vec[i]);
-    offsets[i] = cumlen;
-    data += s;
-    cumlen += s.length();
-  }
-  return data;
-}
-
 // assigning (for a write) allocates
 // [[Rcpp::export]]
 XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(CharacterVector vec, bool nullable) {
