@@ -2578,65 +2578,28 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int 
   return buf;
 }
 
-// helper function to turn a vector of strings
-// [[Rcpp::export]]
-std::string convertStringVectorIntoOffsetsAndString(Rcpp::CharacterVector vec,
-                                                    Rcpp::IntegerVector offsets) {
-  size_t n = vec.size();
-  if (offsets.size() != (R_xlen_t)n) Rcpp::stop("offsets needs to be of same size as vec");
-  std::string data = "";
-  int cumlen = 0;
-  for (size_t i=0; i<n; i++) {
-    std::string s(vec[i]);
-    offsets[i] = cumlen;
-    data += s;
-    cumlen += s.length();
-  }
-  return data;
-}
-
-
 // assigning (for a write) allocates
 // [[Rcpp::export]]
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(IntegerVector intoffsets,
-                                                       std::string data) {
-  XPtr<vlc_buf_t> bufptr = make_xptr<vlc_buf_t>(new vlc_buf_t);
-  int n = intoffsets.size();
-  bufptr->offsets.resize(n);
-  for (int i=0; i<n; i++) {
-    bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
-  }
-  bufptr->str = data;
-  bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
-  bufptr->validity_map.resize(n);  // validity_map resized but not used
-  bufptr->nullable = false;
-  return(bufptr);
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(CharacterVector vec, bool nullable) {
+    size_t n = vec.size();
+    XPtr<vlc_buf_t> bufptr = make_xptr<vlc_buf_t>(new vlc_buf_t);
+    bufptr->offsets.resize(n);
+    bufptr->validity_map.resize(n);
+    bufptr->nullable = nullable;
+    bufptr->str = "";
+    uint64_t cumlen = 0;
+    for (size_t i=0; i<n; i++) {
+        std::string s(vec[i]);
+        bufptr->offsets[i] = cumlen;
+        bufptr->str += s;
+        cumlen += s.length();
+        if (nullable) {
+          bufptr->validity_map[i] = vec[i] == NA_STRING;
+        }
+    }
+    bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
+    return(bufptr);
 }
-
-// assigning (for a write) allocates with nullable vector
-// [[Rcpp::export]]
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create_nullable(IntegerVector intoffsets,
-                                                                std::string data,
-                                                                bool nullable,
-                                                                std::vector<bool> navec) {
-  XPtr<vlc_buf_t> bufptr = make_xptr<vlc_buf_t>(new vlc_buf_t);
-  int n = intoffsets.size();
-  bufptr->offsets.resize(n);
-  for (int i=0; i<n; i++) {
-    bufptr->offsets[i] = static_cast<uint64_t>(intoffsets[i]);
-  }
-  bufptr->str = data;
-  bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
-  if (nullable) {
-      bufptr->validity_map.resize(n);
-      for (int i=0; i<n; i++) {
-          bufptr->validity_map[i] = (navec[i] ? 0 : 1);
-      }
-  }
-  bufptr->nullable = nullable;
-  return(bufptr);
-}
-
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> query,
