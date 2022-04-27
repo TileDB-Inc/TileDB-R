@@ -1,2 +1,2 @@
-version: 2.8.1
-sha: e9a945c
+version: 2.8.2
+sha: 6f382df
