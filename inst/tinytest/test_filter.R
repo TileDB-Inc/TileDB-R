@@ -37,7 +37,7 @@ for (name in name_list) {
 }
 name_list <- c("DICTIONARY_ENCODING")
 for (name in name_list) {
-    if (tiledb_version(TRUE) >= "2.8.0") {
+    if (tiledb_version(TRUE) >= "2.9.0") {
         flt <- tiledb_filter(name)
         expect_equal(tiledb_filter_type(flt), name)
     } else {

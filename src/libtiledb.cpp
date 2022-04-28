@@ -277,7 +277,7 @@ tiledb_filter_type_t _string_to_tiledb_filter(std::string filter) {
     return TILEDB_FILTER_CHECKSUM_MD5;
   } else if (filter == "CHECKSUM_SHA256") {
     return TILEDB_FILTER_CHECKSUM_SHA256;
-#if TILEDB_VERSION >= TileDB_Version(2,8,0)
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
   } else if (filter == "DICTIONARY_ENCODING") {
     return TILEDB_FILTER_DICTIONARY;
 #endif
@@ -314,7 +314,7 @@ const char* _tiledb_filter_to_string(tiledb_filter_type_t filter) {
       return "CHECKSUM_MD5";
     case TILEDB_FILTER_CHECKSUM_SHA256:
       return "CHECKSUM_SHA256";
-#if TILEDB_VERSION >= TileDB_Version(2,8,0)
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
     case TILEDB_FILTER_DICTIONARY:
       return "DICTIONARY_ENCODING";
 #endif
