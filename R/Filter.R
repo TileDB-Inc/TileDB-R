@@ -28,7 +28,7 @@ setClass("tiledb_filter",
          slots = list(ptr = "externalptr"))
 
 tiledb_filter.from_ptr <- function(ptr) {
-  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_filter` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
+  stopifnot("ptr must be a non-NULL externalptr to a tiledb_filter" = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
   return(new("tiledb_filter", ptr = ptr))
 }
 
@@ -46,6 +46,9 @@ tiledb_filter.from_ptr <- function(ptr) {
 #'   - "BITSHUFFLE"
 #'   - "BYTESHUFFLE"
 #'   - "POSITIVE_DELTA"
+#'   - "CHECKSUM_MD5"
+#'   - "CHECKSUM_SHA256"
+#'   - "DICTIONARY"
 #'
 #' Valid compression options vary depending on the filter used,
 #' consult the TileDB docs for more information.
@@ -59,8 +62,8 @@ tiledb_filter.from_ptr <- function(ptr) {
 #'
 #' @export tiledb_filter
 tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
-  stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
-            `Argument 'filter' must be scalar string"` = is.scalar(name, "character"))
+  stopifnot("Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
+            "Argument 'filter' must be scalar string" = is.scalar(name, "character"))
   ptr <- libtiledb_filter(ctx@ptr, name)
   return(new("tiledb_filter", ptr = ptr))
 }
@@ -100,7 +103,7 @@ setMethod("show",
 #'
 #' @export
 tiledb_filter_type <- function(object) {
-  stopifnot(`The 'object' argument must be a tiledb_filter` = is(object, "tiledb_filter"))
+  stopifnot("The 'object' argument must be a tiledb_filter" = is(object, "tiledb_filter"))
   return(libtiledb_filter_get_type(object@ptr))
 }
 
@@ -117,9 +120,9 @@ tiledb_filter_type <- function(object) {
 #' tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
 #' @export
 tiledb_filter_set_option <- function(object, option, value) {
-  stopifnot(`The 'object' argument must be a tiledb_filter` = is(object, "tiledb_filter"),
-            `The 'option' argument must be character` = is.character(option),
-            `The 'value' argument must be numeric or character or logical` = is.numeric(value) || is.character(value) || is.logical(value))
+  stopifnot("The 'object' argument must be a tiledb_filter" = is(object, "tiledb_filter"),
+            "The 'option' argument must be character" = is.character(option),
+            "The 'value' argument must be numeric or character or logical" = is.numeric(value) || is.character(value) || is.logical(value))
 
   object@ptr <- libtiledb_filter_set_option(object@ptr, option, value)
   return(object)
@@ -138,7 +141,7 @@ tiledb_filter_set_option <- function(object, option, value) {
 #'
 #' @export
 tiledb_filter_get_option <- function(object, option) {
-  stopifnot(`The 'object' argument must be a tiledb_filter` = is(object, "tiledb_filter"),
-            `The 'option' argument must be character` = is.character(option))
+  stopifnot("The 'object' argument must be a tiledb_filter" = is(object, "tiledb_filter"),
+            "The 'option' argument must be character" = is.character(option))
   return(libtiledb_filter_get_option(object@ptr, option))
 }
