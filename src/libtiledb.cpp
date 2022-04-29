@@ -277,6 +277,10 @@ tiledb_filter_type_t _string_to_tiledb_filter(std::string filter) {
     return TILEDB_FILTER_CHECKSUM_MD5;
   } else if (filter == "CHECKSUM_SHA256") {
     return TILEDB_FILTER_CHECKSUM_SHA256;
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+  } else if (filter == "DICTIONARY_ENCODING") {
+    return TILEDB_FILTER_DICTIONARY;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB filter '%s'", filter.c_str());
   }
@@ -310,6 +314,10 @@ const char* _tiledb_filter_to_string(tiledb_filter_type_t filter) {
       return "CHECKSUM_MD5";
     case TILEDB_FILTER_CHECKSUM_SHA256:
       return "CHECKSUM_SHA256";
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    case TILEDB_FILTER_DICTIONARY:
+      return "DICTIONARY_ENCODING";
+#endif
     default: {
       Rcpp::stop("unknown tiledb_filter_t (%d)", filter);
     }
@@ -1245,12 +1253,6 @@ XPtr<tiledb::FilterList> libtiledb_filter_list(XPtr<tiledb::Context> ctx, List f
   // check that external pointers are supported
   R_xlen_t nfilters = filters.length();
   if (nfilters > 0) {
-    // for (R_xlen_t i=0; i < nfilters; i++)  {
-    //   SEXP filter = filters[i];
-    //   if (TYPEOF(filter) != EXTPTRSXP) {
-    //     Rcpp::stop("Invalid filter object at index %d (type %s)", i, Rcpp::type2name(filter));
-    //   }
-    // }
     for (SEXP f : filters) {
       auto filter = as<XPtr<tiledb::Filter>>(f);
       check_xptr_tag<tiledb::Filter>(filter);

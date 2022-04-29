@@ -27,12 +27,24 @@ name_list <- c("NONE",
                "BIT_WIDTH_REDUCTION",
                "BITSHUFFLE",
                "BYTESHUFFLE",
-               "POSITIVE_DELTA")
+               "POSITIVE_DELTA",
+               "CHECKSUM_MD5",
+               "CHECKSUM_SHA256")
 for (name in name_list) {
   flt <- tiledb_filter(name)
   expect_equal(tiledb_filter_type(flt), name)
 
 }
+name_list <- c("DICTIONARY_ENCODING")
+for (name in name_list) {
+    if (tiledb_version(TRUE) >= "2.9.0") {
+        flt <- tiledb_filter(name)
+        expect_equal(tiledb_filter_type(flt), name)
+    } else {
+        expect_error(tiledb_filter(name))
+    }
+}
+
 expect_error(tiledb_filter("UNKNOWN"))
 #})
 
