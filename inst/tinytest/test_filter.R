@@ -107,6 +107,6 @@ for (name in name_list) {
     if (is.na(match(name, c("NONE", "BITSHUFFLE", "BYTESHUFFLE", "CHECKSUM_MD5", "CHECKSUM_SHA256")))) {
         size_none <- tiledb_vfs_dir_size(file.path(tempdir(), "NONE"))
         size_curr <- tiledb_vfs_dir_size(uri)
-        if (size_curr >= size_none) message(name)
+        expect_true(size_curr < size_none)
     }
 }
