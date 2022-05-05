@@ -73,3 +73,40 @@ flt <- tiledb_filter("POSITIVE_DELTA")
 tiledb_filter_set_option(flt, "POSITIVE_DELTA_MAX_WINDOW", 10)
 expect_equal(tiledb_filter_get_option(flt, "POSITIVE_DELTA_MAX_WINDOW"), 10)
 #})
+
+## add some bulk checking for filters
+name_list <- c("NONE",
+               "GZIP",
+               "ZSTD",
+               "LZ4",
+               "RLE",
+               "BZIP2",
+               "DOUBLE_DELTA",
+               "BIT_WIDTH_REDUCTION",
+               "BITSHUFFLE",
+               "BYTESHUFFLE",
+               "CHECKSUM_MD5",
+               "CHECKSUM_SHA256",
+               "DICTIONARY_ENCODING")
+
+dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
+
+for (name in name_list) {
+    dat2 <- dat
+    if (name == "DICTIONARY_ENCODING") {
+        if (tiledb_version(TRUE) < "2.9.0") next             # skip if not 2.9.0 or later
+        dat2 <- dat2[, sapply(dat2, class) == "character"]
+    }
+
+    uri <- file.path(tempdir(), name)
+    fromDataFrame(dat2, uri, filter=name)
+
+    chk <- tiledb_array(uri, return_as="data.frame")[]
+    expect_equal(dat2, chk[, -1])
+
+    if (is.na(match(name, c("NONE", "BITSHUFFLE", "BYTESHUFFLE", "CHECKSUM_MD5", "CHECKSUM_SHA256")))) {
+        size_none <- tiledb_vfs_dir_size(file.path(tempdir(), "NONE"))
+        size_curr <- tiledb_vfs_dir_size(uri)
+        expect_true(size_curr < size_none)
+    }
+}
