@@ -91,6 +91,7 @@ name_list <- c("NONE",
 
 dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
 
+vfs <- tiledb_vfs()                     # use an explicit VFS instance for the ops in loop over filters
 for (name in name_list) {
     dat2 <- dat
     if (name == "DICTIONARY_ENCODING") {
@@ -98,15 +99,17 @@ for (name in name_list) {
         dat2 <- dat2[, sapply(dat2, class) == "character"]
     }
 
-    uri <- file.path(tempdir(), name)
+    basepath <- file.path(tempdir())
+    uri <- file.path(basepath, name)
     fromDataFrame(dat2, uri, filter=name)
 
     chk <- tiledb_array(uri, return_as="data.frame")[]
     expect_equal(dat2, chk[, -1])
 
     if (is.na(match(name, c("NONE", "BITSHUFFLE", "BYTESHUFFLE", "CHECKSUM_MD5", "CHECKSUM_SHA256")))) {
-        size_none <- tiledb_vfs_dir_size(file.path(tempdir(), "NONE"))
-        size_curr <- tiledb_vfs_dir_size(uri)
+        size_none <- tiledb_vfs_dir_size(file.path(basepath, "NONE"), vfs)
+        size_curr <- tiledb_vfs_dir_size(uri, vfs)
         expect_true(size_curr < size_none)
     }
 }
+rm(vfs)
