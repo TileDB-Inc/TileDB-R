@@ -92,6 +92,8 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
       return "DATETIME_FS";
     case TILEDB_DATETIME_AS:
       return "DATETIME_AS";
+    case TILEDB_BLOB:
+      return "BLOB";
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
@@ -150,6 +152,8 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_DATETIME_AS;
   } else if (typestr == "UTF8") {
     return TILEDB_STRING_UTF8;
+  } else if (typestr == "BLOB") {
+    return TILEDB_BLOB;
   } else {
     Rcpp::stop("Unknown TileDB type '%s'", typestr.c_str());
   }
@@ -4628,8 +4632,14 @@ XPtr<tiledb::ArraySchema> libtiledb_filestore_schema_create(XPtr<tiledb::Context
     tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
     tiledb_array_schema_t* schema_type_ptr;
-    if (tiledb_filestore_schema_create(ctx_ptr, uri.c_str(), &schema_type_ptr) == TILEDB_ERR) {
-        Rcpp::stop("Error creating array schema from filestore URI");
+    if (uri == "") {
+        if (tiledb_filestore_schema_create(ctx_ptr, nullptr, &schema_type_ptr) == TILEDB_ERR) {
+            Rcpp::stop("Error creating array schema from defaults");
+        }
+    } else {
+        if (tiledb_filestore_schema_create(ctx_ptr, uri.c_str(), &schema_type_ptr) == TILEDB_ERR) {
+            Rcpp::stop("Error creating array schema from filestore URI");
+        }
     }
     auto schptr = new tiledb::ArraySchema(*ctx.get(), schema_type_ptr);
     auto schema = make_xptr<tiledb::ArraySchema>(schptr);
