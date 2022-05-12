@@ -2,20 +2,20 @@
 % Please edit documentation in R/Filestore.R
 \name{tiledb_filestore_schema_create}
 \alias{tiledb_filestore_schema_create}
-\title{Create an array schema from a given URI}
+\title{Create an array schema from a given URI with schema}
 \usage{
-tiledb_filestore_schema_create(uri, ctx = tiledb_get_context())
+tiledb_filestore_schema_create(uri = NULL, ctx = tiledb_get_context())
 }
 \arguments{
-\item{uri}{Character with an TileDB Array URI, if missing or NULL a default schema
+\item{uri}{Character with an TileDB Array Schema URI, if missing or NULL a default schema
 is returned}
 
 \item{ctx}{(optional) A TileDB Ctx object; if not supplied the default
 context object is retrieved}
 }
 \value{
-An ArraySchema object
+An ArraySchema object corresponding to the supplied schema, or a default if missing
 }
 \description{
-Create an array schema from a given URI
+Create an array schema from a given URI with schema
 }

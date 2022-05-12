@@ -2966,27 +2966,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_filestore_uri_import
-void libtiledb_filestore_uri_import(XPtr<tiledb::Context> ctx, std::string filestore_uri, std::string file_uri);
+bool libtiledb_filestore_uri_import(XPtr<tiledb::Context> ctx, std::string filestore_uri, std::string file_uri);
 RcppExport SEXP _tiledb_libtiledb_filestore_uri_import(SEXP ctxSEXP, SEXP filestore_uriSEXP, SEXP file_uriSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type filestore_uri(filestore_uriSEXP);
     Rcpp::traits::input_parameter< std::string >::type file_uri(file_uriSEXP);
-    libtiledb_filestore_uri_import(ctx, filestore_uri, file_uri);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filestore_uri_import(ctx, filestore_uri, file_uri));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_filestore_uri_export
-void libtiledb_filestore_uri_export(XPtr<tiledb::Context> ctx, std::string file_uri, std::string filestore_uri);
+bool libtiledb_filestore_uri_export(XPtr<tiledb::Context> ctx, std::string file_uri, std::string filestore_uri);
 RcppExport SEXP _tiledb_libtiledb_filestore_uri_export(SEXP ctxSEXP, SEXP file_uriSEXP, SEXP filestore_uriSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type file_uri(file_uriSEXP);
     Rcpp::traits::input_parameter< std::string >::type filestore_uri(filestore_uriSEXP);
-    libtiledb_filestore_uri_export(ctx, file_uri, filestore_uri);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filestore_uri_export(ctx, file_uri, filestore_uri));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_filestore_buffer_import

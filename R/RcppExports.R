@@ -1013,11 +1013,11 @@ libtiledb_filestore_schema_create <- function(ctx, uri) {
 }
 
 libtiledb_filestore_uri_import <- function(ctx, filestore_uri, file_uri) {
-    invisible(.Call(`_tiledb_libtiledb_filestore_uri_import`, ctx, filestore_uri, file_uri))
+    .Call(`_tiledb_libtiledb_filestore_uri_import`, ctx, filestore_uri, file_uri)
 }
 
 libtiledb_filestore_uri_export <- function(ctx, file_uri, filestore_uri) {
-    invisible(.Call(`_tiledb_libtiledb_filestore_uri_export`, ctx, file_uri, filestore_uri))
+    .Call(`_tiledb_libtiledb_filestore_uri_export`, ctx, file_uri, filestore_uri)
 }
 
 libtiledb_filestore_buffer_import <- function(ctx, filestore_uri, buf, size) {

@@ -38,3 +38,36 @@ tiledb_filestore_schema_create <- function(uri = NULL, ctx = tiledb_get_context(
     arrptr <- libtiledb_filestore_schema_create(ctx@ptr, if (is.null(uri)) "" else uri)
     tiledb_array_schema.from_ptr(arrptr)
 }
+
+##' Import a file into a TileDB Filestore
+##'
+##' @param filestore_uri Character with an TileDB Array Schema URI
+##' @param file_uri Character with a file URI
+##' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+##' context object is retrieved
+##' @return A boolean is returned to indicate successful completion
+##' @export
+tiledb_filestore_uri_import <- function(filestore_uri, file_uri, ctx = tiledb_get_context()) {
+    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+              "The 'file_uri' argument must be character" = is.character(file_uri),
+              "The 'file_uri' must providing an existing file" = file.exists(file_uri),
+              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
+    libtiledb_filestore_uri_import(ctx@ptr, filestore_uri, file_uri)
+}
+
+##' Export a file from a TileDB Filestore
+##'
+##' @param file_uri Character with a file URI
+##' @param filestore_uri Character with an TileDB Array Schema URI
+##' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+##' context object is retrieved
+##' @return A boolean is returned to indicate successful completion
+##' @export
+tiledb_filestore_uri_export <- function(file_uri, filestore_uri, ctx = tiledb_get_context()) {
+    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+              "The 'file_uri' argument must be character" = is.character(file_uri),
+              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
+    libtiledb_filestore_uri_export(ctx@ptr, file_uri, filestore_uri)
+}

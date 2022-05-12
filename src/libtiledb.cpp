@@ -2764,9 +2764,9 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype,
   XPtr<query_buf_t> buf = make_xptr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32"  || domaintype == "UINT32") {
      buf->size = sizeof(int32_t);
-  } else if (domaintype == "INT16"  || domaintype == "UINT16") {
+  } else if (domaintype == "INT16" || domaintype == "UINT16") {
      buf->size = sizeof(int16_t);
-  } else if (domaintype == "INT8"   || domaintype == "UINT8") {
+  } else if (domaintype == "INT8"  || domaintype == "UINT8" || domaintype == "BLOB") {
      buf->size = sizeof(int8_t);
   } else if (domaintype == "INT64" ||
              domaintype == "UINT64" ||
@@ -3079,6 +3079,17 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     Rcpp::IntegerVector out(buf->ncells);
     for (size_t i=0; i<n; i++) {
       out[i] = static_cast<int32_t>(uintvec[i]);
+    }
+    if (buf->nullable)
+        setValidityMapForInteger(out, buf->validity_map);
+    return out;
+  } else if (dtype == "BLOB") {
+    size_t n = buf->ncells;
+    std::vector<int8_t> intvec(n);
+    std::memcpy(intvec.data(), buf->vec.data(), n*buf->size);
+    Rcpp::IntegerVector out(buf->ncells);
+    for (size_t i=0; i<n; i++) {
+      out[i] = static_cast<int32_t>(intvec[i]);
     }
     if (buf->nullable)
         setValidityMapForInteger(out, buf->validity_map);
@@ -4632,14 +4643,10 @@ XPtr<tiledb::ArraySchema> libtiledb_filestore_schema_create(XPtr<tiledb::Context
     tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
     tiledb_array_schema_t* schema_type_ptr;
-    if (uri == "") {
-        if (tiledb_filestore_schema_create(ctx_ptr, nullptr, &schema_type_ptr) == TILEDB_ERR) {
-            Rcpp::stop("Error creating array schema from defaults");
-        }
-    } else {
-        if (tiledb_filestore_schema_create(ctx_ptr, uri.c_str(), &schema_type_ptr) == TILEDB_ERR) {
-            Rcpp::stop("Error creating array schema from filestore URI");
-        }
+    if (tiledb_filestore_schema_create(ctx_ptr,
+                                       (uri == "" ? nullptr : uri.c_str()),
+                                       &schema_type_ptr) == TILEDB_ERR) {
+        Rcpp::stop("Error creating array schema from defaults");
     }
     auto schptr = new tiledb::ArraySchema(*ctx.get(), schema_type_ptr);
     auto schema = make_xptr<tiledb::ArraySchema>(schptr);
@@ -4653,7 +4660,7 @@ XPtr<tiledb::ArraySchema> libtiledb_filestore_schema_create(XPtr<tiledb::Context
 
 // Imports a file into a TileDB filestore array
 // [[Rcpp::export]]
-void libtiledb_filestore_uri_import(XPtr<tiledb::Context> ctx,
+bool libtiledb_filestore_uri_import(XPtr<tiledb::Context> ctx,
                                     std::string filestore_uri,
                                     std::string file_uri) {
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
@@ -4661,20 +4668,29 @@ void libtiledb_filestore_uri_import(XPtr<tiledb::Context> ctx,
     if (tiledb_filestore_uri_import(ctx_ptr, filestore_uri.c_str(),
                                     file_uri.c_str(), TILEDB_MIME_AUTODETECT) == TILEDB_ERR) {
         Rcpp::stop("Error importing file into filestore");
+        return false;           // not reached
     }
+    return true;
+#else
+    return false;
 #endif
+
 }
 
 // Export from a TileDB filestore array into a file uri
 // [[Rcpp::export]]
-void libtiledb_filestore_uri_export(XPtr<tiledb::Context> ctx,
+bool libtiledb_filestore_uri_export(XPtr<tiledb::Context> ctx,
                                     std::string file_uri,
                                     std::string filestore_uri) {
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
     tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
     if (tiledb_filestore_uri_export(ctx_ptr, file_uri.c_str(), filestore_uri.c_str())  == TILEDB_ERR) {
         Rcpp::stop("Error exporting file from filestore");
+        return false;           // not reached
     }
+    return true;
+#else
+    return false;
 #endif
 }
 
