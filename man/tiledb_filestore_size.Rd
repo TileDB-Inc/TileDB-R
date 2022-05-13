@@ -4,7 +4,7 @@
 \alias{tiledb_filestore_size}
 \title{Return (uncompressed) TileDB Filestore size}
 \usage{
-tiledb_filestore_size(filestore_uri = tiledb_get_context())
+tiledb_filestore_size(filestore_uri, ctx = tiledb_get_context())
 }
 \arguments{
 \item{filestore_uri}{Character with an TileDB Array Schema URI}

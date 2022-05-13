@@ -4640,8 +4640,8 @@ std::string libtiledb_group_dump(XPtr<tiledb::Group> grp, bool recursive) {
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_filestore_schema_create(XPtr<tiledb::Context> ctx,
                                                             std::string uri) {
-    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
     tiledb_array_schema_t* schema_type_ptr;
     if (tiledb_filestore_schema_create(ctx_ptr,
                                        (uri == "" ? nullptr : uri.c_str()),
@@ -4747,8 +4747,8 @@ size_t libtiledb_filestore_size(XPtr<tiledb::Context> ctx, std::string filestore
 // Get MIME type of TileDB filestore as string
 // [[Rcpp::export]]
 std::string libtiledb_mime_type_to_str(int32_t mime_type) {
-    const char* ptr;
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    const char* ptr;
     if (tiledb_mime_type_to_str(static_cast<tiledb_mime_type_t>(mime_type),
                                 &ptr) == TILEDB_ERR) {
         Rcpp::stop("Error converting mime type to string");
@@ -4762,11 +4762,13 @@ std::string libtiledb_mime_type_to_str(int32_t mime_type) {
 // Create MIME type of TileDB filestore from string
 // [[Rcpp::export]]
 int32_t libtiledb_mime_type_from_str(std::string mime_type) {
-    tiledb_mime_type_t mt;
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_mime_type_t mt;
     if (tiledb_mime_type_from_str(mime_type.c_str(), &mt) == TILEDB_ERR) {
         Rcpp::stop("Error converting mime type from string");
     }
-#endif
     return static_cast<int32_t>(mt);
+#else
+    return -1;
+#endif
 }

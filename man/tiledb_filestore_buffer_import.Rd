@@ -7,7 +7,7 @@
 tiledb_filestore_buffer_import(
   filestore_uri,
   buf,
-  sz,
+  bytes,
   ctx = tiledb_get_context()
 )
 }
@@ -16,10 +16,10 @@ tiledb_filestore_buffer_import(
 
 \item{buf}{Character variable with content to be imported}
 
+\item{bytes}{Number of bytes to be import, defaults to length of \code{buf}}
+
 \item{ctx}{(optional) A TileDB Ctx object; if not supplied the default
 context object is retrieved}
-
-\item{size}{Number of bytes to be import, defaults to length of \code{buf}}
 }
 \value{
 A boolean is returned to indicate successful completion

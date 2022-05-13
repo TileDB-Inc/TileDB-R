@@ -16,10 +16,10 @@ tiledb_filestore_buffer_export(
 
 \item{offset}{(optional) Numeric variable with offset from beginnig, default is zero}
 
+\item{bytes}{(optional) Numeric variable with number of bytes to read, default is zero}
+
 \item{ctx}{(optional) A TileDB Ctx object; if not supplied the default
 context object is retrieved}
-
-\item{size}{(optional) Numeric variable with number of bytes to read, default is zero}
 }
 \value{
 A character variable containing the filestore content (subject to offset and
