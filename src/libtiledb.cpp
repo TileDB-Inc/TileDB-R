@@ -3085,14 +3085,11 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     return out;
   } else if (dtype == "BLOB") {
     size_t n = buf->ncells;
-    std::vector<int8_t> intvec(n);
-    std::memcpy(intvec.data(), buf->vec.data(), n*buf->size);
-    Rcpp::IntegerVector out(buf->ncells);
-    for (size_t i=0; i<n; i++) {
-      out[i] = static_cast<int32_t>(intvec[i]);
-    }
-    if (buf->nullable)
-        setValidityMapForInteger(out, buf->validity_map);
+    Rcpp::RawVector out(n);
+    std::memcpy(out.begin(), buf->vec.data(), n*buf->size);
+    // -- raw has no NA type so no mapping possible here
+    // if (buf->nullable)
+    //    setValidityMapForRaw(out, buf->validity_map);
     return out;
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());

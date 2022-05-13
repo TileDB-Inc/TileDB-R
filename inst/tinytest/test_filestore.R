@@ -38,3 +38,10 @@ expect_silent(chkbuf <- tiledb_filestore_buffer_export(tempuri))
 expect_equal(chkbuf, buf)
 
 expect_equal(tiledb_filestore_size(tempuri), nchar(buf))
+
+## also test reading from filestore-create array via tiledb_array
+n <- tiledb_filestore_size(tempuri)
+arr <- tiledb_array(tempuri, return_as="asis")
+reftxt <- paste(oldcntnt, collapse="\n") # collapse input file into one string
+chk <- arr[0:(n-1)]$contents
+expect_equal(reftxt, rawToChar(chk))
