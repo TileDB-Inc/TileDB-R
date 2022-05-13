@@ -5,7 +5,8 @@ ctx <- tiledb_ctx(limitTileDBCores())
 
 if (tiledb_version(TRUE) < "2.9.0") exit_file("Needs TileDB 2.9.* or later")
 
-text_file <- system.file("tinytest", "testdata", "text.txt", package="tiledb")
+text_file <- tempfile()
+writeLines(c("Simple text file.", "With two lines."), text_file)
 expect_true(file.exists(text_file))
 expect_true(file.info(text_file)$size > 0)
 
@@ -18,10 +19,22 @@ expect_error(tiledb_filestore_schema_create("does_not_exist"))
 tempuri <- tempfile()
 res <- tiledb_filestore_schema_create(text_file) 					# schema from text_file
 expect_silent( tiledb_array_create(tempuri, res) )                  # create array
-expect_true( tiledb_filestore_uri_import(tempuri, text_file) ) 	# import text_file into array
+expect_true(tiledb_filestore_uri_import(tempuri, text_file)) 		# import text_file into array
 newfile <- tempfile()
-expect_true( tiledb_filestore_uri_export(newfile, tempuri) )
+expect_true(tiledb_filestore_uri_export(newfile, tempuri))
 
 oldcntnt <- readLines(text_file)
 newcntnt <- readLines(newfile)
 expect_equal(oldcntnt, newcntnt)
+unlink(newfile)
+
+unlink(tempuri, recursive=TRUE)
+res <- tiledb_filestore_schema_create() 							# default schema
+expect_silent( tiledb_array_create(tempuri, res) )                  # create array
+buf <- paste(newcntnt, collapse="\n")
+expect_true(tiledb_filestore_buffer_import(tempuri, buf)) 	        # import from variable into array
+
+expect_silent(chkbuf <- tiledb_filestore_buffer_export(tempuri))
+expect_equal(chkbuf, buf)
+
+expect_equal(tiledb_filestore_size(tempuri), nchar(buf))

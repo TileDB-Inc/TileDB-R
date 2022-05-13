@@ -2992,16 +2992,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_filestore_buffer_import
-void libtiledb_filestore_buffer_import(XPtr<tiledb::Context> ctx, std::string filestore_uri, std::string buf, size_t size);
+bool libtiledb_filestore_buffer_import(XPtr<tiledb::Context> ctx, std::string filestore_uri, std::string buf, size_t size);
 RcppExport SEXP _tiledb_libtiledb_filestore_buffer_import(SEXP ctxSEXP, SEXP filestore_uriSEXP, SEXP bufSEXP, SEXP sizeSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< std::string >::type filestore_uri(filestore_uriSEXP);
     Rcpp::traits::input_parameter< std::string >::type buf(bufSEXP);
     Rcpp::traits::input_parameter< size_t >::type size(sizeSEXP);
-    libtiledb_filestore_buffer_import(ctx, filestore_uri, buf, size);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_filestore_buffer_import(ctx, filestore_uri, buf, size));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_filestore_buffer_export

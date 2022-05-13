@@ -1021,7 +1021,7 @@ libtiledb_filestore_uri_export <- function(ctx, file_uri, filestore_uri) {
 }
 
 libtiledb_filestore_buffer_import <- function(ctx, filestore_uri, buf, size) {
-    invisible(.Call(`_tiledb_libtiledb_filestore_buffer_import`, ctx, filestore_uri, buf, size))
+    .Call(`_tiledb_libtiledb_filestore_buffer_import`, ctx, filestore_uri, buf, size)
 }
 
 libtiledb_filestore_buffer_export <- function(ctx, filestore_uri, offset, size) {

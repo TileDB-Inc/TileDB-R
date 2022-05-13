@@ -71,3 +71,53 @@ tiledb_filestore_uri_export <- function(file_uri, filestore_uri, ctx = tiledb_ge
               "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
     libtiledb_filestore_uri_export(ctx@ptr, file_uri, filestore_uri)
 }
+
+##' Import size bytes from a string into a TileDB Filestore
+##'
+##' @param filestore_uri Character with an TileDB Array Schema URI
+##' @param buf Character variable with content to be imported
+##' @param size Number of bytes to be import, defaults to length of \code{buf}
+##' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+##' context object is retrieved
+##' @return A boolean is returned to indicate successful completion
+##' @export
+tiledb_filestore_buffer_import <- function(filestore_uri, buf, sz, ctx = tiledb_get_context()) {
+    if (missing(sz)) sz <- nchar(buf)
+    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+              "The 'buf' argument must be character" = is.character(buf),
+              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
+    libtiledb_filestore_buffer_import(ctx@ptr, filestore_uri, buf, sz)
+}
+
+##' Export from a TileDB Filestore to a character variable
+##'
+##' @param filestore_uri Character with an TileDB Array Schema URI
+##' @param offset (optional) Numeric variable with offset from beginnig, default is zero
+##' @param size (optional) Numeric variable with number of bytes to read, default is zero
+##' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+##' context object is retrieved
+##' @return A character variable containing the filestore content (subject to offset and
+##' bytes) is returned
+##' @export
+tiledb_filestore_buffer_export <- function(filestore_uri, offset, bytes, ctx = tiledb_get_context()) {
+    if (missing(offset)) offset <- 0
+    if (missing(bytes)) bytes <- tiledb_filestore_size(filestore_uri, ctx=ctx)
+    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+              "The 'offset' argument must be numeric" = is.numeric(offset),
+              "The 'bytes' argument must be numeric" = is.numeric(bytes),
+              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
+    libtiledb_filestore_buffer_export(ctx@ptr, filestore_uri, offset, bytes)
+}
+
+##' Return (uncompressed) TileDB Filestore size
+##'
+##' @param filestore_uri Character with an TileDB Array Schema URI
+##' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+##' context object is retrieved
+##' @return A numeric with the size is returned
+##' @export
+tiledb_filestore_size <- function(filestore_uri, ctx = tiledb_get_context()) {
+    libtiledb_filestore_size(ctx@ptr, filestore_uri)
+}

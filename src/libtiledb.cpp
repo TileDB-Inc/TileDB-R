@@ -4696,7 +4696,7 @@ bool libtiledb_filestore_uri_export(XPtr<tiledb::Context> ctx,
 
 // Write size bytes from buf into TileDB filestore
 // [[Rcpp::export]]
-void libtiledb_filestore_buffer_import(XPtr<tiledb::Context> ctx,
+bool libtiledb_filestore_buffer_import(XPtr<tiledb::Context> ctx,
                                        std::string filestore_uri,
                                        std::string buf, size_t size) {
 #if TILEDB_VERSION >= TileDB_Version(2,9,0)
@@ -4705,7 +4705,11 @@ void libtiledb_filestore_buffer_import(XPtr<tiledb::Context> ctx,
                                        static_cast<void*>(buf.data()), size,
                                        TILEDB_MIME_AUTODETECT) == TILEDB_ERR) {
         Rcpp::stop("Error importing file into filestore");
+        return false;           // not reached
     }
+    return true;
+#else
+    return false;
 #endif
 }
 
