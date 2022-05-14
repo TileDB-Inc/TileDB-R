@@ -92,6 +92,8 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
       return "DATETIME_FS";
     case TILEDB_DATETIME_AS:
       return "DATETIME_AS";
+    case TILEDB_BLOB:
+      return "BLOB";
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
@@ -150,6 +152,8 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_DATETIME_AS;
   } else if (typestr == "UTF8") {
     return TILEDB_STRING_UTF8;
+  } else if (typestr == "BLOB") {
+    return TILEDB_BLOB;
   } else {
     Rcpp::stop("Unknown TileDB type '%s'", typestr.c_str());
   }
@@ -2760,9 +2764,9 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype,
   XPtr<query_buf_t> buf = make_xptr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32"  || domaintype == "UINT32") {
      buf->size = sizeof(int32_t);
-  } else if (domaintype == "INT16"  || domaintype == "UINT16") {
+  } else if (domaintype == "INT16" || domaintype == "UINT16") {
      buf->size = sizeof(int16_t);
-  } else if (domaintype == "INT8"   || domaintype == "UINT8") {
+  } else if (domaintype == "INT8"  || domaintype == "UINT8" || domaintype == "BLOB") {
      buf->size = sizeof(int8_t);
   } else if (domaintype == "INT64" ||
              domaintype == "UINT64" ||
@@ -3078,6 +3082,14 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     }
     if (buf->nullable)
         setValidityMapForInteger(out, buf->validity_map);
+    return out;
+  } else if (dtype == "BLOB") {
+    size_t n = buf->ncells;
+    Rcpp::RawVector out(n);
+    std::memcpy(out.begin(), buf->vec.data(), n*buf->size);
+    // -- raw has no NA type so no mapping possible here
+    // if (buf->nullable)
+    //    setValidityMapForRaw(out, buf->validity_map);
     return out;
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());
@@ -4613,5 +4625,147 @@ std::string libtiledb_group_dump(XPtr<tiledb::Group> grp, bool recursive) {
     return grp->dump(recursive);
 #else
     return std::string("");
+#endif
+}
+
+
+/**
+ * Filestore (via tiledb_experimental.h)
+ */
+
+// Creates array schema based on URL, or default schema if no URI provided
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_filestore_schema_create(XPtr<tiledb::Context> ctx,
+                                                            std::string uri) {
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
+    tiledb_array_schema_t* schema_type_ptr;
+    if (tiledb_filestore_schema_create(ctx_ptr,
+                                       (uri == "" ? nullptr : uri.c_str()),
+                                       &schema_type_ptr) == TILEDB_ERR) {
+        Rcpp::stop("Error creating array schema from defaults");
+    }
+    auto schptr = new tiledb::ArraySchema(*ctx.get(), schema_type_ptr);
+    auto schema = make_xptr<tiledb::ArraySchema>(schptr);
+    return schema;
+#else
+    auto schptr = new tiledb::ArraySchema(*ctx.get(), TILEDB_SPARSE);
+    auto schema = make_xptr<tiledb::ArraySchema>(schptr);
+    return schema;
+#endif
+}
+
+// Imports a file into a TileDB filestore array
+// [[Rcpp::export]]
+bool libtiledb_filestore_uri_import(XPtr<tiledb::Context> ctx,
+                                    std::string filestore_uri,
+                                    std::string file_uri) {
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
+    if (tiledb_filestore_uri_import(ctx_ptr, filestore_uri.c_str(),
+                                    file_uri.c_str(), TILEDB_MIME_AUTODETECT) == TILEDB_ERR) {
+        Rcpp::stop("Error importing file into filestore");
+        return false;           // not reached
+    }
+    return true;
+#else
+    return false;
+#endif
+
+}
+
+// Export from a TileDB filestore array into a file uri
+// [[Rcpp::export]]
+bool libtiledb_filestore_uri_export(XPtr<tiledb::Context> ctx,
+                                    std::string file_uri,
+                                    std::string filestore_uri) {
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
+    if (tiledb_filestore_uri_export(ctx_ptr, file_uri.c_str(), filestore_uri.c_str())  == TILEDB_ERR) {
+        Rcpp::stop("Error exporting file from filestore");
+        return false;           // not reached
+    }
+    return true;
+#else
+    return false;
+#endif
+}
+
+// Write size bytes from buf into TileDB filestore
+// [[Rcpp::export]]
+bool libtiledb_filestore_buffer_import(XPtr<tiledb::Context> ctx,
+                                       std::string filestore_uri,
+                                       std::string buf, size_t size) {
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
+    if (tiledb_filestore_buffer_import(ctx_ptr, filestore_uri.c_str(),
+                                       static_cast<void*>(buf.data()), size,
+                                       TILEDB_MIME_AUTODETECT) == TILEDB_ERR) {
+        Rcpp::stop("Error importing file into filestore");
+        return false;           // not reached
+    }
+    return true;
+#else
+    return false;
+#endif
+}
+
+// Retrieve TileDB filestore content into buffer
+// [[Rcpp::export]]
+std::string libtiledb_filestore_buffer_export(XPtr<tiledb::Context> ctx,
+                                              std::string filestore_uri,
+                                              size_t offset, size_t size) {
+    std::string buf("");
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
+    buf.resize(size);
+    if (tiledb_filestore_buffer_export(ctx_ptr, filestore_uri.c_str(), offset,
+                                       static_cast<void*>(buf.data()), size) == TILEDB_ERR) {
+        Rcpp::stop("Error exporting file from filestore");
+    }
+#endif
+    return buf;
+
+}
+
+// Get size of uncompressed TileDB filestore array
+// [[Rcpp::export]]
+size_t libtiledb_filestore_size(XPtr<tiledb::Context> ctx, std::string filestore_uri) {
+    size_t sz = 0;
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_ctx_t* ctx_ptr = ctx->ptr().get();
+    if (tiledb_filestore_size(ctx_ptr, filestore_uri.c_str(), &sz) == TILEDB_ERR) {
+        Rcpp::stop("Error accessize filestore uri size");
+    }
+#endif
+    return sz;
+}
+
+// Get MIME type of TileDB filestore as string
+// [[Rcpp::export]]
+std::string libtiledb_mime_type_to_str(int32_t mime_type) {
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    const char* ptr;
+    if (tiledb_mime_type_to_str(static_cast<tiledb_mime_type_t>(mime_type),
+                                &ptr) == TILEDB_ERR) {
+        Rcpp::stop("Error converting mime type to string");
+    }
+    return std::string(ptr);
+#else
+    return std::string("");
+#endif
+}
+
+// Create MIME type of TileDB filestore from string
+// [[Rcpp::export]]
+int32_t libtiledb_mime_type_from_str(std::string mime_type) {
+#if TILEDB_VERSION >= TileDB_Version(2,9,0)
+    tiledb_mime_type_t mt;
+    if (tiledb_mime_type_from_str(mime_type.c_str(), &mt) == TILEDB_ERR) {
+        Rcpp::stop("Error converting mime type from string");
+    }
+    return static_cast<int32_t>(mt);
+#else
+    return -1;
 #endif
 }
