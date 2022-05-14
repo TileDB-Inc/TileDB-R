@@ -92,8 +92,10 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
       return "DATETIME_FS";
     case TILEDB_DATETIME_AS:
       return "DATETIME_AS";
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     case TILEDB_BLOB:
       return "BLOB";
+#endif
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
@@ -152,8 +154,10 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_DATETIME_AS;
   } else if (typestr == "UTF8") {
     return TILEDB_STRING_UTF8;
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   } else if (typestr == "BLOB") {
     return TILEDB_BLOB;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB type '%s'", typestr.c_str());
   }
@@ -2766,8 +2770,12 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype,
      buf->size = sizeof(int32_t);
   } else if (domaintype == "INT16" || domaintype == "UINT16") {
      buf->size = sizeof(int16_t);
-  } else if (domaintype == "INT8"  || domaintype == "UINT8" || domaintype == "BLOB") {
+  } else if (domaintype == "INT8" || domaintype == "UINT8") {
      buf->size = sizeof(int8_t);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
+  } else if (domaintype == "BLOB") {
+     buf->size = sizeof(int8_t);
+#endif
   } else if (domaintype == "INT64" ||
              domaintype == "UINT64" ||
              domaintype == "DATETIME_YEAR" ||
@@ -3083,6 +3091,7 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     if (buf->nullable)
         setValidityMapForInteger(out, buf->validity_map);
     return out;
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   } else if (dtype == "BLOB") {
     size_t n = buf->ncells;
     Rcpp::RawVector out(n);
@@ -3091,6 +3100,7 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     // if (buf->nullable)
     //    setValidityMapForRaw(out, buf->validity_map);
     return out;
+#endif
   } else {
     Rcpp::stop("Unsupported type '%s'", dtype.c_str());
   }
