@@ -598,13 +598,27 @@ tiledb_array_schema_set_capacity <- function(x, value) {
 
 #' @rdname tiledb_array_schema_check
 #' @export
-setGeneric("check", function(object) standardGeneric("check"))
+setGeneric("schema_check", function(object) standardGeneric("schema_check"))
 
 #' @rdname tiledb_array_schema_check
 #' @export
-setMethod("check", signature = "tiledb_array_schema", function(object) {
+setMethod("schema_check", signature = "tiledb_array_schema", function(object) {
   libtiledb_array_schema_check(object@ptr)
 })
+
+## -- To be removed by May 2023 or later
+
+#' @rdname tiledb_array_schema_check
+#' @export
+setGeneric("check", function(object) standardGeneric("check"))
+#
+#' @rdname tiledb_array_schema_check
+#' @export
+setMethod("check", signature = "tiledb_array_schema", function(object) {
+    .Deprecated(msg="check() is deprecated, please use schema_check() instead.")
+    libtiledb_array_schema_check(object@ptr)
+})
+
 
 #' Check the schema for correctness
 #'

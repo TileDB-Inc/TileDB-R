@@ -28,6 +28,9 @@ Available filters:
 \item "BITSHUFFLE"
 \item "BYTESHUFFLE"
 \item "POSITIVE_DELTA"
+\item "CHECKSUM_MD5"
+\item "CHECKSUM_SHA256"
+\item "DICTIONARY"
 }
 }
 \details{
