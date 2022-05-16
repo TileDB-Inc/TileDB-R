@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -468,7 +468,7 @@
         <dd>Constructs a <code>tiledb_array_schema</code> object</dd>
       </dl><dl><dt>
           
-          <code><a href="tiledb_array_schema_check.html">check()</a></code> <code><a href="tiledb_array_schema_check.html">tiledb_array_schema_check()</a></code> 
+          <code><a href="tiledb_array_schema_check.html">schema_check()</a></code> <code><a href="tiledb_array_schema_check.html">check()</a></code> <code><a href="tiledb_array_schema_check.html">tiledb_array_schema_check()</a></code> 
         </dt>
         <dd>Check the schema for correctness</dd>
       </dl><dl><dt>
@@ -571,7 +571,7 @@ This is only valid for sparse arrays.</dd>
         <dd>Constructs a <code>tiledb_array_schema</code> object</dd>
       </dl><dl><dt>
           
-          <code><a href="tiledb_array_schema_check.html">check()</a></code> <code><a href="tiledb_array_schema_check.html">tiledb_array_schema_check()</a></code> 
+          <code><a href="tiledb_array_schema_check.html">schema_check()</a></code> <code><a href="tiledb_array_schema_check.html">check()</a></code> <code><a href="tiledb_array_schema_check.html">tiledb_array_schema_check()</a></code> 
         </dt>
         <dd>Check the schema for correctness</dd>
       </dl><dl><dt>
@@ -1813,6 +1813,47 @@ This is only valid for sparse arrays.</dd>
         </dt>
         <dd>Store a TileDB VFS object in the package environment</dd>
       </dl></div><div class="section level2">
+      <h2 id="filestore">Filestore<a class="anchor" aria-label="anchor" href="#filestore"></a></h2>
+      
+      <p class="section-desc"></p><p>filestore functionality</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="tiledb_filestore_buffer_export.html">tiledb_filestore_buffer_export()</a></code> 
+        </dt>
+        <dd>Export from a TileDB Filestore to a character variable</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_filestore_buffer_import.html">tiledb_filestore_buffer_import()</a></code> 
+        </dt>
+        <dd>Import size bytes from a string into a TileDB Filestore</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_filestore_schema_create.html">tiledb_filestore_schema_create()</a></code> 
+        </dt>
+        <dd>Create an array schema from a given URI with schema</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_filestore_size.html">tiledb_filestore_size()</a></code> 
+        </dt>
+        <dd>Return (uncompressed) TileDB Filestore size</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_filestore_uri_export.html">tiledb_filestore_uri_export()</a></code> 
+        </dt>
+        <dd>Export a file from a TileDB Filestore</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_filestore_uri_import.html">tiledb_filestore_uri_import()</a></code> 
+        </dt>
+        <dd>Import a file into a TileDB Filestore</dd>
+      </dl></div><div class="section level2">
       <h2 id="fragment">Fragment<a class="anchor" aria-label="anchor" href="#fragment"></a></h2>
       
       
@@ -2027,7 +2068,7 @@ This is only valid for sparse arrays.</dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
     </footer></div>

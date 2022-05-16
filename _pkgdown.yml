@@ -117,6 +117,10 @@ reference:
   - starts_with("tiledb_vfs")
   - matches("tiledb_get_vfs")
   - matches("tiledb_set_vfs")
+- title: Filestore
+  desc: filestore functionality
+  contents:
+  - starts_with("tiledb_filestore")
 - title: Fragment
   contents:
   - starts_with("tiledb_fragment")
