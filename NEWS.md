@@ -1,3 +1,38 @@
+# tiledb 0.13.0
+
+* This release of the R package builds against [TileDB 2.9.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.9.0), and has also been tested against earlier releases as well as the development version.
+
+## Improvements
+
+* Support for groups has been added for TileDB 2.8 or later (#404)
+
+* The group member name retrieval can now also return the optional group member name (#399)
+
+* Allocation and creation of large string vector buffers was refactored (#400)
+
+* Support for dictionary encoding compression filters has been added for TileDB 2.9 or later (#404)
+
+* Support for Filestore functionality has been added for TileDB 2.9 or later (#410)
+
+* Support for BLOB datatypes has been added for TileDB 2.7 or later (#411)
+
+* Use of TileDB Embedded was upgraded to release 2.9.0 (#413) following earlier updates to 2.8.1 (#401), 2.8.2 (#403), 2.8.3 (#408)
+
+## Bug Fixes
+
+* Tests for filters have been made more robust (#407, #412)
+
+## Deprecations
+
+* The `check()` function is now deprecated and `schema_check()` is provided (#409)
+
+## Build and Test Systems
+
+* Nightly valgrind checks were updated to use current versions (#397, #402)
+
+* Following release of R 4.2.0, only ucrt builds are supported on Windows (#405)
+
+
 # tiledb 0.12.0
 
 * This release of the R package builds against [TileDB 2.8.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.8.0), and has also been tested against earlier releases as well as the development version.
