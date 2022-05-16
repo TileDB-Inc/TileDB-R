@@ -616,6 +616,24 @@
     <loc>/reference/tiledb_error_message.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_filestore_buffer_export.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_filestore_buffer_import.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_filestore_schema_create.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_filestore_size.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_filestore_uri_export.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_filestore_uri_import.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_filter-class.html</loc>
   </url>
   <url>
