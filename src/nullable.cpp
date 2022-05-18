@@ -84,3 +84,20 @@ void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_
         if (map[i] == 0)
             vec[i] = NA_INTEGER64;
 }
+
+void getValidityMapFromLogical(Rcpp::LogicalVector & vec, std::vector<uint8_t> & map) {
+    if (static_cast<size_t>(vec.size()) != map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int getter.", vec.size(), map.size());
+
+    for (auto i=0; i < vec.size(); i++)
+        map[i] = (vec[i] == NA_LOGICAL) ? 0 : 1;
+}
+
+void setValidityMapForLogical(Rcpp::LogicalVector & vec, const std::vector<uint8_t> & map) {
+    if (static_cast<size_t>(vec.size()) != map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int setter.", vec.size(), map.size());
+
+    for (auto i=0; i < vec.size(); i++)
+        if (map[i] == 0)
+            vec[i] = NA_LOGICAL;
+}
