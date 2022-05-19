@@ -221,3 +221,40 @@ newarr <- tiledb_array(uri, as.data.frame=TRUE)
 chk <- newarr[]
 expect_equal(df[,1:10], chk[,1:10])
 expect_equivalent(as.numeric(df[,11]), chk[,11]) # we currently return uint64_t as numeric
+
+
+## BOOL support added in 2.10.0
+if (tiledb_version(TRUE) < "2.10.0") exit_file("Remainder needs 2.10.* or later")
+
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+
+## high-level
+D <- data.frame(key=c(2L,4L,6L,8L), val=c(TRUE,FALSE,NA,TRUE))
+fromDataFrame(D, uri, col_index=1)
+arr <- tiledb_array(uri, return_as="data.frame")
+res <- arr[]
+attr(res, "query_status") <- NULL
+expect_equal(D, res)
+
+
+## lower-level testing tiledb_query_set_buffer
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+v <- D[, "val"]
+v[3] <- TRUE                            # without nullable for simplicity
+dim <- tiledb_dim(name = "dim", domain = c(0L, 3L), type = "INT32")
+sch <- tiledb_array_schema(domain = tiledb_domain(dim),
+                           attrs = tiledb_attr("val", type = "BOOL"))
+tiledb_array_create(uri, sch)
+arr <- tiledb_array(uri)
+qry <- tiledb_query(arr, "WRITE")
+qry <- tiledb_query_set_buffer(qry, "val", v)
+qry <- tiledb_query_submit(qry)
+qry <- tiledb_query_finalize(qry)
+expect_equal(tiledb_query_status(qry), "COMPLETE")
+
+arr2 <- tiledb_array(uri, return_as="data.frame")
+res2 <- arr2[0:3]
+print(res2)
+attr(res2, "query_status") <- NULL
+expect_equal(v, res2[,"val"])
