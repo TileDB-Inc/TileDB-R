@@ -2579,7 +2579,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 #endif
     return query;
   } else if (TYPEOF(buffer) == LGLSXP) {
-    LogicalVector vec(buffer);
+    LogicalVector vec(buffer);  // note that it is really an int at the element storage
 #if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
 #else
