@@ -96,6 +96,10 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
     case TILEDB_BLOB:
       return "BLOB";
 #endif
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+    case TILEDB_BOOL:
+      return "BOOL";
+#endif
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
@@ -158,6 +162,10 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
   } else if (typestr == "BLOB") {
     return TILEDB_BLOB;
 #endif
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+  } else if (typestr == "BOOL") {
+    return TILEDB_BOOL;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB type '%s'", typestr.c_str());
   }
@@ -216,6 +224,10 @@ std::string tiledb_datatype_R_type(std::string datatype) {
       return "DATETIME_US";
     case TILEDB_DATETIME_NS:
       return "DATETIME_NS";
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+    case TILEDB_BOOL:
+      return "BOOL";
+#endif
     default:
       Rcpp::stop("unknown tiledb_datatype_t (%d)", dtype);
   }
@@ -1364,11 +1376,18 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                attr_dtype == TILEDB_INT8   ||
                attr_dtype == TILEDB_UINT8    ) {
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+    } else if (attr_dtype == TILEDB_BOOL) {
+        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+#endif
     } else {
         Rcpp::stop("Only integer ((U)INT{8,16,32,64}), logical (INT32), real (FLOAT{32,64}), "
-                   "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), "
-                   "nanotime (DATETIME_NS) and character (CHAR,ASCII) attributes "
-                   "are supported -- seeting %s which is not", type.c_str());
+                   "Date (DATEIME_DAY), Datetime (DATETIME_{SEC,MS,US}), nanotime (DATETIME_NS), "
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+                   "logical (BOOL), "
+#endif
+                   "and character (CHAR,ASCII) attributes are supported "
+                   "-- seeing %s which is not", type.c_str());
     }
     attr->set_filter_list(*fltrlst);
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
@@ -2560,7 +2579,7 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 #endif
     return query;
   } else if (TYPEOF(buffer) == LGLSXP) {
-    LogicalVector vec(buffer);
+    LogicalVector vec(buffer);  // note that it is really an int at the element storage
 #if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
 #else
@@ -2776,6 +2795,10 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype,
   } else if (domaintype == "BLOB") {
      buf->size = sizeof(int8_t);
 #endif
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+  } else if (domaintype == "BOOL") {
+     buf->size = sizeof(uint8_t);
+#endif
   } else if (domaintype == "INT64" ||
              domaintype == "UINT64" ||
              domaintype == "DATETIME_YEAR" ||
@@ -2928,6 +2951,18 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
       x[i] = static_cast<float>(v[i]);
     }
     std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+  } else if (dtype == "BOOL") {
+    LogicalVector v(vec);
+    auto n = v.length();
+    std::vector<uint8_t> x(n);
+    for (auto i=0; i<n; i++) {
+      x[i] = static_cast<uint8_t>(v[i]);
+    }
+    std::memcpy(buf->vec.data(), &(x[0]), buf->ncells*buf->size);
+    if (buf->nullable)
+        getValidityMapFromLogical(v, buf->validity_map);
+#endif
   } else {
     Rcpp::stop("Assignment to '%s' currently unsupported.", dtype.c_str());
   }
@@ -3099,6 +3134,19 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     // -- raw has no NA type so no mapping possible here
     // if (buf->nullable)
     //    setValidityMapForRaw(out, buf->validity_map);
+    return out;
+#endif
+#if TILEDB_VERSION >= TileDB_Version(2,10,0)
+  } else if (dtype == "BOOL") {
+    size_t n = buf->ncells;
+    std::vector<uint8_t> uintvec(n);
+    std::memcpy(uintvec.data(), buf->vec.data(), n*buf->size);
+    Rcpp::LogicalVector out(buf->ncells);
+    for (size_t i=0; i<n; i++) {
+      out[i] = static_cast<int32_t>(uintvec[i]); // logical is int32_t internally
+    }
+    if (buf->nullable)
+        setValidityMapForLogical(out, buf->validity_map);
     return out;
 #endif
   } else {

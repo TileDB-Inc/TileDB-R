@@ -114,7 +114,14 @@ tiledb_query_set_buffer <- function(query, attr, buffer) {
   stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
             `Argument 'attr' must be character_variable` = is.character(attr),
             `Argument 'buffer' must be integer, numeric or logical` = is.numeric(buffer) || is.logical(buffer))
-  libtiledb_query_set_buffer(query@ptr, attr, buffer)
+  if (is.numeric(buffer) || tiledb_version(TRUE) < "2.10.0") {
+      libtiledb_query_set_buffer(query@ptr, attr, buffer)
+  } else {              # logical now maps to BOOL which is a uint8_t, we need a different approach
+      nr <- NROW(buffer)
+      bufptr <- libtiledb_query_buffer_alloc_ptr("BOOL", nr, FALSE)
+      bufptr <- libtiledb_query_buffer_assign_ptr(bufptr, "BOOL", buffer, FALSE)
+      query@ptr <- libtiledb_query_set_buffer_ptr(query@ptr, attr, bufptr)
+  }
   invisible(query)
 }
 

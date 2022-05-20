@@ -65,6 +65,8 @@ void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> &
 void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8_t> & map);
 void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & map);
 void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_t> & map);
+void getValidityMapFromLogical(Rcpp::LogicalVector & vec, std::vector<uint8_t> & map);
+void setValidityMapForLogical(Rcpp::LogicalVector & vec, const std::vector<uint8_t> & map);
 
 // type and size helper
 tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr);

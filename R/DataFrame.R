@@ -192,6 +192,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
             tp <- "DATETIME_NS"
         else if (cl == "integer64")
             tp <- "INT64"
+        else if (cl == "logical")
+            tp <- if (tiledb_version(TRUE) >= "2.10.0") "BOOL" else "INT32"
         else
             stop("Currently unsupported type: ", cl)
         if (debug) {
