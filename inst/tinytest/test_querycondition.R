@@ -278,3 +278,9 @@ qc <- parse_query_condition(species == "Adelie" || species == "Chinstrap" && yea
 arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, species == "Adelie" | species == "Chinstrap" & year >= 2009)))
+
+## empty sets are fine
+qc <- parse_query_condition(year < 2008 || year > 2010)
+arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arr[]),
+             sum(with(penguins, year < 2008 | year > 2010)))
