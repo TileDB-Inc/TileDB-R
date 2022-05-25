@@ -93,6 +93,10 @@ name_list <- c("NONE",
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 dat <- palmerpenguins::penguins
 
+## we have seen some test setups fail and suspect lack of AVX2
+if (Sys.info()[["sysname"]]=="Linux" && isFALSE(any(grepl("avx2", readLines("/proc/cpuinfo")))))
+    exit_file("Skipping remainder on Linux systems without AVX2")
+
 vfs <- tiledb_vfs()                     # use an explicit VFS instance for the ops in loop over filters
 for (name in name_list) {
     dat2 <- dat
