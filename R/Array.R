@@ -100,6 +100,16 @@ tiledb_array_close <- function(arr) {
   arr
 }
 
+##' Test if TileDB Array is open
+##'
+##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
+##' @return A boolean indicating whether the TileDB Array object is open
+##' @export
+tiledb_array_is_open <- function(arr) {
+    stopifnot(`The 'arr' argument must be a tiledb_array object` = is(arr, "tiledb_array") || is(arr, "tiledb_sparse") || is(arr, "tiledb_dense"))
+    libtiledb_array_is_open(arr@ptr)
+}
+
 ##' Check for Homogeneous Domain
 ##'
 ##' @param arr A TileDB Array object
