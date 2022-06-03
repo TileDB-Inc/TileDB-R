@@ -988,7 +988,9 @@ J <- letters[1:3]
 data <- c(1L, 2L, 3L)
 arr <- tiledb_array(uri = tmp)
 arr[I, J] <- data
+expect_false(tiledb_array_is_open(arr))
 arr <- tiledb_array_open(arr)
+expect_True(tiledb_array_is_open(arr))
 expect_equal(tiledb_array_get_non_empty_domain_from_index(arr, 1), c(1, 3))
 expect_equal(tiledb_array_get_non_empty_domain_from_name(arr, "d1"), c(1, 3))
 expect_equal(tiledb_array_get_non_empty_domain_from_index(arr, 2), c("a", "c"))
