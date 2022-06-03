@@ -232,6 +232,7 @@ expect_equal(nv[3], n)                  # third is length of validity buffer (if
 #})
 
 ## check for warning in insufficient memory
+oldcfg <- tiledb_config()
 cfg <- tiledb_config()
 cfg["sm.memory_budget"] <- "16"
 cfg["sm.memory_budget_var"] <- "32"
@@ -249,3 +250,5 @@ expect_true(nchar(res) > 1000)  		# safe lower boundary
 res <- tiledb_ctx_stats()               # test here rather than in test_ctx to have real query
 expect_true(is.character(res))
 expect_true(nchar(res) > 1000)  		# safe lower boundary
+
+ctx <- tiledb_ctx(oldcfg)               # reset config

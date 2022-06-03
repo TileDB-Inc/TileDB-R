@@ -791,6 +791,8 @@ setMethod("[", "tiledb_array",
           if (resrv == 0 && counter > 1L) {
               finished <- TRUE
               #if (verbose) message("Breaking loop at zero length expected")
+              if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
+              .pkgenv[["query_status"]] <- status
               break
           }
           ## get results
