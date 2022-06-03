@@ -1418,3 +1418,10 @@ arr <- tiledb_array(uri, as.data.frame = TRUE, attrs = NA_character_)
 res <- arr[]
 expect_equal(NCOL(res), 2)
 expect_equal(colnames(res), c("species", "year"))
+
+
+## check for incomplete status on unsuccessful query
+set_allocation_size_preference(256)     # too low for penguins to return something
+array <- tiledb_array(uri, as.data.frame=TRUE)
+expect_warning(res <- array[])          # warning emitted
+expect_equal(attr(res, "query_status"), "INCOMPLETE") # and query status reported
