@@ -144,6 +144,15 @@ origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
+
+## Setup
+# Explicitly set C++17 on Darwin because even Clang 13 defaults to C++98,
+# which causes AC_CHECK_HEADER for tiledb below to fail (SC-18405).
+# This will almost certainly fail in the same way when building with GCC
+# which does not enable C++17 by default.
+if test x"${uname}" = x"Darwin"; then
+    CPPFLAGS="-std=c++17 ${CPPFLAGS}"
+fi
 ## Take care of 10.14 requirement for Intel macOS
 if test x"${uname}" = x"Darwin" -a x"${machine}" = x"x86_64"; then
     AC_MSG_CHECKING([for Darwin x86_64 use minimum version override])
@@ -160,7 +169,7 @@ checkTileDBViaHeader="yes"
 ## Use either one of the tests
 if test x"${checkTileDBViaHeader}" = x"yes"; then
     ## simply check for tiledb C-api header
-    AC_CHECK_HEADER([tiledb/tiledb.h], [have_tiledb="yes"], [have_tiledb="no"])
+    AC_CHECK_HEADER([tiledb/tiledb], [have_tiledb="yes"], [have_tiledb="no"])
 else
     ## formally check we can build
     AC_MSG_CHECKING([compilation with TileDB])
