@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2021 TileDB Inc.
+#  Copyright (c) 2021-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,8 @@ setClass("tiledb_query_condition",
 #' @return A 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition <- function(ctx = tiledb_get_context()) {
-    stopifnot(`The argument must be a ctx object` = is(ctx, "tiledb_ctx"),
-              `This function needs TileDB 2.3.0 or newer` = tiledb_version(TRUE) >= "2.3.0")
+    stopifnot("The argument must be a ctx object" = is(ctx, "tiledb_ctx"),
+              "This function needs TileDB 2.3.0 or newer" = tiledb_version(TRUE) >= "2.3.0")
     ptr <- libtiledb_query_condition(ctx@ptr)
     query_condition <- new("tiledb_query_condition", ptr = ptr, init = FALSE)
     invisible(query_condition)
@@ -61,11 +61,11 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 #' @return The initialized 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
-    stopifnot(`Argument 'qc' with query condition object required` = is(qc, "tiledb_query_condition"),
-              `Argument 'attr' must be character` = is.character(attr),
-              `Argument 'value' must be of length one` = is.vector(value) && all.equal(length(value),1),
-              `Argument 'dtype' must be character` = is.character(dtype),
-              `Argument 'op' must be character` = is.character(op))
+    stopifnot("Argument 'qc' with query condition object required" = is(qc, "tiledb_query_condition"),
+              "Argument 'attr' must be character" = is.character(attr),
+              "Argument 'value' must be of length one" = is.vector(value) && all.equal(length(value),1),
+              "Argument 'dtype' must be character" = is.character(dtype),
+              "Argument 'op' must be character" = is.character(op))
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
     ## maybe check dtype too
     libtiledb_query_condition_init(qc@ptr, attr, value, dtype, op)
@@ -75,17 +75,18 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
 
 #' Combine two 'tiledb_query_condition' objects
 #'
-#' Combines two query condition object using a relatiional operator. Note that at present
-#' only 'AND' is supported.
+#' Combines two query condition object using a relatiional operator. Support for operator
+#' 'AND' is generally available, the 'OR' operator is available if TileDB 2.10 or newer is
+#' used.
 #' @param lhs A 'tiledb_query_condition' object on the left-hand side of the relation
 #' @param rhs A 'tiledb_query_condition' object on the left-hand side of the relation
 #' @param op A character value with then relation, this must be one of 'AND', 'OR' or 'NOT'.
 #' @return The combined 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_combine <- function(lhs, rhs, op) {
-    stopifnot(`Argument 'lhs' must be a query condition object` = is(lhs, "tiledb_query_condition"),
-              `Argument 'rhs' must be a query condition object` = is(rhs, "tiledb_query_condition"),
-              `Argument 'op' must be a character` = is.character(op))
+    stopifnot("Argument 'lhs' must be a query condition object" = is(lhs, "tiledb_query_condition"),
+              "Argument 'rhs' must be a query condition object" = is(rhs, "tiledb_query_condition"),
+              "Argument 'op' must be a character" = is.character(op))
     op <- match.arg(op, c("AND", "OR", "NOT"))
     qc <- tiledb_query_condition()
     qc@ptr <- libtiledb_query_condition_combine(lhs@ptr, rhs@ptr, op)

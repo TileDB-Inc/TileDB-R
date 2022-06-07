@@ -231,3 +231,56 @@ expect_equal(dim(fullarr), c(50,3))
 subarr <- tiledb_array(uri, as.data.frame=TRUE,
                        query_condition=parse_query_condition(region == "Northeast"))[]
 expect_equal(dim(subarr), c(9,3))
+
+
+## Testing OR condition
+
+## Pre-test: will return NA in case of error ie when TileDB Core does not yet have OR support
+## wrapped in 'class()' to avoid a warning of 'is.na() applied to non-list or vector S4'
+if (is.na(tryCatch(class(qc <- parse_query_condition(x3 == 1 || x4 == 2)), error = function(e) NA)))
+    exit_file("Skipping for lack of 'OR' support in TileDB")
+
+## Re-create penguins
+uri <- tempfile()
+fromDataFrame(penguins, uri, sparse=TRUE)
+
+## Basics
+qc <- tiledb_query_condition_init("year", 2009, "INT32", "EQ")
+arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arrwithqc[]), 120L)
+
+lhs <- tiledb_query_condition_init("year", 2008, "INT32", "GE")
+rhs <- tiledb_query_condition_init("year", 2008, "INT32", "LE")
+qc <- tiledb_query_condition_combine(lhs, rhs, "AND")
+arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arrwithqc[]), 114L)  # basically a different way of writing EQ via '<= && >='
+
+lhs <- tiledb_query_condition_init("year", 2008, "INT32", "GE")
+rhs <- tiledb_query_condition_init("year", 2008, "INT32", "LE")
+qc <- tiledb_query_condition_combine(lhs, rhs, "OR")
+arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arrwithqc[]), 344L)  # the OR makes it unconstrained via '<= || >='
+
+## simple OR
+qc <- parse_query_condition(species == "Adelie" || species == "Chinstrap")
+arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+## Note that in R '||' is used for length-1 comparison, and '|' along a vector so '|' here
+expect_equal(NROW(arr[]), sum(with(penguins, species == "Adelie" | species == "Chinstrap")))
+
+## three elements works too
+qc <- parse_query_condition(species == "Adelie" || species == "Chinstrap" || year >= 2009)
+arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arr[]),
+             sum(with(penguins, species == "Adelie" | species == "Chinstrap" | year >= 2009)))
+
+## three elements works too as does mixing AND and OR
+qc <- parse_query_condition(species == "Adelie" || species == "Chinstrap" && year >= 2009)
+arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arr[]),
+             sum(with(penguins, species == "Adelie" | species == "Chinstrap" & year >= 2009)))
+
+## empty sets are fine
+qc <- parse_query_condition(year < 2008 || year > 2010)
+arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arr[]),
+             sum(with(penguins, year < 2008 | year > 2010)))
