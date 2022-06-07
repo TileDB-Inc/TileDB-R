@@ -2,7 +2,7 @@
 
 ##  MIT License
 ##
-##  Copyright (c) 2017-2021 TileDB Inc.
+##  Copyright (c) 2017-2022 TileDB Inc.
 ##
 ##  Permission is hereby granted, free of charge, to any person obtaining a copy
 ##  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.10.0])
+AC_INIT([TileDB-R],[0.13.0])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -162,7 +162,7 @@ checkTileDBViaHeader="yes"
 ## Use either one of the tests
 if test x"${checkTileDBViaHeader}" = x"yes"; then
     ## simply check for tiledb C-api header
-    AC_CHECK_HEADER([tiledb/tiledb.h], [have_tiledb="yes"], [have_tiledb="no"])
+    AC_CHECK_HEADER([tiledb/tiledb], [have_tiledb="yes"], [have_tiledb="no"])
 else
     ## formally check we can build
     AC_MSG_CHECKING([compilation with TileDB])
