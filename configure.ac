@@ -46,6 +46,8 @@ CXX17FLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
 AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
+m4_include([tools/m4/ax_cxx_compile_stdcxx.m4])
+AX_CXX_COMPILE_STDCXX([17])
 
 ## Can we use pkg-config?
 AC_PATH_PROG(have_pkg_config, pkg-config, no)
