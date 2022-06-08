@@ -25,6 +25,10 @@ libtiledb_query_import_buffer <- function(ctx, query, name, arrowpointers) {
     .Call(`_tiledb_libtiledb_query_import_buffer`, ctx, query, name, arrowpointers)
 }
 
+makeQueryWrapper <- function(qp) {
+    .Call(`_tiledb_makeQueryWrapper`, qp)
+}
+
 libtiledb_query_set_coordinates <- function(query, coords, dtype) {
     .Call(`_tiledb_libtiledb_query_set_coordinates`, query, coords, dtype)
 }
@@ -1054,5 +1058,9 @@ querybuf_from_shmem <- function(path, dtype) {
 
 vlcbuf_from_shmem <- function(datapath, dtype) {
     .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
+}
+
+.is_xptr_tag_null <- function(ptr) {
+    .Call(`_tiledb_is_xptr_tag_null`, ptr)
 }
 

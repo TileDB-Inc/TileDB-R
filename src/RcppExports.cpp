@@ -79,6 +79,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// makeQueryWrapper
+SEXP makeQueryWrapper(SEXP qp);
+RcppExport SEXP _tiledb_makeQueryWrapper(SEXP qpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type qp(qpSEXP);
+    rcpp_result_gen = Rcpp::wrap(makeQueryWrapper(qp));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_set_coordinates
 XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query, SEXP coords, std::string dtype);
 RcppExport SEXP _tiledb_libtiledb_query_set_coordinates(SEXP querySEXP, SEXP coordsSEXP, SEXP dtypeSEXP) {
@@ -3103,6 +3114,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// is_xptr_tag_null
+bool is_xptr_tag_null(SEXP ptr);
+RcppExport SEXP _tiledb_is_xptr_tag_null(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_xptr_tag_null(ptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_allocate_arrow_array_as_xptr", (DL_FUNC) &_tiledb_allocate_arrow_array_as_xptr, 0},
@@ -3111,6 +3133,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_delete_arrow_schema_from_xptr", (DL_FUNC) &_tiledb_delete_arrow_schema_from_xptr, 1},
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
+    {"_tiledb_makeQueryWrapper", (DL_FUNC) &_tiledb_makeQueryWrapper, 1},
     {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
     {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},
     {"_tiledb_tiledb_datatype_string_to_sizeof", (DL_FUNC) &_tiledb_tiledb_datatype_string_to_sizeof, 1},
@@ -3366,6 +3389,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
     {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 2},
+    {"_tiledb_is_xptr_tag_null", (DL_FUNC) &_tiledb_is_xptr_tag_null, 1},
     {NULL, NULL, 0}
 };
 

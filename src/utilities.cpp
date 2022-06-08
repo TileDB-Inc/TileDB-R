@@ -86,3 +86,8 @@ bool isInteger64(Rcpp::NumericVector v) {
   std::string s = v.attr("class");
   return s == "integer64";
 }
+
+// [[Rcpp::export(.is_xptr_tag_null)]]
+bool is_xptr_tag_null(SEXP ptr) {
+    return R_ExternalPtrTag(ptr) == R_NilValue;
+}
