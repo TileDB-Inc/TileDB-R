@@ -255,6 +255,5 @@ expect_equal(tiledb_query_status(qry), "COMPLETE")
 
 arr2 <- tiledb_array(uri, return_as="data.frame")
 res2 <- arr2[0:3]
-print(res2)
 attr(res2, "query_status") <- NULL
 expect_equal(v, res2[,"val"])
