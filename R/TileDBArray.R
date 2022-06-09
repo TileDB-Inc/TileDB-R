@@ -1203,7 +1203,8 @@ setReplaceMethod("attrs",
                  signature = "tiledb_array",
                  function(x, value) {
   nm <- names(attrs(schema(x)))
-  if (length(nm) == 0) {                # none set so far
+  value_is_na <- length(value) == 1 && is.na(value)  # no attribute query
+  if (length(nm) == 0 || value_is_na) {              # none set so far
     x@attrs <- value
   } else {
     pm <- pmatch(value, nm)

@@ -1421,6 +1421,13 @@ res <- arr[]
 expect_equal(NCOL(res), 2)
 expect_equal(colnames(res), c("species", "year"))
 
+## check that we can specify no attributes with the setter
+arr <- tiledb_array(uri)
+expect_identical(attrs(arr), character(length = 0L))
+
+attrs(arr) <- NA_character_
+expect_true(is.na(attrs(arr)))
+
 
 ## check for incomplete status on unsuccessful query
 set_allocation_size_preference(256)     # too low for penguins to return something
