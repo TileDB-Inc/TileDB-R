@@ -352,3 +352,32 @@ fetchBatched <- function(x, lst) {
 
     res
 }
+
+
+#' Return \sQuote{batched} status
+#'
+#' Batched queries return an initial result set even when it is incomplete. Where
+#' the normal retrieval process will loop in place to complete a (potentially large)
+#' result set, this function will return a result (which may be part of a larger
+#' result set) allowing the user to assemble all part.
+#'
+#' @param lst A list object as returned by \code{createBatched}
+#' @return The Query status as a character variable
+#' @export
+statusBatched <- function(lst) {
+    libtiledb_query_status(lst[[1]])
+}
+
+#' Check \sQuote{batched} query for completion
+#'
+#' Batched queries return an initial result set even when it is incomplete. Where
+#' the normal retrieval process will loop in place to complete a (potentially large)
+#' result set, this function will return a result (which may be part of a larger
+#' result set) allowing the user to assemble all part.
+#'
+#' @param lst A list object as returned by \code{createBatched}
+#' @return A logical value to indicated if the query completed
+#' @export
+completedBatched <- function(lst) {
+    libtiledb_query_status(lst[[1]]) == "COMPLETE"
+}
