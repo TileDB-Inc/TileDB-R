@@ -1060,7 +1060,3 @@ vlcbuf_from_shmem <- function(datapath, dtype) {
     .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
 }
 
-.is_xptr_tag_null <- function(ptr) {
-    .Call(`_tiledb_is_xptr_tag_null`, ptr)
-}
-

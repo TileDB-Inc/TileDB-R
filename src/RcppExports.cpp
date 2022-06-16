@@ -3114,17 +3114,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// is_xptr_tag_null
-bool is_xptr_tag_null(SEXP ptr);
-RcppExport SEXP _tiledb_is_xptr_tag_null(SEXP ptrSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_xptr_tag_null(ptr));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_allocate_arrow_array_as_xptr", (DL_FUNC) &_tiledb_allocate_arrow_array_as_xptr, 0},
@@ -3389,7 +3378,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
     {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 2},
-    {"_tiledb_is_xptr_tag_null", (DL_FUNC) &_tiledb_is_xptr_tag_null, 1},
     {NULL, NULL, 0}
 };
 
