@@ -1,4 +1,17 @@
 
+#' Create a \sQuote{batched} query object
+#'
+#' Batched queries return an initial result set even when it is incomplete. Where
+#' the normal retrieval process will loop in place to complete a (potentially large)
+#' result set, this function will return a result (which may be part of a larger
+#' result set) allowing the user to assemble all part.
+#'
+#' The \code{tiledb_array} object can be parameterised as usual.
+#'
+#' @param x A \code{tiledb_array} object
+#' @return A list containing an external pointer to a TileDB Query object along with other
+#' support variables used by \code{fetchBatched}
+#' @export
 createBatched <- function(x) {
     ## add defaults, shortcut for now
     i <- j <- k <- NULL
@@ -12,10 +25,6 @@ createBatched <- function(x) {
     ##     if (length(ndlist) >= 3 && !is.null(ndlist[[3]])) k <- ndlist[[3]]
     ##     if (length(ndlist) >= 4) message("Indices beyond the third dimension not supported in [i,j,k] form. Use selected_ranges().")
     ## }
-
-    #qryinit <- x@qryinit
-    #if (isFALSE(qryinit)) message("Dispatched to tiledb_batched. Query not yet initialized") else message("Dispatched to tiledb_batched. Query reuse.")
-    #cat("XPtr class", class(x@qry), "tag null", if (.is_xptr_tag_null(x@qry)) "yes" else "no", "\n")
 
     ctx <- x@ctx
     uri <- x@uri
@@ -108,15 +117,9 @@ createBatched <- function(x) {
     }
     nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
 
-    #if (!qryinit) {
-        ## open query
-        qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
-        if (length(layout) > 0) libtiledb_query_set_layout(qryptr, layout)
-        #x@qry <- qryptr
-        #x@qryinit <- TRUE
-        #if (verbose) message("Setting qryinit to TRUE")
-        #if (verbose) cat("Now XPtr class", class(x@qry), "tag null", if (.is_xptr_tag_null(x@qry)) "yes" else "no", "\n")
-    ##}
+    ## open query
+    qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
+    if (length(layout) > 0) libtiledb_query_set_layout(qryptr, layout)
 
 
     ## ranges seem to interfere with the byte/element adjustment below so set up toggle
@@ -259,6 +262,20 @@ createBatched <- function(x) {
 }
 
 
+#' Run a \sQuote{batched} query
+#'
+#' Batched queries return an initial result set even when it is incomplete. Where
+#' the normal retrieval process will loop in place to complete a (potentially large)
+#' result set, this function will return a result (which may be part of a larger
+#' result set) allowing the user to assemble all part.
+#'
+#' The \code{tiledb_array} object can be parameterised as usual.
+#'
+#' @param x A \code{tiledb_array} object
+#' @param lst A list object as returned by \code{createBatched}
+#' @return A data.frame object with the (potentially partial) result of a
+#' batched query
+#' @export
 fetchBatched <- function(x, lst) {
     qryptr <- lst[[1]]
     allnames <- lst[[2]]
@@ -280,6 +297,7 @@ fetchBatched <- function(x, lst) {
 
     ## close array
     if (status == "COMPLETE") {
+        arrptr <- x@ptr
         libtiledb_array_close(arrptr)
         .pkgenv[["query_status"]] <- status
         finished <- TRUE
@@ -300,13 +318,13 @@ fetchBatched <- function(x, lst) {
     }
     ##if (verbose) message("Expected size ", resrv)
     ## Permit one pass to allow zero-row schema read
-    if (resrv == 0 && counter > 1L) {
-        finished <- TRUE
+    #if (resrv == 0 && counter > 1L) {
+        #finished <- TRUE
         ##if (verbose) message("Breaking loop at zero length expected")
-        if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
-        .pkgenv[["query_status"]] <- status
+        #if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
+        #.pkgenv[["query_status"]] <- status
                                         #break
-    }
+    #}
     ## get results
     getResult <- function(buf, name, varnum, resrv, qryptr) {
         has_dumpbuffers <- length(x@dumpbuffers) > 0
