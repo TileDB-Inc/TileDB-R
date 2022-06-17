@@ -10,8 +10,8 @@ createBatched(x)
 \item{x}{A \code{tiledb_array} object}
 }
 \value{
-A list containing an external pointer to a TileDB Query object along with other
-support variables used by \code{fetchBatched}
+A \code{batchedquery} object, that is a list containing an external pointer
+to a TileDB Query object along with other support variables used by \code{fetchBatched}
 }
 \description{
 Batched queries return an initial result set even when it is incomplete. Where

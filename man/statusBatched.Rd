@@ -4,10 +4,10 @@
 \alias{statusBatched}
 \title{Return \sQuote{batched} status}
 \usage{
-statusBatched(lst)
+statusBatched(obj)
 }
 \arguments{
-\item{lst}{A list object as returned by \code{createBatched}}
+\item{obj}{A list object as returned by \code{createBatched}}
 }
 \value{
 The Query status as a character variable

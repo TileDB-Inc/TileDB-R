@@ -9,8 +9,8 @@
 #' The \code{tiledb_array} object can be parameterised as usual.
 #'
 #' @param x A \code{tiledb_array} object
-#' @return A list containing an external pointer to a TileDB Query object along with other
-#' support variables used by \code{fetchBatched}
+#' @return A \code{batchedquery} object, that is a list containing an external pointer
+#' to a TileDB Query object along with other support variables used by \code{fetchBatched}
 #' @export
 createBatched <- function(x) {
     ## add defaults, shortcut for now
@@ -258,7 +258,9 @@ createBatched <- function(x) {
     #}
 
 
-    list(qryptr, allnames, allvarnum, alltypes, allnullable, buflist)
+    res <- list(qryptr, allnames, allvarnum, alltypes, allnullable, buflist)
+    class(res) <- "batchedquery"
+    res
 }
 
 
@@ -272,17 +274,19 @@ createBatched <- function(x) {
 #' The \code{tiledb_array} object can be parameterised as usual.
 #'
 #' @param x A \code{tiledb_array} object
-#' @param lst A list object as returned by \code{createBatched}
+#' @param obj A \code{batchedquery} object as returned by \code{createBatched}
 #' @return A data.frame object with the (potentially partial) result of a
 #' batched query
 #' @export
-fetchBatched <- function(x, lst) {
-    qryptr <- lst[[1]]
-    allnames <- lst[[2]]
-    allvarnum <- lst[[3]]
-    alltypes <- lst[[4]]
-    allnullable <- lst[[5]]
-    buflist <- lst[[6]]
+fetchBatched <- function(x, obj) {
+    stopifnot("The 'x' argument must be a 'tiledb_array'" = is(x, "tiledb_array"),
+              "The 'obj' argument must be 'batchedquery' object" = inherits(obj, "batchedquery"))
+    qryptr <- obj[[1]]
+    allnames <- obj[[2]]
+    allvarnum <- obj[[3]]
+    alltypes <- obj[[4]]
+    allnullable <- obj[[5]]
+    buflist <- obj[[6]]
 
     asint64 <- x@datetimes_as_int64
 
@@ -361,11 +365,12 @@ fetchBatched <- function(x, lst) {
 #' result set, this function will return a result (which may be part of a larger
 #' result set) allowing the user to assemble all part.
 #'
-#' @param lst A list object as returned by \code{createBatched}
+#' @param obj A list object as returned by \code{createBatched}
 #' @return The Query status as a character variable
 #' @export
-statusBatched <- function(lst) {
-    libtiledb_query_status(lst[[1]])
+statusBatched <- function(obj) {
+    stopifnot("The 'obj' argument must be 'batchedquery' object" = inherits(obj, "batchedquery"))
+    libtiledb_query_status(obj[[1]])
 }
 
 #' Check \sQuote{batched} query for completion
@@ -375,9 +380,10 @@ statusBatched <- function(lst) {
 #' result set, this function will return a result (which may be part of a larger
 #' result set) allowing the user to assemble all part.
 #'
-#' @param lst A list object as returned by \code{createBatched}
+#' @param obj A list object as returned by \code{createBatched}
 #' @return A logical value to indicated if the query completed
 #' @export
-completedBatched <- function(lst) {
-    libtiledb_query_status(lst[[1]]) == "COMPLETE"
+completedBatched <- function(obj) {
+    stopifnot("The 'obj' argument must be 'batchedquery' object" = inherits(obj, "batchedquery"))
+    libtiledb_query_status(obj[[1]]) == "COMPLETE"
 }

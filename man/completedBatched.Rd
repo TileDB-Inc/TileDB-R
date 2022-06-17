@@ -4,10 +4,10 @@
 \alias{completedBatched}
 \title{Check \sQuote{batched} query for completion}
 \usage{
-completedBatched(lst)
+completedBatched(obj)
 }
 \arguments{
-\item{lst}{A list object as returned by \code{createBatched}}
+\item{obj}{A list object as returned by \code{createBatched}}
 }
 \value{
 A logical value to indicated if the query completed

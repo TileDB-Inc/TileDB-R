@@ -4,12 +4,12 @@
 \alias{fetchBatched}
 \title{Run a \sQuote{batched} query}
 \usage{
-fetchBatched(x, lst)
+fetchBatched(x, obj)
 }
 \arguments{
 \item{x}{A \code{tiledb_array} object}
 
-\item{lst}{A list object as returned by \code{createBatched}}
+\item{obj}{A \code{batchedquery} object as returned by \code{createBatched}}
 }
 \value{
 A data.frame object with the (potentially partial) result of a
