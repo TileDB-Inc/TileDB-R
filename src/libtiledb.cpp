@@ -633,88 +633,73 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
         Rcpp::stop("domain or tile_extent does not match dimension type");
     }
     if (dtype == TILEDB_INT32) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-        auto domain_vec = as<IntegerVector>(domain);
+        Rcpp::IntegerVector domain_vec = Rcpp::IntegerVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        auto tile_extent_vec = as<IntegerVector>(tile_extent);
-        if (tile_extent_vec.length() != 1) {
-            Rcpp::stop("tile_extent must be a scalar");
-        }
-        std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
-        std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<int32_t, 2> _domain = {domain_vec[0], domain_vec[1]};
+        int32_t _tile_extent = Rcpp::as<int32_t>(tile_extent);
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<int32_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
     } else if (dtype == TILEDB_UINT32) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
         Rcpp::IntegerVector domain_vec = Rcpp::IntegerVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        Rcpp::IntegerVector extent_vec = Rcpp::IntegerVector(tile_extent);
-        std::array<Dtype, 2> _domain = {static_cast<uint32_t>(domain_vec[0]), static_cast<uint32_t>(domain_vec[1])};
-        std::array<Dtype, 1> _tile_extent = {static_cast<uint32_t>(extent_vec[0])};
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<uint32_t, 2> _domain = {static_cast<uint32_t>(domain_vec[0]), static_cast<uint32_t>(domain_vec[1])};
+        uint32_t _tile_extent = Rcpp::as<uint32_t>(tile_extent);
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<uint32_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
     } else if (dtype == TILEDB_INT16) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
         Rcpp::IntegerVector domain_vec = Rcpp::IntegerVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        Rcpp::IntegerVector extent_vec = Rcpp::IntegerVector(tile_extent);
-        std::array<Dtype, 2> _domain = {static_cast<int16_t>(domain_vec[0]), static_cast<int16_t>(domain_vec[1])};
-        std::array<Dtype, 1> _tile_extent = {static_cast<int16_t>(extent_vec[0])};
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<int16_t, 2> _domain = {static_cast<int16_t>(domain_vec[0]), static_cast<int16_t>(domain_vec[1])};
+        int16_t _tile_extent = Rcpp::as<int16_t>(tile_extent);
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<int16_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
     } else if (dtype == TILEDB_UINT16) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_UINT16>::type;
         Rcpp::IntegerVector domain_vec = Rcpp::IntegerVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        Rcpp::IntegerVector extent_vec = Rcpp::IntegerVector(tile_extent);
-        std::array<Dtype, 2> _domain = {static_cast<uint16_t>(domain_vec[0]), static_cast<uint16_t>(domain_vec[1])};
-        std::array<Dtype, 1> _tile_extent = {static_cast<uint16_t>(extent_vec[0])};
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<uint16_t, 2> _domain = {static_cast<uint16_t>(domain_vec[0]), static_cast<uint16_t>(domain_vec[1])};
+        int16_t _tile_extent = Rcpp::as<int16_t>(tile_extent);
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<uint16_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
     } else if (dtype == TILEDB_INT8) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_INT8>::type;
         Rcpp::IntegerVector domain_vec = Rcpp::IntegerVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        Rcpp::IntegerVector extent_vec = Rcpp::IntegerVector(tile_extent);
-        std::array<Dtype, 2> _domain = {static_cast<int8_t>(domain_vec[0]), static_cast<int8_t>(domain_vec[1])};
-        std::array<Dtype, 1> _tile_extent = {static_cast<int8_t>(extent_vec[0])};
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<int8_t, 2> _domain = {static_cast<int8_t>(domain_vec[0]), static_cast<int8_t>(domain_vec[1])};
+        int8_t _tile_extent = static_cast<int8_t>(Rcpp::as<int16_t>(tile_extent));
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<int8_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
   } else if (dtype == TILEDB_UINT8) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_UINT8>::type;
         Rcpp::IntegerVector domain_vec = Rcpp::IntegerVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        Rcpp::IntegerVector extent_vec = Rcpp::IntegerVector(tile_extent);
-        std::array<Dtype, 2> _domain = {static_cast<uint8_t>(domain_vec[0]), static_cast<uint8_t>(domain_vec[1])};
-        std::array<Dtype, 1> _tile_extent = {static_cast<uint8_t>(extent_vec[0])};
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<uint8_t, 2> _domain = {static_cast<uint8_t>(domain_vec[0]), static_cast<uint8_t>(domain_vec[1])};
+        uint8_t _tile_extent = Rcpp::as<uint8_t>(tile_extent);
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<uint8_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
   } else if (dtype == TILEDB_INT64) {
-        // for int64 domains and extents we require integer64 types
+        // for int64 domains and extents we require integer64 types which are internally memmap'ed from double
         Rcpp::NumericVector dv(domain);
         if (!isInteger64(dv)) {
             Rcpp::stop("dimension domain for INT64 must be an integer64 type in R");
@@ -723,18 +708,18 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
         std::vector<int64_t> domain_vec = getInt64Vector(Rcpp::NumericVector(dv));
-        int64_t domain[] = {domain_vec[0], domain_vec[1]};
+        std::array<int64_t, 2> _domain = {domain_vec[0], domain_vec[1]};
         Rcpp::NumericVector ext(tile_extent);
         if (!isInteger64(ext)) {
             Rcpp::stop("tile exent for INT64 domain must be an integer64 type in R");
         }
-        int64_t extent = makeScalarInteger64(ext[0]);
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype, domain, &extent));
+        int64_t _tile_extent = makeScalarInteger64(ext[0]);
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<int64_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
     } else if (dtype == TILEDB_UINT64) {
-        // for uint64 domains and extents we require integer64 types
+        // for uint64 domains and extents we require integer64 types which are internally memmap'ed from double
         Rcpp::NumericVector dv(domain);
         if (!isInteger64(dv)) {
             Rcpp::stop("dimension domain for UINT64 must be an integer64 type in R");
@@ -743,45 +728,35 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
         std::vector<int64_t> domain_vec = getInt64Vector(Rcpp::NumericVector(dv));
-        uint64_t domain[] = { static_cast<uint64_t>(domain_vec[0]), static_cast<uint64_t>(domain_vec[1])};
+        std::array<uint64_t, 2> _domain = { static_cast<uint64_t>(domain_vec[0]), static_cast<uint64_t>(domain_vec[1])};
         Rcpp::NumericVector ext(tile_extent);
         if (!isInteger64(ext)) {
             Rcpp::stop("tile exent for UINT64 domain must be an integer64 type in R");
         }
-        uint64_t extent = static_cast<uint64_t>(makeScalarInteger64(ext[0]));
-        auto dim = new tiledb::Dimension(tiledb::Dimension::create(*ctx.get(), name, dtype, domain, &extent));
+        uint64_t _tile_extent = static_cast<uint64_t>(makeScalarInteger64(ext[0]));
+        auto dim = new tiledb::Dimension(tiledb::Dimension::create<uint64_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
 
     } else if (dtype == TILEDB_FLOAT32) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
-        auto domain_vec = as<NumericVector>(domain);
+        Rcpp::NumericVector domain_vec = Rcpp::NumericVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        auto tile_extent_vec = as<NumericVector>(tile_extent);
-        if (tile_extent_vec.length() != 1) {
-            Rcpp::stop("tile_extent must be a scalar");
-        }
-        std::array<Dtype, 2> _domain = {static_cast<float>(domain_vec[0]), static_cast<float>(domain_vec[1])};
-        std::array<Dtype, 1> _tile_extent = {static_cast<float>(tile_extent_vec[0])};
-        auto d = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<float, 2> _domain = {static_cast<float>(domain_vec[0]), static_cast<float>(domain_vec[1])};
+        float_t _tile_extent = Rcpp::as<float>(tile_extent);
+        auto d = new tiledb::Dimension(tiledb::Dimension::create<float>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(d);
         return ptr;
 
     } else if (dtype == TILEDB_FLOAT64) {
-        using Dtype = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-        auto domain_vec = as<NumericVector>(domain);
+        Rcpp::NumericVector domain_vec = Rcpp::NumericVector(domain);
         if (domain_vec.length() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        auto tile_extent_vec = as<NumericVector>(tile_extent);
-        if (tile_extent_vec.length() != 1) {
-            Rcpp::stop("tile_extent must be a scalar");
-        }
-        std::array<Dtype, 2> _domain = {domain_vec[0], domain_vec[1]};
-        std::array<Dtype, 1> _tile_extent = {tile_extent_vec[0]};
-        auto d = new tiledb::Dimension(tiledb::Dimension::create<Dtype>(*ctx.get(), name, _domain, _tile_extent[0]));
+        std::array<double, 2> _domain = {static_cast<double>(domain_vec[0]), static_cast<double>(domain_vec[1])};
+        double_t _tile_extent = Rcpp::as<double>(tile_extent);
+        auto d = new tiledb::Dimension(tiledb::Dimension::create<double>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(d);
         return ptr;
 
@@ -1327,55 +1302,39 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
     // placeholder, overwritten in all branches below
     XPtr<tiledb::Attribute> attr = XPtr<tiledb::Attribute>(static_cast<tiledb::Attribute*>(nullptr));
 
-    if (attr_dtype == TILEDB_INT32) {
-        using DType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    } else if (attr_dtype == TILEDB_UINT32) {
-        using DType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    } else if (attr_dtype == TILEDB_FLOAT64) {
-        using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    } else if (attr_dtype == TILEDB_FLOAT32) {
-        using DType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
-    } else if (attr_dtype == TILEDB_CHAR) {
-        using DType = tiledb::impl::tiledb_to_type<TILEDB_CHAR>::type;
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(tiledb::Attribute::create<DType>(*ctx.get(), name)));
+    if (attr_dtype == TILEDB_INT32 ||
+        attr_dtype == TILEDB_UINT32 ||
+        attr_dtype == TILEDB_FLOAT64 ||
+        attr_dtype == TILEDB_FLOAT32 ||
+        attr_dtype == TILEDB_INT64  ||
+        attr_dtype == TILEDB_UINT64 ||
+        attr_dtype == TILEDB_UINT32 ||
+        attr_dtype == TILEDB_INT16  ||
+        attr_dtype == TILEDB_UINT16 ||
+        attr_dtype == TILEDB_INT8   ||
+        attr_dtype == TILEDB_UINT8  ||
+        attr_dtype == TILEDB_DATETIME_YEAR ||
+        attr_dtype == TILEDB_DATETIME_MONTH ||
+        attr_dtype == TILEDB_DATETIME_WEEK ||
+        attr_dtype == TILEDB_DATETIME_DAY ||
+        attr_dtype == TILEDB_DATETIME_HR ||
+        attr_dtype == TILEDB_DATETIME_MIN ||
+        attr_dtype == TILEDB_DATETIME_SEC ||
+        attr_dtype == TILEDB_DATETIME_MS  ||
+        attr_dtype == TILEDB_DATETIME_US  ||
+        attr_dtype == TILEDB_DATETIME_NS  ||
+        attr_dtype == TILEDB_DATETIME_PS  ||
+        attr_dtype == TILEDB_DATETIME_FS  ||
+        attr_dtype == TILEDB_DATETIME_AS) {
+        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+    } else if (attr_dtype == TILEDB_CHAR ||
+               attr_dtype == TILEDB_STRING_ASCII) {
+        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
         uint64_t num = static_cast<uint64_t>(ncells);
         if (ncells == R_NaInt) {
             num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
         }
         attr->set_cell_val_num(num);
-    } else if (attr_dtype == TILEDB_STRING_ASCII) {
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, TILEDB_STRING_ASCII));
-        uint64_t num = static_cast<uint64_t>(ncells);
-        if (ncells == R_NaInt) {
-            num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
-        }
-        attr->set_cell_val_num(num);
-    } else if (attr_dtype == TILEDB_DATETIME_YEAR ||
-               attr_dtype == TILEDB_DATETIME_MONTH ||
-               attr_dtype == TILEDB_DATETIME_WEEK ||
-               attr_dtype == TILEDB_DATETIME_DAY ||
-               attr_dtype == TILEDB_DATETIME_HR ||
-               attr_dtype == TILEDB_DATETIME_MIN ||
-               attr_dtype == TILEDB_DATETIME_SEC ||
-               attr_dtype == TILEDB_DATETIME_MS  ||
-               attr_dtype == TILEDB_DATETIME_US  ||
-               attr_dtype == TILEDB_DATETIME_NS  ||
-               attr_dtype == TILEDB_DATETIME_PS  ||
-               attr_dtype == TILEDB_DATETIME_FS  ||
-               attr_dtype == TILEDB_DATETIME_AS) {
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
-    } else if (attr_dtype == TILEDB_INT64  ||
-               attr_dtype == TILEDB_UINT64 ||
-               attr_dtype == TILEDB_UINT32 ||
-               attr_dtype == TILEDB_INT16  ||
-               attr_dtype == TILEDB_UINT16 ||
-               attr_dtype == TILEDB_INT8   ||
-               attr_dtype == TILEDB_UINT8    ) {
-        attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
     } else if (attr_dtype == TILEDB_BOOL) {
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
@@ -1609,14 +1568,14 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_create(XPtr<tiledb::Context> ctx, std::string atstr) {
   check_xptr_tag<tiledb::Context>(ctx);
   auto at = _string_to_tiledb_array_type(atstr);
-  auto ptr = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), at));
+  auto ptr = new tiledb::ArraySchema(*ctx.get(), at);
   return make_xptr<tiledb::ArraySchema>(ptr);
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx, std::string uri) {
     check_xptr_tag<tiledb::Context>(ctx);
-    auto ptr = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri));
+    auto ptr = new tiledb::ArraySchema(*ctx.get(), uri);
     return make_xptr<tiledb::ArraySchema>(ptr);
 }
 
@@ -1625,8 +1584,8 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
                                                                std::string uri,
                                                                std::string key) {
   check_xptr_tag<tiledb::Context>(ctx);
-  auto p = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
-                                                       key.data(), (uint32_t) key.size()));
+  auto p = new tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
+                                   key.data(), (uint32_t) key.size());
   return make_xptr<tiledb::ArraySchema>(p);
 }
 
@@ -1859,10 +1818,10 @@ XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx) {
 #if TILEDB_VERSION >= TileDB_Version(2,4,0)
     check_xptr_tag<tiledb::Context>(ctx);
-    auto p = new tiledb::ArraySchemaEvolution(tiledb::ArraySchemaEvolution(*ctx.get()));
+    auto p = new tiledb::ArraySchemaEvolution(*ctx.get());
     auto ptr = make_xptr<tiledb::ArraySchemaEvolution>(p);
 #else
-    auto p = new tiledb::ArraySchemaEvolution(tiledb::ArraySchemaEvolution()); // placeholder
+    auto p = new tiledb::ArraySchemaEvolution(); // placeholder
     auto ptr = make_xptr<tiledb::ArraySchemaEvolution>(p);
 #endif
     return ptr;
@@ -1935,7 +1894,7 @@ XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string 
                                          std::string type) {
   check_xptr_tag<tiledb::Context>(ctx);
   auto query_type = _string_to_tiledb_query_type(type);
-  return make_xptr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type)));
+  return make_xptr<tiledb::Array>(new tiledb::Array(*ctx.get(), uri, query_type));
 }
 
 // [[Rcpp::export]]
@@ -1945,7 +1904,7 @@ XPtr<tiledb::Array> libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::stri
   auto query_type = _string_to_tiledb_query_type(type);
   // get timestamp as seconds since epoch (plus fractional seconds, returns double), scale to millisec
   uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
-  auto ptr = new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type, ts_ms));
+  auto ptr = new tiledb::Array(*ctx.get(), uri, query_type, ts_ms);
   return make_xptr<tiledb::Array>(ptr);
 }
 
@@ -1967,9 +1926,9 @@ XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, 
   check_xptr_tag<tiledb::Context>(ctx);
   auto query_type = _string_to_tiledb_query_type(type);
   uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
-  return make_xptr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
-                                                                  TILEDB_AES_256_GCM, enc_key.data(),
-                                                                  (uint32_t)enc_key.size(), ts_ms)));
+  return make_xptr<tiledb::Array>(new tiledb::Array(*ctx.get(), uri, query_type,
+                                                    TILEDB_AES_256_GCM, enc_key.data(),
+                                                    (uint32_t)enc_key.size(), ts_ms));
 }
 
 // [[Rcpp::export]]
@@ -2463,7 +2422,7 @@ XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx,
   check_xptr_tag<tiledb::Context>(ctx);
   check_xptr_tag<tiledb::Array>(array);
   auto query_type = _string_to_tiledb_query_type(type);
-  auto ptr = new tiledb::Query(tiledb::Query(*ctx.get(), *array.get(), query_type));
+  auto ptr = new tiledb::Query(*ctx.get(), *array.get(), query_type);
   return make_xptr<tiledb::Query>(ptr);
 }
 
