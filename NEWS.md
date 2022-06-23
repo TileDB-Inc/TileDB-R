@@ -1,3 +1,38 @@
+# tiledb 0.14.0
+
+* This release of the R package builds against [TileDB 2.10.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.10.0), and has also been tested against earlier releases as well as the development version.
+
+## Improvements
+
+* Use of TileDB Embedded was upgraded to release 2.10.0 (#432) following earlier updates to 2.9.1 (#415), 2.9.2 (#419), 2.9.3 (#422), 2.9.4 (#427) and 2.9.5 (#430)
+
+* The BOOL data type is now supported (#416)
+
+* Query conditions support was extended with support for an OR operator (#417)
+
+* An incomplete query result is now signaled via a warning message (#420)
+
+* A helper function was added to check if an Array is open (#421)
+
+* Batched queries are now supported given the user the possibility to process larger-than-memory result sets in parts (#429)
+
+* Some internal object creation code was refactored (#431)
+
+## Bug Fixes
+
+* The `attr` setter for Attributes was corrected to support NA settings (#425)
+
+## Build and Test Systems
+
+* Filter compression tests are skipped on systems lacking AVX2 support (#418)
+
+* The build system now checks for C++17 support (#424)
+
+* The valgrind test was upgraded to release 2.9.3 and the 2.10 release branch (#426)
+
+* Tests for overlapping ranges have been added (#428)
+
+
 # tiledb 0.13.0
 
 * This release of the R package builds against [TileDB 2.9.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.9.0), and has also been tested against earlier releases as well as the development version.
