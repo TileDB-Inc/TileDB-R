@@ -1434,3 +1434,18 @@ set_allocation_size_preference(256)     # too low for penguins to return somethi
 array <- tiledb_array(uri, as.data.frame=TRUE)
 expect_warning(res <- array[])          # warning emitted
 expect_equal(attr(res, "query_status"), "INCOMPLETE") # and query status reported
+
+
+## check for batched operation
+set_allocation_size_preference(1024)
+arr <- tiledb_array(uri, as.data.frame=TRUE)
+lst <- tiledb:::createBatched(arr)
+res1 <- tiledb:::fetchBatched(arr, lst)
+expect_false(completedBatched(lst))
+res2 <- tiledb:::fetchBatched(arr, lst)
+expect_false(completedBatched(lst))
+res3 <- tiledb:::fetchBatched(arr, lst)
+expect_false(completedBatched(lst))
+res4 <- tiledb:::fetchBatched(arr, lst)
+expect_true(completedBatched(lst))
+expect_equal(nrow(res1) + nrow(res2) + nrow(res3) + nrow(res4), 344)
