@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,6 +74,7 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>object</dt>
 <dd><p><code>tiledb_config</code> object</p></dd>
+
 </dl></div>
 
     <div class="section level2">
@@ -85,6 +86,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "config.env_var_prefix" : "TILEDB_"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "config.logging_format" : "DEFAULT"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "config.logging_level" : "0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "filestore.buffer_size" : "104857600"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "rest.curl.verbose" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "rest.http_compressor" : "any"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "rest.retry_count" : "25"</span>
@@ -106,7 +108,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.consolidation.steps" : "4294967295"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.consolidation.timestamp_end" : "18446744073709551615"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.consolidation.timestamp_start" : "0"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.consolidation.with_timestamps" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.dedup_coords" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.enable_signal_handlers" : "true"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.encryption_key" : ""</span>
@@ -135,8 +136,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.skip_est_size_partitioning" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.tile_cache_size" : "10000000"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.vacuum.mode" : "fragments"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.vacuum.timestamp_end" : "18446744073709551615"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.vacuum.timestamp_start" : "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.var_offsets.bitsize" : "64"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.var_offsets.extra_element" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.var_offsets.mode" : "bytes"</span>
@@ -209,7 +208,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>
