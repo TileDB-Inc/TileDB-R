@@ -36,10 +36,9 @@ The most recent released version can be installed from
     > if (!requireNamespace("remotes",quietly=TRUE)) install.packages("remotes")
     > remotes::install_github("TileDB-Inc/TileDB-R")
     ...
-    > library(tiledb)
-    > tiledb_version()
+    > tiledb::tiledb_version()
     major minor patch
-        2     6     1
+        2    10     0
     > help(package=tiledb)
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:

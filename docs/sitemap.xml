@@ -124,7 +124,13 @@
     <loc>/reference/cell_val_num-tiledb_attr-method.html</loc>
   </url>
   <url>
+    <loc>/reference/completedBatched.html</loc>
+  </url>
+  <url>
     <loc>/reference/config-tiledb_ctx-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/createBatched.html</loc>
   </url>
   <url>
     <loc>/reference/datatype-tiledb_attr-method.html</loc>
@@ -170,6 +176,9 @@
   </url>
   <url>
     <loc>/reference/extended-tiledb_array-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fetchBatched.html</loc>
   </url>
   <url>
     <loc>/reference/filter_list-set-tiledb_attr-method.html</loc>
@@ -367,6 +376,9 @@
     <loc>/reference/show-tiledb_sparse-method.html</loc>
   </url>
   <url>
+    <loc>/reference/statusBatched.html</loc>
+  </url>
+  <url>
     <loc>/reference/strings_as_factors-set-tiledb_array-method.html</loc>
   </url>
   <url>
@@ -461,6 +473,9 @@
   </url>
   <url>
     <loc>/reference/tiledb_array_is_homogeneous.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_array_is_open.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_array_open.html</loc>

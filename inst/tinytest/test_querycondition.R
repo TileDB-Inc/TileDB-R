@@ -233,12 +233,10 @@ subarr <- tiledb_array(uri, as.data.frame=TRUE,
 expect_equal(dim(subarr), c(9,3))
 
 
-## Testing OR condition
+## -- Testing OR condition
 
-## Pre-test: will return NA in case of error ie when TileDB Core does not yet have OR support
-## wrapped in 'class()' to avoid a warning of 'is.na() applied to non-list or vector S4'
-if (is.na(tryCatch(class(qc <- parse_query_condition(x3 == 1 || x4 == 2)), error = function(e) NA)))
-    exit_file("Skipping for lack of 'OR' support in TileDB")
+## Test minimal version
+if (tiledb_version(TRUE) < "2.10.0") exit_file("Remainder needs 2.10.* or later")
 
 ## Re-create penguins
 uri <- tempfile()

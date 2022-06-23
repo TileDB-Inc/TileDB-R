@@ -16,7 +16,7 @@ At present only integer or numeric attribute comparisons are implemented."><!-- 
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,21 +88,32 @@ At present only integer or numeric attribute comparisons are implemented.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>attr</dt>
 <dd><p>A character value with the scheme attribute name</p></dd>
+
+
 <dt>value</dt>
 <dd><p>A scalar value that the attribute is compared against</p></dd>
+
+
 <dt>dtype</dt>
 <dd><p>A character value with the TileDB data type of the attribute column, for
 example 'FLOAT64' or 'INT32'</p></dd>
+
+
 <dt>op</dt>
 <dd><p>A character value with then comparison operation, this must be one of
 'LT', 'LE', 'GT', 'GE', 'EQ', 'NE'.</p></dd>
+
+
 <dt>qc</dt>
 <dd><p>(optional) A 'tiledb_query_condition' object to be initialized by this call,
 if none is given a new one is allocated.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The initialized 'tiledb_query_condition' object</p>
+    
+
+<p>The initialized 'tiledb_query_condition' object</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -114,7 +125,7 @@ if none is given a new one is allocated.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

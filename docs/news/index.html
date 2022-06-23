@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,29 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.14.0" id="tiledb-0140">tiledb 0.14.0<a class="anchor" aria-label="anchor" href="#tiledb-0140"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.10.0" class="external-link">TileDB 2.10.0</a>, and has also been tested against earlier releases as well as the development version.</li></ul><div class="section level3">
+<h3 id="improvements-0-14-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-14-0"></a></h3>
+<ul><li><p>Use of TileDB Embedded was upgraded to release 2.10.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/432" class="external-link">#432</a>) following earlier updates to 2.9.1 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/415" class="external-link">#415</a>), 2.9.2 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/419" class="external-link">#419</a>), 2.9.3 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/422" class="external-link">#422</a>), 2.9.4 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/427" class="external-link">#427</a>) and 2.9.5 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/430" class="external-link">#430</a>)</p></li>
+<li><p>The BOOL data type is now supported (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/416" class="external-link">#416</a>)</p></li>
+<li><p>Query conditions support was extended with support for an OR operator (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/417" class="external-link">#417</a>)</p></li>
+<li><p>An incomplete query result is now signaled via a warning message (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/420" class="external-link">#420</a>)</p></li>
+<li><p>A helper function was added to check if an Array is open (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/421" class="external-link">#421</a>)</p></li>
+<li><p>Batched queries are now supported given the user the possibility to process larger-than-memory result sets in parts (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/429" class="external-link">#429</a>)</p></li>
+<li><p>Some internal object creation code was refactored (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/431" class="external-link">#431</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-14-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-14-0"></a></h3>
+<ul><li>The <code>attr</code> setter for Attributes was corrected to support NA settings (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/425" class="external-link">#425</a>)</li></ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-14-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-14-0"></a></h3>
+<ul><li><p>Filter compression tests are skipped on systems lacking AVX2 support (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/418" class="external-link">#418</a>)</p></li>
+<li><p>The build system now checks for C++17 support (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/424" class="external-link">#424</a>)</p></li>
+<li><p>The valgrind test was upgraded to release 2.9.3 and the 2.10 release branch (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/426" class="external-link">#426</a>)</p></li>
+<li><p>Tests for overlapping ranges have been added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/428" class="external-link">#428</a>)</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.13.0" id="tiledb-0130">tiledb 0.13.0<a class="anchor" aria-label="anchor" href="#tiledb-0130"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.9.0" class="external-link">TileDB 2.9.0</a>, and has also been tested against earlier releases as well as the development version.</li></ul><div class="section level3">
@@ -472,9 +495,9 @@
 <h2 class="pkg-version" data-toc-text="0.5.0" id="tiledb-050">tiledb 0.5.0<a class="anchor" aria-label="anchor" href="#tiledb-050"></a></h2>
 <ul><li>This release of the R package builds against the 1.7.5 releases of TileDB.</li></ul><div class="section level3">
 <h3 id="improvements-0-5-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-5-0"></a></h3>
-<ul><li>Added support for i) multi-range subarrays, ii) incomplete queries,<ol start="3" style="list-style-type: lower-roman"><li>result size estimation and ‘time travel’ at to time-points has been added <a href="https://github.com/TileDB-Inc/TileDB-R/pull/105" class="external-link">#105</a>
+<ul><li>Added support for i) multi-range subarrays, ii) incomplete queries,<ol start="3" style="list-style-type: lower-roman"><li>result size estimation and ‘time travel’ at to time-points has been added <a href="https://github.com/TileDB-Inc/TileDB-R/pull/105" class="external-link"></a><a href="https://github.com/TileDB-Inc/TileDB-R/issues/105" class="external-link">#105</a>
 </li></ol></li>
-<li>Added additional support for metadata <a href="https://github.com/TileDB-Inc/TileDB-R/pull/105" class="external-link">#106</a>
+<li>Added additional support for metadata <a href="https://github.com/TileDB-Inc/TileDB-R/pull/105" class="external-link"></a><a href="https://github.com/TileDB-Inc/TileDB-R/issues/106" class="external-link">#106</a>
 </li>
 </ul></div>
 </div>
@@ -493,7 +516,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>
