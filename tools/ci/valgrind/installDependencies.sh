@@ -3,37 +3,33 @@
 set -u
 
 echo "::group::Set up apt"
-# Refresh repo content 
+# Refresh repo content
 apt update -qq
 
 # Install packages for add-apt-repository
 export DEBIAN_FRONTEND=noninteractive
-apt install --yes --no-install-recommends software-properties-common dirmngr wget
-
-# Get repo signing keys for R at CRAN and cran2deb4ubuntu, and for edd/misc
-for key in C9A7585B49D51698710F3A115E25F516B04C661B E298A3A825C0D65DFD57CBB651716619E084DAB9 39A90F2E6D5DCC5DFB39462B67C2D66C4B1D4339; do
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${key}
-    gpg -a --export ${key} | apt-key add -
-done
-# Add R builds mirrored at CRAN 
-#add-apt-repository --yes "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
-add-apt-repository --yes ppa:marutter/rrutter4.0
-# Add 'cran2deb4ubuntu' repo with 5k CRAN binaries
-add-apt-repository --yes ppa:c2d4u.team/c2d4u4.0+
-# Add PPA with some AWS SDK packaging to skip AWS SDK build
-add-apt-repository --yes ppa:edd/misc
+# Install with recommends to get ca-certificates as well
+apt install --yes wget
+# marutter key
+wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran.asc
+echo "deb [arch=amd64] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" > /etc/apt/sources.list.d/cranubuntu.list
+# edd key and cranapt / r2u for CRAN binaries
+wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_key.asc | tee -a /etc/apt/trusted.gpg.d/cranapt_key.asc
+echo "deb [arch=amd64] https://dirk.eddelbuettel.com/cranapt jammy main" > /etc/apt/sources.list.d/cranapt.list
+# edd launchpad key and launchpad PPA for AWS packages
+wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_launchpad_ppa_key.asc | tee -a /etc/apt/trusted.gpg.d/eddppa_key.asc
+echo "deb [arch=amd64] http://ppa.launchpad.net/edd/misc/ubuntu jammy main" > /etc/apt/sources.list.d/eddppa.list
 
 # Refresh repo content metadata again
 apt update -qq
 echo "::endgroup::"
 
 
-
 echo "::group::Install Binary Packages"
 # Install and skip recommended packages
 apt install --yes --no-install-recommends \
-    git \
     cmake \
+    git \
     libaws-c-common-dev \
     libaws-c-event-stream-dev \
     libaws-checksums-dev \
@@ -44,18 +40,11 @@ apt install --yes --no-install-recommends \
     libspdlog-dev \
     libssl-dev \
     libzstd-dev \
+    python3-dbus \
+    python3-apt \
     r-base-dev \
-    r-cran-bit64 \
-    r-cran-curl \
-    r-cran-data.table \
     r-cran-littler \
-    r-cran-matrix \
-    r-cran-palmerpenguins \
-    r-cran-rcpp \
-    r-cran-tibble \
-    r-cran-tinytest \
-    r-cran-zoo \
-    valgrind 
+    valgrind
 
 apt clean
 
@@ -66,24 +55,33 @@ done
 echo "::endgroup::"
 
 
+echo "::group::Install BSPM"
+Rscript -e 'install.packages("bspm")'
+export RHOME=$(R RHOME)
+echo "suppressMessages(bspm::enable())" >> ${RHOME}/etc/Rprofile.site
+echo "options(bspm.sudo=TRUE)" >> ${RHOME}/etc/Rprofile.site
 
-echo "::group::Install R Packages"
-# Some R packages not (yet) available as binaries
-install.r nanotime nycflights13 simplermarkdown
-
-## Not:
-#    r-cran-bookdown \
-#    r-cran-knitr \
-#    r-cran-rmarkdown \
-#    r-cran-testthat \
-#    libv8-dev \
+## Pinning for cran2apt to resolve some package r-cran-* package versions issues in the distro
+echo "Package: *" > /etc/apt/preferences.d/99cranapt
+echo "Pin: release o=CRAN-Apt Project" >> /etc/apt/preferences.d/99cranapt
+echo "Pin: release l=CRAN-Apt Packages" >> /etc/apt/preferences.d/99cranapt
+echo "Pin-Priority: 700"  >> /etc/apt/preferences.d/99cranapt
 echo "::endgroup::"
 
 
-echo "::group::Install cmake"
-# deal with cmake
-wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
-echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
-apt-get update -qq
-apt install --yes --no-install-recommends cmake
+echo "::group::Install R Packages"
+# This relies on bspm and installs binaries (i.e. r-cran-* packages)
+install.r \
+    bit64 \
+    curl \
+    data.table \
+    Matrix \
+    nanotime \
+    nycflights13 \
+    palmerpenguins \
+    Rcpp \
+    simplermarkdown \
+    tibble \
+    tinytest \
+    zoo
 echo "::endgroup::"

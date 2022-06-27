@@ -6,7 +6,7 @@ for suffix in Rout Rout.fail; do
         echo ""
         echo "** Using ${suffix}"
         echo ""
-        cat tiledb.Rcheck/tests/tinytest.Rout
+        cat tiledb.Rcheck/tests/tinytest.${suffix}
     fi
 done
 
