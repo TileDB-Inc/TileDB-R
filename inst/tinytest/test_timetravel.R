@@ -130,6 +130,8 @@ expect_true(length(ndircons2) < length(ndircons))
 
 ## earlier time travel test recast via timestamp_{start,end}
 ## time travel
+if (Sys.getenv("CI") != "") exit_file("Skip remainder")
+
 tmp <- tempfile()
 dir.create(tmp)
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 5L, "INT32"),
