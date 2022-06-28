@@ -813,8 +813,29 @@ setMethod("[", "tiledb_array",
           }
           reslist <- mapply(getResult, buflist, allnames, allvarnum,
                             MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-          ## convert list into data.frame (cheaply) and subset
-          res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
+
+          ## convert list into data.frame (possibly dealing with list columns) and subset
+          vnum <- 1   # default value of variable number of elements per cell
+          if (is.list(allvarnum)) allvarnum <- unlist(allvarnum)
+          vnum <- max(allvarnum, na.rm=TRUE)
+          if (is.finite(vnum) && (vnum > 1)) {
+              ## turn to list col if a varnum != 1 (and not NA) seen
+              ind <- which(allvarnum != 1 & !is.na(allvarnum))
+              for (k in ind) {
+                  v <- reslist[[k]][seq_len(resrv)]
+                  ## see https://stackoverflow.com/a/9547594/143305 for I()
+                  ## and https://stackoverflow.com/a/3321659/143305 for split()
+                  reslist[[k]] <- I(unname(split(v, ceiling(seq_along(v)/vnum))))
+              }
+              for (k in seq_along(reslist)) {
+                  if (length(reslist[[k]]) >= resrv) {
+                      reslist[[k]] <- reslist[[k]][seq_len(resrv/vnum)]
+                  }
+              }
+              res <- data.frame(reslist)[,,drop=FALSE]
+          } else {
+              res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
+          }
           colnames(res) <- allnames
           #if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
           overallresults[[counter]] <- res
