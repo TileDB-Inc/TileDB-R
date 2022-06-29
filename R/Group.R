@@ -278,10 +278,9 @@ tiledb_group_add_member <- function(grp, uri, relative, name=NULL) {
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
 ##' @param uri A character value with a the URI of the member to be removed, or (if added
 ##' with a name) the name of the member
-##' @param relative A boolean variables describing absolute or relative (to group) uri use
 ##' @return The TileDB Group object, invisibly
 ##' @export
-tiledb_group_remove_member <- function(grp, uri, relative) {
+tiledb_group_remove_member <- function(grp, uri) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "The 'uri' argument must be character" = is.character(uri),
               "This function needs TileDB 2.8.*" = .tiledb28())
