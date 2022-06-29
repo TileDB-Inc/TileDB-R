@@ -4,15 +4,13 @@
 \alias{tiledb_group_remove_member}
 \title{Remove Member from TileDB Group}
 \usage{
-tiledb_group_remove_member(grp, uri, relative)
+tiledb_group_remove_member(grp, uri)
 }
 \arguments{
 \item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
 
 \item{uri}{A character value with a the URI of the member to be removed, or (if added
 with a name) the name of the member}
-
-\item{relative}{A boolean variables describing absolute or relative (to group) uri use}
 }
 \value{
 The TileDB Group object, invisibly
