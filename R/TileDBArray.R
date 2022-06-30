@@ -819,13 +819,18 @@ setMethod("[", "tiledb_array",
           if (is.list(allvarnum)) allvarnum <- unlist(allvarnum)
           vnum <- max(allvarnum, na.rm=TRUE)
           if (is.finite(vnum) && (vnum > 1)) {
+              ## we know the length of returned data for all columns (resrv) and the max
+              ## of ncells so we can infer to length of columns with ncells==1
+              lengthguess <- resrv/vnum
               ## turn to list col if a varnum != 1 (and not NA) seen
               ind <- which(allvarnum != 1 & !is.na(allvarnum))
               for (k in ind) {
-                  v <- reslist[[k]][seq_len(resrv)]
+                  ncells <- allvarnum[k]
+                  currcollength <- ncells * lengthguess
+                  v <- reslist[[k]][seq_len(currcollength)]
                   ## see https://stackoverflow.com/a/9547594/143305 for I()
                   ## and https://stackoverflow.com/a/3321659/143305 for split()
-                  reslist[[k]] <- I(unname(split(v, ceiling(seq_along(v)/vnum))))
+                  reslist[[k]] <- I(unname(split(v, ceiling(seq_along(v)/ncells))))
               }
               for (k in seq_along(reslist)) {
                   if (length(reslist[[k]]) >= resrv) {
