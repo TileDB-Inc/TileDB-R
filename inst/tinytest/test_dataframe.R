@@ -328,3 +328,14 @@ arr2 <- tiledb_array(uri, return_as="data.frame")
 res2 <- arr2[]
 attr(res2, "query_status") <- NULL
 expect_equal(D, res2)
+
+
+## list columns
+D <- data.frame(a=1:5,
+                b=I(split(1:10, ceiling((1:10)/2))),
+                c=I(split(101:115, ceiling((1:15)/3))))
+uri <- tempfile()
+fromDataFrame(D, uri, col_index=1)
+arr <- tiledb_array(uri, return_as="data.frame")
+res <- arr[]
+expect_equivalent(res, D)
