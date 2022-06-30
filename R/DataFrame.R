@@ -177,7 +177,14 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
 
     makeAttr <- function(ind) {
         col <- obj[,ind]
-        cl <- class(col)[1]
+        if (inherits(col, "AsIs")) {
+            ## we just look at the first list column, others have to have same type and length
+            cl <- class(obj[,ind][[1]])
+            nc <- length(obj[,ind][[1]])
+        } else {
+            cl <- class(col)[1]
+            nc <- 1
+        }
         if (cl == "integer")
             tp <- "INT32"
         else if (cl == "numeric")
@@ -201,7 +208,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         }
         tiledb_attr(colnames(obj)[ind],
                     type = tp,
-                    ncells = ifelse(tp %in% c("CHAR","ASCII"), NA_integer_, 1),
+                    ncells = if (tp %in% c("CHAR","ASCII")) NA_integer_ else nc,
                     filter_list = filterlist,
                     nullable = any(is.na(col)))
     }
