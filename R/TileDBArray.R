@@ -796,51 +796,43 @@ setMethod("[", "tiledb_array",
               break
           }
           ## get results
-          getResult <- function(buf, name, varnum, resrv, qryptr) {
+          getResult <- function(buf, name, varnum, estsz, qryptr) {
               has_dumpbuffers <- length(x@dumpbuffers) > 0
+              #message("For ", name, " seeing ", estsz)
               if (is.na(varnum)) {
                   vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
                   if (has_dumpbuffers) {
                       vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
                   }
-                  libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+                  libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1][seq_len(estsz)]
               } else {
                   if (has_dumpbuffers) {
-                      vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
+                      vecbuf_to_shmem(x@dumpbuffers, name, buf, estsz)
                   }
-                  libtiledb_query_get_buffer_ptr(buf, asint64)
+                  libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
               }
           }
-          reslist <- mapply(getResult, buflist, allnames, allvarnum,
-                            MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-
+          reslist <- mapply(getResult, buflist, allnames, allvarnum, estsz,
+                            MoreArgs=list(qryptr=qryptr), SIMPLIFY=FALSE)
           ## convert list into data.frame (possibly dealing with list columns) and subset
           vnum <- 1   # default value of variable number of elements per cell
           if (is.list(allvarnum)) allvarnum <- unlist(allvarnum)
           vnum <- max(allvarnum, na.rm=TRUE)
           if (is.finite(vnum) && (vnum > 1)) {
-              ## we know the length of returned data for all columns (resrv) and the max
-              ## of ncells so we can infer to length of columns with ncells==1
-              lengthguess <- resrv/vnum
               ## turn to list col if a varnum != 1 (and not NA) seen
               ind <- which(allvarnum != 1 & !is.na(allvarnum))
               for (k in ind) {
                   ncells <- allvarnum[k]
-                  currcollength <- ncells * lengthguess
-                  v <- reslist[[k]][seq_len(currcollength)]
+                  v <- reslist[[k]]
+                  ## we split a vector v into 'list-columns' which element containing
+                  ## ncells value (and we get ncells from the Array schema)
                   ## see https://stackoverflow.com/a/9547594/143305 for I()
                   ## and https://stackoverflow.com/a/3321659/143305 for split()
                   reslist[[k]] <- I(unname(split(v, ceiling(seq_along(v)/ncells))))
               }
-              for (k in seq_along(reslist)) {
-                  if (length(reslist[[k]]) >= resrv) {
-                      reslist[[k]] <- reslist[[k]][seq_len(resrv/vnum)]
-                  }
-              }
-              res <- data.frame(reslist)[,,drop=FALSE]
-          } else {
-              res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
           }
+          ## the list columns are now all of equal lenthth as R needs and we can form a data.frame
+          res <- data.frame(reslist)[,,drop=FALSE]
           colnames(res) <- allnames
           #if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
           overallresults[[counter]] <- res
