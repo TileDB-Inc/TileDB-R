@@ -168,7 +168,6 @@ for (i in seq_len(dim(df)[2])) {
 uri <- tempfile()
 set.seed(42)
 nobs <- 50L
-set.seed(42)
 df <- data.frame(time = round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range = seq(-1000, 1000, length=nobs),
                  int_vals = sort(as.integer(runif(nobs)*1e9)),
@@ -328,3 +327,14 @@ arr2 <- tiledb_array(uri, return_as="data.frame")
 res2 <- arr2[]
 attr(res2, "query_status") <- NULL
 expect_equal(D, res2)
+
+
+## list columns
+D <- data.frame(a=1:5,
+                b=I(split(1:10, ceiling((1:10)/2))),
+                c=I(split(101:115, ceiling((1:15)/3))))
+uri <- tempfile()
+fromDataFrame(D, uri, col_index=1)
+arr <- tiledb_array(uri, return_as="data.frame")
+res <- arr[]
+expect_equivalent(res, D)

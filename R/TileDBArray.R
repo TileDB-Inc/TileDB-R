@@ -796,25 +796,43 @@ setMethod("[", "tiledb_array",
               break
           }
           ## get results
-          getResult <- function(buf, name, varnum, resrv, qryptr) {
+          getResult <- function(buf, name, varnum, estsz, qryptr) {
               has_dumpbuffers <- length(x@dumpbuffers) > 0
+              #message("For ", name, " seeing ", estsz)
               if (is.na(varnum)) {
                   vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
                   if (has_dumpbuffers) {
                       vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
                   }
-                  libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
+                  libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1][seq_len(estsz)]
               } else {
                   if (has_dumpbuffers) {
-                      vecbuf_to_shmem(x@dumpbuffers, name, buf, resrv)
+                      vecbuf_to_shmem(x@dumpbuffers, name, buf, estsz)
                   }
-                  libtiledb_query_get_buffer_ptr(buf, asint64)
+                  libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
               }
           }
-          reslist <- mapply(getResult, buflist, allnames, allvarnum,
-                            MoreArgs=list(resrv=resrv, qryptr=qryptr), SIMPLIFY=FALSE)
-          ## convert list into data.frame (cheaply) and subset
-          res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
+          reslist <- mapply(getResult, buflist, allnames, allvarnum, estsz,
+                            MoreArgs=list(qryptr=qryptr), SIMPLIFY=FALSE)
+          ## convert list into data.frame (possibly dealing with list columns) and subset
+          vnum <- 1   # default value of variable number of elements per cell
+          if (is.list(allvarnum)) allvarnum <- unlist(allvarnum)
+          vnum <- max(allvarnum, na.rm=TRUE)
+          if (is.finite(vnum) && (vnum > 1)) {
+              ## turn to list col if a varnum != 1 (and not NA) seen
+              ind <- which(allvarnum != 1 & !is.na(allvarnum))
+              for (k in ind) {
+                  ncells <- allvarnum[k]
+                  v <- reslist[[k]]
+                  ## we split a vector v into 'list-columns' which element containing
+                  ## ncells value (and we get ncells from the Array schema)
+                  ## see https://stackoverflow.com/a/9547594/143305 for I()
+                  ## and https://stackoverflow.com/a/3321659/143305 for split()
+                  reslist[[k]] <- I(unname(split(v, ceiling(seq_along(v)/ncells))))
+              }
+          }
+          ## the list columns are now all of equal lenthth as R needs and we can form a data.frame
+          res <- data.frame(reslist)[,,drop=FALSE]
           colnames(res) <- allnames
           #if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
           overallresults[[counter]] <- res
@@ -1118,10 +1136,14 @@ setMethod("[<-", "tiledb_array",
         buflist[[k]] <- libtiledb_query_buffer_var_char_create(txtvec, allnullable[k])
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[k]])
       } else {
-        nr <- NROW(value[[k]])
-        #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr, "null:", allnullable[i], "asint64:", asint64, "\n")
+        col <- value[[k]]
+        if (is.list(col)) {
+            col <- unname(do.call(c, col))
+        }
+        nr <- NROW(col)
+        # cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr, "null:", allnullable[i], "asint64:", asint64, "\n")
         buflist[[k]] <- libtiledb_query_buffer_alloc_ptr(alltypes[k], nr, allnullable[k])
-        buflist[[k]] <- libtiledb_query_buffer_assign_ptr(buflist[[k]], alltypes[k], value[[k]], asint64)
+        buflist[[k]] <- libtiledb_query_buffer_assign_ptr(buflist[[k]], alltypes[k], col, asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[k]])
       }
     }

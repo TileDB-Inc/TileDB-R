@@ -1327,6 +1327,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
         attr_dtype == TILEDB_DATETIME_FS  ||
         attr_dtype == TILEDB_DATETIME_AS) {
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
+        attr->set_cell_val_num(static_cast<uint64_t>(ncells));
     } else if (attr_dtype == TILEDB_CHAR ||
                attr_dtype == TILEDB_STRING_ASCII) {
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
