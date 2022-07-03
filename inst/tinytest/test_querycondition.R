@@ -4,6 +4,8 @@ library(tiledb)
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
 
+if (Sys.getenv("_RUNNING_UNDER_VALGRIND_", "FALSE") == "TRUE") exit_file("Skipping under valgrind")
+
 ctx <- tiledb_ctx(limitTileDBCores())
 
 if (tiledb_version(TRUE) < "2.3.0") exit_file("TileDB Query Condition requires TileDB 2.3.* or greater")
