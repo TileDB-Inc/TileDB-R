@@ -33,3 +33,18 @@ pathroot <- file.path("/", "dev", "shm", "penguins", "buffers", "data")
 arr@buffers <- sapply(colnames(v3), function(x) file.path(pathroot, x), simplify=FALSE)
 v4 <- arr[]
 expect_true(all.equal(v3, v4))
+
+## list columns
+D <- data.frame(a=1:5,
+                b=I(split(c(1:4,NA,NA,7:10), ceiling((1:10)/2))),
+                c=I(split(c(101:109, NA, NA, NA, 113:115), ceiling((1:15)/3))))
+uri <- tempfile()
+fromDataFrame(D, uri, col_index=1)
+arr <- tiledb_array(uri, return_as="data.frame")
+arr@dumpbuffers <- "listcols"
+v5 <- arr[]
+arr@dumpbuffers <- character()          			# turn buffer store off again
+pathroot <- file.path("/", "dev", "shm", "listcols", "buffers", "data")
+arr@buffers <- sapply(colnames(v5), function(x) file.path(pathroot, x), simplify=FALSE)
+v6 <- arr[]
+expect_true(all.equal(v5, v6))

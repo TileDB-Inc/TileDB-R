@@ -331,8 +331,8 @@ expect_equal(D, res2)
 
 ## list columns
 D <- data.frame(a=1:5,
-                b=I(split(1:10, ceiling((1:10)/2))),
-                c=I(split(101:115, ceiling((1:15)/3))))
+                b=I(split(c(1:4,NA,NA,7:10), ceiling((1:10)/2))),
+                c=I(split(c(101:109, NA, NA, NA, 113:115), ceiling((1:15)/3))))
 uri <- tempfile()
 fromDataFrame(D, uri, col_index=1)
 arr <- tiledb_array(uri, return_as="data.frame")

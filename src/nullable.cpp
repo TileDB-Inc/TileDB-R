@@ -25,79 +25,108 @@
 // In principle, the following functions could be templated. In practive it is a little
 // harder as the NA values are not IEEE 754 generic (beyond double)
 
-void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int getter.", vec.size(), map.size());
+void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in int getter.", vec.size(), nc * map.size());
 
-    for (auto i=0; i < vec.size(); i++)
-        map[i] = (vec[i] == R_NaInt) ? 0 : 1;
-}
-
-void setValidityMapForInteger(Rcpp::IntegerVector & vec, const std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int setter.", vec.size(), map.size());
-
-    for (auto i=0; i < vec.size(); i++)
-        if (map[i] == 0)
-            vec[i] = R_NaInt;
-}
-
-void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in numeric getter.", vec.size(), map.size());
-
-    for (auto i=0; i < vec.size(); i++) {
-        // see R_ext/Arith.h: true for both NA and NaN
-        map[i] = (R_isnancpp(vec[i])) ? 0 : 1;
+    for (auto i=0; i < vec.size(); i += nc) {
+        uint8_t m = 1;  // default to no NA/NaN
+        for (auto j=0; j<nc && m==1; j++) {
+            if (vec[i + j] == R_NaInt) {
+                m = 0;
+            }
+        }
+        map[i / nc] = m;
     }
 }
 
-void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in numeric setter.", vec.size(), map.size());
+void setValidityMapForInteger(Rcpp::IntegerVector & vec, const std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in int setter.", vec.size(), nc * map.size());
 
     for (auto i=0; i < vec.size(); i++)
-        if (map[i] == 0)
+        if (map[i/nc] == 0)
+            vec[i] = R_NaInt;
+}
+
+void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in numeric getter.", vec.size(), nc * map.size());
+
+    for (auto i=0; i < vec.size(); i += nc) {
+        uint8_t m = 1;  // default to no NA/NaN
+        for (auto j=0; j<nc && m==1; j++) {
+            // see R_ext/Arith.h: true for both NA and NaN
+            if (R_isnancpp(vec[i + j])) {
+                m = 0;
+            }
+        }
+        map[i / nc] = m;
+        //Rprintf("getMap (%d) vec %f map %d\n", i, vec[i], map[i/nc]);
+    }
+}
+
+void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in numeric setter.", vec.size(), nc * map.size());
+
+    for (auto i=0; i < vec.size(); i++) {
+        if (map[i/nc] == 0)
             vec[i] = R_NaReal;
+        //Rprintf("setMap (%d) vec %f map %d\n", i, vec[i], map[i/nc]);
+    }
 }
 
 // as defined in the bit64 package file integer64.h
 #define NA_INTEGER64 LLONG_MIN
 #define ISNA_INTEGER64(X)((X)==NA_INTEGER64)
 
-void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int64 getter.", vec.size(), map.size());
+void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in int64 getter.", vec.size(), nc * map.size());
 
     std::vector<int64_t> ivec = getInt64Vector(vec);
 
-    for (auto i=0; i < vec.size(); i++) {
-        map[i] = (ISNA_INTEGER64(ivec[i])) ? 0 : 1;
+    for (auto i=0; i < vec.size(); i += nc) {
+        uint8_t m = 1;  // default to no NA/NaN
+        for (auto j=0; j<nc && m==1; j++) {
+            if (ISNA_INTEGER64(ivec[i + j])) {
+                m = 0;
+            }
+        }
+        map[i / nc] = m;
     }
 }
 
-void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int64 setter.", vec.size(), map.size());
+void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in int64 setter.", vec.size(), nc * map.size());
 
     for (size_t i=0; i < vec.size(); i++)
-        if (map[i] == 0)
+        if (map[i/nc] == 0)
             vec[i] = NA_INTEGER64;
 }
 
-void getValidityMapFromLogical(Rcpp::LogicalVector & vec, std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int getter.", vec.size(), map.size());
+void getValidityMapFromLogical(Rcpp::LogicalVector & vec, std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in int getter.", vec.size(), nc * map.size());
 
-    for (auto i=0; i < vec.size(); i++)
-        map[i] = (vec[i] == NA_LOGICAL) ? 0 : 1;
+    for (auto i=0; i < vec.size(); i += nc) {
+        uint8_t m = 1;  // default to no NA/NaN
+        for (auto j=0; j<nc && m==1; j++) {
+            if (vec[i + j] == NA_LOGICAL) {
+                m = 0;
+            }
+        }
+        map[i / nc] = m;
+    }
 }
 
-void setValidityMapForLogical(Rcpp::LogicalVector & vec, const std::vector<uint8_t> & map) {
-    if (static_cast<size_t>(vec.size()) != map.size())
-        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int setter.", vec.size(), map.size());
+void setValidityMapForLogical(Rcpp::LogicalVector & vec, const std::vector<uint8_t> & map, const int32_t nc) {
+    if (static_cast<size_t>(vec.size()) != nc * map.size())
+        Rcpp::stop("Unequal length between vector (%d) and map (%d) in int setter.", vec.size(), nc * map.size());
 
     for (auto i=0; i < vec.size(); i++)
-        if (map[i] == 0)
+        if (map[i/nc] == 0)
             vec[i] = NA_LOGICAL;
 }

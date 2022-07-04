@@ -109,14 +109,14 @@ void read_string(std::string bufferpath, std::string & str) {
 
 
 // [[Rcpp::export]]
-void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz) {
+void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz, int numvar) {
 #ifdef __linux__
     check_xptr_tag<query_buf_t>(buf);
     std::string bufferpath = _datafile(dir, name);
     write_buffer(bufferpath, sz, buf->size, buf->vec.data());
     if (buf->nullable) {
         std::string validitypath = _validityfile(dir, name);
-        write_buffer(validitypath, sz, sizeof(uint8_t), buf->validity_map.data());
+        write_buffer(validitypath, numvar, sizeof(uint8_t), buf->validity_map.data());
     }
 #endif
 }
@@ -146,6 +146,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
     buf->dtype = _string_to_tiledb_datatype(dtype);
     buf->size = static_cast<int32_t>(tiledb_datatype_size(_string_to_tiledb_datatype(dtype)));
     buf->nullable = false; // default, overriden if buffer in validity path seen
+    buf->numvar = 1;       // gets overridden with validity_map size ratio to vec size
     read_buffer<int8_t>(path, buf->vec);
     buf->ncells = buf->vec.size() / buf->size;
     if (debug) Rcpp::Rcout << path << " " << " dtype " << dtype << " sizeof:" << buf->size
@@ -156,6 +157,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
         if (debug) Rcpp::Rcout << " seeing " << validitypath;
         read_buffer<uint8_t>(validitypath, buf->validity_map);
         buf->nullable = true;
+        buf->numvar = buf->ncells / buf->validity_map.size();
     }
     if (debug) Rcpp::Rcout << std::endl;
     return buf;
