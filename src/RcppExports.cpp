@@ -1707,16 +1707,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_alloc_ptr
-XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype, R_xlen_t ncells, int32_t numvar, bool nullable);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_alloc_ptr(SEXP domaintypeSEXP, SEXP ncellsSEXP, SEXP numvarSEXP, SEXP nullableSEXP) {
+XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype, R_xlen_t ncells, bool nullable, int32_t numvar);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_alloc_ptr(SEXP domaintypeSEXP, SEXP ncellsSEXP, SEXP nullableSEXP, SEXP numvarSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type domaintype(domaintypeSEXP);
     Rcpp::traits::input_parameter< R_xlen_t >::type ncells(ncellsSEXP);
-    Rcpp::traits::input_parameter< int32_t >::type numvar(numvarSEXP);
     Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_alloc_ptr(domaintype, ncells, numvar, nullable));
+    Rcpp::traits::input_parameter< int32_t >::type numvar(numvarSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_alloc_ptr(domaintype, ncells, nullable, numvar));
     return rcpp_result_gen;
 END_RCPP
 }

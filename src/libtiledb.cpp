@@ -2743,8 +2743,8 @@ List libtiledb_query_get_buffer_var_vec(XPtr<tiledb::Query> query, std::string a
 // [[Rcpp::export]]
 XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype,
                                                    R_xlen_t ncells,
-                                                   int32_t numvar = 1,
-                                                   bool nullable = false) {
+                                                   bool nullable = false,
+                                                   int32_t numvar = 1) {
   XPtr<query_buf_t> buf = make_xptr<query_buf_t>(new query_buf_t);
   if (domaintype == "INT32"  || domaintype == "UINT32") {
      buf->size = sizeof(int32_t);

@@ -242,7 +242,7 @@ createBatched <- function(x) {
                 }
             } else {
                                         #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
-                buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, varnum, nullable)
+                buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
                 qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
                 buf
             }

@@ -592,8 +592,8 @@ libtiledb_query_get_buffer_var_vec <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, query, attr, buf)
 }
 
-libtiledb_query_buffer_alloc_ptr <- function(domaintype, ncells, numvar = 1L, nullable = FALSE) {
-    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, domaintype, ncells, numvar, nullable)
+libtiledb_query_buffer_alloc_ptr <- function(domaintype, ncells, nullable = FALSE, numvar = 1L) {
+    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, domaintype, ncells, nullable, numvar)
 }
 
 libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec, asint64 = FALSE) {

@@ -749,7 +749,7 @@ setMethod("[", "tiledb_array",
               }
           } else {
               ##if (verbose) message("Alloc ", resrv, " and ", memory_budget, " and ", ifelse(nullable,"(yes)", "(no)"))
-              buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, varnum, nullable)
+              buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
           }
@@ -1151,7 +1151,7 @@ setMethod("[<-", "tiledb_array",
         nr <- NROW(col)
         #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr,
         #    "null:", ifelse(allnullable[k], "(yes)", "(no)"), "asint64:", asint64, "\n")
-        buflist[[k]] <- libtiledb_query_buffer_alloc_ptr(alltypes[k], nr, allvarnum[k], allnullable[k])
+        buflist[[k]] <- libtiledb_query_buffer_alloc_ptr(alltypes[k], nr, allnullable[k], allvarnum[k])
         buflist[[k]] <- libtiledb_query_buffer_assign_ptr(buflist[[k]], alltypes[k], col, asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[k]])
       }
