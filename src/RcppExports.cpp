@@ -1707,15 +1707,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_alloc_ptr
-XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype, R_xlen_t ncells, bool nullable);
-RcppExport SEXP _tiledb_libtiledb_query_buffer_alloc_ptr(SEXP domaintypeSEXP, SEXP ncellsSEXP, SEXP nullableSEXP) {
+XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype, R_xlen_t ncells, bool nullable, int32_t numvar);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_alloc_ptr(SEXP domaintypeSEXP, SEXP ncellsSEXP, SEXP nullableSEXP, SEXP numvarSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type domaintype(domaintypeSEXP);
     Rcpp::traits::input_parameter< R_xlen_t >::type ncells(ncellsSEXP);
     Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_alloc_ptr(domaintype, ncells, nullable));
+    Rcpp::traits::input_parameter< int32_t >::type numvar(numvarSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_alloc_ptr(domaintype, ncells, nullable, numvar));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3065,15 +3066,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // vecbuf_to_shmem
-void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz);
-RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP dirSEXP, SEXP nameSEXP, SEXP bufSEXP, SEXP szSEXP) {
+void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz, int numvar);
+RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP dirSEXP, SEXP nameSEXP, SEXP bufSEXP, SEXP szSEXP, SEXP numvarSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type dir(dirSEXP);
     Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
     Rcpp::traits::input_parameter< XPtr<query_buf_t> >::type buf(bufSEXP);
     Rcpp::traits::input_parameter< int >::type sz(szSEXP);
-    vecbuf_to_shmem(dir, name, buf, sz);
+    Rcpp::traits::input_parameter< int >::type numvar(numvarSEXP);
+    vecbuf_to_shmem(dir, name, buf, sz, numvar);
     return R_NilValue;
 END_RCPP
 }
@@ -3261,7 +3263,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_buffer_var_vec_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_vec_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_vec, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_vec", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_vec, 3},
-    {"_tiledb_libtiledb_query_buffer_alloc_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_alloc_ptr, 3},
+    {"_tiledb_libtiledb_query_buffer_alloc_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_alloc_ptr, 4},
     {"_tiledb_libtiledb_query_buffer_assign_ptr", (DL_FUNC) &_tiledb_libtiledb_query_buffer_assign_ptr, 4},
     {"_tiledb_libtiledb_query_set_buffer_ptr", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_ptr, 3},
     {"_tiledb_length_from_vlcbuf", (DL_FUNC) &_tiledb_length_from_vlcbuf, 1},
@@ -3374,7 +3376,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_filestore_size", (DL_FUNC) &_tiledb_libtiledb_filestore_size, 2},
     {"_tiledb_libtiledb_mime_type_to_str", (DL_FUNC) &_tiledb_libtiledb_mime_type_to_str, 1},
     {"_tiledb_libtiledb_mime_type_from_str", (DL_FUNC) &_tiledb_libtiledb_mime_type_from_str, 1},
-    {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 4},
+    {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 5},
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
     {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 2},

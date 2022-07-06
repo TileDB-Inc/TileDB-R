@@ -59,14 +59,14 @@ std::vector<int64_t> subnano_to_int64(NumericVector nv, tiledb_datatype_t dtype)
 Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t dtype);
 
 // nullable helpers
-void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map);
-void setValidityMapForInteger(Rcpp::IntegerVector & vec, const std::vector<uint8_t> & map);
-void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map);
-void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8_t> & map);
-void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & map);
-void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_t> & map);
-void getValidityMapFromLogical(Rcpp::LogicalVector & vec, std::vector<uint8_t> & map);
-void setValidityMapForLogical(Rcpp::LogicalVector & vec, const std::vector<uint8_t> & map);
+void getValidityMapFromInteger(Rcpp::IntegerVector & vec, std::vector<uint8_t> & map, int32_t nc);
+void setValidityMapForInteger(Rcpp::IntegerVector & vec, const std::vector<uint8_t> & map, int32_t nc);
+void getValidityMapFromNumeric(Rcpp::NumericVector & vec, std::vector<uint8_t> & map, int32_t nc);
+void setValidityMapForNumeric(Rcpp::NumericVector & vec, const std::vector<uint8_t> & map, int32_t nc);
+void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & map, int32_t nc);
+void setValidityMapForInt64(std::vector<int64_t> & vec, const std::vector<uint8_t> & map, int32_t nc);
+void getValidityMapFromLogical(Rcpp::LogicalVector & vec, std::vector<uint8_t> & map, int32_t nc);
+void setValidityMapForLogical(Rcpp::LogicalVector & vec, const std::vector<uint8_t> & map, int32_t nc);
 
 // type and size helper
 tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr);

@@ -592,8 +592,8 @@ libtiledb_query_get_buffer_var_vec <- function(query, attr, buf) {
     .Call(`_tiledb_libtiledb_query_get_buffer_var_vec`, query, attr, buf)
 }
 
-libtiledb_query_buffer_alloc_ptr <- function(domaintype, ncells, nullable = FALSE) {
-    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, domaintype, ncells, nullable)
+libtiledb_query_buffer_alloc_ptr <- function(domaintype, ncells, nullable = FALSE, numvar = 1L) {
+    .Call(`_tiledb_libtiledb_query_buffer_alloc_ptr`, domaintype, ncells, nullable, numvar)
 }
 
 libtiledb_query_buffer_assign_ptr <- function(buf, dtype, vec, asint64 = FALSE) {
@@ -1044,8 +1044,8 @@ libtiledb_mime_type_from_str <- function(mime_type) {
     .Call(`_tiledb_libtiledb_mime_type_from_str`, mime_type)
 }
 
-vecbuf_to_shmem <- function(dir, name, buf, sz) {
-    invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz))
+vecbuf_to_shmem <- function(dir, name, buf, sz, numvar) {
+    invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz, numvar))
 }
 
 vlcbuf_to_shmem <- function(dir, name, buf, vec) {
