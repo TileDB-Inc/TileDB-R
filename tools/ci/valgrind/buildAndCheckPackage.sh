@@ -9,6 +9,8 @@ echo "::endgroup::"
 echo "::group::Check TileDB R package"
 ## set flag to tolerate missing suggested packages (as eg vignette building tools)
 export _R_CHECK_FORCE_SUGGESTS_=FALSE
+## set an 'under valgrind' variable (see SC-19185)
+export _RUNNING_UNDER_VALGRIND_=TRUE
 ## check package
 R CMD check --use-valgrind --as-cran --no-manual --ignore-vignettes tiledb_*.tar.gz
 echo "::endgroup::"

@@ -9,16 +9,17 @@ apt update -qq
 # Install packages for add-apt-repository
 export DEBIAN_FRONTEND=noninteractive
 # Install with recommends to get ca-certificates as well
-apt install --yes wget
+apt install --yes wget lsb-release
+
 # marutter key
 wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran.asc
-echo "deb [arch=amd64] https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/" > /etc/apt/sources.list.d/cranubuntu.list
+echo "deb [arch=amd64] https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -sc)-cran40/" > /etc/apt/sources.list.d/cranubuntu.list
 # edd key and cranapt / r2u for CRAN binaries
 wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_key.asc | tee -a /etc/apt/trusted.gpg.d/cranapt_key.asc
-echo "deb [arch=amd64] https://dirk.eddelbuettel.com/cranapt jammy main" > /etc/apt/sources.list.d/cranapt.list
+echo "deb [arch=amd64] https://dirk.eddelbuettel.com/cranapt $(lsb_release -sc) main" > /etc/apt/sources.list.d/cranapt.list
 # edd launchpad key and launchpad PPA for AWS packages
 wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_launchpad_ppa_key.asc | tee -a /etc/apt/trusted.gpg.d/eddppa_key.asc
-echo "deb [arch=amd64] http://ppa.launchpad.net/edd/misc/ubuntu jammy main" > /etc/apt/sources.list.d/eddppa.list
+echo "deb [arch=amd64] http://ppa.launchpad.net/edd/misc/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/eddppa.list
 
 # Refresh repo content metadata again
 apt update -qq
