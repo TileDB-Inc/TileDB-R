@@ -4,7 +4,10 @@ library(tiledb)
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
 
-if (Sys.getenv("_RUNNING_UNDER_VALGRIND_", "FALSE") == "TRUE" && Sys.Date() < as.Date("2022-08-06")) exit_file("Skipping under valgrind until Aug 6")
+#if (Sys.getenv("_RUNNING_UNDER_VALGRIND_", "FALSE") == "TRUE" && Sys.Date() < as.Date("2022-08-06")) exit_file("Skipping under valgrind until Aug 6")
+
+## GitHub Actions had some jobs killed on the larger data portion so we dial mem use down
+if (Sys.getenv("CI") != "") set_allocation_size_preference(1024*1024*5)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
