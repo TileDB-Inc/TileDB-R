@@ -49,6 +49,7 @@ tiledb_filter.from_ptr <- function(ptr) {
 #'   - "CHECKSUM_MD5"
 #'   - "CHECKSUM_SHA256"
 #'   - "DICTIONARY"
+#'   - "SCALE_FLOAT"  (TileDB 2.11.0 or later)
 #'
 #' Valid compression options vary depending on the filter used,
 #' consult the TileDB docs for more information.
