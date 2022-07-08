@@ -49,7 +49,7 @@ save_return_as_preference <- function(value = c("asis", "array", "matrix", "data
     value <- match.arg(value)
 
     cfgdir <- tools::R_user_dir(packageName())
-    if (!dir.exists(cfgdir)) dir.create(cfgdir)
+    if (!dir.exists(cfgdir)) dir.create(cfgdir, recursive = TRUE)
     fname <- file.path(cfgdir, "config.dcf")
     con <- file(fname, "a+")
     cat("return_as:", value, "\n", file=con)
@@ -124,7 +124,7 @@ save_allocation_size_preference <- function(value) {
               `The 'value' has to be numeric` = is.numeric(value))
 
     cfgdir <- tools::R_user_dir(packageName())
-    if (!dir.exists(cfgdir)) dir.create(cfgdir)
+    if (!dir.exists(cfgdir)) dir.create(cfgdir, recursive = TRUE)
     fname <- file.path(cfgdir, "config.dcf")
     con <- file(fname, "a+")
     cat("allocation_size:", value, "\n", file=con)
