@@ -3634,20 +3634,29 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
     check_xptr_tag<tiledb::QueryCondition>(query_cond);
 #if TILEDB_VERSION >= TileDB_Version(2,3,0)
     tiledb_query_condition_op_t op = _tiledb_query_string_to_condition_op(cond_op_string);
-    if (cond_val_type == "INT32" ||
-        cond_val_type == "UINT32" ||
-        cond_val_type == "INT16" ||
-        cond_val_type == "UINT16") {
+    if (cond_val_type == "INT32"  || cond_val_type == "UINT32") {
         int v = as<int>(condition_value);
         uint64_t cond_val_size = sizeof(int);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
-    } else if (cond_val_type == "FLOAT32" || cond_val_type == "FLOAT64") {
+    } else if (cond_val_type == "FLOAT64") {
         double v = as<double>(condition_value);
         uint64_t cond_val_size = sizeof(double);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else if (cond_val_type == "INT64" || cond_val_type == "UINT64") {
         int64_t v = makeScalarInteger64( as<double>(condition_value) );
         uint64_t cond_val_size = sizeof(int64_t);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
+    } else if (cond_val_type == "INT8" || cond_val_type == "UINT8") {
+        int v = as<int>(condition_value);
+        uint64_t cond_val_size = sizeof(int8_t);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
+    } else if (cond_val_type == "INT16" || cond_val_type == "UINT16") {
+        int v = as<int>(condition_value);
+        uint64_t cond_val_size = sizeof(int16_t);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
+    } else if (cond_val_type == "FLOAT32") {
+        float v = static_cast<float>(as<double>(condition_value));
+        uint64_t cond_val_size = sizeof(float);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else if (cond_val_type == "ASCII") {
         std::string v = as<std::string>(condition_value);
