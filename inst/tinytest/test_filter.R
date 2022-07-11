@@ -88,7 +88,8 @@ name_list <- c("NONE",
                "BYTESHUFFLE",
                "CHECKSUM_MD5",
                "CHECKSUM_SHA256",
-               "DICTIONARY_ENCODING")
+               "DICTIONARY_ENCODING",
+               "SCALE_FLOAT")
 
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 dat <- palmerpenguins::penguins
@@ -104,6 +105,9 @@ for (name in name_list) {
         if (tiledb_version(TRUE) < "2.9.0") next             # skip if not 2.9.0 or later
         dat2 <- dat2[, sapply(dat2, class) == "character"]
     }
+    if (name == "SCALE_FLOAT") {
+        if (tiledb_version(TRUE) < "2.11.0") next            # skip if not 2.11.0 or later
+    }
 
     basepath <- file.path(tempdir())
     uri <- file.path(basepath, name)
@@ -116,6 +120,7 @@ for (name in name_list) {
         size_curr <- tiledb_vfs_dir_size(uri, vfs)
         expect_true(size_curr > 0)
         expect_true(size_curr < size_none)
+        #message("None ", size_none, " vs ", name, " ", size_curr)
     }
 }
 rm(vfs)
