@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,8 +66,8 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for tiledb_config</span>
-<span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">x</span>, mode <span class="op">=</span> <span class="st">"any"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for tiledb_config</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">x</span>, mode <span class="op">=</span> <span class="st">"any"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -89,9 +89,9 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="fu"><a href="limitTileDBCores.html">limitTileDBCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">cfg</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="fu"><a href="limitTileDBCores.html">limitTileDBCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">cfg</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                          config.env_var_prefix </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                      "TILEDB_" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                          config.logging_format </span>
@@ -104,6 +104,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                        "false" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                           rest.http_compressor </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                          "any" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               rest.load_metadata_on_array_open </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         "true" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       rest.load_non_empty_domain_on_array_open </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         "true" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                               rest.retry_count </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                           "25" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                        rest.retry_delay_factor </span>
@@ -116,6 +120,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                       "https://api.tiledb.com" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               rest.server_serialization_format </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                        "CAPNP" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                 rest.use_refactored_array_open </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                        "false" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                            sm.check_coord_dups </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                         "true" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                             sm.check_coord_oob </span>
@@ -130,6 +136,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                     "50000000" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                          sm.consolidation.mode </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                    "fragments" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           sm.consolidation.purge_deleted_cells </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                        "false" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                sm.consolidation.step_max_frags </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                   "4294967295" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                sm.consolidation.step_min_frags </span>
@@ -320,7 +328,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                         "true" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                              vfs.s3.verify_ssl </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                         "true" </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -332,7 +340,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>
