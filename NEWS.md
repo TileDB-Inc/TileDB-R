@@ -10,6 +10,8 @@
 
 * Query condition support has been extended to more data types (#441)
 
+* The 'SCALE_FLOAT' filter for compression of floating-point attributes is now supported (with TileDB 2.11 or later) (#445)
+
 ## Bug Fixes
 
 * Unit tests were refined with some additional conditioning on envuironment variable `CI` being present (#436)
