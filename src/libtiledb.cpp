@@ -301,6 +301,10 @@ tiledb_filter_type_t _string_to_tiledb_filter(std::string filter) {
   } else if (filter == "DICTIONARY_ENCODING") {
     return TILEDB_FILTER_DICTIONARY;
 #endif
+#if TILEDB_VERSION >= TileDB_Version(2,11,0)
+  } else if (filter == "SCALE_FLOAT") {
+    return TILEDB_FILTER_SCALE_FLOAT;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB filter '%s'", filter.c_str());
   }
@@ -338,7 +342,11 @@ const char* _tiledb_filter_to_string(tiledb_filter_type_t filter) {
     case TILEDB_FILTER_DICTIONARY:
       return "DICTIONARY_ENCODING";
 #endif
-    default: {
+#if TILEDB_VERSION >= TileDB_Version(2,11,0)
+    case TILEDB_FILTER_SCALE_FLOAT:
+      return "SCALE_FLOAT";
+#endif
+  default: {
       Rcpp::stop("unknown tiledb_filter_t (%d)", filter);
     }
   }
@@ -351,6 +359,14 @@ tiledb_filter_option_t _string_to_tiledb_filter_option(std::string filter_option
     return TILEDB_BIT_WIDTH_MAX_WINDOW;
   } else if (filter_option == "POSITIVE_DELTA_MAX_WINDOW") {
     return TILEDB_POSITIVE_DELTA_MAX_WINDOW;
+#if TILEDB_VERSION >= TileDB_Version(2,11,0)
+  } else if (filter_option == "SCALE_FLOAT_BYTEWIDTH") {
+    return TILEDB_SCALE_FLOAT_BYTEWIDTH;
+  } else if (filter_option == "SCALE_FLOAT_FACTOR") {
+    return TILEDB_SCALE_FLOAT_FACTOR;
+  } else if (filter_option == "SCALE_FLOAT_OFFSET") {
+    return TILEDB_SCALE_FLOAT_OFFSET;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB filter option '%s'", filter_option.c_str());
   }
@@ -364,6 +380,14 @@ const char* _tiledb_filter_option_to_string(tiledb_filter_option_t filter_option
     return "BIT_WIDTH_MAX_WINDOW";
   case TILEDB_POSITIVE_DELTA_MAX_WINDOW:
     return "POSITIVE_DELTA_MAX_WINDOW";
+#if TILEDB_VERSION >= TileDB_Version(2,11,0)
+  case TILEDB_SCALE_FLOAT_BYTEWIDTH:
+    return "SCALE_FLOAT_BYTEWIDTH";
+  case TILEDB_SCALE_FLOAT_FACTOR:
+    return "SCALE_FLOAT_FACTOR";
+  case TILEDB_SCALE_FLOAT_OFFSET:
+    return "SCALE_FLOAT_OFFSET";
+#endif
   default:
     Rcpp::stop("unknown tiledb_filter_option_t (%d)", filter_option);
   }
