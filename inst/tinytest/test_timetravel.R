@@ -130,7 +130,8 @@ expect_true(length(ndircons2) < length(ndircons))
 
 ## earlier time travel test recast via timestamp_{start,end}
 ## time travel
-if (Sys.getenv("CI") != "") exit_file("Skip remainder")
+#if (Sys.getenv("CI") != "")
+exit_file("Skip remainder")		## remainder creates persistent issues at CRAN
 
 tmp <- tempfile()
 dir.create(tmp)
