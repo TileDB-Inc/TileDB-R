@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tiledb_config_save</span><span class="op">(</span><span class="va">config</span>, <span class="va">path</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tiledb_config_save</span><span class="op">(</span><span class="va">config</span>, <span class="va">path</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -88,24 +88,27 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="fu"><a href="limitTileDBCores.html">limitTileDBCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sm.tile_cache_size"</span> <span class="op">=</span> <span class="st">"10"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pth</span> <span class="op">&lt;-</span> <span class="fu">tiledb_config_save</span><span class="op">(</span><span class="va">cfg</span>, <span class="va">tmp</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">pth</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="fu"><a href="limitTileDBCores.html">limitTileDBCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sm.tile_cache_size"</span> <span class="op">=</span> <span class="st">"10"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pth</span> <span class="op">&lt;-</span> <span class="fu">tiledb_config_save</span><span class="op">(</span><span class="va">cfg</span>, <span class="va">tmp</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">pth</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> config.env_var_prefix TILEDB_</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> config.logging_format DEFAULT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> config.logging_level 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> filestore.buffer_size 104857600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.curl.verbose false</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.http_compressor any</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rest.load_metadata_on_array_open true</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rest.load_non_empty_domain_on_array_open true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.retry_count 25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.retry_delay_factor 1.25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.retry_http_codes 503</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.retry_initial_delay_ms 500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.server_address https://api.tiledb.com</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rest.server_serialization_format CAPNP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rest.use_refactored_array_open false</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.check_coord_dups true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.check_coord_oob true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.check_global_order true</span>
@@ -113,6 +116,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.consolidation.amplification 1.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.consolidation.buffer_size 50000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.consolidation.mode fragments</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sm.consolidation.purge_deleted_cells false</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.consolidation.step_max_frags 4294967295</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.consolidation.step_min_frags 4294967295</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sm.consolidation.step_size_ratio 0.0</span>
@@ -184,7 +188,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> vfs.s3.use_multipart_upload true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vfs.s3.use_virtual_addressing true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vfs.s3.verify_ssl true</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -196,7 +200,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

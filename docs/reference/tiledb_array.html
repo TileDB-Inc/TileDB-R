@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.14.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,35 +66,35 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">tiledb_array</span><span class="op">(</span>
-  <span class="va">uri</span>,
-  query_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"READ"</span>, <span class="st">"WRITE"</span><span class="op">)</span>,
-  is.sparse <span class="op">=</span> <span class="cn">NA</span>,
-  as.data.frame <span class="op">=</span> <span class="cn">FALSE</span>,
-  attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  extended <span class="op">=</span> <span class="cn">TRUE</span>,
-  selected_ranges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  query_layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  datetimes_as_int64 <span class="op">=</span> <span class="cn">FALSE</span>,
-  encryption_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  timestamp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,
-  as.matrix <span class="op">=</span> <span class="cn">FALSE</span>,
-  as.array <span class="op">=</span> <span class="cn">FALSE</span>,
-  query_condition <span class="op">=</span> <span class="fu">new</span><span class="op">(</span><span class="st">"tiledb_query_condition"</span><span class="op">)</span>,
-  timestamp_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,
-  timestamp_end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,
-  return_as <span class="op">=</span> <span class="fu"><a href="save_return_as_preference.html">get_return_as_preference</a></span><span class="op">(</span><span class="op">)</span>,
-  query_statistics <span class="op">=</span> <span class="cn">FALSE</span>,
-  strings_as_factors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"stringsAsFactors"</span>, <span class="cn">FALSE</span><span class="op">)</span>,
-  sil <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  dumpbuffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,
-  buffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  ctx <span class="op">=</span> <span class="fu"><a href="tiledb_get_context.html">tiledb_get_context</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu">tiledb_dense</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-
-<span class="fu">tiledb_sparse</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tiledb_array</span><span class="op">(</span></span>
+<span>  <span class="va">uri</span>,</span>
+<span>  query_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"READ"</span>, <span class="st">"WRITE"</span><span class="op">)</span>,</span>
+<span>  is.sparse <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  as.data.frame <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  extended <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  selected_ranges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  query_layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  datetimes_as_int64 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  encryption_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  timestamp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,</span>
+<span>  as.matrix <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  as.array <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  query_condition <span class="op">=</span> <span class="fu">new</span><span class="op">(</span><span class="st">"tiledb_query_condition"</span><span class="op">)</span>,</span>
+<span>  timestamp_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,</span>
+<span>  timestamp_end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,</span>
+<span>  return_as <span class="op">=</span> <span class="fu"><a href="save_return_as_preference.html">get_return_as_preference</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  query_statistics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  strings_as_factors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"stringsAsFactors"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  sil <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  dumpbuffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  buffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  ctx <span class="op">=</span> <span class="fu"><a href="tiledb_get_context.html">tiledb_get_context</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">tiledb_dense</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">tiledb_sparse</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -235,7 +235,7 @@ and <code>tiledb_sparse</code> aliasing</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

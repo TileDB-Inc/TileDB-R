@@ -1,3 +1,28 @@
+# tiledb 0.14.1
+
+* This release of the R package builds against [TileDB 2.10.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.10.2), and has also been tested against earlier releases as well as the development version.
+
+## Improvements
+
+* Use of TileDB Embedded was upgraded to release 2.10.2 (#443) following an earlier update to 2.10.1 (#434)
+
+* List columns are now supported in reading and writing of data frames by extending cell variable numbers beyond one (#438, #440)
+
+* Query condition support has been extended to more data types (#441)
+
+* The 'SCALE_FLOAT' filter for compression of floating-point attributes is now supported (with TileDB 2.11 or later) (#445)
+
+## Bug Fixes
+
+* Unit tests were refined with some additional conditioning on envuironment variable `CI` being present (#436)
+
+* An unnessary final argument has been dropped from a 'remove member' method (#437)
+
+## Build and Test Systems
+
+* The nightly `valgrind` check was updated to Ubuntu 22.04 (#435, #439, #442)
+
+
 # tiledb 0.14.0
 
 * This release of the R package builds against [TileDB 2.10.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.10.0), and has also been tested against earlier releases as well as the development version.

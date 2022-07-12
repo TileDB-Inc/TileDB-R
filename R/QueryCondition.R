@@ -63,7 +63,7 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
     stopifnot("Argument 'qc' with query condition object required" = is(qc, "tiledb_query_condition"),
               "Argument 'attr' must be character" = is.character(attr),
-              "Argument 'value' must be of length one" = (is.vector(value) || is.integer64(value)) && all.equal(length(value),1),
+              "Argument 'value' must be of length one" = (is.vector(value) || bit64::is.integer64(value)) && all.equal(length(value),1),
               "Argument 'dtype' must be character" = is.character(dtype),
               "Argument 'op' must be character" = is.character(op))
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
