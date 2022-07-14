@@ -345,3 +345,10 @@ for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32",
     arr <- tiledb_array(tmp, return_as="data.frame", query_condition = qc)
     expect_equal( NROW(arr[]), 10)      # ten rows if we restrict to 'value' > 10
 }
+
+## test on dense array (without dims) and query condition
+uri <- tempfile()
+fromDataFrame(airquality, uri, col_index=c("Month", "Day"))  # dense array
+res <- tiledb_array(uri, return_as="data.frame", extended=FALSE,
+                    query_condition=parse_query_condition(Temp > 90))[]
+expect_equal(NROW(res), 14)
