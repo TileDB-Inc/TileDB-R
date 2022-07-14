@@ -1,3 +1,14 @@
+# Ongoing
+
+## Improvements
+
+## Bug Fixes
+
+## Build and Test Systems
+
+* The nightly `valgrind` check has been extended to the release-2.11 branch (#446)
+
+
 # tiledb 0.14.1
 
 * This release of the R package builds against [TileDB 2.10.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.10.2), and has also been tested against earlier releases as well as the development version.
