@@ -4,7 +4,13 @@
 \alias{parse_query_condition}
 \title{Create a 'tiledb_query_condition' object from an expression}
 \usage{
-parse_query_condition(expr, ta = NULL, debug = FALSE, strict = TRUE)
+parse_query_condition(
+  expr,
+  ta = NULL,
+  debug = FALSE,
+  strict = TRUE,
+  use_int64 = FALSE
+)
 }
 \arguments{
 \item{expr}{An expression that is understood by the TileDB grammar for
@@ -17,6 +23,9 @@ to 'FALSE'.}
 
 \item{strict}{A boolean toogle to, if set, errors if a non-existing attribute is selected
 or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.}
+
+\item{use_int64}{A boolean toggle to switch to \code{integer64} if \code{integer} is seen,
+default is false to remain as a default four-byte \code{int}}
 }
 \value{
 A \code{tiledb_query_condition} object

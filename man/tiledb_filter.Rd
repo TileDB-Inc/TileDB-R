@@ -31,6 +31,7 @@ Available filters:
 \item "CHECKSUM_MD5"
 \item "CHECKSUM_SHA256"
 \item "DICTIONARY"
+\item "SCALE_FLOAT"  (TileDB 2.11.0 or later)
 }
 }
 \details{
