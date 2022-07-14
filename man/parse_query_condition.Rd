@@ -34,3 +34,14 @@ A \code{tiledb_query_condition} object
 The grammar for query conditions is at present constraint to six operators
 and three boolean types.
 }
+\examples{
+\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontrun{
+uri <- "mem://airquality"
+fromDataFrame(airquality, uri, col_index=c("Month", "Day"))  # dense array
+head(tiledb_array(uri, return_as="data.frame")[])   # reordered columns
+head(tiledb_array(uri, return_as="data.frame", extended=FALSE)[])  # no dims
+tiledb_array(uri, return_as="data.frame", extended=FALSE,
+             query_condition=parse_query_condition(Temp > 90))[]
+}
+}

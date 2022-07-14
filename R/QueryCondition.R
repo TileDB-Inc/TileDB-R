@@ -113,6 +113,16 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #' @param use_int64 A boolean toggle to switch to \code{integer64} if \code{integer} is seen,
 #' default is false to remain as a default four-byte \code{int}
 #' @return A `tiledb_query_condition` object
+#' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontrun{
+#' uri <- "mem://airquality"    # change to on-disk for persistence
+#' fromDataFrame(airquality, uri, col_index=c("Month", "Day"))  # dense array
+#' head(tiledb_array(uri, return_as="data.frame")[])   # reordered columns
+#' head(tiledb_array(uri, return_as="data.frame", extended=FALSE)[])  # no dims
+#' tiledb_array(uri, return_as="data.frame", extended=FALSE,
+#'              query_condition=parse_query_condition(Temp > 90))[]
+#' }
 #' @export
 parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_int64=FALSE) {
     .hasArray <- !is.null(ta) && is(ta, "tiledb_array")
