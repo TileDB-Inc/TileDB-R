@@ -653,9 +653,9 @@ setMethod("[", "tiledb_array",
     if (is.null(x@selected_ranges[[k]])) {
       #cat("Adding null dim", k, "on", dimtypes[k], "\n")
       vec <- .map2integer64(nonemptydom[[k]], dimtypes[k])
-      if (vec[1] != 0 && vec[2] != 0) { # corner case of A[] on empty array
-          qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
-          rangeunset <- FALSE
+      if (vec[1] != 0 || vec[2] != 0) { # corner case of A[] on empty array
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+        rangeunset <- FALSE
       }
     } else if (is.null(nrow(x@selected_ranges[[k]]))) {
       #cat("Adding nrow null dim", k, "on", dimtypes[k], "\n")
