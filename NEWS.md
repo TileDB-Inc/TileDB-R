@@ -2,6 +2,8 @@
 
 ## Improvements
 
+* Support for query conditions has been extended to dense arrays (#447)
+
 ## Bug Fixes
 
 ## Build and Test Systems

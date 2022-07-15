@@ -67,7 +67,11 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
               "Argument 'dtype' must be character" = is.character(dtype),
               "Argument 'op' must be character" = is.character(op))
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
-    ## maybe check dtype too
+    ## if dtype is INT64 or UINT64 but the class of value does not yet inherit from integer64, cast
+    if (grepl("INT64", dtype) && !inherits(value, "integer64")) {
+        value <- bit64::as.integer64(value)
+        #message("QCI ", attr, ", ", value, ", ", class(value)[1], ", ", dtype, ", ", op)
+    }
     libtiledb_query_condition_init(qc@ptr, attr, value, dtype, op)
     qc@init <- TRUE
     invisible(qc)
@@ -106,9 +110,20 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #' to 'FALSE'.
 #' @param strict A boolean toogle to, if set, errors if a non-existing attribute is selected
 #' or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.
+#' @param use_int64 A boolean toggle to switch to \code{integer64} if \code{integer} is seen,
+#' default is false to remain as a default four-byte \code{int}
 #' @return A `tiledb_query_condition` object
+#' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontrun{
+#' uri <- "mem://airquality"    # change to on-disk for persistence
+#' fromDataFrame(airquality, uri, col_index=c("Month", "Day"))  # dense array
+#' ## query condition on dense array requires extended=FALSE
+#' tiledb_array(uri, return_as="data.frame", extended=FALSE,
+#'              query_condition=parse_query_condition(Temp > 90))[]
+#' }
 #' @export
-parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE) {
+parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_int64=FALSE) {
     .hasArray <- !is.null(ta) && is(ta, "tiledb_array")
     if (.hasArray && length(ta@sil) == 0) ta@sil <- .fill_schema_info_list(ta@uri)
     .isComparisonOperator <- function(x) as.character(x) %in% c(">", ">=", "<", "<=", "==", "!=")
@@ -117,8 +132,8 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE) {
     .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
     .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
     .errorFunction <- if (strict) stop else warning
-    .getType <- function(x) {
-        if (isTRUE(.isInteger(x))) "INT32"
+    .getType <- function(x, use_int64=FALSE) {
+        if (isTRUE(.isInteger(x))) { if (use_int64) "INT64" else "INT32" }
         else if (isTRUE(.isDouble(x))) "FLOAT64"
         else "ASCII"
     }
@@ -150,7 +165,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE) {
             op <- as.character(x[1])
             attr <- as.character(x[2])
             ch <- as.character(x[3])
-            dtype <- .getType(ch)
+            dtype <- .getType(ch, use_int64)
             if (.hasArray) {
                 ind <- match(attr, ta@sil$names)
                 if (!is.finite(ind)) {

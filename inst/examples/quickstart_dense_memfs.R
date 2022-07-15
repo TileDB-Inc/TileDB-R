@@ -5,7 +5,7 @@
 #
 # The MIT License
 #
-# Copyright (c) 2018-2021 TileDB, Inc.
+# Copyright (c) 2018-2022 TileDB, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -80,10 +80,9 @@ write_array_via_query <- function(uri) {
 }
 
 write_array_via_query_piped <- function(uri) {
-    stopifnot(requireNamespace("magrittr", quietly=TRUE))
-    library(magrittr)
     data <- 1:16
-    qry <- tiledb_array(uri = uri, "WRITE")
+    arr <- tiledb_array(uri = uri)
+    qry <- tiledb_query(arr, "WRITE")
     qry |>
         tiledb_query_set_layout("ROW_MAJOR") |>  # also default, transpose if COL_MAJOR
         tiledb_query_set_buffer("a", data) |>
