@@ -37,10 +37,9 @@ and three boolean types.
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 \dontrun{
-uri <- "mem://airquality"
+uri <- "mem://airquality"    # change to on-disk for persistence
 fromDataFrame(airquality, uri, col_index=c("Month", "Day"))  # dense array
-head(tiledb_array(uri, return_as="data.frame")[])   # reordered columns
-head(tiledb_array(uri, return_as="data.frame", extended=FALSE)[])  # no dims
+## query condition on dense array requires extended=FALSE
 tiledb_array(uri, return_as="data.frame", extended=FALSE,
              query_condition=parse_query_condition(Temp > 90))[]
 }
