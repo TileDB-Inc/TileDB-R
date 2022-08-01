@@ -17,6 +17,7 @@ fromDataFrame(
   tile_domain = NULL,
   tile_extent = NULL,
   mode = c("ingest", "schema_only", "append"),
+  filterlist = NULL,
   debug = FALSE
 )
 }
@@ -58,6 +59,9 @@ cannot exceed the tile domain.}
 data ingestion, the default behavior), \sQuote{schema_only} (to create the array schema without
 writing to the newly-created array) and \sQuote{append} (to only append to an already existing
 array).}
+
+\item{filterlist}{A named list specifying filter choices per column, default is an empty
+\code{list} object.}
 
 \item{debug}{Logical flag to select additional output.}
 }

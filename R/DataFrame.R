@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2022 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -61,6 +61,8 @@
 ##' data ingestion, the default behavior), \sQuote{schema_only} (to create the array schema without
 ##' writing to the newly-created array) and \sQuote{append} (to only append to an already existing
 ##' array).
+##' @param filterlist A named list specifying filter choices per column, default is an empty
+##' \code{list} object.
 ##' @param debug Logical flag to select additional output.
 ##' @return Null, invisibly.
 ##' @examples
@@ -78,10 +80,11 @@
 fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=sparse,
                           cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="ZSTD",
                           capacity = 10000L, tile_domain = NULL, tile_extent = NULL,
-                          mode = c("ingest", "schema_only", "append"), debug = FALSE) {
+                          mode = c("ingest", "schema_only", "append"), filterlist = NULL,
+                          debug = FALSE) {
 
-    stopifnot(`Argument 'obj' should be a 'data.frame' (or a related object)` = inherits(obj, "data.frame"),
-              `Argument 'uri' should be a character variable` = is.character(uri))
+    stopifnot("Argument 'obj' should be a 'data.frame' (or a related object)" = inherits(obj, "data.frame"),
+              "Argument 'uri' should be a character variable" = is.character(uri))
     if (!is.null(col_index) && is.character(col_index)) col_index <- match(col_index, colnames(obj))
     dims <- dim(obj)
     mode <- match.arg(mode)
@@ -172,11 +175,12 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         dom <- tiledb_domain(dims = dimensions)
     }
 
-    ## Create filterlist from filter vector, 'NONE' and 'ZSTD' is default
-    filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
+    ## Create default filterlist from filter vector, 'NONE' and 'ZSTD' is default
+    default_filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
 
     makeAttr <- function(ind) {
         col <- obj[,ind]
+        colname <- colnames(obj)[ind]
         if (inherits(col, "AsIs")) {
             ## we just look at the first list column, others have to have same type and length
             cl <- class(obj[,ind][[1]])
@@ -203,13 +207,19 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
             tp <- if (tiledb_version(TRUE) >= "2.10.0") "BOOL" else "INT32"
         else
             stop("Currently unsupported type: ", cl)
+        filters <- if (colname %in% names(filterlist)) {
+                       cat("Picking filter for", colname, "\n")
+                       tiledb_filter_list(sapply(filterlist[[colname]], tiledb_filter))
+                   } else {
+                       default_filterlist
+                   }
         if (debug) {
-            cat(sprintf("Setting attribute name %s type %s\n", colnames(obj)[ind], tp))
+            cat(sprintf("Setting attribute name %s type %s\n", colname, tp))
         }
-        tiledb_attr(colnames(obj)[ind],
+        tiledb_attr(colname,
                     type = tp,
                     ncells = if (tp %in% c("CHAR","ASCII")) NA_integer_ else nc,
-                    filter_list = filterlist,
+                    filter_list = filters,
                     nullable = any(is.na(col)))
     }
     cols <- seq_len(dims[2])
