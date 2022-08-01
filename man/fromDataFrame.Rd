@@ -17,7 +17,10 @@ fromDataFrame(
   tile_domain = NULL,
   tile_extent = NULL,
   mode = c("ingest", "schema_only", "append"),
-  filterlist = NULL,
+  filter_list = NULL,
+  coords_filters = "ZSTD",
+  offsets_filters = "ZSTD",
+  validity_filters = "RLE",
   debug = FALSE
 )
 }
@@ -60,8 +63,15 @@ data ingestion, the default behavior), \sQuote{schema_only} (to create the array
 writing to the newly-created array) and \sQuote{append} (to only append to an already existing
 array).}
 
-\item{filterlist}{A named list specifying filter choices per column, default is an empty
-\code{list} object.}
+\item{filter_list}{A named list specifying filter choices per column, default is an empty
+\code{list} object. This argument applies for all named arguments and the matchin dimensions
+or attributes. The \code{filter} argument still applies for all unnamed arguments.}
+
+\item{coords_filters}{A character vector with filters for coordinates, default is \code{ZSTD}.}
+
+\item{offsets_filters}{A character vector with filters for coordinates, default is \code{ZSTD}.}
+
+\item{validity_filters}{A character vector with filters for coordinates, default is \code{RLE}.}
 
 \item{debug}{Logical flag to select additional output.}
 }

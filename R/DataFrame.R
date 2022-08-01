@@ -61,8 +61,12 @@
 ##' data ingestion, the default behavior), \sQuote{schema_only} (to create the array schema without
 ##' writing to the newly-created array) and \sQuote{append} (to only append to an already existing
 ##' array).
-##' @param filterlist A named list specifying filter choices per column, default is an empty
-##' \code{list} object.
+##' @param filter_list A named list specifying filter choices per column, default is an empty
+##' \code{list} object. This argument applies for all named arguments and the matchin dimensions
+##' or attributes. The \code{filter} argument still applies for all unnamed arguments.
+##' @param coords_filters A character vector with filters for coordinates, default is \code{ZSTD}.
+##' @param offsets_filters A character vector with filters for coordinates, default is \code{ZSTD}.
+##' @param validity_filters A character vector with filters for coordinates, default is \code{RLE}.
 ##' @param debug Logical flag to select additional output.
 ##' @return Null, invisibly.
 ##' @examples
@@ -80,8 +84,9 @@
 fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=sparse,
                           cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="ZSTD",
                           capacity = 10000L, tile_domain = NULL, tile_extent = NULL,
-                          mode = c("ingest", "schema_only", "append"), filterlist = NULL,
-                          debug = FALSE) {
+                          mode = c("ingest", "schema_only", "append"), filter_list = NULL,
+                          coords_filters = "ZSTD", offsets_filters = "ZSTD",
+                          validity_filters = "RLE", debug = FALSE) {
 
     stopifnot("Argument 'obj' should be a 'data.frame' (or a related object)" = inherits(obj, "data.frame"),
               "Argument 'uri' should be a character variable" = is.character(uri))
@@ -97,8 +102,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         for (i in factcols) obj[,i] <- as.character(obj[,i])
     }
 
-    ## Create default filterlist from filter vector, 'NONE' and 'ZSTD' is default
-    default_filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
+    ## Create default filter_list from filter vector, 'NONE' and 'ZSTD' is default
+    default_filter_list <- tiledb_filter_list(sapply(filter, tiledb_filter))
 
     if (is.null(col_index)) {
         if (missing(tile_domain)) tile_domain <- c(1L, dims[1])
@@ -174,9 +179,9 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                             tile = col_extent,
                             type = dtype)
 
-            if (idxnam %in% names(filterlist)) {
+            if (idxnam %in% names(filter_list)) {
                 cat("Picking index filter for", idxnam, "\n")
-                filter_list(d) <- tiledb_filter_list(sapply(filterlist[[idxnam]], tiledb_filter))
+                filter_list(d) <- tiledb_filter_list(sapply(filter_list[[idxnam]], tiledb_filter))
             }
 
             d
@@ -215,11 +220,11 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
             tp <- if (tiledb_version(TRUE) >= "2.10.0") "BOOL" else "INT32"
         else
             stop("Currently unsupported type: ", cl)
-        filters <- if (colname %in% names(filterlist)) {
+        filters <- if (colname %in% names(filter_list)) {
                        cat("Picking attribute filter for", colname, "\n")
-                       tiledb_filter_list(sapply(filterlist[[colname]], tiledb_filter))
+                       tiledb_filter_list(sapply(filter_list[[colname]], tiledb_filter))
                    } else {
-                       default_filterlist
+                       default_filter_list
                    }
         if (debug) {
             cat(sprintf("Setting attribute name %s type %s\n", colname, tp))
@@ -233,9 +238,16 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]
     attributes <- if (length(cols) > 0) sapply(cols, makeAttr) else list()
-    schema <- tiledb_array_schema(dom, attrs = attributes,
-                                  cell_order = cell_order, tile_order = tile_order,
-                                  sparse=sparse, capacity=capacity)
+    schema <- tiledb_array_schema(dom,
+                                  attrs = attributes,
+                                  cell_order = cell_order,
+                                  tile_order = tile_order,
+                                  sparse=sparse,
+                                  coords_filter_list = tiledb_filter_list(sapply(coords_filters, tiledb_filter)),
+                                  offsets_filter_list = tiledb_filter_list(sapply(offsets_filters, tiledb_filter)),
+                                  validity_filter_list = tiledb_filter_list(sapply(validity_filters, tiledb_filter)),
+
+                                  capacity=capacity)
     allows_dups(schema) <- allows_dups
     if (mode != "append")
         tiledb_array_create(uri, schema)
