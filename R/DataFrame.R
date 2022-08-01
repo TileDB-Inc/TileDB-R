@@ -97,6 +97,9 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         for (i in factcols) obj[,i] <- as.character(obj[,i])
     }
 
+    ## Create default filterlist from filter vector, 'NONE' and 'ZSTD' is default
+    default_filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
+
     if (is.null(col_index)) {
         if (missing(tile_domain)) tile_domain <- c(1L, dims[1])
         if (missing(tile_extent)) tile_extent <- dims[1]
@@ -165,18 +168,23 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                             ifelse(is.null(col_domain[2]), "null", format(col_domain[2])),
                             ifelse(is.null(col_extent), "null", format(col_extent))))
             }
-            tiledb_dim(name = idxnam,
-                       domain = col_domain,
-                       tile = col_extent,
-                       type = dtype)
+
+            d <- tiledb_dim(name = idxnam,
+                            domain = col_domain,
+                            tile = col_extent,
+                            type = dtype)
+
+            if (idxnam %in% names(filterlist)) {
+                cat("Picking index filter for", idxnam, "\n")
+                filter_list(d) <- tiledb_filter_list(sapply(filterlist[[idxnam]], tiledb_filter))
+            }
+
+            d
         }
         dimensions <- sapply(seq_len(ncol(dimobj)), makeDim)
 
         dom <- tiledb_domain(dims = dimensions)
     }
-
-    ## Create default filterlist from filter vector, 'NONE' and 'ZSTD' is default
-    default_filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
 
     makeAttr <- function(ind) {
         col <- obj[,ind]
@@ -208,7 +216,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         else
             stop("Currently unsupported type: ", cl)
         filters <- if (colname %in% names(filterlist)) {
-                       cat("Picking filter for", colname, "\n")
+                       cat("Picking attribute filter for", colname, "\n")
                        tiledb_filter_list(sapply(filterlist[[colname]], tiledb_filter))
                    } else {
                        default_filterlist
