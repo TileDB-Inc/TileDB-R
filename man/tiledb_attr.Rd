@@ -19,7 +19,7 @@ tiledb_attr(
 \item{type}{The tiledb_attr TileDB datatype string; if missing the user is alerted
 that this is a \emph{required} parameter.}
 
-\item{filter_list}{(default filter_list("NONE")) The tiledb_attr filter_list}
+\item{filter_list}{(default filter_list("NONE")) An optional tiledb_filter_list object}
 
 \item{ncells}{(default 1) The number of cells, use \code{NA} to signal variable length}
 

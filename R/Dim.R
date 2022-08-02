@@ -43,6 +43,7 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' @param tile The tile dimension tile extent. For type,
 #' \code{ASCII} \code{NULL} is expected.
 #' @param type The dimension TileDB datatype string
+#' @param filter_list An optional tiledb_filter_list object, default is no filter
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
@@ -51,10 +52,11 @@ tiledb_dim.from_ptr <- function(ptr) {
 #'
 #' @importFrom methods new
 #' @export tiledb_dim
-tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
-  stopifnot(`Argument 'name' must be supplied when creating a dimension object` = !missing(name),
-            `Argument 'name' must be a scalar string when creating a dimension object` = is.scalar(name, "character"),
-            `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
+tiledb_dim <- function(name, domain, tile, type,
+                       filter_list = tiledb_filter_list(), ctx = tiledb_get_context()) {
+  stopifnot("Argument 'name' must be supplied when creating a dimension object" = !missing(name),
+            "Argument 'name' must be a scalar string when creating a dimension object" = is.scalar(name, "character"),
+            "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"))
   if (missing(type)) {
     type <- ifelse(is.integer(domain), "INT32", "FLOAT64")
   } else if (!type %in% c("INT8", "INT16", "INT32", "INT64",
@@ -90,6 +92,7 @@ tiledb_dim <- function(name, domain, tile, type, ctx = tiledb_get_context()) {
     }
   }
   ptr <- libtiledb_dim(ctx@ptr, name, type, domain, tile)
+  libtiledb_dimension_set_filter_list(ptr, filter_list@ptr)
   return(new("tiledb_dim", ptr = ptr))
 }
 
