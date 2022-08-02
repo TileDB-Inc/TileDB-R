@@ -180,7 +180,6 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                             type = dtype)
 
             if (idxnam %in% names(filter_list)) {
-                cat("Picking index filter for", idxnam, "\n")
                 filter_list(d) <- tiledb_filter_list(sapply(filter_list[[idxnam]], tiledb_filter))
             }
 
@@ -221,7 +220,6 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         else
             stop("Currently unsupported type: ", cl)
         filters <- if (colname %in% names(filter_list)) {
-                       cat("Picking attribute filter for", colname, "\n")
                        tiledb_filter_list(sapply(filter_list[[colname]], tiledb_filter))
                    } else {
                        default_filter_list
