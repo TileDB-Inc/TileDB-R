@@ -4,7 +4,14 @@
 \alias{tiledb_dim}
 \title{Contructs a \code{tiledb_dim} object}
 \usage{
-tiledb_dim(name, domain, tile, type, ctx = tiledb_get_context())
+tiledb_dim(
+  name,
+  domain,
+  tile,
+  type,
+  filter_list = tiledb_filter_list(),
+  ctx = tiledb_get_context()
+)
 }
 \arguments{
 \item{name}{The dimension name / label string.  This argument is required.}
@@ -18,6 +25,8 @@ type \code{integer} or \code{double} (i.e. \code{numeric}). For type,
 \code{ASCII} \code{NULL} is expected.}
 
 \item{type}{The dimension TileDB datatype string}
+
+\item{filter_list}{An optional tiledb_filter_list object, default is no filter}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }

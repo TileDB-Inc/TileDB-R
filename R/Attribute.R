@@ -38,7 +38,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @param name The dimension name / label string; if missing default `""` is used.
 #' @param type The tiledb_attr TileDB datatype string; if missing the user is alerted
 #' that this is a _required_ parameter.
-#' @param filter_list (default filter_list("NONE")) The tiledb_attr filter_list
+#' @param filter_list (default filter_list("NONE")) An optional tiledb_filter_list object
 #' @param ncells (default 1) The number of cells, use \code{NA} to signal variable length
 #' @param nullable (default FALSE) A logical switch whether the attribute can have missing
 #' values

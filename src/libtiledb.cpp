@@ -1083,6 +1083,7 @@ XPtr<tiledb::FilterList> libtiledb_dimension_get_filter_list(XPtr<tiledb::Dimens
 XPtr<tiledb::Dimension> libtiledb_dimension_set_filter_list(XPtr<tiledb::Dimension> dim,
                                                             XPtr<tiledb::FilterList> fltrlst) {
   check_xptr_tag<tiledb::Dimension>(dim);
+  check_xptr_tag<tiledb::FilterList>(fltrlst);
   dim->set_filter_list(*fltrlst);
   return dim;
 }
