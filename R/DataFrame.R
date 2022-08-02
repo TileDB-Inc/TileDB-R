@@ -246,7 +246,6 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                                   coords_filter_list = tiledb_filter_list(sapply(coords_filters, tiledb_filter)),
                                   offsets_filter_list = tiledb_filter_list(sapply(offsets_filters, tiledb_filter)),
                                   validity_filter_list = tiledb_filter_list(sapply(validity_filters, tiledb_filter)),
-
                                   capacity=capacity)
     allows_dups(schema) <- allows_dups
     if (mode != "append")
