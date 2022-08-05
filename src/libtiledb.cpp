@@ -462,6 +462,14 @@ const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
   }
 }
 
+tiledb_encryption_type_t _string_to_tiledb_encryption_type_t(std::string encstr) {
+    tiledb_encryption_type_t enc;
+    int rc = tiledb_encryption_type_from_str(encstr.c_str(), &enc);
+    if (rc == TILEDB_OK)
+        return enc;
+    Rcpp::stop("Unknow TileDB encryption type '%s'", encstr.c_str());
+}
+
 
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
@@ -1609,10 +1617,13 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Context> ctx,
                                                                std::string uri,
                                                                std::string key) {
-  check_xptr_tag<tiledb::Context>(ctx);
-  auto p = new tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
-                                   key.data(), (uint32_t) key.size());
-  return make_xptr<tiledb::ArraySchema>(p);
+    check_xptr_tag<tiledb::Context>(ctx);
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    (*cfg)["sm.encryption_type"] = "AES_256_GCM";
+    (*cfg)["sm.encryption_key"] = key;
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    auto p = new tiledb::ArraySchema(*newctx.get(), uri);
+    return make_xptr<tiledb::ArraySchema>(p);
 }
 
 // [[Rcpp::export]]
@@ -1909,10 +1920,11 @@ std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> sc
 // [[Rcpp::export]]
 std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema,
                                             std::string encryption_key) {
-  check_xptr_tag<tiledb::ArraySchema>(schema);
-  tiledb::Array::create(uri, *schema.get(), TILEDB_AES_256_GCM,
-                        encryption_key.c_str(), encryption_key.size());
-  return uri;
+    check_xptr_tag<tiledb::ArraySchema>(schema);
+    tiledb::Array::create(uri, *schema.get(),
+                          _string_to_tiledb_encryption_type_t("AES_256_GCM"),
+                          encryption_key);
+    return uri;
 }
 
 // [[Rcpp::export]]

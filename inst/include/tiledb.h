@@ -1,6 +1,6 @@
 
 // sadly we need to define it here too to reach RcppExports.cpp
-#define TILEDB_DEPRECATED
+// #define TILEDB_DEPRECATED
 
 #include <tiledb/tiledb>
 #if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR >= 4
