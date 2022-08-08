@@ -102,3 +102,17 @@ inlineCxxPlugin <- function(...) {
         .pkgenv[["tiledb_ldflag"]] <- ldflag
     }
 }
+
+
+#' @importFrom utils read.table
+.getLinuxFlavor <- function() {
+    res <- NA_character_
+    osrel <- "/etc/os-release"
+    if (isTRUE(file.exists(osrel))) {   # on (at least) Debian, Ubuntu, Fedora
+        x <- read.table(osrel, sep="=", row.names=1, col.names=c("","Val"), header = FALSE)
+        res <- x["ID", "Val"]
+    }
+    res
+}
+
+.isFedora <- function() isTRUE(.getLinuxFlavor() == "fedora")
