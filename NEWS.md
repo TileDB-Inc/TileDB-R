@@ -1,14 +1,22 @@
-# Ongoing
+# tiledb 0.15.0
+
+* This release of the R package builds against [TileDB 2.11.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.11.0), and has also been tested against earlier releases as well as the development version.
 
 ## Improvements
 
 * Support for query conditions has been extended to dense arrays (#447)
 
+* Support for filter lists has extended to both the data.frame helper and the dimension object constructor (#448)
+
+* Use of TileDB Embedded was upgraded to release 2.11.0 (#449)
+
 ## Bug Fixes
+
+* Small enhancements have been made to the test suite (#450)
 
 ## Build and Test Systems
 
-* The nightly `valgrind` check has been extended to the release-2.11 branch (#446)
+* A small enhancement was made to the test system (#450)
 
 
 # tiledb 0.14.1
