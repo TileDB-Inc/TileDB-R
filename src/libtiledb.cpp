@@ -3442,11 +3442,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
   } else if (typestr == "ASCII" || typestr == "CHAR") {
     std::string start = as<std::string>(starts);
     std::string end = as<std::string>(ends);
-    //tiledb::Array arr = query->array();
-    //tiledb::Context ctx = query->ctx();
-    //tiledb::Subarray sub(ctx, arr);
     if (strides == R_NilValue) {
-        //sub.add_range(uidx, start, end);
       query->add_range(uidx, start, end);
     } else {
       Rcpp::stop("Non-empty stride for string not supported yet.");
@@ -3456,15 +3452,10 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
   } else if (typestr == "FLOAT32") {
     float start = as<float>(starts);
     float end = as<float>(ends);
-    //tiledb::Array arr = query->array();
-    //tiledb::Context ctx = query->ctx();
-    //tiledb::Subarray sub(ctx, arr);
     if (strides == R_NilValue) {
-      //sub.add_range(uidx, start, end);
       query->add_range(uidx, start, end);
     } else {
       float stride = as<float>(strides);
-      //sub.add_range(uidx, start, end, stride);
       query->add_range(uidx, start, end, stride);
     }
     //query->set_subarray(sub);
