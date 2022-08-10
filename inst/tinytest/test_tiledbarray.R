@@ -1018,7 +1018,7 @@ I <- c(1, 2, 2)
 J <- c(1, 4, 3)
 data <- c(1L, 2L, 3L)
 now1 <- Sys.time()
-A <- tiledb_array(uri = tmp, timestamp=now1)
+A <- tiledb_array(uri = tmp, timestamp_end=now1)
 A[I, J] <- data
 
 twot <- 1 + isMacOS*5
@@ -1029,16 +1029,16 @@ now2 <- Sys.time()
 I <- c(8, 6, 9)
 J <- c(5, 7, 8)
 data <- c(11L, 22L, 33L)
-A <- tiledb_array(uri = tmp, timestamp=now2)
+A <- tiledb_array(uri = tmp, timestamp_end=now2)
 A[I, J] <- data
 
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 - onet)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now1 - onet)
 expect_equal(nrow(A[]), 0)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 + onet)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now1 + onet)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 - onet)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 - onet)
 expect_equal(nrow(A[]), 3)
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 + onet)
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 + onet)
 expect_equal(nrow(A[]), 6)
 
 ## as.matrix

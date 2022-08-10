@@ -462,6 +462,14 @@ const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
   }
 }
 
+tiledb_encryption_type_t _string_to_tiledb_encryption_type_t(std::string encstr) {
+    tiledb_encryption_type_t enc;
+    int rc = tiledb_encryption_type_from_str(encstr.c_str(), &enc);
+    if (rc == TILEDB_OK)
+        return enc;
+    Rcpp::stop("Unknow TileDB encryption type '%s'", encstr.c_str());
+}
+
 
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
@@ -1609,10 +1617,13 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load(XPtr<tiledb::Context> ctx,
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Context> ctx,
                                                                std::string uri,
                                                                std::string key) {
-  check_xptr_tag<tiledb::Context>(ctx);
-  auto p = new tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
-                                   key.data(), (uint32_t) key.size());
-  return make_xptr<tiledb::ArraySchema>(p);
+    check_xptr_tag<tiledb::Context>(ctx);
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    (*cfg)["sm.encryption_type"] = "AES_256_GCM";
+    (*cfg)["sm.encryption_key"] = key;
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    auto p = new tiledb::ArraySchema(*newctx.get(), uri);
+    return make_xptr<tiledb::ArraySchema>(p);
 }
 
 // [[Rcpp::export]]
@@ -1909,10 +1920,11 @@ std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> sc
 // [[Rcpp::export]]
 std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema,
                                             std::string encryption_key) {
-  check_xptr_tag<tiledb::ArraySchema>(schema);
-  tiledb::Array::create(uri, *schema.get(), TILEDB_AES_256_GCM,
-                        encryption_key.c_str(), encryption_key.size());
-  return uri;
+    check_xptr_tag<tiledb::ArraySchema>(schema);
+    tiledb::Array::create(uri, *schema.get(),
+                          _string_to_tiledb_encryption_type_t("AES_256_GCM"),
+                          encryption_key);
+    return uri;
 }
 
 // [[Rcpp::export]]
@@ -1926,35 +1938,44 @@ XPtr<tiledb::Array> libtiledb_array_open(XPtr<tiledb::Context> ctx, std::string 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::string uri,
                                             std::string type, Datetime tstamp) {
-  check_xptr_tag<tiledb::Context>(ctx);
-  auto query_type = _string_to_tiledb_query_type(type);
-  // get timestamp as seconds since epoch (plus fractional seconds, returns double), scale to millisec
-  uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
-  auto ptr = new tiledb::Array(*ctx.get(), uri, query_type, ts_ms);
-  return make_xptr<tiledb::Array>(ptr);
+    check_xptr_tag<tiledb::Context>(ctx);
+    auto query_type = _string_to_tiledb_query_type(type);
+    // get timestamp as seconds since epoch (plus fractional seconds, returns double), scale to millisec
+    uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+    auto ptr = new tiledb::Array(*ctx.get(), uri, query_type);
+    ptr->set_open_timestamp_end(ts_ms);
+    return make_xptr<tiledb::Array>(ptr);
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std::string uri,
                                                   std::string type,
                                                   std::string enc_key) {
-  check_xptr_tag<tiledb::Context>(ctx);
-  auto query_type = _string_to_tiledb_query_type(type);
-  return make_xptr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
-                                                                  TILEDB_AES_256_GCM, enc_key.data(),
-                                                                  (uint32_t)enc_key.size())));
+    check_xptr_tag<tiledb::Context>(ctx);
+    auto query_type = _string_to_tiledb_query_type(type);
+
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    (*cfg)["sm.encryption_type"] = "AES_256_GCM";
+    (*cfg)["sm.encryption_key"] = enc_key;
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    auto p = new tiledb::Array(*newctx.get(), uri, query_type);
+    return make_xptr<tiledb::Array>(p);
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, std::string uri,
                                                      std::string type, std::string enc_key,
                                                      Datetime tstamp) {
-  check_xptr_tag<tiledb::Context>(ctx);
-  auto query_type = _string_to_tiledb_query_type(type);
-  uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
-  return make_xptr<tiledb::Array>(new tiledb::Array(*ctx.get(), uri, query_type,
-                                                    TILEDB_AES_256_GCM, enc_key.data(),
-                                                    (uint32_t)enc_key.size(), ts_ms));
+    check_xptr_tag<tiledb::Context>(ctx);
+    auto query_type = _string_to_tiledb_query_type(type);
+    uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    (*cfg)["sm.encryption_type"] = "AES_256_GCM";
+    (*cfg)["sm.encryption_key"] = enc_key;
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    auto p = new tiledb::Array(*newctx.get(), uri, query_type);
+    p->set_open_timestamp_start(ts_ms);
+    return make_xptr<tiledb::Array>(p);
 }
 
 // [[Rcpp::export]]
@@ -3424,8 +3445,9 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
-      Rcpp::stop("Non-emoty stride for string not supported yet.");
+      Rcpp::stop("Non-empty stride for string not supported yet.");
     }
+    //query->set_subarray(sub);
 #endif
   } else if (typestr == "FLOAT32") {
     float start = as<float>(starts);
@@ -3436,6 +3458,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       float stride = as<float>(strides);
       query->add_range(uidx, start, end, stride);
     }
+    //query->set_subarray(sub);
   } else {
     Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
   }
@@ -3491,15 +3514,23 @@ NumericVector libtiledb_query_get_est_result_size_var_nullable(XPtr<tiledb::Quer
 // [[Rcpp::export]]
 double libtiledb_query_get_range_num(XPtr<tiledb::Query> query, int dim_idx) {
   check_xptr_tag<tiledb::Query>(query);
-  uint64_t range_num = query->range_num(static_cast<unsigned int>(dim_idx));
+  tiledb::Array arr = query->array();
+  tiledb::Context ctx = query->ctx();
+  tiledb::Subarray sub(ctx, arr);
+  query->update_subarray_from_query(&sub);
+  uint64_t range_num = sub.range_num(static_cast<unsigned int>(dim_idx));
   return static_cast<double>(range_num);
 }
 
 // [[Rcpp::export]]
 IntegerVector libtiledb_query_get_range(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
   check_xptr_tag<tiledb::Query>(query);
-  std::array<int32_t, 3> rng = query->range<int32_t>(static_cast<unsigned int>(dim_idx),
-                                                     static_cast<unsigned int>(rng_idx));
+  tiledb::Array arr = query->array();
+  tiledb::Context ctx = query->ctx();
+  tiledb::Subarray sub(ctx, arr);
+  query->update_subarray_from_query(&sub);
+  std::array<int32_t, 3> rng = sub.range<int32_t>(static_cast<unsigned int>(dim_idx),
+                                                  static_cast<unsigned int>(rng_idx));
   return IntegerVector::create(rng[0], 	// start
                                rng[1],  // end
                                rng[2]); // stride
@@ -3508,7 +3539,11 @@ IntegerVector libtiledb_query_get_range(XPtr<tiledb::Query> query, int dim_idx, 
 // [[Rcpp::export]]
 CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
   check_xptr_tag<tiledb::Query>(query);
-  std::array<std::string, 2> rng = query->range(static_cast<unsigned int>(dim_idx), static_cast<uint64_t>(rng_idx));
+  tiledb::Array arr = query->array();
+  tiledb::Context ctx = query->ctx();
+  tiledb::Subarray sub(ctx, arr);
+  query->update_subarray_from_query(&sub);
+  std::array<std::string, 2> rng = sub.range(static_cast<unsigned int>(dim_idx), static_cast<uint64_t>(rng_idx));
   return CharacterVector::create(rng[0], rng[1]);	 // start and end
 }
 

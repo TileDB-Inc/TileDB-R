@@ -27,6 +27,8 @@ now1 <- Sys.time()
 A <- tiledb_array(uri = tmp, timestamp_start=now1)
 A[I, J] <- data
 
+deltat <- 0.1
+epst <- deltat/2
 Sys.sleep(deltat)
 
 I <- c(8, 6, 9)
