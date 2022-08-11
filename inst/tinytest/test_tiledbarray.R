@@ -1463,3 +1463,14 @@ expect_false(completedBatched(lst))
 res4 <- tiledb:::fetchBatched(arr, lst)
 expect_true(completedBatched(lst))
 expect_equal(nrow(res1) + nrow(res2) + nrow(res3) + nrow(res4), 344)
+
+
+## check NAs in character column
+library(palmerpenguins)
+uri <- tempfile()
+fromDataFrame(penguins, uri, sparse = TRUE, col_index = c("species", "year"))
+pp <- tiledb_array(uri, return_as="data.frame")[]
+oo <- penguins
+expect_equal(sum(is.na(oo$sex)), sum(is.na(pp$sex)))
+expect_equal(sum(oo$sex == "male"), sum(pp$sex == "male"))
+expect_equal(sum(oo$sex == "female"), sum(pp$sex == "female"))

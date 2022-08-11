@@ -1,3 +1,17 @@
+# Ongoing Development
+
+## Improvements
+
+* Several deprecated API entry points of TileDB Embedded are no longer used (#452, #453)
+
+## Bug Fixes
+
+* Treatment of character columns with missing values has been corrected (#454)
+
+## Build and Test Systems
+
+
+
 # tiledb 0.15.0
 
 * This release of the R package builds against [TileDB 2.11.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.11.0), and has also been tested against earlier releases as well as the development version.
