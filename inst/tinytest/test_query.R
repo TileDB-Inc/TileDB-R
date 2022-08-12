@@ -252,3 +252,21 @@ expect_true(is.character(res))
 expect_true(nchar(res) > 1000)  		# safe lower boundary
 
 ctx <- tiledb_ctx(oldcfg)               # reset config
+
+
+## check deletes
+if (tiledb_version(TRUE) < "2.12.0") exit_file("TileDB deletes requires TileDB 2.12.* or greater")
+if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
+uri <- tempfile()
+pp <- palmerpenguins::penguins
+fromDataFrame(pp, uri, sparse = TRUE, col_index = c("species", "year"))
+
+qc <- parse_query_condition(body_mass_g > 4000 && sex == "male")
+arr <- tiledb_array(uri)
+qry <- tiledb_query(arr, "DELETE")
+qry <- tiledb_query_set_condition(qry, qc)
+tiledb_query_submit(qry)
+tiledb_query_finalize(qry)
+
+oo <- tiledb_array(uri, return_as="data.frame")[]
+expect_equal(nrow(oo), 177)             # instead of 344 pre-deletion

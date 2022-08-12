@@ -33,11 +33,14 @@ setClass("tiledb_query",
 #' Creates a 'tiledb_query' object
 #'
 #' @param array A TileDB Array object
-#' @param type A character value that must be one of 'READ' or 'WRITE'
+#' @param type A character value that must be one of 'READ', 'WRITE', or
+#' 'DELETE' (for TileDB >= 2.12.0)
 #' @param ctx (optional) A TileDB Ctx object
 #' @return 'tiledb_query' object
 #' @export tiledb_query
-tiledb_query <- function(array, type = c("READ", "WRITE"), ctx = tiledb_get_context()) {
+tiledb_query <- function(array,
+                         type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE") else c("READ", "WRITE"),
+                         ctx = tiledb_get_context()) {
   stopifnot(`Argument 'arr' must be a tiledb_array object` = .isArray(array))
   type <- match.arg(type)
   array <- tiledb_array_open(array, type)

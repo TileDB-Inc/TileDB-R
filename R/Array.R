@@ -51,11 +51,13 @@ tiledb_array_create <- function(uri, schema, encryption_key) {
 ##' Open a TileDB Array
 ##'
 ##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
-##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
+##' @param type A character value that must be either \sQuote{READ}, \sQuote{WRITE}
+##' or (for TileDB 2.12.0 or later) \sQuote{DELETE}
 ##' @return The TileDB Array object but opened for reading or writing
 ##' @importFrom methods .hasSlot
 ##' @export
-tiledb_array_open <- function(arr, type=c("READ","WRITE")) {
+tiledb_array_open <- function(arr,
+                              type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE") else c("READ", "WRITE")) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
   type <- match.arg(type)
 

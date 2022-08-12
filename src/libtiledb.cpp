@@ -398,6 +398,10 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
     return TILEDB_READ;
   } else if (qtstr == "WRITE") {
     return TILEDB_WRITE;
+#if TILEDB_VERSION >= TileDB_Version(2,12,0)
+  } else if (qtstr == "DELETE") {
+    return TILEDB_DELETE;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB query type '%s'", qtstr.c_str());
   }
@@ -409,6 +413,10 @@ std::string _tiledb_query_type_to_string(tiledb_query_type_t qtype) {
       return "READ";
     case TILEDB_WRITE:
       return "WRITE";
+#if TILEDB_VERSION >= TileDB_Version(2,12,0)
+    case TILEDB_DELETE:
+      return "DELETE";
+#endif
     default:
       Rcpp::stop("unknown tiledb_query_type_t (%d)", qtype);
   }
