@@ -4,12 +4,17 @@
 \alias{tiledb_array_open}
 \title{Open a TileDB Array}
 \usage{
-tiledb_array_open(arr, type = c("READ", "WRITE"))
+tiledb_array_open(
+  arr,
+  type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE") else
+    c("READ", "WRITE")
+)
 }
 \arguments{
 \item{arr}{A TileDB Array object as for example returned by \code{tiledb_array()}}
 
-\item{type}{A character value that must be either \sQuote{READ} or \sQuote{WRITE}}
+\item{type}{A character value that must be either \sQuote{READ}, \sQuote{WRITE}
+or (for TileDB 2.12.0 or later) \sQuote{DELETE}}
 }
 \value{
 The TileDB Array object but opened for reading or writing

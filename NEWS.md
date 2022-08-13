@@ -4,7 +4,7 @@
 
 * Several deprecated API entry points of TileDB Embedded are no longer used (#452, #453)
 
-* Support for DELETE queries has been added (requires TileDB Embedded 2.12.0 or later) (#455)
+* Support for DELETE queries has been added (requires TileDB Embedded 2.12.0 or later) (#455, #456)
 
 ## Bug Fixes
 
