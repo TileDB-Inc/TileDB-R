@@ -4,12 +4,18 @@
 \alias{tiledb_query}
 \title{Creates a 'tiledb_query' object}
 \usage{
-tiledb_query(array, type = c("READ", "WRITE"), ctx = tiledb_get_context())
+tiledb_query(
+  array,
+  type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE") else
+    c("READ", "WRITE"),
+  ctx = tiledb_get_context()
+)
 }
 \arguments{
 \item{array}{A TileDB Array object}
 
-\item{type}{A character value that must be one of 'READ' or 'WRITE'}
+\item{type}{A character value that must be one of 'READ', 'WRITE', or
+'DELETE' (for TileDB >= 2.12.0)}
 
 \item{ctx}{(optional) A TileDB Ctx object}
 }
