@@ -18,7 +18,7 @@ nelem <- 0.1 * n * k
 mat[sample(seq_len(n*k), nelem)] <- seq(1, nelem)
 
 ## Convert dense matrix to sparse matrix
-spmat <- as(mat, "dgTMatrix")
+spmat <- as(mat, "TsparseMatrix")
 
 uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -36,7 +36,7 @@ mat <- matrix(0, nrow=n, ncol=k, dimnames=list(LETTERS[1:n], letters[1:k]))
 nelem <- 0.2 * n * k
 mat[sample(seq_len(n*k), nelem)] <- seq(1, nelem)
 ## Convert dense matrix to sparse matrix
-spmat <- as(mat, "dgTMatrix")
+spmat <- as(mat, "TsparseMatrix")
 uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromSparseMatrix(spmat, uri)
