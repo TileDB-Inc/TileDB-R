@@ -1109,6 +1109,7 @@ expect_equal(length(res), 2L)
 expect_equal(res$vals, mat)
 expect_equal(res$vals2, 10*mat)
 
+## FYI: 135 tests here
 ## PR #245 (variant of examples/ex_1.R)
 uri <- tempfile()
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 10L, "INT32"),
@@ -1192,6 +1193,7 @@ res2 <- arr[]
 expect_equal(nrow(res2), 2)
 expect_equal(res1, res2)
 
+## FYI: 152 tests here
 ## check for strings_as_factors
 arr <- tiledb_array(uri, as.data.frame=TRUE)
 res <- arr[]
@@ -1235,6 +1237,7 @@ schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32"),
                                              tiledb_attr("b", type = "FLOAT64"),
                                              tiledb_attr("c", type = "CHAR", ncells = NA_integer_)))
 
+## FYI: 160 tests here
 uri <- tempfile()
 res <- tiledb_array_create(uri, schema)
 data <- list(a=array(seq(1:100), dim = c(10,5, 2)),
@@ -1259,7 +1262,6 @@ expect_equal(array_vacuum(uri), NULL)
 expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
 expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
 if (tiledb_version(TRUE) >= "2.3.0") expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
-
 
 
 
