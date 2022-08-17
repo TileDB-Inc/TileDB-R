@@ -1626,11 +1626,8 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
                                                                std::string uri,
                                                                std::string key) {
     check_xptr_tag<tiledb::Context>(ctx);
-    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
-    (*cfg)["sm.encryption_type"] = "AES_256_GCM";
-    (*cfg)["sm.encryption_key"] = key;
-    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
-    auto p = new tiledb::ArraySchema(*newctx.get(), uri);
+    auto p = new tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
+                                     key.data(), (uint32_t) key.size());
     return make_xptr<tiledb::ArraySchema>(p);
 }
 
@@ -1965,13 +1962,9 @@ XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std
                                                   std::string enc_key) {
     check_xptr_tag<tiledb::Context>(ctx);
     auto query_type = _string_to_tiledb_query_type(type);
-
-    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
-    (*cfg)["sm.encryption_type"] = "AES_256_GCM";
-    (*cfg)["sm.encryption_key"] = enc_key;
-    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
-    auto p = new tiledb::Array(*newctx.get(), uri, query_type);
-    return make_xptr<tiledb::Array>(p);
+    return make_xptr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
+                                                                    TILEDB_AES_256_GCM, enc_key.data(),
+                                                                    (uint32_t)enc_key.size())));
 }
 
 // [[Rcpp::export]]
@@ -1981,17 +1974,9 @@ XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, 
     check_xptr_tag<tiledb::Context>(ctx);
     auto query_type = _string_to_tiledb_query_type(type);
     uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
-    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
-    (*cfg)["sm.encryption_type"] = "AES_256_GCM";
-    (*cfg)["sm.encryption_key"] = enc_key;
-    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
-    auto p = new tiledb::Array(*newctx.get(), uri, query_type);
-    p->set_open_timestamp_start(ts_ms);
-#else
-    auto p = new tiledb::Array(*ctx.get(), uri, query_type, ts_ms);
-#endif
-    return make_xptr<tiledb::Array>(p);
+    return make_xptr<tiledb::Array>(new tiledb::Array(*ctx.get(), uri, query_type,
+                                                      TILEDB_AES_256_GCM, enc_key.data(),
+                                                      (uint32_t)enc_key.size(), ts_ms));
 }
 
 // [[Rcpp::export]]
