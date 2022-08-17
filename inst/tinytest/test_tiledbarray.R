@@ -945,34 +945,33 @@ if (tiledb_version(TRUE) >= "2.8.0" && tiledb_version(TRUE) < "2.10.0") exit_fil
 ## FYI: 101 tests here
 ## test encrypted arrays via high-level accessor
 ## (lower-level tests in test_densearray and test_arrayschema)
-if (tiledb_version(TRUE) > "2.5.0") {
-    tmp <- tempfile()
-    dir.create(tmp)
-    encryption_key <- "0123456789abcdeF0123456789abcdeF"
+tmp <- tempfile()
+dir.create(tmp)
+encryption_key <- "0123456789abcdeF0123456789abcdeF"
 
-    ## create 4x4 with single attribute
-    dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
-                                  tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
-    schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
-    invisible( tiledb_array_create(tmp, schema, encryption_key) )
+## create 4x4 with single attribute
+dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
+                              tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
+schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
+invisible( tiledb_array_create(tmp, schema, encryption_key) )
 
-    ## write
-    I <- c(1, 2, 2)
-    J <- c(1, 4, 3)
-    data <- c(1L, 2L, 3L)
-    A <- tiledb_array(uri = tmp, encryption_key = encryption_key)
-    A[I, J] <- data
+## write
+I <- c(1, 2, 2)
+J <- c(1, 4, 3)
+data <- c(1L, 2L, 3L)
+A <- tiledb_array(uri = tmp, encryption_key = encryption_key)
+A[I, J] <- data
 
-    ## read
-    A <- tiledb_array(uri = tmp, as.data.frame=TRUE, encryption_key = encryption_key)
-    chk <- A[1:2, 2:4]
-    expect_equal(nrow(chk), 2)
-    expect_equal(chk[,"rows"], c(2L,2L))
-    expect_equal(chk[,"cols"], c(3L,4L))
-    expect_equal(chk[,"a"], c(3L,2L))
+## read
+A <- tiledb_array(uri = tmp, as.data.frame=TRUE, encryption_key = encryption_key)
+chk <- A[1:2, 2:4]
+expect_equal(nrow(chk), 2)
+expect_equal(chk[,"rows"], c(2L,2L))
+expect_equal(chk[,"cols"], c(3L,4L))
+expect_equal(chk[,"a"], c(3L,2L))
 
-    unlink(tmp, recursive = TRUE)
-}
+unlink(tmp, recursive = TRUE)
+
 
 ## FYI: 105 tests here
 ## non-empty domain, var and plain
