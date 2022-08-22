@@ -153,6 +153,12 @@ if test x"${uname}" = x"Darwin" -a x"${machine}" = x"x86_64"; then
     AC_MSG_RESULT([${CXX17_MACOS}])
 fi
 
+## Take care of riscv64 machines and need for -latomic
+if test x"${machine}" = x"riscv64"; then
+    AC_MSG_CHECKING([for riscv64 linker adjustment])
+    TILEDB_LIBS="${TILEDB_LIBS} -latomic"
+    AC_MSG_RESULT([${TILEDB_LIBS}])
+fi
 
 ## -- Part 3: Check for TileDB --------------------------------------------------
 ##
