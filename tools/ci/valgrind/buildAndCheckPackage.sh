@@ -11,6 +11,8 @@ echo "::group::Check TileDB R package"
 export _R_CHECK_FORCE_SUGGESTS_=FALSE
 ## set an 'under valgrind' variable (see SC-19185)
 export _RUNNING_UNDER_VALGRIND_=TRUE
+## tell valgrind to use '-s'
+export VALGRIND_OPTS="-s"
 ## check package
 R CMD check --use-valgrind --as-cran --no-manual --ignore-vignettes tiledb_*.tar.gz
 echo "::endgroup::"
