@@ -6,6 +6,8 @@
 
 * Support for DELETE queries has been added (requires TileDB Embedded 2.12.0 or later) (#455, #456)
 
+* Use of TileDB Embedded was upgraded to release 2.11.1 (#460)
+
 ## Bug Fixes
 
 * Treatment of character columns with missing values has been corrected (#454)
@@ -17,6 +19,8 @@
 * Sparse matrix conversion used mainly in tests have been updated for version 1.4-2 of the Matrix packages (#457)
 
 * Support builds on the riskv64 platform by adding a missing link instruction (#459)
+
+* Test setup was tweaked to not trigger a spurious valgrind report from libcrypto (#461)
 
 
 # tiledb 0.15.0
