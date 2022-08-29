@@ -24,3 +24,4 @@
 ^vignettes/.*\.Rmd
 ^vignettes/Makefile
 ^inst/tinytest/test_timetravel_extra.R
+^inst/tinytest/test_tiledbarray_extra.R
