@@ -128,21 +128,28 @@ grp <- tiledb_group_close(grp)
 grp <- tiledb_group_open(grp, "READ")
 expect_equal(tiledb_group_member_count(grp), 2)
 
-## remainder fragile on Fedora
-if (isFALSE(tiledb:::.isFedora())) {
-    obj <- tiledb_group_member(grp, 0)
-    expect_equal(length(obj), 3)
-    expect_true(is.character(obj[1]))
-    expect_equal(obj[1], "ARRAY")
-    expect_true(is.character(obj[2]))
-    expect_equal(obj[2], file.path(tiledb_group_uri(grp), "chloe"))
-    expect_true(is.character(obj[3]))
-    expect_equal(obj[3], "name_is_chloe")
+obj <- tiledb_group_member(grp, 0)
+expect_equal(length(obj), 3)
+expect_true(is.character(obj[1]))
+expect_equal(obj[1], "ARRAY")
+expect_true(is.character(obj[2]))
+## there appears to be non-determinism here that between remaining
+## group members 0 and 1, we do not always get the same order:
+## often chloe first then anny; but sometimes anny first, then chloe
+## this is likely due to us writing several small objects 'in bulk'
+## so they end up with identical timestamps, so an added sleep may
+## help but as only two elements remain testing _both_ with a proper
+## 'or' clause is an alternative
+expect_true(obj[2] %in% c(file.path(tiledb_group_uri(grp), "chloe"),
+                          file.path(tiledb_group_uri(grp), "anny")))
+expect_true(is.character(obj[3]))
+expect_true(obj[3] %in% c("name_is_chloe", ""))
 
-    obj <- tiledb_group_member(grp, 1) 									# group member with no name
-    expect_equal(obj[3], "")
+obj <- tiledb_group_member(grp, 1) 									# group member with no name
+expect_true(obj[2] %in% c(file.path(tiledb_group_uri(grp), "chloe"),
+                          file.path(tiledb_group_uri(grp), "anny")))
+expect_true(obj[3] %in% c("name_is_chloe", ""))
 
-    txt <- tiledb_group_member_dump(grp, TRUE)
-    dat <- read.csv(text=txt, sep=' ', header=FALSE)
-    expect_equal(nrow(dat), 1+2)              # one for header 'filename GROUP'
-}
+txt <- tiledb_group_member_dump(grp, TRUE)
+dat <- read.csv(text=txt, sep=' ', header=FALSE)
+expect_equal(nrow(dat), 1+2)              # one for header 'filename GROUP'

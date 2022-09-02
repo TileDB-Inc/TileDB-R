@@ -22,6 +22,8 @@
 
 * Test setup was tweaked to not trigger a spurious valgrind report from libcrypto (#461)
 
+* Test setup was tweaked to make a group comparison more resilient to ordering (#462)
+
 
 # tiledb 0.15.0
 
