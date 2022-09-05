@@ -1026,8 +1026,12 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
     case TILEDB_UINT64: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
       auto t = dim->tile_extent<DataType>();
+      if (t > std::numeric_limits<int64_t>::max()) {
+          Rcpp::stop("tiledb_dim tile UINT64 value not representable as an INT64");
+      }
       if (t > std::numeric_limits<int32_t>::max()) {
-        Rcpp::stop("tiledb_dim tile UINT64 value not representable as an R integer");
+          std::vector<int64_t> v{t};          // return as int64
+          return makeInteger64(v);            // which 'travels' as a double
       }
       return IntegerVector({static_cast<int32_t>(t),});
     }
