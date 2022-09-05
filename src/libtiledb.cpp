@@ -947,8 +947,7 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
       return IntegerVector({static_cast<int32_t>(d1), static_cast<int32_t>(d2)});
     }
     default:
-      Rcpp::stop("invalid tiledb_dim domain type (%d = %s)",
-                 dim_type, _tiledb_datatype_to_string(dim_type));
+      Rcpp::stop("invalid tiledb_dim domain type (%s)", _tiledb_datatype_to_string(dim_type));
   }
 }
 
@@ -1033,8 +1032,7 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       return IntegerVector({static_cast<int32_t>(t),});
     }
     default:
-      Rcpp::stop("invalid tiledb_dim domain type (%d = %s)",
-                 dim_type, _tiledb_datatype_to_string(dim_type));
+      Rcpp::stop("invalid tiledb_dim domain type (%s)", _tiledb_datatype_to_string(dim_type));
   }
 }
 
