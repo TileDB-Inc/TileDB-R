@@ -14,6 +14,8 @@
 
 * Accessing encrypted arrays has been reverted to the older API accessors (#458)
 
+* Int64 domain values in excess of int range are now expressed as integer64 objects (#465)
+
 ## Build and Test Systems
 
 * Sparse matrix conversion used mainly in tests have been updated for version 1.4-2 of the Matrix packages (#457)

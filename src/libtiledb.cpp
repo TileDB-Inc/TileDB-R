@@ -941,13 +941,13 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
       auto d2 = dim->domain<DataType>().second;
       if (d1 <= R_NaInt || d1 > std::numeric_limits<int32_t>::max() ||
           d2 <= R_NaInt || d2 > std::numeric_limits<int32_t>::max()) {
-        Rcpp::stop("tiledb_dim domain INT64 value not representable as an R integer");
+          std::vector<int64_t> v{d1, d2};     // return as int64
+          return makeInteger64(v);            // which 'travels' as a double
       }
-      return IntegerVector({static_cast<int32_t>(d1),
-                            static_cast<int32_t>(d2)});
+      return IntegerVector({static_cast<int32_t>(d1), static_cast<int32_t>(d2)});
     }
     default:
-      Rcpp::stop("invalid tiledb_dim domain type (%d)", dim_type);
+      Rcpp::stop("invalid tiledb_dim domain type (%s)", _tiledb_datatype_to_string(dim_type));
   }
 }
 
@@ -1000,24 +1000,43 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       }
       return IntegerVector({static_cast<int32_t>(t),});
     }
+    case TILEDB_DATETIME_YEAR:
+    case TILEDB_DATETIME_MONTH:
+    case TILEDB_DATETIME_WEEK:
+    case TILEDB_DATETIME_DAY:
+    case TILEDB_DATETIME_HR:
+    case TILEDB_DATETIME_MIN:
+    case TILEDB_DATETIME_SEC:
+    case TILEDB_DATETIME_MS:
+    case TILEDB_DATETIME_US:
+    case TILEDB_DATETIME_NS:
+    case TILEDB_DATETIME_PS:
+    case TILEDB_DATETIME_FS:
+    case TILEDB_DATETIME_AS:
     case TILEDB_INT64: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT64>::type;
       auto t = dim->tile_extent<DataType>();
       if (t <= R_NaInt || t > std::numeric_limits<int32_t>::max()) {
-        Rcpp::stop("tiledb_dim tile INT64 value not representable as an R integer");
+          std::vector<int64_t> v{t};          // return as int64
+          return makeInteger64(v);            // which 'travels' as a double
       }
+      // 'else' i.e. default cast to int32
       return IntegerVector({static_cast<int32_t>(t),});
     }
     case TILEDB_UINT64: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
       auto t = dim->tile_extent<DataType>();
+      if (t > std::numeric_limits<int64_t>::max()) {
+          Rcpp::stop("tiledb_dim tile UINT64 value not representable as an INT64");
+      }
       if (t > std::numeric_limits<int32_t>::max()) {
-        Rcpp::stop("tiledb_dim tile UINT64 value not representable as an R integer");
+          std::vector<int64_t> v{t};          // return as int64
+          return makeInteger64(v);            // which 'travels' as a double
       }
       return IntegerVector({static_cast<int32_t>(t),});
     }
     default:
-      Rcpp::stop("invalid tiledb_dim domain type (%d)", dim_type);
+      Rcpp::stop("invalid tiledb_dim domain type (%s)", _tiledb_datatype_to_string(dim_type));
   }
 }
 
