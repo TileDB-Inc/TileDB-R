@@ -6,7 +6,7 @@
 
 * Support for DELETE queries has been added (requires TileDB Embedded 2.12.0 or later) (#455, #456)
 
-* Use of TileDB Embedded was upgraded to release 2.11.1 (#460)
+* Use of TileDB Embedded was upgraded to release 2.11.1 and 2.11.2 (#460, #466)
 
 ## Bug Fixes
 
