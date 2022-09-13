@@ -26,7 +26,7 @@
 
 * The test setup was tweaked to make a group comparison more resilient to ordering (#462)
 
-* The test setup was refined for two filter tests (#467)
+* The test setup was refined for two filter tests (#467, #468)
 
 
 # tiledb 0.15.0

@@ -124,6 +124,7 @@ for (name in name_list) {
     dat3 <- data.frame(SP=as.character(dat$species),
                        IS=as.character(dat$island),
                        SX=as.character(dat$sex))
+    if (tiledb_version(TRUE) < "2.8.0") next                 # skip if not 2.8.0 or later
     if (name == "DICTIONARY_ENCODING") {
         if (tiledb_version(TRUE) < "2.9.0") next             # skip if not 2.9.0 or later
         dat2 <- dat2[, sapply(dat2, class) == "character"]
