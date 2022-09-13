@@ -22,9 +22,11 @@
 
 * Support builds on the riskv64 platform by adding a missing link instruction (#459)
 
-* Test setup was tweaked to not trigger a spurious valgrind report from libcrypto (#461)
+* The test setup was tweaked to not trigger a spurious valgrind report from libcrypto (#461)
 
-* Test setup was tweaked to make a group comparison more resilient to ordering (#462)
+* The test setup was tweaked to make a group comparison more resilient to ordering (#462)
+
+* The test setup was refined for two filter tests (#467)
 
 
 # tiledb 0.15.0
