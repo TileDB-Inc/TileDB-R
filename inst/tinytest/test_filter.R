@@ -87,8 +87,8 @@ name_list <- c("NONE",
                "BYTESHUFFLE",
                "CHECKSUM_MD5",
                "CHECKSUM_SHA256"
-               #"DICTIONARY_ENCODING",  # cannot be used below
-               #"SCALE_FLOAT"            # cannot be used below
+               #"DICTIONARY_ENCODING",  # cannot be used here, see below for explicit block
+               #"SCALE_FLOAT"           # cannot be used here, see below for explicit block
                )
 
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
@@ -101,13 +101,6 @@ if (Sys.info()[["sysname"]]=="Linux" && isFALSE(any(grepl("avx2", readLines("/pr
 vfs <- tiledb_vfs()                     # use an explicit VFS instance for the ops in loop over filters
 for (name in name_list) {
     dat2 <- dat
-    if (name == "DICTIONARY_ENCODING") {
-        if (tiledb_version(TRUE) < "2.9.0") next             # skip if not 2.9.0 or later
-        dat2 <- dat2[, sapply(dat2, class) == "character"]
-    }
-    if (name == "SCALE_FLOAT") {
-        if (tiledb_version(TRUE) < "2.11.0") next            # skip if not 2.11.0 or later
-    }
     basepath <- file.path(tempdir())
     uri <- file.path(basepath, name)
     fromDataFrame(dat2, uri, filter=name)
