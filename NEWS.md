@@ -28,6 +28,8 @@
 
 * The test setup was refined for two filter tests (#467, #468)
 
+* A parameterized test for the SCALE_FLOAT filter has been added (#469)
+
 
 # tiledb 0.15.0
 
