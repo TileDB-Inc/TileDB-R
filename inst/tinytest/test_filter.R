@@ -190,6 +190,7 @@ if (tiledb_version(TRUE) >= "2.11.0") {
 
         if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     }
+    if (!dir.exists(tempdir())) dir.create(tempdir())
 }
 
 rm(vfs)

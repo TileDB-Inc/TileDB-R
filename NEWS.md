@@ -30,6 +30,8 @@
 
 * A parameterized test for the SCALE_FLOAT filter has been added (#469)
 
+* The test setup ensures that the per-session directory remains accessible (#470)
+
 
 # tiledb 0.15.0
 
