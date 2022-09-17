@@ -170,4 +170,26 @@ for (name in name_list) {
     }
 }
 
+## scale_float with parameters (cf test in TileDB-Py PR #1195)
+if (tiledb_version(TRUE) >= "2.11.0") {
+    dat4 <- data.frame(BL=dat$bill_length_mm,
+                       BD=dat$bill_depth_mm,
+                       FL=as.double(dat$flipper_length_mm),
+                       BM=as.double(dat$body_mass_g))
+    pars <- expand.grid(factor=c(1,0.5,2), offset=0, bytewidth=c(1,0))
+    for (i in seq_len(nrow(pars))) {
+        flt <- tiledb_filter("SCALE_FLOAT")
+        tiledb_filter_set_option(flt, "SCALE_FLOAT_FACTOR", pars[i, "factor"])
+        tiledb_filter_set_option(flt, "SCALE_FLOAT_OFFSET", pars[i, "offset"])
+        tiledb_filter_set_option(flt, "SCALE_FLOAT_BYTEWIDTH", pars[i, "bytewidth"])
+
+        uri <- file.path(tempdir())
+        fromDataFrame(dat4, uri, filter=name)
+        res <- tiledb_array(uri, return_as="data.frame", extended=FALSE)[]
+        expect_equivalent(dat4, res, tolerance=5e-2) # note very high tolerance
+
+        if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    }
+}
+
 rm(vfs)
