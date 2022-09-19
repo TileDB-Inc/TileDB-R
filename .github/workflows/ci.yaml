@@ -1,0 +1,32 @@
+# Run CI for R based on copy of https://eddelbuettel.github.io/r-ci/
+
+name: ci
+
+on:
+  push:
+  pull_request:
+
+env:
+  _R_CHECK_FORCE_SUGGESTS_: "FALSE"
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        include:
+          - {os: macOS-latest}
+          - {os: ubuntu-latest}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Bootstrap
+        run: ./.github/r-ci.sh bootstrap
+
+      - name: Dependencies
+        run: ./.github/r-ci.sh install_all
+
+      - name: Test
+        run: ./.github/r-ci.sh run_tests
