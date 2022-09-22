@@ -8,6 +8,8 @@
 
 * Use of TileDB Embedded was upgraded to release 2.11.1 and 2.11.2 (#460, #466)
 
+* Support for XOR filters has been added (#472)
+
 ## Bug Fixes
 
 * Treatment of character columns with missing values has been corrected (#454)
