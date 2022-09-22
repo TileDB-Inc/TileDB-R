@@ -305,6 +305,10 @@ tiledb_filter_type_t _string_to_tiledb_filter(std::string filter) {
   } else if (filter == "SCALE_FLOAT") {
     return TILEDB_FILTER_SCALE_FLOAT;
 #endif
+#if TILEDB_VERSION >= TileDB_Version(2,12,0)
+  } else if (filter == "FILTER_XOR") {
+    return TILEDB_FILTER_XOR;
+#endif
   } else {
     Rcpp::stop("Unknown TileDB filter '%s'", filter.c_str());
   }
@@ -345,6 +349,10 @@ const char* _tiledb_filter_to_string(tiledb_filter_type_t filter) {
 #if TILEDB_VERSION >= TileDB_Version(2,11,0)
     case TILEDB_FILTER_SCALE_FLOAT:
       return "SCALE_FLOAT";
+#endif
+#if TILEDB_VERSION >= TileDB_Version(2,12,0)
+  case TILEDB_FILTER_XOR:
+    return "FILTER_XOR";
 #endif
   default: {
       Rcpp::stop("unknown tiledb_filter_t (%d)", filter);

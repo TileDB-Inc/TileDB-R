@@ -184,12 +184,24 @@ if (tiledb_version(TRUE) >= "2.11.0") {
         tiledb_filter_set_option(flt, "SCALE_FLOAT_BYTEWIDTH", pars[i, "bytewidth"])
 
         uri <- file.path(tempdir())
-        fromDataFrame(dat4, uri, filter=name)
+        fromDataFrame(dat4, uri, filter_list=tiledb_filter_list(flt))
         res <- tiledb_array(uri, return_as="data.frame", extended=FALSE)[]
-        expect_equivalent(dat4, res, tolerance=5e-2) # note very high tolerance
-
+        expect_equivalent(dat4, res)
         if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     }
+    if (!dir.exists(tempdir())) dir.create(tempdir())
+}
+
+if (tiledb_version(TRUE) >= "2.12.0") {
+    D <- data.frame(index=sample(100, 26, FALSE),
+                    key=LETTERS,
+                    value=cumsum(runif(26)))
+    uri <- file.path(tempdir())
+    fromDataFrame(D, uri, filter="FILTER_XOR")
+    arr <- tiledb_array(uri, return_as="data.frame", extended=FALSE)[]
+    expect_equal(D$value, arr$value)
+
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     if (!dir.exists(tempdir())) dir.create(tempdir())
 }
 
