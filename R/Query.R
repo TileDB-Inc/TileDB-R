@@ -39,7 +39,10 @@ setClass("tiledb_query",
 #' @return 'tiledb_query' object
 #' @export tiledb_query
 tiledb_query <- function(array,
-                         type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE") else c("READ", "WRITE"),
+                         type = if (tiledb_version(TRUE) >= "2.12.0")
+                                    c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
+                                else
+                                    c("READ", "WRITE"),
                          ctx = tiledb_get_context()) {
   stopifnot(`Argument 'arr' must be a tiledb_array object` = .isArray(array))
   type <- match.arg(type)

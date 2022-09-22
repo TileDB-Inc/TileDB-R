@@ -6,8 +6,8 @@
 \usage{
 tiledb_query(
   array,
-  type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE") else
-    c("READ", "WRITE"),
+  type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE",
+    "MODIFY_EXCLUSIVE") else c("READ", "WRITE"),
   ctx = tiledb_get_context()
 )
 }

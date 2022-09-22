@@ -52,12 +52,15 @@ tiledb_array_create <- function(uri, schema, encryption_key) {
 ##'
 ##' @param arr A TileDB Array object as for example returned by `tiledb_array()`
 ##' @param type A character value that must be either \sQuote{READ}, \sQuote{WRITE}
-##' or (for TileDB 2.12.0 or later) \sQuote{DELETE}
+##' or (for TileDB 2.12.0 or later) \sQuote{DELETE} or \sQuote{MODIFY_EXCLUSIVE}
 ##' @return The TileDB Array object but opened for reading or writing
 ##' @importFrom methods .hasSlot
 ##' @export
 tiledb_array_open <- function(arr,
-                              type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE") else c("READ", "WRITE")) {
+                              type = if (tiledb_version(TRUE) >= "2.12.0")
+                                         c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
+                                     else
+                                         c("READ", "WRITE")) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
   type <- match.arg(type)
 
@@ -142,4 +145,19 @@ tiledb_array_is_heterogeneous <- function(arr) {
                        libtiledb_dim_get_datatype)
   n <- length(unique(domaintype))
   n > 1
+}
+
+##' Delete fragments written between the start and end times given
+##'
+##' @param arr A TileDB Array object as for example returned by \code{tiledb_array()}
+##' @param ts_start A Datetime object that will be converted to millisecond granularity
+##' @param ts_end A Datetime object that will be converted to millisecond granularity
+##' @return A boolean indicating success
+##' @export
+tiledb_array_delete_fragments <- function(arr, ts_start, ts_end) {
+    stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
+              "The 'ts_start' argument must a time object" = inherits(ts_start, "POSIXct"),
+              "The 'ts_end' argument must a time object" = inherits(ts_end, "POSIXct"))
+    libtiledb_array_delete_fragments(arr@ptr, ts_start, ts_end)
+    invisible(TRUE)
 }
