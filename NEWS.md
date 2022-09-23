@@ -10,6 +10,8 @@
 
 * Support for XOR filters has been added (#472)
 
+* Support for deletion of fragments has been added (#473)
+
 ## Bug Fixes
 
 * Treatment of character columns with missing values has been corrected (#454)

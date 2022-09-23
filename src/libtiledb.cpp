@@ -407,6 +407,8 @@ tiledb_query_type_t _string_to_tiledb_query_type(std::string qtstr) {
   } else if (qtstr == "WRITE") {
     return TILEDB_WRITE;
 #if TILEDB_VERSION >= TileDB_Version(2,12,0)
+  } else if (qtstr == "MODIFY_EXCLUSIVE") {
+    return TILEDB_MODIFY_EXCLUSIVE;
   } else if (qtstr == "DELETE") {
     return TILEDB_DELETE;
 #endif
@@ -424,6 +426,8 @@ std::string _tiledb_query_type_to_string(tiledb_query_type_t qtype) {
 #if TILEDB_VERSION >= TileDB_Version(2,12,0)
     case TILEDB_DELETE:
       return "DELETE";
+    case TILEDB_MODIFY_EXCLUSIVE:
+      return "MODIFY_EXCLUSIVE";
 #endif
     default:
       Rcpp::stop("unknown tiledb_query_type_t (%d)", qtype);
@@ -2487,6 +2491,19 @@ Rcpp::Datetime libtiledb_array_open_timestamp_end(XPtr<tiledb::Array> array) {
     return(Rcpp::Datetime(0.0));
 #endif
 }
+
+// [[Rcpp::export]]
+void libtiledb_array_delete_fragments(XPtr<tiledb::Array> array,
+                                      Rcpp::Datetime tstamp_start, Rcpp::Datetime tstamp_end) {
+#if TILEDB_VERSION >= TileDB_Version(2,12,0)
+    check_xptr_tag<tiledb::Array>(array);
+    const std::string uri = array->uri();
+    uint64_t ts_ms_st = static_cast<uint64_t>(std::round(tstamp_start.getFractionalTimestamp() * 1000));
+    uint64_t ts_ms_en = static_cast<uint64_t>(std::round(tstamp_end.getFractionalTimestamp() * 1000));
+    array->delete_fragments(uri, ts_ms_st, ts_ms_en);
+#endif
+}
+
 
 /**
  * Query

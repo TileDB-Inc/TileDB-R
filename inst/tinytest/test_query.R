@@ -160,7 +160,7 @@ schema <- tiledb_array_schema(dom,
 tiledb_array_create(tmp, schema)
 arr <- tiledb_array(tmp)
 qry <- tiledb_query(arr, "WRITE")
-qry <- tiledb_query_set_layout(qry, "ROW_MAJOR")
+if (tiledb_version(TRUE) < "2.12.0") qry <- tiledb_query_set_layout(qry, "ROW_MAJOR")
 
 rows <- 1:10
 qry <- tiledb_query_set_buffer(qry, "rows", rows)
