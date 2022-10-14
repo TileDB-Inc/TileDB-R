@@ -1,6 +1,7 @@
 on:
-  push:
-  pull_request:
+  #push:
+  #pull_request:
+  release:
 
 name: windows
 

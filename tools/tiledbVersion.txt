@@ -1,2 +1,2 @@
-version: 2.11.3
-sha: a55a910
+version: 2.12.0-rc0
+sha: 97b7d23
