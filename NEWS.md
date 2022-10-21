@@ -1,4 +1,4 @@
-# tiledb 0.15.0
+# tiledb 0.16.0
 
 ## Improvements
 
