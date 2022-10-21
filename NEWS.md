@@ -1,4 +1,4 @@
-# Ongoing Development
+# tiledb 0.16.0
 
 ## Improvements
 
@@ -35,6 +35,8 @@
 * A parameterized test for the SCALE_FLOAT filter has been added (#469)
 
 * The test setup ensures that the per-session directory remains accessible (#470)
+
+* Continuous integration testing for Linux and macOS has been moved to GitHub Actions (#471)
 
 
 # tiledb 0.15.0
