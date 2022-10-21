@@ -463,6 +463,9 @@
     <loc>/reference/tiledb_array_create.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_array_delete_fragments.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_array_get_non_empty_domain_from_index.html</loc>
   </url>
   <url>

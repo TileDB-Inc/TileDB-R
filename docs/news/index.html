@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.15.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.16.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,17 +61,45 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.15.0" id="tiledb-0150">tiledb 0.15.0<a class="anchor" aria-label="anchor" href="#tiledb-0150"></a></h2>
-<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.11.0" class="external-link">TileDB 2.11.0</a>, and has also been tested against earlier releases as well as the development version.</li></ul><div class="section level3">
+<div class="section level3">
 <h3 id="improvements-0-15-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-15-0"></a></h3>
+<ul><li><p>Several deprecated API entry points of TileDB Embedded are no longer used (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/452" class="external-link">#452</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/453" class="external-link">#453</a>)</p></li>
+<li><p>Support for DELETE queries has been added (requires TileDB Embedded 2.12.0 or later) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/455" class="external-link">#455</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/456" class="external-link">#456</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.11.1, 2.11.2, and 2.11.3 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/460" class="external-link">#460</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/466" class="external-link">#466</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/474" class="external-link">#474</a>)</p></li>
+<li><p>Support for XOR filters has been added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/472" class="external-link">#472</a>)</p></li>
+<li><p>Support for deletion of fragments has been added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/473" class="external-link">#473</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-15-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-15-0"></a></h3>
+<ul><li><p>Treatment of character columns with missing values has been corrected (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/454" class="external-link">#454</a>)</p></li>
+<li><p>Accessing encrypted arrays has been reverted to the older API accessors (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/458" class="external-link">#458</a>)</p></li>
+<li><p>Int64 domain values in excess of int range are now expressed as integer64 objects (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/465" class="external-link">#465</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-15-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-15-0"></a></h3>
+<ul><li><p>Sparse matrix conversion used mainly in tests have been updated for version 1.4-2 of the Matrix packages (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/457" class="external-link">#457</a>)</p></li>
+<li><p>Support builds on the riskv64 platform by adding a missing link instruction (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/459" class="external-link">#459</a>)</p></li>
+<li><p>The test setup was tweaked to not trigger a spurious valgrind report from libcrypto (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/461" class="external-link">#461</a>)</p></li>
+<li><p>The test setup was tweaked to make a group comparison more resilient to ordering (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/462" class="external-link">#462</a>)</p></li>
+<li><p>The test setup was refined for two filter tests (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/467" class="external-link">#467</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/468" class="external-link">#468</a>)</p></li>
+<li><p>A parameterized test for the SCALE_FLOAT filter has been added (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/469" class="external-link">#469</a>)</p></li>
+<li><p>The test setup ensures that the per-session directory remains accessible (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/470" class="external-link">#470</a>)</p></li>
+<li><p>Continuous integration testing for Linux and macOS has been moved to GitHub Actions (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/471" class="external-link">#471</a>)</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.15.0" id="tiledb-0150-1">tiledb 0.15.0<a class="anchor" aria-label="anchor" href="#tiledb-0150-1"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.11.0" class="external-link">TileDB 2.11.0</a>, and has also been tested against earlier releases as well as the development version.</li></ul><div class="section level3">
+<h3 id="improvements-0-15-0-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-15-0-1"></a></h3>
 <ul><li><p>Support for query conditions has been extended to dense arrays (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/447" class="external-link">#447</a>)</p></li>
 <li><p>Support for filter lists has extended to both the data.frame helper and the dimension object constructor (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/448" class="external-link">#448</a>)</p></li>
 <li><p>Use of TileDB Embedded was upgraded to release 2.11.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/449" class="external-link">#449</a>)</p></li>
 </ul></div>
 <div class="section level3">
-<h3 id="bug-fixes-0-15-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-15-0"></a></h3>
+<h3 id="bug-fixes-0-15-0-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-15-0-1"></a></h3>
 <ul><li>Small enhancements have been made to the test suite (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/450" class="external-link">#450</a>)</li></ul></div>
 <div class="section level3">
-<h3 id="build-and-test-systems-0-15-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-15-0"></a></h3>
+<h3 id="build-and-test-systems-0-15-0-1">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-15-0-1"></a></h3>
 <ul><li>A small enhancement was made to the test system (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/450" class="external-link">#450</a>)</li></ul></div>
 </div>
     <div class="section level2">
