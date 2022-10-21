@@ -16,7 +16,7 @@ wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee
 echo "deb [arch=amd64] https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -sc)-cran40/" > /etc/apt/sources.list.d/cranubuntu.list
 # edd key and cranapt / r2u for CRAN binaries
 wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_key.asc | tee -a /etc/apt/trusted.gpg.d/cranapt_key.asc
-echo "deb [arch=amd64] https://dirk.eddelbuettel.com/cranapt $(lsb_release -sc) main" > /etc/apt/sources.list.d/cranapt.list
+echo "deb [arch=amd64] https://r2u.stat.illinois.edu/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/cranapt.list
 # edd launchpad key and launchpad PPA for AWS packages
 wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_launchpad_ppa_key.asc | tee -a /etc/apt/trusted.gpg.d/eddppa_key.asc
 echo "deb [arch=amd64] http://ppa.launchpad.net/edd/misc/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/eddppa.list

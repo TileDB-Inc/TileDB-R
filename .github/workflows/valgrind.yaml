@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [ release-2.10, release-2.11, dev ]
+        tag: [ release-2.11, release-2.12, dev ]
 #        tag: [ 2.9.5, 2.10.0, dev ]
 
     steps:
