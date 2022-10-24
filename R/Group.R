@@ -327,3 +327,16 @@ tiledb_group_member_dump <- function(grp, recursive) {
               "This function needs TileDB 2.8.*" = .tiledb28())
     libtiledb_group_dump(grp@ptr, recursive)
 }
+
+##' Test if a Named Group is Using a Relative URI
+##'
+##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param name A character value with a group name
+##' @return A boolean indicating whether the group uses a relative URI or not
+##' @export
+tiledb_group_is_relative <- function(grp, name) {
+    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+              "The 'name' argument must be a character variable" = inherits(name, "character"),
+              "This function needs TileDB 2.12.*" = tiledb_version(TRUE) >= "2.12.0")
+    libtiledb_group_is_relative(grp@ptr, name)
+}

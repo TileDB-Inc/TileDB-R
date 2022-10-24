@@ -153,3 +153,9 @@ expect_true(obj[3] %in% c("name_is_chloe", ""))
 txt <- tiledb_group_member_dump(grp, TRUE)
 dat <- read.csv(text=txt, sep=' ', header=FALSE)
 expect_equal(nrow(dat), 1+2)              # one for header 'filename GROUP'
+
+if (tiledb_version(TRUE) < "2.12.0") exit_file("Remainder requires TileDB 2.12.* or later")
+expect_true(tiledb_group_is_relative(grp, "name_is_chloe"))
+expect_error(tiledb_group_is_relative(uri, "name_is_chloe"))	# wrong type errors
+expect_error(tiledb_group_is_relative(grp, "does_not_exist"))	# non-group errors
+expect_error(tiledb_group_is_relative(grp, TRUE)) 				# not a char, errors

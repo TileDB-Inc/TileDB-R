@@ -4784,6 +4784,17 @@ std::string libtiledb_group_dump(XPtr<tiledb::Group> grp, bool recursive) {
 #endif
 }
 
+// [[Rcpp::export]]
+bool libtiledb_group_is_relative(XPtr<tiledb::Group> grp, const std::string &name) {
+    check_xptr_tag<tiledb::Group>(grp);
+#if TILEDB_VERSION >= TileDB_Version(2,12,0)
+    return grp->is_relative(name);
+#else
+    return false;
+#endif
+}
+
+
 
 /**
  * Filestore (via tiledb_experimental.h)
