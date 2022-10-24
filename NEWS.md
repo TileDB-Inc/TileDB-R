@@ -2,6 +2,8 @@
 
 ## Improvements
 
+* Support for testing group URIs on being relative has been added (#478)
+
 ## Bug Fixes
 
 ## Build and Test Systems

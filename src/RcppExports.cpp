@@ -2977,6 +2977,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_group_is_relative
+bool libtiledb_group_is_relative(XPtr<tiledb::Group> grp, const std::string& name);
+RcppExport SEXP _tiledb_libtiledb_group_is_relative(SEXP grpSEXP, SEXP nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Group> >::type grp(grpSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_group_is_relative(grp, name));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_filestore_schema_create
 XPtr<tiledb::ArraySchema> libtiledb_filestore_schema_create(XPtr<tiledb::Context> ctx, std::string uri);
 RcppExport SEXP _tiledb_libtiledb_filestore_schema_create(SEXP ctxSEXP, SEXP uriSEXP) {
@@ -3381,6 +3393,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_group_member_count", (DL_FUNC) &_tiledb_libtiledb_group_member_count, 1},
     {"_tiledb_libtiledb_group_member", (DL_FUNC) &_tiledb_libtiledb_group_member, 2},
     {"_tiledb_libtiledb_group_dump", (DL_FUNC) &_tiledb_libtiledb_group_dump, 2},
+    {"_tiledb_libtiledb_group_is_relative", (DL_FUNC) &_tiledb_libtiledb_group_is_relative, 2},
     {"_tiledb_libtiledb_filestore_schema_create", (DL_FUNC) &_tiledb_libtiledb_filestore_schema_create, 2},
     {"_tiledb_libtiledb_filestore_uri_import", (DL_FUNC) &_tiledb_libtiledb_filestore_uri_import, 3},
     {"_tiledb_libtiledb_filestore_uri_export", (DL_FUNC) &_tiledb_libtiledb_filestore_uri_export, 3},

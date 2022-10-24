@@ -1016,6 +1016,10 @@ libtiledb_group_dump <- function(grp, recursive) {
     .Call(`_tiledb_libtiledb_group_dump`, grp, recursive)
 }
 
+libtiledb_group_is_relative <- function(grp, name) {
+    .Call(`_tiledb_libtiledb_group_is_relative`, grp, name)
+}
+
 libtiledb_filestore_schema_create <- function(ctx, uri) {
     .Call(`_tiledb_libtiledb_filestore_schema_create`, ctx, uri)
 }
