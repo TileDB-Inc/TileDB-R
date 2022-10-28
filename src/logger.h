@@ -51,6 +51,8 @@
 #ifndef TILEDB_LOGGER_H
 #define TILEDB_LOGGER_H
 
+#if !defined(_WIN32)
+
 //#if !defined(R_BUILD)
 //#include <spdlog/spdlog.h>
 //#else
@@ -246,6 +248,9 @@ namespace tiledb {
 
 /** Convert TileDB timestamp (in ms) to human readable timestamp. */
 std::string asc_timestamp(uint64_t timestamp_ms);
+
+#endif
+
 
 // Also include the public logger functions here.
 // -- we include it directly here

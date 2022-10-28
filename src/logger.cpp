@@ -33,10 +33,12 @@
 
 #include "logger.h"
 
+#if !defined(_WIN32)
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#endif
 
 
 
@@ -49,27 +51,56 @@
 #include <Rcpp.h>
 
 // [[Rcpp::export]]
-void log_trace(const std::string &s) { tiledb::log_trace(s); }
+void log_trace(const std::string &s) {
+#if !defined(_WIN32)
+    tiledb::log_trace(s);
+#endif
+}
 
 // [[Rcpp::export]]
-void log_debug(const std::string &s) { tiledb::log_debug(s); }
+void log_debug(const std::string &s) {
+#if !defined(_WIN32)
+    tiledb::log_debug(s);
+#endif
+}
 
 // [[Rcpp::export]]
-void log_info(const std::string& s) { tiledb::log_info(s); }
+void log_info(const std::string& s) {
+#if !defined(_WIN32)
+    tiledb::log_info(s);
+#endif
+}
 
 // [[Rcpp::export]]
-void log_warn(const std::string& s) { tiledb::log_warn(s); }
+void log_warn(const std::string& s) {
+#if !defined(_WIN32)
+    tiledb::log_warn(s);
+#endif
+}
 
 // [[Rcpp::export]]
-void log_error(const std::string& s) { tiledb::log_error(s); }
+void log_error(const std::string& s) {
+#if !defined(_WIN32)
+    tiledb::log_error(s);
+#endif
+}
 
 // [[Rcpp::export]]
-void log_critical(const std::string& s) { tiledb::log_fatal(s); }
+void log_critical(const std::string& s) {
+#if !defined(_WIN32)
+    tiledb::log_fatal(s);
+#endif
+}
 
 // [[Rcpp::export]]
-void log_set_level(const std::string& l) { tiledb::log_set_level(l); }
+void log_set_level(const std::string& l) {
+#if !defined(_WIN32)
+    tiledb::log_set_level(l);
+#endif
+}
 
 
+#if !defined(_WIN32)
 
 // logger implementation below
 namespace tiledb {
@@ -274,3 +305,30 @@ namespace tiledb {
     }
 
 }  // namespace tiledb
+
+#else
+
+// sub logger implementation below
+namespace tiledb {
+
+    void log_set_level(const std::string& level) { }
+
+    void log_set_file(const std::string& logfile) { }
+
+    bool log_debug_enabled() { return false; }
+
+    void log_trace(const std::string& msg) { }
+
+    void log_debug(const std::string& msg) { }
+
+    void log_info(const std::string& msg) { }
+
+    void log_warn(const std::string& msg) { }
+
+    void log_error(const std::string& msg) { }
+
+    void log_fatal(const std::string& msg) { }
+
+}
+
+#endif
