@@ -167,6 +167,7 @@ tiledb_array <- function(uri,
             `At most one argument of as.data.frame, as.matrix and as.array can be selected` = sum(as.data.frame, as.matrix, as.array) <= 1,
             `Argument 'as.matrix' cannot be selected for sparse arrays` = !(isTRUE(is.sparse) && as.matrix))
   query_type <- match.arg(query_type)
+  log_info(paste0("[tiledb_array] query: ", query_type))
   if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
       return_as <- "asis"
   if (length(encryption_key) > 0) {
@@ -488,6 +489,8 @@ setMethod("[", "tiledb_array",
   k <- NULL
   #verbose <- getOption("verbose", FALSE)
 
+  log_info("[tiledb_array] '[' accessor started")
+
   ## deal with possible n-dim indexing
   ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
   if (length(ndlist) >= 0) {
@@ -741,6 +744,7 @@ setMethod("[", "tiledb_array",
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
                   #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
+                  log_debug(paste("[tiledb_array] '['", name, "char allocation", resrv, "budget", memory_budget))
                   buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
@@ -749,6 +753,7 @@ setMethod("[", "tiledb_array",
               }
           } else {
               ##if (verbose) message("Alloc ", resrv, " and ", memory_budget, " and ", ifelse(nullable,"(yes)", "(no)"))
+              log_debug(paste("[tiledb_array] '['", name, "non-char allocation ", resrv, "budget", memory_budget))
               buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
@@ -774,6 +779,7 @@ setMethod("[", "tiledb_array",
           ## check status
           status <- libtiledb_query_status(qryptr)
           #if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
+          log_info(paste0("[tiledb_array] '[' query status:", status))
 
           ## close array
           if (status == "COMPLETE") {

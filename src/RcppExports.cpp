@@ -3089,6 +3089,76 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// log_trace
+void log_trace(const std::string& s);
+RcppExport SEXP _tiledb_log_trace(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type s(sSEXP);
+    log_trace(s);
+    return R_NilValue;
+END_RCPP
+}
+// log_debug
+void log_debug(const std::string& s);
+RcppExport SEXP _tiledb_log_debug(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type s(sSEXP);
+    log_debug(s);
+    return R_NilValue;
+END_RCPP
+}
+// log_info
+void log_info(const std::string& s);
+RcppExport SEXP _tiledb_log_info(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type s(sSEXP);
+    log_info(s);
+    return R_NilValue;
+END_RCPP
+}
+// log_warn
+void log_warn(const std::string& s);
+RcppExport SEXP _tiledb_log_warn(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type s(sSEXP);
+    log_warn(s);
+    return R_NilValue;
+END_RCPP
+}
+// log_error
+void log_error(const std::string& s);
+RcppExport SEXP _tiledb_log_error(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type s(sSEXP);
+    log_error(s);
+    return R_NilValue;
+END_RCPP
+}
+// log_critical
+void log_critical(const std::string& s);
+RcppExport SEXP _tiledb_log_critical(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type s(sSEXP);
+    log_critical(s);
+    return R_NilValue;
+END_RCPP
+}
+// log_set_level
+void log_set_level(const std::string& l);
+RcppExport SEXP _tiledb_log_set_level(SEXP lSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type l(lSEXP);
+    log_set_level(l);
+    return R_NilValue;
+END_RCPP
+}
 // vecbuf_to_shmem
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz, int numvar);
 RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP dirSEXP, SEXP nameSEXP, SEXP bufSEXP, SEXP szSEXP, SEXP numvarSEXP) {
@@ -3402,6 +3472,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_filestore_size", (DL_FUNC) &_tiledb_libtiledb_filestore_size, 2},
     {"_tiledb_libtiledb_mime_type_to_str", (DL_FUNC) &_tiledb_libtiledb_mime_type_to_str, 1},
     {"_tiledb_libtiledb_mime_type_from_str", (DL_FUNC) &_tiledb_libtiledb_mime_type_from_str, 1},
+    {"_tiledb_log_trace", (DL_FUNC) &_tiledb_log_trace, 1},
+    {"_tiledb_log_debug", (DL_FUNC) &_tiledb_log_debug, 1},
+    {"_tiledb_log_info", (DL_FUNC) &_tiledb_log_info, 1},
+    {"_tiledb_log_warn", (DL_FUNC) &_tiledb_log_warn, 1},
+    {"_tiledb_log_error", (DL_FUNC) &_tiledb_log_error, 1},
+    {"_tiledb_log_critical", (DL_FUNC) &_tiledb_log_critical, 1},
+    {"_tiledb_log_set_level", (DL_FUNC) &_tiledb_log_set_level, 1},
     {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 5},
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},

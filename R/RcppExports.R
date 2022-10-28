@@ -1052,6 +1052,34 @@ libtiledb_mime_type_from_str <- function(mime_type) {
     .Call(`_tiledb_libtiledb_mime_type_from_str`, mime_type)
 }
 
+log_trace <- function(s) {
+    invisible(.Call(`_tiledb_log_trace`, s))
+}
+
+log_debug <- function(s) {
+    invisible(.Call(`_tiledb_log_debug`, s))
+}
+
+log_info <- function(s) {
+    invisible(.Call(`_tiledb_log_info`, s))
+}
+
+log_warn <- function(s) {
+    invisible(.Call(`_tiledb_log_warn`, s))
+}
+
+log_error <- function(s) {
+    invisible(.Call(`_tiledb_log_error`, s))
+}
+
+log_critical <- function(s) {
+    invisible(.Call(`_tiledb_log_critical`, s))
+}
+
+log_set_level <- function(l) {
+    invisible(.Call(`_tiledb_log_set_level`, l))
+}
+
 vecbuf_to_shmem <- function(dir, name, buf, sz, numvar) {
     invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz, numvar))
 }
