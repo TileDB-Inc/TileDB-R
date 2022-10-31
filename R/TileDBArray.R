@@ -138,6 +138,7 @@ setClass("tiledb_array",
 #' @param buffers An optional list with full pathnames of shared memory buffers to read data from
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
+#' @importFrom RcppSpdlog log_info log_debug log_set_level log_setup
 #' @export
 tiledb_array <- function(uri,
                          query_type = c("READ", "WRITE"),
