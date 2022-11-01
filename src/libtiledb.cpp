@@ -3258,7 +3258,7 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
   check_xptr_tag<tiledb::Query>(query);
   tiledb::Query::Status status = query->query_status();
   std::string status_text = _query_status_to_string(status);
-  spdl::info(fmt::format("[libtiledb_query_status] status = {}", status_text));
+  spdl::info(tfm::format("[libtiledb_query_status] status = %s", status_text.c_str()));
   return status_text;
 }
 
