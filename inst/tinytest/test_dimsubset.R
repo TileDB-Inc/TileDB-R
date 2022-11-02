@@ -3,7 +3,7 @@
 
 library(tinytest)
 library(tiledb)
-library(data.table)
+
 RcppSpdlog::log_setup("test_dimsubset", "warn")
 
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)

@@ -1157,7 +1157,7 @@ setMethod("[<-", "tiledb_array",
             col <- unname(do.call(c, col))
         }
         nr <- NROW(col)
-        log_info(paste("[tiledb_array] '[<-' alloc buf", k, "for", colnam, ":", alltypes[i], "nr:", nr,
+        log_info(paste("[tiledb_array] '[<-' alloc buf", k, "for", colnam, ":", alltypes[k], "nr:", nr,
                        "null:", ifelse(allnullable[k], "(yes)", "(no)"), "asint64:", asint64))
         buflist[[k]] <- libtiledb_query_buffer_alloc_ptr(alltypes[k], nr, allnullable[k], allvarnum[k])
         buflist[[k]] <- libtiledb_query_buffer_assign_ptr(buflist[[k]], alltypes[k], col, asint64)
