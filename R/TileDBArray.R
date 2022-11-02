@@ -168,7 +168,7 @@ tiledb_array <- function(uri,
             `At most one argument of as.data.frame, as.matrix and as.array can be selected` = sum(as.data.frame, as.matrix, as.array) <= 1,
             `Argument 'as.matrix' cannot be selected for sparse arrays` = !(isTRUE(is.sparse) && as.matrix))
   query_type <- match.arg(query_type)
-  log_info(paste0("[tiledb_array] query: ", query_type))
+  log_info(paste0("[tiledb_array] query is ", query_type))
   if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
       return_as <- "asis"
   if (length(encryption_key) > 0) {
@@ -1006,6 +1006,7 @@ setMethod("[<-", "tiledb_array",
   ## add defaults
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
+  log_info("[tiledb_array] '[<-' accessor started")
 
   ctx <- x@ctx
   uri <- x@uri
@@ -1147,7 +1148,7 @@ setMethod("[<-", "tiledb_array",
       k <- match(colnam, nm)
       if (alltypes[k] %in% c("CHAR", "ASCII")) { # variable length
         txtvec <- as.character(value[[k]])
-        #cat("Alloc char buffer", k, "for", colnam, ":", alltypes[k], "\n")
+        log_info(paste("[tiledb_array] '[<-' alloc char buffer", k, "for", colnam, ":", alltypes[k]))
         buflist[[k]] <- libtiledb_query_buffer_var_char_create(txtvec, allnullable[k])
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[k]])
       } else {
@@ -1156,8 +1157,8 @@ setMethod("[<-", "tiledb_array",
             col <- unname(do.call(c, col))
         }
         nr <- NROW(col)
-        #cat("Alloc buf", i, " ", colnam, ":", alltypes[i], "nr:", nr,
-        #    "null:", ifelse(allnullable[k], "(yes)", "(no)"), "asint64:", asint64, "\n")
+        log_info(paste("[tiledb_array] '[<-' alloc buf", k, "for", colnam, ":", alltypes[i], "nr:", nr,
+                       "null:", ifelse(allnullable[k], "(yes)", "(no)"), "asint64:", asint64))
         buflist[[k]] <- libtiledb_query_buffer_alloc_ptr(alltypes[k], nr, allnullable[k], allvarnum[k])
         buflist[[k]] <- libtiledb_query_buffer_assign_ptr(buflist[[k]], alltypes[k], col, asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[k]])
