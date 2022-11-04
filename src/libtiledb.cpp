@@ -3215,7 +3215,7 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {
   check_xptr_tag<tiledb::Query>(query);
-  spdl::info("[libtiledb_query_submit]");
+  spdl::trace("[libtiledb_query_submit]");
   query->submit();
   return query;
 }
@@ -3223,7 +3223,7 @@ XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_submit_async(XPtr<tiledb::Query> query) {
   check_xptr_tag<tiledb::Query>(query);
-  spdl::info("[libtiledb_query_submit_async]");
+  spdl::trace("[libtiledb_query_submit_async]");
   query->submit_async();
   return query;
 }
@@ -3231,7 +3231,7 @@ XPtr<tiledb::Query> libtiledb_query_submit_async(XPtr<tiledb::Query> query) {
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_finalize(XPtr<tiledb::Query> query) {
   check_xptr_tag<tiledb::Query>(query);
-  spdl::info("[libtiledb_query_finalize]");
+  spdl::trace("[libtiledb_query_finalize]");
   query->finalize();
   return query;
 }
@@ -3258,7 +3258,7 @@ std::string libtiledb_query_status(XPtr<tiledb::Query> query) {
   check_xptr_tag<tiledb::Query>(query);
   tiledb::Query::Status status = query->query_status();
   std::string status_text = _query_status_to_string(status);
-  spdl::info(tfm::format("[libtiledb_query_status] status = %s", status_text.c_str()));
+  spdl::debug(tfm::format("[libtiledb_query_status] status = %s", status_text.c_str()));
   return status_text;
 }
 
