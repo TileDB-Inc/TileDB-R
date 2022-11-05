@@ -4,6 +4,8 @@
 
 * Support for testing group URIs on being relative has been added (#478)
 
+* Use of TileDB Embedded was upgraded to release 2.12.1, and 2.12.2 (#480, #481)
+
 ## Bug Fixes
 
 ## Build and Test Systems
