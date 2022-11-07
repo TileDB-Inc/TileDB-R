@@ -1618,13 +1618,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_buffer_var_char_alloc_direct
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata, bool nullable, int cols);
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(double szoffsets, double szdata, bool nullable, int cols);
 RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_alloc_direct(SEXP szoffsetsSEXP, SEXP szdataSEXP, SEXP nullableSEXP, SEXP colsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type szoffsets(szoffsetsSEXP);
-    Rcpp::traits::input_parameter< int >::type szdata(szdataSEXP);
+    Rcpp::traits::input_parameter< double >::type szoffsets(szoffsetsSEXP);
+    Rcpp::traits::input_parameter< double >::type szdata(szdataSEXP);
     Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
     Rcpp::traits::input_parameter< int >::type cols(colsSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_alloc_direct(szoffsets, szdata, nullable, cols));

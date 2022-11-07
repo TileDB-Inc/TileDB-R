@@ -2647,16 +2647,16 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
 // -- vlc_buf_t functions below
 
 // [[Rcpp::export]]
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(int szoffsets, int szdata,
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(double szoffsets, double szdata,
                                                              bool nullable, int cols=1) {
-  XPtr<vlc_buf_t> buf = make_xptr<vlc_buf_t>(new vlc_buf_t);
-  buf->offsets.resize(szoffsets);
-  buf->str.resize(szdata);
-  buf->rows = szoffsets/cols;           // guess for number of elements
-  buf->cols = cols;
-  buf->nullable = nullable;
-  buf->validity_map.resize(szdata);
-  return buf;
+    XPtr<vlc_buf_t> buf = make_xptr<vlc_buf_t>(new vlc_buf_t);
+    buf->offsets.resize(static_cast<size_t>(szoffsets));
+    buf->str.resize(static_cast<size_t>(szdata));
+    buf->rows = std::round(szoffsets/cols);           // guess for number of elements
+    buf->cols = cols;
+    buf->nullable = nullable;
+    buf->validity_map.resize(static_cast<size_t>(szdata));
+    return buf;
 }
 
 // assigning (for a write) allocates
