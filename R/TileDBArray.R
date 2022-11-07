@@ -746,7 +746,7 @@ setMethod("[", "tiledb_array",
                          MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
       ## ensure > 0 for correct handling of zero-length outputs, ensure respecting memory budget
       spdl_debug(paste("['['] result of size estimates is", paste(ressizes, collapse=",")))
-      resrv <- max(1, min(memory_budget/8, ressizes))
+      resrv <- max(1, min(memory_budget/8, ressizes[ressizes > 0]))
       spdl_debug(sprintf("['['] overall estimate %.0f rows", resrv))
 
       ## allocate and set buffers
