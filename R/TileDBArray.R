@@ -138,7 +138,7 @@ setClass("tiledb_array",
 #' @param buffers An optional list with full pathnames of shared memory buffers to read data from
 #' @param ctx optional tiledb_ctx
 #' @return tiledb_array object
-#' @importFrom RcppSpdlog log_info log_debug log_set_level log_setup
+#' @importFrom RcppSpdlog log_setup
 #' @export
 tiledb_array <- function(uri,
                          query_type = c("READ", "WRITE"),
@@ -168,7 +168,7 @@ tiledb_array <- function(uri,
             `At most one argument of as.data.frame, as.matrix and as.array can be selected` = sum(as.data.frame, as.matrix, as.array) <= 1,
             `Argument 'as.matrix' cannot be selected for sparse arrays` = !(isTRUE(is.sparse) && as.matrix))
   query_type <- match.arg(query_type)
-  log_info(paste0("[tiledb_array] query is ", query_type))
+  spdl_debug(paste0("[tiledb_array] query is ", query_type))
   if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
       return_as <- "asis"
   if (length(encryption_key) > 0) {
@@ -490,7 +490,7 @@ setMethod("[", "tiledb_array",
   k <- NULL
   #verbose <- getOption("verbose", FALSE)
 
-  log_info("[tiledb_array] '[' accessor started")
+  spdl_trace("[tiledb_array] '[' accessor started")
 
   ## deal with possible n-dim indexing
   ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -557,6 +557,7 @@ setMethod("[", "tiledb_array",
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
   #if (verbose) message("Memory budget set to ", memory_budget, " bytes or ", memory_budget/8, " rows")
+  spdl_debug(sprintf("['['] memory budget is %.0f", memory_budget))
 
   if (length(enckey) > 0) {
     if (length(tstamp) > 0) {
@@ -722,30 +723,39 @@ setMethod("[", "tiledb_array",
 
       ## retrieve est_result_size
       getEstimatedSize <- function(name, varnum, nullable, qryptr, datatype) {
-          if (is.na(varnum) && !nullable)
+          if (is.na(varnum) && !nullable) {
               res <- libtiledb_query_get_est_result_size_var(qryptr, name)[1]
-          else if (is.na(varnum) && nullable)
+              spdl_debug(sprintf("[getEstimatedSize] column '%s' (is.na(varnum) and !nullable) %.0f", name, res))
+          } else if (is.na(varnum) && nullable) {
               res <- libtiledb_query_get_est_result_size_var_nullable(qryptr, name)[1]
-          else if (!is.na(varnum) && !nullable)
+              spdl_debug(sprintf("[getEstimatedSize] column '%s' (is.na(varnum) and nullable) %.0f", name, res))
+          } else if (!is.na(varnum) && !nullable) {
               res <- libtiledb_query_get_est_result_size(qryptr, name)
-          else if (!is.na(varnum) && nullable)
+              spdl_debug(sprintf("[getEstimatedSize] column '%s' (!is.na(varnum) and !nullable) %.0f", name, res))
+          } else if (!is.na(varnum) && nullable) {
               res <- libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
+              spdl_debug(sprintf("[getEstimatedSize] column '%s' (!is.na(varnum) and nullable) %.0f", name, res))
+          }
           if (rangeunset && tiledb::tiledb_version(TRUE) >= "2.2.0") {
               sz <- tiledb_datatype_string_to_sizeof(datatype)
               res <- res / sz
+              spdl_debug(paste("[getEstimatedSize] rangeunset and res scaled to", res, name))
           }
           res
       }
       ressizes <- mapply(getEstimatedSize, allnames, allvarnum, allnullable, alltypes,
                          MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
       ## ensure > 0 for correct handling of zero-length outputs, ensure respecting memory budget
+      spdl_debug(paste("['['] result of size estimates is", paste(ressizes, collapse=",")))
       resrv <- max(1, min(memory_budget/8, ressizes))
+      spdl_debug(sprintf("['['] overall estimate %.0f rows", resrv))
+
       ## allocate and set buffers
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
                   #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
-                  log_debug(paste("[tiledb_array] '['", name, "char allocation", resrv, "budget", memory_budget))
+                  spdl_debug(sprintf("[getBuffer] '%s' allocating 'char' %.0f rows given budget of %.0f", name, resrv, memory_budget))
                   buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
@@ -754,7 +764,7 @@ setMethod("[", "tiledb_array",
               }
           } else {
               ##if (verbose) message("Alloc ", resrv, " and ", memory_budget, " and ", ifelse(nullable,"(yes)", "(no)"))
-              log_debug(paste("[tiledb_array] '['", name, "non-char allocation ", resrv, "budget", memory_budget))
+              spdl_debug(sprintf("[getBuffer] '%s' allocating non-char %.0f rows given budget of %.0f", name, resrv, memory_budget))
               buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
               buf
@@ -763,6 +773,7 @@ setMethod("[", "tiledb_array",
       buflist <- mapply(getBuffer, allnames, alltypes, allvarnum, allnullable,
                         MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
                         SIMPLIFY=FALSE)
+      spdl_debug("['['] buffers allocated")
 
       ## if we have a query condition, apply it
       if (isTRUE(x@query_condition@init)) {
@@ -775,12 +786,13 @@ setMethod("[", "tiledb_array",
       while (!finished) {
 
           ## fire off query
+          spdl_debug(paste("['['] query submission", counter))
           qryptr <- libtiledb_query_submit(qryptr)
 
           ## check status
           status <- libtiledb_query_status(qryptr)
           #if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
-          log_info(paste0("[tiledb_array] '[' query status:", status))
+          if (status != "COMPLETE") spdl_debug(paste("['['] query returned '", status, "'."))
 
           ## close array
           if (status == "COMPLETE") {
@@ -797,12 +809,14 @@ setMethod("[", "tiledb_array",
                   libtiledb_query_result_buffer_elements(qryptr, name)
           }
           estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
+          spdl_debug(paste("['['] estimated result sizes", paste(estsz, collapse=",")))
           if (any(!is.na(estsz))) {
               resrv <- max(estsz, na.rm=TRUE)
           } else {
               resrv <- resrv/8                  # character case where bytesize of offset vector was used
           }
           #if (verbose) message("Expected size ", resrv)
+          spdl_debug(paste("['['] expected size", resrv))
           ## Permit one pass to allow zero-row schema read
           if (resrv == 0 && counter > 1L) {
               finished <- TRUE
@@ -903,6 +917,7 @@ setMethod("[", "tiledb_array",
   if (x@query_statistics)
       attr(res, "query_statistics") <- libtiledb_query_stats(qryptr)
 
+  spdl_debug("['['] returning result")
   invisible(res)
 })
 
@@ -1006,7 +1021,7 @@ setMethod("[<-", "tiledb_array",
   ## add defaults
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
-  log_info("[tiledb_array] '[<-' accessor started")
+  spdl_debug("[tiledb_array] '[<-' accessor started")
 
   ctx <- x@ctx
   uri <- x@uri
@@ -1148,7 +1163,7 @@ setMethod("[<-", "tiledb_array",
       k <- match(colnam, nm)
       if (alltypes[k] %in% c("CHAR", "ASCII")) { # variable length
         txtvec <- as.character(value[[k]])
-        log_info(paste("[tiledb_array] '[<-' alloc char buffer", k, "for", colnam, ":", alltypes[k]))
+        spdl_debug(paste("[tiledb_array] '[<-' alloc char buffer", k, "for", colnam, ":", alltypes[k]))
         buflist[[k]] <- libtiledb_query_buffer_var_char_create(txtvec, allnullable[k])
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[k]])
       } else {
@@ -1157,8 +1172,8 @@ setMethod("[<-", "tiledb_array",
             col <- unname(do.call(c, col))
         }
         nr <- NROW(col)
-        log_info(paste("[tiledb_array] '[<-' alloc buf", k, "for", colnam, ":", alltypes[k], "nr:", nr,
-                       "null:", ifelse(allnullable[k], "(yes)", "(no)"), "asint64:", asint64))
+        spdl_debug(paste("[tiledb_array] '[<-' alloc buf", k, "for", colnam, ":", alltypes[k], "nr:", nr,
+                         "null:", ifelse(allnullable[k], "(yes)", "(no)"), "asint64:", asint64))
         buflist[[k]] <- libtiledb_query_buffer_alloc_ptr(alltypes[k], nr, allnullable[k], allvarnum[k])
         buflist[[k]] <- libtiledb_query_buffer_assign_ptr(buflist[[k]], alltypes[k], col, asint64)
         qryptr <- libtiledb_query_set_buffer_ptr(qryptr, colnam, buflist[[k]])
