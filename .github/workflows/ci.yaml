@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         include:
-          #- {os: macOS-latest}
+          - {os: macOS-latest}
           - {os: ubuntu-latest}
 
     runs-on: ${{ matrix.os }}
@@ -27,9 +27,6 @@ jobs:
 
       - name: Dependencies
         run: ./.github/r-ci.sh install_all
-
-      - name: Force Spdlog from drat repo
-        run: sudo Rscript -e 'bspm::disable(); install.packages("RcppSpdlog", repo="https://ghrr.github.io/drat", type="source")'
 
       - name: Test
         run: ./.github/r-ci.sh run_tests
