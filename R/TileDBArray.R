@@ -556,7 +556,6 @@ setMethod("[", "tiledb_array",
   ## A preference can be set in a local per-user configuration file; if no value
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
-  #if (verbose) message("Memory budget set to ", memory_budget, " bytes or ", memory_budget/8, " rows")
   spdl_debug(sprintf("['['] memory budget is %.0f", memory_budget))
 
   if (length(enckey) > 0) {
@@ -754,7 +753,6 @@ setMethod("[", "tiledb_array",
       getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
           if (is.na(varnum)) {
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                  #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
                   spdl_debug(sprintf("[getBuffer] '%s' allocating 'char' %.0f rows given budget of %.0f", name, resrv, memory_budget))
                   buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
@@ -763,7 +761,6 @@ setMethod("[", "tiledb_array",
                   message("Non-char var.num columns are not currently supported.")
               }
           } else {
-              ##if (verbose) message("Alloc ", resrv, " and ", memory_budget, " and ", ifelse(nullable,"(yes)", "(no)"))
               spdl_debug(sprintf("[getBuffer] '%s' allocating non-char %.0f rows given budget of %.0f", name, resrv, memory_budget))
               buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
               qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
@@ -815,12 +812,10 @@ setMethod("[", "tiledb_array",
           } else {
               resrv <- resrv/8                  # character case where bytesize of offset vector was used
           }
-          #if (verbose) message("Expected size ", resrv)
           spdl_debug(paste("['['] expected size", resrv))
           ## Permit one pass to allow zero-row schema read
           if (resrv == 0 && counter > 1L) {
               finished <- TRUE
-              #if (verbose) message("Breaking loop at zero length expected")
               if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
               .pkgenv[["query_status"]] <- status
               break
@@ -864,7 +859,6 @@ setMethod("[", "tiledb_array",
           ## the list columns are now all of equal lenthth as R needs and we can form a data.frame
           res <- data.frame(reslist)[,,drop=FALSE]
           colnames(res) <- allnames
-          #if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
           overallresults[[counter]] <- res
           counter <- counter + 1L
       }
