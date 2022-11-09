@@ -15,7 +15,7 @@
 createBatched <- function(x) {
     ## add defaults, shortcut for now
     i <- j <- k <- NULL
-    verbose <- getOption("verbose", FALSE)
+    #verbose <- getOption("verbose", FALSE)
 
     ## ## deal with possible n-dim indexing
     ## ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
@@ -82,7 +82,7 @@ createBatched <- function(x) {
     ## A preference can be set in a local per-user configuration file; if no value
     ## is set a fallback from the TileDB config object is used.
     memory_budget <- get_allocation_size_preference()
-    ##if (verbose) message("Memory budget set to ", memory_budget, " bytes or ", memory_budget/8, " rows")
+    spdl_debug(sprintf("[createBatched] memory budget is %.0f", memory_budget))
 
     if (length(enckey) > 0) {
         if (length(tstamp) > 0) {
@@ -233,7 +233,7 @@ createBatched <- function(x) {
         getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
             if (is.na(varnum)) {
                 if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                                        #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
+                    spdl_debug(sprintf("[getBuffer] '%s' allocating 'char' %.0f rows given budget of %.0f", name, resrv, memory_budget))
                     buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
                     qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                     buf
@@ -241,7 +241,7 @@ createBatched <- function(x) {
                     message("Non-char var.num columns are not currently supported.")
                 }
             } else {
-                                        #if (verbose) message("Allocating with ", resrv, " and ", memory_budget)
+                spdl_debug(sprintf("[getBuffer] '%s' allocating non-char %.0f rows given budget of %.0f", name, resrv, memory_budget))
                 buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
                 qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
                 buf
@@ -290,7 +290,7 @@ fetchBatched <- function(x, obj) {
 
     asint64 <- x@datetimes_as_int64
 
-    verbose <- TRUE
+    #verbose <- getOption("verbose", FALSE)
 
     ## fire off query
     qryptr <- libtiledb_query_submit(qryptr)
@@ -315,12 +315,13 @@ fetchBatched <- function(x, obj) {
             libtiledb_query_result_buffer_elements(qryptr, name)
     }
     estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
+    spdl_debug(paste("[fetchBatched] estimated result sizes", paste(estsz, collapse=",")))
     if (any(!is.na(estsz))) {
         resrv <- max(estsz, na.rm=TRUE)
     } else {
         resrv <- resrv/8                  # character case where bytesize of offset vector was used
     }
-    ##if (verbose) message("Expected size ", resrv)
+    spdl_debug(paste("[fetchBatched] expected size", resrv))
     ## Permit one pass to allow zero-row schema read
     #if (resrv == 0 && counter > 1L) {
         #finished <- TRUE
@@ -366,7 +367,7 @@ fetchBatched <- function(x, obj) {
     }
     res <- data.frame(reslist)[seq_len(resrv),,drop=FALSE]
     colnames(res) <- allnames
-    ##if (verbose) cat("Retrieved ", paste(dim(res), collapse="x"), "...\n")
+    spdl_debug(paste("[fetchBatched] retrieved", paste(dim(res), collapse="x")))
     ##overallresults[[counter]] <- res
     ##counter <- counter + 1L
 
