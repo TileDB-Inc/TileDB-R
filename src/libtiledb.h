@@ -26,6 +26,9 @@
 // in inst/include so that Rcpp code generation can use the types for glue code
 #include "tiledb.h"
 
+// logging support in RcppSpdlog namespace
+#include <spdl.h>
+
 // Version
 Rcpp::NumericVector tiledb_version();
 
@@ -126,6 +129,7 @@ template <typename T> XPtr<T> make_xptr(SEXP p) {
 }
 
 template<typename T> void check_xptr_tag(XPtr<T> ptr) {
+    spdl::trace("[check_xptr_tag]");
     if (R_ExternalPtrTag(ptr) == R_NilValue) {
         Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
     }
