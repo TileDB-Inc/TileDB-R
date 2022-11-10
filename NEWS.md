@@ -4,13 +4,17 @@
 
 * Support for testing group URIs on being relative has been added (#478)
 
+* Logging support at the R and C++ level has been added (#479)
+
 * Use of TileDB Embedded was upgraded to release 2.12.1, and 2.12.2 (#480, #481)
 
 ## Bug Fixes
 
+* Accomodate possible zero sized allocation estimates for attributes (#482)
+
 ## Build and Test Systems
 
-* Update check out action to version three suppressing a warning (#477)
+* Update check-out action to version three suppressing a warning (#477)
 
 
 # tiledb 0.16.0
