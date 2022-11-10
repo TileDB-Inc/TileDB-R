@@ -1037,6 +1037,14 @@ setMethod("[<-", "tiledb_array",
       allnullable <- dimnullable
   }
 
+  ## check we have complete columns (as we cannot write subset of attributes)
+  missing_names <- setdiff(attrnames, names(value))
+  if (sparse
+      && length(missing_names) > 0
+      && names(value)[1] != "value") { # special case of unnamed vector 'value' becoming one-col df
+      stop("Columns '", paste(missing_names, collapse=", "), "' are missing. Please add them", call. = FALSE)
+  }
+
   ## we will recognize two standard cases
   ##  1) arr[]    <- value    where value contains two columns with the dimnames
   ##  2) arr[i,j] <- value    where value contains just the attribute names
