@@ -30,3 +30,7 @@ jobs:
 
       - name: Test
         run: ./.github/r-ci.sh run_tests
+
+      - name: Coverage
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: ./.github/r-ci.sh coverage
