@@ -1415,6 +1415,9 @@ expect_identical(attrs(arr), character(length = 0L))
 attrs(arr) <- NA_character_
 expect_true(is.na(attrs(arr)))
 
+v <- tiledb_version()
+if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L)) exit_file("Skip remainder for 2.4.* and 2.10.*")
+
 
 ## check for incomplete status on unsuccessful query
 set_allocation_size_preference(256)     # too low for penguins to return something
