@@ -1,2 +1,4 @@
+comment: false
+
 ignore:
-  - "inst/tiledb/"  	# ignore headers from TileDB Core brought in via artifact
+  - "inst/tiledb/"
