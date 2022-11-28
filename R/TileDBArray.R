@@ -592,7 +592,9 @@ setMethod("[", "tiledb_array",
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
-  if (length(layout) > 0) libtiledb_query_set_layout(qryptr, layout)
+  qryptr <- libtiledb_query_set_layout(qryptr,
+                                       if (length(layout) > 0) layout
+                                       else { if (sparse) "UNORDERED" else "COL_MAJOR" })
 
   ## ranges seem to interfere with the byte/element adjustment below so set up toggle
   rangeunset <- TRUE

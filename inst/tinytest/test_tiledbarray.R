@@ -599,7 +599,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
@@ -630,7 +630,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
@@ -661,7 +661,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
@@ -692,7 +692,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
@@ -723,7 +723,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
@@ -754,7 +754,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
@@ -785,7 +785,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[as.integer64(1:2), as.integer64(2:3)]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], as.integer64(c(1L, 1L, 2L, 2L)))
@@ -817,7 +817,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[as.integer64(rep(1:4,each=4)), as.integer64(rep(1:4,4))] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[as.integer64(1:2), as.integer64(2:3)]
   expect_equal(newdata[,"a"], c(2L, 3L, 6L, 7L))
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
@@ -868,7 +868,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   #A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
   expect_equal(newdata[,"cols"], c(2L, 3L, 2L, 3L))
@@ -924,7 +924,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   ## or with indices
   A[rep(1:4,each=4), rep(1:4,4)] <- data
 
-  A <- tiledb_array(uri = tmp, as.data.frame=TRUE)
+  A <- tiledb_array(uri = tmp, as.data.frame=TRUE, query_layout="ROW_MAJOR")
   newdata <- A[1:2, 2:3]
   expect_equal(newdata[,"rows"], c(1L, 1L, 2L, 2L))
   expect_equal(newdata[,"cols"], c(2L, 3L, 2L, 3L))
@@ -1351,7 +1351,7 @@ data <- array(1:64, dim = c(4,4,4))
 A <- tiledb_array(uri = uri)
 A[] <- data
 
-A <- tiledb_array(uri = uri, return_as="data.frame")
+A <- tiledb_array(uri = uri, return_as="data.frame", query_layout="ROW_MAJOR")
 res <- A[2,2,2]
 expect_equal(res[, "a", drop=TRUE], 22)
 res <- A[2,2:3,2]
@@ -1421,7 +1421,7 @@ if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L)) exit_file("Skip remainde
 
 ## check for incomplete status on unsuccessful query
 set_allocation_size_preference(256)     # too low for penguins to return something
-array <- tiledb_array(uri, as.data.frame=TRUE)
+array <- tiledb_array(uri, as.data.frame=TRUE, query_layout="ROW_MAJOR")
 expect_warning(res <- array[])          # warning emitted
 expect_equal(attr(res, "query_status"), "INCOMPLETE") # and query status reported
 
