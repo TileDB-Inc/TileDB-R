@@ -8,6 +8,8 @@
 
 * Use of TileDB Embedded was upgraded to release 2.12.1, and 2.12.2 (#480, #481)
 
+* Sparse array queries via tiledb_array and '[]' access use an UNORDERED query layout (#488)
+
 ## Bug Fixes
 
 * Accomodate possible zero sized allocation estimates for attributes (#482)
