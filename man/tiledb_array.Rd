@@ -14,6 +14,7 @@ tiledb_array(
   attrs = character(),
   extended = TRUE,
   selected_ranges = list(),
+  selected_points = list(),
   query_layout = character(),
   datetimes_as_int64 = FALSE,
   encryption_key = character(),
@@ -53,7 +54,10 @@ has the opposite effect and implies no attributes are returned.}
 format, defaults to \code{TRUE}}
 
 \item{selected_ranges}{optional A list with matrices where each matrix i
-describes the (min,max) pair of ranges for dimension i}
+describes the (min,max) pair of ranges selected for dimension i}
+
+\item{selected_points}{optional A list with vectors where each vector i
+describes the points selected in dimension i}
 
 \item{query_layout}{optional A value for the TileDB query layout, defaults to
 an empty character variable indicating no special layout is set}
