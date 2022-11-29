@@ -6,7 +6,7 @@ if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip on Windows")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.4.0") exit_file("Needs TileDB 2.4.* or later")
+if (tiledb_version(TRUE) < "2.11.0") exit_file("Needs TileDB 2.11.* or later")
 
 df <- data.frame(key=letters[1:10],
                  val=1:10)

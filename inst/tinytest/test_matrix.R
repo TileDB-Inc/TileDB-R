@@ -8,11 +8,11 @@ if (isOldWindows) exit_file("skip this file on old Windows releases")
 ctx <- tiledb_ctx(limitTileDBCores())
 
 uri <- tempfile()
-M <- matrix(1:12, 3, 4, dimnames=list(LETTERS[1:3], letters[1:4]))
+M <- matrix(1:16, 4, 4, dimnames=list(LETTERS[1:4], letters[1:4]))
 fromMatrix(M, uri)
 
 M2 <- toMatrix(uri)
-expect_equivalent(M, M2)
+expect_equivalent(M, t(M2))             # because we now default to UNORDERED we need to transpose
 
 
 uri <- tempfile()
@@ -21,7 +21,6 @@ fromMatrix(M, uri)
 
 M2 <- toMatrix(uri)
 expect_equivalent(M, M2)
-
 
 
 uri <- tempfile()
