@@ -369,7 +369,7 @@ setValidity("tiledb_array", function(object) {
   } else {
     for (i in (seq_len(length(object@selected_points)))) {
       if (!is.null(object@selected_points[[i]])) {
-        if (!is.vector(object@selected_ranges[[i]])) {
+        if (!is.vector(object@selected_points[[i]])) {
           valid <- FALSE
           msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not a vector.", i))
         }
@@ -711,25 +711,28 @@ setMethod("[", "tiledb_array",
 
   ## if ranges selected, use those
   for (k in seq_len(length(x@selected_ranges))) {
-    if (is.null(x@selected_ranges[[k]])) {
+    if (is.null(x@selected_ranges[[k]]) && is.null(x@selected_points[[k]])) {
       #cat("Adding null dim", k, "on", dimtypes[k], "\n")
       vec <- .map2integer64(nonemptydom[[k]], dimtypes[k])
       if (vec[1] != 0 || vec[2] != 0) { # corner case of A[] on empty array
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+        spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
         rangeunset <- FALSE
       }
-    } else if (is.null(nrow(x@selected_ranges[[k]]))) {
+    } else if (is.null(nrow(x@selected_ranges[[k]])) && is.null(x@selected_points[[k]])) {
       #cat("Adding nrow null dim", k, "on", dimtypes[k], "\n")
       vec <- x@selected_ranges[[k]]
       vec <- .map2integer64(vec, dimtypes[k])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], min(vec), max(vec))
+      spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
       rangeunset <- FALSE
-    } else {
+    } else if (is.null(x@selected_points[[k]])) {
       #cat("Adding non-zero dim", k, "on", dimtypes[k], "\n")
       m <- x@selected_ranges[[k]]
       for (i in seq_len(nrow(m))) {
         vec <- .map2integer64(c(m[i,1], m[i,2]), dimtypes[k])
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+        spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
     }
@@ -743,6 +746,7 @@ setMethod("[", "tiledb_array",
       for (i in seq_along(m)) {
         vec <- .map2integer64(c(m[i], m[i]), dimtypes[k])
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+        spdl::debug("[tiledb_array] Adding point on non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
     }
@@ -1430,6 +1434,47 @@ setReplaceMethod("selected_ranges", signature = "tiledb_array",
   x
 })
 
+## -- selected_points accessor
+
+#' @rdname selected_points-tiledb_array-method
+#' @export
+setGeneric("selected_points", function(object) standardGeneric("selected_points"))
+
+#' @rdname selected_points-set-tiledb_array-method
+#' @export
+setGeneric("selected_points<-", function(x, value) standardGeneric("selected_points<-"))
+
+#' Retrieve selected_points values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods returns the selection value for \sQuote{selected_points}
+#' and returns a list (with one element per dimension) of vectors where
+#' each row describes one selected points. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
+#' @param object A \code{tiledb_array} object
+#' @return A list which can contain a vector for each dimension
+#' @export
+setMethod("selected_points", signature = "tiledb_array",
+          function(object) object@selected_points)
+
+#' Set selected_points return values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods sets the selection value for \sQuote{selected_points}
+#' which is a list (with one element per dimension) of two-column matrices where
+#' each row describes one pair of minimum and maximum values. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
+#' @param x A \code{tiledb_array} object
+#' @param value A list of vectors where each list element \sQuote{i}
+#' corresponds to the dimension attribute \sQuote{i}.
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("selected_points", signature = "tiledb_array",
+                 function(x, value) {
+  x@selected_points <- value
+  validObject(x)
+  x
+})
 
 
 ## -- query_layout accessor
