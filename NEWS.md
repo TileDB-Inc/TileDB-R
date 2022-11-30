@@ -4,7 +4,7 @@
 
 * Support for testing group URIs on being relative has been added (#478)
 
-* Logging support at the R and C++ level has been added (#479, #487)
+* Logging support at the R and C++ level has been added (#479, #487, #489)
 
 * Use of TileDB Embedded was upgraded to release 2.12.1, and 2.12.2 (#480, #481)
 
