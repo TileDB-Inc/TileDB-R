@@ -1,2 +1,2 @@
-version: 2.13-rc3
+version: 2.13.0
 sha: db00e70
