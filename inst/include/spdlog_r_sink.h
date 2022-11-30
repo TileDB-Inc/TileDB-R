@@ -42,7 +42,8 @@ namespace spdlog {
                 // sending it to its final destination:
                 spdlog::memory_buf_t formatted;
                 spdlog::sinks::base_sink<Mutex>::formatter_->format(msg, formatted);
-                Rprintf(fmt::to_string(formatted).c_str());
+                formatted.push('\0');         // convert to c string
+                Rprintf(formatted.data());    // and print via R's i/o streams
             }
 
             void flush_() override {
