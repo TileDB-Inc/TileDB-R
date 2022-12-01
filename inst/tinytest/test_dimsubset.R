@@ -95,7 +95,16 @@ expect_equal(unique(dat$carrier), "AA")
 expect_equal(unique(dat$origin), "JFK")
 expect_equal(unique(dat$dest), "BOS")
 
+## same via selected_points
+newarr <- tiledb_array(tmp, as.data.frame=TRUE, query_layout="UNORDERED",
+                       selected_points= list("AA", "JFK", "BOS", NULL))
+dat <- newarr[]
+expect_equal(unique(dat$carrier), "AA")
+expect_equal(unique(dat$origin), "JFK")
+expect_equal(unique(dat$dest), "BOS")
+
 ## test named lists with one element
+newarr <- tiledb_array(tmp, as.data.frame=TRUE, query_layout="UNORDERED")
 selected_ranges(newarr) <- list(carrier = cbind("AA","AA"))
 dat <- newarr[]
 expect_equal(unique(dat$carrier), "AA")
@@ -121,12 +130,35 @@ dat <- newarr[]
 expect_equal(unique(dat$dest), "BOS")
 expect_equal(unique(dat$origin), "LGA")
 
+selected_ranges(newarr) <- list()
+selected_points(newarr) <- list(dest = "BOS", origin = "LGA")
+dat <- newarr[]
+expect_equal(unique(dat$dest), "BOS")
+expect_equal(unique(dat$origin), "LGA")
+
+
+selected_points(newarr) <- list()
 selected_ranges(newarr) <- list(origin = cbind("JFK", "JFK"), carrier = cbind("AA", "AA"))
 dat <- newarr[]
 expect_equal(unique(dat$carrier), "AA")
 expect_equal(unique(dat$origin), "JFK")
 
+selected_ranges(newarr) <- list()
+selected_points(newarr) <- list(origin = "JFK", carrier = "AA")
+dat <- newarr[]
+expect_equal(unique(dat$carrier), "AA")
+expect_equal(unique(dat$origin), "JFK")
+
+
+selected_points(newarr) <- list()
 selected_ranges(newarr) <- list(dest = cbind("BOS", "BOS"), origin = cbind("JFK", "LGA"))
+dat <- newarr[]
+expect_equal(unique(dat$origin), c("JFK", "LGA"))
+expect_equal(unique(dat$dest), "BOS")
+
+## use both
+selected_points(newarr) <- list(dest = "BOS")
+selected_ranges(newarr) <- list(origin = cbind("JFK", "LGA"))
 dat <- newarr[]
 expect_equal(unique(dat$origin), c("JFK", "LGA"))
 expect_equal(unique(dat$dest), "BOS")

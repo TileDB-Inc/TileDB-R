@@ -300,6 +300,12 @@ selected_ranges(x) <- list(cbind(2,2), cbind(2,2))
 val <- x[]
 expect_equal(nrow(val), 0L)
 
+selected_ranges(x) <- list()            # unset
+selected_points(x) <- list(2,2)         # same, but via points
+val <- x[]
+expect_equal(nrow(val), 0L)
+
+
 unlink(tmp, recursive = TRUE)
 #})
 
@@ -328,6 +334,11 @@ expect_equal(nrow(val), 0L)
 selected_ranges(x) <- list(cbind(1,21), cbind(10,100))
 val <- x[]
 expect_equal(nrow(val), 1L)
+
+selected_ranges(x) <- list()
+selected_points(x) <- list(21, 100)
+val <- x[]
+expect_equal(nrow(val), 0L)
 
 unlink(tmp, recursive = TRUE)
 #})
@@ -360,6 +371,10 @@ expect_equal(nrow(A[]), 1L)
 matlist <- list(cbind(1,4), cbind(1,4), NULL, cbind(1,2))
 selected_ranges(A) <- matlist
 expect_equal(nrow(A[]), 2L)
+
+selected_ranges(A) <- list()
+selected_points(A) <- list(1, 2, NULL, 4)
+expect_equal(nrow(A[]), 0L)
 
 unlink(tmp, recursive = TRUE)
 #})
@@ -1425,21 +1440,22 @@ array <- tiledb_array(uri, as.data.frame=TRUE, query_layout="ROW_MAJOR")
 expect_warning(res <- array[])          # warning emitted
 expect_equal(attr(res, "query_status"), "INCOMPLETE") # and query status reported
 
-
-## check for batched operation
-set_allocation_size_preference(1024)
-arr <- tiledb_array(uri, as.data.frame=TRUE)
-lst <- tiledb:::createBatched(arr)
-res1 <- tiledb:::fetchBatched(arr, lst)
-expect_false(completedBatched(lst))
-res2 <- tiledb:::fetchBatched(arr, lst)
-expect_false(completedBatched(lst))
-res3 <- tiledb:::fetchBatched(arr, lst)
-expect_false(completedBatched(lst))
-res4 <- tiledb:::fetchBatched(arr, lst)
-expect_true(completedBatched(lst))
-expect_equal(nrow(res1) + nrow(res2) + nrow(res3) + nrow(res4), 344)
-
+if (Sys.getenv("IS_COVR", "no") == "no") {
+    ## check for batched operation -- but not in coverage
+    set_allocation_size_preference(1024)
+    arr <- tiledb_array(uri, as.data.frame=TRUE)
+    lst <- tiledb:::createBatched(arr)
+    res1 <- tiledb:::fetchBatched(arr, lst)
+    expect_false(completedBatched(lst))
+    res2 <- tiledb:::fetchBatched(arr, lst)
+    expect_false(completedBatched(lst))
+    res3 <- tiledb:::fetchBatched(arr, lst)
+    expect_false(completedBatched(lst))
+    res4 <- tiledb:::fetchBatched(arr, lst)
+    expect_true(completedBatched(lst))
+    expect_equal(nrow(res1) + nrow(res2) + nrow(res3) + nrow(res4), 344)
+    set_allocation_size_preference(1024*1024)
+}
 
 ## check NAs in character column
 library(palmerpenguins)

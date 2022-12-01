@@ -38,6 +38,8 @@
 #' columns are returned as well.
 #' @slot selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
+#' @slot selected_points An optional list with vectors where each vector i
+#' describes the selected points for dimension i
 #' @slot query_layout An optional character value
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
@@ -70,6 +72,7 @@ setClass("tiledb_array",
                       attrs = "character",
                       extended = "logical",
                       selected_ranges = "list",
+                      selected_points = "list",
                       query_layout = "character",
                       datetimes_as_int64 = "logical",
                       encryption_key = "character",
@@ -101,7 +104,9 @@ setClass("tiledb_array",
 #' @param extended optional logical switch selecting wide \sQuote{data.frame}
 #' format, defaults to \code{TRUE}
 #' @param selected_ranges optional A list with matrices where each matrix i
-#' describes the (min,max) pair of ranges for dimension i
+#' describes the (min,max) pair of ranges selected for dimension i
+#' @param selected_points optional A list with vectors where each vector i
+#' describes the points selected in dimension i
 #' @param query_layout optional A value for the TileDB query layout, defaults to
 #' an empty character variable indicating no special layout is set
 #' @param datetimes_as_int64 optional A logical value selecting date and datetime value
@@ -147,6 +152,7 @@ tiledb_array <- function(uri,
                          attrs = character(),
                          extended = TRUE,
                          selected_ranges = list(),
+                         selected_points = list(),
                          query_layout = character(),
                          datetimes_as_int64 = FALSE,
                          encryption_key = character(),
@@ -216,6 +222,7 @@ tiledb_array <- function(uri,
       attrs = attrs,
       extended = extended,
       selected_ranges = selected_ranges,
+      selected_points = selected_points,
       query_layout = query_layout,
       datetimes_as_int64 = datetimes_as_int64,
       encryption_key = encryption_key,
@@ -286,6 +293,8 @@ setMethod("show", signature = "tiledb_array",
                             else paste(object@attrs, collapse=","), "\n"
      ,"  selected_ranges    = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
                             else "(none)", "\n"
+     ,"  selected_points    = ", if (length(object@selected_points) > 0) sprintf("(%d non-null points)", sum(sapply(object@selected_points, function(x) !is.null(x))))
+                            else "(none)", "\n"
      ,"  extended           = ", if (object@extended) "TRUE" else "FALSE" ,"\n"
      ,"  query_layout       = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
      ,"  datetimes_as_int64 = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
@@ -349,6 +358,20 @@ setValidity("tiledb_array", function(object) {
         if (ncol(object@selected_ranges[[i]]) != 2) {
           valid <- FALSE
           msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not two column.", i))
+        }
+      }
+    }
+  }
+
+  if (!is.list(object@selected_points)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'selected_points' slot does not contain a list.")
+  } else {
+    for (i in (seq_len(length(object@selected_points)))) {
+      if (!is.null(object@selected_points[[i]])) {
+        if (!is.vector(object@selected_points[[i]]) && !inherits(object@selected_points[[i]], "integer64")) {
+          valid <- FALSE
+          msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not a vector.", i))
         }
       }
     }
@@ -498,7 +521,7 @@ setMethod("[", "tiledb_array",
     if (length(ndlist) >= 1 && !is.null(ndlist[[1]])) i <- ndlist[[1]]
     if (length(ndlist) >= 2 && !is.null(ndlist[[2]])) j <- ndlist[[2]]
     if (length(ndlist) >= 3 && !is.null(ndlist[[3]])) k <- ndlist[[3]]
-    if (length(ndlist) >= 4) message("Indices beyond the third dimension not supported in [i,j,k] form. Use selected_ranges().")
+    if (length(ndlist) >= 4) message("Indices beyond the third dimension not supported in [i,j,k] form. Use selected_ranges() or selected_points().")
   }
 
   ctx <- x@ctx
@@ -607,6 +630,14 @@ setMethod("[", "tiledb_array",
                   "one is required for each dimension."), call. = FALSE)
   }
 
+  ## ensure selected_points, if submitted, is of correct length
+  if (length(x@selected_points) != 0 &&
+      length(x@selected_points) != length(dimnames) &&
+      is.null(names(x@selected_points))) {
+      stop(paste0("If points are selected by index alone (and not named), ",
+                  "one is required for each dimension."), call. = FALSE)
+  }
+
   ## expand a shorter-but-named selected_ranges list
   if (   (length(x@selected_ranges) < length(dimnames))
       && (!is.null(names(x@selected_ranges)))          ) {
@@ -619,6 +650,18 @@ setMethod("[", "tiledb_array",
       x@selected_ranges <- fulllist
   }
 
+  ## expand a shorter-but-named selected_points list
+  if (   (length(x@selected_points) < length(dimnames))
+      && (!is.null(names(x@selected_points)))          ) {
+      fulllist <- vector(mode="list", length=length(dimnames))
+      ind <- match(names(x@selected_points), dimnames)
+      if (any(is.na(ind))) stop("Name for selected points does not match dimension names.")
+      for (ii in seq_len(length(ind))) {
+          fulllist[[ ind[ii] ]] <- x@selected_points[[ii]]
+      }
+      x@selected_points <- fulllist
+  }
+
   ## selected_ranges may be in different order than dimnames, so reorder if need be
   if ((length(x@selected_ranges) == length(dimnames))
       && (!is.null(names(x@selected_ranges)))
@@ -626,9 +669,21 @@ setMethod("[", "tiledb_array",
       x@selected_ranges <- x@selected_ranges[dimnames]
   }
 
+  ## selected_points may be in different order than dimnames, so reorder if need be
+  if ((length(x@selected_points) == length(dimnames))
+      && (!is.null(names(x@selected_points)))
+      && (!identical(names(x@selected_points), dimnames))) {
+      x@selected_points <- x@selected_points[dimnames]
+  }
+
   ## if selected_ranges is still an empty list, make it an explicit one
   if (length(x@selected_ranges) == 0) {
       x@selected_ranges <- vector(mode="list", length=length(dimnames))
+  }
+
+  ## if selected_points is still an empty list, make it an explicit one
+  if (length(x@selected_points) == 0) {
+      x@selected_points <- vector(mode="list", length=length(dimnames))
   }
 
   if (!is.null(i)) {
@@ -656,25 +711,42 @@ setMethod("[", "tiledb_array",
 
   ## if ranges selected, use those
   for (k in seq_len(length(x@selected_ranges))) {
-    if (is.null(x@selected_ranges[[k]])) {
+    if (is.null(x@selected_ranges[[k]]) && is.null(x@selected_points[[k]])) {
       #cat("Adding null dim", k, "on", dimtypes[k], "\n")
       vec <- .map2integer64(nonemptydom[[k]], dimtypes[k])
       if (vec[1] != 0 || vec[2] != 0) { # corner case of A[] on empty array
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+        spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
         rangeunset <- FALSE
       }
-    } else if (is.null(nrow(x@selected_ranges[[k]]))) {
+    } else if (is.null(nrow(x@selected_ranges[[k]])) && is.null(x@selected_points[[k]])) {
       #cat("Adding nrow null dim", k, "on", dimtypes[k], "\n")
       vec <- x@selected_ranges[[k]]
       vec <- .map2integer64(vec, dimtypes[k])
       qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], min(vec), max(vec))
+      spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
       rangeunset <- FALSE
-    } else {
+    } else if (is.null(x@selected_points[[k]])) {
       #cat("Adding non-zero dim", k, "on", dimtypes[k], "\n")
       m <- x@selected_ranges[[k]]
       for (i in seq_len(nrow(m))) {
         vec <- .map2integer64(c(m[i,1], m[i,2]), dimtypes[k])
         qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+        spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
+      }
+      rangeunset <- FALSE
+    }
+  }
+
+  ## if points selected, use those (and fewer special cases as A[i,j,k] not folded into points)
+  for (k in seq_len(length(x@selected_points))) {
+    if (!is.null(x@selected_points[[k]])) {
+      spdl::debug("[tiledb_array] Adding non-zero dim {} on {}", k, dimtypes[k])
+      m <- x@selected_points[[k]]
+      for (i in seq_along(m)) {
+        vec <- .map2integer64(c(m[i], m[i]), dimtypes[k])
+        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+        spdl::debug("[tiledb_array] Adding point on non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
       }
       rangeunset <- FALSE
     }
@@ -1362,6 +1434,47 @@ setReplaceMethod("selected_ranges", signature = "tiledb_array",
   x
 })
 
+## -- selected_points accessor
+
+#' @rdname selected_points-tiledb_array-method
+#' @export
+setGeneric("selected_points", function(object) standardGeneric("selected_points"))
+
+#' @rdname selected_points-set-tiledb_array-method
+#' @export
+setGeneric("selected_points<-", function(x, value) standardGeneric("selected_points<-"))
+
+#' Retrieve selected_points values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods returns the selection value for \sQuote{selected_points}
+#' and returns a list (with one element per dimension) of vectors where
+#' each row describes one selected points. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
+#' @param object A \code{tiledb_array} object
+#' @return A list which can contain a vector for each dimension
+#' @export
+setMethod("selected_points", signature = "tiledb_array",
+          function(object) object@selected_points)
+
+#' Set selected_points return values for the array
+#'
+#' A \code{tiledb_array} object can have a range selection for each dimension
+#' attribute. This methods sets the selection value for \sQuote{selected_points}
+#' which is a list (with one element per dimension) of two-column matrices where
+#' each row describes one pair of minimum and maximum values. Alternatively, the list
+#' can be named with the names providing the match to the corresponding dimension.
+#' @param x A \code{tiledb_array} object
+#' @param value A list of vectors where each list element \sQuote{i}
+#' corresponds to the dimension attribute \sQuote{i}.
+#' @return The modified \code{tiledb_array} array object
+#' @export
+setReplaceMethod("selected_points", signature = "tiledb_array",
+                 function(x, value) {
+  x@selected_points <- value
+  validObject(x)
+  x
+})
 
 
 ## -- query_layout accessor
