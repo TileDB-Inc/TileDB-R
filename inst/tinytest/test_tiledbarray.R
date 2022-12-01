@@ -300,6 +300,12 @@ selected_ranges(x) <- list(cbind(2,2), cbind(2,2))
 val <- x[]
 expect_equal(nrow(val), 0L)
 
+selected_ranges(x) <- list()            # unset
+selected_points(x) <- list(2,2)         # same, but via points
+val <- x[]
+expect_equal(nrow(val), 0L)
+
+
 unlink(tmp, recursive = TRUE)
 #})
 
@@ -328,6 +334,11 @@ expect_equal(nrow(val), 0L)
 selected_ranges(x) <- list(cbind(1,21), cbind(10,100))
 val <- x[]
 expect_equal(nrow(val), 1L)
+
+selected_ranges(x) <- list()
+selected_points(x) <- list(21, 100)
+val <- x[]
+expect_equal(nrow(val), 0L)
 
 unlink(tmp, recursive = TRUE)
 #})
@@ -360,6 +371,10 @@ expect_equal(nrow(A[]), 1L)
 matlist <- list(cbind(1,4), cbind(1,4), NULL, cbind(1,2))
 selected_ranges(A) <- matlist
 expect_equal(nrow(A[]), 2L)
+
+selected_ranges(A) <- list()
+selected_points(A) <- list(1, 2, NULL, 4)
+expect_equal(nrow(A[]), 0L)
 
 unlink(tmp, recursive = TRUE)
 #})
