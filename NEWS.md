@@ -1,4 +1,6 @@
-# Ongoing Development
+# tiledb 0.17.0
+
+* This release of the R package builds against [TileDB 2.13.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.13.0), and has also been tested against earlier releases as well as the development version (#492).
 
 ## Improvements
 
@@ -9,6 +11,10 @@
 * Use of TileDB Embedded was upgraded to release 2.12.1, and 2.12.2 (#480, #481)
 
 * Sparse array queries via tiledb_array and '[]' access use an UNORDERED query layout (#488)
+
+* Use of TileDB Embedded was upgraded to release 2.13.0 (#490)
+
+* Support for selecting dimensions by discrete points has been added (#491)
 
 ## Bug Fixes
 
@@ -27,6 +33,8 @@
 
 # tiledb 0.16.0
 
+* This release of the R package builds against [TileDB 2.12.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.12.0), and has also been tested against earlier releases as well as the development version (#476).
+
 ## Improvements
 
 * Several deprecated API entry points of TileDB Embedded are no longer used (#452, #453)
@@ -38,6 +46,8 @@
 * Support for XOR filters has been added (#472)
 
 * Support for deletion of fragments has been added (#473)
+
+* Use of TileDB Embedded was upgraded to release 2.12.0 (#475)
 
 ## Bug Fixes
 
@@ -68,7 +78,7 @@
 
 # tiledb 0.15.0
 
-* This release of the R package builds against [TileDB 2.11.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.11.0), and has also been tested against earlier releases as well as the development version.
+* This release of the R package builds against [TileDB 2.11.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.11.0), and has also been tested against earlier releases as well as the development version (#451).
 
 ## Improvements
 

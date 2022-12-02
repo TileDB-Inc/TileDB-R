@@ -337,6 +337,12 @@
     <loc>/reference/schema-tiledb_sparse-method.html</loc>
   </url>
   <url>
+    <loc>/reference/selected_points-set-tiledb_array-method.html</loc>
+  </url>
+  <url>
+    <loc>/reference/selected_points-tiledb_array-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/selected_ranges-set-tiledb_array-method.html</loc>
   </url>
   <url>
@@ -785,6 +791,9 @@
   </url>
   <url>
     <loc>/reference/tiledb_group_is_open.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_group_is_relative.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_group_member.html</loc>
