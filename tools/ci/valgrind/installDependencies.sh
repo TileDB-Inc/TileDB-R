@@ -81,7 +81,9 @@ install.r \
     nycflights13 \
     palmerpenguins \
     Rcpp \
+    RcppSpdlog \
     simplermarkdown \
+    spdl \
     tibble \
     tinytest \
     zoo
