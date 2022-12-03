@@ -1,3 +1,14 @@
+# Ongoing Development
+
+## Improvements
+
+## Bug Fixes
+
+## Build and Test Systems
+
+* The nighhly valgrind job setup was updated to include two new dependencies (#493)
+
+
 # tiledb 0.17.0
 
 * This release of the R package builds against [TileDB 2.13.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.13.0), and has also been tested against earlier releases as well as the development version (#492).
