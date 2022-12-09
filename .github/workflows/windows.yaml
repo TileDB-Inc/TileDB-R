@@ -23,7 +23,6 @@ jobs:
           r-version: ${{ matrix.r }}
       - name: Install dependencies
         run: |
-          setRepositories(ind = 1:2)
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
@@ -32,6 +31,5 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
-          _R_CHECK_FORCE_SUGGESTS_: false
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-vignettes", "--as-cran"), build_args = c("--no-build-vignettes"), error_on = "error", check_dir = "check")
         shell: Rscript {0}
