@@ -78,7 +78,12 @@ tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did, ty
         if (grepl("__fragments$", uri)) uri <- dirname(uri)
         typestr <- datatype( dimensions(domain(schema(uri)))[[did+1]] )
     }
-    libtiledb_fragment_info_get_non_empty_domain_index(object@ptr, fid, did, typestr)
+    spdl::debug("[tiledb_fragment_info_get_non_empty_domain_index] fid {} did {} typestr {}", fid, did, typestr)
+    if (typestr == "ASCII") {
+        libtiledb_fragment_info_get_non_empty_domain_var_index(object@ptr, fid, did)
+    } else {
+        libtiledb_fragment_info_get_non_empty_domain_index(object@ptr, fid, did, typestr)
+    }
 }
 
 #' Return a fragment info non-empty domain from name
@@ -103,7 +108,12 @@ tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name
         ind <- which(names == dim_name)
         typestr <- datatype( dimensions(domain(schema(uri)))[[ind]] )
     }
-    libtiledb_fragment_info_get_non_empty_domain_name(object@ptr, fid, dim_name, typestr)
+    spdl::debug("[tiledb_fragment_info_get_non_empty_domain_name] fid {} dimname {} typestr {}", fid, dim_name, typestr)
+    if (typestr == "ASCII") {
+        libtiledb_fragment_info_get_non_empty_domain_var_name(object@ptr, fid, dim_name)
+    } else {
+        libtiledb_fragment_info_get_non_empty_domain_name(object@ptr, fid, dim_name, typestr)
+    }
 }
 
 #' Return a fragment info non-empty domain variable from index
