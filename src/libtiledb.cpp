@@ -1996,10 +1996,12 @@ XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std
                                                   std::string type,
                                                   std::string enc_key) {
     check_xptr_tag<tiledb::Context>(ctx);
-    auto query_type = _string_to_tiledb_query_type(type);
-    return make_xptr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
-                                                                    TILEDB_AES_256_GCM, enc_key.data(),
-                                                                    (uint32_t)enc_key.size())));
+    spdl::debug("[libtiledb_array_open_with_key] function is deprecated");
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_key", enc_key);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_type", "AES_256_GCM");
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    return libtiledb_array_open(newctx, uri, type);
 }
 
 // [[Rcpp::export]]
