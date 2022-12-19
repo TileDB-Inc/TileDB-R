@@ -1658,9 +1658,12 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
                                                                std::string uri,
                                                                std::string key) {
     check_xptr_tag<tiledb::Context>(ctx);
-    auto p = new tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
-                                     key.data(), (uint32_t) key.size());
-    return make_xptr<tiledb::ArraySchema>(p);
+    spdl::debug("[libtiledb_array_schema_load_with_key] function is deprecated");
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_key", key);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_type", "AES_256_GCM");
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    return libtiledb_array_schema_load(newctx, uri);
 }
 
 // [[Rcpp::export]]
