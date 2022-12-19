@@ -2009,11 +2009,13 @@ XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, 
                                                      std::string type, std::string enc_key,
                                                      Datetime tstamp) {
     check_xptr_tag<tiledb::Context>(ctx);
+    spdl::debug("[libtiledb_array_open_at_with_key] function is deprecated");
     auto query_type = _string_to_tiledb_query_type(type);
     uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
-    return make_xptr<tiledb::Array>(new tiledb::Array(*ctx.get(), uri, query_type,
-                                                      TILEDB_AES_256_GCM, enc_key.data(),
-                                                      (uint32_t)enc_key.size(), ts_ms));
+    XPtr<tiledb::Array> ptr = libtiledb_array_open_with_key(ctx, uri, type, enc_key);
+    ptr->close();               // close to reopen at timestamp, this should be revisited
+    ptr->open(query_type, TILEDB_AES_256_GCM, enc_key, ts_ms);
+    return ptr;
 }
 
 // [[Rcpp::export]]
