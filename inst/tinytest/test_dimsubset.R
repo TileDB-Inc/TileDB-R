@@ -157,6 +157,7 @@ expect_equal(unique(dat$origin), c("JFK", "LGA"))
 expect_equal(unique(dat$dest), "BOS")
 
 ## use both
+if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip remainder on Windows")
 selected_points(newarr) <- list(dest = "BOS")
 selected_ranges(newarr) <- list(origin = cbind("JFK", "LGA"))
 dat <- newarr[]
