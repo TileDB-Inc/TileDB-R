@@ -2557,63 +2557,68 @@ std::string libtiledb_query_layout(XPtr<tiledb::Query> query) {
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> query,
                                                            SEXP subarray, std::string typestr) {
-  check_xptr_tag<tiledb::Query>(query);
-  if (typestr == "INT32") {
-    IntegerVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
-  } else if (typestr == "FLOAT64") {
-    NumericVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
-  } else if (typestr == "INT64" ||
-             typestr == "UINT32" ||
-             typestr == "DATETIME_NS") {
-    NumericVector sub(subarray);
-    std::vector<int64_t> v(sub.length());
-    for (int i=0; i<sub.length(); i++)
-      v[i] = static_cast<int64_t>(sub[i]);
-    query->set_subarray(v);
-  } else if (typestr == "DATETIME_YEAR"  ||
-             typestr == "DATETIME_MONTH" ||
-             typestr == "DATETIME_WEEK"  ||
-             typestr == "DATETIME_DAY") {
-    DateVector sub(subarray);
-    std::vector<int64_t> v = dates_to_int64(sub, _string_to_tiledb_datatype(typestr));
-    query->set_subarray(v);
-  } else if (typestr == "DATETIME_HR"  ||
-             typestr == "DATETIME_MIN" ||
-             typestr == "DATETIME_SEC" ||
-             typestr == "DATETIME_MS"  ||
-             typestr == "DATETIME_US") {
-    DatetimeVector sub(subarray);
-    std::vector<int64_t> v = datetimes_to_int64(sub, _string_to_tiledb_datatype(typestr));
-    query->set_subarray(v);
-  } else if (typestr == "UINT64") {
-    NumericVector sub(subarray);
-    std::vector<uint64_t> v(sub.length());
-    for (int i=0; i<sub.length(); i++)
-      v[i] = static_cast<uint64_t>(sub[i]);
-    query->set_subarray(v);
-  } else {
-    Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
-  }
-  return query;
+    check_xptr_tag<tiledb::Query>(query);
+    spdl::debug("libtiledb_query_set_subarray_with_type] setting subarray for type {}", typestr);
+    tiledb::Subarray subarr(query->ctx(), query->array());
+    if (typestr == "INT32") {
+        IntegerVector vec(subarray);
+        subarr.set_subarray(vec.begin(), vec.length());
+    } else if (typestr == "FLOAT64") {
+        NumericVector sub(subarray);
+        subarr.set_subarray(sub.begin(), sub.length());
+    } else if (typestr == "INT64" ||
+               typestr == "UINT32" ||
+               typestr == "DATETIME_NS") {
+        NumericVector sub(subarray);
+        std::vector<int64_t> v(sub.length());
+        for (int i=0; i<sub.length(); i++)
+            v[i] = static_cast<int64_t>(sub[i]);
+        subarr.set_subarray(v);
+    } else if (typestr == "DATETIME_YEAR"  ||
+               typestr == "DATETIME_MONTH" ||
+               typestr == "DATETIME_WEEK"  ||
+               typestr == "DATETIME_DAY") {
+        DateVector sub(subarray);
+        std::vector<int64_t> v = dates_to_int64(sub, _string_to_tiledb_datatype(typestr));
+        subarr.set_subarray(v);
+    } else if (typestr == "DATETIME_HR"  ||
+               typestr == "DATETIME_MIN" ||
+               typestr == "DATETIME_SEC" ||
+               typestr == "DATETIME_MS"  ||
+               typestr == "DATETIME_US") {
+        DatetimeVector sub(subarray);
+        std::vector<int64_t> v = datetimes_to_int64(sub, _string_to_tiledb_datatype(typestr));
+        subarr.set_subarray(v);
+    } else if (typestr == "UINT64") {
+        NumericVector sub(subarray);
+        std::vector<uint64_t> v(sub.length());
+        for (int i=0; i<sub.length(); i++)
+            v[i] = static_cast<uint64_t>(sub[i]);
+        subarr.set_subarray(v);
+    } else {
+        Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
+    }
+    query->set_subarray(subarr);
+    return query;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                                  SEXP subarray) {
-  check_xptr_tag<tiledb::Query>(query);
-  if (TYPEOF(subarray) == INTSXP) {
-    IntegerVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
+    check_xptr_tag<tiledb::Query>(query);
+    spdl::debug("libtiledb_query_set_subarray] setting subarray for type {}", Rf_type2char(TYPEOF(subarray)));
+    tiledb::Subarray subarr(query->ctx(), query->array());
+    if (TYPEOF(subarray) == INTSXP) {
+        IntegerVector vec(subarray);
+        subarr.set_subarray(vec.begin(), vec.length());
+    } else if (TYPEOF(subarray) == REALSXP) {
+        NumericVector vec(subarray);
+        subarr.set_subarray(vec.begin(), vec.length());
+    } else {
+        Rcpp::stop("currently unsupported subarray datatype");
+    }
+    query->set_subarray(subarr);
     return query;
-  } else if (TYPEOF(subarray) == REALSXP) {
-    NumericVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
-    return query;
-  } else {
-    Rcpp::stop("currently unsupported subarray datatype");
-  }
 }
 
 // [[Rcpp::export]]
