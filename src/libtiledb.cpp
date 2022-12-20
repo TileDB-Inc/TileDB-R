@@ -3489,8 +3489,10 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_set_subarray_new(XPtr<tiledb::Query> query, XPtr<tiledb::Subarray> subarr) {
-    query->set_subarray(*subarr);
+XPtr<tiledb::Query> libtiledb_query_set_subarray_object(XPtr<tiledb::Query> query, XPtr<tiledb::Subarray> subarr) {
+    check_xptr_tag<tiledb::Query>(query);
+    check_xptr_tag<tiledb::Subarray>(subarr);
+    query->set_subarray(*subarr.get());
     return query;
 }
 

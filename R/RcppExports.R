@@ -37,6 +37,10 @@ libtiledb_coords <- function() {
     .Call(`_tiledb_libtiledb_coords`)
 }
 
+libtiledb_query_add_range_with_type <- function(query, iidx, typestr, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_query_add_range_with_type`, query, iidx, typestr, starts, ends, strides)
+}
+
 tiledb_datatype_string_to_sizeof <- function(str) {
     .Call(`_tiledb_tiledb_datatype_string_to_sizeof`, str)
 }
@@ -664,12 +668,8 @@ libtiledb_subarray_add_range_with_type <- function(subarr, iidx, typestr, starts
     .Call(`_tiledb_libtiledb_subarray_add_range_with_type`, subarr, iidx, typestr, starts, ends, strides)
 }
 
-libtiledb_query_set_subarray_new <- function(query, subarr) {
-    .Call(`_tiledb_libtiledb_query_set_subarray_new`, query, subarr)
-}
-
-libtiledb_query_add_range_with_type <- function(query, iidx, typestr, starts, ends, strides = NULL) {
-    .Call(`_tiledb_libtiledb_query_add_range_with_type`, query, iidx, typestr, starts, ends, strides)
+libtiledb_query_set_subarray_object <- function(query, subarr) {
+    .Call(`_tiledb_libtiledb_query_set_subarray_object`, query, subarr)
 }
 
 libtiledb_query_get_est_result_size <- function(query, attr) {

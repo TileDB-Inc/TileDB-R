@@ -757,7 +757,7 @@ setMethod("[", "tiledb_array",
   }
 
   if (have_made_selection)
-      libtiledb_query_set_subarray_new(qryptr, sbrptr)
+      libtiledb_query_set_subarray_object(qryptr, sbrptr)
 
   buflist <- vector(mode="list", length=length(allnames))
 
