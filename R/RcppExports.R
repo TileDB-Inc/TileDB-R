@@ -656,6 +656,18 @@ libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL)
     .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
 }
 
+libtiledb_subarray <- function(query) {
+    .Call(`_tiledb_libtiledb_subarray`, query)
+}
+
+libtiledb_subarray_add_range_with_type <- function(subarr, iidx, typestr, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_subarray_add_range_with_type`, subarr, iidx, typestr, starts, ends, strides)
+}
+
+libtiledb_query_set_subarray_new <- function(query, subarr) {
+    .Call(`_tiledb_libtiledb_query_set_subarray_new`, query, subarr)
+}
+
 libtiledb_query_add_range_with_type <- function(query, iidx, typestr, starts, ends, strides = NULL) {
     .Call(`_tiledb_libtiledb_query_add_range_with_type`, query, iidx, typestr, starts, ends, strides)
 }

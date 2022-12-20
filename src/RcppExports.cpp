@@ -1902,6 +1902,45 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_subarray
+XPtr<tiledb::Subarray> libtiledb_subarray(XPtr<tiledb::Query> query);
+RcppExport SEXP _tiledb_libtiledb_subarray(SEXP querySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_subarray(query));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_subarray_add_range_with_type
+XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subarray> subarr, int iidx, std::string typestr, SEXP starts, SEXP ends, SEXP strides);
+RcppExport SEXP _tiledb_libtiledb_subarray_add_range_with_type(SEXP subarrSEXP, SEXP iidxSEXP, SEXP typestrSEXP, SEXP startsSEXP, SEXP endsSEXP, SEXP stridesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Subarray> >::type subarr(subarrSEXP);
+    Rcpp::traits::input_parameter< int >::type iidx(iidxSEXP);
+    Rcpp::traits::input_parameter< std::string >::type typestr(typestrSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type starts(startsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ends(endsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type strides(stridesSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_subarray_add_range_with_type(subarr, iidx, typestr, starts, ends, strides));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_query_set_subarray_new
+XPtr<tiledb::Query> libtiledb_query_set_subarray_new(XPtr<tiledb::Query> query, XPtr<tiledb::Subarray> subarr);
+RcppExport SEXP _tiledb_libtiledb_query_set_subarray_new(SEXP querySEXP, SEXP subarrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Subarray> >::type subarr(subarrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_subarray_new(query, subarr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_add_range_with_type
 XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> query, int iidx, std::string typestr, SEXP starts, SEXP ends, SEXP strides);
 RcppExport SEXP _tiledb_libtiledb_query_add_range_with_type(SEXP querySEXP, SEXP iidxSEXP, SEXP typestrSEXP, SEXP startsSEXP, SEXP endsSEXP, SEXP stridesSEXP) {
@@ -3303,6 +3342,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_get_fragment_uri", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_uri, 2},
     {"_tiledb_libtiledb_query_get_fragment_timestamp_range", (DL_FUNC) &_tiledb_libtiledb_query_get_fragment_timestamp_range, 2},
     {"_tiledb_libtiledb_query_add_range", (DL_FUNC) &_tiledb_libtiledb_query_add_range, 5},
+    {"_tiledb_libtiledb_subarray", (DL_FUNC) &_tiledb_libtiledb_subarray, 1},
+    {"_tiledb_libtiledb_subarray_add_range_with_type", (DL_FUNC) &_tiledb_libtiledb_subarray_add_range_with_type, 6},
+    {"_tiledb_libtiledb_query_set_subarray_new", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray_new, 2},
     {"_tiledb_libtiledb_query_add_range_with_type", (DL_FUNC) &_tiledb_libtiledb_query_add_range_with_type, 6},
     {"_tiledb_libtiledb_query_get_est_result_size", (DL_FUNC) &_tiledb_libtiledb_query_get_est_result_size, 2},
     {"_tiledb_libtiledb_query_get_est_result_size_nullable", (DL_FUNC) &_tiledb_libtiledb_query_get_est_result_size_nullable, 2},
