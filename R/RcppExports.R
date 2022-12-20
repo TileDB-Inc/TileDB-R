@@ -41,6 +41,10 @@ libtiledb_query_add_range_with_type <- function(query, iidx, typestr, starts, en
     .Call(`_tiledb_libtiledb_query_add_range_with_type`, query, iidx, typestr, starts, ends, strides)
 }
 
+libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
+}
+
 tiledb_datatype_string_to_sizeof <- function(str) {
     .Call(`_tiledb_tiledb_datatype_string_to_sizeof`, str)
 }
@@ -656,12 +660,12 @@ libtiledb_query_get_fragment_timestamp_range <- function(query, idx) {
     .Call(`_tiledb_libtiledb_query_get_fragment_timestamp_range`, query, idx)
 }
 
-libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
-    .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
-}
-
 libtiledb_subarray <- function(query) {
     .Call(`_tiledb_libtiledb_subarray`, query)
+}
+
+libtiledb_subarray_add_range <- function(subarr, iidx, starts, ends, strides = NULL) {
+    .Call(`_tiledb_libtiledb_subarray_add_range`, subarr, iidx, starts, ends, strides)
 }
 
 libtiledb_subarray_add_range_with_type <- function(subarr, iidx, typestr, starts, ends, strides = NULL) {

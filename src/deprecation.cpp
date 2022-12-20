@@ -86,7 +86,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
                                                         SEXP strides = R_NilValue) {
 
   check_xptr_tag<tiledb::Query>(query);
-  spdl::debug("[libtiledb_query_add_range_with type] setting subarray for type {}", typestr);
+  spdl::debug("[libtiledb_query_add_range_with type] deprecated subarray setter for type {}", typestr);
   if (TYPEOF(starts) != TYPEOF(ends)) {
       Rcpp::stop("'start' and 'end' must be of identical types");
   }
@@ -230,4 +230,42 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
     Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
   }
   return query;
+}
+
+// Older (simpler) version for just int32, double, string
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iidx,
+                                              SEXP starts, SEXP ends,
+                                              SEXP strides = R_NilValue) {
+    check_xptr_tag<tiledb::Query>(query);
+    spdl::debug("[libtiledb_query_add_range] deprecated setting subarray");
+    if (TYPEOF(starts) != TYPEOF(ends)) {
+        Rcpp::stop("'start' and 'end' must be of identical types");
+    }
+    uint32_t uidx = static_cast<uint32_t>(iidx);
+    if (TYPEOF(starts) == INTSXP) {
+        int32_t start = as<int32_t>(starts);
+        int32_t end = as<int32_t>(ends);
+        int32_t stride = (strides == R_NilValue) ? 0 : Rcpp::as<int32_t>(strides);
+        query->add_range(uidx, start, end, stride);
+    } else if (TYPEOF(starts) == REALSXP) {
+        double start = as<double>(starts);
+        double end = as<double>(ends);
+        double stride = (strides == R_NilValue) ? 0 : Rcpp::as<double_t>(strides);
+        query->add_range(uidx, start, end, stride);
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+    } else if (TYPEOF(starts) == STRSXP) {
+        std::string start = as<std::string>(starts);
+        std::string end = as<std::string>(ends);
+        if (strides == R_NilValue) {
+            query->add_range(uidx, start, end);
+        } else {
+            Rcpp::stop("Non-emoty stride for string not supported yet.");
+        }
+#endif
+    } else {
+        Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
+    }
+    return query;
 }

@@ -2,11 +2,25 @@
 
 ## Improvements
 
+* Support for Subarrays to set ranges has been extended (#496)
+
+* Deprecated Core API functions for Array access and range setting are longer used (#496)
+
 ## Bug Fixes
+
+* Fragment info domain getters now work with ASCII domains (#495)
 
 ## Build and Test Systems
 
-* The nighhly valgrind job setup was updated to include two new dependencies (#493)
+* The nightly valgrind job setup was updated to include two new dependencies (#493)
+
+* The Windows setup for continuous integration was updated (#494)
+
+## Deprecations
+
+* Functions `libtiledb_query_add_range{,_with_type}` relying on depecreated Core
+  functionality are deprecated, and will be removed with the Core functions.
+  Subarray range setters are available. This is a mostly internal change.
 
 
 # tiledb 0.17.0

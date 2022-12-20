@@ -39,7 +39,7 @@ tiledb_subarray.from_ptr <- function(ptr) {
 #' @return tiledb_subarray object
 #' @export
 tiledb_subarray <- function(query) {
-    stopifnot("Argument 'query' must be a tiledb_query object" = is(ctx, "tiledb_query"))
+    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"))
     ptr <- libtiledb_subarray(query@ptr)
     return(new("tiledb_subarray", ptr = ptr))
 }
@@ -51,8 +51,8 @@ tiledb_subarray <- function(query) {
 #' @return tiledb_query object
 #' @export
 tiledb_subarray_to_query <- function(query, subarray) {
-    stopifnot("Argument 'query' must be a tiledb_query object" = is(ctx, "tiledb_query"),
-              "Argument 'subarray' must be a tiledb_subarray object" = is(ctx, "tiledb_subarray"),)
+    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"),
+              "Argument 'subarray' must be a tiledb_subarray" = is(subarray, "tiledb_subarray"))
     query@ptr <- libtiledb_query_set_subarray_object(query@ptr, subarray@ptr)
     query
 }
