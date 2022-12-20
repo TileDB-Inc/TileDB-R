@@ -29,45 +29,7 @@
 #include "libtiledb.h"
 #include "tiledb_version.h"
 
-#include <fstream>
-#include <unistd.h>
-
 using namespace Rcpp;
-
-// [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query,
-                                                    SEXP coords,
-                                                    std::string dtype) {
-  //printf("In qsc %s\n", dtype.c_str());
-  if (dtype == "DATETIME_MS") {
-    IntegerVector sub(coords);
-    std::vector<int64_t> vec(sub.length());
-    for (int i=0; i<sub.length(); i++) {
-      vec[i] = sub[i];
-      //Rprintf("%d %d %ld %lu\n", sub[i], vec[i],
-      //        static_cast<int64_t>(sub[i]), static_cast<uint64_t>(sub[i]));
-    }
-    query->set_coordinates(vec.data(), vec.size());
-    return query;
-  } else if (TYPEOF(coords) == INTSXP) {
-    IntegerVector sub(coords);
-    query->set_coordinates(sub.begin(), sub.length());
-    return query;
-  } else if (TYPEOF(coords) == REALSXP) {
-    NumericVector sub(coords);
-    query->set_coordinates(sub.begin(), sub.length());
-    return query;
-  } else {
-    Rcpp::stop("invalid subarray datatype");
-  }
-}
-
-
-// [[Rcpp::export]]
-std::string libtiledb_coords() {
-  return tiledb_coords();
-}
-
 
 // Using add_range() on a Query object is deprecated in TileDB Core, and will be
 // removed in a future release.  Until then it will remain accessible here for
