@@ -69,6 +69,14 @@ std::string libtiledb_coords() {
 }
 
 
+// Using add_range() on a Query object is deprecated in TileDB Core, and will be
+// removed in a future release.  Until then it will remain accessible here for
+// the convenience of R package users
+//
+// The new function libtiledb_subarray_add_range_with_type() has the same
+// functionality, but uses a a Subarray external pointer instead of an Query
+// external pointer.  User have to first create a Subarray pointer and then
+// set it in the query object -- see R/TileDBArray.R for one example
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> query,
