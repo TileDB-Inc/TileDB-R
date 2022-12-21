@@ -209,6 +209,7 @@ qry <- tiledb:::libtiledb_query_set_buffer(qry, "a1", dat)
 qry <- tiledb:::libtiledb_query_submit(qry)
 tiledb:::libtiledb_array_close(arr)
 expect_true(is(qry, "externalptr"))
+if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
 res <- c(0, 0)
 sub <- c(1L, 2L)

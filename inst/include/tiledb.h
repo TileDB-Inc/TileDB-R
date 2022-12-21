@@ -92,4 +92,12 @@ namespace tiledb {
 }
 #endif
 
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 7
+// we need a placeholder as tiledb::Subarray as it is in function signatures
+namespace tiledb {
+    class Subarray {
+    };
+}
+#endif
+
 #endif // __tiledb_h__

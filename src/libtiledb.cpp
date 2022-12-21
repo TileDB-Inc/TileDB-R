@@ -2558,6 +2558,7 @@ std::string libtiledb_query_layout(XPtr<tiledb::Query> query) {
 XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> query,
                                                            SEXP subarray, std::string typestr) {
     check_xptr_tag<tiledb::Query>(query);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     spdl::debug("libtiledb_query_set_subarray_with_type] setting subarray for type {}", typestr);
     tiledb::Subarray subarr(query->ctx(), query->array());
     if (typestr == "INT32") {
@@ -2599,6 +2600,7 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
         Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
     }
     query->set_subarray(subarr);
+#endif
     return query;
 }
 
@@ -2606,6 +2608,7 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
 XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                                  SEXP subarray) {
     check_xptr_tag<tiledb::Query>(query);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     spdl::debug("libtiledb_query_set_subarray] setting subarray for type {}", Rf_type2char(TYPEOF(subarray)));
     tiledb::Subarray subarr(query->ctx(), query->array());
     if (TYPEOF(subarray) == INTSXP) {
@@ -2618,6 +2621,7 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
         Rcpp::stop("currently unsupported subarray datatype");
     }
     query->set_subarray(subarr);
+#endif
     return query;
 }
 
@@ -3343,7 +3347,11 @@ Rcpp::DatetimeVector libtiledb_query_get_fragment_timestamp_range(XPtr<tiledb::Q
 
 // [[Rcpp::export]]
 XPtr<tiledb::Subarray> libtiledb_subarray(XPtr<tiledb::Query> query) {
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     return make_xptr<tiledb::Subarray>(new tiledb::Subarray(query->ctx(), query->array()));
+#else
+    return make_xptr<tiledb::Subarray>(R_NilValue);
+#endif
 }
 
 // [[Rcpp::export]]
@@ -3351,6 +3359,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range(XPtr<tiledb::Subarray> subar
                                                     int iidx, SEXP starts, SEXP ends,
                                                     SEXP strides = R_NilValue) {
     check_xptr_tag<tiledb::Subarray>(subarr);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     spdl::debug("libtiledb_query_add_range] setting subarray");
     if (TYPEOF(starts) != TYPEOF(ends)) {
         Rcpp::stop("'start' and 'end' must be of identical types");
@@ -3366,7 +3375,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range(XPtr<tiledb::Subarray> subar
         double end = as<double>(ends);
         double stride = (strides == R_NilValue) ? 0 : Rcpp::as<double_t>(strides);
         subarr->add_range(uidx, start, end, stride);
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
     } else if (TYPEOF(starts) == STRSXP) {
         std::string start = as<std::string>(starts);
         std::string end = as<std::string>(ends);
@@ -3375,10 +3383,10 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range(XPtr<tiledb::Subarray> subar
         } else {
             Rcpp::stop("Non-emoty stride for string not supported yet.");
         }
-#endif
     } else {
         Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
     }
+#endif
     return subarr;
 }
 
@@ -3390,6 +3398,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
                                                               SEXP strides = R_NilValue) {
 
     check_xptr_tag<tiledb::Subarray>(subarr);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     if (TYPEOF(starts) != TYPEOF(ends)) {
         Rcpp::stop("'start' and 'end' must be of identical types");
     }
@@ -3486,6 +3495,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
     } else {
         Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
     }
+#endif
     return subarr;
 }
 
@@ -3493,7 +3503,9 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
 XPtr<tiledb::Query> libtiledb_query_set_subarray_object(XPtr<tiledb::Query> query, XPtr<tiledb::Subarray> subarr) {
     check_xptr_tag<tiledb::Query>(query);
     check_xptr_tag<tiledb::Subarray>(subarr);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     query->set_subarray(*subarr.get());
+#endif
     return query;
 }
 

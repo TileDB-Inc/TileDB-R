@@ -39,7 +39,8 @@ tiledb_subarray.from_ptr <- function(ptr) {
 #' @return tiledb_subarray object
 #' @export
 tiledb_subarray <- function(query) {
-    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"))
+    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"),
+              "Subarray functionality needs TileDB >= 2.7.0" = tiledb_version(TRUE) >= "2.6.0")
     ptr <- libtiledb_subarray(query@ptr)
     return(new("tiledb_subarray", ptr = ptr))
 }

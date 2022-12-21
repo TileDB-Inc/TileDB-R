@@ -138,6 +138,8 @@ tiledb_array_close(arr)
 rm(qry)
 
 
+if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
+
 ## tiledb_array support
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 library(palmerpenguins)
