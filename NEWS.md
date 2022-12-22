@@ -22,6 +22,11 @@
   functionality are deprecated, and will be removed with the Core functions.
   Subarray range setters are available. This is a mostly internal change.
 
+## Removals
+
+* Functions `libtiledb_query_set_coordinates()` and `libtiledb_coords()`
+  which have been deprecated since June 2000 have been remove. (#497)
+
 
 # tiledb 0.17.0
 

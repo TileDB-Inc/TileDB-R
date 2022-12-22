@@ -90,29 +90,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// libtiledb_query_set_coordinates
-XPtr<tiledb::Query> libtiledb_query_set_coordinates(XPtr<tiledb::Query> query, SEXP coords, std::string dtype);
-RcppExport SEXP _tiledb_libtiledb_query_set_coordinates(SEXP querySEXP, SEXP coordsSEXP, SEXP dtypeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
-    Rcpp::traits::input_parameter< SEXP >::type coords(coordsSEXP);
-    Rcpp::traits::input_parameter< std::string >::type dtype(dtypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_set_coordinates(query, coords, dtype));
-    return rcpp_result_gen;
-END_RCPP
-}
-// libtiledb_coords
-std::string libtiledb_coords();
-RcppExport SEXP _tiledb_libtiledb_coords() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(libtiledb_coords());
-    return rcpp_result_gen;
-END_RCPP
-}
 // libtiledb_query_add_range_with_type
 XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> query, int iidx, std::string typestr, SEXP starts, SEXP ends, SEXP strides);
 RcppExport SEXP _tiledb_libtiledb_query_add_range_with_type(SEXP querySEXP, SEXP iidxSEXP, SEXP typestrSEXP, SEXP startsSEXP, SEXP endsSEXP, SEXP stridesSEXP) {
@@ -3203,8 +3180,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_makeQueryWrapper", (DL_FUNC) &_tiledb_makeQueryWrapper, 1},
-    {"_tiledb_libtiledb_query_set_coordinates", (DL_FUNC) &_tiledb_libtiledb_query_set_coordinates, 3},
-    {"_tiledb_libtiledb_coords", (DL_FUNC) &_tiledb_libtiledb_coords, 0},
     {"_tiledb_libtiledb_query_add_range_with_type", (DL_FUNC) &_tiledb_libtiledb_query_add_range_with_type, 6},
     {"_tiledb_libtiledb_query_add_range", (DL_FUNC) &_tiledb_libtiledb_query_add_range, 5},
     {"_tiledb_tiledb_datatype_string_to_sizeof", (DL_FUNC) &_tiledb_tiledb_datatype_string_to_sizeof, 1},
