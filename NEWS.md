@@ -6,6 +6,8 @@
 
 * Deprecated Core API functions for Array access and range setting are longer used (#496)
 
+* TileDB Group objects now have a default `show()` method (#498)
+
 ## Bug Fixes
 
 * Fragment info domain getters now work with ASCII domains (#495)
