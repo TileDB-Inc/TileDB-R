@@ -1658,9 +1658,12 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_load_with_key(XPtr<tiledb::Cont
                                                                std::string uri,
                                                                std::string key) {
     check_xptr_tag<tiledb::Context>(ctx);
-    auto p = new tiledb::ArraySchema(*ctx.get(), uri, TILEDB_AES_256_GCM,
-                                     key.data(), (uint32_t) key.size());
-    return make_xptr<tiledb::ArraySchema>(p);
+    spdl::debug("[libtiledb_array_schema_load_with_key] function is deprecated");
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_key", key);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_type", "AES_256_GCM");
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    return libtiledb_array_schema_load(newctx, uri);
 }
 
 // [[Rcpp::export]]
@@ -1993,10 +1996,12 @@ XPtr<tiledb::Array> libtiledb_array_open_with_key(XPtr<tiledb::Context> ctx, std
                                                   std::string type,
                                                   std::string enc_key) {
     check_xptr_tag<tiledb::Context>(ctx);
-    auto query_type = _string_to_tiledb_query_type(type);
-    return make_xptr<tiledb::Array>(new tiledb::Array(tiledb::Array(*ctx.get(), uri, query_type,
-                                                                    TILEDB_AES_256_GCM, enc_key.data(),
-                                                                    (uint32_t)enc_key.size())));
+    spdl::debug("[libtiledb_array_open_with_key] function is deprecated");
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_key", enc_key);
+    cfg = libtiledb_config_set(cfg, "sm.encryption_type", "AES_256_GCM");
+    XPtr<tiledb::Context> newctx = libtiledb_ctx(cfg);
+    return libtiledb_array_open(newctx, uri, type);
 }
 
 // [[Rcpp::export]]
@@ -2004,11 +2009,13 @@ XPtr<tiledb::Array> libtiledb_array_open_at_with_key(XPtr<tiledb::Context> ctx, 
                                                      std::string type, std::string enc_key,
                                                      Datetime tstamp) {
     check_xptr_tag<tiledb::Context>(ctx);
+    spdl::debug("[libtiledb_array_open_at_with_key] function is deprecated");
     auto query_type = _string_to_tiledb_query_type(type);
     uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
-    return make_xptr<tiledb::Array>(new tiledb::Array(*ctx.get(), uri, query_type,
-                                                      TILEDB_AES_256_GCM, enc_key.data(),
-                                                      (uint32_t)enc_key.size(), ts_ms));
+    XPtr<tiledb::Array> ptr = libtiledb_array_open_with_key(ctx, uri, type, enc_key);
+    ptr->close();               // close to reopen at timestamp, this should be revisited
+    ptr->open(query_type, TILEDB_AES_256_GCM, enc_key, ts_ms);
+    return ptr;
 }
 
 // [[Rcpp::export]]
@@ -2550,63 +2557,72 @@ std::string libtiledb_query_layout(XPtr<tiledb::Query> query) {
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> query,
                                                            SEXP subarray, std::string typestr) {
-  check_xptr_tag<tiledb::Query>(query);
-  if (typestr == "INT32") {
-    IntegerVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
-  } else if (typestr == "FLOAT64") {
-    NumericVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
-  } else if (typestr == "INT64" ||
-             typestr == "UINT32" ||
-             typestr == "DATETIME_NS") {
-    NumericVector sub(subarray);
-    std::vector<int64_t> v(sub.length());
-    for (int i=0; i<sub.length(); i++)
-      v[i] = static_cast<int64_t>(sub[i]);
-    query->set_subarray(v);
-  } else if (typestr == "DATETIME_YEAR"  ||
-             typestr == "DATETIME_MONTH" ||
-             typestr == "DATETIME_WEEK"  ||
-             typestr == "DATETIME_DAY") {
-    DateVector sub(subarray);
-    std::vector<int64_t> v = dates_to_int64(sub, _string_to_tiledb_datatype(typestr));
-    query->set_subarray(v);
-  } else if (typestr == "DATETIME_HR"  ||
-             typestr == "DATETIME_MIN" ||
-             typestr == "DATETIME_SEC" ||
-             typestr == "DATETIME_MS"  ||
-             typestr == "DATETIME_US") {
-    DatetimeVector sub(subarray);
-    std::vector<int64_t> v = datetimes_to_int64(sub, _string_to_tiledb_datatype(typestr));
-    query->set_subarray(v);
-  } else if (typestr == "UINT64") {
-    NumericVector sub(subarray);
-    std::vector<uint64_t> v(sub.length());
-    for (int i=0; i<sub.length(); i++)
-      v[i] = static_cast<uint64_t>(sub[i]);
-    query->set_subarray(v);
-  } else {
-    Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
-  }
-  return query;
+    check_xptr_tag<tiledb::Query>(query);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
+    spdl::debug("libtiledb_query_set_subarray_with_type] setting subarray for type {}", typestr);
+    tiledb::Subarray subarr(query->ctx(), query->array());
+    if (typestr == "INT32") {
+        IntegerVector vec(subarray);
+        subarr.set_subarray(vec.begin(), vec.length());
+    } else if (typestr == "FLOAT64") {
+        NumericVector sub(subarray);
+        subarr.set_subarray(sub.begin(), sub.length());
+    } else if (typestr == "INT64" ||
+               typestr == "UINT32" ||
+               typestr == "DATETIME_NS") {
+        NumericVector sub(subarray);
+        std::vector<int64_t> v(sub.length());
+        for (int i=0; i<sub.length(); i++)
+            v[i] = static_cast<int64_t>(sub[i]);
+        subarr.set_subarray(v);
+    } else if (typestr == "DATETIME_YEAR"  ||
+               typestr == "DATETIME_MONTH" ||
+               typestr == "DATETIME_WEEK"  ||
+               typestr == "DATETIME_DAY") {
+        DateVector sub(subarray);
+        std::vector<int64_t> v = dates_to_int64(sub, _string_to_tiledb_datatype(typestr));
+        subarr.set_subarray(v);
+    } else if (typestr == "DATETIME_HR"  ||
+               typestr == "DATETIME_MIN" ||
+               typestr == "DATETIME_SEC" ||
+               typestr == "DATETIME_MS"  ||
+               typestr == "DATETIME_US") {
+        DatetimeVector sub(subarray);
+        std::vector<int64_t> v = datetimes_to_int64(sub, _string_to_tiledb_datatype(typestr));
+        subarr.set_subarray(v);
+    } else if (typestr == "UINT64") {
+        NumericVector sub(subarray);
+        std::vector<uint64_t> v(sub.length());
+        for (int i=0; i<sub.length(); i++)
+            v[i] = static_cast<uint64_t>(sub[i]);
+        subarr.set_subarray(v);
+    } else {
+        Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
+    }
+    query->set_subarray(subarr);
+#endif
+    return query;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                                  SEXP subarray) {
-  check_xptr_tag<tiledb::Query>(query);
-  if (TYPEOF(subarray) == INTSXP) {
-    IntegerVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
+    check_xptr_tag<tiledb::Query>(query);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
+    spdl::debug("libtiledb_query_set_subarray] setting subarray for type {}", Rf_type2char(TYPEOF(subarray)));
+    tiledb::Subarray subarr(query->ctx(), query->array());
+    if (TYPEOF(subarray) == INTSXP) {
+        IntegerVector vec(subarray);
+        subarr.set_subarray(vec.begin(), vec.length());
+    } else if (TYPEOF(subarray) == REALSXP) {
+        NumericVector vec(subarray);
+        subarr.set_subarray(vec.begin(), vec.length());
+    } else {
+        Rcpp::stop("currently unsupported subarray datatype");
+    }
+    query->set_subarray(subarr);
+#endif
     return query;
-  } else if (TYPEOF(subarray) == REALSXP) {
-    NumericVector sub(subarray);
-    query->set_subarray(sub.begin(), sub.length());
-    return query;
-  } else {
-    Rcpp::stop("currently unsupported subarray datatype");
-  }
 }
 
 // [[Rcpp::export]]
@@ -3326,199 +3342,173 @@ Rcpp::DatetimeVector libtiledb_query_get_fragment_timestamp_range(XPtr<tiledb::Q
   return Rcpp::DatetimeVector::create(range.first/1000.0, range.second/1000.0);
 }
 
+// Subarray functions replacing old Query functionality
+// (This breaks the alphabetical + chronlogical sorting but belongs here
+
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iidx,
-                                              SEXP starts, SEXP ends,
-                                              SEXP strides = R_NilValue) {
-  check_xptr_tag<tiledb::Query>(query);
-  if (TYPEOF(starts) != TYPEOF(ends)) {
-    Rcpp::stop("'start' and 'end' must be of identical types");
-  }
-  uint32_t uidx = static_cast<uint32_t>(iidx);
-  if (TYPEOF(starts) == INTSXP) {
-    int32_t start = as<int32_t>(starts);
-    int32_t end = as<int32_t>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      int32_t stride = as<int32_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (TYPEOF(starts) == REALSXP) {
-    double start = as<double>(starts);
-    double end = as<double>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      double stride = as<double>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  } else if (TYPEOF(starts) == STRSXP) {
-    std::string start = as<std::string>(starts);
-    std::string end = as<std::string>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      Rcpp::stop("Non-emoty stride for string not supported yet.");
-    }
+XPtr<tiledb::Subarray> libtiledb_subarray(XPtr<tiledb::Query> query) {
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
+    return make_xptr<tiledb::Subarray>(new tiledb::Subarray(query->ctx(), query->array()));
+#else
+    return make_xptr<tiledb::Subarray>(R_NilValue);
 #endif
-  } else {
-    Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
-  }
-  return query;
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> query,
-                                                        int iidx,
-                                                        std::string typestr,
-                                                        SEXP starts, SEXP ends,
-                                                        SEXP strides = R_NilValue) {
-  check_xptr_tag<tiledb::Query>(query);
-  if (TYPEOF(starts) != TYPEOF(ends)) {
-    Rcpp::stop("'start' and 'end' must be of identical types");
-  }
-  uint32_t uidx = static_cast<uint32_t>(iidx);
-  if (typestr == "INT32") {
-    int32_t start = as<int32_t>(starts);
-    int32_t end = as<int32_t>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      int32_t stride = as<int32_t>(strides);
-      query->add_range(uidx, start, end, stride);
+XPtr<tiledb::Subarray> libtiledb_subarray_add_range(XPtr<tiledb::Subarray> subarr,
+                                                    int iidx, SEXP starts, SEXP ends,
+                                                    SEXP strides = R_NilValue) {
+    check_xptr_tag<tiledb::Subarray>(subarr);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
+    spdl::debug("libtiledb_query_add_range] setting subarray");
+    if (TYPEOF(starts) != TYPEOF(ends)) {
+        Rcpp::stop("'start' and 'end' must be of identical types");
     }
-  } else if (typestr == "FLOAT64") {
-    double start = as<double>(starts);
-    double end = as<double>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
+    uint32_t uidx = static_cast<uint32_t>(iidx);
+    if (TYPEOF(starts) == INTSXP) {
+        int32_t start = as<int32_t>(starts);
+        int32_t end = as<int32_t>(ends);
+        int32_t stride = (strides == R_NilValue) ? 0 : Rcpp::as<int32_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+    } else if (TYPEOF(starts) == REALSXP) {
+        double start = as<double>(starts);
+        double end = as<double>(ends);
+        double stride = (strides == R_NilValue) ? 0 : Rcpp::as<double_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+    } else if (TYPEOF(starts) == STRSXP) {
+        std::string start = as<std::string>(starts);
+        std::string end = as<std::string>(ends);
+        if (strides == R_NilValue) {
+            subarr->add_range(uidx, start, end);
+        } else {
+            Rcpp::stop("Non-emoty stride for string not supported yet.");
+        }
     } else {
-      double stride = as<double>(strides);
-      query->add_range(uidx, start, end, stride);
+        Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
     }
-  } else if (typestr == "INT64") {
-    int64_t start = makeScalarInteger64(as<double>(starts));
-    int64_t end = makeScalarInteger64(as<double>(ends));
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      int64_t stride = makeScalarInteger64(as<double>(strides));
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (typestr == "UINT64") {
-    uint64_t start = static_cast<uint64_t>(makeScalarInteger64(as<double>(starts)));
-    uint64_t end = static_cast<uint64_t>(makeScalarInteger64(as<double>(ends)));
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      uint64_t stride = makeScalarInteger64(as<double>(strides));
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (typestr == "UINT32") {
-    uint32_t start = as<uint32_t>(starts);
-    uint32_t end   = as<uint32_t>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      uint32_t stride = as<int32_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (typestr == "INT16") {
-    int16_t start = as<int16_t>(starts);
-    int16_t end   = as<int16_t>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      int16_t stride = as<int16_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (typestr == "UINT16") {
-    uint16_t start = as<uint16_t>(starts);
-    uint16_t end   = as<uint16_t>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      uint16_t stride = as<uint16_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (typestr == "INT8") {
-    int8_t start = as<int16_t>(starts);
-    int8_t end   = as<int16_t>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      int8_t stride = as<int16_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (typestr == "UINT8") {
-    uint8_t start = as<uint16_t>(starts);
-    uint8_t end   = as<uint16_t>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      uint8_t stride = as<uint16_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (typestr == "DATETIME_YEAR"  ||
-             typestr == "DATETIME_MONTH" ||
-             typestr == "DATETIME_WEEK"  ||
-             typestr == "DATETIME_DAY"   ||
-             typestr == "DATETIME_HR"    ||
-             typestr == "DATETIME_MIN"   ||
-             typestr == "DATETIME_SEC"   ||
-             typestr == "DATETIME_MS"    ||
-             typestr == "DATETIME_US"   ) {
-    //int64_t start = date_to_int64(as<Date>(starts), _string_to_tiledb_datatype(typestr));
-    int64_t start = makeScalarInteger64(as<double>(starts));
-    //int64_t end = date_to_int64(as<Date>(ends), _string_to_tiledb_datatype(typestr));
-    int64_t end = makeScalarInteger64(as<double>(ends));
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      int64_t stride = as<int64_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-  } else if (
-             typestr == "DATETIME_NS" ||
-             typestr == "DATETIME_FS" ||
-             typestr == "DATETIME_PS" ||
-             typestr == "DATETIME_AS") {
-    int64_t start = makeScalarInteger64(as<double>(starts));
-    int64_t end = makeScalarInteger64(as<double>(ends));
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      int64_t stride = as<int64_t>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
-  } else if (typestr == "ASCII" || typestr == "CHAR") {
-    std::string start = as<std::string>(starts);
-    std::string end = as<std::string>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      Rcpp::stop("Non-empty stride for string not supported yet.");
-    }
-    //query->set_subarray(sub);
 #endif
-  } else if (typestr == "FLOAT32") {
-    float start = as<float>(starts);
-    float end = as<float>(ends);
-    if (strides == R_NilValue) {
-      query->add_range(uidx, start, end);
-    } else {
-      float stride = as<float>(strides);
-      query->add_range(uidx, start, end, stride);
-    }
-    //query->set_subarray(sub);
-  } else {
-    Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
-  }
-  return query;
+    return subarr;
 }
+
+// [[Rcpp::export]]
+XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subarray> subarr,
+                                                              int iidx,
+                                                              std::string typestr,
+                                                              SEXP starts, SEXP ends,
+                                                              SEXP strides = R_NilValue) {
+
+    check_xptr_tag<tiledb::Subarray>(subarr);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
+    if (TYPEOF(starts) != TYPEOF(ends)) {
+        Rcpp::stop("'start' and 'end' must be of identical types");
+    }
+    uint32_t uidx = static_cast<uint32_t>(iidx);
+
+    if (typestr == "INT32") {
+        int32_t start = as<int32_t>(starts);
+        int32_t end = as<int32_t>(ends);
+        int32_t stride = (strides == R_NilValue) ? 0 : Rcpp::as<int32_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "FLOAT64") {
+        double start = as<double>(starts);
+        double end = as<double>(ends);
+        double stride = (strides == R_NilValue) ? 0 : Rcpp::as<double_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "INT64") {
+        int64_t start = makeScalarInteger64(as<double>(starts));
+        int64_t end = makeScalarInteger64(as<double>(ends));
+        int64_t stride = (strides == R_NilValue) ? 0 : makeScalarInteger64(as<double>(strides));
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "UINT64") {
+        uint64_t start = static_cast<uint64_t>(makeScalarInteger64(as<double>(starts)));
+        uint64_t end = static_cast<uint64_t>(makeScalarInteger64(as<double>(ends)));
+        uint64_t stride = (strides == R_NilValue) ? 0 : makeScalarInteger64(as<double>(strides));
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "UINT32") {
+        uint32_t start = as<uint32_t>(starts);
+        uint32_t end   = as<uint32_t>(ends);
+        uint32_t stride = (strides == R_NilValue) ? 0 : as<int32_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "INT16") {
+        int16_t start = as<int16_t>(starts);
+        int16_t end   = as<int16_t>(ends);
+        int16_t stride = (strides == R_NilValue) ? 0 : as<int16_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "UINT16") {
+        uint16_t start = as<uint16_t>(starts);
+        uint16_t end   = as<uint16_t>(ends);
+        uint16_t stride = (strides == R_NilValue) ? 0 : as<uint16_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "INT8") {
+        int8_t start = as<int16_t>(starts);
+        int8_t end   = as<int16_t>(ends);
+        int8_t stride = (strides == R_NilValue) ? 0 : as<int16_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "UINT8") {
+        uint8_t start = as<uint16_t>(starts);
+        uint8_t end   = as<uint16_t>(ends);
+        uint8_t stride = (strides == R_NilValue) ? 0 : as<uint16_t>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else if (typestr == "DATETIME_YEAR"  ||
+               typestr == "DATETIME_MONTH" ||
+               typestr == "DATETIME_WEEK"  ||
+               typestr == "DATETIME_DAY"   ||
+               typestr == "DATETIME_HR"    ||
+               typestr == "DATETIME_MIN"   ||
+               typestr == "DATETIME_SEC"   ||
+               typestr == "DATETIME_MS"    ||
+               typestr == "DATETIME_US"    ||
+               typestr == "DATETIME_NS"    ||
+               typestr == "DATETIME_FS"    ||
+               typestr == "DATETIME_PS"    ||
+               typestr == "DATETIME_AS") {
+        int64_t start = makeScalarInteger64(as<double>(starts));
+        int64_t end = makeScalarInteger64(as<double>(ends));
+        int64_t stride = (strides == R_NilValue) ? 0 : makeScalarInteger64(as<double>(strides));
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+#if TILEDB_VERSION >= TileDB_Version(2,0,0)
+    } else if (typestr == "ASCII" || typestr == "CHAR") {
+        std::string start = as<std::string>(starts);
+        std::string end = as<std::string>(ends);
+        if (strides != R_NilValue) {
+            Rcpp::stop("Non-empty stride for string not supported yet.");
+        }
+        subarr->add_range(uidx, start, end);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {}", typestr, uidx, start, end);
+#endif
+    } else if (typestr == "FLOAT32") {
+        float start = as<float>(starts);
+        float end = as<float>(ends);
+        float stride = (strides == R_NilValue) ? 0 : Rcpp::as<float>(strides);
+        subarr->add_range(uidx, start, end, stride);
+        spdl::debug("[libtiledb_subarry_add_range_with type] {} dim {} added {} to {} by {}", typestr, uidx, start, end, stride);
+    } else {
+        Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
+    }
+#endif
+    return subarr;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_set_subarray_object(XPtr<tiledb::Query> query, XPtr<tiledb::Subarray> subarr) {
+    check_xptr_tag<tiledb::Query>(query);
+    check_xptr_tag<tiledb::Subarray>(subarr);
+#if TILEDB_VERSION >= TileDB_Version(2,7,0)
+    query->set_subarray(*subarr.get());
+#endif
+    return query;
+}
+
 
 // [[Rcpp::export]]
 R_xlen_t libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::string attr) {

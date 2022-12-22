@@ -198,6 +198,8 @@ expect_equal(tiledb_query_status(qry), "COMPLETE")
 
 keydat <- tiledb:::libtiledb_query_get_buffer_ptr(buf, FALSE)
 
+if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
+
 n <- tiledb_query_result_buffer_elements(qry, "rows")
 expect_equal(n, 4L)
 expect_equal(rowdat[1:n], rows[4:7])

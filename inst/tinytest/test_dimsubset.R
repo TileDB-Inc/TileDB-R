@@ -4,13 +4,14 @@
 library(tinytest)
 library(tiledb)
 library(RcppSpdlog)                     # use logging for some informal profiling
-log_setup("test_dimsubset", "warn")     # but set the default level to 'warn' -> silent, activate via 'info'
 
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
 
 if (!requireNamespace("nycflights13", quietly=TRUE)) exit_file("Needed 'nycflights13' package missing")
+if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
+log_setup("test_dimsubset", "warn")     # but set the default level to 'warn' -> silent, activate via 'info'
 ctx <- tiledb_ctx(limitTileDBCores())
 log_info("ctx created")
 
@@ -157,6 +158,7 @@ expect_equal(unique(dat$origin), c("JFK", "LGA"))
 expect_equal(unique(dat$dest), "BOS")
 
 ## use both
+if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip remainder on Windows")
 selected_points(newarr) <- list(dest = "BOS")
 selected_ranges(newarr) <- list(origin = cbind("JFK", "LGA"))
 dat <- newarr[]

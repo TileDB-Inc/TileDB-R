@@ -7,8 +7,7 @@ isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.3.0") exit_file("TileDB time travel tests require TileDB 2.3.* or greater")
-
+if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
 
 ## tests formerly in test_tiledbarray.R

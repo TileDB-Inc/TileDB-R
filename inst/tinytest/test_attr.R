@@ -53,7 +53,7 @@ expect_true(is.na(tiledb::cell_val_num(attrs)))
 #})
 
 #test_that("tiledb_attr set fill", {
-if (tiledb_version(TRUE) < "2.1.0") exit_file("Needs TileDB 2.1.* or later")
+if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 if (isOldWindows) exit_file("skip remainder of this file on old Windows releases")
 
 ## test for default

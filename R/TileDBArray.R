@@ -708,49 +708,56 @@ setMethod("[", "tiledb_array",
   }
   ## (i,j,k) are now done and transferred to x@select_ranges
 
+  ## pointer to subarray needed for iterated setting of points from selected_ranges
+  ## and selected_points across all possible dimensions
+  have_made_selection <- FALSE
+  sbrptr <- libtiledb_subarray(qryptr)
 
   ## if ranges selected, use those
   for (k in seq_len(length(x@selected_ranges))) {
-    if (is.null(x@selected_ranges[[k]]) && is.null(x@selected_points[[k]])) {
-      #cat("Adding null dim", k, "on", dimtypes[k], "\n")
-      vec <- .map2integer64(nonemptydom[[k]], dimtypes[k])
-      if (vec[1] != 0 || vec[2] != 0) { # corner case of A[] on empty array
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
-        spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
-        rangeunset <- FALSE
+      if (is.null(x@selected_ranges[[k]]) && is.null(x@selected_points[[k]])) {
+          vec <- .map2integer64(nonemptydom[[k]], dimtypes[k])
+          if (vec[1] != 0 || vec[2] != 0) { # corner case of A[] on empty array
+              sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, k-1, dimtypes[k], vec[1], vec[2])
+              spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
+              rangeunset <- FALSE
+              have_made_selection <- TRUE
+          }
+      } else if (is.null(nrow(x@selected_ranges[[k]])) && is.null(x@selected_points[[k]])) {
+          vec <- x@selected_ranges[[k]]
+          vec <- .map2integer64(vec, dimtypes[k])
+          sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, k-1, dimtypes[k], min(vec), max(vec))
+          spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
+          rangeunset <- FALSE
+          have_made_selection <- TRUE
+      } else if (is.null(x@selected_points[[k]])) {
+          m <- x@selected_ranges[[k]]
+          for (i in seq_len(nrow(m))) {
+              vec <- .map2integer64(c(m[i,1], m[i,2]), dimtypes[k])
+              sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, k-1, dimtypes[k], vec[1], vec[2])
+              spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
+          }
+          rangeunset <- FALSE
+          have_made_selection <- TRUE
       }
-    } else if (is.null(nrow(x@selected_ranges[[k]])) && is.null(x@selected_points[[k]])) {
-      #cat("Adding nrow null dim", k, "on", dimtypes[k], "\n")
-      vec <- x@selected_ranges[[k]]
-      vec <- .map2integer64(vec, dimtypes[k])
-      qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], min(vec), max(vec))
-      spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
-      rangeunset <- FALSE
-    } else if (is.null(x@selected_points[[k]])) {
-      #cat("Adding non-zero dim", k, "on", dimtypes[k], "\n")
-      m <- x@selected_ranges[[k]]
-      for (i in seq_len(nrow(m))) {
-        vec <- .map2integer64(c(m[i,1], m[i,2]), dimtypes[k])
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
-        spdl::debug("[tiledb_array] Adding non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
-      }
-      rangeunset <- FALSE
-    }
   }
 
   ## if points selected, use those (and fewer special cases as A[i,j,k] not folded into points)
   for (k in seq_len(length(x@selected_points))) {
-    if (!is.null(x@selected_points[[k]])) {
-      spdl::debug("[tiledb_array] Adding non-zero dim {} on {}", k, dimtypes[k])
-      m <- x@selected_points[[k]]
-      for (i in seq_along(m)) {
-        vec <- .map2integer64(c(m[i], m[i]), dimtypes[k])
-        qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
-        spdl::debug("[tiledb_array] Adding point on non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
+      if (!is.null(x@selected_points[[k]])) {
+          m <- x@selected_points[[k]]
+          for (i in seq_along(m)) {
+              vec <- .map2integer64(c(m[i], m[i]), dimtypes[k])
+              sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, k-1, dimtypes[k], vec[1], vec[2])
+              spdl::debug("[tiledb_array] Adding point on non-zero dim {}:{} on {} with ({},{})", k, i, dimtypes[k], vec[1], vec[2])
+          }
+          rangeunset <- FALSE
+          have_made_selection <- TRUE
       }
-      rangeunset <- FALSE
-    }
   }
+
+  if (have_made_selection)
+      libtiledb_query_set_subarray_object(qryptr, sbrptr)
 
   buflist <- vector(mode="list", length=length(allnames))
 

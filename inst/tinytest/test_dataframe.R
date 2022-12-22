@@ -12,6 +12,7 @@ uri <- tempfile()
 irisdf <- within(iris, Species <- as.character(Species))
 
 expect_error(fromDataFrame(uri, irisdf)) # arguments checked, error in this wrong case
+if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
 fromDataFrame(irisdf, uri)
 
