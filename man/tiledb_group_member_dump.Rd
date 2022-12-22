@@ -4,7 +4,7 @@
 \alias{tiledb_group_member_dump}
 \title{Dump the TileDB Group to String}
 \usage{
-tiledb_group_member_dump(grp, recursive)
+tiledb_group_member_dump(grp, recursive = TRUE)
 }
 \arguments{
 \item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
