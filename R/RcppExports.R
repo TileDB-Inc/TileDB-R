@@ -1075,3 +1075,4 @@ querybuf_from_shmem <- function(path, dtype) {
 vlcbuf_from_shmem <- function(datapath, dtype) {
     .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
 }
+

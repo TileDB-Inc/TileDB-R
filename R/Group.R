@@ -319,10 +319,12 @@ tiledb_group_member <- function(grp, idx) {
 ##' Dump the TileDB Group to String
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param recursive A logical value indicating whether a recursive dump is desired
+##' @param recursive A logical value indicating whether a recursive dump is desired, defaults
+##' to \sQuote{FALSE}. Note that recursive listings on remote object may be an expensive or
+##' slow operation.
 ##' @return A character string
 ##' @export
-tiledb_group_member_dump <- function(grp, recursive = TRUE) {
+tiledb_group_member_dump <- function(grp, recursive = FALSE) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "This function needs TileDB 2.8.*" = .tiledb28())
     libtiledb_group_dump(grp@ptr, recursive)
@@ -346,5 +348,5 @@ tiledb_group_is_relative <- function(grp, name) {
 #' @param object `tiledb_group` object
 #' @export
 setMethod("show", signature(object = "tiledb_group"), function(object) {
-    cat(libtiledb_group_dump(object@ptr, TRUE))
+    cat(libtiledb_group_dump(object@ptr, FALSE))
 })
