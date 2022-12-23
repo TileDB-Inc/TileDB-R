@@ -1,5 +1,6 @@
-[![Build Status](https://img.shields.io/azure-devops/build/tiledb-inc/836549eb-f74a-4986-a18f-7fbba6bbb5f0/24/master?label=Azure%20Pipelines&logo=azure-pipelines&style=flat-square)](https://dev.azure.com/TileDB-Inc/CI/_build/latest?definitionId=24&branchName=master)
-[![R-CMD-check](https://github.com/TileDB-Inc/TileDB-R/workflows/R-CMD-check/badge.svg)](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/R-CMD-check.yaml)
+[![ci](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/ci.yaml/badge.svg)](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/ci.yaml)
+[![windows](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/windows.yaml/badge.svg)](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/windows.yaml)
+[![valgrind](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/valgrind.yaml/badge.svg)](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/valgrind.yaml)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tiledb?color=brightgreen)](https://cran.r-project.org/package=tiledb)
 [![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
 
@@ -36,9 +37,8 @@ The most recent released version can be installed from
     > if (!requireNamespace("remotes",quietly=TRUE)) install.packages("remotes")
     > remotes::install_github("TileDB-Inc/TileDB-R")
     ...
-    > tiledb::tiledb_version()
-    major minor patch
-        2    10     0
+    > library(tiledb)
+    TileDB R 0.17.0 with TileDB Embedded 2.13.0. See https://tiledb.com for more information.
     > help(package=tiledb)
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
