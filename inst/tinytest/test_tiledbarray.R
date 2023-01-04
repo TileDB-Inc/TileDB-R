@@ -413,9 +413,9 @@ if (requireNamespace("bit64", quietly=TRUE)) {
 
   unlink(tmp, recursive = TRUE)
 
-  ## test for error on non integer64 arguments
-  expect_error(tiledb_dim("rows", c(1L,4L), as.integer64(4), "INT64"))
-  expect_error(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "INT64"))
+  ## test for no error on non integer64 arguments
+  expect_silent(tiledb_dim("rows", c(1L,4L), as.integer64(4), "INT64"))
+  expect_silent(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "INT64"))
 }
 
 #test_that("test uint64 dimension for sparse arrays", {
@@ -447,9 +447,9 @@ if (requireNamespace("bit64", quietly=TRUE)) {
 
   unlink(tmp, recursive = TRUE)
 
-  ## test for error on non integer64 arguments
-  expect_error(tiledb_dim("rows", c(1L,4L), as.integer64(4), "UINT64"))
-  expect_error(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "UINT64"))
+  ## test no error on non integer64 arguments
+  expect_silent(tiledb_dim("rows", c(1L,4L), as.integer64(4), "UINT64"))
+  expect_silent(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "UINT64"))
 }
 
 #test_that("test uint32 dimension for sparse arrays", {
