@@ -6,7 +6,9 @@
 
 * Deprecated Core API functions for Array access and range setting are longer used (#496)
 
-* TileDB Group objects now have a default `show()` method (#498)
+* TileDB Group objects now have a default `show()` method (#498, #499)
+
+* Domain and tile sizes for int64 dimension objects are now internally converted (#500)
 
 ## Bug Fixes
 
@@ -27,7 +29,7 @@
 ## Removals
 
 * Functions `libtiledb_query_set_coordinates()` and `libtiledb_coords()`
-  which have been deprecated since June 2000 have been remove. (#497)
+  which have been deprecated since June 2000 have been removed. (#497)
 
 
 # tiledb 0.17.0
