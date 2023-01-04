@@ -10,6 +10,8 @@
 
 * Domain and tile sizes for int64 dimension objects are now internally converted (#500)
 
+* Use of TileDB Embedded was upgraded to release 2.13.1 (#501)
+
 ## Bug Fixes
 
 * Fragment info domain getters now work with ASCII domains (#495)
