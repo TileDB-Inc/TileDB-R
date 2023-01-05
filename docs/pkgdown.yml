@@ -1,5 +1,5 @@
-pandoc: 2.16.2
-pkgdown: 2.0.6
+pandoc: 2.17.1.1
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   data-ingestion-from-sql: data-ingestion-from-sql.html
@@ -7,5 +7,5 @@ articles:
   installation-options: installation-options.html
   introduction: introduction.html
   tiledb-mariadb-examples: tiledb-mariadb-examples.html
-last_built: 2022-12-01T16:49Z
+last_built: 2023-01-05T16:25Z
 

@@ -379,6 +379,9 @@
     <loc>/reference/show-tiledb_filter_list-method.html</loc>
   </url>
   <url>
+    <loc>/reference/show-tiledb_group-method.html</loc>
+  </url>
+  <url>
     <loc>/reference/show-tiledb_sparse-method.html</loc>
   </url>
   <url>
@@ -1030,7 +1033,13 @@
     <loc>/reference/tiledb_stats_reset.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_subarray-class.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_subarray.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_subarray_to_query.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_version.html</loc>
