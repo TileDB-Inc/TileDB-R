@@ -1303,11 +1303,29 @@ R_xlen_t libtiledb_filter_get_option(XPtr<tiledb::Filter> filter, std::string fi
 }
 
 //[[Rcpp::export]]
-XPtr<tiledb::Filter> libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, int value) {
-  check_xptr_tag<tiledb::Filter>(filter);
-  tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
-  filter->set_option(filter_option, &value);
-  return filter;
+XPtr<tiledb::Filter> libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, std::string filter_option_str, SEXP valuesxp) {
+    check_xptr_tag<tiledb::Filter>(filter);
+    tiledb_filter_option_t filter_option = _string_to_tiledb_filter_option(filter_option_str);
+#if TILEDB_VERSION >= TileDB_Version(2,11,0)
+    // For scale_float filters we need either a double, or an
+    if (filter_option == TILEDB_SCALE_FLOAT_FACTOR || filter_option == TILEDB_SCALE_FLOAT_OFFSET) {
+        double value = Rcpp::as<double>(valuesxp);
+        spdl::debug("[libtiledb_filter_set_option] setting {} to {}", filter_option_str, value);
+        filter->set_option(filter_option, &value);
+        return filter;
+    } else if (filter_option == TILEDB_SCALE_FLOAT_BYTEWIDTH) {
+        double dblval = Rcpp::as<double>(valuesxp);
+        int64_t int64val = makeScalarInteger64(dblval);
+        uint64_t value = static_cast<uint64_t>(int64val);
+        spdl::debug("[libtiledb_filter_set_option] setting {} to {}", filter_option_str, value);
+        filter->set_option(filter_option, &value);
+        return filter;
+    }
+#endif
+    // all others set an int value
+    int32_t value = Rcpp::as<int32_t>(valuesxp);
+    filter->set_option(filter_option, &value);
+    return filter;
 }
 
 
