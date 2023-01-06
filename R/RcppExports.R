@@ -192,8 +192,8 @@ libtiledb_filter_get_option <- function(filter, filter_option_str) {
     .Call(`_tiledb_libtiledb_filter_get_option`, filter, filter_option_str)
 }
 
-libtiledb_filter_set_option <- function(filter, filter_option_str, value) {
-    .Call(`_tiledb_libtiledb_filter_set_option`, filter, filter_option_str, value)
+libtiledb_filter_set_option <- function(filter, filter_option_str, valuesxp) {
+    .Call(`_tiledb_libtiledb_filter_set_option`, filter, filter_option_str, valuesxp)
 }
 
 libtiledb_filter_list <- function(ctx, filters) {
