@@ -1,6 +1,7 @@
 
-// We needed to define it here too to reach RcppExports.cpp, currently unused
-// #define TILEDB_DEPRECATED
+// We need to define this here to reach RcppExports.cpp
+// TileDB 2.14.0 or later no longer need it
+#define TILEDB_DEPRECATED
 
 #include <tiledb/tiledb>
 #if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR >= 4
