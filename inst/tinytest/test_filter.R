@@ -176,7 +176,9 @@ if (tiledb_version(TRUE) >= "2.11.0") {
                        BD=dat$bill_depth_mm,
                        FL=as.double(dat$flipper_length_mm),
                        BM=as.double(dat$body_mass_g))
-    pars <- expand.grid(factor=c(1,0.5,2), offset=0, bytewidth=c(1,0))
+    pars <- expand.grid(factor=c(1.0,0.5,2.0),
+                        offset=0.0,
+                        bytewidth=bit64::as.integer64(c(1,8)))
     for (i in seq_len(nrow(pars))) {
         flt <- tiledb_filter("SCALE_FLOAT")
         tiledb_filter_set_option(flt, "SCALE_FLOAT_FACTOR", pars[i, "factor"])
