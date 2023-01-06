@@ -1310,14 +1310,14 @@ XPtr<tiledb::Filter> libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, st
     // For scale_float filters we need either a double, or an
     if (filter_option == TILEDB_SCALE_FLOAT_FACTOR || filter_option == TILEDB_SCALE_FLOAT_OFFSET) {
         double value = Rcpp::as<double>(valuesxp);
-        spdl::warn("[libtiledb_filter_set_option] setting {} to {}", filter_option_str, value);
+        spdl::debug("[libtiledb_filter_set_option] setting {} to {}", filter_option_str, value);
         filter->set_option(filter_option, &value);
         return filter;
     } else if (filter_option == TILEDB_SCALE_FLOAT_BYTEWIDTH) {
         double dblval = Rcpp::as<double>(valuesxp);
         int64_t int64val = makeScalarInteger64(dblval);
         uint64_t value = static_cast<uint64_t>(int64val);
-        spdl::warn("[libtiledb_filter_set_option] setting {} to {}", filter_option_str, value);
+        spdl::debug("[libtiledb_filter_set_option] setting {} to {}", filter_option_str, value);
         filter->set_option(filter_option, &value);
         return filter;
     }
