@@ -93,9 +93,14 @@ reference:
   - matches("parse_query_condition")
   - matches("tiledb_get_query_status")
   - matches("tiledb_error_message")
+  - matches("completedBatched")
+  - matches("createBatched")
+  - matches("fetchBatched")
+  - matches("statusBatched")
 - title: Group
   contents:
   - starts_with("tiledb_group")
+  - matches("show,tiledb_group-method")
 - title: Object
   desc: object management functions
   contents:
