@@ -18,6 +18,8 @@
 
 * Fragment info domain getters now work with ASCII domains (#495)
 
+* The scale filter option setting was corrected to use the proper types (#503)
+
 ## Build and Test Systems
 
 * The nightly valgrind job setup was updated to include two new dependencies (#493)
