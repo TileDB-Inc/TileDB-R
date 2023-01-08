@@ -1,6 +1,23 @@
+# tiledb 0.17.1.1 (under development)
+
+* This release of the R package builds against [TileDB 2.13.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.13.1), and has also been tested against earlier releases as well as the development version (#502).
+
+## Improvements
+
+## Bug Fixes
+
+## Build and Test Systems
+
+* The nightly valgrind job matrix was updated to releases 2.13 and 2.14 as well as the branch (#504)
+
+## Deprecations
+
+## Removals
+
+
 # tiledb 0.17.1
 
-* This release of the R package builds against [TileDB 2.13.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.13.0), and has also been tested against earlier releases as well as the development version (#502).
+* This release of the R package builds against [TileDB 2.13.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.13.1), and has also been tested against earlier releases as well as the development version (#502).
 
 ## Improvements
 
