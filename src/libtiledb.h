@@ -27,7 +27,8 @@
 #include "tiledb.h"
 
 // logging support in RcppSpdlog namespace
-#include <spdl.h>
+// comment out for now as interaction seen with spdlog 1.11.0 its fmt library
+// #include <spdl.h>
 
 // Version
 Rcpp::NumericVector tiledb_version();
@@ -131,7 +132,7 @@ template <typename T> XPtr<T> make_xptr(SEXP p) {
 }
 
 template<typename T> void check_xptr_tag(XPtr<T> ptr) {
-    spdl::trace("[check_xptr_tag]");
+    //spdl::trace("[check_xptr_tag]");
     if (R_ExternalPtrTag(ptr) == R_NilValue) {
         Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
     }
