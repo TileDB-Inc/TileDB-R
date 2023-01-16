@@ -48,7 +48,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
                                                         SEXP strides = R_NilValue) {
 
   check_xptr_tag<tiledb::Query>(query);
-  //spdl::debug("[libtiledb_query_add_range_with type] deprecated subarray setter for type {}", typestr);
+  spdl::debug("[libtiledb_query_add_range_with type] deprecated subarray setter for type {}", typestr);
   if (TYPEOF(starts) != TYPEOF(ends)) {
       Rcpp::stop("'start' and 'end' must be of identical types");
   }
@@ -201,7 +201,7 @@ XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iid
                                               SEXP starts, SEXP ends,
                                               SEXP strides = R_NilValue) {
     check_xptr_tag<tiledb::Query>(query);
-    //spdl::debug("[libtiledb_query_add_range] deprecated setting subarray");
+    spdl::debug("[libtiledb_query_add_range] deprecated setting subarray");
     if (TYPEOF(starts) != TYPEOF(ends)) {
         Rcpp::stop("'start' and 'end' must be of identical types");
     }
