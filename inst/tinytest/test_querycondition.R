@@ -357,3 +357,26 @@ fromDataFrame(airquality, uri, col_index=c("Month", "Day"))  # dense array
 res <- tiledb_array(uri, return_as="data.frame", extended=FALSE,
                     query_condition=parse_query_condition(Temp > 90))[]
 expect_equal(NROW(res), 14)
+
+
+## Test minimal version
+if (tiledb_version(TRUE) < "2.14.0") exit_file("Remainder needs 2.14.* or later")
+
+D <- data.frame(key = c("á", "ą", "ã", "à", "å", "ä", "æ", "ç", "ć", "Ç", "í",
+                        "ë", "é", "è", "ê", "ł", "Ł", "ñ", "ń", "ó", "ô", "ò",
+                        "ö", "ø", "Ø", "ř", "š", "ś", "ş", "Š", "ú", "ü", "ý",
+                        "ź", "Ž", "Ż"))
+uri <- tempfile()
+fromDataFrame(D, uri)
+
+arr <- tiledb_array(uri)
+chk <- arr[] 		# everything
+expect_equal(D$key, chk$key)
+
+## exclude two
+chk <- tiledb_array(uri, query_condition=parse_query_condition(key != "ñ" && key != "Ø"))[]
+expect_equal(nrow(D), nrow(chk) + 2)
+
+## include two
+chk <- tiledb_array(uri, query_condition=parse_query_condition(key == "ñ" || key == "Ø"))[]
+expect_equal(nrow(chk), 2)
