@@ -374,9 +374,9 @@ chk <- arr[] 		# everything
 expect_equal(D$key, chk$key)
 
 ## exclude two
-chk <- tiledb_array(uri, query_condition=parse_query_condition(key != "ñ" && key != "Ø"))[]
+chk <- tiledb_array(uri, query_condition=parse_query_condition(key != "ñ" && key != "Ø"), return_as="data.frame")[]
 expect_equal(nrow(D), nrow(chk) + 2)
 
 ## include two
-chk <- tiledb_array(uri, query_condition=parse_query_condition(key == "ñ" || key == "Ø"))[]
+chk <- tiledb_array(uri, query_condition=parse_query_condition(key == "ñ" || key == "Ø"), return_as="data.frame")[]
 expect_equal(nrow(chk), 2)
