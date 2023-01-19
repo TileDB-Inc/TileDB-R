@@ -26,8 +26,8 @@
 // in inst/include so that Rcpp code generation can use the types for glue code
 #include "tiledb.h"
 
-// logging support in RcppSpdlog namespace
-#include <spdl.h>
+// logging support in RcppSpdlog namespace without making recourse to fmt::format
+#include <tinyspdl.h>
 
 // Version
 Rcpp::NumericVector tiledb_version();
