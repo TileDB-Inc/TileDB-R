@@ -1,14 +1,20 @@
-# tiledb 0.17.1.1 (under development)
+# tiledb 0.18.0
 
-* This release of the R package builds against [TileDB 2.13.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.13.1), and has also been tested against earlier releases as well as the development version (#502).
+* This release of the R package builds against [TileDB 2.14.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.0), and has also been tested against earlier releases as well as the development version (#502).
 
 ## Improvements
+
+* Use of TileDB Embedded was upgraded to release 2.14.0 (#505)
 
 ## Bug Fixes
 
 ## Build and Test Systems
 
 * The nightly valgrind job matrix was updated to releases 2.13 and 2.14 as well as the branch (#504)
+
+* The nightly valgrind job show the most recent commit sha1 after updating from release branches (#507)
+
+* A query condition test for utf8 attributes has been added (#507, #508)
 
 ## Deprecations
 
