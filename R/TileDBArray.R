@@ -606,7 +606,7 @@ setMethod("[", "tiledb_array",
 
   ## helper function to sweep over names and types of domain
   getDomain <- function(nm, tp) {
-    if (tp %in% c("ASCII", "CHAR")) {
+    if (tp %in% c("ASCII", "CHAR", "UTF8")) {
       libtiledb_array_get_non_empty_domain_var_from_name(arrptr, nm)
     } else {
       libtiledb_array_get_non_empty_domain_from_name(arrptr, nm, tp)
@@ -881,19 +881,21 @@ setMethod("[", "tiledb_array",
 
           ## retrieve actual result size (from fixed size element columns)
           getResultSize <- function(name, varnum, qryptr) {
-              if (is.na(varnum))                  # symbols come up with higher count
-                  libtiledb_query_result_buffer_elements(qryptr, name, 0)
-              else
-                  libtiledb_query_result_buffer_elements(qryptr, name)
+              val <- if (is.na(varnum))                  # symbols come up with higher count
+                         libtiledb_query_result_buffer_elements(qryptr, name, 0)
+                     else
+                         libtiledb_query_result_buffer_elements(qryptr, name)
+              spdl::debug("[getResultSize] name {} varnum {} has {}", name, varnum, val)
+              val
           }
           estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-          spdl::debug("['['] estimated result sizes", paste(estsz, collapse=","))
+          spdl::debug("['['] estimated result sizes {}", paste(estsz, collapse=","))
           if (any(!is.na(estsz))) {
               resrv <- max(estsz, na.rm=TRUE)
           } else {
-              resrv <- resrv/8                  # character case where bytesize of offset vector was used
+              resrv <- resrv/8              # character case where bytesize of offset vector was used
           }
-          spdl::debug("['['] expected size", resrv)
+          spdl::debug("['['] expected size {}", resrv)
           ## Permit one pass to allow zero-row schema read
           if (resrv == 0 && counter > 1L) {
               finished <- TRUE
@@ -1244,7 +1246,7 @@ setMethod("[<-", "tiledb_array",
     for (colnam in allnames) {
       ## when an index column is use this may be unordered to remap to position in 'nm' names
       k <- match(colnam, nm)
-      if (alltypes[k] %in% c("CHAR", "ASCII")) { # variable length
+      if (alltypes[k] %in% c("CHAR", "ASCII", "UTF8")) { # variable length
         txtvec <- as.character(value[[k]])
         spdl::debug("[tiledb_array] '[<-' alloc char buffer {} '{}': {}", k, colnam, alltypes[k])
         buflist[[k]] <- libtiledb_query_buffer_var_char_create(txtvec, allnullable[k])
