@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2022 TileDB Inc.
+//  Copyright (c) 2017-2023 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -1420,7 +1420,8 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
         attr->set_cell_val_num(static_cast<uint64_t>(ncells));
     } else if (attr_dtype == TILEDB_CHAR ||
-               attr_dtype == TILEDB_STRING_ASCII) {
+               attr_dtype == TILEDB_STRING_ASCII ||
+               attr_dtype == TILEDB_STRING_UTF8) {
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
         uint64_t num = static_cast<uint64_t>(ncells);
         if (ncells == R_NaInt) {
@@ -1437,7 +1438,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
                    "logical (BOOL), "
 #endif
-                   "and character (CHAR,ASCII) attributes are supported "
+                   "and character (CHAR,ASCII,UTF8) attributes are supported "
                    "-- seeing %s which is not", type.c_str());
     }
     attr->set_filter_list(*fltrlst);
@@ -3302,6 +3303,8 @@ R_xlen_t libtiledb_query_result_buffer_elements(XPtr<tiledb::Query> query,
                                                 int32_t which = 1) {
     check_xptr_tag<tiledb::Query>(query);
     auto nelements = query->result_buffer_elements()[attribute];
+    spdl::debug(tfm::format("[libtiledb_query_result_buffer_elements] attribute %s : (%d,%d)",
+                            attribute, nelements.first, nelements.second));
     R_xlen_t nelem = (which == 0 ? nelements.first : nelements.second);
     return nelem;
 }
