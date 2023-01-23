@@ -1,3 +1,22 @@
+# tiledb 0.18.0.1 (Development)
+
+* This release of the R package builds against [TileDB 2.14.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.0), and has also been tested against earlier releases as well as the development version (#502).
+
+## Improvements
+
+* Attributes can now be created, written and read from in (explicit) UTF8 types (and CHAR and ASCII already behaved correctly with respect to utf8 data) (#510)
+
+## Bug Fixes
+
+## Build and Test Systems
+
+* The TileDB Embedded version is now used to determine whether a dampener is needed for the deprecation warning (#511)
+
+## Deprecations
+
+## Removals
+
+
 # tiledb 0.18.0
 
 * This release of the R package builds against [TileDB 2.14.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.0), and has also been tested against earlier releases as well as the development version (#502).
