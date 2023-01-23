@@ -2,7 +2,7 @@
 
 ##  MIT License
 ##
-##  Copyright (c) 2017-2022 TileDB Inc.
+##  Copyright (c) 2017-2023 TileDB Inc.
 ##
 ##  Permission is hereby granted, free of charge, to any person obtaining a copy
 ##  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.15.0])
+AC_INIT([TileDB-R],[0.18.0])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -73,6 +73,8 @@ if test x"${have_pkg_config}" = x"no"; then
     AC_SUBST([TILEDB_INCLUDE], "")
     AC_SUBST([TILEDB_LIBS], "-ltiledb")
     AC_SUBST([TILEDB_RPATH], "")
+    ## For TileDB older than 2.15 we use this to silence a deprecation warning
+    AC_SUBST([TILEDB_SILENT_BUILD], "-DTILEDB_SILENT_BUILD")
 fi
 
 ## If we have pkg-config, use it to test minimal version
@@ -83,6 +85,16 @@ if test x"${have_pkg_config}" != x"no"; then
     else
         AC_MSG_RESULT([insufficient])
         AC_MSG_ERROR([TileDB Embedded 2.0.0 or later is required.])
+    fi
+    AC_MSG_CHECKING([for pkg-config checking TileDB deprecation silencer])
+    if pkg-config --atleast-version=2.15.0 tiledb; then
+        ## For TileDB 2.15 or newer are fine
+        AC_MSG_RESULT([not required])
+        AC_SUBST([TILEDB_SILENT_BUILD], "")
+    else
+        ## For TileDB older than 2.15 we use this to silence a deprecation warning
+        AC_MSG_RESULT([enabled])
+        AC_SUBST([TILEDB_SILENT_BUILD], "-DTILEDB_SILENT_BUILD")
     fi
 fi
 
