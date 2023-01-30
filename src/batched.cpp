@@ -5,9 +5,10 @@
 class QueryWrapper {
 public:
     QueryWrapper(SEXP qp): qryptr(qp), init(true) {};
+    inline bool is_intialized(void) { return qryptr != R_NilValue && init; }
 private:
-    SEXP qryptr;
-    bool init;
+    SEXP qryptr = R_NilValue;
+    bool init = false;
 };
 
 // [[Rcpp::export]]
