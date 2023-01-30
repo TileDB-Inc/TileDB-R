@@ -6,6 +6,8 @@
 
 * Attributes can now be created, written and read from in (explicit) UTF8 types (and CHAR and ASCII already behaved correctly with respect to utf8 data) (#510)
 
+* Compilation under `clang++` no longer complains about two unused member variables (#512)
+
 ## Bug Fixes
 
 ## Build and Test Systems
