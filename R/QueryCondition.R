@@ -126,11 +126,12 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_int64=FALSE) {
     .hasArray <- !is.null(ta) && is(ta, "tiledb_array")
     if (.hasArray && length(ta@sil) == 0) ta@sil <- .fill_schema_info_list(ta@uri)
-    .isComparisonOperator <- function(x) as.character(x) %in% c(">", ">=", "<", "<=", "==", "!=")
+    .isComparisonOperator <- function(x) tolower(as.character(x)) %in% c(">", ">=", "<", "<=", "==", "!=", "%in%")
     .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!")
     .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
     .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
     .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
+    .isInOperator <- function(x) tolower(as.character(x)) == "%in%"
     .errorFunction <- if (strict) stop else warning
     .getType <- function(x, use_int64=FALSE) {
         if (isTRUE(.isInteger(x))) { if (use_int64) "INT64" else "INT32" }
@@ -148,6 +149,11 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                                               `&&` = "AND",
                                               `||` = "OR",
                                               `!`  = "NOT")
+    .neweqcond <- function(val, attr) {
+        if (debug) cat("   ", attr, "EQ", val, "\n")
+        tiledb_query_condition_init(attr = attr, value = val, dtype = "ASCII", op = "EQ")
+    }
+    .neworcond <- function(op1, op2) tiledb_query_condition_combine(op1, op2, "OR")
     .makeExpr <- function(x, debug=FALSE) {
         if (is.symbol(x)) {
             stop("Unexpected symbol in expression: ", format(x))
@@ -160,7 +166,14 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
             tiledb_query_condition_combine(.makeExpr(x[[2]]),
                                            .makeExpr(x[[3]]),
                                            .mapBoolToCharacter(as.character(x[1])))
-
+        } else if (.isInOperator(x[1])) {
+            if (debug) cat("in: [", as.character(x[2]), "]",
+                           " ", as.character(x[1]),
+                           " [", as.character(x[3]), "]\n", sep="")
+            attr <- as.character(x[2])
+            vals <- eval(parse(text=as.character(x[3])))
+            eqconds <- Map(.neweqcond, vals, attr)
+            orcond <- Reduce(.neworcond, eqconds)
         } else if (.isComparisonOperator(x[1])) {
             op <- as.character(x[1])
             attr <- as.character(x[2])
@@ -169,7 +182,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
             if (.hasArray) {
                 ind <- match(attr, ta@sil$names)
                 if (!is.finite(ind)) {
-                    .errorFunction("No attibute '", attr, "' present.", call. = FALSE)
+                    .errorFunction("No attribute '", attr, "' present.", call. = FALSE)
                     return(NULL)
                 }
                 if (ta@sil$status[ind] != 2) {
