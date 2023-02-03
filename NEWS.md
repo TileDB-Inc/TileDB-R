@@ -8,6 +8,8 @@
 
 * Compilation under `clang++` no longer complains about two unused member variables (#512)
 
+* Query conditions for character columns can now be expressed using the `%in%` operator and a vector of values (#513)
+
 ## Bug Fixes
 
 ## Build and Test Systems
