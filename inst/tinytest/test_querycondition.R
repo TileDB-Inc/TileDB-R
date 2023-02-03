@@ -186,20 +186,22 @@ expect_equal(NROW(res), 34L)
 expect_true(all(res$bill_length_mm < 40))
 expect_true(all(res$year == 2009))
 
-qc3 <- parse_query_condition(island %in% c("Dream", "Biscoe"), arr)
-arrwithqc3 <- tiledb_array(uri, as.data.frame=TRUE, strings_as_factors=TRUE, query_condition=qc3)
-res <- arrwithqc3[]
-expect_equal(NROW(res), 168+124)
-expect_true(all(res$island != "Torgersen"))
-expect_true(all(res$island == "Dream" | res$island == "Biscoe"))
+if (tiledb_version(TRUE) >= "2.10.0") { # the OR operator is more recent than query conditions overall
+    qc3 <- parse_query_condition(island %in% c("Dream", "Biscoe"), arr)
+    arrwithqc3 <- tiledb_array(uri, as.data.frame=TRUE, strings_as_factors=TRUE, query_condition=qc3)
+    res <- arrwithqc3[]
+    expect_equal(NROW(res), 168+124)
+    expect_true(all(res$island != "Torgersen"))
+    expect_true(all(res$island == "Dream" | res$island == "Biscoe"))
 
-qc4 <- parse_query_condition(island %in% c("Dream", "Biscoe") && body_mass_g > 3500, arr)
-arrwithqc4 <- tiledb_array(uri, as.data.frame=TRUE, strings_as_factors=TRUE, query_condition=qc4)
-res <- arrwithqc4[]
-expect_equal(NROW(res), 153+80)
-expect_true(all(res$island != "Torgersen"))
-expect_true(all(res$island == "Dream" | res$island == "Biscoe"))
-expect_true(all(res$body_mass_g > 3500))
+    qc4 <- parse_query_condition(island %in% c("Dream", "Biscoe") && body_mass_g > 3500, arr)
+    arrwithqc4 <- tiledb_array(uri, as.data.frame=TRUE, strings_as_factors=TRUE, query_condition=qc4)
+    res <- arrwithqc4[]
+    expect_equal(NROW(res), 153+80)
+    expect_true(all(res$island != "Torgersen"))
+    expect_true(all(res$island == "Dream" | res$island == "Biscoe"))
+    expect_true(all(res$body_mass_g > 3500))
+}
 
 unlink(uri, recursive=TRUE)
 

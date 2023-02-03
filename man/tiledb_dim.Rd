@@ -16,17 +16,17 @@ tiledb_dim(
 \arguments{
 \item{name}{The dimension name / label string.  This argument is required.}
 
-\item{domain}{The dimension (inclusive) domain. The dimension’s domain is
-defined by a (lower bound, upper bound) vector, and is usually either of
-type \code{integer} or \code{double} (i.e. \code{numeric}). For type,
-\code{ASCII} \code{NULL} is expected.}
+\item{domain}{The dimension (inclusive) domain. The domain of a dimension
+is defined by a (lower bound, upper bound) vector. For type, \code{ASCII}
+\code{NULL} is expected.}
 
 \item{tile}{The tile dimension tile extent. For type,
 \code{ASCII} \code{NULL} is expected.}
 
-\item{type}{The dimension TileDB datatype string}
+\item{type}{The dimension TileDB datatype string.}
 
-\item{filter_list}{An optional tiledb_filter_list object, default is no filter}
+\item{filter_list}{An optional \code{tiledb_filter_list} object, default
+is no filter}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }
