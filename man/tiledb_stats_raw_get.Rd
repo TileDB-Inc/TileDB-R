@@ -7,7 +7,7 @@
 tiledb_stats_raw_get()
 }
 \description{
-This function is a convenience wrapper for \code{tiledb_stats_raw_dump}
+This function is a (now deprecated) convenience wrapper for \code{tiledb_stats_raw_dump}
 and returns the result as a JSON string.
 It required TileDB Embedded 2.0.3 or later.
 }

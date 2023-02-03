@@ -2,7 +2,7 @@
 % Please edit documentation in R/Stats.R
 \name{tiledb_stats_dump}
 \alias{tiledb_stats_dump}
-\title{Dumps internal TileDB statistics to file}
+\title{Dumps internal TileDB statistics to file or stdout}
 \usage{
 tiledb_stats_dump(path)
 }
@@ -11,7 +11,7 @@ tiledb_stats_dump(path)
 if the empty string is passed then the result is displayed on stdout.}
 }
 \description{
-Dumps internal TileDB statistics to file
+Dumps internal TileDB statistics to file or stdout
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ tiledb_stats_reset <- function() {
   libtiledb_stats_reset()
 }
 
-#' Dumps internal TileDB statistics to file
+#' Dumps internal TileDB statistics to file or stdout
 #'
 #' @param path Character variable with path to stats file;
 #' if the empty string is passed then the result is displayed on stdout.
@@ -68,23 +68,20 @@ tiledb_stats_print <- function() {
   libtiledb_stats_dump("")
 }
 
-#' Dumps internal TileDB statistics as JSON to file
+#' Dumps internal TileDB statistics as JSON to a string
 #'
 #' This function requires TileDB Embedded 2.0.3 or later.
-#' @param path Character variable with path to stats file;
-#' if the empty string is passed then the result is displayed on stdout.
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 #' if (tiledb_version(TRUE) >= "2.0.3") {
-#'   pth <- tempfile()
-#'   tiledb_stats_raw_dump(pth)
-#'   cat(readLines(pth)[1:10], sep = "\n")
+#'   txt <- tiledb_stats_raw_dump()
+#'   cat(txt, "\n")
 #' }
 #' @export
-tiledb_stats_raw_dump <- function(path) {
-  stopifnot(`Argument 'path' must be character` = is.character(path),
-            `Raw statistics are available with TileDB Embedded verion 2.0.3 or later` = tiledb_version(TRUE) >= "2.0.3")
-  libtiledb_stats_raw_dump(path)
+tiledb_stats_raw_dump <- function() {
+    stopifnot("Raw statistics are available with TileDB Embedded verion 2.0.3 or later" =
+                  tiledb_version(TRUE) >= "2.0.3")
+    libtiledb_stats_raw_dump()
 }
 
 #' Print internal TileDB statistics as JSON
@@ -93,17 +90,20 @@ tiledb_stats_raw_dump <- function(path) {
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_print <- function() {
-  stopifnot(`Raw statistics are available with TileDB Embedded verion 2.0.3 or later` = tiledb_version(TRUE) >= "2.0.3")
-  libtiledb_stats_raw_dump("")
+    stopifnot("Raw statistics are available with TileDB Embedded verion 2.0.3 or later"
+              = tiledb_version(TRUE) >= "2.0.3")
+    cat(libtiledb_stats_raw_dump(), "\n")
 }
 
 #' Gets internal TileDB statistics as JSON string
 #'
-#' This function is a convenience wrapper for \code{tiledb_stats_raw_dump}
+#' This function is a (now deprecated) convenience wrapper for \code{tiledb_stats_raw_dump}
 #' and returns the result as a JSON string.
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_get <- function() {
-  stopifnot(`Raw statistics are available with TileDB Embedded verion 2.0.3 or later` = tiledb_version(TRUE) >= "2.0.3")
-  libtiledb_stats_raw_get()
-}
+    stopifnot("Raw statistics are available with TileDB Embedded verion 2.0.3 or later"
+              = tiledb_version(TRUE) >= "2.0.3")
+    .Deprecated(msg="Use 'tiledb_stats_raw_dump' instead of 'tiledb_stats_raw_get'.")
+    libtiledb_stats_raw_get()
+ }

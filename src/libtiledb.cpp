@@ -4165,33 +4165,24 @@ void libtiledb_stats_dump(std::string path = "") {
 }
 
 // [[Rcpp::export]]
-void libtiledb_stats_raw_dump(std::string path = "") {
+std::string libtiledb_stats_raw_dump() {
 #if TILEDB_VERSION < TileDB_Version(2,0,3)
-  Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
+    Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
 #else
-  if (path == "") {
-    tiledb::Stats::raw_dump();
-  } else {
-    FILE* fptr = nullptr;
-    fptr = fopen(path.c_str(), "w");
-    if (fptr == nullptr) {
-      Rcpp::stop("error opening stats dump file for writing");
-    }
-    tiledb::Stats::raw_dump(fptr);
-    fclose(fptr);
-  }
+    std::string txt;
+    tiledb::Stats::raw_dump(&txt);
+    return txt;
 #endif
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_stats_raw_get() {
 #if TILEDB_VERSION < TileDB_Version(2,0,3)
-  Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
-  return(std::string());//not reached
+    Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
+    return(std::string());//not reached
 #else
-  std::string result;
-  tiledb::Stats::raw_dump(&result);
-  return result;
+    Rcpp::message(Rcpp::wrap("This function is deprecated, please use 'libtiledb_stats_raw_dump'."));
+    return libtiledb_stats_raw_dump();
 #endif
 }
 

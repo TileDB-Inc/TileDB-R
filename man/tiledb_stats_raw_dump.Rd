@@ -2,13 +2,9 @@
 % Please edit documentation in R/Stats.R
 \name{tiledb_stats_raw_dump}
 \alias{tiledb_stats_raw_dump}
-\title{Dumps internal TileDB statistics as JSON to file}
+\title{Dumps internal TileDB statistics as JSON to a string}
 \usage{
-tiledb_stats_raw_dump(path)
-}
-\arguments{
-\item{path}{Character variable with path to stats file;
-if the empty string is passed then the result is displayed on stdout.}
+tiledb_stats_raw_dump()
 }
 \description{
 This function requires TileDB Embedded 2.0.3 or later.
@@ -16,8 +12,7 @@ This function requires TileDB Embedded 2.0.3 or later.
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 if (tiledb_version(TRUE) >= "2.0.3") {
-  pth <- tempfile()
-  tiledb_stats_raw_dump(pth)
-  cat(readLines(pth)[1:10], sep = "\n")
+  txt <- tiledb_stats_raw_dump()
+  cat(txt, "\n")
 }
 }
