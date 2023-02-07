@@ -1,6 +1,6 @@
-# tiledb 0.18.0.1 (Development)
+# tiledb 0.18.0.2 (Development)
 
-* This release of the R package builds against [TileDB 2.14.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.0), and has also been tested against earlier releases as well as the development version (#502).
+* This release of the R package builds against [TileDB 2.14.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.1), and has also been tested against earlier releases as well as the development version (#502).
 
 ## Improvements
 
@@ -10,7 +10,11 @@
 
 * Query conditions for character columns can now be expressed using the `%in%` operator and a vector of values (#513)
 
+* Use of TileDB Embedded was upgraded to release 2.14.1 (#516)
+
 ## Bug Fixes
+
+* The access to JSON-formatted performance statistics has been simplified (#514)
 
 ## Build and Test Systems
 
