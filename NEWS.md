@@ -2,6 +2,10 @@
 
 * This release of the R package builds against [TileDB 2.14.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.1), and has also been tested against earlier releases as well as the development version (#502).
 
+## Breaking Changes
+
+* The validity map coding of nullable strings has been corrected, but previously written arrays with missing values can not be read as should exported and re-written (#517)
+
 ## Improvements
 
 * Attributes can now be created, written and read from in (explicit) UTF8 types (and CHAR and ASCII already behaved correctly with respect to utf8 data) (#510)
