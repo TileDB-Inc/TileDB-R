@@ -263,12 +263,13 @@ uri <- tempfile()
 pp <- palmerpenguins::penguins
 fromDataFrame(pp, uri, sparse = TRUE, col_index = c("species", "year"))
 
-qc <- parse_query_condition(body_mass_g > 4000 && sex == "male")
+qc <- parse_query_condition(body_mass_g > 4000 || island == "Biscoe" || sex == "male")
 arr <- tiledb_array(uri)
 qry <- tiledb_query(arr, "DELETE")
 qry <- tiledb_query_set_condition(qry, qc)
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 
-oo <- tiledb_array(uri, return_as="data.frame")[]
-expect_equal(nrow(oo), 177)             # instead of 344 pre-deletion
+oo <- tiledb_array(uri, return_as="data.frame", strings_as_factors=TRUE)[]
+
+expect_equal(nrow(oo), 84)             # instead of 344 pre-deletion
