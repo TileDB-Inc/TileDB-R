@@ -2691,6 +2691,20 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(double szoffsets, d
     buf->cols = cols;
     buf->nullable = nullable;
     buf->validity_map.resize(static_cast<size_t>(szdata));
+    buf->legacy_validity = false; 		              // for legacy validity mode
+    return buf;
+}
+
+// [[Rcpp::export]]
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_legacy_validity_mode(XPtr<tiledb::Context> ctx,
+                                                                     XPtr<vlc_buf_t> buf,
+                                                                     bool override_value = false) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    Rcpp::CharacterVector vec = libtiledb_config_get(cfg, "r.legacy_validity_mode");
+    buf->legacy_validity = std::string("true") == std::string(vec[0]) || override_value;
+    spdl::debug(tfm::format("[libtiledb_query_buffer_var_char_legacy_validity_mode] "
+                            "legacy_validity set to %s", buf->legacy_validity ? "true" : "false"));
     return buf;
 }
 
@@ -2710,7 +2724,7 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(CharacterVector vec, bool
         bufptr->str += s;
         cumlen += s.length();
         if (nullable) {
-          bufptr->validity_map[i] = vec[i] != R_NaString;
+            bufptr->validity_map[i] = vec[i] != R_NaString;
         }
     }
     bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
@@ -2763,10 +2777,17 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
   CharacterMatrix mat(bufptr->rows, bufptr->cols);
   for (size_t i = 0; i < n; i++) {
       if (bufptr->nullable) {
-          if (bufptr->validity_map[i] != 0)
-              mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
-          else
-              mat[i] = R_NaString;
+          if (bufptr->legacy_validity) {
+              if (bufptr->validity_map[i] == 0)
+                  mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
+              else
+                  mat[i] = R_NaString;
+          } else {
+              if (bufptr->validity_map[i] != 0)
+                  mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
+              else
+                  mat[i] = R_NaString;
+          }
       } else {
           mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
       }

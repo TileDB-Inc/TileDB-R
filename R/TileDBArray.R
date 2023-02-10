@@ -836,6 +836,7 @@ setMethod("[", "tiledb_array",
               if (type %in% c("CHAR", "ASCII", "UTF8")) {
                   spdl::debug("[getBuffer] '{}' allocating 'char' {} rows given budget of {}", name, resrv, memory_budget)
                   buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
+                  buf <- libtiledb_query_buffer_var_char_legacy_validity_mode(ctx@ptr, buf)
                   qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
                   buf
               } else {

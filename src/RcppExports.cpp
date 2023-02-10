@@ -1639,6 +1639,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_buffer_var_char_legacy_validity_mode
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_legacy_validity_mode(XPtr<tiledb::Context> ctx, XPtr<vlc_buf_t> buf, bool override_value);
+RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_legacy_validity_mode(SEXP ctxSEXP, SEXP bufSEXP, SEXP override_valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<vlc_buf_t> >::type buf(bufSEXP);
+    Rcpp::traits::input_parameter< bool >::type override_value(override_valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_buffer_var_char_legacy_validity_mode(ctx, buf, override_value));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_buffer_var_char_create
 XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(CharacterVector vec, bool nullable);
 RcppExport SEXP _tiledb_libtiledb_query_buffer_var_char_create(SEXP vecSEXP, SEXP nullableSEXP) {
@@ -3312,6 +3325,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_set_subarray", (DL_FUNC) &_tiledb_libtiledb_query_set_subarray, 2},
     {"_tiledb_libtiledb_query_set_buffer", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer, 3},
     {"_tiledb_libtiledb_query_buffer_var_char_alloc_direct", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_alloc_direct, 4},
+    {"_tiledb_libtiledb_query_buffer_var_char_legacy_validity_mode", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_legacy_validity_mode, 3},
     {"_tiledb_libtiledb_query_buffer_var_char_create", (DL_FUNC) &_tiledb_libtiledb_query_buffer_var_char_create, 2},
     {"_tiledb_libtiledb_query_set_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_set_buffer_var_char, 3},
     {"_tiledb_libtiledb_query_get_buffer_var_char", (DL_FUNC) &_tiledb_libtiledb_query_get_buffer_var_char, 3},
