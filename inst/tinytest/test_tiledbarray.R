@@ -1472,3 +1472,21 @@ oo <- penguins
 expect_equal(sum(is.na(oo$sex)), sum(is.na(pp$sex)))
 expect_equal(sum(oo$sex == "male"), sum(pp$sex == "male"))
 expect_equal(sum(oo$sex == "female"), sum(pp$sex == "female"))
+
+## legacy validity mode
+tdir <- tempfile()
+tgzfile <- system.file("sampledata", "legacy_validity.tar.gz", package="tiledb")
+untar(tarfile = tgzfile, exdir = tdir)
+uri <- file.path(tdir, "legacy_validity")
+cfg <- tiledb_config()
+oldcfg <- cfg
+cfg["r.legacy_validity_mode"] <- "true"
+ctx <- tiledb_ctx(cfg)
+arr <- tiledb_array(uri, strings_as_factors=FALSE, return_as="data.frame")[]
+expect_equal(dim(arr)[1], 10)
+expect_equal(dim(arr)[2], 3)
+expect_equivalent(arr, data.frame(key=1:10,
+                                  val1=c(letters[1:4], NA, letters[6:7], NA, letters[9:10]),
+                                  val2=LETTERS[1:10]))
+expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
+ctx <- tiledb_ctx(oldcfg)               # reset config
