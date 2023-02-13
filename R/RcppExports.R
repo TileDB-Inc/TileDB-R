@@ -568,12 +568,16 @@ libtiledb_query_buffer_var_char_alloc_direct <- function(szoffsets, szdata, null
     .Call(`_tiledb_libtiledb_query_buffer_var_char_alloc_direct`, szoffsets, szdata, nullable, cols)
 }
 
-libtiledb_query_buffer_var_char_legacy_validity_mode <- function(ctx, buf, override_value = FALSE) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_legacy_validity_mode`, ctx, buf, override_value)
+libtiledb_query_buffer_var_char_get_legacy_validity_value <- function(ctx, validity_override = FALSE) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_get_legacy_validity_value`, ctx, validity_override)
 }
 
-libtiledb_query_buffer_var_char_create <- function(vec, nullable) {
-    .Call(`_tiledb_libtiledb_query_buffer_var_char_create`, vec, nullable)
+libtiledb_query_buffer_var_char_legacy_validity_mode <- function(ctx, buf, validity_override = FALSE) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_legacy_validity_mode`, ctx, buf, validity_override)
+}
+
+libtiledb_query_buffer_var_char_create <- function(vec, nullable, legacy_validity = FALSE) {
+    .Call(`_tiledb_libtiledb_query_buffer_var_char_create`, vec, nullable, legacy_validity)
 }
 
 libtiledb_query_set_buffer_var_char <- function(query, attr, bufptr) {

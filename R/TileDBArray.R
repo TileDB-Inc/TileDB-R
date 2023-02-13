@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2022 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -1243,6 +1243,7 @@ setMethod("[<-", "tiledb_array",
                                          else { if (sparse) "UNORDERED" else "COL_MAJOR" })
 
     buflist <- vector(mode="list", length=nc)
+    legacy_validity <- libtiledb_query_buffer_var_char_get_legacy_validity_value(ctx@ptr)
 
     for (colnam in allnames) {
       ## when an index column is use this may be unordered to remap to position in 'nm' names
@@ -1250,7 +1251,7 @@ setMethod("[<-", "tiledb_array",
       if (alltypes[k] %in% c("CHAR", "ASCII", "UTF8")) { # variable length
         txtvec <- as.character(value[[k]])
         spdl::debug("[tiledb_array] '[<-' alloc char buffer {} '{}': {}", k, colnam, alltypes[k])
-        buflist[[k]] <- libtiledb_query_buffer_var_char_create(txtvec, allnullable[k])
+        buflist[[k]] <- libtiledb_query_buffer_var_char_create(txtvec, allnullable[k], legacy_validity)
         qryptr <- libtiledb_query_set_buffer_var_char(qryptr, colnam, buflist[[k]])
       } else {
         col <- value[[k]]
