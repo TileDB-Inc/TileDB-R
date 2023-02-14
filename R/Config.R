@@ -55,7 +55,8 @@ tiledb_config.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export tiledb_config
 tiledb_config <- function(config = NA_character_) {
-  if (!is.na(config)) {
+  config <- config[!is.na(x = config)]
+  if (length(x = config)) {
     stopifnot(`If given, the 'config' argument must be a name, value character vector` = is.character(config) && !is.null(names(config)))
     ptr <- libtiledb_config(config)
   } else {

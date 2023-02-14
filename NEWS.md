@@ -1,6 +1,7 @@
 # tiledb 0.18.0.2 (Development)
 
 * This release of the R package builds against [TileDB 2.14.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.1), and has also been tested against earlier releases as well as the development version (#502).
+* Safer checking of `NAs` in `tiledb_config()` to support R 4.2 conditional lengths (#518, #519)
 
 ## Improvements
 

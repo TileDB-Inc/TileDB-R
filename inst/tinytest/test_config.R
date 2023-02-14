@@ -20,6 +20,15 @@ expect_error(tiledb_config(1))
 expect_error(tiledb_config(c(foo = 1)))
 #})
 
+## handle cases with NAs
+expect_silent(cfg <- tiledb_config(c(a = "1")))
+expect_equal(cfg["a"], c(a = "1"))
+expect_silent(cfg <- tiledb_config(c(a = "1", b = "2")))
+expect_equal(cfg["b"], c(b = "2"))
+expect_equal(head(names(as.vector(cfg)), 2L), c("a", "b"))
+expect_silent(cfg <- tiledb_config(c(a = "1", c = NA_character_, b = "2")))
+expect_equal(head(names(as.vector(cfg)), 2L), c("a", "b"))
+
 #test_that("tiledb_config indexing works", {
 cfg <- tiledb_config()
 cfg["foo"] <- "bar"
