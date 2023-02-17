@@ -4,7 +4,7 @@
 
 ## Breaking Changes
 
-* The validity map coding of nullable strings has been corrected, but previously written arrays with missing values can not be read as should exported and re-written (#517)
+* The validity map coding of nullable strings has been corrected: validity map values of one are now interpreted as valid/non-null for full compatibility with other TileDB projects. Previously written arrays with nullable strings can be read by setting the config option `r.legacy_validity_mode` to `true`; the option also permits to write to an older installation. A conversion helper script is provided in `scripts/legacy_validity_convert.r`. (#517)
 
 ## Improvements
 
