@@ -1473,7 +1473,8 @@ expect_equal(sum(is.na(oo$sex)), sum(is.na(pp$sex)))
 expect_equal(sum(oo$sex == "male"), sum(pp$sex == "male"))
 expect_equal(sum(oo$sex == "female"), sum(pp$sex == "female"))
 
-## legacy validity mode
+
+## [214]  legacy validity mode
 tdir <- tempfile()
 tgzfile <- system.file("sampledata", "legacy_validity.tar.gz", package="tiledb")
 untar(tarfile = tgzfile, exdir = tdir)
@@ -1490,3 +1491,32 @@ expect_equivalent(arr, data.frame(key=1:10,
                                   val2=LETTERS[1:10]))
 expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
 ctx <- tiledb_ctx(oldcfg)               # reset config
+
+## [218]  test conversion
+tdir <- tempfile()
+tgzfile <- system.file("sampledata", "legacy_write.tar.gz", package="tiledb")
+untar(tarfile = tgzfile, exdir = tdir)
+inuri <- file.path(tdir, "legacy_write", "penguins")
+
+outdir <- tempfile()
+dir.create(outdir)
+cfg["r.legacy_validity_mode"] <- "false" 	# reset to no conversion to read 'before'
+ctx <- tiledb_ctx(cfg)
+before <- tiledb_array(inuri, strings_as_factors=TRUE)[]
+expect_equal(sum(is.na(before$sex)), 333)
+
+tiledb:::.legacy_validity(inuri, outdir)
+outuri <- file.path(outdir, "penguins")
+after <- tiledb_array(outuri, strings_as_factors=TRUE)[]
+expect_equal(sum(is.na(after$sex)), 11)
+for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows and sex
+    expect_equal(before[[col]], after[[col]])
+
+newout <- tempfile()
+dir.create(newout)
+tiledb:::.legacy_validity(outuri, newout, tolegacy=TRUE)
+rvturi <- file.path(newout, "penguins")
+revert <- tiledb_array(rvturi, strings_as_factors=TRUE)[]
+expect_equal(sum(is.na(revert$sex)), 333)
+for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows
+    expect_equal(before[[col]], revert[[col]])
