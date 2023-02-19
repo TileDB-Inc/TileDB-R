@@ -20,4 +20,10 @@ doc <- "Usage: convert.t [-h] [-v] [-d] [-t] [-o OUTDIR | -u] INDIR
 opt <- docopt(doc)			# docopt parsing
 #if (opt$debug) print(opt)
 
-tiledb:::.legacy_validity(opt$INDIR, opt$out, opt$tolegacy, opt$usetmp, opt$verbose, opt$debug)
+tiledb:::.legacy_validity(inuri=opt$INDIR,
+                          outdir=opt$out,
+                          fromlegacy=!opt$tolegacy,
+                          tolegacy=opt$tolegacy,
+                          usetmp=opt$usetmp,
+                          verbose=opt$verbose,
+                          debug=opt$debug)

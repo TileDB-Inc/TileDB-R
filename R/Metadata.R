@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -77,10 +77,10 @@ tiledb_put_metadata <- function(arr, key, val) {
 }
 
 
-##' Return a TileDB Array Metadata object given by key
+##' Return all TileDB Array Metadata objects as a named list
 ##'
 ##' @param arr A TileDB Array object, or a character URI describing one
-##' @return A object stored in the Metadata under the given key
+##' @return A named list with all Metadata objects indexed by the given key
 ##' @export
 tiledb_get_all_metadata <- function(arr) {
   stopifnot(`Argument 'arr' must be a (dense or sparse) TileDB array` = .isArray(arr),
