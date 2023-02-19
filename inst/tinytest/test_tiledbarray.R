@@ -1492,7 +1492,27 @@ expect_equivalent(arr, data.frame(key=1:10,
 expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
 ctx <- tiledb_ctx(oldcfg)               # reset config
 
-## [218]  test conversion
+##  [218]  test conversion with metadata
+outdir <- tempfile()
+dir.create(outdir)
+tiledb:::.legacy_validity(uri, outdir, fromlegacy=TRUE)
+outuri <- file.path(outdir, "legacy_validity")
+chk <- tiledb_array(outuri, return_as="data.frame")[]
+expect_equal(dim(arr)[1], 10)
+expect_equal(dim(arr)[2], 3)
+expect_equivalent(arr, data.frame(key=1:10,
+                                  val1=c(letters[1:4], NA, letters[6:7], NA, letters[9:10]),
+                                  val2=LETTERS[1:10]))
+expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
+arr <- tiledb_array(outuri)
+arr <- tiledb_array_open(arr, "READ")
+expect_equal(tiledb_num_metadata(arr), 2) 	# two sets of meta data
+mdlst <- tiledb_get_all_metadata(arr)
+expect_equal(mdlst[["data"]], c(123L, 456L, 789L))
+expect_equal(mdlst[["text"]], "the quick brown fox")
+
+
+##  [225]  test conversion: larger penguins example
 tdir <- tempfile()
 tgzfile <- system.file("sampledata", "legacy_write.tar.gz", package="tiledb")
 untar(tarfile = tgzfile, exdir = tdir)
@@ -1505,7 +1525,7 @@ ctx <- tiledb_ctx(cfg)
 before <- tiledb_array(inuri, strings_as_factors=TRUE)[]
 expect_equal(sum(is.na(before$sex)), 333)
 
-tiledb:::.legacy_validity(inuri, outdir)
+tiledb:::.legacy_validity(inuri, outdir, fromlegacy=TRUE)
 outuri <- file.path(outdir, "penguins")
 after <- tiledb_array(outuri, strings_as_factors=TRUE)[]
 expect_equal(sum(is.na(after$sex)), 11)

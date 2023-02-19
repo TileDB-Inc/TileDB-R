@@ -227,6 +227,7 @@ r_to_tiledb_type <- function(x) {
 ## conversion helper from (and to) legacy validity map for nullable strings
 .legacy_validity <- function(inuri,
                              outdir = NULL,
+                             fromlegacy = TRUE,
                              tolegacy = FALSE,
                              usetmp = FALSE,
                              verbose = FALSE,
@@ -248,10 +249,10 @@ r_to_tiledb_type <- function(x) {
         stop("If '--usetmp' is not given then '--out OUT' must be given.", call. = FALSE)
 
     if (!dir.exists(newdir)) dir.create(newdir)
-    res <- file.copy(inuri, newdir, recursive=TRUE)
+    #res <- file.copy(inuri, newdir, recursive=TRUE)
     newuri <- file.path(newdir, array)
-    arr <- tiledb_array(newuri)
 
+    arr <- tiledb_array(inuri)
     attrlst <- attrs(schema(arr))
     is_nullable_string <- function(x) datatype(x) %in% c("ASCII", "CHAR", "UTF8") &&
                                           tiledb_attribute_get_nullable(x)
@@ -261,28 +262,30 @@ r_to_tiledb_type <- function(x) {
     }
 
     oldcfg <- cfg <- tiledb_config()
-    cfg["r.legacy_validity_mode"] <- if (tolegacy) "false" else "true"
+    cfg["r.legacy_validity_mode"] <- if (fromlegacy) "true" else "false"
     ctx <- tiledb_ctx(cfg)
-    dat <- tiledb_array(newuri, return_as="data.frame", strings_as_factors=TRUE)[]
+    dat <- tiledb_array(inuri, return_as="data.frame", strings_as_factors=TRUE)[]
     if (debug) print(summary(dat))
 
-    ## delete fully via an 'always true' condition testing for 'FALSE || TRUE'
-    colnm <- names(stringcols)[1] # we know from above that this is string column
-    cnd <- sprintf(r"(%s == "" || %s != "")", colnm, colnm)
-    qc <- do.call(tiledb::parse_query_condition, list(expr = str2lang(cnd), ta = arr))
-    arr <- tiledb_array(newuri)
-    qry <- tiledb_query(arr, "DELETE")
-    qry <- tiledb_query_set_condition(qry, qc)
-    tiledb_query_submit(qry)
-    tiledb_query_finalize(qry)
-    if (debug) {
-        cat("Deleted old\n")
-        print(tiledb_array(newuri)[])
-    }
+    arr <- tiledb_array(inuri)
+    arr <- tiledb_array_open(arr, "READ")
+    nmd <- tiledb_num_metadata(arr)
+    if (nmd > 0) metadatalist <- tiledb_get_all_metadata(arr)
+    if (debug) print(metadatalist)
 
-    cfg["r.legacy_validity_mode"] <- if (tolegacy) "false" else "true"
+    cfg["r.legacy_validity_mode"] <- if (tolegacy) "true" else "false"
     ctx <- tiledb_ctx(cfg)
-    fromDataFrame(dat[,-1], newuri, mode="append") # unless we say append complains about exists
+    fromDataFrame(dat[,-1], newuri)
+
+    if (nmd > 0) {
+        arr <- tiledb_array(newuri)
+        arr <- tiledb_array_open(arr, "WRITE")
+        for (nm in names(metadatalist)) {
+            invisible(tiledb_put_metadata(arr, nm, metadatalist[[nm]]))
+            if (debug) print(metadatalist[[nm]])
+        }
+        invisible(tiledb_array_close(arr))
+    }
 
     chk <- tiledb_array(newuri, strings_as_factors=TRUE)[]
     if (debug) {
