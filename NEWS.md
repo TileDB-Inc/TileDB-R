@@ -3,8 +3,6 @@
 * This release of the R package builds against [TileDB 2.15.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.0), and has also been tested against earlier releases as well as the development
   version (#516, #521).
 
-* Safer checking of `NAs` in `tiledb_config()` to support R 4.2 conditional lengths (#518, #519)
-
 ## Breaking Changes
 
 * The validity map coding of nullable strings has been corrected: validity map values of one are now interpreted as valid/non-null for full compatibility with other TileDB projects. Previously written arrays with nullable strings can be read by setting the config option `r.legacy_validity_mode` to `true`; the option also permits to write to an older installation. A conversion helper script is provided in `scripts/legacy_validity_convert.r`. (#517)
@@ -19,6 +17,8 @@
 
 * Use of TileDB Embedded was upgraded to releases 2.14.1 and 2.15.0 (#516, #521)
 
+* Safer checking of `NAs` in `tiledb_config()` to support R 4.2 conditional lengths (#519)
+
 ## Bug Fixes
 
 * The access to JSON-formatted performance statistics has been simplified (#514)
@@ -26,6 +26,8 @@
 ## Build and Test Systems
 
 * The TileDB Embedded version is now used to determine whether a dampener is needed for the deprecation warning (#511)
+
+* One of the test data sets included with #517 has been regenerated under an older TileDB version in order to test on more systems (#523)
 
 ## Deprecations
 
