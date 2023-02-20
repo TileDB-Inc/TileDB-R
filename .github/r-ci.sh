@@ -192,9 +192,11 @@ BootstrapLinuxOptions() {
     #    InstallPandoc 'linux/debian/x86_64'
     #fi
     if [[ "${USE_BSPM}" != "FALSE" ]]; then
-        sudo Rscript --vanilla -e 'install.packages("bspm", repos="https://cran.r-project.org")'
+        #sudo Rscript --vanilla -e 'install.packages("bspm", repos="https://cran.r-project.org")'
+        sudo Rscript --vanilla -e 'remotes::install_url("https://cloud.r-project.org/src/contrib/Archive/bspm/bspm_0.3.10.tar.gz")'
         echo "suppressMessages(bspm::enable())" | sudo tee --append /etc/R/Rprofile.site >/dev/null
-        echo "options(bspm.sudo=TRUE)" | sudo tee --append /etc/R/Rprofile.site >/dev/null
+        ##--not needed with 0.3.10 echo "options(bspm.version.check=FALSE)" | sudo tee --append /etc/R/Rprofile.site >/dev/null
+        ##--not needed here        echo "options(bspm.sudo=TRUE)" | sudo tee --append /etc/R/Rprofile.site >/dev/null
     fi
 }
 
@@ -319,16 +321,12 @@ RBinaryInstall() {
 
 InstallGithub() {
     #EnsureDevtools
-
     #echo "Installing GitHub packages: $@"
-    # Install the package.
-    #Rscript -e 'library(devtools); library(methods); install_github(commandArgs(TRUE), build_vignettes = FALSE)' "$@"
     sudo Rscript -e 'remotes::install_github(commandArgs(TRUE))' "$@"
 }
 
 InstallDeps() {
     #EnsureDevtools
-    #Rscript -e 'library(devtools); library(methods); install_deps(dependencies = TRUE)'
     sudo Rscript -e 'remotes::install_deps(".")'
 }
 

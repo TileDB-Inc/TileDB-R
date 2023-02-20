@@ -180,7 +180,7 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
     buf->rows = buf->offsets.size();
     buf->cols = 2;              // value not used
     buf->nullable = false;      // default, overridden below if validity path used
-
+    buf->legacy_validity = false; // may need to open door to config option here too
     if (debug) Rcpp::Rcout << datapath << " " << offsetspath
                            << " data:" << buf->str.size()
                            << " offsets:" << buf->offsets.size();

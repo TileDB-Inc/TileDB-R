@@ -29,6 +29,7 @@ struct var_length_char_buffer {
     int32_t rows, cols;              	// dimension from subarray
     bool nullable;                      // flag
     std::vector<uint8_t> validity_map;  // for nullable vectors
+    bool legacy_validity;               // for legacy validity mode
 };
 typedef struct var_length_char_buffer vlc_buf_t;
 

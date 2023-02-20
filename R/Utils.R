@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2022 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -222,4 +222,78 @@ r_to_tiledb_type <- function(x) {
 
 .assertArray <- function(arr) {
     stopifnot(is(arr, "tiledb_sparse") || is(arr, "tiledb_dense") || is(arr, "tiledb_array"))
+}
+
+## conversion helper from (and to) legacy validity map for nullable strings
+.legacy_validity <- function(inuri,
+                             outdir = NULL,
+                             fromlegacy = TRUE,
+                             tolegacy = FALSE,
+                             usetmp = FALSE,
+                             verbose = FALSE,
+                             debug = FALSE) {
+
+    stopifnot("'inuri' must be an existing directory" = dir.exists(inuri))
+
+    if (verbose)
+        cat("Running with tiledb R package version", format(packageVersion("tiledb")),
+            "and TileDB Core version", format(tiledb_version(TRUE)), "\n")
+
+    array <- basename(inuri)
+    if (debug) print(summary(tiledb_array(inuri, strings_as_factors=TRUE)[]))
+
+    newdir <- ""
+    if (isTRUE(usetmp)) newdir <- tempfile()
+    if (!is.null(outdir)) newdir <- outdir
+    if (newdir == "")
+        stop("If '--usetmp' is not given then '--out OUT' must be given.", call. = FALSE)
+
+    if (!dir.exists(newdir)) dir.create(newdir)
+    #res <- file.copy(inuri, newdir, recursive=TRUE)
+    newuri <- file.path(newdir, array)
+
+    arr <- tiledb_array(inuri)
+    attrlst <- attrs(schema(arr))
+    is_nullable_string <- function(x) datatype(x) %in% c("ASCII", "CHAR", "UTF8") &&
+                                          tiledb_attribute_get_nullable(x)
+    stringcols <- Filter(is_nullable_string, attrlst)
+    if (length(stringcols) == 0) {
+        stop("No string columns in array so nothing to do. Exiting.\n", call. = FALSE)
+    }
+    dimnames <- sapply(dimensions(domain(schema(arr))), name)
+
+    oldcfg <- cfg <- tiledb_config()
+    cfg["r.legacy_validity_mode"] <- if (fromlegacy) "true" else "false"
+    ctx <- tiledb_ctx(cfg)
+    dat <- tiledb_array(inuri, return_as="data.frame", strings_as_factors=TRUE)[]
+    if (debug) print(summary(dat))
+
+    arr <- tiledb_array(inuri)
+    arr <- tiledb_array_open(arr, "READ")
+    nmd <- tiledb_num_metadata(arr)
+    if (nmd > 0) metadatalist <- tiledb_get_all_metadata(arr)
+    if (debug) print(metadatalist)
+
+    cfg["r.legacy_validity_mode"] <- if (tolegacy) "true" else "false"
+    ctx <- tiledb_ctx(cfg)
+    fromDataFrame(dat, newuri, col_index=dimnames)
+
+    if (nmd > 0) {
+        arr <- tiledb_array(newuri)
+        arr <- tiledb_array_open(arr, "WRITE")
+        for (nm in names(metadatalist)) {
+            invisible(tiledb_put_metadata(arr, nm, metadatalist[[nm]]))
+            if (debug) print(metadatalist[[nm]])
+        }
+        invisible(tiledb_array_close(arr))
+    }
+
+    chk <- tiledb_array(newuri, strings_as_factors=TRUE)[]
+    if (debug) {
+        cat("Written back.\n")
+        print(summary(chk))
+    }
+    if (verbose) cat("Done.\n")
+    ctx <- tiledb_ctx(oldcfg) # reset
+    invisible()
 }

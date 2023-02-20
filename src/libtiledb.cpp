@@ -2691,17 +2691,41 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_alloc_direct(double szoffsets, d
     buf->cols = cols;
     buf->nullable = nullable;
     buf->validity_map.resize(static_cast<size_t>(szdata));
+    buf->legacy_validity = false; 		              // for legacy validity mode
+    return buf;
+}
+
+// [[Rcpp::export]]
+bool libtiledb_query_buffer_var_char_get_legacy_validity_value(XPtr<tiledb::Context> ctx,
+                                                               bool validity_override = false) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    XPtr<tiledb::Config> cfg = libtiledb_ctx_config(ctx);
+    Rcpp::CharacterVector vec = libtiledb_config_get(cfg, "r.legacy_validity_mode");
+    bool legacy_validity = std::string("true") == std::string(vec[0]) || validity_override;
+    return legacy_validity;
+}
+
+// [[Rcpp::export]]
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_legacy_validity_mode(XPtr<tiledb::Context> ctx,
+                                                                     XPtr<vlc_buf_t> buf,
+                                                                     bool validity_override = false) {
+    buf->legacy_validity = libtiledb_query_buffer_var_char_get_legacy_validity_value(ctx,
+                                                                                     validity_override);
+    spdl::debug(tfm::format("[libtiledb_query_buffer_var_char_legacy_validity_mode] "
+                            "legacy_validity set to %s", buf->legacy_validity ? "true" : "false"));
     return buf;
 }
 
 // assigning (for a write) allocates
 // [[Rcpp::export]]
-XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(CharacterVector vec, bool nullable) {
+XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(CharacterVector vec, bool nullable,
+                                                       bool legacy_validity = false) {
     size_t n = vec.size();
     XPtr<vlc_buf_t> bufptr = make_xptr<vlc_buf_t>(new vlc_buf_t);
     bufptr->offsets.resize(n);
     bufptr->validity_map.resize(n);
     bufptr->nullable = nullable;
+    bufptr->legacy_validity = legacy_validity;
     bufptr->str = "";
     uint64_t cumlen = 0;
     for (size_t i=0; i<n; i++) {
@@ -2710,7 +2734,11 @@ XPtr<vlc_buf_t> libtiledb_query_buffer_var_char_create(CharacterVector vec, bool
         bufptr->str += s;
         cumlen += s.length();
         if (nullable) {
-          bufptr->validity_map[i] = vec[i] == NA_STRING;
+            if (legacy_validity) {
+                bufptr->validity_map[i] = vec[i] == R_NaString;
+            } else {
+                bufptr->validity_map[i] = vec[i] != R_NaString;
+            }
         }
     }
     bufptr->rows = bufptr->cols = 0; // signal unassigned for the write case
@@ -2763,10 +2791,17 @@ CharacterMatrix libtiledb_query_get_buffer_var_char(XPtr<vlc_buf_t> bufptr,
   CharacterMatrix mat(bufptr->rows, bufptr->cols);
   for (size_t i = 0; i < n; i++) {
       if (bufptr->nullable) {
-          if (bufptr->validity_map[i] == 0)
-              mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
-          else
-              mat[i] = R_NaString;
+          if (bufptr->legacy_validity) {
+              if (bufptr->validity_map[i] == 0)
+                  mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
+              else
+                  mat[i] = R_NaString;
+          } else {
+              if (bufptr->validity_map[i] != 0)
+                  mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
+              else
+                  mat[i] = R_NaString;
+          }
       } else {
           mat[i] = std::string(&bufptr->str[bufptr->offsets[i]], str_sizes[i]);
       }
