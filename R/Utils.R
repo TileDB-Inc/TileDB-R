@@ -260,6 +260,7 @@ r_to_tiledb_type <- function(x) {
     if (length(stringcols) == 0) {
         stop("No string columns in array so nothing to do. Exiting.\n", call. = FALSE)
     }
+    dimnames <- sapply(dimensions(domain(schema(arr))), name)
 
     oldcfg <- cfg <- tiledb_config()
     cfg["r.legacy_validity_mode"] <- if (fromlegacy) "true" else "false"
@@ -275,7 +276,7 @@ r_to_tiledb_type <- function(x) {
 
     cfg["r.legacy_validity_mode"] <- if (tolegacy) "true" else "false"
     ctx <- tiledb_ctx(cfg)
-    fromDataFrame(dat[,-1], newuri)
+    fromDataFrame(dat, newuri, col_index=dimnames)
 
     if (nmd > 0) {
         arr <- tiledb_array(newuri)
