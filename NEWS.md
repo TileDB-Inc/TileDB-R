@@ -1,7 +1,7 @@
-# tiledb 0.18.0.2 (Development)
+# tiledb 0.18.0.3 (Development)
 
-* This release of the R package builds against [TileDB 2.14.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.1), and has also been tested against earlier releases as well as the development version (#502).
-* Safer checking of `NAs` in `tiledb_config()` to support R 4.2 conditional lengths (#518, #519)
+* This release of the R package builds against [TileDB 2.15.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.0), and has also been tested against earlier releases as well as the development
+  version (#516, #521).
 
 ## Breaking Changes
 
@@ -15,7 +15,9 @@
 
 * Query conditions for character columns can now be expressed using the `%in%` operator and a vector of values (#513)
 
-* Use of TileDB Embedded was upgraded to release 2.14.1 (#516)
+* Use of TileDB Embedded was upgraded to releases 2.14.1 and 2.15.0 (#516, #521)
+
+* Safer checking of `NAs` in `tiledb_config()` to support R 4.2 conditional lengths (#519)
 
 ## Bug Fixes
 
@@ -24,6 +26,8 @@
 ## Build and Test Systems
 
 * The TileDB Embedded version is now used to determine whether a dampener is needed for the deprecation warning (#511)
+
+* One of the test data sets included with #517 has been regenerated under an older TileDB version in order to test on more systems (#523)
 
 ## Deprecations
 
