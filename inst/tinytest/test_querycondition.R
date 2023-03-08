@@ -327,6 +327,14 @@ arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, year < 2010)))
 
+## Last two with single & or |
+qc <- parse_query_condition(year <= 2009 & year >= 2009)
+arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arr[]), sum(with(penguins, year == 2009)))
+
+qc <- parse_query_condition(year < 2009 | year < 2010)
+arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+expect_equal(NROW(arr[]), sum(with(penguins, year < 2010)))
 
 ## query conditions over different types
 suppressMessages(library(bit64))
