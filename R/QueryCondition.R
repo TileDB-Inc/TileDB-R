@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2021-2022 TileDB Inc.
+#  Copyright (c) 2021-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -103,8 +103,7 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #' The grammar for query conditions is at present constraint to six operators
 #' and three boolean types.
 #'
-#' @param expr An expression that is understood by the TileDB grammar for
-#' query conditions.
+#' @param expr An expression that is understood by the TileDB grammar for query conditions.
 #' @param ta An optional tiledb_array object that the query condition is applied to
 #' @param debug A boolean toogle to enable more verbose operations, defaults
 #' to 'FALSE'.
@@ -127,7 +126,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
     .hasArray <- !is.null(ta) && is(ta, "tiledb_array")
     if (.hasArray && length(ta@sil) == 0) ta@sil <- .fill_schema_info_list(ta@uri)
     .isComparisonOperator <- function(x) tolower(as.character(x)) %in% c(">", ">=", "<", "<=", "==", "!=", "%in%")
-    .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!")
+    .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!", "&", "|")
     .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
     .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
     .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
@@ -147,7 +146,9 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                                             `!=` = "NE")
     .mapBoolToCharacter <- function(x) switch(x,
                                               `&&` = "AND",
+                                              `&`  = "AND",
                                               `||` = "OR",
+                                              `|`  = "OR",
                                               `!`  = "NOT")
     .neweqcond <- function(val, attr) {
         if (debug) cat("   ", attr, "EQ", val, "\n")

@@ -19,6 +19,8 @@
 
 * Safer checking of `NAs` in `tiledb_config()` to support R 4.2 conditional lengths (#519)
 
+* Query conditions can now be combined using `&` and `|` (in addition to `&&` and `||`) (#526)
+
 ## Bug Fixes
 
 * The access to JSON-formatted performance statistics has been simplified (#514)
