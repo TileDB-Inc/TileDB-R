@@ -31,6 +31,8 @@
 
 * One of the test data sets included with #517 has been regenerated under an older TileDB version in order to test on more systems (#523)
 
+* Documentation for Metadata accessors no longer states URIs strings are accepted (#527)
+
 ## Deprecations
 
 ## Removals
