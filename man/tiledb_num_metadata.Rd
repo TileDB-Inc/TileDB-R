@@ -7,7 +7,7 @@
 tiledb_num_metadata(arr)
 }
 \arguments{
-\item{arr}{A TileDB Array object, or a character URI describing one}
+\item{arr}{A TileDB Array object}
 }
 \value{
 A integer variable with the number of Metadata objects

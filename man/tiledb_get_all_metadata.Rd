@@ -7,7 +7,7 @@
 tiledb_get_all_metadata(arr)
 }
 \arguments{
-\item{arr}{A TileDB Array object, or a character URI describing one}
+\item{arr}{A TileDB Array object}
 }
 \value{
 A named list with all Metadata objects indexed by the given key

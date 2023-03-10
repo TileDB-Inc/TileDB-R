@@ -7,7 +7,7 @@
 tiledb_get_metadata(arr, key)
 }
 \arguments{
-\item{arr}{A TileDB Array object, or a character URI describing one}
+\item{arr}{A TileDB Array object}
 
 \item{key}{A character value describing a metadata key}
 }

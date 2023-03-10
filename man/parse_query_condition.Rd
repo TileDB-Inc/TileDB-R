@@ -13,8 +13,7 @@ parse_query_condition(
 )
 }
 \arguments{
-\item{expr}{An expression that is understood by the TileDB grammar for
-query conditions.}
+\item{expr}{An expression that is understood by the TileDB grammar for query conditions.}
 
 \item{ta}{An optional tiledb_array object that the query condition is applied to}
 
