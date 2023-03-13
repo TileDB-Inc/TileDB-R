@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,39 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.19.0" id="tiledb-0190">tiledb 0.19.0<a class="anchor" aria-label="anchor" href="#tiledb-0190"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.0" class="external-link">TileDB 2.15.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/516" class="external-link">#516</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/521" class="external-link">#521</a>).</li>
+</ul><div class="section level3">
+<h3 id="breaking-changes-0-19-0">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-19-0"></a></h3>
+<ul><li>The validity map coding of nullable strings has been corrected: validity map values of one are now interpreted as valid/non-null for full compatibility with other TileDB projects. Previously written arrays with nullable strings can be read by setting the config option <code>r.legacy_validity_mode</code> to <code>true</code>; the option also permits to write to an older installation. A conversion helper script is provided in <code>scripts/legacy_validity_convert.r</code>. (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/517" class="external-link">#517</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-0-19-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-19-0"></a></h3>
+<ul><li><p>Attributes can now be created, written and read from in (explicit) UTF8 types (and CHAR and ASCII already behaved correctly with respect to utf8 data) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/510" class="external-link">#510</a>)</p></li>
+<li><p>Compilation under <code>clang++</code> no longer complains about two unused member variables (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/512" class="external-link">#512</a>)</p></li>
+<li><p>Query conditions for character columns can now be expressed using the <code>%in%</code> operator and a vector of values (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/513" class="external-link">#513</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to releases 2.14.1 and 2.15.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/516" class="external-link">#516</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/521" class="external-link">#521</a>)</p></li>
+<li><p>Safer checking of <code>NAs</code> in <code><a href="../reference/tiledb_config.html">tiledb_config()</a></code> to support R 4.2 conditional lengths (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/519" class="external-link">#519</a>)</p></li>
+<li><p>Query conditions can now be combined using <code>&amp;</code> and <code>|</code> (in addition to <code>&amp;&amp;</code> and <code>||</code>) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/526" class="external-link">#526</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-19-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-19-0"></a></h3>
+<ul><li>The access to JSON-formatted performance statistics has been simplified (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/514" class="external-link">#514</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-19-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-19-0"></a></h3>
+<ul><li><p>The TileDB Embedded version is now used to determine whether a dampener is needed for the deprecation warning (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/511" class="external-link">#511</a>)</p></li>
+<li><p>One of the test data sets included with <a href="https://github.com/TileDB-Inc/TileDB-R/issues/517" class="external-link">#517</a> has been regenerated under an older TileDB version in order to test on more systems (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/523" class="external-link">#523</a>)</p></li>
+<li><p>Documentation for Metadata accessors no longer states URIs strings are accepted (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/527" class="external-link">#527</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecations-0-19-0">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-19-0"></a></h3>
+</div>
+<div class="section level3">
+<h3 id="removals-0-19-0">Removals<a class="anchor" aria-label="anchor" href="#removals-0-19-0"></a></h3>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.18.0" id="tiledb-0180">tiledb 0.18.0<a class="anchor" aria-label="anchor" href="#tiledb-0180"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.14.0" class="external-link">TileDB 2.14.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/502" class="external-link">#502</a>).</li>

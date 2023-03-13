@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,6 +99,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "rest.server_address" : "https://api.tiledb.com"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "rest.server_serialization_format" : "CAPNP"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "rest.use_refactored_array_open" : "false"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "rest.use_refactored_array_open_and_query_submit" : "false"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.allow_separate_attribute_writes" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.allow_updates_experimental" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.check_coord_dups" : "true"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.check_coord_oob" : "true"</span>
@@ -133,6 +135,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_unordered_with_dups.ratio_coords" : "0.5"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_unordered_with_dups.ratio_query_condition" : "0.25"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_unordered_with_dups.ratio_tile_ranges" : "0.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.tile_upper_memory_limit" : "2147483648"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.total_budget" : "10737418240"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.memory_budget" : "5368709120"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.memory_budget_var" : "10737418240"</span>
@@ -145,7 +148,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.skip_checksum_validation" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.skip_est_size_partitioning" : "false"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.skip_unary_partitioning_budget_check" : "false"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.tile_cache_size" : "10000000"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.vacuum.mode" : "fragments"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.var_offsets.bitsize" : "64"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.var_offsets.extra_element" : "false"</span>
@@ -158,8 +160,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.storage_sas_token" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.use_block_list_upload" : "true"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.use_https" : "true"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.disable_batching" : "false"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.file.max_parallel_ops" : "12"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.file.max_parallel_ops" : "1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.file.posix_directory_permissions" : "755"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.file.posix_file_permissions" : "644"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.gcs.max_parallel_ops" : "12"</span>
@@ -170,7 +171,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.hdfs.kerb_ticket_cache_path" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.hdfs.name_node_uri" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.hdfs.username" : ""</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.max_batch_size" : "18446744073709551615"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.max_batch_size" : "104857600"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.min_batch_gap" : "512000"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.min_batch_size" : "20971520"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.min_parallel_size" : "10485760"</span>

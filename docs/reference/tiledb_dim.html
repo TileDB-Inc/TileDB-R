@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,10 +83,9 @@
 
 
 <dt>domain</dt>
-<dd><p>The dimension (inclusive) domain. The dimension’s domain is
-defined by a (lower bound, upper bound) vector, and is usually either of
-type <code>integer</code> or <code>double</code> (i.e. <code>numeric</code>). For type,
-<code>ASCII</code> <code>NULL</code> is expected.</p></dd>
+<dd><p>The dimension (inclusive) domain. The domain of a dimension
+is defined by a (lower bound, upper bound) vector. For type, <code>ASCII</code>
+<code>NULL</code> is expected.</p></dd>
 
 
 <dt>tile</dt>
@@ -95,11 +94,12 @@ type <code>integer</code> or <code>double</code> (i.e. <code>numeric</code>). Fo
 
 
 <dt>type</dt>
-<dd><p>The dimension TileDB datatype string</p></dd>
+<dd><p>The dimension TileDB datatype string.</p></dd>
 
 
 <dt>filter_list</dt>
-<dd><p>An optional tiledb_filter_list object, default is no filter</p></dd>
+<dd><p>An optional <code>tiledb_filter_list</code> object, default
+is no filter</p></dd>
 
 
 <dt>ctx</dt>
