@@ -20,7 +20,7 @@ create a context object, and cfg &amp;lt;- config(ctx) to retrieve it."><!-- mat
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,8 +102,8 @@ create a context object, and <code>cfg &lt;- config(ctx)</code> to retrieve it.<
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ctx</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_ctx.html">tiledb_ctx</a></span><span class="op">(</span><span class="fu"><a href="limitTileDBCores.html">limitTileDBCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu">tiledb_config</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">cfg</span><span class="op">[</span><span class="st">"sm.tile_cache_size"</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sm.tile_cache_size </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         "10000000" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NA </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NA </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># set tile cache size to custom value</span></span></span>
 <span class="r-in"><span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu">tiledb_config</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sm.tile_cache_size"</span> <span class="op">=</span> <span class="st">"100"</span><span class="op">)</span><span class="op">)</span></span></span>
