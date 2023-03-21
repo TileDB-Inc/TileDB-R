@@ -1,3 +1,10 @@
+# tiledb ongoing development
+
+## Improvements
+
+* Query conditions can now be expressed for attributes of type UTF-8 (#529)
+
+
 # tiledb 0.19.0
 
 * This release of the R package builds against [TileDB 2.15.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.0), and has also been tested against earlier releases as well as the development
