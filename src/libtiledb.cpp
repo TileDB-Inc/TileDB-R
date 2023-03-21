@@ -3832,7 +3832,7 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
         float v = static_cast<float>(as<double>(condition_value));
         uint64_t cond_val_size = sizeof(float);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
-    } else if (cond_val_type == "ASCII") {
+    } else if (cond_val_type == "ASCII" || cond_val_type == "UTF8") {
         std::string v = as<std::string>(condition_value);
         query_cond->init(attr_name, v, op);
     } else {

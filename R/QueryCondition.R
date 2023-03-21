@@ -196,7 +196,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                            op, " (aka ", .mapOpToCharacter(op), ")",
                            " [",ch, "] ", dtype, "\n", sep="")
             tiledb_query_condition_init(attr = attr,
-                                        value = if (dtype == "ASCII") ch else as.numeric(ch),
+                                        value = if (dtype == "ASCII" || dtype == "UTF8") ch else as.numeric(ch),
                                         dtype = dtype,
                                         op = .mapOpToCharacter(op))
         } else {
