@@ -54,7 +54,8 @@ describes the selected points for dimension i}
 \item{\code{return_as}}{A character value with the desired \code{tiledb_array} conversion,
 permitted values are \sQuote{asis} (default, returning a list of columns),
 \sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}
-or \sQuote{tibble}; the latter two require the respective packages installed}
+\sQuote{tibble}, or \sQuote{nanoarrow}; note that \sQuote{data.table} and \sQuote{tibble}
+require the respective packages to installed.}
 
 \item{\code{query_statistics}}{A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 query statistics are returned (as a JSON string) via the attribute

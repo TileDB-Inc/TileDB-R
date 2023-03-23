@@ -52,7 +52,8 @@
 #' @slot return_as A character value with the desired \code{tiledb_array} conversion,
 #' permitted values are \sQuote{asis} (default, returning a list of columns),
 #' \sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}
-#' or \sQuote{tibble}; the latter two require the respective packages installed
+#' \sQuote{tibble}, or \sQuote{nanoarrow};
+#' note that \sQuote{data.table} and \sQuote{tibble} require the respective packages to installed.
 #' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 #' query statistics are returned (as a JSON string) via the attribute
 #' \sQuote{query_statistics} of the return object.
@@ -128,9 +129,9 @@ setClass("tiledb_array",
 #' until which the array is to be openened. No fragments written earlier later be considered.
 #' @param return_as optional A character value with the desired \code{tiledb_array} conversion,
 #' permitted values are \sQuote{asis} (default, returning a list of columns), \sQuote{array},
-#' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}; the latter
-#' two require the respective packages installed. The existing \code{as.*} arguments take precedent
-#' over this.
+#' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, \sQuote{nanoarrow};
+#' here \sQuote{data.table} and \sQuote{tibble} require the respective
+#' packages installed. The existing \code{as.*} arguments take precedent over this.
 #' @param query_statistics optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 #' query statistics are returned (as a JSON string) via the attribute
 #' \sQuote{query_statistics} of the return object.
@@ -432,9 +433,11 @@ setValidity("tiledb_array", function(object) {
     msg <- c(msg, "The 'ptr' slot does not contain an external pointer.")
   }
 
-  if (!(object@return_as %in% c("asis", "array", "matrix", "data.frame", "data.table", "tibble"))) {
+  if (!(object@return_as %in% c("asis", "array", "matrix", "data.frame",
+                                "data.table", "tibble", "nanoarrow"))) {
     valid <- FALSE
-    msg <- c(msg, "The 'return_as' slot must contain one of 'asis', 'array', 'matrix', 'data.frame', 'data.table', 'tibble'.")
+    msg <- c(msg, paste("The 'return_as' slot must contain one of 'asis', 'array', 'matrix',",
+                        "'data.frame', 'data.table', 'tibble', 'nanoarrow'."))
   }
 
   if (!is.logical(object@query_statistics)) {
@@ -535,6 +538,8 @@ setMethod("[", "tiledb_array",
   tstamp <- x@timestamp
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
+
+  use_nanoarrow <- x@return_as == "nanoarrow"
 
   dims <- tiledb::dimensions(dom)
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
@@ -831,28 +836,30 @@ setMethod("[", "tiledb_array",
       spdl::debug("['['] overall estimate {} rows", resrv)
 
       ## allocate and set buffers
-      getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
-          if (is.na(varnum)) {
-              if (type %in% c("CHAR", "ASCII", "UTF8")) {
-                  spdl::debug("[getBuffer] '{}' allocating 'char' {} rows given budget of {}", name, resrv, memory_budget)
-                  buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
-                  buf <- libtiledb_query_buffer_var_char_legacy_validity_mode(ctx@ptr, buf)
-                  qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
-                  buf
+      if (!use_nanoarrow) {
+          getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
+              if (is.na(varnum)) {
+                  if (type %in% c("CHAR", "ASCII", "UTF8")) {
+                      spdl::debug("[getBuffer] '{}' allocating 'char' {} rows given budget of {}", name, resrv, memory_budget)
+                      buf <- libtiledb_query_buffer_var_char_alloc_direct(resrv, memory_budget, nullable)
+                      buf <- libtiledb_query_buffer_var_char_legacy_validity_mode(ctx@ptr, buf)
+                      qryptr <- libtiledb_query_set_buffer_var_char(qryptr, name, buf)
+                      buf
+                  } else {
+                      message("Non-char var.num columns are not currently supported.")
+                  }
               } else {
-                  message("Non-char var.num columns are not currently supported.")
+                  spdl::debug("[getBuffer] '{}' allocating non-char {} rows given budget of {}", name, resrv, memory_budget)
+                  buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
+                  qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
+                  buf
               }
-          } else {
-              spdl::debug("[getBuffer] '{}' allocating non-char {} rows given budget of {}", name, resrv, memory_budget)
-              buf <- libtiledb_query_buffer_alloc_ptr(type, resrv, nullable, varnum)
-              qryptr <- libtiledb_query_set_buffer_ptr(qryptr, name, buf)
-              buf
           }
+          buflist <- mapply(getBuffer, allnames, alltypes, allvarnum, allnullable,
+                            MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
+                            SIMPLIFY=FALSE)
+          spdl::debug("['['] buffers allocated in list")
       }
-      buflist <- mapply(getBuffer, allnames, alltypes, allvarnum, allnullable,
-                        MoreArgs=list(resrv=resrv, qryptr=qryptr, arrptr=arrptr),
-                        SIMPLIFY=FALSE)
-      spdl::debug("['['] buffers allocated")
 
       ## if we have a query condition, apply it
       if (isTRUE(x@query_condition@init)) {
@@ -864,14 +871,26 @@ setMethod("[", "tiledb_array",
       finished <- FALSE
       while (!finished) {
 
+          if (use_nanoarrow) {
+              abptr <- libtiledb_allocate_column_buffers(ctx@ptr, qryptr, uri, allnames)
+              spdl::debug("['['] buffers allocated and set")
+          }
+
           ## fire off query
-          spdl::debug("['['] query submission: {}", counter)
+          spdl::debug("['['] query submission: {} array_open {}", counter,
+                      if (libtiledb_array_is_open(arrptr)) "true" else "false")
           qryptr <- libtiledb_query_submit(qryptr)
 
           ## check status
           status <- libtiledb_query_status(qryptr)
           #if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
           if (status != "COMPLETE") spdl::debug("['['] query returned '{}'.", status)
+
+          if (use_nanoarrow) {
+              rl <- libtiledb_to_arrow(abptr, qryptr)
+              overallresults[[counter]] <- .as_arrow_table(rl)
+              spdl::info("['['] received arrow table {}", counter)
+          }
 
           ## close array
           if (status == "COMPLETE") {
@@ -880,103 +899,122 @@ setMethod("[", "tiledb_array",
               finished <- TRUE
           }
 
-          ## retrieve actual result size (from fixed size element columns)
-          getResultSize <- function(name, varnum, qryptr) {
-              val <- if (is.na(varnum))                  # symbols come up with higher count
-                         libtiledb_query_result_buffer_elements(qryptr, name, 0)
-                     else
-                         libtiledb_query_result_buffer_elements(qryptr, name)
-              spdl::debug("[getResultSize] name {} varnum {} has {}", name, varnum, val)
-              val
-          }
-          estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
-          spdl::debug("['['] estimated result sizes {}", paste(estsz, collapse=","))
-          if (any(!is.na(estsz))) {
-              resrv <- max(estsz, na.rm=TRUE)
-          } else {
-              resrv <- resrv/8              # character case where bytesize of offset vector was used
-          }
-          spdl::debug("['['] expected size {}", resrv)
-          ## Permit one pass to allow zero-row schema read
-          if (resrv == 0 && counter > 1L) {
-              finished <- TRUE
-              if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
-              .pkgenv[["query_status"]] <- status
-              break
-          }
-          ## get results
-          getResult <- function(buf, name, varnum, estsz, qryptr) {
-              has_dumpbuffers <- length(x@dumpbuffers) > 0
-              ## message("For ", name, " seeing ", estsz, " and ", varnum)
-              if (is.na(varnum)) {
-                  vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
-                  if (has_dumpbuffers) {
-                      vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
-                  }
-                  libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1][seq_len(estsz)]
+          if (!use_nanoarrow) {
+              ## retrieve actual result size (from fixed size element columns)
+              getResultSize <- function(name, varnum, qryptr) {
+                  val <- if (is.na(varnum))                  # symbols come up with higher count
+                             libtiledb_query_result_buffer_elements(qryptr, name, 0)
+                         else
+                             libtiledb_query_result_buffer_elements(qryptr, name)
+                  spdl::debug("[getResultSize] name {} varnum {} has {}", name, varnum, val)
+                  val
+              }
+              estsz <- mapply(getResultSize, allnames, allvarnum, MoreArgs=list(qryptr=qryptr), SIMPLIFY=TRUE)
+              spdl::debug("['['] estimated result sizes {}", paste(estsz, collapse=","))
+              if (any(!is.na(estsz))) {
+                  resrv <- max(estsz, na.rm=TRUE)
               } else {
-                  if (has_dumpbuffers) {
-                      vecbuf_to_shmem(x@dumpbuffers, name, buf, estsz, varnum)
+                  resrv <- resrv/8              # character case where bytesize of offset vector was used
+              }
+              spdl::debug("['['] expected size {}", resrv)
+              ## Permit one pass to allow zero-row schema read
+              if (resrv == 0 && counter > 1L) {
+                  finished <- TRUE
+                  if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
+                  .pkgenv[["query_status"]] <- status
+                  break
+              }
+              ## get results
+              getResult <- function(buf, name, varnum, estsz, qryptr) {
+                  has_dumpbuffers <- length(x@dumpbuffers) > 0
+                  ## message("For ", name, " seeing ", estsz, " and ", varnum)
+                  if (is.na(varnum)) {
+                      vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
+                      if (has_dumpbuffers) {
+                          vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
+                      }
+                      libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1][seq_len(estsz)]
+                  } else {
+                      if (has_dumpbuffers) {
+                          vecbuf_to_shmem(x@dumpbuffers, name, buf, estsz, varnum)
+                      }
+                      libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
                   }
-                  libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
               }
-          }
-          reslist <- mapply(getResult, buflist, allnames, allvarnum, estsz,
-                            MoreArgs=list(qryptr=qryptr), SIMPLIFY=FALSE)
-          ## convert list into data.frame (possibly dealing with list columns) and subset
-          vnum <- 1   # default value of variable number of elements per cell
-          if (is.list(allvarnum)) allvarnum <- unlist(allvarnum)
-          if (length(allvarnum) > 0 && any(!is.na(allvarnum))) vnum <- max(allvarnum, na.rm=TRUE)
-          if (is.finite(vnum) && (vnum > 1)) {
-              ## turn to list col if a varnum != 1 (and not NA) seen
-              ind <- which(allvarnum != 1 & !is.na(allvarnum))
-              for (k in ind) {
-                  ncells <- allvarnum[k]
-                  v <- reslist[[k]]
-                  ## we split a vector v into 'list-columns' which element containing
-                  ## ncells value (and we get ncells from the Array schema)
-                  ## see https://stackoverflow.com/a/9547594/143305 for I()
-                  ## and https://stackoverflow.com/a/3321659/143305 for split()
-                  reslist[[k]] <- I(unname(split(v, ceiling(seq_along(v)/ncells))))
+              spdl::debug("['['] getting results")
+              reslist <- mapply(getResult, buflist, allnames, allvarnum, estsz,
+                                MoreArgs=list(qryptr=qryptr), SIMPLIFY=FALSE)
+              spdl::debug("['['] got results")
+              ## convert list into data.frame (possibly dealing with list columns) and subset
+              vnum <- 1   # default value of variable number of elements per cell
+              if (is.list(allvarnum)) allvarnum <- unlist(allvarnum)
+              if (length(allvarnum) > 0 && any(!is.na(allvarnum))) vnum <- max(allvarnum, na.rm=TRUE)
+              if (is.finite(vnum) && (vnum > 1)) {
+                  ## turn to list col if a varnum != 1 (and not NA) seen
+                  ind <- which(allvarnum != 1 & !is.na(allvarnum))
+                  for (k in ind) {
+                      ncells <- allvarnum[k]
+                      v <- reslist[[k]]
+                      ## we split a vector v into 'list-columns' which element containing
+                      ## ncells value (and we get ncells from the Array schema)
+                      ## see https://stackoverflow.com/a/9547594/143305 for I()
+                      ## and https://stackoverflow.com/a/3321659/143305 for split()
+                      reslist[[k]] <- I(unname(split(v, ceiling(seq_along(v)/ncells))))
+                  }
               }
+              ## the list columns are now all of equal lenthth as R needs and we can form a data.frame
+              res <- data.frame(reslist)[,,drop=FALSE]
+              colnames(res) <- allnames
+              overallresults[[counter]] <- res
           }
-          ## the list columns are now all of equal lenthth as R needs and we can form a data.frame
-          res <- data.frame(reslist)[,,drop=FALSE]
-          colnames(res) <- allnames
-          overallresults[[counter]] <- res
+          spdl::debug("['['] completed {}", counter)
           counter <- counter + 1L
       }
-      if (requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
-          res <- as.data.frame(data.table::rbindlist(overallresults))
+
+      if (!use_nanoarrow) {
+          if (requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
+              res <- as.data.frame(data.table::rbindlist(overallresults))
+          } else {
+              res <- do.call(rbind, overallresults)
+          }
       } else {
-          res <- do.call(rbind, overallresults)
+          res <- overallresults
       }
+      spdl::info("['['] returning 'res'")
       res
   }                                     # end of 'big else' for query build, submission and read
 
-  ## convert to factor if that was asked
-  if (x@strings_as_factors) {
-      for (n in colnames(res))
-          if (is.character(res[[n]]))
-              res[[n]] <- as.factor(res[[n]])
+  if (!use_nanoarrow) {
+      ## convert to factor if that was asked
+      if (x@strings_as_factors) {
+          for (n in colnames(res))
+              if (is.character(res[[n]]))
+                  res[[n]] <- as.factor(res[[n]])
+      }
+
+      ## reduce output if extended is false, or attrs given
+      if (!x@extended) {
+          if (length(sel) > 0) {
+              res <- res[, if (sparse) allnames else attrnames, drop=FALSE]
+          }
+          k <- match("__tiledb_rows", colnames(res))
+          if (is.finite(k)) {
+              res <- res[, -k, drop=FALSE]
+          }
+      }
   }
 
-  ## reduce output if extended is false, or attrs given
-  if (!x@extended) {
-      if (length(sel) > 0) {
-          res <- res[, if (sparse) allnames else attrnames, drop=FALSE]
-      }
-      k <- match("__tiledb_rows", colnames(res))
-      if (is.finite(k)) {
-          res <- res[, -k, drop=FALSE]
-      }
-  }
+  spdl::debug("['['] before preparing final data form")
   if (x@return_as == "asis") {
+      spdl::debug("['['] return asis")
       if (!x@as.data.frame && !x@as.matrix && !x@as.array) {
+          spdl::debug("['['] return asis list")
           res <- as.list(res)
       } else if (x@as.matrix) {
+          spdl::debug("['['] return asis to matrix")
           res <- .convertToMatrix(res)
       } else if (x@as.array) {
+          spdl::debug("['['] return asis to array")
           res <- .convertToArray(dimnames, attrnames, res)
       }
   } else if (x@return_as == "array") {       	# if a conversion preference has been given, use it
@@ -989,8 +1027,12 @@ setMethod("[", "tiledb_array",
       res <- data.table::data.table(as.data.frame(res))
   } else if (x@return_as == "tibble" && requireNamespace("tibble", quietly=TRUE)) {
       res <- tibble::as_tibble(res)
+  } else if (use_nanoarrow) {
+      spdl::info("['['] possibly shrinking return list")
+      res <- if (is.list(res) && length(res) == 1) res[[1]] else res
   }
 
+  spdl::debug("['['] getting query status")
   attr(res, "query_status") <- .pkgenv[["query_status"]]
   if (x@query_statistics)
       attr(res, "query_statistics") <- libtiledb_query_stats(qryptr)

@@ -29,6 +29,8 @@
 // logging support in RcppSpdlog namespace without making recourse to fmt::format
 #include <tinyspdl.h>
 
+#include "nanoarrow.h"
+
 // Version
 Rcpp::NumericVector tiledb_version();
 
@@ -98,6 +100,14 @@ const tiledb_xptr_object tiledb_xptr_vlc_buf_t                   { 170 };
 const tiledb_xptr_object tiledb_xptr_vlv_buf_t                   { 180 };
 const tiledb_xptr_object tiledb_xptr_query_buf_t                 { 190 };
 const tiledb_xptr_object tiledb_xptr_object_subarray             { 200 };
+const tiledb_xptr_object tiledb_xptr_column_buffer               { 210 };
+const tiledb_xptr_object tiledb_xptr_array_buffers               { 220 };
+const tiledb_xptr_object tiledb_xptr_map_to_col_buf_t            { 230 };
+
+// the definitions above are internal to tiledb-r but we need a new value here if we want tag the external pointer
+const tiledb_xptr_object tiledb_arrow_array_t                    { 300 };
+const tiledb_xptr_object tiledb_arrow_schema_t                   { 310 };
+
 
 // templated checkers for external pointer tags
 template <typename T> const int32_t XPtrTagType                            = tiledb_xptr_default; // clang++ wants a value
@@ -121,9 +131,15 @@ template <> inline const int32_t XPtrTagType<vlc_buf_t>                    = til
 template <> inline const int32_t XPtrTagType<vlv_buf_t>                    = tiledb_xptr_vlv_buf_t;
 template <> inline const int32_t XPtrTagType<query_buf_t>                  = tiledb_xptr_query_buf_t;
 template <> inline const int32_t XPtrTagType<tiledb::Subarray>             = tiledb_xptr_object_subarray;
+template <> inline const int32_t XPtrTagType<tiledb::ColumnBuffer>         = tiledb_xptr_column_buffer;
+template <> inline const int32_t XPtrTagType<tiledb::ArrayBuffers>         = tiledb_xptr_array_buffers;
+template <> inline const int32_t XPtrTagType<map_to_col_buf_t>             = tiledb_xptr_map_to_col_buf_t;
 
-template <typename T> XPtr<T> make_xptr(T* p) {
-    return XPtr<T>(p, true, Rcpp::wrap(XPtrTagType<T>), R_NilValue);
+template <> inline const int32_t XPtrTagType<ArrowArray>             	   = tiledb_arrow_array_t;
+template <> inline const int32_t XPtrTagType<ArrowSchema>             	   = tiledb_arrow_schema_t;
+
+template <typename T> XPtr<T> make_xptr(T* p, bool finalize=true) {
+    return XPtr<T>(p, finalize, Rcpp::wrap(XPtrTagType<T>), R_NilValue);
 }
 
 template <typename T> XPtr<T> make_xptr(SEXP p) {

@@ -26,7 +26,7 @@ SystemRequirements: A C++17 compiler is required, and on macOS
  build or download was specified by the user.
 Imports: methods, Rcpp (>= 1.0.8), nanotime, spdl
 LinkingTo: Rcpp
-Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble
+Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble, arrow
 VignetteBuilder: simplermarkdown
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
