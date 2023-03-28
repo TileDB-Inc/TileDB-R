@@ -30,10 +30,10 @@ expect_true(tiledb_group_is_open(grp))
 
 cfg <- tiledb_group_get_config(grp)
 expect_true(is(cfg, "tiledb_config"))
+grp <- tiledb_group_close(grp)
 grp <- tiledb_group_set_config(grp, cfg)
 
 ## close, re-open to write
-grp <- tiledb_group_close(grp)
 expect_false(tiledb_group_is_open(grp))
 grp <- tiledb_group_open(grp, "WRITE")
 expect_true(tiledb_group_is_open(grp))
