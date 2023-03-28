@@ -4,6 +4,10 @@
 
 * Query conditions can now be expressed for attributes of type UTF-8 (#529)
 
+## Build and Test Systems
+
+* Testing for Groups reflect the stricter behavior in config setting requiring a close array (#530)
+
 
 # tiledb 0.19.0
 
