@@ -42,6 +42,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @param ncells (default 1) The number of cells, use \code{NA} to signal variable length
 #' @param nullable (default FALSE) A logical switch whether the attribute can have missing
 #' values
+#' @param dictionary (default NULL) A character vector of dictionary values
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
@@ -58,6 +59,7 @@ tiledb_attr <- function(name,
                         filter_list = tiledb_filter_list(),
                         ncells = 1,
                         nullable = FALSE,
+                        dictionary = NULL,
                         ctx = tiledb_get_context()
                         ) {
     if (missing(name)) name <- ""
@@ -66,7 +68,10 @@ tiledb_attr <- function(name,
               `The 'name' argument must be a scalar string` = is.scalar(name, "character"),
               `The 'filter_list' argument must be a tiledb_filter_list instance` = is(filter_list, "tiledb_filter_list"))
     ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells, nullable)
-    new("tiledb_attr", ptr = ptr)
+    attr <- new("tiledb_attr", ptr = ptr)
+    if (!is.null(dictionary))
+        attr <- tiledb_attribute_set_dictionary(attr, dictionary, nullable, FALSE, ctx)
+    invisible(attr)
 }
 
 #' Raw display of an attribute object
@@ -83,11 +88,14 @@ setMethod("raw_dump",
 # internal function returning text use here and in other higher-level show() methods
 .as_text_attribute <- function(object) {
     fl <- filter_list(object)
+    dct <- tiledb_attribute_get_dictionary(object)
+    ndct <- length(dct)
     txt <- paste0("tiledb_attr(name=\"", name(object), "\", ",
                   "type=\"", datatype(object), "\", ",
                   "ncells=", cell_val_num(object), ", ",
                   "nullable=", tiledb_attribute_get_nullable(object),
-                  if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)))
+                  if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)),
+                  if (ndct > 0) paste0(", dictionary=(", paste(dct[seq(1, min(5, ndct))], collapse=","), if (ndct > 5) ",...", ")"))
     txt <- paste0(txt, ")")
     txt
 }
@@ -312,4 +320,30 @@ tiledb_attribute_set_nullable <- function(attr, flag) {
 tiledb_attribute_get_nullable <- function(attr) {
     stopifnot(`The argument must be an attribute` = is(attr, "tiledb_attr"))
     libtiledb_attribute_get_nullable(attr@ptr)
+}
+
+#' Get the TileDB Attribute Dictionary
+#'
+#' @param attr A TileDB Attribute object
+#' @return A character vector with the dictionary (of length zero if none)
+#' @export
+tiledb_attribute_get_dictionary <- function(attr) {
+    stopifnot("The argument must be an attribute" = is(attr, "tiledb_attr"))
+    libtiledb_attribute_get_dictionary(attr@ptr)
+}
+
+#' Set a TileDB Attribute Dictionary
+#'
+#' @param attr A TileDB Attribute object
+#' @param vec A Character Vector with the dictionary values
+#' @return The modified TileDB Attribute object
+#' @export
+tiledb_attribute_set_dictionary <- function(attr, vec,
+                                            nullable = FALSE, ordered = FALSE,
+                                            ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'vec' argument must be character" = is.character(vec))
+    nullable <- nullable || any(is.na(vec))
+    attr@ptr <- libtiledb_attribute_set_dictionary(ctx@ptr, attr@ptr, vec, nullable, ordered)
+    attr
 }

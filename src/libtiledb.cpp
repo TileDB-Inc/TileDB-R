@@ -1573,6 +1573,48 @@ bool libtiledb_attribute_get_nullable(XPtr<tiledb::Attribute> attr) {
     return attr->nullable();
 }
 
+// [[Rcpp::export]]
+bool libtiledb_attribute_has_dictionary(XPtr<tiledb::Attribute> attr) {
+    check_xptr_tag<tiledb::Attribute>(attr);
+    bool res = false;
+#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+    std::optional<tiledb::Dictionary> dict = attr->get_dictionary();
+    if (dict != std::nullopt) {
+        res = true;
+    }
+#endif
+    return res;
+}
+
+// [[Rcpp::export]]
+Rcpp::CharacterVector libtiledb_attribute_get_dictionary(XPtr<tiledb::Attribute> attr) {
+    check_xptr_tag<tiledb::Attribute>(attr);
+    Rcpp::CharacterVector vec;
+#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+    std::optional<tiledb::Dictionary> dict = attr->get_dictionary();
+    if (dict != std::nullopt) {
+        std::vector<std::string> vals = dict->get_values();
+        vec = vals;
+    }
+#endif
+    return vec;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Attribute> libtiledb_attribute_set_dictionary(XPtr<tiledb::Context> ctx,
+                                                           XPtr<tiledb::Attribute> attr,
+                                                           std::vector<std::string> values,
+                                                           bool nullable = false,
+                                                           bool ordered = false) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+    auto dict = tiledb::Dictionary::create(*ctx.get(), values, nullable, ordered);
+    attr->set_dictionary(dict);
+#endif
+    return attr;
+}
+
 /**
  * TileDB Array Schema
  */
@@ -3336,7 +3378,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         double end = as<double>(ends);
         double stride = (strides == R_NilValue) ? 0 : Rcpp::as<double_t>(strides);
         subarr->add_range(uidx, start, end, stride);
-        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %d by %d", typestr, uidx, start, end, stride));
+        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %f to %f by %f", typestr, uidx, start, end, stride));
     } else if (typestr == "INT64") {
         int64_t start = makeScalarInteger64(as<double>(starts));
         int64_t end = makeScalarInteger64(as<double>(ends));
@@ -3410,8 +3452,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         float end = as<float>(ends);
         float stride = (strides == R_NilValue) ? 0 : Rcpp::as<float>(strides);
         subarr->add_range(uidx, start, end, stride);
-        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %f by %f", typestr, uidx, start, end, stride));
-    } else {
+        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %f to %f by %f", typestr, uidx, start, end, stride));
         Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
     }
     return subarr;

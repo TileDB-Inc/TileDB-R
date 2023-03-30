@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2022 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -97,10 +97,10 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
     if (class(obj)[1] != "data.frame") obj <- as.data.frame(obj)
 
     ## turn factor columns in char columns
-    factcols <- grep("factor", sapply(obj, class))
-    if (length(factcols) > 0) {
-        for (i in factcols) obj[,i] <- as.character(obj[,i])
-    }
+    #factcols <- grep("factor", sapply(obj, class))
+    #if (length(factcols) > 0) {
+    #    for (i in factcols) obj[,i] <- as.character(obj[,i])
+    #}
 
     ## Create default filter_list from filter vector, 'NONE' and 'ZSTD' is default
     default_filter_list <- tiledb_filter_list(sapply(filter, tiledb_filter))
@@ -193,6 +193,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
     makeAttr <- function(ind) {
         col <- obj[,ind]
         colname <- colnames(obj)[ind]
+        lvls <- NULL 			# by default no factor levels
         if (inherits(col, "AsIs")) {
             ## we just look at the first list column, others have to have same type and length
             cl <- class(obj[,ind][[1]])
@@ -217,8 +218,15 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
             tp <- "INT64"
         else if (cl == "logical")
             tp <- if (tiledb_version(TRUE) >= "2.10.0") "BOOL" else "INT32"
+        else if (cl == "factor") {
+            lvls <- levels(col) 		# extract factor levels
+            if (length(lvls) > .Machine$integer.max)
+                stop("Cannot represent this many levels for ", colname, call. = FALSE)
+            tp <- "INT32"
+        }
         else
             stop("Currently unsupported type: ", cl)
+
         filters <- if (colname %in% names(filter_list)) {
                        tiledb_filter_list(sapply(filter_list[[colname]], tiledb_filter))
                    } else {
@@ -231,7 +239,8 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                     type = tp,
                     ncells = if (tp %in% c("CHAR","ASCII")) NA_integer_ else nc,
                     filter_list = filters,
-                    nullable = any(is.na(col)))
+                    nullable = any(is.na(col)),
+                    dictionary = lvls)
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]

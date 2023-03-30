@@ -298,6 +298,18 @@ libtiledb_attribute_get_nullable <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_nullable`, attr)
 }
 
+libtiledb_attribute_has_dictionary <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_has_dictionary`, attr)
+}
+
+libtiledb_attribute_get_dictionary <- function(attr) {
+    .Call(`_tiledb_libtiledb_attribute_get_dictionary`, attr)
+}
+
+libtiledb_attribute_set_dictionary <- function(ctx, attr, values, nullable = FALSE, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_attribute_set_dictionary`, ctx, attr, values, nullable, ordered)
+}
+
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, validity_filter_list = NULL, sparse = FALSE) {
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, validity_filter_list, sparse)
 }
