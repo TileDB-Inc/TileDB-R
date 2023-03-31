@@ -950,10 +950,14 @@ setMethod("[", "tiledb_array",
                       libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
                   }
                   col <- libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
-                  if (!is.null(dictionaries[[name]])) {
-                      dct <- dictionaries[[name]]
+                  if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
+                      dct <- dictionaries[[name]]           # access it from utility
                       ## the following expands out to a char vector first; we can do better
-                      col <- factor(dct[col+1], levels=dct)
+                      ##   col <- factor(dct[col+1], levels=dct)
+                      ## so we do it "by hand"
+                      col <- col + 1L # adjust for zero-index C/C++ layer
+                      attr(col, "levels") <- dct
+                      attr(col, "class")  <- "factor"
                   }
                   col
               }
