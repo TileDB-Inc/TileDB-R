@@ -61,6 +61,7 @@
     if (interactive()) {
         packageStartupMessage("TileDB R ", packageVersion("tiledb"),
                               " with TileDB Embedded ", format(tiledb_version(TRUE)),
+                              " on ", utils::osVersion,
                               ". See https://tiledb.com for more information.")
     }
 }
