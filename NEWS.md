@@ -4,9 +4,13 @@
 
 * Query conditions can now be expressed for attributes of type UTF-8 (#529)
 
+* The startup message now displays the operating system and version (#532)
+
 ## Build and Test Systems
 
 * Testing for Groups reflect the stricter behavior in config setting requiring a close array (#530)
+
+* The use of binary packages in continuous integration has been made a little more robust (#531)
 
 
 # tiledb 0.19.0
