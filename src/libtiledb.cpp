@@ -4578,6 +4578,25 @@ XPtr<tiledb::Group> libtiledb_group(XPtr<tiledb::Context> ctx,
     return ptr;
 }
 
+// Interfaces to R are C-based so we cannot overload just on signature
+// [[Rcpp::export]]
+XPtr<tiledb::Group> libtiledb_group_with_config(XPtr<tiledb::Context> ctx,
+                                                const std::string& uri,
+                                                const std::string& querytypestr,
+                                                XPtr<tiledb::Config> cfg) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Config>(cfg);
+#if TILEDB_VERSION >= TileDB_Version(2,15,1)
+    tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
+    auto p = new tiledb::Group(*ctx.get(), uri, querytype, *cfg.get());
+    XPtr<tiledb::Group> ptr = make_xptr<tiledb::Group>(p);
+#else
+    XPtr<tiledb::Group> ptr(new tiledb::Group()); // placeholder
+#endif
+    return ptr;
+}
+
+
 // [[Rcpp::export]]
 XPtr<tiledb::Group> libtiledb_group_open(XPtr<tiledb::Group> grp,
                                          const std::string& querytypestr) {

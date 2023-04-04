@@ -2810,6 +2810,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_group_with_config
+XPtr<tiledb::Group> libtiledb_group_with_config(XPtr<tiledb::Context> ctx, const std::string& uri, const std::string& querytypestr, XPtr<tiledb::Config> cfg);
+RcppExport SEXP _tiledb_libtiledb_group_with_config(SEXP ctxSEXP, SEXP uriSEXP, SEXP querytypestrSEXP, SEXP cfgSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type querytypestr(querytypestrSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Config> >::type cfg(cfgSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_group_with_config(ctx, uri, querytypestr, cfg));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_group_open
 XPtr<tiledb::Group> libtiledb_group_open(XPtr<tiledb::Group> grp, const std::string& querytypestr);
 RcppExport SEXP _tiledb_libtiledb_group_open(SEXP grpSEXP, SEXP querytypestrSEXP) {
@@ -3435,6 +3449,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_fragment_info_dump", (DL_FUNC) &_tiledb_libtiledb_fragment_info_dump, 1},
     {"_tiledb_libtiledb_error_message", (DL_FUNC) &_tiledb_libtiledb_error_message, 1},
     {"_tiledb_libtiledb_group", (DL_FUNC) &_tiledb_libtiledb_group, 3},
+    {"_tiledb_libtiledb_group_with_config", (DL_FUNC) &_tiledb_libtiledb_group_with_config, 4},
     {"_tiledb_libtiledb_group_open", (DL_FUNC) &_tiledb_libtiledb_group_open, 2},
     {"_tiledb_libtiledb_group_set_config", (DL_FUNC) &_tiledb_libtiledb_group_set_config, 2},
     {"_tiledb_libtiledb_group_get_config", (DL_FUNC) &_tiledb_libtiledb_group_get_config, 1},
