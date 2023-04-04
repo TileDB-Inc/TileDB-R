@@ -34,16 +34,24 @@ setClass("tiledb_group",
 #' @param uri Character variable with the URI of the new group object
 #' @param type Character variable with the query type value: one of \dQuote{READ}
 #' or \dQuote{WRITE}
-#' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+#' @param ctx (optional) A TileDB Context object; if not supplied the default
 #' context object is retrieved
+#' @param cfg (optional) A TileConfig object
 #' @return A 'group' object
 #' @export
-tiledb_group <- function(uri, type = c("READ", "WRITE"), ctx = tiledb_get_context()) {
+tiledb_group <- function(uri, type = c("READ", "WRITE"),
+                         ctx = tiledb_get_context(), cfg = NULL) {
     stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
               "The 'uri' argument must be character" = is.character(uri),
-              "This function needs TileDB 2.8.*" = .tiledb28())
+              "This function needs TileDB 2.8.*" = .tiledb28(),
+              "The 'config argument must be a Config object" =
+                  is.null(cfg) || is(cfg, "tiledb_config"))
     type <- match.arg(type)
-    ptr <- libtiledb_group(ctx@ptr, uri, type)
+    if (is.null(cfg)) {
+        ptr <- libtiledb_group(ctx@ptr, uri, type)
+    } else {
+        ptr <- libtiledb_group_with_config(ctx@ptr, uri, type, cfg@ptr)
+    }
     group <- new("tiledb_group", ptr = ptr)
     invisible(group)
 }
