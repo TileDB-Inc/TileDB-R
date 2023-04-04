@@ -160,7 +160,7 @@ expect_error(tiledb_group_is_relative(uri, "name_is_chloe"))	# wrong type errors
 expect_error(tiledb_group_is_relative(grp, "does_not_exist"))	# non-group errors
 expect_error(tiledb_group_is_relative(grp, TRUE)) 				# not a char, errors
 
-if (tiledb_version(TRUE) < "2.16.0") exit_file("Remainder requires TileDB 2.16.* or later")
+if (tiledb_version(TRUE) < "2.15.1") exit_file("Remainder requires TileDB 2.15.1 or later")
 grp <- tiledb_group_close(grp)
 cfg <- tiledb_config(c("sm.tile_cache_size" = "100"))
 grp <- tiledb_group(uri, "READ", cfg=cfg)

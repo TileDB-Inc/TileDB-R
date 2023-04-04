@@ -4586,7 +4586,7 @@ XPtr<tiledb::Group> libtiledb_group_with_config(XPtr<tiledb::Context> ctx,
                                                 XPtr<tiledb::Config> cfg) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Config>(cfg);
-#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+#if TILEDB_VERSION >= TileDB_Version(2,15,1)
     tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
     auto p = new tiledb::Group(*ctx.get(), uri, querytype, *cfg.get());
     XPtr<tiledb::Group> ptr = make_xptr<tiledb::Group>(p);
