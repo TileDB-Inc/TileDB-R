@@ -4586,9 +4586,13 @@ XPtr<tiledb::Group> libtiledb_group_with_config(XPtr<tiledb::Context> ctx,
                                                 XPtr<tiledb::Config> cfg) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Config>(cfg);
-#if TILEDB_VERSION >= TileDB_Version(2,15,1)
     tiledb_query_type_t querytype = _string_to_tiledb_query_type(querytypestr);
+#if TILEDB_VERSION >= TileDB_Version(2,15,1)
     auto p = new tiledb::Group(*ctx.get(), uri, querytype, *cfg.get());
+    XPtr<tiledb::Group> ptr = make_xptr<tiledb::Group>(p);
+#elif TILEDB_VERSION >= TileDB_Version(2,8,0)
+    Rcpp::warning("libtiledb_group_with_config should only called with TileDB 2.15.1 or later");
+    auto p = new tiledb::Group(*ctx.get(), uri, querytype); // placeholder
     XPtr<tiledb::Group> ptr = make_xptr<tiledb::Group>(p);
 #else
     XPtr<tiledb::Group> ptr(new tiledb::Group()); // placeholder

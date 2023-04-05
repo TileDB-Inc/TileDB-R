@@ -8,7 +8,7 @@
 
 * Use of TileDB Embedded was upgraded to release 2.15.1 (#534)
 
-* Group objects can be opened while supplying a Config object when 2.15.1 or newer is used (#535)
+* Group objects can be opened while supplying a Config object when 2.15.1 or newer is used (#535, #536)
 
 ## Build and Test Systems
 
