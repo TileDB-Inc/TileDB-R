@@ -4,7 +4,12 @@
 \alias{tiledb_group}
 \title{Creates a 'tiledb_group' object}
 \usage{
-tiledb_group(uri, type = c("READ", "WRITE"), ctx = tiledb_get_context())
+tiledb_group(
+  uri,
+  type = c("READ", "WRITE"),
+  ctx = tiledb_get_context(),
+  cfg = NULL
+)
 }
 \arguments{
 \item{uri}{Character variable with the URI of the new group object}
@@ -12,8 +17,10 @@ tiledb_group(uri, type = c("READ", "WRITE"), ctx = tiledb_get_context())
 \item{type}{Character variable with the query type value: one of \dQuote{READ}
 or \dQuote{WRITE}}
 
-\item{ctx}{(optional) A TileDB Ctx object; if not supplied the default
+\item{ctx}{(optional) A TileDB Context object; if not supplied the default
 context object is retrieved}
+
+\item{cfg}{(optional) A TileConfig object}
 }
 \value{
 A 'group' object

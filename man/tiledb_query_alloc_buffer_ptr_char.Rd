@@ -4,12 +4,14 @@
 \alias{tiledb_query_alloc_buffer_ptr_char}
 \title{Allocate a Query buffer for reading a character attribute}
 \usage{
-tiledb_query_alloc_buffer_ptr_char(sizeoffsets, sizedata)
+tiledb_query_alloc_buffer_ptr_char(sizeoffsets, sizedata, nullable = FALSE)
 }
 \arguments{
 \item{sizeoffsets}{A numeric value with the size of the offsets vector}
 
 \item{sizedata}{A numeric value of the size of the data string}
+
+\item{nullable}{An optional boolean indicating whether the column can have NULLs}
 }
 \value{
 An external pointer to the allocated buffer object
