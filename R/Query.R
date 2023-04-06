@@ -148,12 +148,13 @@ tiledb_query_create_buffer_ptr_char <- function(query, varvec) {
 #'
 #' @param sizeoffsets A numeric value with the size of the offsets vector
 #' @param sizedata A numeric value of the size of the data string
+#' @param nullable An optional boolean indicating whether the column can have NULLs
 #' @return An external pointer to the allocated buffer object
 #' @export
-tiledb_query_alloc_buffer_ptr_char <- function(sizeoffsets, sizedata) {
+tiledb_query_alloc_buffer_ptr_char <- function(sizeoffsets, sizedata, nullable=FALSE) {
   stopifnot(`Argument 'sizeoffset' must be numeric` = is.numeric(sizeoffsets),
             `Argument 'sizedata' must be numeric` = is.numeric(sizedata))
-  bufptr <- libtiledb_query_buffer_var_char_alloc_direct(sizeoffsets, sizedata)
+  bufptr <- libtiledb_query_buffer_var_char_alloc_direct(sizeoffsets, sizedata, nullable)
   bufptr
 }
 
