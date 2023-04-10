@@ -12,6 +12,8 @@
 
 * For character column buffer allocations, the R function now accepts a `nullable` option (#537)
 
+* For standard buffer allocations, the R function now accepts `nullable` and `varnum` options (#538)
+
 ## Build and Test Systems
 
 * Testing for Groups reflect the stricter behavior in config setting requiring a close array (#530)
