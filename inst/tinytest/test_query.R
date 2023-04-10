@@ -273,3 +273,27 @@ tiledb_query_finalize(qry)
 oo <- tiledb_array(uri, return_as="data.frame", strings_as_factors=TRUE)[]
 
 expect_equal(nrow(oo), 84)             # instead of 344 pre-deletion
+
+
+## for #537 #538: allocate char buffer and normal buffer with nullable
+## quick data frame with NAs
+sdf <- data.frame(rows=1:5,
+                  keys=c("ABC", NA, "GHI", "JKL", "MNO"),
+                  vals=c(NA,sqrt(2:3),NA,sqrt(5)))
+uri <- tempfile()
+fromDataFrame(sdf, uri, col_index=1)
+
+arr <- tiledb_array(uri)
+qry <- tiledb_query(arr, "READ")
+N <- 10
+rows <- integer(N)
+keysbuf <- tiledb_query_alloc_buffer_ptr_char(N, N*8, TRUE)
+valsbuf <- tiledb_query_buffer_alloc_ptr(qry, "FLOAT64", N, TRUE)
+
+expect_silent(tiledb_query_set_buffer(qry, "rows", rows))
+expect_silent(tiledb_query_set_buffer_ptr_char(qry, "keys", keysbuf))
+expect_silent(tiledb_query_set_buffer_ptr(qry, "vals", valsbuf))
+expect_silent(tiledb_query_set_subarray(qry, c(1L,5L), "INT32"))
+expect_silent(tiledb_query_submit(qry))
+expect_silent(tiledb_query_finalize(qry))
+expect_equal(tiledb_query_status(qry), "COMPLETE")
