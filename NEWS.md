@@ -10,7 +10,7 @@
 
 * Group objects can be opened while supplying a Config object when 2.15.1 or newer is used (#535, #536)
 
-* For character column buffer allocations, the helper function now accepts a `nullable` option (#537)
+* For character column buffer allocations, the R function now accepts a `nullable` option (#537)
 
 ## Build and Test Systems
 

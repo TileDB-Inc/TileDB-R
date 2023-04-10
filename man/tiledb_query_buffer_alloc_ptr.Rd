@@ -4,7 +4,13 @@
 \alias{tiledb_query_buffer_alloc_ptr}
 \title{Allocate a Query buffer for a given type}
 \usage{
-tiledb_query_buffer_alloc_ptr(query, datatype, ncells)
+tiledb_query_buffer_alloc_ptr(
+  query,
+  datatype,
+  ncells,
+  nullable = FALSE,
+  varnum = 1
+)
 }
 \arguments{
 \item{query}{A TileDB Query object}
@@ -12,6 +18,12 @@ tiledb_query_buffer_alloc_ptr(query, datatype, ncells)
 \item{datatype}{A character value containing the data type}
 
 \item{ncells}{A number of elements (not bytes)}
+
+\item{nullable}{Optional boolean parameter indicating whether missing values
+are allowed (for which another column is allocated), default is FALSE}
+
+\item{varnum}{Option intgeter parameter for the number of elemements per variable,
+default is one}
 }
 \value{
 An external pointer to the allocated buffer object
