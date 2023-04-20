@@ -198,7 +198,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
             tiledb_query_condition_init(attr = attr,
                                         value = switch(dtype,
                                                        ASCII = ch,
-                                                       UTF0 = ch,
+                                                       UTF8 = ch,
                                                        BOOL = as.logical(ch),
                                                        as.numeric(ch)),
                                         dtype = dtype,
