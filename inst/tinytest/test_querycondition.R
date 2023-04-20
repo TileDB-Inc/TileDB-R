@@ -406,3 +406,20 @@ expect_equal(nrow(D), nrow(chk) + 2)
 ## include two
 chk <- tiledb_array(uri, query_condition=parse_query_condition(key == "ñ" || key == "Ø"), return_as="data.frame")[]
 expect_equal(nrow(chk), 2)
+
+
+## Test minimal version
+if (tiledb_version(TRUE) < "2.16.0") exit_file("Remainder needs 2.16.* or later")
+
+## BOOL in query condition
+D <- data.frame(rows=1:5,
+                vals=100+cumsum(rnorm(5)),
+                labs=c(TRUE, FALSE, FALSE, TRUE, FALSE))
+uri <- tempfile()
+expect_silent(fromDataFrame(D, uri, col_index=1))
+arr <- tiledb_array(uri, return_as="data.frame")
+expect_equal(nrow(arr[]), 5L)
+query_condition(arr) <- parse_query_condition(labs == TRUE, ta=arr)
+expect_equal(nrow(arr[]), 2L)
+query_condition(arr) <- parse_query_condition(labs == FALSE, ta=arr)
+expect_equal(nrow(arr[]), 3L)
