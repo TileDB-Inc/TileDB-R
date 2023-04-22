@@ -3835,6 +3835,10 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
     } else if (cond_val_type == "ASCII" || cond_val_type == "UTF8") {
         std::string v = as<std::string>(condition_value);
         query_cond->init(attr_name, v, op);
+    } else if (cond_val_type == "BOOL") {
+        bool v = as<bool>(condition_value);
+        uint64_t cond_val_size = sizeof(bool);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else {
         Rcpp::stop("Currently unsupported type: %s", cond_val_type);
     }
