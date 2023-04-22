@@ -14,6 +14,8 @@
 
 * For standard buffer allocations, the R function now accepts `nullable` and `varnum` options (#538)
 
+* Query conditions can now be expressed on boolean attributes (#540)
+
 ## Build and Test Systems
 
 * Testing for Groups reflect the stricter behavior in config setting requiring a close array (#530)
