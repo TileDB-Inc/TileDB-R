@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         include: [
-          { windows: windows-2019, r: release    },
-          { windows: windows-2022, r: devel      }
+          { windows: windows-latest, r: release    },
+          { windows: windows-latest, r: devel      }
         ]
     steps:
       - run: git config --global core.autocrlf false
