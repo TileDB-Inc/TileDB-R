@@ -22,6 +22,8 @@
 
 * The use of binary packages in continuous integration has been made a little more robust (#531)
 
+* A small subset of tests are skipped if testing against the older release 2.14.* (#542)
+
 
 # tiledb 0.19.0
 
