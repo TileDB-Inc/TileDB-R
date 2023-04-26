@@ -6,7 +6,7 @@
 
 * The startup message now displays the operating system and version (#532)
 
-* Use of TileDB Embedded was upgraded to release 2.15.1 (#534)
+* Use of TileDB Embedded was upgraded to release 2.15.1 and 2.15.2 (#534, #541)
 
 * Group objects can be opened while supplying a Config object when 2.15.1 or newer is used (#535, #536)
 
