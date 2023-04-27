@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,26 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.19.1" id="tiledb-0191">tiledb 0.19.1<a class="anchor" aria-label="anchor" href="#tiledb-0191"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.2" class="external-link">TileDB 2.15.2</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/534" class="external-link">#534</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/541" class="external-link">#541</a>).</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-19-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-19-1"></a></h3>
+<ul><li><p>Query conditions can now be expressed for attributes of type UTF-8 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/529" class="external-link">#529</a>)</p></li>
+<li><p>The startup message now displays the operating system and version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/532" class="external-link">#532</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.15.1 and 2.15.2 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/534" class="external-link">#534</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/541" class="external-link">#541</a>)</p></li>
+<li><p>Group objects can be opened while supplying a Config object when 2.15.1 or newer is used (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/535" class="external-link">#535</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/536" class="external-link">#536</a>)</p></li>
+<li><p>For character column buffer allocations, the R function now accepts a <code>nullable</code> option (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/537" class="external-link">#537</a>)</p></li>
+<li><p>For standard buffer allocations, the R function now accepts <code>nullable</code> and <code>varnum</code> options (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/538" class="external-link">#538</a>)</p></li>
+<li><p>Query conditions can now be expressed on boolean attributes (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/540" class="external-link">#540</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-19-1">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-19-1"></a></h3>
+<ul><li><p>Testing for Groups reflect the stricter behavior in config setting requiring a close array (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/530" class="external-link">#530</a>)</p></li>
+<li><p>The use of binary packages in continuous integration has been made a little more robust (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/531" class="external-link">#531</a>)</p></li>
+<li><p>A small subset of tests are skipped if testing against the older release 2.14.* (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/542" class="external-link">#542</a>)</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.19.0" id="tiledb-0190">tiledb 0.19.0<a class="anchor" aria-label="anchor" href="#tiledb-0190"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.0" class="external-link">TileDB 2.15.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/516" class="external-link">#516</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/521" class="external-link">#521</a>).</li>

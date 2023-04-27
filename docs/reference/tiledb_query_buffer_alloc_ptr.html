@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tiledb_query_buffer_alloc_ptr</span><span class="op">(</span><span class="va">query</span>, <span class="va">datatype</span>, <span class="va">ncells</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tiledb_query_buffer_alloc_ptr</span><span class="op">(</span></span>
+<span>  <span class="va">query</span>,</span>
+<span>  <span class="va">datatype</span>,</span>
+<span>  <span class="va">ncells</span>,</span>
+<span>  nullable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  varnum <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -81,6 +87,16 @@
 
 <dt>ncells</dt>
 <dd><p>A number of elements (not bytes)</p></dd>
+
+
+<dt>nullable</dt>
+<dd><p>Optional boolean parameter indicating whether missing values
+are allowed (for which another column is allocated), default is FALSE</p></dd>
+
+
+<dt>varnum</dt>
+<dd><p>Option intgeter parameter for the number of elemements per variable,
+default is one</p></dd>
 
 </dl></div>
     <div class="section level2">
