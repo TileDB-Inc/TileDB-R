@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tiledb_query_alloc_buffer_ptr_char</span><span class="op">(</span><span class="va">sizeoffsets</span>, <span class="va">sizedata</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">tiledb_query_alloc_buffer_ptr_char</span><span class="op">(</span><span class="va">sizeoffsets</span>, <span class="va">sizedata</span>, nullable <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,6 +77,10 @@
 
 <dt>sizedata</dt>
 <dd><p>A numeric value of the size of the data string</p></dd>
+
+
+<dt>nullable</dt>
+<dd><p>An optional boolean indicating whether the column can have NULLs</p></dd>
 
 </dl></div>
     <div class="section level2">
