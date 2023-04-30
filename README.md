@@ -38,7 +38,8 @@ The most recent released version can be installed from
     > remotes::install_github("TileDB-Inc/TileDB-R")
     ...
     > library(tiledb)
-    TileDB R 0.17.0 with TileDB Embedded 2.13.0. See https://tiledb.com for more information.
+    TileDB R 0.19.1 with TileDB Embedded 2.15.2 on Ubuntu 22.04.
+    See https://tiledb.com for more information about TileDB.
     > help(package=tiledb)
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
@@ -46,7 +47,7 @@ If the TileDB library is installed in a custom location, you need to pass the ex
     > remotes::install_github("TileDB-Inc/TileDB-R",
           args="--configure-args='--with-tiledb=/path/to/tiledb'")
 
-Note that the TileDB R package is developed and tested against the latest stable (`v2.6.x`) version
+Note that the TileDB R package is always developed and tested against the latest stable version
 of TileDB, but should also build against the newest development version.
 
 ## Quick Links
@@ -58,7 +59,7 @@ of TileDB, but should also build against the newest development version.
 
 ## Copyright
 
-The TileDB R package is Copyright 2018-2022 TileDB, Inc
+The TileDB R package is Copyright 2018-2023 TileDB, Inc
 
 ## License
 
