@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2022 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@
         packageStartupMessage("TileDB R ", packageVersion("tiledb"),
                               " with TileDB Embedded ", format(tiledb_version(TRUE)),
                               " on ", utils::osVersion,
-                              ". See https://tiledb.com for more information.")
+                              ".\nSee https://tiledb.com for more information about TileDB.")
     }
 }
 
