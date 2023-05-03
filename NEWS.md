@@ -7,6 +7,10 @@
 
 * The startup message is now reformated across two shorter lines (#545)
 
+## Bug Fixes
+
+* Consolidation and vacuum calls now reflect the state of the global context object (#547)
+
 
 # tiledb 0.19.1
 
