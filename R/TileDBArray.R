@@ -1591,7 +1591,7 @@ array_consolidate <- function(uri, cfg = NULL,
                               ctx = tiledb_get_context()) {
     stopifnot(`Argument 'uri' must be character` = is.character(uri))
     if (is.null(cfg)) {
-        cfg <- tiledb_config()
+        cfg <- config(ctx)
     }
 
     if (!missing(start_time)) {
@@ -1635,7 +1635,7 @@ array_vacuum <- function(uri, cfg = NULL,
 
     stopifnot(`Argument 'uri' must be character` = is.character(uri))
     if (is.null(cfg)) {
-        cfg <- tiledb_config()
+        cfg <- config(ctx)
     }
 
     if (!missing(start_time)) {
