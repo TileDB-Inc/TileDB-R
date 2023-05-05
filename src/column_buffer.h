@@ -70,7 +70,7 @@ class ColumnBuffer {
      * @brief Convert a bytemap to a bitmap in place.
      *
      */
-    __attribute__((visibility("default"))) static void to_bitmap(
+    static void to_bitmap(
         tcb::span<uint8_t> bytemap);
 
     //===================================================================
