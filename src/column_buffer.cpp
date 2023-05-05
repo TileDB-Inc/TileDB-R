@@ -5,7 +5,7 @@
  *
  * The MIT License
  *
- * @copyright Copyright (c) 2022 TileDB, Inc.
+ * @copyright Copyright (c) 2022-2023 TileDB, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +30,8 @@
  * This file defines the a ColumBuffer class.
  */
 
-// #include "tiledbsoma/column_buffer.h"
-// #include "tiledbsoma/array_buffers.h"
-// #include "tiledbsoma/common.h"
-// #include "tiledbsoma/logger_public.h"
 #include "tinyspdl.h"
 #include "column_buffer.h"
-#include "common.h"
-//#include "tiledbsoma/logger_public.h"
 
 namespace tiledb {
 
@@ -58,9 +52,8 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
         bool is_nullable = attr.nullable();
 
         if (!is_var && attr.cell_val_num() != 1) {
-            throw tiledbsoma::TileDBSOMAError(
-                "[ColumnBuffer] Values per cell > 1 is not supported: " +
-                name_str);
+            Rcpp::stop(std::string("[ColumnBuffer] Values per cell > 1 is not supported: ") +
+                       name_str);
         }
 
         return ColumnBuffer::alloc(
@@ -73,16 +66,15 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
                       dim.type() == TILEDB_STRING_UTF8;
 
         if (!is_var && dim.cell_val_num() != 1) {
-            throw tiledbsoma::TileDBSOMAError(
-                "[ColumnBuffer] Values per cell > 1 is not supported: " +
-                name_str);
+            Rcpp::stop(std::string("[ColumnBuffer] Values per cell > 1 is not supported: ") +
+                       name_str);
         }
 
         return ColumnBuffer::alloc(
             array, dim.name(), dim.type(), is_var, false);
     }
 
-    throw tiledbsoma::TileDBSOMAError("[ColumnBuffer] Column name not found: " + name_str);
+    Rcpp::stop(std::string("[ColumnBuffer] Column name not found: ") + name_str);
 }
 
 void ColumnBuffer::to_bitmap(tcb::span<uint8_t> bytemap) {
@@ -119,7 +111,6 @@ ColumnBuffer::ColumnBuffer(
     , num_cells_(0)
     , is_var_(is_var)
     , is_nullable_(is_nullable) {
-    //LOG_DEBUG(fmt::format(
     spdl::debug(tfm::format(
         "[ColumnBuffer] '%s' %d cells %d bytes is_var=%s is_nullable=%s",
         name,
@@ -207,12 +198,10 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::alloc(
         try {
             num_bytes = std::stoull(value_str);
         } catch (const std::exception& e) {
-            //throw TileDBSOMAError(fmt::format(
-            throw tiledbsoma::TileDBSOMAError(tfm::format(
-                "[ColumnBuffer] Error parsing %s: '%s' (%s)",
-                CONFIG_KEY_INIT_BYTES,
-                value_str.c_str(),
-                std::string(e.what()).c_str()));
+            Rcpp::stop(tfm::format("[ColumnBuffer] Error parsing %s: '%s' (%s)",
+                                   CONFIG_KEY_INIT_BYTES,
+                                   value_str.c_str(),
+                                   std::string(e.what()).c_str()));
         }
     }
     spdl::debug(tfm::format("[ColumnBuffer::alloc] num_bytes = %d", num_bytes));
@@ -234,4 +223,4 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::alloc(
         name, type, num_cells, num_bytes, is_var, is_nullable);
 }
 
-}  // namespace tiledbsoma
+}  // namespace tiledb

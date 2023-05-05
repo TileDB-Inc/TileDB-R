@@ -1,10 +1,6 @@
 #ifndef ARROW_ADAPTER_H
 #define ARROW_ADAPTER_H
 
-//#include <tiledbsoma/tiledbsoma>
-//#ifndef ARROW_SCHEMA_AND_ARRAY_DEFINED
-//#include "carrow.h"
-//#endif
 #include "libtiledb.h"
 #include <column_buffer.h>
 #include <nanoarrow.h>
@@ -191,6 +187,6 @@ class ArrowAdapter {
     }
 };
 
-};  // namespace tiledbsoma
+};  // namespace tiledb
 
 #endif

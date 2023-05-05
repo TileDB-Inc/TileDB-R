@@ -5,7 +5,7 @@
  *
  * The MIT License
  *
- * @copyright Copyright (c) 2022 TileDB, Inc.
+ * @copyright Copyright (c) 2022-2023 TileDB, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,14 +38,8 @@
 #include <span/span.hpp>
 #include <tiledb/tiledb>
 
-// #include "tiledbsoma/column_buffer.h"
-// #include "tiledbsoma/common.h"
-// #include "tiledbsoma/logger_public.h"
 #include "column_buffer.h"
-#include "common.h"
-//#include "tiledbsoma/logger_public.h"
 
-//namespace tiledbsoma {
 namespace tiledb {
 
 using namespace tiledb;
@@ -122,6 +116,6 @@ class ArrayBuffers {
     std::unordered_map<std::string, std::shared_ptr<ColumnBuffer>> buffers_;
 };
 
-}  // namespace tiledbsoma
+}  // namespace tiledb
 
 #endif

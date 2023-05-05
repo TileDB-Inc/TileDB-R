@@ -5,7 +5,7 @@
  *
  * The MIT License
  *
- * @copyright Copyright (c) 2022 TileDB, Inc.
+ * @copyright Copyright (c) 2022-2023 TileDB, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,11 +38,6 @@
 #include <span/span.hpp>
 #include <tiledb/tiledb>
 
-//#include "tiledbsoma/common.h"
-#include "common.h"
-//#include "tiledbsoma/logger_public.h"
-
-//namespace tiledbsoma {
 namespace tiledb {
 
 using namespace tiledb;
@@ -105,7 +100,6 @@ class ColumnBuffer {
     ColumnBuffer(ColumnBuffer&&) = default;
 
     ~ColumnBuffer() {
-        //LOG_TRACE(fmt::format("[ColumnBuffer] release '{}'", name_));
         spdl::trace(tfm::format("[ColumnBuffer] release '%s'", name_));
     }
 
@@ -285,5 +279,5 @@ class ColumnBuffer {
     std::vector<uint8_t> validity_;
 };
 
-}  // namespace tiledbsoma
+}  // namespace tiledb
 #endif
