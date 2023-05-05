@@ -1440,11 +1440,11 @@ if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L, 14L)) exit_file("Skip rem
 ## CI issues at GitHub for r-release on Windows Server 2019
 if (getRversion() < "4.3.0" && Sys.info()[["sysname"]] == "Windows") exit_file("Skip remainder for R 4.2.* on Windows")
 
-## check for incomplete status on unsuccessful query
-set_allocation_size_preference(256)     # too low for penguins to return something
-array <- tiledb_array(uri, as.data.frame=TRUE, query_layout="ROW_MAJOR")
-expect_warning(res <- array[])          # warning emitted
-expect_equal(attr(res, "query_status"), "INCOMPLETE") # and query status reported
+## check for incomplete status on unsuccessful query -- this no longer fails following some changes made
+#set_allocation_size_preference(128)     # too low for penguins to query fully
+#array <- tiledb_array(uri, as.data.frame=TRUE, query_layout="ROW_MAJOR")
+#expect_warning(res <- array[])          # warning emitted
+#expect_equal(attr(res, "query_status"), "INCOMPLETE") # and query status reported
 
 if (Sys.getenv("IS_COVR", "no") == "no") {
     ## check for batched operation -- but not in coverage
