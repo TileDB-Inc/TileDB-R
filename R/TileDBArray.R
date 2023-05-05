@@ -971,14 +971,10 @@ setMethod("[", "tiledb_array",
           counter <- counter + 1L
       }
 
-      if (!use_nanoarrow) {
-          if (requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
-              res <- as.data.frame(data.table::rbindlist(overallresults))
-          } else {
-              res <- do.call(rbind, overallresults)
-          }
+      if (!use_nanoarrow && requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
+          res <- as.data.frame(data.table::rbindlist(overallresults))
       } else {
-          res <- overallresults
+          res <- do.call(rbind, overallresults)
       }
       spdl::info("['['] returning 'res'")
       res
@@ -1024,12 +1020,12 @@ setMethod("[", "tiledb_array",
   } else if (x@return_as == "data.frame") {
       res <- as.data.frame(res)         		# should already be one per above
   } else if (x@return_as == "data.table" && requireNamespace("data.table", quietly=TRUE)) {
-      res <- data.table::data.table(as.data.frame(res))
+      res <- data.table::data.table(res)
   } else if (x@return_as == "tibble" && requireNamespace("tibble", quietly=TRUE)) {
       res <- tibble::as_tibble(res)
   } else if (use_nanoarrow) {
-      spdl::info("['['] possibly shrinking return list")
-      res <- if (is.list(res) && length(res) == 1) res[[1]] else res
+      ## possible list already collapsed above
+      res
   }
 
   spdl::debug("['['] getting query status")
