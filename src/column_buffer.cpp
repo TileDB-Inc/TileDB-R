@@ -42,7 +42,8 @@ using namespace tiledb;
 //===================================================================
 
 std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
-    std::shared_ptr<Array> array, std::string_view name) {
+    std::shared_ptr<Array> array, std::string_view name, size_t memory_budget) {
+
     auto name_str = std::string(name);  // string for TileDB API
     auto schema = array->schema();
 
@@ -57,7 +58,7 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
         }
 
         return ColumnBuffer::alloc(
-            array, attr.name(), attr.type(), is_var, is_nullable);
+            array, attr.name(), attr.type(), is_var, is_nullable, memory_budget);
 
     } else if (schema.domain().has_dimension(name_str)) {
         auto dim = schema.domain().dimension(name_str);
@@ -71,7 +72,8 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
         }
 
         return ColumnBuffer::alloc(
-            array, dim.name(), dim.type(), is_var, false);
+            array, dim.name(), dim.type(), is_var, false, memory_budget);
+
     }
 
     Rcpp::stop(std::string("[ColumnBuffer] Column name not found: ") + name_str);
@@ -188,22 +190,10 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::alloc(
     std::string_view name,
     tiledb_datatype_t type,
     bool is_var,
-    bool is_nullable) {
-    // Set number of bytes for the data buffer. Override with a value from
-    // the config if present.
-    auto num_bytes = DEFAULT_ALLOC_BYTES;
-    auto config = array->schema().context().config();
-    if (config.contains(CONFIG_KEY_INIT_BYTES)) {
-        auto value_str = config.get(CONFIG_KEY_INIT_BYTES);
-        try {
-            num_bytes = std::stoull(value_str);
-        } catch (const std::exception& e) {
-            Rcpp::stop(tfm::format("[ColumnBuffer] Error parsing %s: '%s' (%s)",
-                                   CONFIG_KEY_INIT_BYTES,
-                                   value_str.c_str(),
-                                   std::string(e.what()).c_str()));
-        }
-    }
+    bool is_nullable,
+    size_t memory_budget) {
+
+    auto num_bytes = memory_budget;
     spdl::debug(tfm::format("[ColumnBuffer::alloc] num_bytes = %d", num_bytes));
 
     bool is_dense = array->schema().array_type() == TILEDB_DENSE;

@@ -872,7 +872,7 @@ setMethod("[", "tiledb_array",
       while (!finished) {
 
           if (use_nanoarrow) {
-              abptr <- libtiledb_allocate_column_buffers(ctx@ptr, qryptr, uri, allnames)
+              abptr <- libtiledb_allocate_column_buffers(ctx@ptr, qryptr, uri, allnames, memory_budget)
               spdl::debug("['['] buffers allocated and set")
           }
 

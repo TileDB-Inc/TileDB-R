@@ -43,8 +43,8 @@ libtiledb_to_arrow <- function(ab, qry) {
     .Call(`_tiledb_libtiledb_to_arrow`, ab, qry)
 }
 
-libtiledb_allocate_column_buffers <- function(ctx, qry, uri, names) {
-    .Call(`_tiledb_libtiledb_allocate_column_buffers`, ctx, qry, uri, names)
+libtiledb_allocate_column_buffers <- function(ctx, qry, uri, names, memory_budget) {
+    .Call(`_tiledb_libtiledb_allocate_column_buffers`, ctx, qry, uri, names, memory_budget)
 }
 
 makeQueryWrapper <- function(qp) {

@@ -324,7 +324,8 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
 Rcpp::XPtr<tiledb::ArrayBuffers> libtiledb_allocate_column_buffers(Rcpp::XPtr<tiledb::Context> ctx,
                                                                    Rcpp::XPtr<tiledb::Query> qry,
                                                                    std::string uri,
-                                                                   std::vector<std::string> names) {
+                                                                   std::vector<std::string> names,
+                                                                   const size_t memory_budget) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Query>(qry);
     // allocate the ArrayBuffers object we will with ColumnBuffer objects and return
@@ -333,10 +334,11 @@ Rcpp::XPtr<tiledb::ArrayBuffers> libtiledb_allocate_column_buffers(Rcpp::XPtr<ti
     auto arrsp = std::make_shared<tiledb::Array>(*ctx.get(), uri, TILEDB_READ);
     for (auto name: names) {
         // returns a shared pointer to new column buffer for 'name'
-        auto cbsp = tiledb::ColumnBuffer::create(arrsp, name);
+        auto cbsp = tiledb::ColumnBuffer::create(arrsp, name, memory_budget);
         abp->emplace(name, cbsp);
         cbsp->attach(*qry.get());
-        spdl::debug(tfm::format("[libtiledb_alloocate_column_buffers] emplaced %s cnt %d", name, cbsp.use_count()));
+        spdl::debug(tfm::format("[libtiledb_alloocate_column_buffers] emplaced %s cnt %d membudget %d",
+                                name, cbsp.use_count(), memory_budget));
     }
     return make_xptr<tiledb::ArrayBuffers>(abp);
 }

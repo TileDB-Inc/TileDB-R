@@ -47,9 +47,9 @@ using namespace tiledb;
  *
  */
 class ColumnBuffer {
-    inline static const size_t DEFAULT_ALLOC_BYTES = 1 << 24;  // 16 MiB
-    inline static const std::string
-        CONFIG_KEY_INIT_BYTES = "soma.init_buffer_bytes";
+    // inline static const size_t DEFAULT_ALLOC_BYTES = 1 << 24;  // 16 MiB
+    // inline static const std::string
+    //     CONFIG_KEY_INIT_BYTES = "soma.init_buffer_bytes";
 
    public:
     //===================================================================
@@ -64,7 +64,7 @@ class ColumnBuffer {
      * @return ColumnBuffer
      */
     static std::shared_ptr<ColumnBuffer> create(
-        std::shared_ptr<Array> array, std::string_view name);
+        std::shared_ptr<Array> array, std::string_view name, size_t memory_budget);
 
     /**
      * @brief Convert a bytemap to a bitmap in place.
@@ -245,7 +245,8 @@ class ColumnBuffer {
         std::string_view name,
         tiledb_datatype_t type,
         bool is_var,
-        bool is_nullable);
+        bool is_nullable,
+        size_t memory_budget);
 
     //===================================================================
     //= private non-static
