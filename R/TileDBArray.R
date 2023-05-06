@@ -541,7 +541,15 @@ setMethod("[", "tiledb_array",
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
-  use_arrow <- x@return_as %in% c("arrow_table", "arrow")
+  if (x@return_as == "arrow_table")
+    x@return_as <- "arrow" # normalize
+
+  if (x@return_as %in% c("data.table", "tibble", "arrow"))
+    if (!requireNames(x@return_as, quietly=TRUE)
+      stop("The 'return_as' argument value '", x@return_as, "' requires the package '",
+           x@return_as, "' to be installed.", call. = FALSE)
+
+  use_arrow <- x@return_as == "arrow"
 
   dims <- tiledb::dimensions(dom)
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
