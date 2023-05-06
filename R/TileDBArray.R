@@ -52,8 +52,9 @@
 #' @slot return_as A character value with the desired \code{tiledb_array} conversion,
 #' permitted values are \sQuote{asis} (default, returning a list of columns),
 #' \sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}
-#' \sQuote{tibble}, or \sQuote{nanoarrow};
-#' note that \sQuote{data.table} and \sQuote{tibble} require the respective packages to installed.
+#' \sQuote{tibble}, \sQuote{arrow_table} or \sQuote{arrow} (where the last two are synomyms);
+#' note that \sQuote{data.table}, \sQuote{tibble} and \sQuote{arrow} require the respective
+#' packages to installed.
 #' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 #' query statistics are returned (as a JSON string) via the attribute
 #' \sQuote{query_statistics} of the return object.
@@ -129,9 +130,10 @@ setClass("tiledb_array",
 #' until which the array is to be openened. No fragments written earlier later be considered.
 #' @param return_as optional A character value with the desired \code{tiledb_array} conversion,
 #' permitted values are \sQuote{asis} (default, returning a list of columns), \sQuote{array},
-#' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, \sQuote{nanoarrow};
-#' here \sQuote{data.table} and \sQuote{tibble} require the respective
-#' packages installed. The existing \code{as.*} arguments take precedent over this.
+#' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, \sQuote{arrow_table},
+#' or \sQuote{arrow} (as an alias for \sQuote{arrow_table}; here \sQuote{data.table},
+#' \sQuote{tibble} and \sQuote{arrow} require the respective packages to be installed.
+#' The existing \code{as.*} arguments take precedent over this.
 #' @param query_statistics optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
 #' query statistics are returned (as a JSON string) via the attribute
 #' \sQuote{query_statistics} of the return object.
@@ -434,10 +436,10 @@ setValidity("tiledb_array", function(object) {
   }
 
   if (!(object@return_as %in% c("asis", "array", "matrix", "data.frame",
-                                "data.table", "tibble", "nanoarrow"))) {
+                                "data.table", "tibble", "arrow_table", "arrow"))) {
     valid <- FALSE
     msg <- c(msg, paste("The 'return_as' slot must contain one of 'asis', 'array', 'matrix',",
-                        "'data.frame', 'data.table', 'tibble', 'nanoarrow'."))
+                        "'data.frame', 'data.table', 'tibble', 'arrow_table' or 'arrow'."))
   }
 
   if (!is.logical(object@query_statistics)) {
@@ -539,7 +541,7 @@ setMethod("[", "tiledb_array",
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
-  use_nanoarrow <- x@return_as == "nanoarrow"
+  use_arrow <- x@return_as %in% c("arrow_table", "arrow")
 
   dims <- tiledb::dimensions(dom)
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
@@ -836,7 +838,7 @@ setMethod("[", "tiledb_array",
       spdl::debug("['['] overall estimate {} rows", resrv)
 
       ## allocate and set buffers
-      if (!use_nanoarrow) {
+      if (!use_arrow) {
           getBuffer <- function(name, type, varnum, nullable, resrv, qryptr, arrptr) {
               if (is.na(varnum)) {
                   if (type %in% c("CHAR", "ASCII", "UTF8")) {
@@ -871,7 +873,7 @@ setMethod("[", "tiledb_array",
       finished <- FALSE
       while (!finished) {
 
-          if (use_nanoarrow) {
+          if (use_arrow) {
               abptr <- libtiledb_allocate_column_buffers(ctx@ptr, qryptr, uri, allnames, memory_budget)
               spdl::debug("['['] buffers allocated and set")
           }
@@ -886,7 +888,7 @@ setMethod("[", "tiledb_array",
           #if (status != "COMPLETE") warning("Query returned '", status, "'.", call. = FALSE)
           if (status != "COMPLETE") spdl::debug("['['] query returned '{}'.", status)
 
-          if (use_nanoarrow) {
+          if (use_arrow) {
               rl <- libtiledb_to_arrow(abptr, qryptr)
               overallresults[[counter]] <- .as_arrow_table(rl)
               spdl::info("['['] received arrow table {}", counter)
@@ -899,7 +901,7 @@ setMethod("[", "tiledb_array",
               finished <- TRUE
           }
 
-          if (!use_nanoarrow) {
+          if (!use_arrow) {
               ## retrieve actual result size (from fixed size element columns)
               getResultSize <- function(name, varnum, qryptr) {
                   val <- if (is.na(varnum))                  # symbols come up with higher count
@@ -971,7 +973,7 @@ setMethod("[", "tiledb_array",
           counter <- counter + 1L
       }
 
-      if (!use_nanoarrow && requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
+      if (!use_arrow && requireNamespace("data.table", quietly=TRUE)) { 		# use very efficient rbindlist if available
           res <- as.data.frame(data.table::rbindlist(overallresults))
       } else {
           res <- do.call(rbind, overallresults)
@@ -980,7 +982,7 @@ setMethod("[", "tiledb_array",
       res
   }                                     # end of 'big else' for query build, submission and read
 
-  if (!use_nanoarrow) {
+  if (!use_arrow) {
       ## convert to factor if that was asked
       if (x@strings_as_factors) {
           for (n in colnames(res))
@@ -1023,7 +1025,7 @@ setMethod("[", "tiledb_array",
       res <- data.table::data.table(res)
   } else if (x@return_as == "tibble" && requireNamespace("tibble", quietly=TRUE)) {
       res <- tibble::as_tibble(res)
-  } else if (use_nanoarrow) {
+  } else if (use_arrow) {
       ## possible list already collapsed above
       res
   }

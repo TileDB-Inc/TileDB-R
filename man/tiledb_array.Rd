@@ -89,8 +89,9 @@ until which the array is to be openened. No fragments written earlier later be c
 
 \item{return_as}{optional A character value with the desired \code{tiledb_array} conversion,
 permitted values are \sQuote{asis} (default, returning a list of columns), \sQuote{array},
-\sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, or \sQuote{nanoarrow};
-here \sQuote{data.table} and \sQuote{tibble} require the respective packages installed.
+\sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, \sQuote{arrow_table},
+or \sQuote{arrow} (as an alias for \sQuote{arrow_table}; here \sQuote{data.table},
+\sQuote{tibble} and \sQuote{arrow} require the respective packages to be installed.
 The existing \code{as.*} arguments take precedent over this.}
 
 \item{query_statistics}{optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
