@@ -545,7 +545,7 @@ setMethod("[", "tiledb_array",
     x@return_as <- "arrow" # normalize
 
   if (x@return_as %in% c("data.table", "tibble", "arrow"))
-    if (!requireNames(x@return_as, quietly=TRUE)
+    if (!requireNamespace(x@return_as, quietly=TRUE))
       stop("The 'return_as' argument value '", x@return_as, "' requires the package '",
            x@return_as, "' to be installed.", call. = FALSE)
 
