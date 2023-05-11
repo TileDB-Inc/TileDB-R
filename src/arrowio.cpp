@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2020-2022 TileDB Inc.
+//  Copyright (c) 2020-2023 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,32 @@
 
 #include "libtiledb.h"
 #include "tiledb_version.h"
+#include <nanoarrow.h>          // for C interface to Arrow
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
-#include <tiledb/arrowio>
+//#include <tiledb/arrowio>
+#include "tiledb_arrowio.h"
 #endif
+
+#include "column_buffer.h"
+#include "arrow_adapter.h"
+
+
+ArrowSchema* schema_owning_ptr(void) {
+  struct ArrowSchema* schema = (struct ArrowSchema*)ArrowMalloc(sizeof(struct ArrowSchema));
+  if (schema == nullptr) Rcpp::stop("Failed to allocate ArrowSchema");
+  schema->release = NULL;
+  spdl::debug("[schema_owning_ptr] created");
+  return schema;
+}
+
+ArrowArray* array_owning_ptr(void) {
+  struct ArrowArray* array = (struct ArrowArray*)ArrowMalloc(sizeof(struct ArrowArray));
+  if (array == nullptr) Rcpp::stop("Failed to allocate ArrowArray");
+  array->release = NULL;
+  spdl::debug("[array_owning_ptr] created");
+  return array;
+}
+
 
 // borrowed from arrow R package (version 7.0.0)  (licensed under Apache-2.0) and slightly extended/adapted
 template <typename T>
@@ -130,12 +153,17 @@ Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
 #if TILEDB_VERSION >= TileDB_Version(2,2,0)
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    auto arrptr = allocate_arrow_array(); 	// external pointer object
-    auto schptr = allocate_arrow_schema();
+    //auto arrptr = allocate_arrow_array(); 	// external pointer object
+    //auto schptr = allocate_arrow_schema();
+    auto schptr = schema_owning_ptr();
+    auto arrptr = array_owning_ptr();
     adapter.export_buffer(name.c_str(),
-                          static_cast<void*>(R_ExternalPtrAddr(arrptr)),
-                          static_cast<void*>(R_ExternalPtrAddr(schptr)));
-    return Rcpp::List::create(arrptr, schptr);
+                          static_cast<void*>(arrptr),
+                          static_cast<void*>(schptr));
+    spdl::debug(tfm::format("[libtiledb_query_export_buffer] name '%s'", name.c_str()));
+    SEXP xpschema = R_MakeExternalPtr((void*) schptr, R_NilValue, R_NilValue);
+    SEXP xparray = R_MakeExternalPtr((void*) arrptr, R_NilValue, R_NilValue);
+    return Rcpp::List::create(xparray, xpschema);
 #else
     Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
     return Rcpp::List::create(R_NilValue, R_NilValue); // not reached
@@ -157,4 +185,160 @@ XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
     Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
 #endif
     return(query);
+}
+
+
+// [[Rcpp::export]]
+Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
+                                              XPtr<tiledb::Query> query,
+                                              std::vector<std::string> names) {
+#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+    size_t ncol = names.size();
+    tiledb::arrow::ArrowAdapter adapter(ctx, query);
+
+    ArrowSchema* schemap = schema_owning_ptr();
+    ArrowArray* arrayp = array_owning_ptr();
+    ArrowSchemaInitFromType(schemap, NANOARROW_TYPE_STRUCT);
+    ArrowSchemaAllocateChildren(schemap, ncol);
+    ArrowArrayInitFromType(arrayp, NANOARROW_TYPE_STRUCT);
+    ArrowArrayAllocateChildren(arrayp, ncol);
+    arrayp->length = 0;
+
+    for (size_t i=0; i<ncol; i++) {
+        // this allocates, and properly wraps as external pointers controlling lifetime
+        ArrowSchema* chldschemap = schema_owning_ptr();
+        ArrowArray* chldarrayp = array_owning_ptr();
+
+        spdl::debug(tfm::format("[libtiledb_query_export_arrow_table] Accessing %s at %d", names[i], i));
+        adapter.export_buffer(names[i].c_str(), (void*) chldarrayp, (void*) chldschemap);
+
+        spdl::debug(tfm::format("[libtiledb_query_export_arrow_table] Setting children %s at %d", names[i], i));
+        schemap->children[i] = chldschemap;
+        arrayp->children[i] = chldarrayp;
+
+        if (chldarrayp->length > arrayp->length) {
+            spdl::info(tfm::format("[libtiledb_query_export_arrow_table] Setting array length to %d", chldarrayp->length));
+            arrayp->length = chldarrayp->length;
+        }
+        spdl::info(tfm::format("[libtiledb_query_export_arrow_table] Seeing %s (%s) at length %d null_count %d buffers %d",
+                               names[i], chldschemap->format, chldarrayp->length, chldarrayp->null_count, chldarrayp->n_buffers));
+
+    }
+    SEXP xparray = R_MakeExternalPtr((void*) arrayp, R_NilValue, R_NilValue);
+    SEXP xpschema = R_MakeExternalPtr((void*) schemap, R_NilValue, R_NilValue);
+
+    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = xparray,
+                                       Rcpp::Named("schema") = xpschema);
+    return as;
+#else
+    Rcpp::stop("This function requires TileDB (2.2.0 or greater).");
+    return R_NilValue; // not reached
+#endif
+}
+
+//' @noRd
+// [[Rcpp::export]]
+bool check_arrow_schema_tag(Rcpp::XPtr<ArrowSchema> xp) {
+  check_xptr_tag<ArrowSchema>(xp);  // throws if mismatched
+  return true;
+}
+
+//' @noRd
+// [[Rcpp::export]]
+bool check_arrow_array_tag(Rcpp::XPtr<ArrowArray> xp) {
+  check_xptr_tag<ArrowArray>(xp);  // throws if mismatched
+  return true;
+}
+
+
+// (Adapted) helper functions from nanoarrow
+//
+// Create an external pointer with the proper class and that will release any
+// non-null, non-released pointer when garbage collected. We use a tagged XPtr,
+// but do not set an XPtr finalizer
+Rcpp::XPtr<ArrowSchema> schema_owning_xptr(void) {
+    struct ArrowSchema* schema = (struct ArrowSchema*)ArrowMalloc(sizeof(struct ArrowSchema));
+    if (schema == NULL) Rcpp::stop("Failed to allocate ArrowSchema");
+    schema->release = NULL;
+    Rcpp::XPtr<ArrowSchema> schema_xptr = make_xptr(schema, false);
+    return schema_xptr;
+}
+// Create an external pointer with the proper class and that will release any
+// non-null, non-released pointer when garbage collected. We use a tagged XPtr,
+// but do not set an XPtr finalizer
+Rcpp::XPtr<ArrowArray> array_owning_xptr(void) {
+    struct ArrowArray* array = (struct ArrowArray*)ArrowMalloc(sizeof(struct ArrowArray));
+    if (array == NULL) Rcpp::stop("Failed to allocate ArrowArray");
+    array->release = NULL;
+    Rcpp::XPtr<ArrowArray> array_xptr = make_xptr(array, false);
+    return array_xptr;
+}
+
+// [[Rcpp::export]]
+Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
+                              Rcpp::XPtr<tiledb::Query> qry) {
+    check_xptr_tag<tiledb::ArrayBuffers>(ab);
+    check_xptr_tag<tiledb::Query>(qry);
+    std::vector<std::string> names = ab->names();
+    auto ncol = names.size();
+    Rcpp::XPtr<ArrowSchema> schemaxp = schema_owning_xptr();
+    Rcpp::XPtr<ArrowArray> arrayxp = array_owning_xptr();
+    ArrowSchemaInitFromType((ArrowSchema*)R_ExternalPtrAddr(schemaxp), NANOARROW_TYPE_STRUCT);
+    ArrowSchemaAllocateChildren((ArrowSchema*)R_ExternalPtrAddr(schemaxp), ncol);
+    ArrowArrayInitFromType((ArrowArray*)R_ExternalPtrAddr(arrayxp), NANOARROW_TYPE_STRUCT);
+    ArrowArrayAllocateChildren((ArrowArray*)R_ExternalPtrAddr(arrayxp), ncol);
+
+    arrayxp->length = 0;
+
+    for (size_t i=0; i<ncol; i++) {
+        // this allocates, and properly wraps as external pointers controlling lifetime
+        Rcpp::XPtr<ArrowSchema> chldschemaxp = schema_owning_xptr();
+        Rcpp::XPtr<ArrowArray> chldarrayxp = array_owning_xptr();
+
+        auto buf = ab->at(names[i]);        // buf is a shared_ptr to ColumnBuffer
+        buf->update_size(*qry);
+        spdl::info(tfm::format("[libtiledb_to_arrow] Accessing %s at %d use_count=%d sz %d nm %s tp %d",
+                               names[i], i, buf.use_count(), buf->size(), buf->name(), buf->type()));
+
+        // this is pair of array and schema pointer
+        auto pp = tiledb::ArrowAdapter::to_arrow(buf);
+        spdl::info(tfm::format("[libtiledb_to_arrow] Incoming name %s length %d",
+                               std::string(pp.second->name), pp.first->length));
+        memcpy((void*) chldschemaxp, pp.second.get(), sizeof(ArrowSchema));
+        memcpy((void*) chldarrayxp, pp.first.get(), sizeof(ArrowArray));
+        schemaxp->children[i] = chldschemaxp;
+        arrayxp->children[i] = chldarrayxp;
+
+        if (pp.first->length > arrayxp->length) {
+            spdl::debug(tfm::format("[libtiledb_to_arrow] Setting array length to %d", pp.first->length));
+            arrayxp->length = pp.first->length;
+        }
+    }
+    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayxp,
+                                       Rcpp::Named("schema") = schemaxp);
+    return as;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::XPtr<tiledb::ArrayBuffers> libtiledb_allocate_column_buffers(Rcpp::XPtr<tiledb::Context> ctx,
+                                                                   Rcpp::XPtr<tiledb::Query> qry,
+                                                                   std::string uri,
+                                                                   std::vector<std::string> names,
+                                                                   const size_t memory_budget) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Query>(qry);
+    // allocate the ArrayBuffers object we will with ColumnBuffer objects and return
+    auto abp = new tiledb::ArrayBuffers;
+    // get the array and its pointer
+    auto arrsp = std::make_shared<tiledb::Array>(*ctx.get(), uri, TILEDB_READ);
+    for (auto name: names) {
+        // returns a shared pointer to new column buffer for 'name'
+        auto cbsp = tiledb::ColumnBuffer::create(arrsp, name, memory_budget);
+        abp->emplace(name, cbsp);
+        cbsp->attach(*qry.get());
+        spdl::debug(tfm::format("[libtiledb_alloocate_column_buffers] emplaced %s cnt %d membudget %d",
+                                name, cbsp.use_count(), memory_budget));
+    }
+    return make_xptr<tiledb::ArrayBuffers>(abp);
 }

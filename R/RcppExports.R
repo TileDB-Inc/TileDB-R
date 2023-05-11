@@ -25,6 +25,28 @@ libtiledb_query_import_buffer <- function(ctx, query, name, arrowpointers) {
     .Call(`_tiledb_libtiledb_query_import_buffer`, ctx, query, name, arrowpointers)
 }
 
+libtiledb_query_export_arrow_table <- function(ctx, query, names) {
+    .Call(`_tiledb_libtiledb_query_export_arrow_table`, ctx, query, names)
+}
+
+#' @noRd
+check_arrow_schema_tag <- function(xp) {
+    .Call(`_tiledb_check_arrow_schema_tag`, xp)
+}
+
+#' @noRd
+check_arrow_array_tag <- function(xp) {
+    .Call(`_tiledb_check_arrow_array_tag`, xp)
+}
+
+libtiledb_to_arrow <- function(ab, qry) {
+    .Call(`_tiledb_libtiledb_to_arrow`, ab, qry)
+}
+
+libtiledb_allocate_column_buffers <- function(ctx, qry, uri, names, memory_budget) {
+    .Call(`_tiledb_libtiledb_allocate_column_buffers`, ctx, qry, uri, names, memory_budget)
+}
+
 makeQueryWrapper <- function(qp) {
     .Call(`_tiledb_makeQueryWrapper`, qp)
 }

@@ -1,7 +1,7 @@
 CXX_STD = CXX17
 RWINLIB = ../windows/rwinlib-tiledb
 
-PKG_CPPFLAGS = -I../inst/include -I$(RWINLIB)/include -I$(RWINLIB)/include/tiledb -DTILEDB_STATIC_DEFINE -DTILEDB_SILENT_BUILD
+PKG_CPPFLAGS = -I. -I../inst/include -I$(RWINLIB)/include -I$(RWINLIB)/include/tiledb -DTILEDB_STATIC_DEFINE -DTILEDB_SILENT_BUILD
 PKG_LIBS = \
 	-L$(RWINLIB)/lib$(subst gcc,,$(COMPILED_BY))$(R_ARCH) \
 	-L$(RWINLIB)/lib$(R_ARCH)$(CRT) \

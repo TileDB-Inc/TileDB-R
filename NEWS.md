@@ -7,6 +7,8 @@
 
 * The startup message is now reformated across two shorter lines (#545)
 
+* Support for returning 'Arrow Table' objects has been added (#548)
+
 ## Bug Fixes
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)

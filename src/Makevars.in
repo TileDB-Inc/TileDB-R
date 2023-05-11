@@ -5,7 +5,7 @@ CXX_STD = CXX17
 PKG_CXX17FLAGS = @CXX17_MACOS@
 
 ## We need the TileDB Headers
-PKG_CPPFLAGS = -I../inst/include/ @TILEDB_INCLUDE@ @TILEDB_SILENT_BUILD@
+PKG_CPPFLAGS = -I. -I../inst/include/ @TILEDB_INCLUDE@ @TILEDB_SILENT_BUILD@
 
 ## We also need the TileDB library
 PKG_LIBS = @CXX17_MACOS@ @TILEDB_LIBS@ @TILEDB_RPATH@

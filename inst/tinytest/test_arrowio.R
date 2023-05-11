@@ -178,6 +178,23 @@ for (i in c(1:7,9:10)) {
 }
 expect_equivalent(df[,8], as.integer64(1:10))
 
+
+## test support for return_as="arrow"
+if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
+library(palmerpenguins)
+uri <- tempfile()
+fromDataFrame(penguins, uri, col_index = c("species", "year"))
+for (arg in c("arrow", "arrow_table")) {
+    res <- tiledb_array(uri, return_as=arg)[]
+    expect_true(inherits(res, "Table"))
+    expect_true(inherits(res, "ArrowTabular"))
+    expect_true(inherits(res, "ArrowObject"))
+    expect_equal(res$num_rows, 344)
+    expect_equal(res$num_columns, 8)
+}
+
+
+
 ## detaching arrow should not be necessary as we generally do not need to unload
 ## packages but had been seen as beneficial in some instanced so there is now an option
 if (Sys.getenv("R_TESTING_CLEANUP", "") == "yes") detach(package:arrow, unload=TRUE)

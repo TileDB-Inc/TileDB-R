@@ -18,6 +18,12 @@
 #define RCPP_USE_FINALIZE_ON_EXIT
 #include "Rcpp.h"
 
+#include "tinyspdl.h"
+#include "column_buffer.h"
+#include "array_buffers.h"
+
+#include "nanoarrow.h"
+
 #ifndef __tiledb_h__
 #define __tiledb_h__
 
@@ -57,6 +63,10 @@ struct query_buffer {
     bool nullable;                      // flag
 };
 typedef struct query_buffer query_buf_t;
+
+// map from buffer names to shared_ptr to column_buffer
+typedef std::unordered_map<std::string, std::shared_ptr<tiledb::ColumnBuffer>> map_to_col_buf_t;
+
 
 // C++ compiler complains about missing delete functionality when we use tiledb_vfs_fh_t directly
 struct vfs_fh {

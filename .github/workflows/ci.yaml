@@ -31,6 +31,10 @@ jobs:
       - name: Test
         run: ./.github/r-ci.sh run_tests
 
+      - name: Show install log
+        run: cat $HOME/work/TileDB-R/TileDB-R/tiledb.Rcheck/00install.out
+        if: failure()
+
       #- name: Coverage
       #  if: ${{ matrix.os == 'ubuntu-latest' }}
       #  run: ./.github/r-ci.sh coverage
