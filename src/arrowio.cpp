@@ -187,6 +187,10 @@ XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
     return(query);
 }
 
+Rcpp::XPtr<ArrowSchema> schema_owning_xptr(void);
+Rcpp::XPtr<ArrowArray> array_owning_xptr(void);
+Rcpp::XPtr<ArrowSchema> schema_setup_struct(Rcpp::XPtr<ArrowSchema> schxp, int64_t n_children);
+Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t n_children);
 
 // [[Rcpp::export]]
 Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
@@ -196,12 +200,11 @@ Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
     size_t ncol = names.size();
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    ArrowSchema* schemap = schema_owning_ptr();
-    ArrowArray* arrayp = array_owning_ptr();
-    ArrowSchemaInitFromType(schemap, NANOARROW_TYPE_STRUCT);
-    ArrowSchemaAllocateChildren(schemap, ncol);
-    ArrowArrayInitFromType(arrayp, NANOARROW_TYPE_STRUCT);
-    ArrowArrayAllocateChildren(arrayp, ncol);
+    Rcpp::XPtr<ArrowSchema> schemap = schema_owning_xptr();
+    Rcpp::XPtr<ArrowArray> arrayp = array_owning_xptr();
+    schemap = schema_setup_struct(schemap, ncol);
+    arrayp = array_setup_struct(arrayp, ncol);
+
     arrayp->length = 0;
 
     for (size_t i=0; i<ncol; i++) {
@@ -224,11 +227,9 @@ Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
                                names[i], chldschemap->format, chldarrayp->length, chldarrayp->null_count, chldarrayp->n_buffers));
 
     }
-    SEXP xparray = R_MakeExternalPtr((void*) arrayp, R_NilValue, R_NilValue);
-    SEXP xpschema = R_MakeExternalPtr((void*) schemap, R_NilValue, R_NilValue);
 
-    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = xparray,
-                                       Rcpp::Named("schema") = xpschema);
+    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayp,
+                                       Rcpp::Named("schema") = schemap);
     return as;
 #else
     Rcpp::stop("This function requires TileDB (2.2.0 or greater).");
@@ -274,6 +275,113 @@ Rcpp::XPtr<ArrowArray> array_owning_xptr(void) {
     return array_xptr;
 }
 
+// Helper function to register a finalizer -- eg for debugging purposes
+inline void registerXptrFinalizer(SEXP s, R_CFinalizer_t f, bool onexit = true) {
+    R_RegisterCFinalizerEx(s, f, onexit ? TRUE : FALSE);
+}
+
+Rcpp::XPtr<ArrowSchema> schema_setup_struct(Rcpp::XPtr<ArrowSchema> schxp, int64_t n_children) {
+    ArrowSchema* schema = schxp.get();
+    auto type = NANOARROW_TYPE_STRUCT;
+
+    ArrowSchemaInit(schema);    					// modified from ArrowSchemaInitFromType()
+    int result = ArrowSchemaSetType(schema, type);
+    if (result != NANOARROW_OK) {
+        schema->release(schema);
+        Rcpp::stop("Error setting struct schema");
+    }
+
+    // now adapted from ArrowSchemaAllocateChildren
+    if (schema->children != NULL) Rcpp::stop("Error allocation as children not null");
+
+    if (n_children > 0) {
+        auto ptr = (struct ArrowSchema**) ArrowMalloc(n_children * sizeof(struct ArrowSchema*));
+        Rcpp::XPtr<ArrowSchema*> schema_ptrxp = make_xptr(ptr, false);
+        schema->children = schema_ptrxp.get();
+        if (schema->children == NULL) Rcpp::stop("Failed to allocate ArrowSchema*");
+
+        schema->n_children = n_children;
+        memset(schema->children, 0, n_children * sizeof(struct ArrowSchema*));
+
+        for (int64_t i = 0; i < n_children; i++) {
+            schema->children[i] = schema_owning_xptr();
+            if (schema->children[i] == NULL) Rcpp::stop("Error allocation schema child %ld", i);
+            schema->children[i]->release = NULL;
+        }
+    }
+    return schxp;
+}
+
+extern "C" {
+    void ArrowArrayRelease(struct ArrowArray *array); 		// made non-static in nanoarrow.c
+    ArrowErrorCode ArrowArraySetStorageType(struct ArrowArray* array,	// ditto
+                                            enum ArrowType storage_type);
+}
+
+Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t n_children) {
+    ArrowArray* array = arrxp.get();
+    auto storage_type = NANOARROW_TYPE_STRUCT;
+
+    array->length = 0;
+    array->null_count = 0;
+    array->offset = 0;
+    array->n_buffers = 0;
+    array->n_children = 0;
+    array->buffers = NULL;
+    array->children = NULL;
+    array->dictionary = NULL;
+    array->release = &ArrowArrayRelease;
+    array->private_data = NULL;
+
+    auto private_data = (struct ArrowArrayPrivateData*) ArrowMalloc(sizeof(struct ArrowArrayPrivateData));
+    if (private_data == NULL) {
+        array->release = NULL;
+        Rcpp::stop("Error allocating array private data");
+    }
+    ArrowBitmapInit(&private_data->bitmap);
+    ArrowBufferInit(&private_data->buffers[0]);
+    ArrowBufferInit(&private_data->buffers[1]);
+    private_data->buffer_data[0] = NULL;
+    private_data->buffer_data[1] = NULL;
+    private_data->buffer_data[2] = NULL;
+    array->private_data = private_data;
+    array->buffers = (const void**)(&private_data->buffer_data);
+    int result = ArrowArraySetStorageType(array, storage_type);
+    if (result != NANOARROW_OK) {
+        array->release(array);
+        Rcpp::stop("Error setting array storage type");
+    }
+
+    ArrowLayoutInit(&private_data->layout, storage_type);
+    // We can only know this not to be true when initializing based on a schema so assume this to be true.
+    private_data->union_type_id_is_child_index = 1;
+
+
+    // remainder from ArrowArrayAllocateChildren()
+    if (array->children != NULL) Rcpp::stop("Error allocating array children as pointer not null");
+
+    if (n_children == 0) {
+        return arrxp;
+    }
+
+    auto ptr = (struct ArrowArray**) ArrowMalloc(n_children * sizeof(struct ArrowArray*));
+    Rcpp::XPtr<ArrowArray*> array_ptrxp = make_xptr(ptr, false);
+    array->children = array_ptrxp.get();
+    if (array->children == NULL) Rcpp::stop("Failed to allocated ArrayArray*");
+
+    memset(array->children, 0, n_children * sizeof(struct ArrowArray*));
+
+    for (int64_t i = 0; i < n_children; i++) {
+        array->children[i] = array_owning_xptr();
+        if (array->children[i] == NULL) Rcpp::stop("Error allocation array child %ld", i);
+        array->children[i]->release = NULL;
+    }
+    array->n_children = n_children;
+    return arrxp;
+}
+
+
+
 // [[Rcpp::export]]
 Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
                               Rcpp::XPtr<tiledb::Query> qry) {
@@ -283,10 +391,8 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
     auto ncol = names.size();
     Rcpp::XPtr<ArrowSchema> schemaxp = schema_owning_xptr();
     Rcpp::XPtr<ArrowArray> arrayxp = array_owning_xptr();
-    ArrowSchemaInitFromType((ArrowSchema*)R_ExternalPtrAddr(schemaxp), NANOARROW_TYPE_STRUCT);
-    ArrowSchemaAllocateChildren((ArrowSchema*)R_ExternalPtrAddr(schemaxp), ncol);
-    ArrowArrayInitFromType((ArrowArray*)R_ExternalPtrAddr(arrayxp), NANOARROW_TYPE_STRUCT);
-    ArrowArrayAllocateChildren((ArrowArray*)R_ExternalPtrAddr(arrayxp), ncol);
+    schemaxp = schema_setup_struct(schemaxp, ncol);
+    arrayxp = array_setup_struct(arrayxp, ncol);
 
     arrayxp->length = 0;
 

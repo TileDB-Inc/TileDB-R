@@ -1748,7 +1748,8 @@ ArrowErrorCode ArrowMetadataBuilderRemove(struct ArrowBuffer* buffer,
 
 #include "nanoarrow.h"
 
-static void ArrowArrayRelease(struct ArrowArray* array) {
+// -- changed for tiledb-r  static
+void ArrowArrayRelease(struct ArrowArray* array) {
   // Release buffers held by this array
   struct ArrowArrayPrivateData* private_data =
       (struct ArrowArrayPrivateData*)array->private_data;
@@ -1791,8 +1792,9 @@ static void ArrowArrayRelease(struct ArrowArray* array) {
   array->release = NULL;
 }
 
-static ArrowErrorCode ArrowArraySetStorageType(struct ArrowArray* array,
-                                               enum ArrowType storage_type) {
+// -- changed for tiledb-r  static
+ArrowErrorCode ArrowArraySetStorageType(struct ArrowArray* array,
+                                        enum ArrowType storage_type) {
   switch (storage_type) {
     case NANOARROW_TYPE_UNINITIALIZED:
     case NANOARROW_TYPE_NA:

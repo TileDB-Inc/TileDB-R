@@ -13,6 +13,12 @@
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)
 
+* Pointers to 'Arrow Table' objects representing the table columns are now in external pointers too (#550)
+
+## Build and Test Systems
+
+* 'sudo' mode is reenabled for package 'bspm' used in the continuous integration at GitHub Actions (#549)
+
 
 # tiledb 0.19.1
 
