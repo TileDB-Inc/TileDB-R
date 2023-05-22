@@ -187,6 +187,10 @@ XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
     return(query);
 }
 
+Rcpp::XPtr<ArrowSchema> schema_owning_xptr(void);
+Rcpp::XPtr<ArrowArray> array_owning_xptr(void);
+Rcpp::XPtr<ArrowSchema> schema_setup_struct(Rcpp::XPtr<ArrowSchema> schxp, int64_t n_children);
+Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t n_children);
 
 // [[Rcpp::export]]
 Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
@@ -196,12 +200,11 @@ Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
     size_t ncol = names.size();
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    ArrowSchema* schemap = schema_owning_ptr();
-    ArrowArray* arrayp = array_owning_ptr();
-    ArrowSchemaInitFromType(schemap, NANOARROW_TYPE_STRUCT);
-    ArrowSchemaAllocateChildren(schemap, ncol);
-    ArrowArrayInitFromType(arrayp, NANOARROW_TYPE_STRUCT);
-    ArrowArrayAllocateChildren(arrayp, ncol);
+    Rcpp::XPtr<ArrowSchema> schemap = schema_owning_xptr();
+    Rcpp::XPtr<ArrowArray> arrayp = array_owning_xptr();
+    schemap = schema_setup_struct(schemap, ncol);
+    arrayp = array_setup_struct(arrayp, ncol);
+
     arrayp->length = 0;
 
     for (size_t i=0; i<ncol; i++) {
@@ -224,11 +227,9 @@ Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
                                names[i], chldschemap->format, chldarrayp->length, chldarrayp->null_count, chldarrayp->n_buffers));
 
     }
-    SEXP xparray = R_MakeExternalPtr((void*) arrayp, R_NilValue, R_NilValue);
-    SEXP xpschema = R_MakeExternalPtr((void*) schemap, R_NilValue, R_NilValue);
 
-    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = xparray,
-                                       Rcpp::Named("schema") = xpschema);
+    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayp,
+                                       Rcpp::Named("schema") = schemap);
     return as;
 #else
     Rcpp::stop("This function requires TileDB (2.2.0 or greater).");
