@@ -1,13 +1,15 @@
 # tilebd 0.19.* -- Ongoing development
 
-* This release of the R package builds against [TileDB 2.15.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.2), and has also been tested against earlier releases as well as the development
-  version (#534, #541).
+* This release of the R package builds against [TileDB 2.15.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.3), and has also been tested against earlier releases as well as the development
+  version (#551).
 
 ## Improvements
 
 * The startup message is now reformated across two shorter lines (#545)
 
 * Support for returning 'Arrow Table' objects has been added (#548)
+
+* Use of TileDB Embedded was upgraded to release 2.15.3 (#551)
 
 ## Bug Fixes
 
