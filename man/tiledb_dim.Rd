@@ -17,11 +17,11 @@ tiledb_dim(
 \item{name}{The dimension name / label string.  This argument is required.}
 
 \item{domain}{The dimension (inclusive) domain. The domain of a dimension
-is defined by a (lower bound, upper bound) vector. For type, \code{ASCII}
+is defined by a (lower bound, upper bound) vector. For type \code{ASCII},
 \code{NULL} is expected.}
 
-\item{tile}{The tile dimension tile extent. For type,
-\code{ASCII} \code{NULL} is expected.}
+\item{tile}{The tile dimension tile extent. For type
+\code{ASCII}, \code{NULL} is expected.}
 
 \item{type}{The dimension TileDB datatype string.}
 

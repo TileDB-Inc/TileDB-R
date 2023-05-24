@@ -37,10 +37,10 @@ tiledb_dim.from_ptr <- function(ptr) {
 #'
 #' @param name The dimension name / label string.  This argument is required.
 #' @param domain The dimension (inclusive) domain. The domain of a dimension
-#' is defined by a (lower bound, upper bound) vector. For type, \code{ASCII}
+#' is defined by a (lower bound, upper bound) vector. For type \code{ASCII},
 #' \code{NULL} is expected.
-#' @param tile The tile dimension tile extent. For type,
-#' \code{ASCII} \code{NULL} is expected.
+#' @param tile The tile dimension tile extent. For type
+#' \code{ASCII}, \code{NULL} is expected.
 #' @param type The dimension TileDB datatype string.
 #' @param filter_list An optional \code{tiledb_filter_list} object, default
 #' is no filter
