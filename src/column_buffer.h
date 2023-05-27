@@ -73,6 +73,12 @@ class ColumnBuffer {
     static void to_bitmap(
         tcb::span<uint8_t> bytemap);
 
+    /**
+     * @brief Cast a 64 bit int down to 32 bit for Date type.
+     *
+     */
+    static void date_cast_to_32bit(tcb::span<int64_t> data);
+
     //===================================================================
     //= public non-static
     //===================================================================
@@ -224,6 +230,16 @@ class ColumnBuffer {
     void validity_to_bitmap() {
         ColumnBuffer::to_bitmap(validity());
     }
+
+    /**
+     * @brief Convert a date column to 32 bit int.
+     *
+     */
+    void date_cast() {
+        ColumnBuffer::date_cast_to_32bit(data<int64_t>());
+    }
+
+
 
    private:
     //===================================================================

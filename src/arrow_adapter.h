@@ -126,6 +126,11 @@ class ArrowAdapter {
         }
 #endif
 
+        /* Workaround for Date column with is 32-bit but treated as 64-bit */
+        if (column->type() == TILEDB_DATETIME_DAY) {
+            column->date_cast();
+        }
+
         return std::pair(std::move(array), std::move(schema));
     }
 
@@ -185,6 +190,8 @@ class ArrowAdapter {
                 return "tsu:";
             case TILEDB_DATETIME_NS:
                 return "tsn:";
+            case TILEDB_DATETIME_DAY:
+                return "tdD";
             default:
                 break;
         }

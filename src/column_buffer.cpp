@@ -96,6 +96,16 @@ void ColumnBuffer::to_bitmap(tcb::span<uint8_t> bytemap) {
     }
 }
 
+void ColumnBuffer::date_cast_to_32bit(tcb::span<int64_t> data) {
+    size_t n = data.size();
+    std::vector<int32_t> vec(n);
+    for (size_t i=0; i<n; i++) {
+        vec[i] = static_cast<int32_t>(data[i]);
+    }
+    std::memcpy(data.data(), vec.data(), sizeof(int32_t) * n);
+}
+
+
 //===================================================================
 //= public non-static
 //===================================================================
