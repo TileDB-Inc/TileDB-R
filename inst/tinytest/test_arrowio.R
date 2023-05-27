@@ -193,7 +193,15 @@ for (arg in c("arrow", "arrow_table")) {
     expect_equal(res$num_columns, 8)
 }
 
-
+## test support for return as Date (GH Issue 533)
+uri <- tempfile()
+D <- data.frame(val = 100 + 0:4,
+                dat = Sys.Date() + seq(-4,0))
+fromDataFrame(D, uri, col_index = 1)
+at <- tiledb_array(uri, return_as = "arrow")[]
+expect_true(inherits(at, "Table"))
+chk <- data.frame(at)
+expect_equal(D, chk)
 
 ## detaching arrow should not be necessary as we generally do not need to unload
 ## packages but had been seen as beneficial in some instanced so there is now an option
