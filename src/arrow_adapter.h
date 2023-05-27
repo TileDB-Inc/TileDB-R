@@ -185,6 +185,8 @@ class ArrowAdapter {
                 return "tsu:";
             case TILEDB_DATETIME_NS:
                 return "tsn:";
+            case TILEDB_DATETIME_DAY:
+                return "tdD";
             default:
                 break;
         }
