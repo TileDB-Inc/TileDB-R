@@ -11,11 +11,15 @@
 
 * Use of TileDB Embedded was upgraded to release 2.15.3 (#551)
 
+* Date columns can now be exported to Arrow as well (#554)
+
 ## Bug Fixes
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)
 
 * Pointers to 'Arrow Table' objects representing the table columns are now in external pointers too (#550)
+
+* The documentation for 'Dimensions' was corrected in two spots in its wording / grammar (#552)
 
 ## Build and Test Systems
 
