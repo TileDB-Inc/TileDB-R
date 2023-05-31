@@ -25,6 +25,8 @@
 
 * 'sudo' mode is reenabled for package 'bspm' used in the continuous integration at GitHub Actions (#549)
 
+* Compilation on Linux systems as old as Ubuntu 18.04 without a `filesystem` header is now possible (#556)
+
 
 # tiledb 0.19.1
 
