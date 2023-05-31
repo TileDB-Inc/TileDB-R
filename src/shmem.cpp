@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2021-2022 TileDB Inc.
+//  Copyright (c) 2021-2023 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,18 @@
 #include "libtiledb.h"
 #include "tiledb_version.h"
 
+#ifdef __CAN_COMPILE_SHMEN__
+#undef __CAN_COMPILE_SHMEN__
+#endif
+
 #ifdef __linux__
+#ifndef LACKING_FILESYSTEM
+#define __CAN_COMPILE_SHMEN__
+#endif
+#endif
+
+#ifdef __CAN_COMPILE_SHMEN__
+
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
@@ -107,10 +118,9 @@ void read_string(std::string bufferpath, std::string & str) {
 
 #endif
 
-
 // [[Rcpp::export]]
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz, int numvar) {
-#ifdef __linux__
+#ifdef __CAN_COMPILE_SHMEN__
     check_xptr_tag<query_buf_t>(buf);
     std::string bufferpath = _datafile(dir, name);
     write_buffer(bufferpath, sz, buf->size, buf->vec.data());
@@ -123,7 +133,7 @@ void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, i
 
 // [[Rcpp::export]]
 void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, IntegerVector vec) {
-#ifdef __linux__
+#ifdef __CAN_COMPILE_SHMEN__
     check_xptr_tag<vlc_buf_t>(buf);
     std::string bufferpath = _datafile(dir, name);
     write_buffer(bufferpath, std::strlen(buf->str.c_str()), 1L, (void*)buf->str.c_str());
@@ -140,7 +150,7 @@ void vlcbuf_to_shmem(std::string dir, std::string name, XPtr<vlc_buf_t> buf, Int
 
 // [[Rcpp::export]]
 XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
-#ifdef __linux__
+#ifdef __CAN_COMPILE_SHMEN__
     // allocate buffer, then set up buffer
     XPtr<query_buf_t> buf = make_xptr<query_buf_t>(new query_buf_t);
     buf->dtype = _string_to_tiledb_datatype(dtype);
@@ -162,7 +172,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
     if (debug) Rcpp::Rcout << std::endl;
     return buf;
 #else
-    Rcpp::stop("This function is only available under Linux.");
+    Rcpp::stop("This function is only available under (recent enough) Linux.");
     // not reached
     XPtr<query_buf_t> buf = make_xptr<query_buf_t>(new query_buf_t);
     return buf;
@@ -171,7 +181,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
 
 // [[Rcpp::export]]
 XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
-#ifdef __linux__
+#ifdef __CAN_COMPILE_SHMEN__
     // allocate buffer, then set up buffer
     XPtr<vlc_buf_t> buf = make_xptr<vlc_buf_t>(new vlc_buf_t);
     read_string(datapath, buf->str);
@@ -194,7 +204,7 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
     if (debug) Rcpp::Rcout << std::endl;
     return buf;
 #else
-    Rcpp::stop("This function is only available under Linux.");
+    Rcpp::stop("This function is only available under (recent enough) Linux.");
     // not reached
     XPtr<vlc_buf_t> buf = make_xptr<vlc_buf_t>(new vlc_buf_t);
     return buf;

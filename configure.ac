@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.18.0])
+AC_INIT([TileDB-R],[0.19.1])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -172,6 +172,17 @@ if test x"${machine}" = x"riscv64"; then
     AC_MSG_RESULT([${TILEDB_LIBS}])
 fi
 
+## Take care of need for 'filesystem' (C++17, and g++ 8.*-ish or newer)
+if test x"${uname}" = x"Linux"; then
+   AC_CHECK_HEADER([filesystem], [have_filesystem="yes"], [have_filesystem="no"])
+   if test x"${have_filesystem}" = x"no"; then
+       AC_MSG_CHECKING([use of filesystem header])
+       FILESYSTEM_HEADER_MISSSING="-DLACKING_FILESYSTEM"
+       AC_MSG_RESULT([${FILESYSTEM_HEADER_MISSSING}])
+   fi
+fi
+
+
 ## -- Part 3: Check for TileDB --------------------------------------------------
 ##
 ## Check for TileDB -- either just probing the header, or by compilations (~ 1 second)
@@ -254,7 +265,7 @@ if test x"${have_tiledb}" = x"no"; then
     #AC_SUBST([TILEDB_INCLUDE], "-Itiledb-inst/include")
     AC_MSG_RESULT([using inst/tiledb/{lib,include}])
     RPATH=" -Wl,-rpath,'\$\$ORIGIN/../tiledb/lib'"
-    AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include ${CXX17_MACOS}")
+    AC_SUBST([TILEDB_INCLUDE], "-I../inst/tiledb/include ${CXX17_MACOS} ${FILESYSTEM_HEADER_MISSSING}")
     AC_SUBST([TILEDB_LIBS], "-ltiledb -L../inst/tiledb/lib")
     AC_SUBST([TILEDB_RPATH], "${RPATH}")
 
@@ -264,6 +275,7 @@ if test x"${have_tiledb}" = x"no"; then
 fi
 
 AC_SUBST([CXX17_MACOS])
+AC_SUBST([FILESYSTEM_HEADER_MISSSING])
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
