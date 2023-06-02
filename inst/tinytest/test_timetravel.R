@@ -130,7 +130,7 @@ expect_true(length(ndircons2) < length(ndircons))
 if (tiledb_version(TRUE) < "2.15.0") exit_file("Needs TileDB 2.15.* or later")
 
 uri <- tempfile()
-ts <- function(x) as.POSIXct(x/1000, tz="UTC")
+ts <- function(x) as.POSIXct(x/1000, tz="UTC", origin="1970-01-01")
 D <- data.frame(ind = 1L, val = 1.0)
 fromDataFrame(D, uri, col_index = 1, mode = "schema_only")
 for (tstamp in 1:3) {
