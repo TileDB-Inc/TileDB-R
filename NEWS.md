@@ -13,6 +13,8 @@
 
 * Date columns can now be exported to Arrow as well (#554)
 
+* Array writes which set timestamps now take advantage of the new temporal policy API (#558)
+
 ## Bug Fixes
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)

@@ -610,9 +610,11 @@ setMethod("[", "tiledb_array",
     }
   }
   if (length(x@timestamp_start) > 0) {
+      spdl::debug("['['] set open_timestamp_start to {}", x@timestamp_start)
       arrptr <- libtiledb_array_set_open_timestamp_start(arrptr, x@timestamp_start)
   }
   if (length(x@timestamp_end) > 0) {
+      spdl::debug("['['] set open_timestamp_end to {}", x@timestamp_end)
       arrptr <- libtiledb_array_set_open_timestamp_end(arrptr, x@timestamp_end)
   }
   if (length(x@timestamp_start) > 0 || length(x@timestamp_end) > 0) {
@@ -1269,6 +1271,9 @@ setMethod("[<-", "tiledb_array",
     if (libtiledb_array_is_open_for_writing(x@ptr)) { 			# if open for writing
       arrptr <- x@ptr                                           #   use array
     } else {                                                    # else open appropriately
+      if (length(x@timestamp_end) > 0) {
+        tstamp <- x@timestamp_end
+      }
       if (length(enckey) > 0) {
         if (length(tstamp) > 0) {
           arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "WRITE", enckey, tstamp)
@@ -1277,8 +1282,10 @@ setMethod("[<-", "tiledb_array",
         }
       } else {
         if (length(tstamp) > 0) {
+          spdl::debug("['[<-'] openning for WRITE at {}", tstamp)
           arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "WRITE", tstamp)
         } else {
+          spdl::debug("['[<-'] openning for WRITE")
           arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
         }
       }
