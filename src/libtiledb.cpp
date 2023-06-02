@@ -2005,7 +2005,7 @@ XPtr<tiledb::Array> libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::stri
     auto ptr = new tiledb::Array(*ctx.get(), uri, query_type, tiledb::TemporalPolicy(tiledb::TimeTravel, ts_ms));
     ptr->set_open_timestamp_end(ts_ms);
 #elif TILEDB_VERSION >= TileDB_Version(2,3,0)
-    auto ptr = new tiledb::Array(*ctx.get(), uri, query_type, ts_ms);
+    auto ptr = new tiledb::Array(*ctx.get(), uri, query_type);
     ptr->set_open_timestamp_end(ts_ms);
 #else
     auto ptr = new tiledb::Array(*ctx.get(), uri, query_type, ts_ms);
