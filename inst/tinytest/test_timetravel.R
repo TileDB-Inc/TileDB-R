@@ -125,3 +125,38 @@ array_consolidate(uri, start_time=times[1]-0.5, end_time=times[3])
 array_vacuum(uri, start_time=times[1]-0.5, end_time=times[3])
 ndircons2 <- tiledb_vfs_ls(uridir, vfs=vfs)
 expect_true(length(ndircons2) < length(ndircons))
+
+## time-travel via policy object
+if (tiledb_version(TRUE) < "2.15.0") exit_file("Needs TileDB 2.15.* or later")
+
+uri <- tempfile()
+ts <- function(x) as.POSIXct(x/1000, tz="UTC")
+D <- data.frame(ind = 1L, val = 1.0)
+fromDataFrame(D, uri, col_index = 1, mode = "schema_only")
+for (tstamp in 1:3) {
+    arr <- tiledb_array(uri, "WRITE", timestamp_end = ts(tstamp))
+    arr[] <- data.frame(ind=1, val=tstamp)
+}
+
+## Unconstrained, expect all 3
+expect_equal(tiledb_array(uri, return_as="data.frame")[]$val, c(1,2,3))
+
+## Interval (1,2), expect 1 to 2
+expect_equal(tiledb_array(uri, return_as="data.frame",
+                          timestamp_start=ts(1), timestamp_end=ts(2))[]$val, c(1,2))
+
+## Interval (2,3), expect 2 to 3
+expect_equal(tiledb_array(uri, return_as="data.frame",
+                          timestamp_start=ts(2), timestamp_end=ts(3))[]$val, c(2,3))
+
+## Endpoint 1, expect 1
+expect_equal(tiledb_array(uri, return_as="data.frame", timestamp_end=ts(1))[]$val, 1)
+
+## Interval (1, ) expect 1 to 3
+expect_equal(tiledb_array(uri, return_as="data.frame", timestamp_start=ts(1))[]$val, c(1,2,3))
+
+## Also check fragment_info
+fi <- tiledb_fragment_info(uri)
+expect_equal(as.numeric(tiledb_fragment_info_get_timestamp_range(fi,0))*1000, c(1,1))
+expect_equal(as.numeric(tiledb_fragment_info_get_timestamp_range(fi,1))*1000, c(2,2))
+expect_equal(as.numeric(tiledb_fragment_info_get_timestamp_range(fi,2))*1000, c(3,3))
