@@ -73,12 +73,12 @@ setMethod("raw_dump",
 
 # internal function returning text use here and in other higher-level show() methods
 .as_text_domain <- function(object) {
-    txt <- "tiledb_domain(c("
+    txt <- "tiledb_domain(c(\n"
     dims <- dimensions(object)
     nd <- length(dims)
     for (i in seq_len(nd)) {
-        txt <- paste0(txt, .as_text_dimension(dims[[i]]),
-                      if (i == nd) "))" else ", ")
+        txt <- paste0(txt, "        ", .as_text_dimension(dims[[i]]),
+                      if (i == nd) "\n    ))" else ",\n")
     }
     txt
 }

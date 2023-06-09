@@ -15,6 +15,8 @@
 
 * Array writes which set timestamps now take advantage of the new temporal policy API (#558)
 
+* Displaying a schema is now more readable with additional linebreaks (#560)
+
 ## Bug Fixes
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)
