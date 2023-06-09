@@ -145,7 +145,7 @@ setMethod("show", signature(object = "tiledb_array_schema"),
     nfo <- nfilters(fl$offsets)
     nfv <- if (tiledb_version(TRUE) >= "2.6.0") nfilters(fl$validity) else 0
     cat("tiledb_array_schema(\n    domain=", .as_text_domain(domain(object)), ",\n",
-        "    attrs=c(", paste(sapply(attrs(object), .as_text_attribute), collapse=", "), "),\n",
+        "    attrs=c(\n        ", paste(sapply(attrs(object), .as_text_attribute), collapse=",\n        "), "\n    ),\n",
         "    cell_order=\"", cell_order(object), "\", ",
         "tile_order=\"", tile_order(object), "\", ",
         "capacity=", capacity(object), ", ",
