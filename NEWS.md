@@ -17,6 +17,8 @@
 
 * Displaying a schema is now more readable with additional linebreaks (#560)
 
+* Attempts to select on dimensions that do not exist now error out with a message (#561)
+
 ## Bug Fixes
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)
