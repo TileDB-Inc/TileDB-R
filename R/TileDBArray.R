@@ -552,6 +552,7 @@ setMethod("[", "tiledb_array",
   use_arrow <- x@return_as == "arrow"
 
   dims <- tiledb::dimensions(dom)
+  ndims <- length(dims)
   dimnames <- sapply(dims, function(d) libtiledb_dim_get_name(d@ptr))
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
@@ -711,6 +712,9 @@ setMethod("[", "tiledb_array",
   }
 
   if (!is.null(j)) {
+      if (ndims == 1) {
+          stop("Setting dimension 'j' requires at least two dimensions.", call. = FALSE)
+      }
       if (!is.null(x@selected_ranges[[2]])) {
           stop("Cannot set both 'j' and second element of 'selected_ranges'.", call. = FALSE)
       }
@@ -718,6 +722,9 @@ setMethod("[", "tiledb_array",
   }
 
   if (!is.null(k)) {
+      if (ndims <= 2) {
+          stop("Setting dimension 'k' requires at least three dimensions.", call. = FALSE)
+      }
       if (!is.null(x@selected_ranges[[3]])) {
           stop("Cannot set both 'k' and second element of 'selected_ranges'.", call. = FALSE)
       }
