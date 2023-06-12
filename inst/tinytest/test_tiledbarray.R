@@ -1540,3 +1540,17 @@ revert <- tiledb_array(rvturi, strings_as_factors=TRUE)[]
 expect_equal(sum(is.na(revert$sex)), 333)
 for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows
     expect_equal(before[[col]], revert[[col]])
+
+## check for error when setting on N+1 dims
+D <- data.frame(i=1:10, j=101:110, k=letters[1:10])
+uri <- tempfile()
+fromDataFrame(D, uri, col_index=1)
+arr <- tiledb_array(uri, return_as="data.frame")
+expect_error(arr[, 103:105])   # error: indexing on second dim on one-dim array
+expect_equal(nrow(arr[]), 10)
+
+uri <- tempfile()
+fromDataFrame(D, uri, col_index=1:2)
+arr <- tiledb_array(uri, return_as="data.frame")
+expect_error(arr[, , 103:105]) # error: indexing on third dim on two-dim array
+expect_equal(nrow(arr[]), 10)
