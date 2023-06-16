@@ -298,16 +298,8 @@ libtiledb_attribute_get_nullable <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_nullable`, attr)
 }
 
-libtiledb_attribute_has_dictionary <- function(attr) {
-    .Call(`_tiledb_libtiledb_attribute_has_dictionary`, attr)
-}
-
-libtiledb_attribute_get_dictionary <- function(attr) {
-    .Call(`_tiledb_libtiledb_attribute_get_dictionary`, attr)
-}
-
-libtiledb_attribute_set_dictionary <- function(ctx, attr, values, nullable = FALSE, ordered = FALSE) {
-    .Call(`_tiledb_libtiledb_attribute_set_dictionary`, ctx, attr, values, nullable, ordered)
+libtiledb_attribute_has_enumeration <- function(ctx, attr) {
+    .Call(`_tiledb_libtiledb_attribute_has_enumeration`, ctx, attr)
 }
 
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, validity_filter_list = NULL, sparse = FALSE) {
@@ -432,6 +424,9 @@ libtiledb_array_schema_check <- function(schema) {
 
 libtiledb_array_schema_version <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_version`, schema)
+
+libtiledb_array_schema_set_enumeration <- function(ctx, schema, attr, enum_name, values, nullable = FALSE, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema_set_enumeration`, ctx, schema, attr, enum_name, values, nullable, ordered)
 }
 
 libtiledb_array_schema_evolution <- function(ctx) {
@@ -576,6 +571,14 @@ libtiledb_array_open_timestamp_end <- function(array) {
 
 libtiledb_array_delete_fragments <- function(array, tstamp_start, tstamp_end) {
     invisible(.Call(`_tiledb_libtiledb_array_delete_fragments`, array, tstamp_start, tstamp_end))
+}
+
+libtiledb_array_has_enumeration <- function(ctx, arr, name) {
+    .Call(`_tiledb_libtiledb_array_has_enumeration`, ctx, arr, name)
+}
+
+libtiledb_array_get_enumeration <- function(ctx, arr, name) {
+    .Call(`_tiledb_libtiledb_array_get_enumeration`, ctx, arr, name)
 }
 
 libtiledb_query <- function(ctx, array, type) {
@@ -1129,4 +1132,3 @@ querybuf_from_shmem <- function(path, dtype) {
 vlcbuf_from_shmem <- function(datapath, dtype) {
     .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
 }
-
