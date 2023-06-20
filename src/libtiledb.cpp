@@ -1588,6 +1588,29 @@ bool libtiledb_attribute_has_enumeration(XPtr<tiledb::Context> ctx,
     return res;
 }
 
+// [[Rcpp::export]]
+std::vector<std::string> libtiledb_attribute_get_enumeration(XPtr<tiledb::Context> ctx,
+                                                             XPtr<tiledb::Attribute> attr,
+                                                             XPtr<tiledb::Array> arr) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+    check_xptr_tag<tiledb::Array>(arr);
+    std::vector<std::string> res;
+#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+    auto enmrname = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
+    if (enmrname == std::nullopt) {
+        Rcpp::stop("No enumeration name for attribute");
+    }
+    auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), enmrname.value());
+    if (enmr.ptr() == nullptr) {
+        Rcpp::stop("No enumeration for given attribute.");
+    }
+    res = enmr.as_vector<std::string>();
+#endif
+    return res;
+}
+
+
 
 /**
  * TileDB Array Schema
@@ -3080,9 +3103,11 @@ IntegerVector length_from_vlcbuf(XPtr<vlc_buf_t> buf) {
 
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
+  spdl::debug("[libtiledb_query_get_buffer_ptr] before buf type check");
   check_xptr_tag<query_buf_t>(buf);
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
   //Rcpp::Rcout << dtype << " " << buf->ncells << " " << buf->size << " " << buf->nullable << std::endl;
+  spdl::debug(tfm::format("[libtiledb_query_get_buffer_ptr] type %s", dtype));
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);

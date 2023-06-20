@@ -547,7 +547,7 @@ setMethod("[", "tiledb_array",
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
-  attrdictionary <- unname(sapply(attrs, function(a) libtiledb_attribute_has_dictionary(a@ptr)))
+  attrdictionary <- unname(sapply(attrs, function(a) libtiledb_attribute_has_enumeration(ctx@ptr, a@ptr)))
   if (length(sel)==1 && is.na(sel[1])) {            # special case of NA selecting no attrs
     attrnames <- character()
     attrtypes <- character()
@@ -585,10 +585,14 @@ setMethod("[", "tiledb_array",
   ## dictionaries are schema-level objects to fetch them now where we expect to have some
   dictionaries <- vector(mode="list", length=length(allnames))
   names(dictionaries) <- allnames
-  for (ii in seq_along(dictionaries))
-    if (alldictionary[ii])
-      dictionaries[[ii]] <- tiledb_attribute_get_dictionary(attrs[[allnames[ii]]])
-
+  for (ii in seq_along(dictionaries)) {
+    arr <- x
+    print(arr)
+    if (!tiledb_array_is_open(arr)) arr <- tiledb_array_open(arr,"READ")
+    if (alldictionary[ii]) {
+      dictionaries[[ii]] <- tiledb_attribute_get_dictionary(attrs[[allnames[ii]]], arr)
+    }
+  }
   ## A preference can be set in a local per-user configuration file; if no value
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
@@ -937,29 +941,33 @@ setMethod("[", "tiledb_array",
               getResult <- function(buf, name, varnum, estsz, qryptr) {
                   has_dumpbuffers <- length(x@dumpbuffers) > 0
                   ## message("For ", name, " seeing ", estsz, " and ", varnum)
+                  spdl::debug("[getResult] name {} estsz {} varnum {}", name, estsz, varnum)
                   if (is.na(varnum)) {
+                      spdl::debug("[getResult] varnum before libtiledb_query_result_buffer_elements_vec");
                       vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
                       if (has_dumpbuffers) {
                           vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
                       }
+                      spdl::debug("[getResult] varnum before libtiledb_query_get_buffer_var_char");
                       libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1][seq_len(estsz)]
                   } else {
                       if (has_dumpbuffers) {
                           vecbuf_to_shmem(x@dumpbuffers, name, buf, estsz, varnum)
                       }
                       libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
+                      spdl::debug("[getResult] calling libtiledb_query_get_buffer_ptr")
+                      col <- libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
+                      if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
+                          dct <- dictionaries[[name]]           # access it from utility
+                          ## the following expands out to a char vector first; we can do better
+                          ##   col <- factor(dct[col+1], levels=dct)
+                          ## so we do it "by hand"
+                          col <- col + 1L # adjust for zero-index C/C++ layer
+                          attr(col, "levels") <- dct
+                          attr(col, "class")  <- "factor"
+                      }
+                      col
                   }
-                  col <- libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
-                  if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
-                      dct <- dictionaries[[name]]           # access it from utility
-                      ## the following expands out to a char vector first; we can do better
-                      ##   col <- factor(dct[col+1], levels=dct)
-                      ## so we do it "by hand"
-                      col <- col + 1L # adjust for zero-index C/C++ layer
-                      attr(col, "levels") <- dct
-                      attr(col, "class")  <- "factor"
-                  }
-                  col
               }
               spdl::debug("['['] getting results")
               reslist <- mapply(getResult, buflist, allnames, allvarnum, estsz,
