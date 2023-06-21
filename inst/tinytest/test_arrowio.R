@@ -106,7 +106,7 @@ for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "u
     expect_equal(v$as_vector(), 4:7)
 }
 
-
+## n=15
 ## round-turn test 2: create arrow object, write tiledb second via zero-copy
 dir.create(tmp <- tempfile())
 n <- 10L
@@ -176,7 +176,7 @@ for (i in c(1:7,9:10)) {
 }
 expect_equivalent(df[,8], as.integer64(1:10))
 
-
+## n=28
 ## test support for return_as="arrow"
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 library(palmerpenguins)

@@ -3508,7 +3508,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         float stride = (strides == R_NilValue) ? 0 : Rcpp::as<float>(strides);
         subarr->add_range(uidx, start, end, stride);
         spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %f to %f by %f", typestr, uidx, start, end, stride));
-        Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
     }
     return subarr;
 }

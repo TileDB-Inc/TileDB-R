@@ -83,6 +83,7 @@ d <- tiledb_dim("", c(-1L, 100L))
 expect_equal(dim(d), 102L)
 #})
 
+## n=18
 ## test permissible types for dimension objects -- cf inst/examples/ex_dimensions.R
 ## quick check of various dimension types
 suppressMessages({

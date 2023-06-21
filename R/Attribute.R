@@ -91,7 +91,7 @@ setMethod("raw_dump",
     ndct <- 0 				# default
     dct <- character()		# default
     if (!is.null(array)) {
-        dct <- tiledb_attribute_get_dictionary(object, array)
+        dct <- tiledb_attribute_get_enumeration(object, array)
         ndct <- length(dct)
     }
     txt <- paste0("tiledb_attr(name=\"", name(object), "\", ",
@@ -326,15 +326,24 @@ tiledb_attribute_get_nullable <- function(attr) {
     libtiledb_attribute_get_nullable(attr@ptr)
 }
 
-#' Get the TileDB Attribute Dictionary
+#' Get the TileDB Attribute Enumeration
 #'
 #' @param attr A TileDB Attribute object
-#' @return A character vector with the dictionary (of length zero if none)
+#' @param arr A Tiledb Array object
+#' @return A character vector with the enumeration (of length zero if none)
 #' @export
-tiledb_attribute_get_dictionary <- function(attr, arr, ctx = tiledb_get_context()) {
+tiledb_attribute_get_enumeration <- function(attr, arr, ctx = tiledb_get_context()) {
     stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
               "The 'arr' argument must be an array" = is(arr, "tiledb_array"))
     libtiledb_attribute_get_enumeration(ctx@ptr, attr@ptr, arr@ptr)
+}
+
+#' @noRd
+#' @export
+tiledb_attribute_get_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'arr' argument must be an external pointer" = is(arrptr, "externalptr"))
+    libtiledb_attribute_get_enumeration(ctx@ptr, attr@ptr, arrptr)
 }
 
 #' Set a TileDB Attribute Dictionary

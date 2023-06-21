@@ -4,7 +4,13 @@
 \alias{tiledb_attribute_set_dictionary}
 \title{Set a TileDB Attribute Dictionary}
 \usage{
-tiledb_attribute_set_dictionary(attr, vec)
+tiledb_attribute_set_dictionary(
+  attr,
+  vec,
+  nullable = FALSE,
+  ordered = FALSE,
+  ctx = tiledb_get_context()
+)
 }
 \arguments{
 \item{attr}{A TileDB Attribute object}

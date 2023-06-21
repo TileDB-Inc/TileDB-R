@@ -97,10 +97,11 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
     if (class(obj)[1] != "data.frame") obj <- as.data.frame(obj)
 
     ## turn factor columns in char columns
-    #factcols <- grep("factor", sapply(obj, class))
-    #if (length(factcols) > 0) {
-    #    for (i in factcols) obj[,i] <- as.character(obj[,i])
-    #}
+    ## TODO: add an option
+    factcols <- grep("factor", sapply(obj, class))
+    if (length(factcols) > 0) {
+        for (i in factcols) obj[,i] <- as.character(obj[,i])
+    }
 
     ## Create default filter_list from filter vector, 'NONE' and 'ZSTD' is default
     default_filter_list <- tiledb_filter_list(sapply(filter, tiledb_filter))

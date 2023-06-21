@@ -66,7 +66,7 @@ newdf <- within(newdf, char <- as.character(char))
 expect_equal(df, newdf[,-1])
 #})
 
-
+## n=8
 ## test dense with non-default index columm
 uri <- tempfile()
 set.seed(42)
@@ -101,6 +101,7 @@ if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
 
+## n=13
 olddf <- df
 df <- data.frame(chars=olddf$chars,
                  index=olddf$index,     # index not in first column
@@ -131,7 +132,7 @@ if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
 
-
+## n=18
 ## test sparse with non-default index columm
 uri <- tempfile()
 set.seed(42)
@@ -164,6 +165,7 @@ for (i in seq_len(dim(df)[2])) {
     expect_equal(df, chk[][,colnames(df)]) 		# index col comes first so need re-order
 }
 
+## n=24
 ## test sparse with several non-default index columms
 uri <- tempfile()
 set.seed(42)
@@ -195,7 +197,6 @@ for (i in seq_len(dim(df)[2])) {
     expect_equal(df, newdf[, colnames(df)])
 }
 
-
 combinations <- list(c(1,2), c(1,3), c(2,4), c(3,5), c(4,5), c(2,3,4))
 for (comb in combinations) {
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -213,6 +214,7 @@ for (comb in combinations) {
     expect_equal(df, newdf[, colnames(df)])
 }
 
+## n=44
 ## simple nullable example, no CHAR support yet C++
 uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
@@ -246,6 +248,7 @@ if (getRversion() < '4.0.0') {
 }
 expect_equivalent(D, chk)               # skip attribute
 
+## n=45
 ## sparse array can have duplicate values in index column
 df <- data.frame(
   index = c(1, 1, 3),
@@ -279,7 +282,7 @@ if (getRversion() < '4.0.0') {
 }
 expect_equivalent(df, res)
 
-
+## n=49
 ## test ingest vs schema_only vs append
 if (tiledb_version(TRUE) < "2.4.0") exit_file("Neeeds TileDB 2.4.* or later")
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
@@ -307,7 +310,7 @@ chk <- arr[]
 expect_equal(nrow(chk), nrow(data))     # all data
 expect_equal(ncol(chk), ncol(data))     # all columns
 
-
+## n=55
 ## attribute-less arrays
 uri <- tempfile()
 D <- data.frame(dim = c(2L, 4L, 6L))

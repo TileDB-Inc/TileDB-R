@@ -548,6 +548,7 @@ setMethod("[", "tiledb_array",
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
   attrdictionary <- unname(sapply(attrs, function(a) libtiledb_attribute_has_enumeration(ctx@ptr, a@ptr)))
+
   if (length(sel)==1 && is.na(sel[1])) {            # special case of NA selecting no attrs
     attrnames <- character()
     attrtypes <- character()
@@ -582,17 +583,6 @@ setMethod("[", "tiledb_array",
       alldictionary <- attrdictionary
   }
 
-  ## dictionaries are schema-level objects to fetch them now where we expect to have some
-  dictionaries <- vector(mode="list", length=length(allnames))
-  names(dictionaries) <- allnames
-  for (ii in seq_along(dictionaries)) {
-    arr <- x
-    print(arr)
-    if (!tiledb_array_is_open(arr)) arr <- tiledb_array_open(arr,"READ")
-    if (alldictionary[ii]) {
-      dictionaries[[ii]] <- tiledb_attribute_get_dictionary(attrs[[allnames[ii]]], arr)
-    }
-  }
   ## A preference can be set in a local per-user configuration file; if no value
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
@@ -613,6 +603,15 @@ setMethod("[", "tiledb_array",
   }
   if (length(x@timestamp_start) > 0 || length(x@timestamp_end) > 0) {
       arrptr <- libtiledb_array_reopen(arrptr)
+  }
+
+  ## dictionaries are schema-level objects to fetch them now where we expect to have some
+  dictionaries <- vector(mode="list", length=length(allnames))
+  names(dictionaries) <- allnames
+  for (ii in seq_along(dictionaries)) {
+    if (isTRUE(alldictionary[ii])) {
+      dictionaries[[ii]] <- tiledb_attribute_get_enumeration(attrs[[allnames[ii]]], arrptr)
+    }
   }
 
   ## helper function to sweep over names and types of domain
