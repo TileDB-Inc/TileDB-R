@@ -41,8 +41,6 @@ tiledb_array_schema(
 \item{allows_dups}{(optional, requires \sQuote{sparse} to be TRUE)}
 
 \item{ctx}{tiledb_ctx object (optional)}
-
-\item{enumeration}{(option) named list with enumeration levels}
 }
 \description{
 Constructs a \code{tiledb_array_schema} object

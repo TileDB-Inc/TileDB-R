@@ -1645,7 +1645,6 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
                        Nullable<XPtr<tiledb::FilterList>> validity_filter_list = R_NilValue,
                        bool sparse = false,
                        Nullable<List> enumerations_list = R_NilValue) {
-    spdl::debug("[libtiledb_array_schema] entered");
     // check that external pointers are supported
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Domain>(domain);
@@ -1654,10 +1653,6 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
         for (R_xlen_t i=0; i < nattr; i++)  {
             XPtr<tiledb::Attribute> attr = as<XPtr<tiledb::Attribute>>(attributes[i]);
             check_xptr_tag<tiledb::Attribute>(attr);
-            // SEXP attr = attributes[i];
-            // if (TYPEOF(attr) != EXTPTRSXP) {
-            //     Rcpp::stop("Invalid attribute object at index %d (type %s)", i, Rcpp::type2name(attr));
-            // }
         }
     }
     auto _cell_order = _string_to_tiledb_layout(cell_order);
@@ -1673,18 +1668,16 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
         R_xlen_t nenum = enumerations.length();
         for (R_xlen_t i=0; i < nenum; i++)  {
             bool nn = enumerations[i] == R_NilValue;
-            spdl::debug(tfm::format("[libtiledb_array_schema] enum %d null %d", i, nn));
             if (nn == false) {
                 XPtr<tiledb::Attribute> attr = as<XPtr<tiledb::Attribute>>(attributes[i]);
                 std::vector<std::string> enums = as<std::vector<std::string>>(enumerations[i]);
                 std::string enum_name = std::string(enumnames[i]);
-                spdl::debug(tfm::format("[libtiledb_array_schema] setting as %s", enum_name.c_str()));
-                //for (auto txt: enums) spdl::debug(tfm::format("[libtiledb_array_schema] enum %d has %s", i, txt.c_str()));
                 libtiledb_array_schema_set_enumeration(ctx, schema, attr, enum_name, enums, false, false);
             }
         }
     }
 
+    // Now add attributes
     if (nattr > 0) {
         for (SEXP a : attributes) {
             auto attr = as<XPtr<tiledb::Attribute>>(a);
@@ -1966,7 +1959,6 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_enumeration(XPtr<tiledb::Co
     auto enumeration = tiledb::Enumeration::create(*ctx.get(), enum_name, values);
     tiledb::ArraySchemaExperimental::add_enumeration(*ctx.get(), *schema.get(), enumeration);
     tiledb::AttributeExperimental::set_enumeration_name(*ctx.get(), *attr.get(), enum_name);
-    spdl::debug(tfm::format("[libtiledb_array_schema_set_enumeration] set emumeration under %s length %s", enum_name.c_str(), values.size()));
 #endif
     return schema;
 }

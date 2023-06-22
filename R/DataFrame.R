@@ -258,7 +258,6 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         colnames <- lapply(a_e, "[[", 3)
         names(enumerations) <- colnames
     }
-    spdl::debug("[fromDataFrame] About to create schema")
     schema <- tiledb_array_schema(dom,
                                   attrs = attributes,
                                   cell_order = cell_order,

@@ -99,7 +99,6 @@ tiledb_array_schema <- function(domain,
     offsets_filter_list_ptr <- if (!is.null(offsets_filter_list)) offsets_filter_list@ptr else NULL
     validity_filter_list_ptr <- if (!is.null(validity_filter_list)) validity_filter_list@ptr else NULL
 
-    spdl::debug("[tiledb_array_schema] About to call libtiledb_array_schema")
     ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptr_list, cell_order, tile_order,
                                   coords_filter_list_ptr, offsets_filter_list_ptr,
                                   validity_filter_list_ptr, sparse, enumerations)
@@ -145,6 +144,7 @@ setMethod("raw_dump",
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           definition = function(object) {
+    spdl::debug("[show-method tiledb_array_schema] entered")
     fl <- filter_list(object)
     nfc <- nfilters(fl$coords)
     nfo <- nfilters(fl$offsets)
@@ -162,7 +162,6 @@ setMethod("show", signature(object = "tiledb_array_schema"),
     if (nfo > 0) cat("    offsets_filter_list=", .as_text_filter_list(fl$offsets), if (nfv > 0) ",\n" else "", sep="")
     if (nfv > 0) cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
     cat(")\n", sep="")
-    #cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
 })
 
 #' @rdname generics
