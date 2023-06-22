@@ -10,7 +10,7 @@ tiledb_attr(
   filter_list = tiledb_filter_list(),
   ncells = 1,
   nullable = FALSE,
-  dictionary = NULL,
+  enumeration = NULL,
   ctx = tiledb_get_context()
 )
 }
@@ -27,9 +27,9 @@ that this is a \emph{required} parameter.}
 \item{nullable}{(default FALSE) A logical switch whether the attribute can have missing
 values}
 
-\item{dictionary}{(default NULL) A character vector of dictionary values}
-
 \item{ctx}{tiledb_ctx object (optional)}
+
+\item{dictionary}{(default NULL) A character vector of dictionary values}
 }
 \value{
 \code{tiledb_dim} object

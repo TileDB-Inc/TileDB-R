@@ -859,9 +859,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_attribute_set_enumeration
+XPtr<tiledb::Attribute> libtiledb_attribute_set_enumeration(XPtr<tiledb::Context> ctx, XPtr<tiledb::Attribute> attr, const std::string& enum_name);
+RcppExport SEXP _tiledb_libtiledb_attribute_set_enumeration(SEXP ctxSEXP, SEXP attrSEXP, SEXP enum_nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type enum_name(enum_nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_set_enumeration(ctx, attr, enum_name));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_schema
-XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order, Nullable<XPtr<tiledb::FilterList>> coords_filter_list, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list, Nullable<XPtr<tiledb::FilterList>> validity_filter_list, bool sparse);
-RcppExport SEXP _tiledb_libtiledb_array_schema(SEXP ctxSEXP, SEXP domainSEXP, SEXP attributesSEXP, SEXP cell_orderSEXP, SEXP tile_orderSEXP, SEXP coords_filter_listSEXP, SEXP offsets_filter_listSEXP, SEXP validity_filter_listSEXP, SEXP sparseSEXP) {
+XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order, Nullable<XPtr<tiledb::FilterList>> coords_filter_list, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list, Nullable<XPtr<tiledb::FilterList>> validity_filter_list, bool sparse, Nullable<List> enumerations_list);
+RcppExport SEXP _tiledb_libtiledb_array_schema(SEXP ctxSEXP, SEXP domainSEXP, SEXP attributesSEXP, SEXP cell_orderSEXP, SEXP tile_orderSEXP, SEXP coords_filter_listSEXP, SEXP offsets_filter_listSEXP, SEXP validity_filter_listSEXP, SEXP sparseSEXP, SEXP enumerations_listSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -874,7 +887,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::FilterList>> >::type offsets_filter_list(offsets_filter_listSEXP);
     Rcpp::traits::input_parameter< Nullable<XPtr<tiledb::FilterList>> >::type validity_filter_list(validity_filter_listSEXP);
     Rcpp::traits::input_parameter< bool >::type sparse(sparseSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema(ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, validity_filter_list, sparse));
+    Rcpp::traits::input_parameter< Nullable<List> >::type enumerations_list(enumerations_listSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema(ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, validity_filter_list, sparse, enumerations_list));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3436,7 +3450,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_attribute_get_nullable", (DL_FUNC) &_tiledb_libtiledb_attribute_get_nullable, 1},
     {"_tiledb_libtiledb_attribute_has_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_has_enumeration, 2},
     {"_tiledb_libtiledb_attribute_get_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_get_enumeration, 3},
-    {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 9},
+    {"_tiledb_libtiledb_attribute_set_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_set_enumeration, 3},
+    {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 10},
     {"_tiledb_libtiledb_array_schema_create", (DL_FUNC) &_tiledb_libtiledb_array_schema_create, 2},
     {"_tiledb_libtiledb_array_schema_load", (DL_FUNC) &_tiledb_libtiledb_array_schema_load, 2},
     {"_tiledb_libtiledb_array_schema_load_with_key", (DL_FUNC) &_tiledb_libtiledb_array_schema_load_with_key, 3},

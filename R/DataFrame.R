@@ -98,10 +98,10 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
 
     ## turn factor columns in char columns
     ## TODO: add an option
-    factcols <- grep("factor", sapply(obj, class))
-    if (length(factcols) > 0) {
-        for (i in factcols) obj[,i] <- as.character(obj[,i])
-    }
+    #factcols <- grep("factor", sapply(obj, class))
+    #if (length(factcols) > 0) {
+    #    for (i in factcols) obj[,i] <- as.character(obj[,i])
+    #}
 
     ## Create default filter_list from filter vector, 'NONE' and 'ZSTD' is default
     default_filter_list <- tiledb_filter_list(sapply(filter, tiledb_filter))
@@ -191,6 +191,10 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         dom <- tiledb_domain(dims = dimensions)
     }
 
+    ## the simple helper function used create attribute_i given index i
+    ## we now make it a little bit more powerful yet clumsy but returning a
+    ## three element list at each element where the list contains the attribute
+    ## along with the optional factor levels vector (and the corresponding column name)
     makeAttr <- function(ind) {
         col <- obj[,ind]
         colname <- colnames(obj)[ind]
@@ -236,16 +240,25 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         if (debug) {
             cat(sprintf("Setting attribute name %s type %s\n", colname, tp))
         }
-        tiledb_attr(colname,
-                    type = tp,
-                    ncells = if (tp %in% c("CHAR","ASCII")) NA_integer_ else nc,
-                    filter_list = filters,
-                    nullable = any(is.na(col)),
-                    dictionary = lvls)
+        attr <- tiledb_attr(colname,
+                            type = tp,
+                            ncells = if (tp %in% c("CHAR","ASCII")) NA_integer_ else nc,
+                            filter_list = filters,
+                            nullable = any(is.na(col)),
+                            enumeration = lvls)
+        list(attr=attr, lvls=lvls, name=colname)
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]
-    attributes <- if (length(cols) > 0) sapply(cols, makeAttr) else list()
+    attributes <- enumerations <- list() 		# fallback
+    if (length(cols) > 0) {
+        a_e <- lapply(cols, makeAttr)
+        attributes <- lapply(a_e, "[[", 1)
+        enumerations <- lapply(a_e, "[[", 2)
+        colnames <- lapply(a_e, "[[", 3)
+        names(enumerations) <- colnames
+    }
+    spdl::debug("[fromDataFrame] About to create schema")
     schema <- tiledb_array_schema(dom,
                                   attrs = attributes,
                                   cell_order = cell_order,
@@ -254,8 +267,10 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                                   coords_filter_list = tiledb_filter_list(sapply(coords_filters, tiledb_filter)),
                                   offsets_filter_list = tiledb_filter_list(sapply(offsets_filters, tiledb_filter)),
                                   validity_filter_list = tiledb_filter_list(sapply(validity_filters, tiledb_filter)),
-                                  capacity=capacity)
+                                  capacity = capacity,
+                                  enumerations = if (length(enumerations) > 0) enumerations else NULL)
     allows_dups(schema) <- allows_dups
+
     if (mode != "append")
         tiledb_array_create(uri, schema)
 

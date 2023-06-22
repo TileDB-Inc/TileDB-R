@@ -993,7 +993,7 @@ expect_equal(schema, schema2)
 ## access schema from array
 schema3 <- tiledb::schema(arr)
 expect_true(is(schema3, "tiledb_array_schema"))
-expect_equal(schema, schema3)
+expect_equivalent(schema, schema3)  # switched to equivalent
 
 ## n=114
 ## time travel

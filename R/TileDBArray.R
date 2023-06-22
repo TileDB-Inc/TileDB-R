@@ -246,7 +246,7 @@ setMethod("schema", "tiledb_array", function(object, ...) {
   }  else {
     schema_xptr <- libtiledb_array_schema_load(ctx@ptr, uri)
   }
-  return(tiledb_array_schema.from_ptr(schema_xptr))
+  return(tiledb_array_schema.from_ptr(schema_xptr, object@ptr))
 })
 
 ## unexported helper function to deal with ... args / enckey in next method
@@ -610,7 +610,7 @@ setMethod("[", "tiledb_array",
   names(dictionaries) <- allnames
   for (ii in seq_along(dictionaries)) {
     if (isTRUE(alldictionary[ii])) {
-      dictionaries[[ii]] <- tiledb_attribute_get_enumeration(attrs[[allnames[ii]]], arrptr)
+      dictionaries[[ii]] <- tiledb_attribute_get_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
     }
   }
 

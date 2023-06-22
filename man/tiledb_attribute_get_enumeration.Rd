@@ -10,6 +10,8 @@ tiledb_attribute_get_enumeration(attr, arr, ctx = tiledb_get_context())
 \item{attr}{A TileDB Attribute object}
 
 \item{arr}{A Tiledb Array object}
+
+\item{ctx}{A Tiledb Context object (optional)}
 }
 \value{
 A character vector with the enumeration (of length zero if none)

@@ -23,14 +23,16 @@
 #' An S4 class for the TileDB array schema
 #'
 #' @slot ptr An external pointer to the underlying implementation
+#' @slot arrptr An optional external pointer to the underlying array, or NULL if missing
 #' @exportClass tiledb_array_schema
 setClass("tiledb_array_schema",
-         slots = list(ptr = "externalptr"))
+         slots = list(ptr = "externalptr",
+                      arrptr = "ANY"))
 
-tiledb_array_schema.from_ptr <- function(ptr) {
+tiledb_array_schema.from_ptr <- function(ptr, arrptr=NULL) {
     stopifnot("The 'ptr' argument must be an external pointer to a tiledb_array_schema instance"
               = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
-    new("tiledb_array_schema", ptr = ptr)
+    new("tiledb_array_schema", ptr = ptr, arrptr=arrptr)
 }
 
 #' Constructs a `tiledb_array_schema` object
@@ -44,7 +46,7 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param offsets_filter_list (optional)
 #' @param validity_filter_list (optional)
 #' @param capacity (optional)
-#' @param allows_dups (optional, requires \sQuote{spars} to be TRUE)
+#' @param allows_dups (optional, requires \sQuote{sparse} to be TRUE)
 #' @param ctx tiledb_ctx object (optional)
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -69,6 +71,7 @@ tiledb_array_schema <- function(domain,
                                 validity_filter_list = NULL,
                                 capacity = 10000L,
                                 allows_dups = FALSE,
+                                enumerations = NULL,
                                 ctx = tiledb_get_context()) {
     if (!missing(attrs) && length(attrs) != 0) {
         is_attr <- function(obj) is(obj, "tiledb_attr")
@@ -96,9 +99,10 @@ tiledb_array_schema <- function(domain,
     offsets_filter_list_ptr <- if (!is.null(offsets_filter_list)) offsets_filter_list@ptr else NULL
     validity_filter_list_ptr <- if (!is.null(validity_filter_list)) validity_filter_list@ptr else NULL
 
+    spdl::debug("[tiledb_array_schema] About to call libtiledb_array_schema")
     ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptr_list, cell_order, tile_order,
                                   coords_filter_list_ptr, offsets_filter_list_ptr,
-                                  validity_filter_list_ptr, sparse)
+                                  validity_filter_list_ptr, sparse, enumerations)
     libtiledb_array_schema_set_capacity(ptr, capacity)
     if (allows_dups) libtiledb_array_schema_set_allows_dups(ptr, TRUE)
     invisible(new("tiledb_array_schema", ptr = ptr))
@@ -156,11 +160,9 @@ setMethod("show", signature(object = "tiledb_array_schema"),
         sep="")
     if (nfc > 0) cat("    coords_filter_list=", .as_text_filter_list(fl$coords), if (nfo + nfv > 0) "," else "", "\n", sep="")
     if (nfo > 0) cat("    offsets_filter_list=", .as_text_filter_list(fl$offsets), if (nfv > 0) ",\n" else "", sep="")
-    if (nfv > 0)
-        cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
+    if (nfv > 0) cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
     cat(")\n", sep="")
     #cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
-
 })
 
 #' @rdname generics
