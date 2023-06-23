@@ -14,6 +14,8 @@ tiledb_attribute_set_enumeration_name(
 \item{attr}{A TileDB Attribute object}
 
 \item{enum_name}{A character value with the enumeration value}
+
+\item{ctx}{A Tiledb Context object (optional)}
 }
 \value{
 The modified TileDB Attribute object

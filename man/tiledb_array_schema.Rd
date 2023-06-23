@@ -40,6 +40,8 @@ tiledb_array_schema(
 
 \item{allows_dups}{(optional, requires \sQuote{sparse} to be TRUE)}
 
+\item{enumerations}{(optional) named list of enumerations}
+
 \item{ctx}{tiledb_ctx object (optional)}
 }
 \description{

@@ -27,9 +27,9 @@ that this is a \emph{required} parameter.}
 \item{nullable}{(default FALSE) A logical switch whether the attribute can have missing
 values}
 
-\item{ctx}{tiledb_ctx object (optional)}
+\item{enumeration}{(default NULL) A character vector of dictionary values}
 
-\item{dictionary}{(default NULL) A character vector of dictionary values}
+\item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
 \code{tiledb_dim} object

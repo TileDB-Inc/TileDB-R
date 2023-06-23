@@ -47,6 +47,7 @@ tiledb_array_schema.from_ptr <- function(ptr, arrptr=NULL) {
 #' @param validity_filter_list (optional)
 #' @param capacity (optional)
 #' @param allows_dups (optional, requires \sQuote{sparse} to be TRUE)
+#' @param enumerations (optional) named list of enumerations
 #' @param ctx tiledb_ctx object (optional)
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
