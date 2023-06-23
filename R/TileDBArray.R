@@ -800,7 +800,17 @@ setMethod("[", "tiledb_array",
               vec <- length_from_vlcbuf(buf)
               libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
           } else {
-              libtiledb_query_get_buffer_ptr(buf, asint64)
+              col <- libtiledb_query_get_buffer_ptr(buf, asint64)
+              if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
+                  dct <- dictionaries[[name]]               # access it from utility
+                  ## the following expands out to a char vector first; we can do better
+                  ##   col <- factor(dct[col+1], levels=dct)
+                  ## so we do it "by hand"
+                  col <- col + 1L # adjust for zero-index C/C++ layer
+                  attr(col, "levels") <- dct
+                  attr(col, "class")  <- "factor"
+              }
+              col
           }
       }
       reslist <- mapply(getResultShmem, buflist, allnames, allvarnum, SIMPLIFY=FALSE)
