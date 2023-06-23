@@ -128,6 +128,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         makeDim <- function(ind) {
             idxcol <- dimobj[,ind]
             idxnam <- colnames(dimobj)[ind]
+            if (inherits(idxcol, "factor")) idxcol <- as.character(idxcol)
             col_domain <- if (is.null(tile_domain)) {                   # default case
                               c(min(idxcol), max(idxcol))               #   use range
                           } else if (is.list(tile_domain)) {            # but if list
