@@ -38,6 +38,9 @@
 
 #include "tinyspdl.h"
 #include "column_buffer.h"
+#include <tiledb/array_experimental.h>
+#include <tiledb/attribute_experimental.h>
+#include <tiledb/enumeration_experimental.h>
 
 namespace tiledb {
 
@@ -47,8 +50,10 @@ using namespace tiledb;
 //= public static
 //===================================================================
 
-std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
-    std::shared_ptr<Array> array, std::string_view name, size_t memory_budget) {
+std::shared_ptr<ColumnBuffer> ColumnBuffer::create(std::shared_ptr<Array> array,
+                                                   std::string_view name,
+                                                   size_t memory_budget,
+                                                   tiledb::Context ctx) {
 
     auto name_str = std::string(name);  // string for TileDB API
     auto schema = array->schema();
@@ -63,8 +68,20 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
                        name_str);
         }
 
-        return ColumnBuffer::alloc(
-            array, attr.name(), attr.type(), is_var, is_nullable, memory_budget);
+        auto enumeration_name = tiledb::AttributeExperimental::get_enumeration_name(ctx, attr);
+        if (enumeration_name != std::nullopt) {
+            spdl::warn(tfm::format("[ColumnBuffer::create] Seeing enumeration %s for %s",
+                                   enumeration_name.value(), name));
+            auto enmr = tiledb::ArrayExperimental::get_enumeration(ctx, *array, name_str);
+            std::vector<std::string> enmr_vec = enmr.as_vector<std::string>();
+            spdl::warn(tfm::format("[ColumnBuffer::create] Enumeration '%s' '%s'",
+                                   enmr_vec[0], enmr_vec[1]));
+            return ColumnBuffer::alloc(array, attr.name(), attr.type(), is_var, is_nullable,
+                                       memory_budget, enmr_vec);
+        } else {
+            return ColumnBuffer::alloc(array, attr.name(), attr.type(), is_var, is_nullable,
+                                       memory_budget, std::nullopt);
+        }
 
     } else if (schema.domain().has_dimension(name_str)) {
         auto dim = schema.domain().dimension(name_str);
@@ -77,8 +94,8 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(
                        name_str);
         }
 
-        return ColumnBuffer::alloc(
-            array, dim.name(), dim.type(), is_var, false, memory_budget);
+        return ColumnBuffer::alloc(array, dim.name(), dim.type(), is_var, false,
+                                   memory_budget, std::nullopt);
 
     }
 
@@ -122,13 +139,16 @@ ColumnBuffer::ColumnBuffer(
     size_t num_cells,
     size_t num_bytes,
     bool is_var,
-    bool is_nullable)
+    bool is_nullable,
+    std::optional<std::vector<std::string>> enumeration
+    )
     : name_(name)
     , type_(type)
     , type_size_(tiledb::impl::type_size(type))
     , num_cells_(0)
     , is_var_(is_var)
-    , is_nullable_(is_nullable) {
+    , is_nullable_(is_nullable)
+    , has_enumeration_(false) {
     spdl::debug(tfm::format(
         "[ColumnBuffer] '%s' %d cells %d bytes is_var=%s is_nullable=%s",
         name,
@@ -145,6 +165,12 @@ ColumnBuffer::ColumnBuffer(
     }
     if (is_nullable_) {
         validity_.resize(num_cells);
+    }
+
+    // Store the enumeration (and we need a setter as this function is static)
+    if (enumeration != std::nullopt) {
+        has_enumeration_ = true;
+        enmr_ = std::move(enumeration.value());
     }
 }
 
@@ -207,7 +233,8 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::alloc(
     tiledb_datatype_t type,
     bool is_var,
     bool is_nullable,
-    size_t memory_budget) {
+    size_t memory_budget,
+    std::optional<std::vector<std::string>> enumeration) {
 
     auto num_bytes = memory_budget;
     spdl::debug(tfm::format("[ColumnBuffer::alloc] num_bytes = %d", num_bytes));
@@ -226,7 +253,7 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::alloc(
                                 num_bytes / tiledb::impl::type_size(type);
 
     return std::make_shared<ColumnBuffer>(
-        name, type, num_cells, num_bytes, is_var, is_nullable);
+        name, type, num_cells, num_bytes, is_var, is_nullable, enumeration);
 }
 
 }  // namespace tiledb

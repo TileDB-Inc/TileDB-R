@@ -33,7 +33,7 @@
 #ifndef COLUMN_BUFFER_H
 #define COLUMN_BUFFER_H
 
-#include <stdexcept>  // for windows: error C2039: 'runtime_error': is not a member of 'std'
+#include <stdexcept>
 
 #include <span/span.hpp>
 #include <tiledb/tiledb>
@@ -64,7 +64,8 @@ class ColumnBuffer {
      * @return ColumnBuffer
      */
     static std::shared_ptr<ColumnBuffer> create(
-        std::shared_ptr<Array> array, std::string_view name, size_t memory_budget);
+        std::shared_ptr<Array> array, std::string_view name,
+        size_t memory_budget, tiledb::Context ctx);
 
     /**
      * @brief Convert a bytemap to a bitmap in place.
@@ -99,7 +100,8 @@ class ColumnBuffer {
         size_t num_cells,
         size_t num_bytes,
         bool is_var = false,
-        bool is_nullable = false);
+        bool is_nullable = false,
+        std::optional<std::vector<std::string>> enumeration = std::nullopt);
 
     ColumnBuffer() = delete;
     ColumnBuffer(const ColumnBuffer&) = delete;
@@ -240,7 +242,6 @@ class ColumnBuffer {
     }
 
 
-
    private:
     //===================================================================
     //= private static
@@ -262,7 +263,8 @@ class ColumnBuffer {
         tiledb_datatype_t type,
         bool is_var,
         bool is_nullable,
-        size_t memory_budget);
+        size_t memory_budget,
+        std::optional<std::vector<std::string>> enmr);
 
     //===================================================================
     //= private non-static
@@ -294,6 +296,13 @@ class ColumnBuffer {
 
     // Validity buffer (optional).
     std::vector<uint8_t> validity_;
+
+    // If true, has an enumeration
+    bool has_enumeration_;
+
+    // Enumeration buffer (optional).
+    std::vector<std::string> enmr_;
+
 };
 
 }  // namespace tiledb
