@@ -115,14 +115,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_to_arrow
-Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab, Rcpp::XPtr<tiledb::Query> qry);
-RcppExport SEXP _tiledb_libtiledb_to_arrow(SEXP abSEXP, SEXP qrySEXP) {
+Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab, Rcpp::XPtr<tiledb::Query> qry, Rcpp::List dicts);
+RcppExport SEXP _tiledb_libtiledb_to_arrow(SEXP abSEXP, SEXP qrySEXP, SEXP dictsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::ArrayBuffers> >::type ab(abSEXP);
     Rcpp::traits::input_parameter< Rcpp::XPtr<tiledb::Query> >::type qry(qrySEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_to_arrow(ab, qry));
+    Rcpp::traits::input_parameter< Rcpp::List >::type dicts(dictsSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_to_arrow(ab, qry, dicts));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3386,7 +3387,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_arrow_table", (DL_FUNC) &_tiledb_libtiledb_query_export_arrow_table, 3},
     {"_tiledb_check_arrow_schema_tag", (DL_FUNC) &_tiledb_check_arrow_schema_tag, 1},
     {"_tiledb_check_arrow_array_tag", (DL_FUNC) &_tiledb_check_arrow_array_tag, 1},
-    {"_tiledb_libtiledb_to_arrow", (DL_FUNC) &_tiledb_libtiledb_to_arrow, 2},
+    {"_tiledb_libtiledb_to_arrow", (DL_FUNC) &_tiledb_libtiledb_to_arrow, 3},
     {"_tiledb_libtiledb_allocate_column_buffers", (DL_FUNC) &_tiledb_libtiledb_allocate_column_buffers, 5},
     {"_tiledb_makeQueryWrapper", (DL_FUNC) &_tiledb_makeQueryWrapper, 1},
     {"_tiledb_libtiledb_query_add_range_with_type", (DL_FUNC) &_tiledb_libtiledb_query_add_range_with_type, 6},

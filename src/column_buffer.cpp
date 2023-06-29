@@ -70,12 +70,10 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(std::shared_ptr<Array> array,
 
         auto enumeration_name = tiledb::AttributeExperimental::get_enumeration_name(ctx, attr);
         if (enumeration_name != std::nullopt) {
-            spdl::warn(tfm::format("[ColumnBuffer::create] Seeing enumeration %s for %s",
+            spdl::trace(tfm::format("[ColumnBuffer::create] Seeing enumeration %s via %s",
                                    enumeration_name.value(), name));
             auto enmr = tiledb::ArrayExperimental::get_enumeration(ctx, *array, name_str);
             std::vector<std::string> enmr_vec = enmr.as_vector<std::string>();
-            spdl::warn(tfm::format("[ColumnBuffer::create] Enumeration '%s' '%s'",
-                                   enmr_vec[0], enmr_vec[1]));
             return ColumnBuffer::alloc(array, attr.name(), attr.type(), is_var, is_nullable,
                                        memory_budget, enmr_vec);
         } else {

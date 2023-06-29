@@ -145,7 +145,6 @@ setMethod("raw_dump",
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
           definition = function(object) {
-    spdl::debug("[show-method tiledb_array_schema] entered")
     fl <- filter_list(object)
     nfc <- nfilters(fl$coords)
     nfo <- nfilters(fl$offsets)

@@ -94,6 +94,7 @@ tiledb_arrow_schema_del <- function(ptr) {
 ##' @noRd
 .as_arrow_table <- function(arrlst) {
     .check_arrow_pointers(arrlst)
+    spdl::info("[.as_arrow_table] checked pointers")
     if (!requireNamespace("arrow", quietly=TRUE)) {
         stop("This functionality requires the 'arrow' package to be installed.", call. = FALSE)
     } else {

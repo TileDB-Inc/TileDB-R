@@ -241,6 +241,46 @@ class ColumnBuffer {
         ColumnBuffer::date_cast_to_32bit(data<int64_t>());
     }
 
+    /**
+     * @brief Return true if the buffer has an associated enumeration
+     */
+    bool has_enumeration() const {
+        return has_enumeration_;
+    }
+
+    /**
+     * @brief Fill offsets_ and data_ from Enumeration (temporary)
+     */
+    void from_enumeration(std::shared_ptr<std::vector<std::string>> enmr) {
+        size_t nlvl = enmr->size();
+        offsets_.resize(nlvl + 1);
+        std::string newstr = "";
+        uint64_t cumlen = 0;
+        for (size_t i = 0; i < nlvl; i++) {
+            offsets_[i] = cumlen;
+            std::string s{(*enmr)[i]};
+            newstr += s;
+            cumlen += s.length();
+        }
+        offsets_[nlvl] = cumlen;
+        type_ = TILEDB_STRING_UTF8;
+        num_cells_ = newstr.length();
+        data_.resize(num_cells_);
+        std::memcpy(data_.data(), newstr.data(), sizeof(char) * num_cells_);
+        spdl::debug(tfm::format("[from_enumeration] offsets vec length is %ld last %ld is_var %d",
+                                offsets_.size(), cumlen, is_var_));
+    }
+
+    /**
+     * @brief ColumnBuffer from Enumeration
+     */
+    std::shared_ptr<std::vector<std::string>> get_enumeration() {
+        auto p = std::make_shared<std::vector<std::string>>(enmr_);
+        return p;
+    }
+
+
+
 
    private:
     //===================================================================

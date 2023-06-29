@@ -241,7 +241,6 @@ setMethod("schema", "tiledb_array", function(object, ...) {
   ctx <- object@ctx
   uri <- object@uri
   enckey <- object@encryption_key
-  spdl::debug("[schema-method tiledb_array] entered")
   if (length(enckey) > 0) {
     schema_xptr <- libtiledb_array_schema_load_with_key(ctx@ptr, uri, enckey)
   }  else {
@@ -910,9 +909,12 @@ setMethod("[", "tiledb_array",
           if (status != "COMPLETE") spdl::debug("['['] query returned '{}'.", status)
 
           if (use_arrow) {
-              rl <- libtiledb_to_arrow(abptr, qryptr)
-              overallresults[[counter]] <- .as_arrow_table(rl)
+              #spdl::log("debug")
+              #print(str(dictionaries))
+              rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
+              overallresults[[counter]] <- rl #.as_arrow_table(rl)
               spdl::info("['['] received arrow table {}", counter)
+              #spdl::log("warn")
           }
 
           ## close array

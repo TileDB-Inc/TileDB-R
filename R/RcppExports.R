@@ -39,8 +39,8 @@ check_arrow_array_tag <- function(xp) {
     .Call(`_tiledb_check_arrow_array_tag`, xp)
 }
 
-libtiledb_to_arrow <- function(ab, qry) {
-    .Call(`_tiledb_libtiledb_to_arrow`, ab, qry)
+libtiledb_to_arrow <- function(ab, qry, dicts) {
+    .Call(`_tiledb_libtiledb_to_arrow`, ab, qry, dicts)
 }
 
 libtiledb_allocate_column_buffers <- function(ctx, qry, uri, names, memory_budget) {
