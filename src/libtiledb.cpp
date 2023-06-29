@@ -2335,7 +2335,12 @@ bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
     }
     case REALSXP: {
       Rcpp::NumericVector v(obj);
-      array->put_metadata(key.c_str(), TILEDB_FLOAT64, v.size(), v.begin());
+      if (isInteger64(v)) {
+          std::vector<int64_t> iv = getInt64Vector(v);
+          array->put_metadata(key.c_str(), TILEDB_INT64, iv.size(), (void*) &iv[0]);
+      } else {
+          array->put_metadata(key.c_str(), TILEDB_FLOAT64, v.size(), v.begin());
+      }
       break;
     }
     case INTSXP: {
@@ -2425,7 +2430,9 @@ SEXP _metadata_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num, con
   } else if (v_type == TILEDB_UINT32) {
     return copy_int_vector<uint32_t>(v_num, v);
   } else if (v_type == TILEDB_INT64) {
-    return copy_int_vector<int64_t>(v_num, v);
+    std::vector<int64_t> iv(v_num);
+    std::memcpy(&(iv[0]), v, v_num*sizeof(int64_t));
+    return makeInteger64(iv);
   } else if (v_type == TILEDB_UINT64) {
     return copy_int_vector<uint64_t>(v_num, v);
   } else {

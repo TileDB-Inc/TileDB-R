@@ -190,4 +190,11 @@ close_and_reopen(arr, "READ")
 expect_equal(tiledb_num_metadata(arr), 2)
 #})
 
+vals <- bit64::as.integer64(c(10,20,30))
+close_and_reopen(arr, "WRITE")
+expect_true(tiledb_put_metadata(arr, "int64", vals))
+close_and_reopen(arr, "READ")
+expect_equal(tiledb_get_metadata(arr, "int64"), vals)
+
+
 if (dir.exists(tmp)) unlink(tmp, recursive = TRUE, force = TRUE)
