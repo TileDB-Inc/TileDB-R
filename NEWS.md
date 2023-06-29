@@ -19,6 +19,8 @@
 
 * Attempts to select on dimensions that do not exist now error out with a message (#561)
 
+* Integer64 values can now be written to array metadata (#564)
+
 ## Bug Fixes
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)
