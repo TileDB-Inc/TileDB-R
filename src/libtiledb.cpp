@@ -2335,7 +2335,12 @@ bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
     }
     case REALSXP: {
       Rcpp::NumericVector v(obj);
-      array->put_metadata(key.c_str(), TILEDB_FLOAT64, v.size(), v.begin());
+      if (isInteger64(v)) {
+          std::vector<int64_t> iv = getInt64Vector(v);
+          array->put_metadata(key.c_str(), TILEDB_INT64, iv.size(), (void*) &iv[0]);
+      } else {
+          array->put_metadata(key.c_str(), TILEDB_FLOAT64, v.size(), v.begin());
+      }
       break;
     }
     case INTSXP: {
