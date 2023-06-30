@@ -912,7 +912,13 @@ setMethod("[", "tiledb_array",
               #spdl::log("debug")
               #print(str(dictionaries))
               rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
-              overallresults[[counter]] <- rl #.as_arrow_table(rl)
+              at <- .as_arrow_table(rl)
+              for (n in names(dictionaries)) {
+                  if (!is.null(dictionaries[[n]])) {
+                      at[[n]] <- arrow::DictionaryArray$create(at[[n]]$as_vector(), dictionaries[[n]])
+                  }
+              }
+              overallresults[[counter]] <- at
               spdl::info("['['] received arrow table {}", counter)
               #spdl::log("warn")
           }
