@@ -909,18 +909,16 @@ setMethod("[", "tiledb_array",
           if (status != "COMPLETE") spdl::debug("['['] query returned '{}'.", status)
 
           if (use_arrow) {
-              #spdl::log("debug")
-              #print(str(dictionaries))
               rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
               at <- .as_arrow_table(rl)
-              for (n in names(dictionaries)) {
-                  if (!is.null(dictionaries[[n]])) {
-                      at[[n]] <- arrow::DictionaryArray$create(at[[n]]$as_vector(), dictionaries[[n]])
-                  }
-              }
+              ## if dictionaries are to be injected at the R level, this does it
+              #for (n in names(dictionaries)) {
+              #    if (!is.null(dictionaries[[n]])) {
+              #        at[[n]] <- arrow::DictionaryArray$create(at[[n]]$as_vector(), dictionaries[[n]])
+              #    }
+              #}
               overallresults[[counter]] <- at
-              spdl::info("['['] received arrow table {}", counter)
-              #spdl::log("warn")
+              spdl::debug("['['] received arrow table {}", counter)
           }
 
           ## close array
@@ -1022,7 +1020,7 @@ setMethod("[", "tiledb_array",
       } else {
           res <- do.call(rbind, overallresults)
       }
-      spdl::info("['['] returning 'res'")
+      spdl::debug("['['] returning 'res'")
       res
   }                                     # end of 'big else' for query build, submission and read
 

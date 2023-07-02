@@ -386,38 +386,44 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
                                std::string(pp.second->name), pp.first->length));
         memcpy((void*) chldschemaxp, pp.second.get(), sizeof(ArrowSchema));
         memcpy((void*) chldarrayxp, pp.first.get(), sizeof(ArrowArray));
-        // if (false && is_factor) {
-        //     std::vector<std::string> svec = Rcpp::as<std::vector<std::string>>(dicts[i]);
-        //     Rcpp::XPtr<ArrowSchema> dschxp = schema_owning_xptr();
-        //     Rcpp::XPtr<ArrowArray> darrxp = array_owning_xptr();
-        //     dschxp->format = "U";
-        //     dschxp->flags |= ARROW_FLAG_NULLABLE;
-        //     darrxp->length = svec.size();
-        //     darrxp->null_count = 0;
-        //     darrxp->n_buffers = 3; // nullable is zero
-        //     darrxp->buffers = (const void**)malloc(sizeof(void*) * darrxp->n_buffers);
-        //     darrxp->buffers[0] = nullptr;  // validity
+        if (is_factor) {
+            std::vector<std::string> svec = Rcpp::as<std::vector<std::string>>(dicts[i]);
+            Rcpp::XPtr<ArrowSchema> dschxp = schema_owning_xptr();
+            Rcpp::XPtr<ArrowArray> darrxp = array_owning_xptr();
+            dschxp = schema_setup_struct(dschxp, 0);
+            darrxp = array_setup_struct(darrxp, 0);
 
-        //     size_t nv = svec.size();
-        //     std::string str = "";
-        //     std::vector<uint64_t> offsets(nv+1);
-        //     uint64_t cumlen = 0;
-        //     for (size_t i = 0; i < nv; i++) {
-        //         std::string s = svec[i];
-        //         offsets[i] = cumlen;
-        //         str += s;
-        //         cumlen += s.length();
-        //     }
-        //     offsets[nv] = cumlen;
-        //     darrxp->buffers[2] = str.data();
-        //     darrxp->buffers[1] = offsets.data();
+            dschxp->format = "U";
+            dschxp->flags |= ARROW_FLAG_NULLABLE;
+            darrxp->length = svec.size();
+            darrxp->null_count = 0;
+            darrxp->n_buffers = 3; // nullable is zero
+            darrxp->buffers = (const void**)malloc(sizeof(void*) * darrxp->n_buffers);
+            darrxp->buffers[0] = nullptr;  // validity
 
-        //     spdl::debug(tfm::format("[libtiledb_to_arrow] dict %s fmt %s -- len %d nbuf %d str %s",
-        //                             names[i], dschxp->format,
-        //                             darrxp->length, darrxp->n_buffers, str));
-        //     chldschemaxp->dictionary = dschxp;
-        //     chldarrayxp->dictionary = darrxp;
-        // }
+            size_t nv = svec.size();
+            std::string str = "";
+            std::vector<uint64_t> offsets(nv+1);
+            uint64_t cumlen = 0;
+            for (size_t i = 0; i < nv; i++) {
+                std::string s = svec[i];
+                offsets[i] = cumlen;
+                str += s;
+                cumlen += s.length();
+                //spdl::warn(tfm::format("[libtiledb_to_arrow] %s %ld %ld", s, offsets[i], cumlen));
+            }
+            offsets[nv] = cumlen;
+            //darrxp->buffers[2] = str.data();
+            darrxp->buffers[2] = (const char*)malloc(sizeof(char) * cumlen);
+            std::memcpy((void*) darrxp->buffers[2], str.data(), (sizeof(char) * cumlen));
+            darrxp->buffers[1] = (const char*)malloc(sizeof(uint64_t) * (nv + 1));
+            std::memcpy((void*) darrxp->buffers[1], offsets.data(), (sizeof(uint64_t) * (nv + 1)));
+
+            spdl::debug(tfm::format("[libtiledb_to_arrow] dict %s fmt %s -- len %d nbuf %d str %s",
+                                    names[i], dschxp->format, darrxp->length, darrxp->n_buffers, str));
+            chldschemaxp->dictionary = dschxp;
+            chldarrayxp->dictionary = darrxp;
+        }
 
         if (chldschemaxp->dictionary != nullptr && chldarrayxp->dictionary != nullptr) {
             Rcpp::XPtr<ArrowSchema> schemaxp = schema_owning_xptr();
