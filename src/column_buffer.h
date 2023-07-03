@@ -100,8 +100,8 @@ class ColumnBuffer {
         size_t num_cells,
         size_t num_bytes,
         bool is_var = false,
-        bool is_nullable = false,
-        std::optional<std::vector<std::string>> enumeration = std::nullopt);
+        bool is_nullable = false);
+        //std::optional<std::vector<std::string>> enumeration = std::nullopt);
 
     ColumnBuffer() = delete;
     ColumnBuffer(const ColumnBuffer&) = delete;
@@ -241,12 +241,12 @@ class ColumnBuffer {
         ColumnBuffer::date_cast_to_32bit(data<int64_t>());
     }
 
-    /**
-     * @brief Return true if the buffer has an associated enumeration
-     */
-    bool has_enumeration() const {
-        return has_enumeration_;
-    }
+    // /**
+    //  * @brief Return true if the buffer has an associated enumeration
+    //  */
+    // bool has_enumeration() const {
+    //     return has_enumeration_;
+    // }
 
     // /**
     //  * @brief Fill offsets_ and data_ from Enumeration (temporary)
@@ -278,8 +278,6 @@ class ColumnBuffer {
     //     auto p = std::make_shared<std::vector<std::string>>(enmr_);
     //     return p;
     // }
-
-
 
 
    private:
@@ -337,11 +335,11 @@ class ColumnBuffer {
     // Validity buffer (optional).
     std::vector<uint8_t> validity_;
 
-    // If true, has an enumeration
-    bool has_enumeration_;
+    // // If true, has an enumeration
+    // bool has_enumeration_;
 
-    // Enumeration buffer (optional).
-    std::vector<std::string> enmr_;
+    // // Enumeration buffer (optional).
+    // std::vector<std::string> enmr_;
 
 };
 

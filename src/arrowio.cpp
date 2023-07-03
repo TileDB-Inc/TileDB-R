@@ -413,7 +413,6 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
                 cumlen += s.length();
             }
             offsets[nv] = cumlen;
-            //darrxp->buffers[2] = str.data();
             darrxp->buffers[2] = (const char*)malloc(sizeof(char) * cumlen);
             std::memcpy((void*) darrxp->buffers[2], str.data(), (sizeof(char) * cumlen));
             darrxp->buffers[1] = (const char*)malloc(sizeof(int32_t) * (nv + 1));
@@ -425,18 +424,8 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
             chldarrayxp->dictionary = darrxp;
         }
 
-        if (chldschemaxp->dictionary != nullptr && chldarrayxp->dictionary != nullptr) {
-            Rcpp::XPtr<ArrowSchema> schemaxp = schema_owning_xptr();
-            Rcpp::XPtr<ArrowArray> arrayxp = array_owning_xptr();
-            memcpy((void*) schemaxp, chldschemaxp->dictionary, sizeof(ArrowSchema));
-            memcpy((void*) arrayxp, chldarrayxp->dictionary, sizeof(ArrowArray));
-            chldschemaxp->dictionary = schemaxp;
-            chldarrayxp->dictionary = arrayxp;
-            spdl::trace(tfm::format("[libtiledb_to_arrow] preserved dictionary for %s", names[i]));
-        }
         schemaxp->children[i] = chldschemaxp;
         arrayxp->children[i] = chldarrayxp;
-
 
         if (pp.first->length > arrayxp->length) {
             spdl::debug(tfm::format("[libtiledb_to_arrow] Setting array length to %d", pp.first->length));

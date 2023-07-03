@@ -137,16 +137,16 @@ ColumnBuffer::ColumnBuffer(
     size_t num_cells,
     size_t num_bytes,
     bool is_var,
-    bool is_nullable,
-    std::optional<std::vector<std::string>> enumeration
-    )
+    bool is_nullable)
+    //std::optional<std::vector<std::string>> enumeration)
     : name_(name)
     , type_(type)
     , type_size_(tiledb::impl::type_size(type))
     , num_cells_(0)
     , is_var_(is_var)
     , is_nullable_(is_nullable)
-    , has_enumeration_(false) {
+    //, has_enumeration_(false)
+{
     spdl::debug(tfm::format(
         "[ColumnBuffer] '%s' %d cells %d bytes is_var=%s is_nullable=%s",
         name,
@@ -166,10 +166,10 @@ ColumnBuffer::ColumnBuffer(
     }
 
     // Store the enumeration (and we need a setter as this function is static)
-    if (enumeration != std::nullopt) {
-        has_enumeration_ = true;
-        enmr_ = std::move(enumeration.value());
-    }
+    // if (enumeration != std::nullopt) {
+    //     has_enumeration_ = true;
+    //     enmr_ = std::move(enumeration.value());
+    // }
 }
 
 void ColumnBuffer::attach(Query& query) {
@@ -251,7 +251,7 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::alloc(
                                 num_bytes / tiledb::impl::type_size(type);
 
     return std::make_shared<ColumnBuffer>(
-        name, type, num_cells, num_bytes, is_var, is_nullable, enumeration);
+         name, type, num_cells, num_bytes, is_var, is_nullable); //, enumeration);
 }
 
 }  // namespace tiledb
