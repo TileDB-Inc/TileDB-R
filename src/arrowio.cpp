@@ -393,18 +393,18 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
             dschxp = schema_setup_struct(dschxp, 0);
             darrxp = array_setup_struct(darrxp, 0);
 
-            dschxp->format = "U";
+            dschxp->format = "u";
             dschxp->flags |= ARROW_FLAG_NULLABLE;
             darrxp->length = svec.size();
             darrxp->null_count = 0;
-            darrxp->n_buffers = 3; // nullable is zero
+            darrxp->n_buffers = 3; // we always have three for dictionairies
             darrxp->buffers = (const void**)malloc(sizeof(void*) * darrxp->n_buffers);
             darrxp->buffers[0] = nullptr;  // validity
 
             size_t nv = svec.size();
             std::string str = "";
-            std::vector<uint64_t> offsets(nv+1);
-            uint64_t cumlen = 0;
+            std::vector<int32_t> offsets(nv+1);
+            int32_t cumlen = 0;
             for (size_t i = 0; i < nv; i++) {
                 std::string s = svec[i];
                 offsets[i] = cumlen;
@@ -416,8 +416,8 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
             //darrxp->buffers[2] = str.data();
             darrxp->buffers[2] = (const char*)malloc(sizeof(char) * cumlen);
             std::memcpy((void*) darrxp->buffers[2], str.data(), (sizeof(char) * cumlen));
-            darrxp->buffers[1] = (const char*)malloc(sizeof(uint64_t) * (nv + 1));
-            std::memcpy((void*) darrxp->buffers[1], offsets.data(), (sizeof(uint64_t) * (nv + 1)));
+            darrxp->buffers[1] = (const char*)malloc(sizeof(int32_t) * (nv + 1));
+            std::memcpy((void*) darrxp->buffers[1], offsets.data(), (sizeof(int32_t) * (nv + 1)));
 
             spdl::debug(tfm::format("[libtiledb_to_arrow] dict %s fmt %s -- len %d nbuf %d str %s",
                                     names[i], dschxp->format, darrxp->length, darrxp->n_buffers, str));
