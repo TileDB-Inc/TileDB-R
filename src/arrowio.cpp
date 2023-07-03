@@ -387,6 +387,7 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
         memcpy((void*) chldschemaxp, pp.second.get(), sizeof(ArrowSchema));
         memcpy((void*) chldarrayxp, pp.first.get(), sizeof(ArrowArray));
         if (is_factor) {
+            // this could be rewritten if we generalized ColumnBuffer to allow passing of
             std::vector<std::string> svec = Rcpp::as<std::vector<std::string>>(dicts[i]);
             Rcpp::XPtr<ArrowSchema> dschxp = schema_owning_xptr();
             Rcpp::XPtr<ArrowArray> darrxp = array_owning_xptr();
@@ -410,7 +411,6 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
                 offsets[i] = cumlen;
                 str += s;
                 cumlen += s.length();
-                //spdl::warn(tfm::format("[libtiledb_to_arrow] %s %ld %ld", s, offsets[i], cumlen));
             }
             offsets[nv] = cumlen;
             //darrxp->buffers[2] = str.data();
