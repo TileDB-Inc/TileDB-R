@@ -1624,7 +1624,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute_set_enumeration(XPtr<tiledb::Context
  * TileDB Array Schema
  */
 
-// fwd decl
+// forward declaration
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_enumeration(XPtr<tiledb::Context> ctx,
                                                                  XPtr<tiledb::ArraySchema> schema,
                                                                  XPtr<tiledb::Attribute> attr,
@@ -2586,6 +2586,23 @@ std::vector<std::string> libtiledb_array_get_enumeration(XPtr<tiledb::Context> c
     return res;
 }
 
+// quick and dirty checker for an entire array
+// [[Rcpp::export]]
+Rcpp::LogicalVector libtiledb_array_has_enumeration_vector(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Array>(array);
+    Rcpp::XPtr<tiledb::ArraySchema> arrsch = libtiledb_array_get_schema(array);
+    Rcpp::List attrs = libtiledb_array_schema_attributes(arrsch);
+    size_t n = attrs.size();
+    Rcpp::LogicalVector has_enum = Rcpp::LogicalVector(n);
+    Rcpp::CharacterVector attr_names(n);
+    for (size_t i = 0; i < n; i++) {
+        has_enum[i] = libtiledb_attribute_has_enumeration(ctx, attrs[i]);
+        attr_names[i] = libtiledb_attribute_get_name(attrs[i]);
+    }
+    has_enum.attr("names") = attr_names;
+    return has_enum;
+}
 
 
 /**

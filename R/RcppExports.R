@@ -589,6 +589,10 @@ libtiledb_array_get_enumeration <- function(ctx, arr, name) {
     .Call(`_tiledb_libtiledb_array_get_enumeration`, ctx, arr, name)
 }
 
+libtiledb_array_has_enumeration_vector <- function(ctx, array) {
+    .Call(`_tiledb_libtiledb_array_has_enumeration_vector`, ctx, array)
+}
+
 libtiledb_query <- function(ctx, array, type) {
     .Call(`_tiledb_libtiledb_query`, ctx, array, type)
 }

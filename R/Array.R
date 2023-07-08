@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -160,4 +160,19 @@ tiledb_array_delete_fragments <- function(arr, ts_start, ts_end) {
               "The 'ts_end' argument must a time object" = inherits(ts_end, "POSIXct"))
     libtiledb_array_delete_fragments(arr@ptr, ts_start, ts_end)
     invisible(TRUE)
+}
+
+##' Check for Enumeration (aka Factor aka Dictionary)
+##'
+##' @param arr A TileDB Array object
+##' @return A boolean indicating if the array has homogeneous domains
+##' @export
+tiledb_array_has_enumeration <- function(arr) {
+    stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
+    ctx <- tiledb_get_context()
+    if (!tiledb_array_is_open(arr)) {
+        arr <- tiledb_array_open(arr, "READ")
+        on.exit(tiledb_array_close(arr))
+    }
+    return(libtiledb_array_has_enumeration_vector(ctx@ptr, arr@ptr))
 }

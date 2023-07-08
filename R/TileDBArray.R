@@ -609,9 +609,9 @@ setMethod("[", "tiledb_array",
   dictionaries <- vector(mode="list", length=length(allnames))
   names(dictionaries) <- allnames
   for (ii in seq_along(dictionaries)) {
-    if (isTRUE(alldictionary[ii])) {
-      dictionaries[[ii]] <- tiledb_attribute_get_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
-    }
+      if (isTRUE(alldictionary[ii])) {
+          dictionaries[[ii]] <- tiledb_attribute_get_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
+      }
   }
 
   ## helper function to sweep over names and types of domain

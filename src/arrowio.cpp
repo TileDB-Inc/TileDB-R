@@ -453,6 +453,7 @@ Rcpp::XPtr<tiledb::ArrayBuffers> libtiledb_allocate_column_buffers(Rcpp::XPtr<ti
     auto arrsp = std::make_shared<tiledb::Array>(*ctx.get(), uri, TILEDB_READ);
     for (auto name: names) {
         // returns a shared pointer to new column buffer for 'name'
+        spdl::debug(tfm::format("[libtiledb_alloocate_column_buffers] creating %s", name));
         auto cbsp = tiledb::ColumnBuffer::create(arrsp, name, memory_budget, *ctx.get());
         abp->emplace(name, cbsp);
         cbsp->attach(*qry.get());
