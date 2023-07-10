@@ -257,6 +257,13 @@ setMethod("schema", "tiledb_array", function(object, ...) {
     schema_xptr <- libtiledb_array_schema_load(ctxptr, uri)
   }
 }
+.array_open <- function(ctxptr, uri, enckey=character()) {
+    if (length(enckey) > 0) {
+        arr_xptr <- libtiledb_array_open(ctxptr, uri, "READ", enckey)
+    } else {
+        arr_xptr <- libtiledb_array_open(ctxptr, uri, "READ")
+    }
+}
 
 #' Return a schema from a URI character value
 #'
@@ -264,9 +271,10 @@ setMethod("schema", "tiledb_array", function(object, ...) {
 #' @param ... Extra parameters such as \sQuote{enckey}, the encryption key
 #' @return The scheme for the object
 setMethod("schema", "character", function(object, ...) {
-  ctx <- tiledb_get_context()
-  schema_xptr <- .array_schema_load(ctx@ptr, object, ...)
-  return(tiledb_array_schema.from_ptr(schema_xptr))
+    ctx <- tiledb_get_context()
+    schema_xptr <- .array_schema_load(ctx@ptr, object, ...)
+    array_xptr <- .array_open(ctx@ptr, object, ...)
+    return(tiledb_array_schema.from_ptr(schema_xptr, array_xptr))
 })
 
 
