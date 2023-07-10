@@ -961,10 +961,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
 
 if (tiledb_version(TRUE) >= "2.8.0" && tiledb_version(TRUE) < "2.10.0") exit_file("2.8.* and 2.9.* skip remainder")
 
-## FYI: 101 tests here
-
-
-## FYI: 105 tests here
+## n=104
 ## non-empty domain, var and plain
 tmp <- tempfile()
 dir.create(tmp)
@@ -999,6 +996,7 @@ schema3 <- tiledb::schema(arr)
 expect_true(is(schema3, "tiledb_array_schema"))
 expect_equal(schema, schema3)
 
+## n=114
 ## time travel
 tmp <- tempfile()
 dir.create(tmp)
@@ -1033,15 +1031,6 @@ if (tiledb_version(TRUE) >= "2.10.0") {
     A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 - onet)
     expect_equal(nrow(A[]), 3)
     A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp_end=now2 + onet)
-    expect_equal(nrow(A[]), 6)
-} else if (tiledb_version(TRUE) >= "2.8.0") {
-    A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 - onet)
-    expect_equal(nrow(A[]), 0)
-    A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now1 + onet)
-    expect_equal(nrow(A[]), 3)
-    A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 - onet)
-    expect_equal(nrow(A[]), 3)
-    A <- tiledb_array(uri = tmp, as.data.frame=TRUE, timestamp=now2 + onet)
     expect_equal(nrow(A[]), 6)
 }
 
@@ -1303,6 +1292,7 @@ if (hasTibble) {
     expect_true(inherits(res, "tbl"))
 }
 
+## n=178
 ## test return_as for array and matrix
 uri <- tempfile()
 dir.create(uri)
@@ -1359,6 +1349,7 @@ expect_true(min(res$bill_length_mm) > 50)
 expect_equal(colnames(res), c("species", "island", "body_mass_g", "bill_length_mm", "year", "sex"))
 
 
+## n=186
 ## new 3d index, and int64 domain conversion
 uri <- tempfile()
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
@@ -1392,6 +1383,7 @@ selected_ranges(A) <- list(cbind(2,2), cbind(2,3), cbind(2,2))
 res <- A[]
 expect_equal(res[, "a", drop=TRUE], c(22,26))
 
+## n=196
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
   uri <- tempfile()
@@ -1437,6 +1429,7 @@ expect_true(is.na(attrs(arr)))
 v <- tiledb_version()
 if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L, 12L, 14L)) exit_file("Skip remainder for 2.{4,10,14}.*")
 
+## n=204
 ## CI issues at GitHub for r-release on Windows Server 2019
 if (getRversion() < "4.3.0" && Sys.info()[["sysname"]] == "Windows") exit_file("Skip remainder for R 4.2.* on Windows")
 

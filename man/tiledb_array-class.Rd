@@ -39,8 +39,6 @@ describes the selected points for dimension i}
 
 \item{\code{encryption_key}}{A character value}
 
-\item{\code{timestamp}}{A POSIXct datetime variable (deprecated, use timestamp_start)}
-
 \item{\code{as.matrix}}{A logical value}
 
 \item{\code{as.array}}{A logical value}

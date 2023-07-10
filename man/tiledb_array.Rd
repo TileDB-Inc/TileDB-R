@@ -18,7 +18,6 @@ tiledb_array(
   query_layout = character(),
   datetimes_as_int64 = FALSE,
   encryption_key = character(),
-  timestamp = as.POSIXct(double(), origin = "1970-01-01"),
   as.matrix = FALSE,
   as.array = FALSE,
   query_condition = new("tiledb_query_condition"),
@@ -68,9 +67,6 @@ representation as \sQuote{raw} \code{integer64} and not as \code{Date},
 
 \item{encryption_key}{optional A character value with an AES-256 encryption key
 in case the array was written with encryption.}
-
-\item{timestamp}{optional A POSIXct Datetime value determining where in time the array is
-to be openened. Deprecated, use \sQuote{timestamp_start} instead}
 
 \item{as.matrix}{optional logical switch, defaults to "FALSE"; currently limited to dense
 matrices; in the case of multiple attributes in query a list of matrices is returned}

@@ -43,7 +43,6 @@
 #' @slot query_layout An optional character value
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
-#' @slot timestamp A POSIXct datetime variable (deprecated, use timestamp_start)
 #' @slot as.matrix A logical value
 #' @slot as.array A logical value
 #' @slot query_condition A Query Condition object
@@ -78,7 +77,6 @@ setClass("tiledb_array",
                       query_layout = "character",
                       datetimes_as_int64 = "logical",
                       encryption_key = "character",
-                      timestamp = "POSIXct",
                       as.matrix = "logical",
                       as.array = "logical",
                       query_condition = "tiledb_query_condition",
@@ -116,8 +114,6 @@ setClass("tiledb_array",
 #' \code{POSIXct} or \code{nanotime} objects.
 #' @param encryption_key optional A character value with an AES-256 encryption key
 #' in case the array was written with encryption.
-#' @param timestamp optional A POSIXct Datetime value determining where in time the array is
-#' to be openened. Deprecated, use \sQuote{timestamp_start} instead
 #' @param as.matrix optional logical switch, defaults to "FALSE"; currently limited to dense
 #' matrices; in the case of multiple attributes in query a list of matrices is returned
 #' @param as.array optional logical switch, defaults to "FALSE"; in the case of multiple
@@ -159,7 +155,6 @@ tiledb_array <- function(uri,
                          query_layout = character(),
                          datetimes_as_int64 = FALSE,
                          encryption_key = character(),
-                         timestamp = as.POSIXct(double(), origin="1970-01-01"),
                          as.matrix = FALSE,
                          as.array = FALSE,
                          query_condition = new("tiledb_query_condition"),
@@ -181,23 +176,12 @@ tiledb_array <- function(uri,
   if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
       return_as <- "asis"
   if (length(encryption_key) > 0) {
-    if (!is.character(encryption_key))
-      stop("if used, argument aes_key must be character", call. = FALSE)
-    if (length(timestamp) > 0) {
-      array_xptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, query_type, encryption_key, timestamp)
-    } else {
-      array_xptr <- libtiledb_array_open_with_key(ctx@ptr, uri, query_type, encryption_key)
-    }
+    stopifnot("if used, argument aes_key must be character" = is.character(encryption_key))
+    array_xptr <- libtiledb_array_open_with_key(ctx@ptr, uri, query_type, encryption_key)
   } else {
-    if (length(timestamp) > 0) {
-      array_xptr <- libtiledb_array_open_at(ctx@ptr, uri, query_type, timestamp)
-    } else {
-      array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
-    }
+    array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   }
 
-  if (length(timestamp) > 0)
-      .Deprecated(msg="Use 'timestamp_start' (and maybe 'timestamp_end') instead of 'timestamp'.")
   if (length(timestamp_start) > 0) {
       libtiledb_array_set_open_timestamp_start(array_xptr, timestamp_start)
   }
@@ -229,7 +213,6 @@ tiledb_array <- function(uri,
       query_layout = query_layout,
       datetimes_as_int64 = datetimes_as_int64,
       encryption_key = encryption_key,
-      timestamp = timestamp,
       as.matrix = as.matrix,
       as.array = as.array,
       query_condition = query_condition,
@@ -302,7 +285,6 @@ setMethod("show", signature = "tiledb_array",
      ,"  query_layout       = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
      ,"  datetimes_as_int64 = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
      ,"  encryption_key     = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
-     ,"  timestamp          = ", if (length(object@timestamp) == 0) "(none)" else format(object@timestamp), "\n"
      ,"  as.matrix          = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
      ,"  as.array           = ", if (object@as.array) "TRUE" else "FALSE", "\n"
      ,"  query_condition    = ", if (isTRUE(object@query_condition@init)) "(set)" else "(none)", "\n"
@@ -393,11 +375,6 @@ setValidity("tiledb_array", function(object) {
   if (!is.character(object@encryption_key)) {
     valid <- FALSE
     msg <- c(msg, "The 'encryption_key' slot does not contain a character vector.")
-  }
-
-  if (!inherits(object@timestamp, "POSIXct")) {
-    valid <- FALSE
-    msg <- c(msg, "The 'timestamp' slot does not contain a POSIXct value.")
   }
 
   if (!is.logical(object@as.matrix)) {
@@ -537,7 +514,7 @@ setMethod("[", "tiledb_array",
   layout <- x@query_layout
   asint64 <- x@datetimes_as_int64
   enckey <- x@encryption_key
-  tstamp <- x@timestamp
+  tstamp <- x@timestamp_end
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
@@ -598,17 +575,9 @@ setMethod("[", "tiledb_array",
   spdl::debug("['['] memory budget is {}", memory_budget)
 
   if (length(enckey) > 0) {
-    if (length(tstamp) > 0) {
-      arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "READ", enckey, tstamp)
-    } else {
-      arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
-    }
+    arrptr <- libtiledb_array_open_with_key(ctx@ptr, uri, "READ", enckey)
   } else {
-    if (length(tstamp) > 0) {
-      arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "READ", tstamp)
-    } else {
-      arrptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
-    }
+    arrptr <- libtiledb_array_open(ctx@ptr, uri, "READ")
   }
   if (length(x@timestamp_start) > 0) {
       spdl::debug("['['] set open_timestamp_start to {}", x@timestamp_start)
@@ -1166,7 +1135,7 @@ setMethod("[<-", "tiledb_array",
   layout <- x@query_layout
   asint64 <- x@datetimes_as_int64
   enckey <- x@encryption_key
-  tstamp <- x@timestamp
+  tstamp <- x@timestamp_end
 
   sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
@@ -1278,9 +1247,6 @@ setMethod("[<-", "tiledb_array",
     if (libtiledb_array_is_open_for_writing(x@ptr)) { 			# if open for writing
       arrptr <- x@ptr                                           #   use array
     } else {                                                    # else open appropriately
-      if (length(x@timestamp_end) > 0) {
-        tstamp <- x@timestamp_end
-      }
       if (length(enckey) > 0) {
         if (length(tstamp) > 0) {
           arrptr <- libtiledb_array_open_at_with_key(ctx@ptr, uri, "WRITE", enckey, tstamp)

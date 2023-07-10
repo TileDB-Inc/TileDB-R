@@ -35,6 +35,10 @@
 
 * Compilation on Linux systems as old as Ubuntu 18.04 without a `filesystem` header is now possible (#556)
 
+## Removals
+
+* The `timestamp` argument to `tiledb_array`, deprecated in favor of `timestamp_end` (and `timestamp_start`) in July 2021, has been removed (#566).
+
 
 # tiledb 0.19.1
 

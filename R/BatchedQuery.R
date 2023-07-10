@@ -34,7 +34,7 @@ createBatched <- function(x) {
     layout <- x@query_layout
     asint64 <- x@datetimes_as_int64
     enckey <- x@encryption_key
-    tstamp <- x@timestamp
+    tstamp <- x@timestamp_end
 
     sparse <- libtiledb_array_schema_sparse(sch@ptr)
 
