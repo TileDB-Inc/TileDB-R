@@ -73,7 +73,7 @@ tiledb_query_set_layout(qry, "UNORDERED")
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 
-#arr <- tiledb_array(tmp, as.data.frame=TRUE)
+#arr <- tiledb_array(tmp, return_as="data.frame")
 #print(arr[])
 
 
@@ -162,7 +162,7 @@ tiledb_query_set_layout(qry, "UNORDERED")
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 
-arr <- tiledb_array(tmp, as.data.frame=TRUE)
+arr <- tiledb_array(tmp, return_as="data.frame")
 df <- arr[]
 
 for (i in 1:10) {

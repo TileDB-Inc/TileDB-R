@@ -35,6 +35,10 @@
 
 * Compilation on Linux systems as old as Ubuntu 18.04 without a `filesystem` header is now possible (#556)
 
+## Deprecations
+
+* The boolean arguments `as.data.frame`, `as.matrix` and `as.array` to the `tiledb_array()` accessor are deprecated in favor of the more general `return_as="..."` form. (#567)
+
 ## Removals
 
 * The `timestamp` argument to `tiledb_array`, deprecated in favor of `timestamp_end` (and `timestamp_start`) in July 2021, has been removed (#566).

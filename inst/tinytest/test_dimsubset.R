@@ -78,7 +78,7 @@ log_info("re-arranged list object made")
 arr[] <- newlst
 log_info("array written")
 
-newarr <- tiledb_array(tmp, as.data.frame=TRUE, query_layout="UNORDERED")
+newarr <- tiledb_array(tmp, return_as="data.frame", query_layout="UNORDERED")
 dat <- newarr[]
 log_info("array read")
 expect_equal(nrow(dat), nrow(flights))
@@ -97,7 +97,7 @@ expect_equal(unique(dat$origin), "JFK")
 expect_equal(unique(dat$dest), "BOS")
 
 ## same via selected_points
-newarr <- tiledb_array(tmp, as.data.frame=TRUE, query_layout="UNORDERED",
+newarr <- tiledb_array(tmp, return_as="data.frame", query_layout="UNORDERED",
                        selected_points= list("AA", "JFK", "BOS", NULL))
 dat <- newarr[]
 expect_equal(unique(dat$carrier), "AA")
@@ -105,7 +105,7 @@ expect_equal(unique(dat$origin), "JFK")
 expect_equal(unique(dat$dest), "BOS")
 
 ## test named lists with one element
-newarr <- tiledb_array(tmp, as.data.frame=TRUE, query_layout="UNORDERED")
+newarr <- tiledb_array(tmp, return_as="data.frame", query_layout="UNORDERED")
 selected_ranges(newarr) <- list(carrier = cbind("AA","AA"))
 dat <- newarr[]
 expect_equal(unique(dat$carrier), "AA")

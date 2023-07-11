@@ -10,5 +10,5 @@ ctx <- tiledb_ctx(config)
 
 array_name <- "tiledb://TileDB-Inc/quickstart_sparse"
 
-arr <- tiledb_array(array_name, query_type="READ", as.data.frame=TRUE)
+arr <- tiledb_array(array_name, return_as="data.frame")
 show(arr[])

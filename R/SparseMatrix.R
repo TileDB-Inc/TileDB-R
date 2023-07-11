@@ -112,7 +112,7 @@ fromSparseMatrix <- function(obj,
 toSparseMatrix <- function(uri) {
     stopifnot(`Argument 'uri' must be character` = is.character(uri))
 
-    arr <- tiledb_array(uri, as.data.frame=TRUE, query_layout="UNORDERED")
+    arr <- tiledb_array(uri, return_as="data.frame", query_layout="UNORDERED")
     obj <- arr[]
 
     dimnm <- list(NULL, NULL)        # by default no dimnames

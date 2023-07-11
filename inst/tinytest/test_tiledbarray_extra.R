@@ -37,7 +37,7 @@ A <- tiledb_array(uri = tmp, encryption_key = encryption_key)
 A[I, J] <- data
 
 ## read
-A <- tiledb_array(uri = tmp, as.data.frame=TRUE, encryption_key = encryption_key)
+A <- tiledb_array(uri = tmp, return_as="data.frame", encryption_key = encryption_key)
 chk <- A[1:2, 2:4]
 expect_equal(nrow(chk), 2)
 expect_equal(chk[,"rows"], c(2L,2L))

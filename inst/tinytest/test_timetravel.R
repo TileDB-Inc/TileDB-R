@@ -44,11 +44,11 @@ while (deltat < 30) {
     ## we need an 'epsilon' because when we record 'times' is not exactly where the array timestamp is
     epst <- deltat/2
 
-    res1 <- tiledb_array(uri, as.data.frame=TRUE)[]							 		# no limits
-    res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[1]-epst, timestamp_end=times[2]+epst)[]    # end after 2nd timestamp
-    res3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+epst)[] 	# start after fourth
-    res4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-epst)[]    # end before 3rd
-    res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-epst, timestamp_end=times[3]+epst)[]
+    res1 <- tiledb_array(uri, return_as="data.frame")[]							 		# no limits
+    res2 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[1]-epst, timestamp_end=times[2]+epst)[]    # end after 2nd timestamp
+    res3 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[4]+epst)[] 	# start after fourth
+    res4 <- tiledb_array(uri, return_as="data.frame", timestamp_end=times[3]-epst)[]    # end before 3rd
+    res5 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[2]-epst, timestamp_end=times[3]+epst)[]
 
     if (isTRUE(all.equal(NROW(res1), 40)) &&                    # all four groups
         isTRUE(all.equal(NROW(res2), 20)) &&		            # expect group one + two (20 elements)
@@ -67,20 +67,20 @@ while (deltat < 30) {
 
 if (!success) exit_file("Issue with time traveling")
 
-res1 <- tiledb_array(uri, as.data.frame=TRUE)[] 		# no limits
+res1 <- tiledb_array(uri, return_as="data.frame")[] 		# no limits
 expect_equal(NROW(res1), 40)                            # all four observations
 
-res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[1]-epst, timestamp_end=times[2]+epst)[]    # end before 1st timestamp
+res2 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[1]-epst, timestamp_end=times[2]+epst)[]    # end before 1st timestamp
 expect_equal(NROW(res2), 20)            # expect group one and two (20 elements)
 
-res3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+epst)[] # start after fourth
+res3 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[4]+epst)[] # start after fourth
 expect_equal(NROW(res3), 0)             # expect zero data
 
-res4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-epst)[]    # end before 3rd
+res4 <- tiledb_array(uri, return_as="data.frame", timestamp_end=times[3]-epst)[]    # end before 3rd
 expect_equal(NROW(res4), 20)            # expect 2 groups, 20 obs
 expect_equal(max(res4$grp), 2)          # with groups being 1 and 2
 
-res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-epst, timestamp_end=times[3]+epst)[]
+res5 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[2]-epst, timestamp_end=times[3]+epst)[]
 expect_equal(NROW(res5), 20)            # expects 2 groups, 2 and 3, with 20 obs
 expect_equal(min(res5$grp), 2)
 expect_equal(max(res5$grp), 3)
@@ -93,11 +93,11 @@ expect_equal(n, 4)
 times <- do.call(c, lapply(seq_len(n), function(i) tiledb_fragment_info_get_timestamp_range(fi, i-1)[1]))
 
 epstsml <- 0.005
-res1 <- tiledb_array(uri, as.data.frame=TRUE)[]						# no limits
-res2 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[1]+epstsml)[]    	# end after 1st timestamp
-res3 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[4]+epstsml)[]  	# start after fourth
-res4 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_end=times[3]-epstsml)[]    	# end before 3rd
-res5 <- tiledb_array(uri, as.data.frame=TRUE, timestamp_start=times[2]-epstsml, timestamp_end=times[3]+epstsml)[]
+res1 <- tiledb_array(uri, return_as="data.frame")[]						# no limits
+res2 <- tiledb_array(uri, return_as="data.frame", timestamp_end=times[1]+epstsml)[]    	# end after 1st timestamp
+res3 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[4]+epstsml)[]  	# start after fourth
+res4 <- tiledb_array(uri, return_as="data.frame", timestamp_end=times[3]-epstsml)[]    	# end before 3rd
+res5 <- tiledb_array(uri, return_as="data.frame", timestamp_start=times[2]-epstsml, timestamp_end=times[3]+epstsml)[]
 expect_equal(NROW(res1), 40)
 expect_equal(NROW(res2), 10)		            # expect group one (10 elements)
 expect_equal(NROW(res3), 0)			            # expect zero data

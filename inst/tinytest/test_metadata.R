@@ -19,8 +19,7 @@ unlink_and_create_simple <- function(tmp) {
   sch <- tiledb_array_schema(dom, c(a1, a2), sparse=TRUE)
   tiledb_array_create(tmp, sch)
 
-  #arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
-  arr <- tiledb_array(tmp, as.data.frame=FALSE)
+  arr <- tiledb_array(tmp, return_as="asis")
 
   if (tiledb:::libtiledb_array_is_open(arr@ptr)) {
       tiledb_array_close(arr)
@@ -44,8 +43,7 @@ unlink_and_create_ptr <- function(tmp) {
 
   arr <- tiledb_array_open(arr, "READ")
   ##return(arrR)
-  #arr <- tiledb_sparse(tmp, as.data.frame=FALSE)
-  arr <- tiledb_array(tmp, as.data.frame=FALSE)
+  arr <- tiledb_array(tmp, return_as="asis")
 }
 
 close_and_reopen <- function(arr, txt) {

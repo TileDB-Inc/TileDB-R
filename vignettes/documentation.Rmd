@@ -390,7 +390,7 @@ sch <- tiledb_array_schema(dom, c(val))
 tiledb_array_create(tmp, sch)
 
 dat <- matrix(as.integer(rnorm(25)*100), 5, 5)
-arr <- tiledb_dense(tmp, as.data.frame=FALSE)
+arr <- tiledb_array(tmp, return_as = "data.frame")
 arr[] <- dat
 
 
@@ -818,7 +818,7 @@ arr@ptr <- tiledb:::libtiledb_array_reopen(arr@ptr)
 
 ``` r
 # Open the array and read as a data.frame from it.
-A <- tiledb_array(uri = array_name, as.data.frame=TRUE,
+A <- tiledb_array(uri = array_name, return_as = "data.frame",
                   encryption_key = encryption_key)
 
 # Slice rows 1 and 2, and cols 2, 3 and 4

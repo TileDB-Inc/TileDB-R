@@ -34,7 +34,7 @@ attrib <- c(tiledb_attr("year",  type = "DATETIME_YEAR"),  # year
 schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
 res <- tiledb_array_create(uri, schema)
 
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 
 dvec <- 1:3
 data <- data.frame(row = dvec,
@@ -57,7 +57,7 @@ cat("writing ... ")
 arr[] <- data
 
 cat("reading ... ")
-arr2 <- tiledb_array(uri, as.data.frame=TRUE)
+arr2 <- tiledb_array(uri, return_as="data.frame")
 readdata <- arr2[]
 
 cat("checking ... ")

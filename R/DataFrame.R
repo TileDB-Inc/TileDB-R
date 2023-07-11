@@ -76,7 +76,7 @@
 ##' ## turn factor into character
 ##' irisdf <- within(iris, Species <- as.character(Species))
 ##' fromDataFrame(irisdf, uri)
-##' arr <- tiledb_array(uri, as.data.frame=TRUE, sparse=FALSE)
+##' arr <- tiledb_array(uri, return_as="data.frame", sparse=FALSE)
 ##' newdf <- arr[]
 ##' all.equal(iris, newdf)
 ##' }
@@ -265,7 +265,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
   if (dir.exists(uri)) unlink(uri, recursive=TRUE)
   fromDataFrame(obj, uri)
 
-  df <- tiledb_array(uri, as.data.frame=TRUE)
+  df <- tiledb_array(uri, return_as="data.frame")
   df[]
 }
 
@@ -292,7 +292,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
   }
   fromDataFrame(bkdf, uri)
 
-  arr <- tiledb_array(uri, as.data.frame = TRUE)
+  arr <- tiledb_array(uri, return_as="data.frame")
   newdf <- arr[]
   invisible(newdf)
 }
@@ -305,7 +305,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
   fromDataFrame(df, uri)
   cat("Data written\n")
 
-  arr <- tiledb_array(uri, as.data.frame = TRUE)
+  arr <- tiledb_array(uri, return_as="data.frame")
   newdf <- arr[]
   invisible(newdf)
 }
