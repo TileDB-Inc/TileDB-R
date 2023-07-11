@@ -142,7 +142,7 @@ attrib <- c(tiledb_attr("year",  type = "DATETIME_YEAR"),  # year
 schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
 res <- tiledb_array_create(uri, schema)
 
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 
 dvec <- 1:3
 data <- data.frame(row = dvec,
@@ -162,7 +162,7 @@ data <- data.frame(row = dvec,
                    )
 
 arr[] <- data
-arr2 <- tiledb_array(uri, as.data.frame=TRUE)
+arr2 <- tiledb_array(uri, return_as="data.frame")
 readdata <- arr2[]
 expect_true(all.equal(data, readdata, check.attributes=FALSE))
 
@@ -217,7 +217,7 @@ df <- data.frame(row     =  1:10,
 arr <- tiledb_array(uri)
 arr[] <- df
 
-newarr <- tiledb_array(uri, as.data.frame=TRUE)
+newarr <- tiledb_array(uri, return_as="data.frame")
 chk <- newarr[]
 expect_equal(df[,1:10], chk[,1:10])
 expect_equivalent(as.numeric(df[,11]), chk[,11]) # we currently return uint64_t as numeric

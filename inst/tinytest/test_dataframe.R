@@ -16,7 +16,7 @@ if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
 fromDataFrame(irisdf, uri)
 
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 newdf <- arr[]
 #if (getRversion() >= '4.0.0') newdf$Species <- as.factor(newdf$Species)
 if (getRversion() <  '4.0.0') newdf$Species <- as.character(newdf$Species)
@@ -29,7 +29,7 @@ expect_equal(irisdf, newdf[,-1])
 
 
 ## test attrs subselection
-arr <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE,
+arr <- tiledb_array(uri, return_as="data.frame", extended=FALSE,
                     attrs = c("Petal.Length", "Petal.Width"))
 newdf <- arr[]
 expect_equivalent(iris[, c("Petal.Length", "Petal.Width")], newdf) # skip attribute
@@ -58,7 +58,7 @@ df <- data.frame(char=c("abc", "def", "g", "hijk"),
 
 fromDataFrame(df, uri)
 
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 newdf <- arr[]
 
 ## result comes back as factor by default
@@ -78,7 +78,7 @@ df <- data.frame(index=sort(sample(1:1000, rows)),
                  vals=rnorm(rows) * 100,
                  stringsAsFactors=FALSE)
 fromDataFrame(df, uri)
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df, chk[,-1])              # omit first col which is added
@@ -87,7 +87,7 @@ if (tiledb_version(TRUE) < "2.1.0") exit_file("Remaining tests require TileDB 2.
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index=1)
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
@@ -96,7 +96,7 @@ expect_equal(df[,3], na.omit(chk)[,3])
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index="index")
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
@@ -108,7 +108,7 @@ df <- data.frame(chars=olddf$chars,
                  val=olddf$vals)
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri)
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() < '4.0.0') {
     df$chars <- as.character(df$chars)
@@ -118,7 +118,7 @@ expect_equal(df, chk[,-1])              # omit first col which is added
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index=2)
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
@@ -126,7 +126,7 @@ expect_equal(df[,3], na.omit(chk)[,3])
 
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, col_index="index")
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
@@ -155,13 +155,13 @@ df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, sparse=TRUE)
 
-chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
+chk <- tiledb_array(uri, return_as="data.frame", extended=FALSE)
 expect_equivalent(df, chk[])            # skip attribute
 
 for (i in seq_len(dim(df)[2])) {
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     fromDataFrame(df, uri, sparse=TRUE, col_index=i)
-    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    chk <- tiledb_array(uri, return_as="data.frame")
     expect_equal(df, chk[][,colnames(df)]) 		# index col comes first so need re-order
 }
 
@@ -181,7 +181,7 @@ df <- data.frame(time = round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*360
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 fromDataFrame(df, uri, sparse=TRUE)
 
-chk <- tiledb_array(uri, as.data.frame=TRUE, extended=FALSE)
+chk <- tiledb_array(uri, return_as="data.frame", extended=FALSE)
 newdf <- chk[]
 if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
 expect_equivalent(df, newdf)            # skip attribute
@@ -190,7 +190,7 @@ expect_equivalent(df, newdf)            # skip attribute
 for (i in seq_len(dim(df)[2])) {
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     fromDataFrame(df, uri, sparse=TRUE, col_index=i)
-    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    chk <- tiledb_array(uri, return_as="data.frame")
     newdf <- chk[]
     if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
     expect_equal(df, newdf[, colnames(df)])
@@ -201,14 +201,14 @@ combinations <- list(c(1,2), c(1,3), c(2,4), c(3,5), c(4,5), c(2,3,4))
 for (comb in combinations) {
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     fromDataFrame(df, uri, sparse=TRUE, col_index=comb) # by index
-    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    chk <- tiledb_array(uri, return_as="data.frame")
     newdf <- chk[]
     if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
     expect_equal(df, newdf[][, colnames(df)])
 
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     fromDataFrame(df, uri, sparse=TRUE, col_index=colnames(df)[comb]) # by name
-    chk <- tiledb_array(uri, as.data.frame=TRUE)
+    chk <- tiledb_array(uri, return_as="data.frame")
     newdf <- chk[]
     if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
     expect_equal(df, newdf[, colnames(df)])
@@ -223,7 +223,7 @@ dat <- data.frame(A=1:10,
 dat[3,1] <- NA
 dat[4,3] <- NA
 fromDataFrame(dat, uri)
-chk <- tiledb_array(uri, as.data.frame=TRUE)
+chk <- tiledb_array(uri, return_as="data.frame")
 val <- chk[][,-1]  # omit added rows
 if (getRversion() < '4.0.0') {
     dat$B <- as.character(dat$B)
@@ -239,7 +239,7 @@ D <- data.frame(sample=paste(LETTERS[1:N], as.character(sort(trunc(runif(N, 100,
                 stringsAsFactors=FALSE)
 uri <- tempfile()
 fromDataFrame(D, uri, col_index=1, sparse=TRUE)
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() < '4.0.0') {
     chk$sample <- as.character(chk$sample)
@@ -260,7 +260,7 @@ expect_error(fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=FALSE)
 uri <- tempfile()
 expect_silent(arr <- fromDataFrame(df, uri, col_index=1, sparse=TRUE, allows_dups=TRUE))
 
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
 if (getRversion() <  '4.0.0') chk$char <- as.character(chk$char)
 expect_equivalent(df, chk)              # skip attribute

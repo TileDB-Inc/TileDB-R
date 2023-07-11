@@ -239,7 +239,7 @@ cfg <- tiledb_config()
 cfg["sm.memory_budget"] <- "16"
 cfg["sm.memory_budget_var"] <- "32"
 ctx <- tiledb_ctx(cfg)
-array <- tiledb_array(tmp, as.data.frame=TRUE)
+array <- tiledb_array(tmp, return_as="data.frame")
 
 if (packageVersion("tiledb") <= "0.11.0") expect_warning(res <- array[]) # newer versions loop, no warning
 

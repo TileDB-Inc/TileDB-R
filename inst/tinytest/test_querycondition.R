@@ -145,16 +145,16 @@ if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder need
 library(palmerpenguins)
 uri <- tempfile()
 fromDataFrame(penguins, uri, sparse=TRUE)
-unconstr <- tiledb_array(uri, as.data.frame=TRUE)
+unconstr <- tiledb_array(uri, return_as="data.frame")
 expect_equal(NROW(unconstr[]), 344L)    # no condition -> 344 rows
 
 qc <- tiledb_query_condition_init("year", 2009, "INT32", "EQ")
-arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arrwithqc <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 res <- arrwithqc[]
 expect_equal(NROW(res), 120L)    		# year 2009 only -> 120 rows
 expect_true(all(res$year == 2009))
 
-arr2 <- tiledb_array(uri, as.data.frame=TRUE)
+arr2 <- tiledb_array(uri, return_as="data.frame")
 expect_equal(NROW(arr2[]), 344L)    	# no condition -> 344 rows
 query_condition(arr2) <- qc
 expect_equal(NROW(arr2[]), 120L)    	# year 2009 only -> 120 rows
@@ -174,13 +174,13 @@ uri <- tempfile()
 fromDataFrame(penguins, uri, sparse=TRUE)
 arr <- tiledb_array(uri)
 qc <- parse_query_condition(year == 2009)
-arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arrwithqc <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 res <- arrwithqc[]
 expect_equal(NROW(res), 120L)    # year 2009 only -> 120 rows
 expect_true(all(res$year == 2009))
 
 qc2 <- parse_query_condition(year == 2009 && bill_length_mm <= 39.99)
-arrwithqc2 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc2)
+arrwithqc2 <- tiledb_array(uri, return_as="data.frame", query_condition=qc2)
 res <- arrwithqc2[]
 expect_equal(NROW(res), 34L)
 expect_true(all(res$bill_length_mm < 40))
@@ -188,14 +188,14 @@ expect_true(all(res$year == 2009))
 
 if (tiledb_version(TRUE) >= "2.10.0") { # the OR operator is more recent than query conditions overall
     qc3 <- parse_query_condition(island %in% c("Dream", "Biscoe"), arr)
-    arrwithqc3 <- tiledb_array(uri, as.data.frame=TRUE, strings_as_factors=TRUE, query_condition=qc3)
+    arrwithqc3 <- tiledb_array(uri, return_as="data.frame", strings_as_factors=TRUE, query_condition=qc3)
     res <- arrwithqc3[]
     expect_equal(NROW(res), 168+124)
     expect_true(all(res$island != "Torgersen"))
     expect_true(all(res$island == "Dream" | res$island == "Biscoe"))
 
     qc4 <- parse_query_condition(island %in% c("Dream", "Biscoe") && body_mass_g > 3500, arr)
-    arrwithqc4 <- tiledb_array(uri, as.data.frame=TRUE, strings_as_factors=TRUE, query_condition=qc4)
+    arrwithqc4 <- tiledb_array(uri, return_as="data.frame", strings_as_factors=TRUE, query_condition=qc4)
     res <- arrwithqc4[]
     expect_equal(NROW(res), 153+80)
     expect_true(all(res$island != "Torgersen"))
@@ -212,13 +212,13 @@ if (Sys.getenv("MY_UNIVERSE", "") != "") exit_file("Skip remainder at r-universe
 uri <- tempfile()
 fromDataFrame(na.omit(penguins), uri, sparse=TRUE)
 qc3 <- parse_query_condition(sex == "male")
-arrwithqc3 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc3)
+arrwithqc3 <- tiledb_array(uri, return_as="data.frame", query_condition=qc3)
 res <- arrwithqc3[]
 expect_equal(NROW(res), 168L)
 expect_true(all(res$sex == "male"))
 
 qc <- tiledb_query_condition_init("sex", "female", "ASCII", "EQ")
-arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arrwithqc <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 res <- arrwithqc[]
 expect_equal(NROW(res), 165L)
 expect_true(all(res$sex != "male"))
@@ -230,21 +230,21 @@ uri <- tempfile()
 fromDataFrame(edgecases, uri, sparse=TRUE)
 
 qcx1 <- tiledb::parse_query_condition(x1 == "a1")
-arrx1 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx1)
+arrx1 <- tiledb_array(uri, return_as="data.frame", query_condition=qcx1)
 res <- arrx1[]
 expect_equal(res$x1, "a1")
 
 qcx2 <- tiledb::parse_query_condition(x2 == 1L)
-arrx2 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx2)
+arrx2 <- tiledb_array(uri, return_as="data.frame", query_condition=qcx2)
 res <- arrx2[]
 expect_equal(res$x2, 1L)
 
 qcx3 <- tiledb::parse_query_condition(x3 == "_1")
-arrx3 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx3)
+arrx3 <- tiledb_array(uri, return_as="data.frame", query_condition=qcx3)
 expect_equal(arrx3[]$x3, "_1")
 
 qcx4 <- tiledb::parse_query_condition(x4 == "1.1.1")
-arrx4 <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qcx4)
+arrx4 <- tiledb_array(uri, return_as="data.frame", query_condition=qcx4)
 expect_equal(arrx4[]$x4, "1.1.1")
 
 
@@ -254,9 +254,9 @@ df <- data.frame(abb = state.abb,		# builtin-data
                  name = state.name)     # idem
 uri <- tempfile()
 fromDataFrame(df, uri, col_index="abb", sparse=TRUE)
-fullarr <- tiledb_array(uri, as.data.frame=TRUE)[]
+fullarr <- tiledb_array(uri, return_as="data.frame")[]
 expect_equal(dim(fullarr), c(50,3))
-subarr <- tiledb_array(uri, as.data.frame=TRUE,
+subarr <- tiledb_array(uri, return_as="data.frame",
                        query_condition=parse_query_condition(region == "Northeast"))[]
 expect_equal(dim(subarr), c(9,3))
 
@@ -272,68 +272,68 @@ fromDataFrame(penguins, uri, sparse=TRUE)
 
 ## Basics
 qc <- tiledb_query_condition_init("year", 2009, "INT32", "EQ")
-arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arrwithqc <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arrwithqc[]), 120L)
 
 lhs <- tiledb_query_condition_init("year", 2008, "INT32", "GE")
 rhs <- tiledb_query_condition_init("year", 2008, "INT32", "LE")
 qc <- tiledb_query_condition_combine(lhs, rhs, "AND")
-arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arrwithqc <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arrwithqc[]), 114L)  # basically a different way of writing EQ via '<= && >='
 
 lhs <- tiledb_query_condition_init("year", 2008, "INT32", "GE")
 rhs <- tiledb_query_condition_init("year", 2008, "INT32", "LE")
 qc <- tiledb_query_condition_combine(lhs, rhs, "OR")
-arrwithqc <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arrwithqc <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arrwithqc[]), 344L)  # the OR makes it unconstrained via '<= || >='
 
 ## simple OR
 qc <- parse_query_condition(species == "Adelie" || species == "Chinstrap")
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 ## Note that in R '||' is used for length-1 comparison, and '|' along a vector so '|' here
 expect_equal(NROW(arr[]), sum(with(penguins, species == "Adelie" | species == "Chinstrap")))
 
 ## three elements works too
 qc <- parse_query_condition(species == "Adelie" || species == "Chinstrap" || year >= 2009)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, species == "Adelie" | species == "Chinstrap" | year >= 2009)))
 
 ## three elements works too as does mixing AND and OR
 qc <- parse_query_condition(species == "Adelie" || species == "Chinstrap" && year >= 2009)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, species == "Adelie" | species == "Chinstrap" & year >= 2009)))
 
 ## empty sets are fine
 qc <- parse_query_condition(year < 2008 || year > 2010)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, year < 2008 | year > 2010)))
 
 ## Overlapping ranges
 qc <- parse_query_condition(year < 2009 && year < 2010)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, year < 2009)))
 
 qc <- parse_query_condition(year <= 2009 && year >= 2009)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, year == 2009)))
 
 qc <- parse_query_condition(year < 2009 || year < 2010)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, year < 2010)))
 
 ## Last two with single & or |
 qc <- parse_query_condition(year <= 2009 & year >= 2009)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]), sum(with(penguins, year == 2009)))
 
 qc <- parse_query_condition(year < 2009 | year < 2010)
-arr <- tiledb_array(uri, as.data.frame=TRUE, query_condition=qc)
+arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]), sum(with(penguins, year < 2010)))
 
 ## query conditions over different types

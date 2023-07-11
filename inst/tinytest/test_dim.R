@@ -163,7 +163,7 @@ for (dtype in dimtypes) {
     schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
     tiledb_array_create(uri, schema)
 
-    arr <- tiledb_array(uri, as.data.frame=TRUE)
+    arr <- tiledb_array(uri, return_as="data.frame")
     dvec <- switch(dtype,
                    "ASCII"   = LETTERS[1:5],
                    "INT8"    =,
@@ -195,7 +195,7 @@ for (dtype in dimtypes) {
     data <- data.frame(row = dvec, attr = avec, stringsAsFactors=FALSE)
     arr[] <- data
 
-    arr2 <- tiledb_array(uri, as.data.frame=TRUE)
+    arr2 <- tiledb_array(uri, return_as="data.frame")
     readdata <- arr2[]
     if (dtype == "ASCII" && getRversion() < '4.0.0') readdata$row <- as.character(readdata$row)
     if (dtype == "UINT64") readdata[,1] <- as.integer64(readdata[,1])  # return doubles here
@@ -212,7 +212,7 @@ for (dtype in dimtypes) {
     }
 
     ## subset tests
-    arr3 <- tiledb_array(uri, as.data.frame=TRUE)
+    arr3 <- tiledb_array(uri, return_as="data.frame")
     if (dtype %in% c("DATETIME_YEAR", "DATETIME_MONTH", "DATETIME_WEEK", "DATETIME_DAY")) {
         scaleDate <- function(val, dtype) {
             val <- switch(dtype,
@@ -331,7 +331,7 @@ for (dtype in dimtypes) {
     schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
     tiledb_array_create(uri, schema)
 
-    arr <- tiledb_array(uri, as.data.frame=TRUE)
+    arr <- tiledb_array(uri, return_as="data.frame")
     dvec <- switch(dtype,
                    "ASCII"   = LETTERS[1:5],
                    "INT8"    =,
@@ -363,7 +363,7 @@ for (dtype in dimtypes) {
     data <- data.frame(row = dvec, attr = avec, stringsAsFactors=FALSE)
     arr[] <- data
 
-    ## arr2 <- tiledb_array(uri, as.data.frame=TRUE)
+    ## arr2 <- tiledb_array(uri, return_as="data.frame")
     ## readdata <- arr2[]
     ## if (dtype == "ASCII" && getRversion() < '4.0.0') readdata$row <- as.character(readdata$row)
     ## if (dtype == "UINT64") readdata[,1] <- as.integer64(readdata[,1])  # return doubles here
@@ -380,7 +380,7 @@ for (dtype in dimtypes) {
     ## }
 
     ## subset tests
-    arr3 <- tiledb_array(uri, as.data.frame=TRUE)
+    arr3 <- tiledb_array(uri, return_as="data.frame")
     if (dtype %in% c("DATETIME_YEAR", "DATETIME_MONTH", "DATETIME_WEEK", "DATETIME_DAY")) {
         scaleDate <- function(val, dtype) {
             val <- switch(dtype,
