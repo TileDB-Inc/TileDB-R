@@ -84,26 +84,26 @@ write_array <- function(array_name) {
 read_array <- function(array_name) {
     cat("\nReading everything:\n")
     # Open the array and read as a data.frame from it.
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE)
+    A <- tiledb_array(uri = array_name, as="data.frame")
     A[]
 }
 
 read_array_at <- function(array_name, tstamps) {
     ## Read before tstamp[1]
     cat("\nOpening / reading 0.5s before first tstamp\n")
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[1] - 0.5)
+    A <- tiledb_array(uri = array_name, as="data.frame", timestamp=tstamps[1] - 0.5)
     print(A[])
 
     cat("Opening / reading 0.5s after first tstamp\n")
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[1] + 0.5)
+    A <- tiledb_array(uri = array_name, as="data.frame", timestamp=tstamps[1] + 0.5)
     print(A[])
 
     cat("Opening / reading 0.5s before second tstamp\n")
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[2] - 0.5)
+    A <- tiledb_array(uri = array_name, as="data.frame", timestamp=tstamps[2] - 0.5)
     print(A[])
 
     cat("Opening / reading 0.5s after second tstamp\n")
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE, timestamp=tstamps[2] + 0.5)
+    A <- tiledb_array(uri = array_name, return_as="data.frame", timestamp=tstamps[2] + 0.5)
     print(A[])
 
 }

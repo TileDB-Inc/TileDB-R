@@ -69,7 +69,7 @@ write_array <- function(array_name) {
 
 read_array <- function(array_name) {
     # Open the array and read as a data.frame from it.
-    A <- tiledb_array(uri = array_name, as.data.frame=TRUE)
+    A <- tiledb_array(uri = array_name, return_as="data.frame")
     # Slice rows 1 and 2, and cols 2, 3 and 4
     A[1:2, 2:4]
 }

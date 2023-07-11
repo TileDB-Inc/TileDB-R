@@ -78,7 +78,7 @@ delete_rows <- function(uri) {
 
 read_array <- function(uri) {
     # Open the array and read as a data.frame from it.
-    A <- tiledb_array(uri, as.data.frame=TRUE)
+    A <- tiledb_array(uri, return_as="data.frame")
     # Slice rows 1 and 2, and cols 2, 3 and 4
     # A[1:2, 2:4]
     A[]

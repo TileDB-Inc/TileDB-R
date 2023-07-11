@@ -53,7 +53,7 @@ read_array <- function(uri) {
 }
 
 read_as_df <- function(uri) {
-  A <- tiledb_array(uri = uri, as.data.frame = TRUE)
+  A <- tiledb_array(uri = uri, return_as = "data.frame")
   selected_ranges(A) <- list(cbind(ISOdatetime(2020,1,1,0,0,4),
                                    ISOdatetime(2020,1,1,0,0,6)),
                              cbind(1L,1L))

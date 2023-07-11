@@ -95,7 +95,7 @@ write_array <- function(uri) {
                    DATETIME_MS = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123,
                    DATETIME_US = as.POSIXct("2020-01-01 00:00:00") + 0:9 + 0.123456)
 
-  arr <- tiledb_array(uri, as.data.frame=TRUE)
+  arr <- tiledb_array(uri, as="data.frame")
   arr[] <- data.frame(rows = rows,
                       a1 = a1data,
                       d1 = d1data)
@@ -158,7 +158,7 @@ read_array_query <- function(uri) {
 }
 
 read_array <- function(uri) {
-  arr <- tiledb_array(uri, as.data.frame=TRUE)
+  arr <- tiledb_array(uri, return_as="data.frame")
   ## constraint on 1st dim: value from 4 to 7
   selected_ranges(arr) <- list(cbind(as.integer64(4), as.integer64(7)))
   ## fetch data

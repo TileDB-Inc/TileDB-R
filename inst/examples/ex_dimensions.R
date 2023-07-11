@@ -87,7 +87,7 @@ for (dtype in dimtypes) {
     tiledb_array_create(uri, schema)
 
 
-    arr <- tiledb_array(uri, as.data.frame=TRUE)
+    arr <- tiledb_array(uri, return_as="data.frame")
 
     dvec <- switch(dtype,
                    "ASCII"   = LETTERS[1:3],
@@ -124,7 +124,7 @@ for (dtype in dimtypes) {
     arr[] <- data
 
     cat("reading ... ")
-    arr2 <- tiledb_array(uri, as.data.frame=TRUE)
+    arr2 <- tiledb_array(uri, return_as="data.frame")
     readdata <- arr2[]
     cat("(",format(readdata[1,1]), ",", format(readdata[2,1]), ",", format(readdata[3,1]), ") ", sep="")
 

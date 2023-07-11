@@ -12,7 +12,7 @@ if (!dir.exists(uri)) {                 # if that example does not exist, create
   sch <- tiledb_array_schema(dom, c(a1, a2), sparse=TRUE)
   tiledb_array_create(uri, sch)
 
-  arr <- tiledb_array(uri, as.data.frame=FALSE)
+  arr <- tiledb_array(uri, return_as="asis")
 }
 
 ## old initial accessors

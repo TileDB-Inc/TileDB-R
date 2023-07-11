@@ -17,7 +17,7 @@ setup <- function(tmp, verbose=FALSE) {
   a2  <- tiledb_attr("a2", type = "INT32")
   sch <- tiledb_array_schema(dom, c(a1, a2), sparse=TRUE)
   tiledb_array_create(tmp, sch)
-  arr <- tiledb_array(tmp, as.data.frame=FALSE)
+  arr <- tiledb_array(tmp, return_as="asis")
 
   #arrW <- tiledb:::libtiledb_array_open(arr@ptr, tmp, "WRITE")
   #tiledb:::put_metadata(arrW, "vec", c(1.1, 2.2, 3.3))
@@ -120,7 +120,6 @@ setup <- function(tmp, verbose=FALSE) {
 tmp <- "/tmp/fooarray" #tempfile()
 if (dir.exists(tmp)) unlink(tmp, recursive=TRUE)
 arr <- setup(tmp, TRUE)
-# arr <- tiledb_array(tmp, as.data.frame=FALSE)
 
 arr <- tiledb_array(tmp)
 arr <- .tiledb_array_open(arr, "READ")

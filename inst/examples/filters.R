@@ -52,9 +52,9 @@ write_array <- function(uri) {
 }
 
 read_array <- function(uri) {
-  ## opening in data.frame mode; could also open with as.data.frame=FALSE
+  ## opening in data.frame mode
   ## returning three vectors
-  arr <- tiledb_array(uri, as.data.frame=TRUE)
+  arr <- tiledb_array(uri, return_as="data.frame")
   dat <- arr[]
   print(dat)
 }
