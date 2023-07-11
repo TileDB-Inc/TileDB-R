@@ -54,7 +54,7 @@ and for the (row and column, if present as here) indices to not be printed (via 
 
 ```r
 > A <- tiledb_array(uri = uri, attrs = "b",
-+                   as.data.frame=TRUE, extended=FALSE))
++                   return_as = "data.frame", extended=FALSE))
 > A[1:2,2]
 [1] 101.5 104.0
 >
@@ -70,7 +70,7 @@ returned object works via `[[var]]` or `$var`.  A numeric index also works (but 
 
 ```r
 > A <- tiledb_array(uri = uri, attrs = c("a","b"),
-+                   as.data.frame = TRUE)
++                   return_as = "data.frame")
 > A[1:2,2][["a"]]
 [1] 2 7
 > A[1:2,2]$a
@@ -102,7 +102,7 @@ We can restrict the selection to a subset of attributes when opening the array.
 
 ```r
 > A <- tiledb_dense(uri = uri, attrs = c("b","c"),
-+                   as.data.frame = TRUE, extended=FALSE)
++                   return_as = "data.frame", extended=FALSE)
 > A[6:9,2:4]
        b     c
 1  114.0 brown
@@ -120,7 +120,7 @@ We can restrict the selection to a subset of attributes when opening the array.
 >
 ```
 
-This also illustrated the effect of setting `as.data.frame=TRUE` when opening the array.
+This also illustrated the effect of setting `return_as = "data.frame"` when opening the array.
 
 This scheme can be generalized to variable cells, or cells where N>1, as we can expand each
 (atomistic) value over corresponding row and column indices.
@@ -131,7 +131,7 @@ which is about to change. We can also override, users can too.)
 
 ```r
 > A <- tiledb_array("/tmp/tiledb/ex_1/", attrs=c("b","c"),
-+                   as.data.frame = TRUE, extended=TRUE)
++                   return_as = "data.frame", extended=TRUE)
 > sapply(A[6:9, 3:4], "class")
        rows        cols           b           c
   "integer"   "integer"   "numeric" "character"
@@ -220,7 +220,7 @@ illustrates some basic operations on sparse arrays. It also shows date and datet
 just integer and double precision floats.
 
 ```r
-> A <- tiledb_array(uri = uri, as.data.frame = TRUE)
+> A <- tiledb_array(uri = uri, return_as = "data.frame")
 > A[1577858403:1577858408]
         rows cols a   b          d                       e
 1 1577858403    1 3 103 2020-01-11 2020-01-02 18:24:33.844

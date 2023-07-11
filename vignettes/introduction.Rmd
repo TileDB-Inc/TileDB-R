@@ -77,7 +77,7 @@ the return to be a `data.frame` (instead of a simpler list) and for the
 
 ``` r
 > A <- tiledb_array(uri = uri, attrs = "b",
-+                   as.data.frame=TRUE, extended=FALSE))
++                   return_as = "data.frame", extended=FALSE))
 > A[1:2,2]
 [1] 101.5 104.0
 >
@@ -94,7 +94,7 @@ also works (but needs to account for `rows` and `cols`).
 
 ``` r
 > A <- tiledb_array(uri = uri, attrs = c("a","b"),
-+                   as.data.frame = TRUE)
++                   return_as = "data.frame")
 > A[1:2,2][["a"]]
 [1] 2 7
 > A[1:2,2]$a
@@ -128,7 +128,7 @@ array.
 
 ``` r
 > A <- tiledb_dense(uri = uri, attrs = c("b","c"),
-+                   as.data.frame = TRUE, extended=FALSE)
++                   return_as = "data.frame", extended=FALSE)
 > A[6:9,2:4]
        b     c
 1  114.0 brown
@@ -160,7 +160,7 @@ change. We can also override, users can too.)
 
 ``` r
 > A <- tiledb_array("/tmp/tiledb/ex_1/", attrs=c("b","c"),
-+                   as.data.frame = TRUE, extended=TRUE)
++                   return_as = "data.frame", extended=TRUE)
 > sapply(A[6:9, 3:4], "class")
        rows        cols           b           c
   "integer"   "integer"   "numeric" "character"
@@ -252,7 +252,7 @@ illustrates some basic operations on sparse arrays. It also shows date
 and datetime types instead of just integer and double precision floats.
 
 ``` r
-> A <- tiledb_array(uri = uri, as.data.frame = TRUE)
+> A <- tiledb_array(uri = uri, return_as = "data.frame")
 > A[1577858403:1577858408]
         rows cols a   b          d                       e
 1 1577858403    1 3 103 2020-01-11 2020-01-02 18:24:33.844
