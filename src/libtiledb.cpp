@@ -3849,6 +3849,14 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
         bool v = as<bool>(condition_value);
         uint64_t cond_val_size = sizeof(bool);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
+    } else if (cond_val_type == "DATETIME_MS") {
+        int64_t v = static_cast<int64_t>(as<double>(condition_value) * 1000);
+        uint64_t cond_val_size = sizeof(int64_t);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
+    } else if (cond_val_type == "DATETIME_DAY") {
+        int64_t v = static_cast<int64_t>(as<double>(condition_value));
+        uint64_t cond_val_size = sizeof(int64_t);
+        query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else {
         Rcpp::stop("Currently unsupported type: %s", cond_val_type);
     }
