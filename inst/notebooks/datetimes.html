@@ -343,7 +343,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <h4>R</h4>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_year&quot;</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>arr[]</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="co">##         rows a</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co">## 1 2001-01-01 1</span></span>
@@ -387,7 +387,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <h4>R</h4>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_day&quot;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>arr[]</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="co">##         rows a</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a><span class="co">## 1 2001-01-01 1</span></span>
@@ -426,7 +426,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <h4>R</h4>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_min&quot;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>arr[]</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a><span class="co">##                  rows a</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a><span class="co">## 1 2001-01-01 00:00:00 1</span></span>
@@ -468,7 +468,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <h4>R</h4>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ms&quot;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>arr[]</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a><span class="co">##                      rows a</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a><span class="co">## 1 1970-01-01 00:00:00.001 1</span></span>
@@ -513,7 +513,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <h4>R</h4>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_us&quot;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>arr[]</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="co">##                         rows a</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a><span class="co">## 1 1970-01-01 00:00:00.000001 1</span></span>
@@ -558,7 +558,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <h4>R</h4>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ns&quot;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>)</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>arr[]</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="co">##                                  rows a</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a><span class="co">## 1 1970-01-01T00:00:00.000000001+00:00 1</span></span>
@@ -575,7 +575,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <p>Sometimes we may want to access the date or datetimes value in their native <code>integer64</code> format. To do so, we set a toggle when opening the array as shown in the following example which uses the array from the preceding example (at resolution of nanosecond).</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ns&quot;</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>, <span class="dt">datetimes_as_int64=</span><span class="ot">TRUE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>, <span class="dt">datetimes_as_int64=</span><span class="ot">TRUE</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>arr[]</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="co">##                  rows a</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a><span class="co">## 1                   1 1</span></span>
@@ -587,7 +587,7 @@ but not yet date. A day can only be fully recovered via the 'days' period, here 
 <p>We can also write <code>integer64</code> types. The following example adds two extra rows:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="kw">library</span>(tiledb)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>uri &lt;-<span class="st"> &quot;/tmp/tiledb/dt_ns&quot;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">as.data.frame=</span><span class="ot">TRUE</span>, <span class="dt">datetimes_as_int64=</span><span class="ot">TRUE</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>arr &lt;-<span class="st"> </span><span class="kw">tiledb_array</span>(uri, <span class="dt">return_as=</span><span class="ot">"data.frame"</span>, <span class="dt">datetimes_as_int64=</span><span class="ot">TRUE</span>)</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>arr[] &lt;-<span class="st"> </span><span class="kw">data.frame</span>( <span class="dt">rows=</span>bit64<span class="op">::</span><span class="kw">as.integer64</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">a=</span><span class="dv">102</span><span class="op">:</span><span class="dv">103</span>)</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>arr[]</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a><span class="co">##                  rows   a</span></span>

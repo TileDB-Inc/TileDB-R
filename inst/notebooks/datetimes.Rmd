@@ -107,7 +107,7 @@ with tiledb.SparseArray(uri, mode='w') as A:
 ```{r rex2}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_year"
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as="data.frame")
 arr[]
 ## we can also look at 'raw' int64 values:
 datetimes_as_int64(arr) <- TRUE
@@ -149,7 +149,7 @@ with tiledb.SparseArray(uri, mode='w') as A:
 ```{r rex3}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_day"
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as="data.frame")
 arr[]
 ```
 
@@ -190,7 +190,7 @@ with tiledb.SparseArray(uri, mode='w') as A:
 ```{r rex4}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_min"
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as="data.frame")
 arr[]
 ```
 
@@ -236,7 +236,7 @@ with tiledb.SparseArray(uri, mode='w') as A:
 ```{r rex5a}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_ms"
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as="data.frame")
 arr[]
 ```
 
@@ -280,7 +280,7 @@ with tiledb.SparseArray(uri, mode='w') as A:
 ```{r rex5}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_us"
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, as="data.frame")
 arr[]
 ```
 
@@ -325,7 +325,7 @@ with tiledb.SparseArray(uri, mode='w') as A:
 ```{r rex6}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_ns"
-arr <- tiledb_array(uri, as.data.frame=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame")
 arr[]
 ```
 
@@ -339,7 +339,7 @@ example which uses the array from the preceding example (at resolution of nanose
 ```{r rex7}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_ns"
-arr <- tiledb_array(uri, as.data.frame=TRUE, datetimes_as_int64=TRUE)
+arr <- tiledb_array(uri, as="data.frame", datetimes_as_int64=TRUE)
 arr[]
 ```
 
@@ -348,7 +348,7 @@ We can also write `integer64` types. The following example adds two extra rows:
 ```{r rex8}
 library(tiledb)
 uri <- "/tmp/tiledb/dt_ns"
-arr <- tiledb_array(uri, as.data.frame=TRUE, datetimes_as_int64=TRUE)
+arr <- tiledb_array(uri, return_as="data.frame", datetimes_as_int64=TRUE)
 arr[] <- data.frame( rows=bit64::as.integer64(2:3), a=102:103)
 arr[]
 ```
