@@ -182,6 +182,11 @@ tiledb_array <- function(uri,
     array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   }
 
+  ## Deprecated July 2023, to removed by July 2024 or later
+  if (as.data.frame) .Deprecated(old="as.data.frame", new=r"(return_as="data.frame")")
+  if (as.matrix) .Deprecated(old="as.matrix", new=r"(return_as="matrix")")
+  if (as.array) .Deprecated(old="as.array", new=r"(return_as="array")")
+
   if (length(timestamp_start) > 0) {
       libtiledb_array_set_open_timestamp_start(array_xptr, timestamp_start)
   }
