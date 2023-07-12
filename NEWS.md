@@ -21,6 +21,8 @@
 
 * Integer64 values can now be written to array metadata (#564)
 
+* Date and POSIXct attributes are now supported in query conditions (#568)
+
 ## Bug Fixes
 
 * Consolidation and vacuum calls now reflect the state of the global context object (#547)
