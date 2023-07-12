@@ -352,7 +352,9 @@ sch <- tiledb_array_schema(dom,
                                      tiledb_attr("int64",  type="INT64"),
                                      tiledb_attr("uint64", type="UINT64"),
                                      tiledb_attr("float32",type="FLOAT32"),
-                                     tiledb_attr("float64",type="FLOAT64")),
+                                     tiledb_attr("float64",type="FLOAT64"),
+                                     tiledb_attr("posixct",type="DATETIME_MS"),
+                                     tiledb_attr("date",   type="DATETIME_DAY")),
                            sparse = TRUE)
 tiledb_array_create(tmp, sch)
 arr <- tiledb_array(tmp)
@@ -367,11 +369,17 @@ arr[] <- data.frame(rows = 1:n,
                     int64 = as.integer64(1:n),
                     uint64 = as.integer64(1:n),
                     float32 = 1:n,
-                    float64 = 1:n)
+                    float64 = 1:n,
+                    posixct = as.POSIXct(1:n, origin="1970-01-01"),
+                    date = as.Date(1:n))
 
 for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32",
               "int64", "uint64", "float32", "float64")) {
-    val <- if (grepl("int64", col)) as.integer64(10) else 10
+    val <- switch(col,
+                  int64 = as.integer64(10),
+                  posixct = as.POSIXct(10),
+                  date = as.Date(10),
+                  10)
     expect_silent(qc <- tiledb_query_condition_init(col, val, toupper(col), "GT"))
     arr <- tiledb_array(tmp, return_as="data.frame", query_condition = qc)
     expect_equal( NROW(arr[]), 10)      # ten rows if we restrict to 'value' > 10
@@ -423,3 +431,14 @@ query_condition(arr) <- parse_query_condition(labs == TRUE, ta=arr)
 expect_equal(nrow(arr[]), 2L)
 query_condition(arr) <- parse_query_condition(labs == FALSE, ta=arr)
 expect_equal(nrow(arr[]), 3L)
+
+## Parse query condition on POSIXct ('datetime') and Date
+uri <- tempfile()
+D <- data.frame(datetime=as.POSIXct(as.Date("2023-01-01") + 0:99),
+                date=as.Date("2023-01-01") + 0:99,
+                value=cumsum(1:100))
+fromDataFrame(D, uri)
+arr <- tiledb_array(uri, extended=FALSE, return_as="data.frame")
+qc <- parse_query_condition(datetime > "2023-01-05 00:00:00" && date <= "2023-01-10", ta=arr)
+query_condition(arr) <- qc
+expect_equal(nrow(arr[]), 5)
