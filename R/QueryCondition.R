@@ -63,7 +63,10 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
     stopifnot("Argument 'qc' with query condition object required" = is(qc, "tiledb_query_condition"),
               "Argument 'attr' must be character" = is.character(attr),
-              "Argument 'value' must be of length one" = (is.vector(value) || bit64::is.integer64(value)) && all.equal(length(value),1),
+              "Argument 'value' must be of length one" = (is.vector(value) ||
+                                                          bit64::is.integer64(value) ||
+                                                          inherits(value, "POSIXt") ||
+                                                          inherits(value, "Date")) && all.equal(length(value),1),
               "Argument 'dtype' must be character" = is.character(dtype),
               "Argument 'op' must be character" = is.character(op))
     op <- match.arg(op, c("LT", "LE", "GT", "GE", "EQ", "NE"))
@@ -200,6 +203,8 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                                                        ASCII = ch,
                                                        UTF8 = ch,
                                                        BOOL = as.logical(ch),
+                                                       DATETIME_MS = as.POSIXct(ch),
+                                                       DATETIME_DAY = as.Date(ch),
                                                        as.numeric(ch)),
                                         dtype = dtype,
                                         op = .mapOpToCharacter(op))
