@@ -371,14 +371,14 @@ arr[] <- data.frame(rows = 1:n,
                     float32 = 1:n,
                     float64 = 1:n,
                     posixct = as.POSIXct(1:n, origin="1970-01-01"),
-                    date = as.Date(1:n))
+                    date = as.Date(1:n, origin="1970-01-01"))
 
 for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32",
               "int64", "uint64", "float32", "float64")) {
     val <- switch(col,
                   int64 = as.integer64(10),
-                  posixct = as.POSIXct(10),
-                  date = as.Date(10),
+                  posixct = as.POSIXct(10, origin="1970-01-01"),
+                  date = as.Date(10, origin="1970-01-01"),
                   10)
     expect_silent(qc <- tiledb_query_condition_init(col, val, toupper(col), "GT"))
     arr <- tiledb_array(tmp, return_as="data.frame", query_condition = qc)
