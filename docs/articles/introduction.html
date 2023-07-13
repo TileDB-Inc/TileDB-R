@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,7 +148,7 @@ also limits the selection to just one attribute (via
 (instead of a simpler list) and for the (row and column, if present as
 here) indices to not be printed (via <code>extended=FALSE</code>).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="at">uri =</span> uri, <span class="at">attrs =</span> <span class="st">"b"</span>,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">as.data.frame=</span><span class="cn">TRUE</span>, <span class="at">extended=</span><span class="cn">FALSE</span>)<span class="er">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">return_as =</span> <span class="st">"data.frame"</span>, <span class="at">extended=</span><span class="cn">FALSE</span>)<span class="er">)</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,<span class="dv">2</span>]</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">101.5</span> <span class="fl">104.0</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span></span></code></pre></div>
@@ -161,7 +161,7 @@ indexing then selects with in the 2-d attribute object.</p>
 <code>[[var]]</code> or <code>$var</code>. A numeric index also works
 (but needs to account for <code>rows</code> and <code>cols</code>).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="at">uri =</span> uri, <span class="at">attrs =</span> <span class="fu">c</span>(<span class="st">"a"</span>,<span class="st">"b"</span>),</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">as.data.frame =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">return_as =</span> <span class="st">"data.frame"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,<span class="dv">2</span>][[<span class="st">"a"</span>]]</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">2</span> <span class="dv">7</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,<span class="dv">2</span>]<span class="sc">$</span>a</span>
@@ -188,7 +188,7 @@ that option was set.</p>
 <p>We can restrict the selection to a subset of attributes when opening
 the array.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A <span class="ot">&lt;-</span> <span class="fu">tiledb_dense</span>(<span class="at">uri =</span> uri, <span class="at">attrs =</span> <span class="fu">c</span>(<span class="st">"b"</span>,<span class="st">"c"</span>),</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">as.data.frame =</span> <span class="cn">TRUE</span>, <span class="at">extended=</span><span class="cn">FALSE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">return_as =</span> <span class="st">"data.frame"</span>, <span class="at">extended=</span><span class="cn">FALSE</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A[<span class="dv">6</span><span class="sc">:</span><span class="dv">9</span>,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>]</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>       b     c</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span>  <span class="fl">114.0</span> brown</span>
@@ -214,7 +214,7 @@ schema, subject to the constraint mentioned above on R types. (The char
 comes in as a factor variable as is still the R 3.6.* default which is
 about to change. We can also override, users can too.)</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="st">"/tmp/tiledb/ex_1/"</span>, <span class="at">attrs=</span><span class="fu">c</span>(<span class="st">"b"</span>,<span class="st">"c"</span>),</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">as.data.frame =</span> <span class="cn">TRUE</span>, <span class="at">extended=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                   <span class="at">return_as =</span> <span class="st">"data.frame"</span>, <span class="at">extended=</span><span class="cn">TRUE</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">sapply</span>(A[<span class="dv">6</span><span class="sc">:</span><span class="dv">9</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>], <span class="st">"class"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>       rows        cols           b           c</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"integer"</span>   <span class="st">"integer"</span>   <span class="st">"numeric"</span> <span class="st">"character"</span></span>
@@ -287,7 +287,7 @@ rows and column but this can be overridden.</p>
 illustrates some basic operations on sparse arrays. It also shows date
 and datetime types instead of just integer and double precision
 floats.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="at">uri =</span> uri, <span class="at">as.data.frame =</span> <span class="cn">TRUE</span>)</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="at">uri =</span> uri, <span class="at">return_as =</span> <span class="st">"data.frame"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> A[<span class="dv">1577858403</span><span class="sc">:</span><span class="dv">1577858408</span>]</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        rows cols a   b          d                       e</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1577858403</span>    <span class="dv">1</span> <span class="dv">3</span> <span class="dv">103</span> <span class="dv">2020-01-11</span> <span class="dv">2020-01-02</span> <span class="dv">18</span><span class="sc">:</span><span class="dv">24</span><span class="sc">:</span><span class="fl">33.844</span></span>

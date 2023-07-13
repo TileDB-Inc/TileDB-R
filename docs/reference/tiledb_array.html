@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,6 @@
 <span>  query_layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  datetimes_as_int64 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  encryption_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  timestamp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,</span>
 <span>  as.matrix <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  as.array <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  query_condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/methods/new.html" class="external-link">new</a></span><span class="op">(</span><span class="st">"tiledb_query_condition"</span><span class="op">)</span>,</span>
@@ -153,11 +152,6 @@ representation as ‘raw’ <code>integer64</code> and not as <code>Date</code>,
 in case the array was written with encryption.</p></dd>
 
 
-<dt>timestamp</dt>
-<dd><p>optional A POSIXct Datetime value determining where in time the array is
-to be openened. Deprecated, use ‘timestamp_start’ instead</p></dd>
-
-
 <dt>as.matrix</dt>
 <dd><p>optional logical switch, defaults to "FALSE"; currently limited to dense
 matrices; in the case of multiple attributes in query a list of matrices is returned</p></dd>
@@ -186,9 +180,10 @@ until which the array is to be openened. No fragments written earlier later be c
 <dt>return_as</dt>
 <dd><p>optional A character value with the desired <code>tiledb_array</code> conversion,
 permitted values are ‘asis’ (default, returning a list of columns), ‘array’,
-‘matrix’,‘data.frame’, ‘data.table’ or ‘tibble’; the latter
-two require the respective packages installed. The existing <code>as.*</code> arguments take precedent
-over this.</p></dd>
+‘matrix’,‘data.frame’, ‘data.table’, ‘tibble’, ‘arrow_table’,
+or ‘arrow’ (as an alias for ‘arrow_table’; here ‘data.table’,
+‘tibble’ and ‘arrow’ require the respective packages to be installed.
+The existing <code>as.*</code> arguments take precedent over this.</p></dd>
 
 
 <dt>query_statistics</dt>

@@ -97,7 +97,7 @@ uri <- tempfile()
 ## turn factor into character
 irisdf <- within(iris, Species <- as.character(Species))
 fromDataFrame(irisdf, uri)
-arr <- tiledb_array(uri, as.data.frame=TRUE, sparse=FALSE)
+arr <- tiledb_array(uri, return_as="data.frame", sparse=FALSE)
 newdf <- arr[]
 all.equal(iris, newdf)
 }
