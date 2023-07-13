@@ -14,7 +14,7 @@ based on a refactored implementation utilising newer TileDB features."><!-- math
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,10 +124,6 @@ describes the selected points for dimension i</p></dd>
 <dd><p>A character value</p></dd>
 
 
-<dt><code>timestamp</code></dt>
-<dd><p>A POSIXct datetime variable (deprecated, use timestamp_start)</p></dd>
-
-
 <dt><code>as.matrix</code></dt>
 <dd><p>A logical value</p></dd>
 
@@ -152,7 +148,9 @@ describes the selected points for dimension i</p></dd>
 <dd><p>A character value with the desired <code>tiledb_array</code> conversion,
 permitted values are ‘asis’ (default, returning a list of columns),
 ‘array’, ‘matrix’,‘data.frame’, ‘data.table’
-or ‘tibble’; the latter two require the respective packages installed</p></dd>
+‘tibble’, ‘arrow_table’ or ‘arrow’ (where the last two are synomyms);
+note that ‘data.table’, ‘tibble’ and ‘arrow’ require the respective
+packages to installed.</p></dd>
 
 
 <dt><code>query_statistics</code></dt>

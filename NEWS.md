@@ -1,7 +1,6 @@
-# tilebd 0.19.* -- Ongoing development
+# tilebd 0.20.0
 
-* This release of the R package builds against [TileDB 2.15.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.4), and has also been tested against earlier releases as well as the development
-  version (#551, #559)
+* This release of the R package builds against [TileDB 2.16.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.16.0), and has also been tested against earlier releases as well as the development version (#551, #559, #563)
 
 ## Improvements
 
@@ -48,8 +47,7 @@
 
 # tiledb 0.19.1
 
-* This release of the R package builds against [TileDB 2.15.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.2), and has also been tested against earlier releases as well as the development
-  version (#534, #541).
+* This release of the R package builds against [TileDB 2.15.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.2), and has also been tested against earlier releases as well as the development version (#534, #541).
 
 ## Improvements
 

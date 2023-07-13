@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.19.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -479,7 +479,7 @@ that follow.</p>
 <span><span class="fu"><a href="../reference/tiledb_array_create.html">tiledb_array_create</a></span><span class="op">(</span><span class="va">tmp</span>, <span class="va">sch</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">25</span><span class="op">)</span><span class="op">*</span><span class="fl">100</span><span class="op">)</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="va">arr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array.html">tiledb_dense</a></span><span class="op">(</span><span class="va">tmp</span>, as.data.frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">arr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array.html">tiledb_array</a></span><span class="op">(</span><span class="va">tmp</span>, return_as <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span></span>
 <span><span class="va">arr</span><span class="op">[</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">dat</span></span>
 <span></span>
 <span></span>
@@ -909,7 +909,7 @@ that follow.</p>
 </h4>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Open the array and read as a data.frame from it.</span></span>
-<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array.html">tiledb_array</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="va">array_name</span>, as.data.frame<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array.html">tiledb_array</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="va">array_name</span>, return_as <span class="op">=</span> <span class="st">"data.frame"</span>,</span>
 <span>                  encryption_key <span class="op">=</span> <span class="va">encryption_key</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Slice rows 1 and 2, and cols 2, 3 and 4</span></span>
