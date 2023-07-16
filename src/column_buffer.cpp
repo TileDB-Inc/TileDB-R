@@ -30,6 +30,12 @@
  * This file defines the a ColumBuffer class.
  */
 
+// compilation is noisy with the deprecation, we cannot use -Wno-deprecated-declarations
+// as CRAN flags it as a non-portable compiler option, and we cannot (easily) remove the
+// code (yet) so silencing it is for now, and regrouping the affected routines here which
+// also minimizes the surface of code covered by this definition
+#define TILEDB_DEPRECATED
+
 #include "tinyspdl.h"
 #include "column_buffer.h"
 

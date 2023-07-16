@@ -86,14 +86,12 @@ tiledb_arrow_schema_del <- function(ptr) {
 }
 
 ##' @noRd
-##' @export
 .check_arrow_pointers <- function(arrlst) {
     stopifnot("First argument must be an external pointer to ArrowArray" = check_arrow_array_tag(arrlst[[1]]),
               "Second argument must be an external pointer to ArrowSchema" = check_arrow_schema_tag(arrlst[[2]]))
 }
 
 ##' @noRd
-##' @export
 .as_arrow_table <- function(arrlst) {
     .check_arrow_pointers(arrlst)
     if (!requireNamespace("arrow", quietly=TRUE)) {
@@ -104,7 +102,6 @@ tiledb_arrow_schema_del <- function(ptr) {
 }
 
 ##' @noRd
-##' @export
 .tiledb_set_arrow_config <- function(ctx = tiledb_get_context()) {
     cfg <- tiledb_config()        # for var-num columns such as char we need these
     cfg["sm.var_offsets.bitsize"] <- "64"
@@ -114,7 +111,6 @@ tiledb_arrow_schema_del <- function(ptr) {
 }
 
 ##' @noRd
-##' @export
 .tiledb_unset_arrow_config <- function(ctx = tiledb_get_context()) {
     cfg <- tiledb_config()        # for var-num columns such as char we need these
     cfg["sm.var_offsets.bitsize"] <- "64"
