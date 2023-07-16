@@ -1,3 +1,18 @@
+# tilebd 0.20.1
+
+* This release of the R package builds against [TileDB 2.16.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.16.0), and has also been tested against earlier releases as well as the development version
+
+## Bug Fixes
+
+* Several minor adjustments were made to not tickle any notives from R-devel CMD check especially on Windows (#571)
+
+* A memory allocation for Arrow objects was aligned with how that memory is later freed (#572)
+
+## Build and Test Systems
+
+* The valgrind nightly test was rolled to branches 2.15 and 2.15 to 2.15 and 2.15 of the TileDB Embedded library.
+
+
 # tilebd 0.20.0
 
 * This release of the R package builds against [TileDB 2.16.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.16.0), and has also been tested against earlier releases as well as the development version (#551, #559, #563)
