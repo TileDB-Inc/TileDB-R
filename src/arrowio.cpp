@@ -33,7 +33,7 @@
 
 
 ArrowSchema* schema_owning_ptr(void) {
-  struct ArrowSchema* schema = (struct ArrowSchema*)ArrowMalloc(sizeof(struct ArrowSchema));
+  struct ArrowSchema* schema = new struct ArrowSchema;
   if (schema == nullptr) Rcpp::stop("Failed to allocate ArrowSchema");
   schema->release = NULL;
   spdl::debug("[schema_owning_ptr] created");
@@ -41,7 +41,7 @@ ArrowSchema* schema_owning_ptr(void) {
 }
 
 ArrowArray* array_owning_ptr(void) {
-  struct ArrowArray* array = (struct ArrowArray*)ArrowMalloc(sizeof(struct ArrowArray));
+  struct ArrowArray* array = new struct ArrowArray;
   if (array == nullptr) Rcpp::stop("Failed to allocate ArrowArray");
   array->release = NULL;
   spdl::debug("[array_owning_ptr] created");
