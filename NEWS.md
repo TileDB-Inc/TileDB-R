@@ -1,3 +1,10 @@
+# tiledb - ongoing development
+
+## Improvements
+
+* The column buffer allocation is now robust to container overflow sanitizer checks (#574)
+
+
 # tilebd 0.20.1
 
 * This release of the R package builds against [TileDB 2.16.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.16.0), and has also been tested against earlier releases as well as the development version
