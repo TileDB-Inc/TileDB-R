@@ -139,12 +139,12 @@ ColumnBuffer::ColumnBuffer(
     // Call reserve() to allocate memory without initializing the contents.
     // This reduce the time to allocate the buffer and reduces the
     // resident memory footprint of the buffer.
-    data_.reserve(num_bytes);
+    data_.resize(num_bytes);
     if (is_var_) {
-        offsets_.reserve(num_cells + 1);  // extra offset for arrow
+        offsets_.resize(num_cells + 1);  // extra offset for arrow
     }
     if (is_nullable_) {
-        validity_.reserve(num_cells);
+        validity_.resize(num_cells);
     }
 }
 
