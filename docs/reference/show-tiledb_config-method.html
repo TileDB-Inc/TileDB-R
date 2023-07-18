@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -129,13 +129,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.malloc_trim" : "true"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_global_order.ratio_array_data" : "0.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_global_order.ratio_coords" : "0.5"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_global_order.ratio_query_condition" : "0.25"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_global_order.ratio_tile_ranges" : "0.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_unordered_with_dups.ratio_array_data" : "0.1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_unordered_with_dups.ratio_coords" : "0.5"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_unordered_with_dups.ratio_query_condition" : "0.25"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.reader.sparse_unordered_with_dups.ratio_tile_ranges" : "0.1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.tile_upper_memory_limit" : "2147483648"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.tile_upper_memory_limit" : "1073741824"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.mem.total_budget" : "10737418240"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.memory_budget" : "5368709120"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "sm.memory_budget_var" : "10737418240"</span>
@@ -155,11 +153,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.blob_endpoint" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.block_list_block_size" : "5242880"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.max_parallel_ops" : "12"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.max_retries" : "5"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.max_retry_delay_ms" : "60000"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.retry_delay_ms" : "800"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.storage_account_key" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.storage_account_name" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.storage_sas_token" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.use_block_list_upload" : "true"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.azure.use_https" : "true"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.file.max_parallel_ops" : "1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.file.posix_directory_permissions" : "755"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.file.posix_file_permissions" : "644"</span>
@@ -187,6 +187,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.s3.bucket_canned_acl" : "NOT_SET"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.s3.ca_file" : ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.s3.ca_path" : ""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.s3.config_source" : "auto"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.s3.connect_max_tries" : "5"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.s3.connect_scale_factor" : "25"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> "vfs.s3.connect_timeout_ms" : "10800"</span>
