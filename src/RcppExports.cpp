@@ -1230,6 +1230,7 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type schema(schemaSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_version(schema));
+    return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_array_schema_set_enumeration
@@ -3494,11 +3495,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_schema_sparse", (DL_FUNC) &_tiledb_libtiledb_array_schema_sparse, 1},
     {"_tiledb_libtiledb_array_schema_dump", (DL_FUNC) &_tiledb_libtiledb_array_schema_dump, 1},
     {"_tiledb_libtiledb_array_schema_check", (DL_FUNC) &_tiledb_libtiledb_array_schema_check, 1},
-<<<<<<< HEAD
     {"_tiledb_libtiledb_array_schema_version", (DL_FUNC) &_tiledb_libtiledb_array_schema_version, 1},
-=======
     {"_tiledb_libtiledb_array_schema_set_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_enumeration, 7},
->>>>>>> d9969d36 (Snapshot with updated enumeration class)
     {"_tiledb_libtiledb_array_schema_evolution", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution, 1},
     {"_tiledb_libtiledb_array_schema_evolution_add_attribute", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_add_attribute, 2},
     {"_tiledb_libtiledb_array_schema_evolution_drop_attribute", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_drop_attribute, 2},

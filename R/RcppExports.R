@@ -432,6 +432,7 @@ libtiledb_array_schema_check <- function(schema) {
 
 libtiledb_array_schema_version <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_version`, schema)
+}
 
 libtiledb_array_schema_set_enumeration <- function(ctx, schema, attr, enum_name, values, nullable = FALSE, ordered = FALSE) {
     .Call(`_tiledb_libtiledb_array_schema_set_enumeration`, ctx, schema, attr, enum_name, values, nullable, ordered)
@@ -1144,3 +1145,4 @@ querybuf_from_shmem <- function(path, dtype) {
 vlcbuf_from_shmem <- function(datapath, dtype) {
     .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
 }
+
