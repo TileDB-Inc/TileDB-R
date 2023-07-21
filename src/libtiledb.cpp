@@ -1906,6 +1906,12 @@ bool libtiledb_array_schema_check(XPtr<tiledb::ArraySchema> schema) {
   return true;
 }
 
+// [[Rcpp::export]]
+int libtiledb_array_schema_version(XPtr<tiledb::ArraySchema> schema) {
+  check_xptr_tag<tiledb::ArraySchema>(schema);
+  return static_cast<int32_t>(schema->version());
+}
+
 /**
  * TileDB Array Schema Evolution
  */

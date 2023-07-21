@@ -414,6 +414,10 @@ libtiledb_array_schema_check <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_check`, schema)
 }
 
+libtiledb_array_schema_version <- function(schema) {
+    .Call(`_tiledb_libtiledb_array_schema_version`, schema)
+}
+
 libtiledb_array_schema_evolution <- function(ctx) {
     .Call(`_tiledb_libtiledb_array_schema_evolution`, ctx)
 }
