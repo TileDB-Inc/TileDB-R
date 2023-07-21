@@ -259,7 +259,7 @@ setMethod("schema", "tiledb_array", function(object, ...) {
 }
 .array_open <- function(ctxptr, uri, enckey=character()) {
     if (length(enckey) > 0) {
-        arr_xptr <- libtiledb_array_open(ctxptr, uri, "READ", enckey)
+        arr_xptr <- libtiledb_array_open_with_key(ctxptr, uri, "READ", enckey)
     } else {
         arr_xptr <- libtiledb_array_open(ctxptr, uri, "READ")
     }
