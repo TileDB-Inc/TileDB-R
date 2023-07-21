@@ -988,7 +988,7 @@ expect_equal(tiledb_array_get_non_empty_domain_from_name(arr, "d2"), c("a", "c")
 ## access schema from uri
 schema2 <- tiledb::schema(tmp)
 expect_true(is(schema2, "tiledb_array_schema"))
-expect_equal(schema, schema2)
+expect_equal(schema@ptr, schema2@ptr) # schema2 has two slots as we now return array pointer too
 
 ## access schema from array
 schema3 <- tiledb::schema(arr)

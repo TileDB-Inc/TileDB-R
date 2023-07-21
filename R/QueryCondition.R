@@ -60,7 +60,7 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 #' @return The initialized 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
-    stopifnot("Argument 'qc' with query condition object required" = is(qc, "tiledb_query_condition"),
+    stopifnot("Argument 'qc' with query condition object required" = inherits(qc, "tiledb_query_condition"),
               "Argument 'attr' must be character" = is.character(attr),
               "Argument 'value' must be of length one" = (is.vector(value) ||
                                                           bit64::is.integer64(value) ||
@@ -164,8 +164,8 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
             if (debug) cat("-- [", as.character(x[2]), "]",
                            " ", as.character(x[1]),
                            " [", as.character(x[3]), "]\n", sep="")
-            .makeExpr(x[[2]])
-            .makeExpr(x[[3]])
+            .makeExpr(x[[2]], debug=debug)
+            .makeExpr(x[[3]], debug=debug)
             tiledb_query_condition_combine(.makeExpr(x[[2]]),
                                            .makeExpr(x[[3]]),
                                            .mapBoolToCharacter(as.character(x[1])))

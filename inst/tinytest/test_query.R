@@ -229,6 +229,7 @@ expect_equal(nv[3], n)                  # third is length of validity buffer (if
 
 #})
 
+## n=31
 ## check for warning in insufficient memory
 oldcfg <- tiledb_config()
 cfg <- tiledb_config()
@@ -250,7 +251,7 @@ expect_true(nchar(res) > 1000)  		# safe lower boundary
 
 ctx <- tiledb_ctx(oldcfg)               # reset config
 
-
+## n==35
 ## check deletes
 if (tiledb_version(TRUE) < "2.12.0") exit_file("TileDB deletes requires TileDB 2.12.* or greater")
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
@@ -258,15 +259,14 @@ uri <- tempfile()
 pp <- palmerpenguins::penguins
 fromDataFrame(pp, uri, sparse = TRUE, col_index = c("species", "year"))
 
-qc <- parse_query_condition(body_mass_g > 4000 || island == "Biscoe" || sex == "male")
 arr <- tiledb_array(uri)
+qc <- parse_query_condition(body_mass_g > 4000 || island == "Biscoe" || sex == "male", ta = arr)
 qry <- tiledb_query(arr, "DELETE")
 qry <- tiledb_query_set_condition(qry, qc)
 tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 
 oo <- tiledb_array(uri, return_as="data.frame", strings_as_factors=TRUE)[]
-
 expect_equal(nrow(oo), 84)             # instead of 344 pre-deletion
 
 
