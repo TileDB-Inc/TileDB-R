@@ -1579,7 +1579,7 @@ bool libtiledb_attribute_has_enumeration(XPtr<tiledb::Context> ctx,
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Attribute>(attr);
     bool res = false;
-#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
     auto enmr = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
     if (enmr != std::nullopt) {
         res = true;
@@ -1596,7 +1596,7 @@ std::vector<std::string> libtiledb_attribute_get_enumeration(XPtr<tiledb::Contex
     check_xptr_tag<tiledb::Attribute>(attr);
     check_xptr_tag<tiledb::Array>(arr);
     std::vector<std::string> res;
-#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
     auto enmrname = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
     if (enmrname == std::nullopt) {
         Rcpp::stop("No enumeration name for attribute");
@@ -1616,7 +1616,9 @@ XPtr<tiledb::Attribute> libtiledb_attribute_set_enumeration(XPtr<tiledb::Context
                                                             const std::string &enum_name) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Attribute>(attr);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
     tiledb::AttributeExperimental::set_enumeration_name(*ctx.get(), *attr.get(), enum_name);
+#endif
     return attr;
 }
 
@@ -1955,7 +1957,7 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_enumeration(XPtr<tiledb::Co
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::ArraySchema>(schema);
     check_xptr_tag<tiledb::Attribute>(attr);
-#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
     auto enumeration = tiledb::Enumeration::create(*ctx.get(), enum_name, values);
     tiledb::ArraySchemaExperimental::add_enumeration(*ctx.get(), *schema.get(), enumeration);
     tiledb::AttributeExperimental::set_enumeration_name(*ctx.get(), *attr.get(), enum_name);
@@ -2560,7 +2562,7 @@ bool libtiledb_array_has_enumeration(XPtr<tiledb::Context> ctx,
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Array>(arr);
     bool res = false;
-#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
     auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), name);
     if (enmr.ptr() != nullptr) {
         res = true;
@@ -2576,7 +2578,7 @@ std::vector<std::string> libtiledb_array_get_enumeration(XPtr<tiledb::Context> c
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Array>(arr);
     std::vector<std::string> res;
-#if TILEDB_VERSION >= TileDB_Version(2,16,0)
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
     auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), name);
     if (enmr.ptr() == nullptr) {
         Rcpp::stop("No enumeration named '%s' in array.");

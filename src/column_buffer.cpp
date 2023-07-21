@@ -38,10 +38,12 @@
 
 #include "tinyspdl.h"
 #include "column_buffer.h"
+#include "tiledb_version.h"
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
 #include <tiledb/array_experimental.h>
 #include <tiledb/attribute_experimental.h>
 #include <tiledb/enumeration_experimental.h>
-
+#endif
 namespace tiledb {
 
 using namespace tiledb;
@@ -68,6 +70,7 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(std::shared_ptr<Array> array,
                        name_str);
         }
 
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
         auto enum_name = tiledb::AttributeExperimental::get_enumeration_name(ctx, attr);
         if (enum_name != std::nullopt) {
             spdl::trace(tfm::format("[ColumnBuffer::create] Seeing enumeration %s via %s",
@@ -80,6 +83,10 @@ std::shared_ptr<ColumnBuffer> ColumnBuffer::create(std::shared_ptr<Array> array,
             return ColumnBuffer::alloc(array, attr.name(), attr.type(), is_var, is_nullable,
                                        memory_budget, std::nullopt);
         }
+#else
+            return ColumnBuffer::alloc(array, attr.name(), attr.type(), is_var, is_nullable,
+                                       memory_budget, std::nullopt);
+#endif
 
     } else if (schema.domain().has_dimension(name_str)) {
         auto dim = schema.domain().dimension(name_str);
