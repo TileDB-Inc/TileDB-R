@@ -4,6 +4,8 @@
 
 * The column buffer allocation is now robust to container overflow sanitizer checks (#574)
 
+* The array schema version is now accessible via a function (#575)
+
 
 # tilebd 0.20.1
 

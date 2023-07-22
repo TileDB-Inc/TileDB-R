@@ -632,6 +632,18 @@ tiledb_array_schema_check <- function(object) {
   libtiledb_array_schema_check(object@ptr)
 }
 
+#' Check the version of the array schema
+#'
+#' Returns the (internal) version of the \code{tiledb_array} schema
+#' @param object An \code{array_schema} object
+#' @return An integer value describing the internal schema format version
+#' @export
+tiledb_array_schema_version <- function(object) {
+  stopifnot(`The argument must be a tiledb_array_schema object` = is(object, "tiledb_array_schema"))
+  libtiledb_array_schema_version(object@ptr)
+}
+
+
 ## -- convenience accessor `has_attribute` -- a little redundant as we already retrieve
 ##    all names and can check the returned set but a direct caller is a little lighter
 
