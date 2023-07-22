@@ -278,6 +278,7 @@ setMethod("show", signature = "tiledb_array",
           definition = function (object) {
   cat("tiledb_array\n"
      ,"  uri                = '", object@uri, "'\n"
+     ,"  schema_version     = ", tiledb_array_schema_version(schema(object)), "\n"
      ,"  is.sparse          = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
      ,"  as.data.frame      = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
      ,"  attrs              = ", if (length(object@attrs) == 0) "(none)"

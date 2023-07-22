@@ -640,7 +640,7 @@ tiledb_array_schema_check <- function(object) {
 #' @export
 tiledb_array_schema_version <- function(object) {
   stopifnot(`The argument must be a tiledb_array_schema object` = is(object, "tiledb_array_schema"))
-  libtiledb_array_schema_check(object@ptr)
+  libtiledb_array_schema_version(object@ptr)
 }
 
 
