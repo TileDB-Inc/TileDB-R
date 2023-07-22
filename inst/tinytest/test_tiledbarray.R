@@ -1522,8 +1522,9 @@ tiledb:::.legacy_validity(inuri, outdir, fromlegacy=TRUE)
 outuri <- file.path(outdir, "penguins")
 after <- tiledb_array(outuri, strings_as_factors=TRUE)[]
 expect_equal(sum(is.na(after$sex)), 11)
-for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows and sex
+for (col in colnames(before)[-c(1,8)]) {# exclude __tiledb_rows and sex
     expect_equal(before[[col]], after[[col]])
+}
 
 newout <- tempfile()
 dir.create(newout)
@@ -1531,8 +1532,9 @@ tiledb:::.legacy_validity(outuri, newout, tolegacy=TRUE)
 rvturi <- file.path(newout, "penguins")
 revert <- tiledb_array(rvturi, strings_as_factors=TRUE)[]
 expect_equal(sum(is.na(revert$sex)), 333)
-for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows
+for (col in colnames(before)[-c(1,8)]) { # exclude __tiledb_rows and sex
     expect_equal(before[[col]], revert[[col]])
+}
 
 ## check for error when setting on N+1 dims
 D <- data.frame(i=1:10, j=101:110, k=letters[1:10])
@@ -1547,3 +1549,9 @@ fromDataFrame(D, uri, col_index=1:2)
 arr <- tiledb_array(uri, return_as="data.frame")
 expect_error(arr[, , 103:105]) # error: indexing on third dim on two-dim array
 expect_equal(nrow(arr[]), 10)
+
+## check array schema version return
+sch <- tiledb::schema(arr)
+ver <- tiledb_array_schema_version(sch)
+expect_true(inherits(ver, "integer"))
+expect_true(is.finite(ver))
