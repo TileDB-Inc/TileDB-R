@@ -970,7 +970,7 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
   switch (dim_type) {
     case TILEDB_FLOAT32: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT32>::type;
-      return NumericVector({dim->tile_extent<DataType>(),});
+      return Rcpp::wrap(static_cast<double>(dim->tile_extent<DataType>()));
     }
     case TILEDB_FLOAT64: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_FLOAT64>::type;
@@ -978,23 +978,23 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       if (t == R_NaReal) {
         Rcpp::stop("tiledb_dim tile FLOAT64 value not representable as an R double");
       }
-      return NumericVector({t});
+      return Rcpp::wrap(static_cast<double>(dim->tile_extent<DataType>()));
     }
     case TILEDB_INT8: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT8>::type;
-      return IntegerVector({dim->tile_extent<DataType>()});
+      return Rcpp::wrap(static_cast<int32_t>(dim->tile_extent<DataType>()));
     }
     case TILEDB_UINT8: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT8>::type;
-      return IntegerVector({dim->tile_extent<DataType>()});
+      return Rcpp::wrap(static_cast<int32_t>(dim->tile_extent<DataType>()));
     }
     case TILEDB_INT16: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
-      return IntegerVector({dim->tile_extent<DataType>()});
+      return Rcpp::wrap(static_cast<int32_t>(dim->tile_extent<DataType>()));
     }
     case TILEDB_UINT16: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
-      return IntegerVector({dim->tile_extent<DataType>()});
+      return Rcpp::wrap(static_cast<int32_t>(dim->tile_extent<DataType>()));
     }
     case TILEDB_INT32: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT32>::type;
@@ -1002,15 +1002,17 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       if (t == R_NaInt) {
         Rcpp::stop("tiledb_dim tile INT32 value not representable as an R integer");
       }
-      return IntegerVector({t,});
+      return Rcpp::wrap(static_cast<int32_t>(t));
     }
     case TILEDB_UINT32: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT32>::type;
       auto t = dim->tile_extent<DataType>();
       if (t > std::numeric_limits<int32_t>::max()) {
-        Rcpp::stop("tiledb_dim tile UINT32 value not representable as an R integer");
+        Rcpp::warning("tiledb_dim tile UINT32 value not representable as an R integer, returning double");
+        return Rcpp::wrap(static_cast<double>(t));
+      } else {
+        return Rcpp::wrap(static_cast<int32_t>(t));
       }
-      return IntegerVector({static_cast<int32_t>(t),});
     }
     case TILEDB_DATETIME_YEAR:
     case TILEDB_DATETIME_MONTH:
@@ -1033,20 +1035,21 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
           return makeInteger64(v);           // which 'travels' as a double
       }
       // 'else' i.e. default cast to int32
-      return IntegerVector({static_cast<int32_t>(t),});
+      return Rcpp::wrap(static_cast<int32_t>(t));
     }
     case TILEDB_UINT64: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
       auto t = dim->tile_extent<DataType>();
       if (t > std::numeric_limits<int64_t>::max()) {
-          Rcpp::stop("tiledb_dim tile UINT64 value not representable as an INT64");
+          Rcpp::warning("tiledb_dim tile UINT32 value not representable as an INT64, returning double");
+          return Rcpp::wrap(static_cast<double>(t));
       }
       if (t > std::numeric_limits<int32_t>::max()) {
           auto tt = static_cast<int64_t>(t); // avoids a 'narrowing' watnings
           std::vector<int64_t> v{ tt };      // return as int64
           return makeInteger64(v);           // which 'travels' as a double
       }
-      return IntegerVector({static_cast<int32_t>(t),});
+      return Rcpp::wrap(static_cast<int32_t>(t));
     }
     default:
       Rcpp::stop("invalid tiledb_dim domain type (%s)", _tiledb_datatype_to_string(dim_type));
