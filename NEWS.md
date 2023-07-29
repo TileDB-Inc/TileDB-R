@@ -1,10 +1,16 @@
 # tiledb - ongoing development
 
+* This release of the R package builds against [TileDB 2.16.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.16.1), and has also been tested against earlier releases as well as the development version
+
 ## Improvements
 
 * The column buffer allocation is now robust to container overflow sanitizer checks (#574)
 
 * The array schema version is now accessible via a function (#575)
+
+* Use of TileDB Embedded was upgraded to release 2.15.3 (#576)
+
+* The tile extend getter function is now able to access a wider range of possible values (#577)
 
 
 # tilebd 0.20.1
@@ -19,7 +25,7 @@
 
 ## Build and Test Systems
 
-* The valgrind nightly test was rolled to branches 2.15 and 2.15 to 2.15 and 2.15 of the TileDB Embedded library.
+* The valgrind nightly test was rolled from branches 2.14 and 2.15 to 2.15 and 2.16 of the TileDB Embedded library.
 
 
 # tilebd 0.20.0
