@@ -92,10 +92,8 @@ const char* _tiledb_datatype_to_string(tiledb_datatype_t dtype) {
       return "DATETIME_FS";
     case TILEDB_DATETIME_AS:
       return "DATETIME_AS";
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     case TILEDB_BLOB:
       return "BLOB";
-#endif
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
     case TILEDB_BOOL:
       return "BOOL";
@@ -158,10 +156,8 @@ tiledb_datatype_t _string_to_tiledb_datatype(std::string typestr) {
     return TILEDB_DATETIME_AS;
   } else if (typestr == "UTF8") {
     return TILEDB_STRING_UTF8;
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   } else if (typestr == "BLOB") {
     return TILEDB_BLOB;
-#endif
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
   } else if (typestr == "BOOL") {
     return TILEDB_BOOL;
@@ -243,10 +239,8 @@ const char* _tiledb_layout_to_string(tiledb_layout_t layout) {
       return "GLOBAL_ORDER";
     case TILEDB_UNORDERED:
       return "UNORDERED";
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     case TILEDB_HILBERT:
       return "HILBERT";
-#endif
     default:
       Rcpp::stop("unknown tiledb_layout_t (%d)", layout);
   }
@@ -261,10 +255,8 @@ tiledb_layout_t _string_to_tiledb_layout(std::string lstr) {
     return TILEDB_GLOBAL_ORDER;
   } else if (lstr == "UNORDERED") {
     return TILEDB_UNORDERED;
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
   } else if (lstr == "HILBERT") {
     return TILEDB_HILBERT;
-#endif
   } else {
     Rcpp::stop("Unknown TileDB layout '%s' ", lstr.c_str());
   }
@@ -533,10 +525,8 @@ bool libtiledb_ctx_is_supported_fs(XPtr<tiledb::Context> ctx, std::string scheme
     return ctx->is_supported_fs(TILEDB_AZURE);
   } else if (scheme == "gcs") {
     return ctx->is_supported_fs(TILEDB_GCS);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
   } else if (scheme == "memory") {
     return ctx->is_supported_fs(TILEDB_MEMFS);
-#endif
   } else {
     Rcpp::stop("Unknown TileDB fs scheme: '%s'", scheme.c_str());
   }
@@ -550,12 +540,8 @@ void libtiledb_ctx_set_tag(XPtr<tiledb::Context> ctx, std::string key, std::stri
 
 // [[Rcpp::export]]
 std::string libtiledb_ctx_stats(XPtr<tiledb::Context> ctx) {
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     check_xptr_tag<tiledb::Context>(ctx);
     return ctx->stats();
-#else
-    return std::string("");
-#endif
 }
 
 /**
@@ -1110,7 +1096,6 @@ NumericVector dim_domain_subarray(NumericVector domain, NumericVector subscript)
 
 // [[Rcpp::export]]
 int libtiledb_dim_get_cell_val_num(XPtr<tiledb::Dimension> dim) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   check_xptr_tag<tiledb::Dimension>(dim);
   unsigned int ncells = dim->cell_val_num();
   if (ncells == TILEDB_VAR_NUM) {
@@ -1119,9 +1104,6 @@ int libtiledb_dim_get_cell_val_num(XPtr<tiledb::Dimension> dim) {
     Rcpp::stop("tiledb_attr ncells value not representable as an R integer");
   }
   return static_cast<int32_t>(ncells);
-#else
-  return R_NaInt;
-#endif
 }
 
 // [[Rcpp::export]]
@@ -1445,9 +1427,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                    "-- seeing %s which is not", type.c_str());
     }
     attr->set_filter_list(*fltrlst);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     attr->set_nullable(nullable);
-#endif
     return attr;
 }
 
@@ -1522,7 +1502,6 @@ void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
 
 // [[Rcpp::export]]
 void libtiledb_attribute_set_fill_value(XPtr<tiledb::Attribute> attr, SEXP val) {
-#if TILEDB_VERSION >= TileDB_Version(2,1,0)
   tiledb_datatype_t dtype = attr->type();
   check_xptr_tag<tiledb::Attribute>(attr);
   if (dtype == TILEDB_INT32) {
@@ -1546,14 +1525,10 @@ void libtiledb_attribute_set_fill_value(XPtr<tiledb::Attribute> attr, SEXP val) 
     std::string typestr = _tiledb_datatype_to_string(dtype);
     Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
   }
-#else
-  Rcpp::stop("libtiledb_attribute_set_fill_value_with_type only available with TileDB 2.1.0 or later");
-#endif
 }
 
 // [[Rcpp::export]]
 SEXP libtiledb_attribute_get_fill_value(XPtr<tiledb::Attribute> attr) {
-#if TILEDB_VERSION >= TileDB_Version(2,1,0)
   check_xptr_tag<tiledb::Attribute>(attr);
   tiledb_datatype_t dtype = attr->type();
   const void* valptr;
@@ -1575,30 +1550,18 @@ SEXP libtiledb_attribute_get_fill_value(XPtr<tiledb::Attribute> attr) {
     std::string typestr = _tiledb_datatype_to_string(dtype);
     Rcpp::stop("Type '%s' is not currently supported.", typestr.c_str());
   }
-#else
-  Rcpp::stop("libtiledb_attribute_get_fill_value_with_type only available with TileDB 2.1.0 or later");
-  return R_NilValue; // not reached
-#endif
 }
 
 // [[Rcpp::export]]
 void libtiledb_attribute_set_nullable(XPtr<tiledb::Attribute> attr, const bool flag) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     check_xptr_tag<tiledb::Attribute>(attr);
     attr->set_nullable(flag);
-#else
-    Rcpp::stop("Nullable attributes are only available with TileDB 2.2.0 or later");
-#endif
 }
 
 // [[Rcpp::export]]
 bool libtiledb_attribute_get_nullable(XPtr<tiledb::Attribute> attr) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     check_xptr_tag<tiledb::Attribute>(attr);
     return attr->nullable();
-#else
-    return false;
-#endif
 }
 
 /**
@@ -1651,10 +1614,8 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
         schema->set_offsets_filter_list(*xptr_offsets);
     }
     if (validity_filter_list.isNotNull()) {
-#if TILEDB_VERSION >= TileDB_Version(2,6,0)
         XPtr<tiledb::FilterList> xptr_validity(validity_filter_list);
         schema->set_validity_filter_list(*xptr_validity);
-#endif
     }
     schema->check();
     return schema;
@@ -1780,21 +1741,15 @@ int libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema) {
 
 // [[Rcpp::export]]
 bool libtiledb_array_schema_get_allows_dups(XPtr<tiledb::ArraySchema> schema) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   check_xptr_tag<tiledb::ArraySchema>(schema);
   return schema->allows_dups();
-#else
-  return true;
-#endif
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_allows_dups(XPtr<tiledb::ArraySchema> schema,
                                                                  bool allows_dups) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   check_xptr_tag<tiledb::ArraySchema>(schema);
   schema->set_allows_dups(allows_dups);
-#endif
   return schema;
 }
 
@@ -1834,31 +1789,24 @@ libtiledb_array_schema_set_offsets_filter_list(XPtr<tiledb::ArraySchema> schema,
 // [[Rcpp::export]]
 XPtr<tiledb::FilterList>
 libtiledb_array_schema_get_validity_filter_list(XPtr<tiledb::ArraySchema> schema) {
-#if TILEDB_VERSION >= TileDB_Version(2,6,0)
     check_xptr_tag<tiledb::ArraySchema>(schema);
     return make_xptr<tiledb::FilterList>(new tiledb::FilterList(schema->validity_filter_list()));
-#else
-    return make_xptr<tiledb::FilterList>(R_NilValue);
-#endif
-
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema>
 libtiledb_array_schema_set_validity_filter_list(XPtr<tiledb::ArraySchema> schema,
                                                 XPtr<tiledb::FilterList> fltrlst) {
-#if TILEDB_VERSION >= TileDB_Version(2,6,0)
     check_xptr_tag<tiledb::ArraySchema>(schema);
     check_xptr_tag<tiledb::FilterList>(fltrlst);
     schema->set_validity_filter_list(*fltrlst);
-#endif
     return schema;
 }
 
 
 // [[Rcpp::export]]
 int libtiledb_array_schema_get_attribute_num(XPtr<tiledb::ArraySchema> schema) {
-    check_xptr_tag<tiledb::ArraySchema>(schema);
+  check_xptr_tag<tiledb::ArraySchema>(schema);
   uint32_t attr_num = schema->attribute_num();
   if (attr_num >= std::numeric_limits<int32_t>::max()) {
     Rcpp::stop("Overflow retrieving attribute number.");
@@ -1921,14 +1869,9 @@ int libtiledb_array_schema_version(XPtr<tiledb::ArraySchema> schema) {
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx) {
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     check_xptr_tag<tiledb::Context>(ctx);
     auto p = new tiledb::ArraySchemaEvolution(*ctx.get());
     auto ptr = make_xptr<tiledb::ArraySchemaEvolution>(p);
-#else
-    auto p = new tiledb::ArraySchemaEvolution(); // placeholder
-    auto ptr = make_xptr<tiledb::ArraySchemaEvolution>(p);
-#endif
     return ptr;
 }
 
@@ -1936,43 +1879,31 @@ libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx) {
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution_add_attribute(XPtr<tiledb::ArraySchemaEvolution> ase,
                                                XPtr<tiledb::Attribute> attr) {
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     check_xptr_tag<tiledb::ArraySchemaEvolution>(ase);
     check_xptr_tag<tiledb::Attribute>(attr);
     tiledb::ArraySchemaEvolution res = ase->add_attribute(*attr.get());
     auto ptr = new tiledb::ArraySchemaEvolution(res);
     return make_xptr<tiledb::ArraySchemaEvolution>(ptr);
-#else
-    return ase;
-#endif
 }
 
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution_drop_attribute(XPtr<tiledb::ArraySchemaEvolution> ase,
                                                 const std::string & attrname) {
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     check_xptr_tag<tiledb::ArraySchemaEvolution>(ase);
     tiledb::ArraySchemaEvolution res = ase->drop_attribute(attrname);
     auto ptr = new tiledb::ArraySchemaEvolution(res);
     return make_xptr<tiledb::ArraySchemaEvolution>(ptr);
-#else
-    return ase;
-#endif
 }
 
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchemaEvolution>
 libtiledb_array_schema_evolution_array_evolve(XPtr<tiledb::ArraySchemaEvolution> ase,
                                               const std::string & uri) {
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     check_xptr_tag<tiledb::ArraySchemaEvolution>(ase);
     tiledb::ArraySchemaEvolution res = ase->array_evolve(uri);
     auto ptr = new tiledb::ArraySchemaEvolution(res);
     return make_xptr<tiledb::ArraySchemaEvolution>(ptr);
-#else
-    return ase;
-#endif
 }
 
 /**
@@ -2013,11 +1944,9 @@ XPtr<tiledb::Array> libtiledb_array_open_at(XPtr<tiledb::Context> ctx, std::stri
 #if TILEDB_VERSION >= TileDB_Version(2,15,0)
     auto ptr = new tiledb::Array(*ctx.get(), uri, query_type, tiledb::TemporalPolicy(tiledb::TimeTravel, ts_ms));
     ptr->set_open_timestamp_end(ts_ms);
-#elif TILEDB_VERSION >= TileDB_Version(2,3,0)
+#else
     auto ptr = new tiledb::Array(*ctx.get(), uri, query_type);
     ptr->set_open_timestamp_end(ts_ms);
-#else
-    auto ptr = new tiledb::Array(*ctx.get(), uri, query_type, ts_ms);
 #endif
     return make_xptr<tiledb::Array>(ptr);
 }
@@ -2138,20 +2067,15 @@ List libtiledb_array_get_non_empty_domain(XPtr<tiledb::Array> array) {
 // [[Rcpp::export]]
 CharacterVector libtiledb_array_get_non_empty_domain_var_from_name(XPtr<tiledb::Array> array,
                                                                    std::string name) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   check_xptr_tag<tiledb::Array>(array);
   auto res = array->non_empty_domain_var(name);
   return CharacterVector::create(res.first, res.second);
-#else
-  return CharacterVector::create("NA", "NA");
-#endif
 }
 
 // [[Rcpp::export]]
 CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb::Array> array,
                                                                     int32_t idx,
                                                                     std::string typestr = "ASCII") {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   check_xptr_tag<tiledb::Array>(array);
   if (typestr == "ASCII") {
     auto res = array->non_empty_domain_var(idx);
@@ -2161,16 +2085,12 @@ CharacterVector libtiledb_array_get_non_empty_domain_var_from_index(XPtr<tiledb:
   }
   // not reached
   return CharacterVector::create("", "");
-#else
-  return CharacterVector::create("NA", "NA");
-#endif
 }
 
 // [[Rcpp::export]]
 NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array> array,
                                                              std::string name,
                                                              std::string typestr) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   check_xptr_tag<tiledb::Array>(array);
   if (typestr == "INT64") {
     auto p = array->non_empty_domain<int64_t>(name);
@@ -2228,9 +2148,6 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
   }
-#else
-  return NumericVector::create(NA_REAL, NA_REAL);
-#endif
 }
 
 
@@ -2238,7 +2155,6 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
 NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array> array,
                                                               int32_t idx,
                                                               std::string typestr) {
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   check_xptr_tag<tiledb::Array>(array);
   if (typestr == "INT64") {
     auto p = array->non_empty_domain<int64_t>(idx);
@@ -2296,9 +2212,6 @@ NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
   }
-#else
-  return NumericVector::create(NA_REAL, NA_REAL);
-#endif
 }
 
 
@@ -2495,46 +2408,34 @@ void libtiledb_array_delete_metadata(XPtr<tiledb::Array> array, std::string key)
 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_set_open_timestamp_start(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp) {
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     check_xptr_tag<tiledb::Array>(array);
     uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
     array->set_open_timestamp_start(ts_ms);
-#endif
     return array;
 }
 
 // [[Rcpp::export]]
 Rcpp::Datetime libtiledb_array_open_timestamp_start(XPtr<tiledb::Array> array) {
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     check_xptr_tag<tiledb::Array>(array);
     uint64_t ts_ms = array->open_timestamp_start();
     double ts = ts_ms / 1000.0;
     return(Rcpp::Datetime(ts));
-#else
-    return(Rcpp::Datetime(0.0));
-#endif
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Array> libtiledb_array_set_open_timestamp_end(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp) {
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     check_xptr_tag<tiledb::Array>(array);
     uint64_t ts_ms = static_cast<uint64_t>(std::round(tstamp.getFractionalTimestamp() * 1000));
     array->set_open_timestamp_end(ts_ms);
-#endif
     return array;
 }
 
 // [[Rcpp::export]]
 Rcpp::Datetime libtiledb_array_open_timestamp_end(XPtr<tiledb::Array> array) {
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     check_xptr_tag<tiledb::Array>(array);
     uint64_t ts_ms = array->open_timestamp_end();
     double ts = ts_ms / 1000.0;
     return(Rcpp::Datetime(ts));
-#else
-    return(Rcpp::Datetime(0.0));
-#endif
 }
 
 // [[Rcpp::export]]
@@ -2596,7 +2497,6 @@ std::string libtiledb_query_layout(XPtr<tiledb::Query> query) {
 XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> query,
                                                            SEXP subarray, std::string typestr) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     spdl::debug(tfm::format("libtiledb_query_set_subarray_with_type] setting subarray for type %s", typestr));
     tiledb::Subarray subarr(query->ctx(), query->array());
     if (typestr == "INT32") {
@@ -2638,7 +2538,6 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
         Rcpp::stop("currently unsupported subarray datatype '%s'", typestr.c_str());
     }
     query->set_subarray(subarr);
-#endif
     return query;
 }
 
@@ -2646,7 +2545,6 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray_with_type(XPtr<tiledb::Query> q
 XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
                                                  SEXP subarray) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     spdl::debug(tfm::format("libtiledb_query_set_subarray] setting subarray for type %s", Rf_type2char(TYPEOF(subarray))));
     tiledb::Subarray subarr(query->ctx(), query->array());
     if (TYPEOF(subarray) == INTSXP) {
@@ -2659,7 +2557,6 @@ XPtr<tiledb::Query> libtiledb_query_set_subarray(XPtr<tiledb::Query> query,
         Rcpp::stop("currently unsupported subarray datatype");
     }
     query->set_subarray(subarr);
-#endif
     return query;
 }
 
@@ -2670,27 +2567,15 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer(XPtr<tiledb::Query> query,
   check_xptr_tag<tiledb::Query>(query);
   if (TYPEOF(buffer) == INTSXP) {
     IntegerVector vec(buffer);
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
-#else
-    query->set_buffer(attr, vec.begin(), vec.length());
-#endif
     return query;
   } else if (TYPEOF(buffer) == REALSXP) {
     NumericVector vec(buffer);
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
-#else
-    query->set_buffer(attr, vec.begin(), vec.length());
-#endif
     return query;
   } else if (TYPEOF(buffer) == LGLSXP) {
     LogicalVector vec(buffer);  // note that it is really an int at the element storage
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     query->set_data_buffer(attr, vec.begin(), vec.length());
-#else
-    query->set_buffer(attr, vec.begin(), vec.length());
-#endif
     return query;
   } else {
     Rcpp::stop("Invalid attribute buffer type for attribute '%s': %s",
@@ -2770,24 +2655,12 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_char(XPtr<tiledb::Query> quer
                                                         XPtr<vlc_buf_t> bufptr) {
     check_xptr_tag<tiledb::Query>(query);
     check_xptr_tag<vlc_buf_t>(bufptr);
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     if (bufptr->nullable) {
         query->set_validity_buffer(attr, bufptr->validity_map);
     }
     query->set_data_buffer(attr, bufptr->str);
     query->set_offsets_buffer(attr, bufptr->offsets);
     return query;
-#elif TILEDB_VERSION >= TileDB_Version(2,2,4)
-    if (bufptr->nullable) {
-        query->set_buffer_nullable(attr, bufptr->offsets, bufptr->str, bufptr->validity_map);
-    } else {
-        query->set_buffer(attr, bufptr->offsets, bufptr->str);
-    }
-    return query;
-#else
-    query->set_buffer(attr, bufptr->offsets, bufptr->str);
-    return query;
-#endif
 }
 
 // 'len' is the length of the query result set, i.e. buffer elements for standard columns
@@ -2866,19 +2739,11 @@ XPtr<tiledb::Query> libtiledb_query_set_buffer_var_vec(XPtr<tiledb::Query> query
                                                        std::string attr, XPtr<vlv_buf_t> buf) {
   check_xptr_tag<vlv_buf_t>(buf);
   if (buf->dtype == TILEDB_INT32) {
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
       query->set_data_buffer(attr, buf->idata);
       query->set_offsets_buffer(attr, buf->offsets);
-#else
-      query->set_buffer(attr, buf->offsets, buf->idata);
-#endif
   } else if (buf->dtype == TILEDB_FLOAT64) {
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
       query->set_data_buffer(attr, buf->ddata);
       query->set_offsets_buffer(attr, buf->offsets);
-#else
-      query->set_buffer(attr, buf->offsets, buf->ddata);
-#endif
   } else {
       Rcpp::stop("Unsupported type '%s' for buffer", _tiledb_datatype_to_string(buf->dtype));
   }
@@ -2937,10 +2802,8 @@ XPtr<query_buf_t> libtiledb_query_buffer_alloc_ptr(std::string domaintype,
      buf->size = sizeof(int16_t);
   } else if (domaintype == "INT8" || domaintype == "UINT8") {
      buf->size = sizeof(int8_t);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   } else if (domaintype == "BLOB") {
      buf->size = sizeof(int8_t);
-#endif
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
   } else if (domaintype == "BOOL") {
      buf->size = sizeof(uint8_t);
@@ -3119,23 +2982,11 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
 XPtr<tiledb::Query> libtiledb_query_set_buffer_ptr(XPtr<tiledb::Query> query,
                                                    std::string attr,
                                                    XPtr<query_buf_t> buf) {
-  check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
+    check_xptr_tag<tiledb::Query>(query);
     if (buf->nullable) {
         query->set_validity_buffer(attr, buf->validity_map);
     }
     query->set_data_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
-#elif TILEDB_VERSION >= TileDB_Version(2,2,0)
-    if (buf->nullable) {
-        query->set_buffer_nullable(attr, static_cast<void*>(buf->vec.data()), buf->ncells,
-                                   buf->validity_map.data(),
-                                   static_cast<uint64_t>(buf->validity_map.size()));
-    } else {
-        query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
-    }
-#else
-    query->set_buffer(attr, static_cast<void*>(buf->vec.data()), buf->ncells);
-#endif
     return query;
 }
 
@@ -3272,7 +3123,6 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     if (buf->nullable)
         setValidityMapForInteger(out, buf->validity_map, buf->numvar);
     return out;
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   } else if (dtype == "BLOB") {
     size_t n = buf->ncells;
     Rcpp::RawVector out(n);
@@ -3281,7 +3131,6 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     // if (buf->nullable)
     //    setValidityMapForRaw(out, buf->validity_map);
     return out;
-#endif
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
   } else if (dtype == "BOOL") {
     size_t n = buf->ncells;
@@ -3368,7 +3217,6 @@ NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> que
                                                          std::string attribute,
                                                          bool nullable = false) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (nullable) {
         auto nelem = query->result_buffer_elements_nullable()[attribute];
         auto vec = NumericVector( {
@@ -3381,10 +3229,6 @@ NumericVector libtiledb_query_result_buffer_elements_vec(XPtr<tiledb::Query> que
         auto nelem = query->result_buffer_elements()[attribute];
         return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
     }
-#else
-    auto nelem = query->result_buffer_elements()[attribute];
-    return NumericVector( { static_cast<double>(nelem.first), static_cast<double>(nelem.second) });
-#endif
 }
 
 // [[Rcpp::export]]
@@ -3422,11 +3266,7 @@ Rcpp::DatetimeVector libtiledb_query_get_fragment_timestamp_range(XPtr<tiledb::Q
 
 // [[Rcpp::export]]
 XPtr<tiledb::Subarray> libtiledb_subarray(XPtr<tiledb::Query> query) {
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     return make_xptr<tiledb::Subarray>(new tiledb::Subarray(query->ctx(), query->array()));
-#else
-    return make_xptr<tiledb::Subarray>(R_NilValue);
-#endif
 }
 
 // [[Rcpp::export]]
@@ -3434,7 +3274,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range(XPtr<tiledb::Subarray> subar
                                                     int iidx, SEXP starts, SEXP ends,
                                                     SEXP strides = R_NilValue) {
     check_xptr_tag<tiledb::Subarray>(subarr);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     spdl::debug("libtiledb_query_add_range] setting subarray");
     if (TYPEOF(starts) != TYPEOF(ends)) {
         Rcpp::stop("'start' and 'end' must be of identical types");
@@ -3461,7 +3300,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range(XPtr<tiledb::Subarray> subar
     } else {
         Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
     }
-#endif
     return subarr;
 }
 
@@ -3473,7 +3311,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
                                                               SEXP strides = R_NilValue) {
 
     check_xptr_tag<tiledb::Subarray>(subarr);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     if (TYPEOF(starts) != TYPEOF(ends)) {
         Rcpp::stop("'start' and 'end' must be of identical types");
     }
@@ -3551,7 +3388,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         int64_t stride = (strides == R_NilValue) ? 0 : makeScalarInteger64(as<double>(strides));
         subarr->add_range(uidx, start, end, stride);
         spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %d by %d", typestr, uidx, start, end, stride));
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
     } else if (typestr == "ASCII" || typestr == "CHAR") {
         std::string start = as<std::string>(starts);
         std::string end = as<std::string>(ends);
@@ -3560,7 +3396,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         }
         subarr->add_range(uidx, start, end);
         spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %s to %s", typestr, uidx, start, end));
-#endif
     } else if (typestr == "FLOAT32") {
         float start = as<float>(starts);
         float end = as<float>(ends);
@@ -3570,7 +3405,6 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
     } else {
         Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
     }
-#endif
     return subarr;
 }
 
@@ -3578,9 +3412,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
 XPtr<tiledb::Query> libtiledb_query_set_subarray_object(XPtr<tiledb::Query> query, XPtr<tiledb::Subarray> subarr) {
     check_xptr_tag<tiledb::Query>(query);
     check_xptr_tag<tiledb::Subarray>(subarr);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
     query->set_subarray(*subarr.get());
-#endif
     return query;
 }
 
@@ -3596,70 +3428,48 @@ R_xlen_t libtiledb_query_get_est_result_size(XPtr<tiledb::Query> query, std::str
 // [[Rcpp::export]]
 NumericVector libtiledb_query_get_est_result_size_nullable(XPtr<tiledb::Query> query, std::string attr) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     std::array<uint64_t, 2> est = query->est_result_size_nullable(attr);
     return Rcpp::NumericVector::create(static_cast<R_xlen_t>(est[0]),
                                        static_cast<R_xlen_t>(est[1]));
-#else
-    return Rcpp::NumericVector::create(R_NaReal,R_NaReal);
-#endif
 }
 
 
 // [[Rcpp::export]]
 NumericVector libtiledb_query_get_est_result_size_var(XPtr<tiledb::Query> query, std::string attr) {
   check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION < TileDB_Version(2,2,0)
-  std::pair<uint64_t, uint64_t> est = query->est_result_size_var(attr);
-  return NumericVector::create(static_cast<R_xlen_t>(est.first), static_cast<R_xlen_t>(est.second));
-#else
   std::array<uint64_t, 2> est = query->est_result_size_var(attr);
   return NumericVector::create(static_cast<R_xlen_t>(est[0]), static_cast<R_xlen_t>(est[1]));
-#endif
 }
 
 // [[Rcpp::export]]
 NumericVector libtiledb_query_get_est_result_size_var_nullable(XPtr<tiledb::Query> query, std::string attr) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION < TileDB_Version(2,2,0)
-    return Rcpp::NumericVector::create(R_NaReal,R_NaReal,R_NaReal);
-#else
     std::array<uint64_t, 3> est = query->est_result_size_var_nullable(attr);
     return Rcpp::NumericVector::create(static_cast<R_xlen_t>(est[0]),
                                        static_cast<R_xlen_t>(est[1]),
                                        static_cast<R_xlen_t>(est[2]));
-#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_query_get_range_num(XPtr<tiledb::Query> query, int dim_idx) {
   check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   tiledb::Array arr = query->array();
   tiledb::Context ctx = query->ctx();
   tiledb::Subarray sub(ctx, arr);
   query->update_subarray_from_query(&sub);
   uint64_t range_num = sub.range_num(static_cast<unsigned int>(dim_idx));
-#else
-  uint64_t range_num = query->range_num(static_cast<unsigned int>(dim_idx));
-#endif
   return static_cast<double>(range_num);
 }
 
 // [[Rcpp::export]]
 IntegerVector libtiledb_query_get_range(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
   check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   tiledb::Array arr = query->array();
   tiledb::Context ctx = query->ctx();
   tiledb::Subarray sub(ctx, arr);
   query->update_subarray_from_query(&sub);
   std::array<int32_t, 3> rng = sub.range<int32_t>(static_cast<unsigned int>(dim_idx),
                                                   static_cast<unsigned int>(rng_idx));
-#else
-  std::array<int32_t, 3> rng = query->range<int32_t>(static_cast<unsigned int>(dim_idx),
-                                                     static_cast<unsigned int>(rng_idx));
-#endif
   return IntegerVector::create(rng[0], 	// start
                                rng[1],  // end
                                rng[2]); // stride
@@ -3668,15 +3478,11 @@ IntegerVector libtiledb_query_get_range(XPtr<tiledb::Query> query, int dim_idx, 
 // [[Rcpp::export]]
 CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim_idx, int rng_idx) {
   check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
   tiledb::Array arr = query->array();
   tiledb::Context ctx = query->ctx();
   tiledb::Subarray sub(ctx, arr);
   query->update_subarray_from_query(&sub);
   std::array<std::string, 2> rng = sub.range(static_cast<unsigned int>(dim_idx), static_cast<uint64_t>(rng_idx));
-#else
-  std::array<std::string, 2> rng = query->range(static_cast<unsigned int>(dim_idx), static_cast<uint64_t>(rng_idx));
-#endif
   return CharacterVector::create(rng[0], rng[1]);	 // start and end
 }
 
@@ -3684,10 +3490,8 @@ CharacterVector libtiledb_query_get_range_var(XPtr<tiledb::Query> query, int dim
 XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
                                                   XPtr<tiledb::QueryCondition> query_cond) {
   check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
-    query->set_condition(*query_cond.get());
-#endif
-    return query;
+  query->set_condition(*query_cond.get());
+  return query;
 }
 
 // Note that the Array pointer returned here from a Query object is not owned and will not
@@ -3697,53 +3501,36 @@ XPtr<tiledb::Query> libtiledb_query_set_condition(XPtr<tiledb::Query> query,
 XPtr<tiledb::Array> libtiledb_query_get_array(XPtr<tiledb::Query> query, XPtr<tiledb::Context> ctx) {
     check_xptr_tag<tiledb::Query>(query);
     check_xptr_tag<tiledb::Context>(ctx);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto arr = query->array();
     auto cptr = arr.ptr().get();
     return make_xptr<tiledb::Array>(new tiledb::Array(*ctx.get(), cptr, false));
-#else
-    return make_xptr<tiledb::Array>(R_NilValue);
-#endif
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::ArraySchema> libtiledb_query_get_schema(XPtr<tiledb::Query> query,
                                                      XPtr<tiledb::Context> ctx) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto arr = query->array();
     return libtiledb_array_schema_load(ctx, arr.uri()); // returns an XPtr<tiledb::ArraySchema>
-#else
-    return make_xptr<tiledb::ArraySchema>(R_NilValue);
-#endif
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_query_stats(XPtr<tiledb::Query> query) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,4,0)
     return query->stats();
-#else
-    return std::string("");
-#endif
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Context> libtiledb_query_get_ctx(XPtr<tiledb::Query> query) {
     check_xptr_tag<tiledb::Query>(query);
-#if TILEDB_VERSION >= TileDB_Version(2,6,0)
     auto ctx = query->ctx();
     return make_xptr<tiledb::Context>(new tiledb::Context(ctx));
-#else
-    return make_xptr<tiledb::Context>(R_NilValue);
-#endif
 }
 
 
 /**
  * Query Condition
  */
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
 const char* _tiledb_query_condition_op_to_string(tiledb_query_condition_op_t op) {
     switch (op) {
     case TILEDB_LT:
@@ -3805,16 +3592,12 @@ tiledb_query_condition_combination_op_t _tiledb_query_string_to_condition_combin
         Rcpp::stop("Unknown TileDB combination op string '%s'", opstr.c_str());
     }
 }
-#endif
+
 
 // [[Rcpp::export]]
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx) {
     check_xptr_tag<tiledb::Context>(ctx);
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     auto ptr = make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(*ctx.get()));
-#else
-    auto ptr = make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition());
-#endif
     return ptr;
 }
 
@@ -3825,7 +3608,6 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
                                     const std::string& cond_val_type,
                                     const std::string& cond_op_string) {
     check_xptr_tag<tiledb::QueryCondition>(query_cond);
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     tiledb_query_condition_op_t op = _tiledb_query_string_to_condition_op(cond_op_string);
     if (cond_val_type == "INT32"  || cond_val_type == "UINT32") {
         int v = as<int>(condition_value);
@@ -3869,7 +3651,6 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
     } else {
         Rcpp::stop("Currently unsupported type: %s", cond_val_type);
     }
-#endif
 }
 
 // [[Rcpp::export]]
@@ -3878,13 +3659,9 @@ XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::Quer
                                                                const std::string& str) {
     check_xptr_tag<tiledb::QueryCondition>(lhs);
     check_xptr_tag<tiledb::QueryCondition>(lhs);
-#if TILEDB_VERSION >= TileDB_Version(2,3,0)
     tiledb_query_condition_combination_op_t op = _tiledb_query_string_to_condition_combination_op(str);
     tiledb::QueryCondition res = lhs->combine(*rhs.get(), op);
     auto query_cond = make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
-#else
-    auto query_cond = make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition());
-#endif
     return query_cond;
 }
 
@@ -4232,24 +4009,15 @@ void libtiledb_stats_dump(std::string path = "") {
 
 // [[Rcpp::export]]
 std::string libtiledb_stats_raw_dump() {
-#if TILEDB_VERSION < TileDB_Version(2,0,3)
-    Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
-#else
     std::string txt;
     tiledb::Stats::raw_dump(&txt);
     return txt;
-#endif
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_stats_raw_get() {
-#if TILEDB_VERSION < TileDB_Version(2,0,3)
-    Rcpp::stop("This function requires TileDB Embedded 2.0.3 or later.");
-    return(std::string());//not reached
-#else
     Rcpp::message(Rcpp::wrap("This function is deprecated, please use 'libtiledb_stats_raw_dump'."));
     return libtiledb_stats_raw_dump();
-#endif
 }
 
 /**
@@ -4258,23 +4026,15 @@ std::string libtiledb_stats_raw_get() {
 // [[Rcpp::export]]
 XPtr<tiledb::FragmentInfo> libtiledb_fragment_info(XPtr<tiledb::Context> ctx,
                                                    const std::string& uri) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto ptr = make_xptr<tiledb::FragmentInfo>(new tiledb::FragmentInfo(*ctx.get(), uri));
     ptr->load();                // also load
-#else
-    auto ptr = make_xptr<tiledb::FragmentInfo>(new tiledb::FragmentInfo()); // placeholder class to permit compilation
-#endif
     return ptr;
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_fragment_info_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->fragment_uri(static_cast<uint32_t>(fid));
-#else
-    return std::string("NA");
-#endif
 }
 
 // [[Rcpp::export]]
@@ -4282,7 +4042,6 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tile
                                                                        int32_t fid, int32_t did,
                                                                        const std::string& typestr) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (typestr == "INT64") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
@@ -4308,23 +4067,23 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tile
         std::vector<uint16_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
         return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
-  } else if (typestr == "INT8") {
+    } else if (typestr == "INT8") {
         std::vector<int8_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
         return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
-  } else if (typestr == "UINT8") {
+    } else if (typestr == "UINT8") {
         std::vector<uint8_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
         return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
-  } else if (typestr == "FLOAT64") {
+    } else if (typestr == "FLOAT64") {
         std::vector<double> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
         return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
-  } else if (typestr == "FLOAT32") {
+    } else if (typestr == "FLOAT32") {
         std::vector<float> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
         return NumericVector::create(non_empty_dom[0], non_empty_dom[1]);
-  } else if (typestr == "DATETIME_YEAR" ||
+    } else if (typestr == "DATETIME_YEAR" ||
              typestr == "DATETIME_MONTH" ||
              typestr == "DATETIME_WEEK" ||
              typestr == "DATETIME_DAY" ||
@@ -4348,9 +4107,6 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tile
         Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
         return NumericVector::create(NA_REAL, NA_REAL); // not reached
     }
-#else
-    return NumericVector::create(NA_REAL, NA_REAL);
-#endif
 }
 
 // [[Rcpp::export]]
@@ -4359,7 +4115,6 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiled
                                                                       const std::string& dim_name,
                                                                       const std::string& typestr) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     if (typestr == "INT64") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
@@ -4425,9 +4180,6 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiled
         Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
         return NumericVector::create(NA_REAL, NA_REAL); // not reached
     }
-#else
-    return NumericVector::create(NA_REAL, NA_REAL);
-#endif
 }
 
 // [[Rcpp::export]]
@@ -4435,12 +4187,8 @@ Rcpp::CharacterVector
 libtiledb_fragment_info_get_non_empty_domain_var_index(XPtr<tiledb::FragmentInfo> fi,
                                                        int32_t fid, int32_t did) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto sp = fi->non_empty_domain_var(static_cast<uint32_t>(fid), static_cast<uint32_t>(did));
     return CharacterVector::create(sp.first, sp.second);
-#else
-    return CharacterVector::create(NA_STRING, NA_STRING);
-#endif
 }
 
 // [[Rcpp::export]]
@@ -4449,143 +4197,89 @@ libtiledb_fragment_info_get_non_empty_domain_var_name(XPtr<tiledb::FragmentInfo>
                                                       int32_t fid,
                                                       const std::string& dim_name) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto sp = fi->non_empty_domain_var(static_cast<uint32_t>(fid), dim_name);
     return CharacterVector::create(sp.first, sp.second);
-#else
-    return CharacterVector::create(NA_STRING, NA_STRING);
-#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_num(XPtr<tiledb::FragmentInfo> fi) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->fragment_num());
-#else
-    return NA_REAL;
-#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_size(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->fragment_size(static_cast<uint32_t>(fid)));
-#else
-    return NA_REAL;
-#endif
 }
 
 // [[Rcpp::export]]
 bool libtiledb_fragment_info_dense(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->dense(static_cast<uint32_t>(fid));
-#else
-    return NA_LOGICAL;
-#endif
 }
 
 // [[Rcpp::export]]
 bool libtiledb_fragment_info_sparse(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->sparse(static_cast<uint32_t>(fid));
-#else
-    return NA_LOGICAL;
-#endif
 }
 
 // [[Rcpp::export]]
 Rcpp::DatetimeVector
 libtiledb_fragment_info_timestamp_range(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     auto range = fi->timestamp_range(static_cast<uint32_t>(fid));
     return Rcpp::DatetimeVector::create(range.first/1000.0, range.second/1000.0);
-#else
-    return DatetimeVector::create(NA_REAL, NA_REAL);
-#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_cell_num(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->cell_num(static_cast<uint32_t>(fid)));
-#else
-    return NA_REAL;
-#endif
 }
 
 // [[Rcpp::export]]
 int libtiledb_fragment_info_version(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<int>(fi->version(static_cast<uint32_t>(fid)));
-#else
-    return NA_INTEGER;
-#endif
 }
 
 // [[Rcpp::export]]
 bool libtiledb_fragment_info_has_consolidated_metadata(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->has_consolidated_metadata(static_cast<uint32_t>(fid));
-#else
-    return NA_LOGICAL;
-#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_unconsolidated_metadata_num(XPtr<tiledb::FragmentInfo> fi) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->unconsolidated_metadata_num());
-#else
-    return NA_REAL;
-#endif
 }
 
 // [[Rcpp::export]]
 double libtiledb_fragment_info_to_vacuum_num(XPtr<tiledb::FragmentInfo> fi) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return static_cast<double>(fi->to_vacuum_num());
-#else
-    return NA_REAL;
-#endif
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_fragment_info_to_vacuum_uri(XPtr<tiledb::FragmentInfo> fi, int32_t fid) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->to_vacuum_uri(static_cast<uint32_t>(fid));
-#else
-    return std::string("NA");
-#endif
 }
 
 // [[Rcpp::export]]
 void libtiledb_fragment_info_dump(XPtr<tiledb::FragmentInfo> fi) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return fi->dump();
-#endif
 }
 
 // [[Rcpp::export]]
 std::string libtiledb_error_message(XPtr<tiledb::Context> ctx) {
     check_xptr_tag<tiledb::Context>(ctx);
-#if TILEDB_VERSION >= TileDB_Version(2,5,0)
     tiledb::Error error(*ctx.get());
     std::string txt(error.error_message());
-#else
-    std::string txt("This function requires TileDB 2.5.0 or later.");
-#endif
     return txt;
 }
 

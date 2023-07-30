@@ -146,9 +146,7 @@ class ArrowAdapter {
             case TILEDB_STRING_UTF8:
                 return "U";  // large because TileDB uses 64bit offsets
             case TILEDB_CHAR:
-#if TILEDB_VERSION >= TileDB_Version(2,7,0)
             case TILEDB_BLOB:
-#endif
                 return "Z";  // large because TileDB uses 64bit offsets
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
             case TILEDB_BOOL:
