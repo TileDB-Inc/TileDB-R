@@ -84,7 +84,7 @@ tiledb_array_schema <- function(domain,
               "tile_order argument must be a scalar string" = is.scalar(tile_order, "character"),
               "coords_filter_list must be a filter list"    = is.null(coords_filter_list) || is(coords_filter_list, "tiledb_filter_list"),
               "offsets_filter_list must be a filter_list"   = is.null(offsets_filter_list) || is(offsets_filter_list, "tiledb_filter_list"),
-              "validity_filter_list must be a_filter_list"  = is.null(validity_filter_list) || is(validity_filter_list, "tiledb_filter_list") || (tiledb_version(TRUE) < "2.6.0"),
+              "validity_filter_list must be a_filter_list"  = is.null(validity_filter_list) || is(validity_filter_list, "tiledb_filter_list"),
               "'sparse' must be TRUE or FALSE"              = is.logical(sparse),
               "'allows_dups' must be TRUE or FALSE"         = is.logical(allows_dups),
               "'allows_dups' requires 'sparse' TRUE"        = !allows_dups || sparse)
@@ -93,7 +93,7 @@ tiledb_array_schema <- function(domain,
     attr_ptr_list <- if (is.list(attrs)) lapply(attrs, function(obj) slot(obj, "ptr")) else list()
     coords_filter_list_ptr <- if (!is.null(coords_filter_list)) coords_filter_list@ptr else NULL
     offsets_filter_list_ptr <- if (!is.null(offsets_filter_list)) offsets_filter_list@ptr else NULL
-    validity_filter_list_ptr <- if (tiledb_version(TRUE) >= "2.6.0" && !is.null(validity_filter_list)) validity_filter_list@ptr else NULL
+    validity_filter_list_ptr <- if (!is.null(validity_filter_list)) validity_filter_list@ptr else NULL
 
     ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptr_list, cell_order, tile_order,
                                   coords_filter_list_ptr, offsets_filter_list_ptr,
@@ -143,7 +143,7 @@ setMethod("show", signature(object = "tiledb_array_schema"),
     fl <- filter_list(object)
     nfc <- nfilters(fl$coords)
     nfo <- nfilters(fl$offsets)
-    nfv <- if (tiledb_version(TRUE) >= "2.6.0") nfilters(fl$validity) else 0
+    nfv <- nfilters(fl$validity)
     cat("tiledb_array_schema(\n    domain=", .as_text_domain(domain(object)), ",\n",
         "    attrs=c(\n        ", paste(sapply(attrs(object), .as_text_attribute), collapse=",\n        "), "\n    ),\n",
         "    cell_order=\"", cell_order(object), "\", ",
@@ -155,7 +155,7 @@ setMethod("show", signature(object = "tiledb_array_schema"),
         sep="")
     if (nfc > 0) cat("    coords_filter_list=", .as_text_filter_list(fl$coords), if (nfo + nfv > 0) "," else "", "\n", sep="")
     if (nfo > 0) cat("    offsets_filter_list=", .as_text_filter_list(fl$offsets), if (nfv > 0) ",\n" else "", sep="")
-    if (tiledb_version(TRUE) >= "2.6.0" && nfv > 0)
+    if (nfv > 0)
         cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
     cat(")\n", sep="")
     #cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
@@ -325,10 +325,10 @@ setGeneric("filter_list<-", function(x, value) standardGeneric("filter_list<-"))
 setMethod("filter_list", "tiledb_array_schema", function(object) {
   coords_ptr <- libtiledb_array_schema_get_coords_filter_list(object@ptr)
   offsets_ptr <- libtiledb_array_schema_get_offsets_filter_list(object@ptr)
-  validity_ptr <- if (tiledb_version(TRUE) >= "2.6.0") libtiledb_array_schema_get_validity_filter_list(object@ptr) else NULL
+  validity_ptr <- libtiledb_array_schema_get_validity_filter_list(object@ptr)
   return(c(coords = tiledb_filter_list.from_ptr(coords_ptr),
            offsets = tiledb_filter_list.from_ptr(offsets_ptr),
-           validity = if (tiledb_version(TRUE) >= "2.6.0") tiledb_filter_list.from_ptr(validity_ptr) else NULL))
+           validity = tiledb_filter_list.from_ptr(validity_ptr)))
 })
 
 # ' Set the Filter List for a TileDB Schema
@@ -377,8 +377,7 @@ tiledb_array_schema_set_offsets_filter_list <- function(sch, fl) {
 #' @export
 tiledb_array_schema_set_validity_filter_list <- function(sch, fl) {
   stopifnot(`The 'sch' argument must be a tiledb_array_schema object` = is(sch, "tiledb_array_schema"),
-            `The 'fl' argument must be a tiledb_filter_list object` = is(fl, "tiledb_filter_list"),
-            `This function requires TileDB 2.6.0 or later` = tiledb_version(TRUE) >= "2.6.0")
+            `The 'fl' argument must be a tiledb_filter_list object` = is(fl, "tiledb_filter_list"))
   sch@ptr <- libtiledb_array_schema_set_validity_filter_list(sch@ptr, fl@ptr)
   sch
 }
@@ -701,11 +700,9 @@ tiledb_schema_object <- function(array) {
     n_offsets <- nfilters(filterlist$offsets)
     offsets <- sapply(seq_len(n_offsets), function(i) tiledb_filter_type(filterlist$offsets[i-1]))
     offsetopts <- sapply(seq_len(n_offsets), function(i) .getFilterOption(filterlist$offsets[i-1]))
-    if (tiledb_version(TRUE) >= "2.6.0") {
-        n_validity <- nfilters(filterlist$validity)
-        validity <- sapply(seq_len(n_validity), function(i) tiledb_filter_type(filterlist$validity[i-1]))
-        validityopts <- sapply(seq_len(n_validity), function(i) .getFilterOption(filterlist$validity[i-1]))
-    }
+    n_validity <- nfilters(filterlist$validity)
+    validity <- sapply(seq_len(n_validity), function(i) tiledb_filter_type(filterlist$validity[i-1]))
+    validityopts <- sapply(seq_len(n_validity), function(i) .getFilterOption(filterlist$validity[i-1]))
 
     arrdesc <- data.frame(uri = uri,
                           type = if (sparse) "sparse" else "dense",
@@ -717,8 +714,8 @@ tiledb_schema_object <- function(array) {
                           coord_options = paste0(coordopts, collapse=","),
                           offset_filters = paste0(offsets, collapse=","),
                           offset_options = paste0(offsetopts, collapse=","),
-                          validity_filters = if (tiledb_version(TRUE) >= "2.6.0") paste0(validity, collapse=",") else "",
-                          validity_options = if (tiledb_version(TRUE) >= "2.6.0") paste0(validityopts, collapse=",") else ""
+                          validity_filters = paste0(validity, collapse=","),
+                          validity_options = paste0(validityopts, collapse=",")
                           )
 
     dims <- dimensions(dom)
@@ -757,7 +754,7 @@ tiledb_schema_object <- function(array) {
         if (nfilters(fltlst) == 0) ""
         else sapply(seq_len(nfilters(fltlst)), function(i) .getFilterOption(fltlst[i-1]))
     }))
-    attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a) || tiledb_version(TRUE) < "2.1.0") ""
+    attrfillvals <- sapply(attrs, function(a) if (tiledb_attribute_get_nullable(a)) ""
                                               else format(tiledb_attribute_get_fill_value(a)))
 
     attrdesc <- data.frame(names = attrnames,
@@ -839,12 +836,9 @@ tiledb_schema_object <- function(array) {
         ifelse(sch$offset_filters != "",
                .show_filter_list(sch$offset_filters, sch$offset_options, "\n\t\t\t   offsets_filter_list="),
                "offset_filters=NULL"), ", ",
-        ifelse(tiledb_version(TRUE) >= "2.6.0",
-               ifelse(sch$validity_filters != "",
-                      .show_filter_list(sch$validity_filters, sch$validity_options, "\n\t\t\t   validity_filter_list="),
-                      "validity_filters=NULL"),
-               ""),
-        ")\n",
+        ifelse(sch$validity_filters != "",
+               .show_filter_list(sch$validity_filters, sch$validity_options, "\n\t\t\t   validity_filter_list="),
+               "validity_filters=NULL"), ")\n",
         "tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n",
         sep="")
 }

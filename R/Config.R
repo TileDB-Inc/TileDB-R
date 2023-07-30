@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -234,15 +234,8 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
   }
   stopifnot(`The 'ncores' argument must be numeric or character` = is.numeric(ncores) || is.character(ncores))
   cfg <- tiledb_config()
-  if (tiledb_version(TRUE) >= "2.1.0") {
-    cfg["sm.compute_concurrency_level"] <- ncores
-    cfg["sm.io_concurrency_level"] <- ncores
-  } else {
-    cfg["sm.num_reader_threads"] <- ncores
-    cfg["sm.num_writer_threads"] <- ncores
-    cfg["vfs.file.max_parallel_ops"] <- ncores
-    cfg["vfs.num_threads"] <- ncores
-  }
+  cfg["sm.compute_concurrency_level"] <- ncores
+  cfg["sm.io_concurrency_level"] <- ncores
   if (verbose) message("Limiting TileDB to ",ncores," cores. See ?limitTileDBCores.")
   invisible(cfg)
 }

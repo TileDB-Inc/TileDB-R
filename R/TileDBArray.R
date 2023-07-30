@@ -815,7 +815,7 @@ setMethod("[", "tiledb_array",
               res <- libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
               spdl::debug("[getEstimatedSize] column '{}' (!is.na(varnum) and nullable) {}", name, res)
           }
-          if (rangeunset && tiledb::tiledb_version(TRUE) >= "2.2.0") {
+          if (rangeunset) {
               sz <- tiledb_datatype_string_to_sizeof(datatype)
               res <- res / sz
               spdl::debug("[getEstimatedSize] column '{}' rangeunset and res scaled to {}", name, res)
@@ -1629,15 +1629,13 @@ array_consolidate <- function(uri, cfg = NULL,
     }
 
     if (!missing(start_time)) {
-        stopifnot(`Argument 'start_time' must be datetime object` = inherits(start_time, "POSIXt"),
-                  `TileDB 2.3.0 or later is required`  = tiledb_version(TRUE) >= "2.3.0")
+        stopifnot(`Argument 'start_time' must be datetime object` = inherits(start_time, "POSIXt"))
         start_time_int64 <- bit64::as.integer64(as.numeric(start_time) * 1000)
         cfg["sm.consolidation.timestamp_start"] = as.character(start_time_int64)
     }
 
     if (!missing(end_time)) {
-        stopifnot(`Argument 'end_time' must be datetime object`  = inherits(end_time, "POSIXt"),
-                  `TileDB 2.3.0 or later is required` = tiledb_version(TRUE) >= "2.3.0")
+        stopifnot(`Argument 'end_time' must be datetime object`  = inherits(end_time, "POSIXt"))
         end_time_int64 <- bit64::as.integer64(as.numeric(end_time) * 1000)
         cfg["sm.consolidation.timestamp_end"] = as.character(end_time_int64)
     }
@@ -1673,15 +1671,13 @@ array_vacuum <- function(uri, cfg = NULL,
     }
 
     if (!missing(start_time)) {
-        stopifnot(`Argument 'start_time' must be datetime object` = inherits(start_time, "POSIXt"),
-                  `TileDB 2.3.0 or later is required`  = tiledb_version(TRUE) >= "2.3.0")
+        stopifnot(`Argument 'start_time' must be datetime object` = inherits(start_time, "POSIXt"))
         start_time_int64 <- bit64::as.integer64(as.numeric(start_time) * 1000)
         cfg["sm.consolidation.timestamp_start"] = as.character(start_time_int64)
     }
 
     if (!missing(end_time)) {
-        stopifnot(`Argument 'end_time' must be datetime object` = inherits(end_time, "POSIXt"),
-                  `TileDB 2.3.0 or later is required` = tiledb_version(TRUE) >= "2.3.0")
+        stopifnot(`Argument 'end_time' must be datetime object` = inherits(end_time, "POSIXt"))
         end_time_int64 <- bit64::as.integer64(as.numeric(end_time) * 1000)
         cfg["sm.consolidation.timestamp_end"] = as.character(end_time_int64)
     }

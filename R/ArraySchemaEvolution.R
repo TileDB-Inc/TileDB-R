@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2021 TileDB Inc.
+#  Copyright (c) 2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,7 @@ setClass("tiledb_array_schema_evolution",
 #' @return A 'array_schema_evolution' object
 #' @export
 tiledb_array_schema_evolution <- function(ctx = tiledb_get_context()) {
-    stopifnot(`The 'ctx' argument must be a Context object` = is(ctx, "tiledb_ctx"),
-              `This function needs TileDB 2.4.0 or newer` = tiledb_version(TRUE) >= "2.4.0")
+    stopifnot(`The 'ctx' argument must be a Context object` = is(ctx, "tiledb_ctx"))
     ptr <- libtiledb_array_schema_evolution(ctx@ptr)
     array_schema_evolution <- new("tiledb_array_schema_evolution", ptr = ptr)
     invisible(array_schema_evolution)

@@ -73,14 +73,10 @@ tiledb_stats_print <- function() {
 #' This function requires TileDB Embedded 2.0.3 or later.
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' if (tiledb_version(TRUE) >= "2.0.3") {
-#'   txt <- tiledb_stats_raw_dump()
-#'   cat(txt, "\n")
-#' }
+#' txt <- tiledb_stats_raw_dump()
+#' cat(txt, "\n")
 #' @export
 tiledb_stats_raw_dump <- function() {
-    stopifnot("Raw statistics are available with TileDB Embedded verion 2.0.3 or later" =
-                  tiledb_version(TRUE) >= "2.0.3")
     libtiledb_stats_raw_dump()
 }
 
@@ -90,8 +86,6 @@ tiledb_stats_raw_dump <- function() {
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_print <- function() {
-    stopifnot("Raw statistics are available with TileDB Embedded verion 2.0.3 or later"
-              = tiledb_version(TRUE) >= "2.0.3")
     cat(libtiledb_stats_raw_dump(), "\n")
 }
 
@@ -102,8 +96,6 @@ tiledb_stats_raw_print <- function() {
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_get <- function() {
-    stopifnot("Raw statistics are available with TileDB Embedded verion 2.0.3 or later"
-              = tiledb_version(TRUE) >= "2.0.3")
     .Deprecated(msg="Use 'tiledb_stats_raw_dump' instead of 'tiledb_stats_raw_get'.")
     libtiledb_stats_raw_get()
  }

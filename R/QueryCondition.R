@@ -37,8 +37,7 @@ setClass("tiledb_query_condition",
 #' @return A 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition <- function(ctx = tiledb_get_context()) {
-    stopifnot("The argument must be a ctx object" = is(ctx, "tiledb_ctx"),
-              "This function needs TileDB 2.3.0 or newer" = tiledb_version(TRUE) >= "2.3.0")
+    stopifnot("The argument must be a ctx object" = is(ctx, "tiledb_ctx"))
     ptr <- libtiledb_query_condition(ctx@ptr)
     query_condition <- new("tiledb_query_condition", ptr = ptr, init = FALSE)
     invisible(query_condition)

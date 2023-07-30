@@ -219,7 +219,7 @@ createBatched <- function(x) {
                 res <- libtiledb_query_get_est_result_size(qryptr, name)
             else if (!is.na(varnum) && nullable)
                 res <- libtiledb_query_get_est_result_size_nullable(qryptr, name)[1]
-            if (rangeunset && tiledb::tiledb_version(TRUE) >= "2.2.0") {
+            if (rangeunset) {
                 sz <- tiledb_datatype_string_to_sizeof(datatype)
                 res <- res / sz
             }
