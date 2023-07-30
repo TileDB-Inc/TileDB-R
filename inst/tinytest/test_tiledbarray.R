@@ -4,7 +4,6 @@ library(tiledb)
 isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (isOldWindows) exit_file("skip this file on old Windows releases")
 isMacOS <- (Sys.info()['sysname'] == "Darwin")
-if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
@@ -1205,7 +1204,7 @@ arr2 <- tiledb_array(uri, return_as="matrix")
 res <- arr2[]
 expect_equal(dim(res), c(5,4))
 expect_equal(sum(is.na(res[1:3,1:2])), 6) # arr[1:3,1:2] all NA
-if (tiledb_version(TRUE) < "2.7.0" || Sys.Date() >= as.Date("2022-01-28")) expect_equal(res[1:3,3:4], mat[1:3,3:4])  ## Fix pending, cf SC-13735
+expect_equal(res[1:3,3:4], mat[1:3,3:4])
 expect_equal(res[4:5,1:4], mat[4:5,1:4])
 
 ## issue 259 dense array with n>2 dimensions
@@ -1234,13 +1233,13 @@ expect_equal(array_consolidate(uri), NULL)
 expect_error(array_consolidate(uri, start_time="abc")) # not a datetime
 expect_error(array_consolidate(uri, end_time="def"))   # not a datetime
 now <- Sys.time()
-if (tiledb_version(TRUE) >= "2.3.0") expect_equal(array_consolidate(uri, start_time=now-60, end_time=now), NULL)
+expect_equal(array_consolidate(uri, start_time=now-60, end_time=now), NULL)
 
 ## vaccum
 expect_equal(array_vacuum(uri), NULL)
 expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
 expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
-if (tiledb_version(TRUE) >= "2.3.0") expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
+expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
 
 
 
@@ -1318,7 +1317,6 @@ expect_true(inherits(res, "matrix"))
 set_return_as_preference(oldConversionValue) 		# reset baseline value
 
 ## test query_statistics setter and getter
-if (tiledb_version(TRUE) < "2.4.0") exit_file("TileDB Query stats requires TileDB 2.4.* or greater")
 uri <- tempfile()
 fromDataFrame(mtcars, uri)
 arr <- tiledb_array(uri)

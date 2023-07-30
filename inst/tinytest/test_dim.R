@@ -78,12 +78,10 @@ dim <- tiledb_dim("", c(1, 100), type = "FLOAT64")
 expect_equal(tiledb::datatype(dim), "FLOAT64")
 #})
 
-t#est_that("tiledb_dim dim() method", {
+#test_that("tiledb_dim dim() method", {
 d <- tiledb_dim("", c(-1L, 100L))
 expect_equal(dim(d), 102L)
 #})
-
-if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
 ## test permissible types for dimension objects -- cf inst/examples/ex_dimensions.R
 ## quick check of various dimension types

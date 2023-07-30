@@ -198,8 +198,6 @@ expect_equal(tiledb_query_status(qry), "COMPLETE")
 
 keydat <- tiledb:::libtiledb_query_get_buffer_ptr(buf, FALSE)
 
-if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
-
 n <- tiledb_query_result_buffer_elements(qry, "rows")
 expect_equal(n, 4L)
 expect_equal(rowdat[1:n], rows[4:7])
@@ -207,8 +205,6 @@ expect_equal(valdat[1:n], vals[4:7])
 expect_equal(keydat[1:n], keys[4:7])
 n2 <- tiledb:::libtiledb_query_result_buffer_elements(qry@ptr, "rows", 0)
 expect_equal(n2, 0)                     # first element can be requested, is zero for fixed-sized
-
-if (tiledb_version(TRUE) < "2.2.0") exit_file("Remaining tests require TileDB 2.2.* or later")
 
 ## not as streamlined as it could, may need a wrapper for schema-from-query
 arrschptr <- tiledb:::libtiledb_query_get_schema(qry@ptr, tiledb_get_context()@ptr)
@@ -244,7 +240,6 @@ array <- tiledb_array(tmp, return_as="data.frame")
 if (packageVersion("tiledb") <= "0.11.0") expect_warning(res <- array[]) # newer versions loop, no warning
 
 ## check for query stats
-if (tiledb_version(TRUE) < "2.4.0") exit_file("TileDB Query + Ctx stats requires TileDB 2.4.* or greater")
 res <- tiledb_query_stats(qry)
 expect_true(is.character(res))
 expect_true(nchar(res) > 1000)  		# safe lower boundary

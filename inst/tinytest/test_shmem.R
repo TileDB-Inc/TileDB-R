@@ -6,8 +6,6 @@ if (Sys.info()['sysname'] == "Darwin") exit_file("Skip on macOS")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
-
 uri <- tempfile()
 fromDataFrame(mtcars, uri)              			# create an array
 arr <- tiledb_array(uri, return_as="data.frame")

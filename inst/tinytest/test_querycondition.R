@@ -12,8 +12,6 @@ if (Sys.getenv("CI") != "") set_allocation_size_preference(1024*1024*5)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.3.0") exit_file("TileDB Query Condition requires TileDB 2.3.* or greater")
-
 ## simple data.frame to test against
 D <- data.frame(a=1:20,
                 b=seq(101,120)+0.5)
@@ -138,8 +136,6 @@ expect_equal(nrow(ndf), 1)
 tiledb_array_close(arr)
 rm(qry)
 
-
-if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
 ## tiledb_array support
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")

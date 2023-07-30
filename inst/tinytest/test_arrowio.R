@@ -6,8 +6,6 @@ if (isOldWindows) exit_file("skip this file on old Windows releases")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.2.0") exit_file("TileDB ArrowIO types required TileDB 2.2.* or greater")
-
 if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
 suppressMessages(library(arrow))
 
