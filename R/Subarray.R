@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2022 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,7 @@ tiledb_subarray.from_ptr <- function(ptr) {
 #' @return tiledb_subarray object
 #' @export
 tiledb_subarray <- function(query) {
-    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"),
-              "Subarray functionality needs TileDB >= 2.7.0" = tiledb_version(TRUE) >= "2.6.0")
+    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"))
     ptr <- libtiledb_subarray(query@ptr)
     return(new("tiledb_subarray", ptr = ptr))
 }

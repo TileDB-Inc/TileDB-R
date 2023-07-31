@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.19.1])
+AC_INIT([TileDB-R],[0.20.1])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -81,10 +81,10 @@ fi
 if test x"${have_pkg_config}" != x"no"; then
     AC_MSG_CHECKING([for pkg-config checking TileDB version])
     if pkg-config --atleast-version=2.0.0 tiledb; then
-        AC_MSG_RESULT([>= 2.0.0])
+        AC_MSG_RESULT([>= 2.7.0])
     else
         AC_MSG_RESULT([insufficient])
-        AC_MSG_ERROR([TileDB Embedded 2.0.0 or later is required.])
+        AC_MSG_ERROR([TileDB Embedded 2.7.0 or later is required.])
     fi
     AC_MSG_CHECKING([for pkg-config checking TileDB deprecation silencer])
     if pkg-config --atleast-version=2.15.0 tiledb; then

@@ -23,10 +23,9 @@
 #include "libtiledb.h"
 #include "tiledb_version.h"
 #include <nanoarrow.h>          // for C interface to Arrow
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
+
 //#include <tiledb/arrowio>
 #include "tiledb_arrowio.h"
-#endif
 
 #include "column_buffer.h"
 #include "arrow_adapter.h"
@@ -104,53 +103,38 @@ struct Pointer {
 };
 
 
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
 // these functions are local to this compilation unit as is the defintion of Pointer
 Pointer<ArrowArray> allocate_arrow_array()   { return {}; }
 Pointer<ArrowSchema> allocate_arrow_schema() { return {}; }
 void delete_arrow_array(Pointer<ArrowArray> ptr)   { ptr.finalize(); }
 void delete_arrow_schema(Pointer<ArrowSchema> ptr) { ptr.finalize(); }
-#endif
 
 // [[Rcpp::export(.allocate_arrow_array_as_xptr)]]
 SEXP allocate_arrow_array_as_xptr() {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return allocate_arrow_array();
-#else
-    return R_NilValue;
-#endif
 }
 
 // [[Rcpp::export(.allocate_arrow_schema_as_xptr)]]
 SEXP allocate_arrow_schema_as_xptr() {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     return allocate_arrow_schema();
-#else
-    return R_NilValue;
-#endif
 }
 
 // [[Rcpp::export(.delete_arrow_array_from_xptr)]]
 void delete_arrow_array_from_xptr(SEXP sxp) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     Pointer<ArrowArray> ptr(sxp);
     delete_arrow_array(ptr);
-#endif
 }
 
 // [[Rcpp::export(.delete_arrow_schema_from_xptr)]]
 void delete_arrow_schema_from_xptr(SEXP sxp) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     Pointer<ArrowSchema> ptr(sxp);
     delete_arrow_schema(ptr);
-#endif
 }
 
 // [[Rcpp::export]]
 Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
                                          XPtr<tiledb::Query> query,
                                          std::string name) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
     //auto arrptr = allocate_arrow_array(); 	// external pointer object
@@ -164,10 +148,6 @@ Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
     SEXP xpschema = R_MakeExternalPtr((void*) schptr, R_NilValue, R_NilValue);
     SEXP xparray = R_MakeExternalPtr((void*) arrptr, R_NilValue, R_NilValue);
     return Rcpp::List::create(xparray, xpschema);
-#else
-    Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
-    return Rcpp::List::create(R_NilValue, R_NilValue); // not reached
-#endif
 }
 
 // [[Rcpp::export]]
@@ -175,15 +155,11 @@ XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
                                                   XPtr<tiledb::Query> query,
                                                   std::string name,
                                                   Rcpp::List arrowpointers) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
     adapter.import_buffer(name.c_str(),
                           R_ExternalPtrAddr(arrowpointers[0]),
                           R_ExternalPtrAddr(arrowpointers[1]));
-#else
-    Rcpp::stop("This function requires TileDB 2.2.0 or greater.");
-#endif
     return(query);
 }
 
@@ -196,7 +172,6 @@ Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t 
 Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
                                               XPtr<tiledb::Query> query,
                                               std::vector<std::string> names) {
-#if TILEDB_VERSION >= TileDB_Version(2,2,0)
     size_t ncol = names.size();
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
@@ -231,10 +206,6 @@ Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
     Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayp,
                                        Rcpp::Named("schema") = schemap);
     return as;
-#else
-    Rcpp::stop("This function requires TileDB (2.2.0 or greater).");
-    return R_NilValue; // not reached
-#endif
 }
 
 //' @noRd

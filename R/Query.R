@@ -568,8 +568,7 @@ tiledb_get_query_status <- function() {
 #' @return A JSON-formatted string with context statistics
 #' @export
 tiledb_query_stats <- function(query) {
-    stopifnot(`The 'query' argument must be a TileDB Query object` = is(query, "tiledb_query"),
-              `TileDB 2.4.0 or later is required` = tiledb_version(TRUE) >= "2.4.0")
+    stopifnot(`The 'query' argument must be a TileDB Query object` = is(query, "tiledb_query"))
     libtiledb_query_stats(query@ptr)
 }
 
@@ -579,8 +578,7 @@ tiledb_query_stats <- function(query) {
 #' @return A TileDB Context object retrieved from the query
 #' @export
 tiledb_query_ctx <- function(query) {
-    stopifnot(`The 'query' argument must be a TileDB Query object` = is(query, "tiledb_query"),
-              `TileDB 2.6.0 or later is required` = tiledb_version(TRUE) >= "2.6.0")
+    stopifnot(`The 'query' argument must be a TileDB Query object` = is(query, "tiledb_query"))
     new("tiledb_ctx", ptr = libtiledb_query_get_ctx(query@ptr))
 }
 

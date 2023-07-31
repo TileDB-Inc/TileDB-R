@@ -167,7 +167,6 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       int64_t stride = as<int64_t>(strides);
       query->add_range(uidx, start, end, stride);
     }
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
   } else if (typestr == "ASCII" || typestr == "CHAR") {
     std::string start = as<std::string>(starts);
     std::string end = as<std::string>(ends);
@@ -177,7 +176,6 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       Rcpp::stop("Non-empty stride for string not supported yet.");
     }
     //query->set_subarray(sub);
-#endif
   } else if (typestr == "FLOAT32") {
     float start = as<float>(starts);
     float end = as<float>(ends);
@@ -216,7 +214,6 @@ XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iid
         double end = as<double>(ends);
         double stride = (strides == R_NilValue) ? 0 : Rcpp::as<double_t>(strides);
         query->add_range(uidx, start, end, stride);
-#if TILEDB_VERSION >= TileDB_Version(2,0,0)
     } else if (TYPEOF(starts) == STRSXP) {
         std::string start = as<std::string>(starts);
         std::string end = as<std::string>(ends);
@@ -225,7 +222,6 @@ XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iid
         } else {
             Rcpp::stop("Non-emoty stride for string not supported yet.");
         }
-#endif
     } else {
         Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
     }

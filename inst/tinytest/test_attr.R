@@ -54,7 +54,6 @@ expect_true(is.na(tiledb::cell_val_num(attrs)))
 #})
 
 #test_that("tiledb_attr set fill", {
-if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 if (isOldWindows) exit_file("skip remainder of this file on old Windows releases")
 
 ## test for default
@@ -168,7 +167,6 @@ readdata <- arr2[]
 expect_true(all.equal(data, readdata, check.attributes=FALSE))
 
 
-if (tiledb_version(TRUE) < "2.2.0") exit_file("Needs TileDB 2.2.* or later")
 attrib <- tiledb_attr("a",  type = "INT32")
 tiledb_attribute_set_nullable(attrib, TRUE)
 expect_true(tiledb_attribute_get_nullable(attrib))

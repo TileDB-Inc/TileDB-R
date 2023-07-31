@@ -12,6 +12,10 @@
 
 * The tile extend getter function is now able to access a wider range of possible values (#577)
 
+## Build and Test Systems
+
+* The minimal version of TileDB Embedded that can be used with the R package is now release 2.7.0 (#578)
+
 
 # tilebd 0.20.1
 
