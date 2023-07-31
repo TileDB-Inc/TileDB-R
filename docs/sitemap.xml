@@ -541,6 +541,9 @@
     <loc>/reference/tiledb_array_schema_set_validity_filter_list.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_array_schema_version.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_arrow_array_ptr.html</loc>
   </url>
   <url>

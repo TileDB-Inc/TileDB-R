@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,21 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.20.2" id="tiledb-0202">tiledb 0.20.2<a class="anchor" aria-label="anchor" href="#tiledb-0202"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.16.1" class="external-link">TileDB 2.16.1</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/579" class="external-link">#579</a>)</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-20-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-20-2"></a></h3>
+<ul><li><p>The column buffer allocation is now robust to container overflow sanitizer checks (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/574" class="external-link">#574</a>)</p></li>
+<li><p>The array schema version is now accessible via a function (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/575" class="external-link">#575</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.15.3 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/576" class="external-link">#576</a>)</p></li>
+<li><p>The tile extend getter function is now able to access a wider range of possible values (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/577" class="external-link">#577</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-20-2">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-20-2"></a></h3>
+<ul><li>The minimal version of TileDB Embedded that can be used with the R package is now release 2.7.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/578" class="external-link">#578</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.19.1" id="tiledb-0191">tiledb 0.19.1<a class="anchor" aria-label="anchor" href="#tiledb-0191"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.15.2" class="external-link">TileDB 2.15.2</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/534" class="external-link">#534</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/541" class="external-link">#541</a>).</li>
