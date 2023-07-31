@@ -2121,11 +2121,12 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
 })
 
 # unexported helper
-.fill_schema_info_list <- function(uri) {
-    sch <- schema(uri)
+.fill_schema_info_list <- function(ta) {
+    sch <- schema(ta)
     list(names=tiledb_schema_get_names(sch),
          types=tiledb_schema_get_types(sch),
-         status=tiledb_schema_get_dim_attr_status(sch))
+         status=tiledb_schema_get_dim_attr_status(sch),
+         enum=tiledb_schema_get_enumeration_status(sch))
 }
 
 

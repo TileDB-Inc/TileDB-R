@@ -32,7 +32,7 @@ setClass("tiledb_array_schema",
 tiledb_array_schema.from_ptr <- function(ptr, arrptr=NULL) {
     stopifnot("The 'ptr' argument must be an external pointer to a tiledb_array_schema instance"
               = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
-    new("tiledb_array_schema", ptr = ptr, arrptr=arrptr)
+    new("tiledb_array_schema", ptr = ptr, arrptr = arrptr)
 }
 
 #' Constructs a `tiledb_array_schema` object
@@ -150,7 +150,7 @@ setMethod("show", signature(object = "tiledb_array_schema"),
     nfo <- nfilters(fl$offsets)
     nfv <- nfilters(fl$validity)
     cat("tiledb_array_schema(\n    domain=", .as_text_domain(domain(object)), ",\n",
-        "    attrs=c(\n        ", paste(sapply(attrs(object), .as_text_attribute), collapse=",\n        "), "\n    ),\n",
+        "    attrs=c(\n        ", paste(sapply(attrs(object), .as_text_attribute, arrptr=object@arrptr), collapse=",\n        "), "\n    ),\n",
         "    cell_order=\"", cell_order(object), "\", ",
         "tile_order=\"", tile_order(object), "\", ",
         "capacity=", capacity(object), ", ",
@@ -541,6 +541,22 @@ tiledb_schema_get_dim_attr_status <- function(sch) {
   dims <- tiledb::dimensions(dom)
   attrs <- tiledb::attrs(sch)
   return(c(rep(1L, length(dims)), rep(2L, length(attrs))))
+}
+
+##' Get Dimension or Attribute Status
+##'
+##' Note that this function is an unexported internal function.
+##'
+##' @param sch A TileDB Schema object
+##' @return An integer vector where each element corresponds to a schema entry,
+##' and a value of one signals dimension and a value of two an attribute.
+tiledb_schema_get_enumeration_status <- function(sch) {
+    stopifnot("The 'sch' argument must be a schema" = is(sch, "tiledb_array_schema"))
+    dom <- tiledb::domain(sch)
+    dims <- tiledb::dimensions(dom)
+    attrs <- tiledb::attrs(sch)
+    return(c(rep(FALSE, length(dims)),
+             sapply(attrs, tiledb_attribute_has_enumeration)))
 }
 
 

@@ -13,6 +13,7 @@
 #include <tiledb/array_experimental.h>
 #include <tiledb/attribute_experimental.h>
 #include <tiledb/enumeration_experimental.h>
+#include <tiledb/query_condition_experimental.h>
 #endif
 
 // Use the 'finalizer on exit' toggle in the XPtr template to ensure

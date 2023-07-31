@@ -3821,6 +3821,17 @@ XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::Quer
     return query_cond;
 }
 
+// [[Rcpp::export]]
+void libtiledb_query_condition_set_use_enumeration(XPtr<tiledb::Context> ctx,
+                                                   XPtr<tiledb::QueryCondition> cond,
+                                                   bool use_enumeration) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::QueryCondition>(cond);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    tiledb::QueryConditionExperimental::set_use_enumeration(*ctx.get(), *cond.get(), use_enumeration);
+#endif
+}
+
 
 /**
  * Array helper functions

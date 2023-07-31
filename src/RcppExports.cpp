@@ -2335,6 +2335,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_condition_set_use_enumeration
+void libtiledb_query_condition_set_use_enumeration(XPtr<tiledb::Context> ctx, XPtr<tiledb::QueryCondition> cond, bool use_enumeration);
+RcppExport SEXP _tiledb_libtiledb_query_condition_set_use_enumeration(SEXP ctxSEXP, SEXP condSEXP, SEXP use_enumerationSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::QueryCondition> >::type cond(condSEXP);
+    Rcpp::traits::input_parameter< bool >::type use_enumeration(use_enumerationSEXP);
+    libtiledb_query_condition_set_use_enumeration(ctx, cond, use_enumeration);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_zip_coords_numeric
 NumericVector libtiledb_zip_coords_numeric(List coords, R_xlen_t coord_length);
 RcppExport SEXP _tiledb_libtiledb_zip_coords_numeric(SEXP coordsSEXP, SEXP coord_lengthSEXP) {
@@ -3586,6 +3598,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_condition", (DL_FUNC) &_tiledb_libtiledb_query_condition, 1},
     {"_tiledb_libtiledb_query_condition_init", (DL_FUNC) &_tiledb_libtiledb_query_condition_init, 5},
     {"_tiledb_libtiledb_query_condition_combine", (DL_FUNC) &_tiledb_libtiledb_query_condition_combine, 3},
+    {"_tiledb_libtiledb_query_condition_set_use_enumeration", (DL_FUNC) &_tiledb_libtiledb_query_condition_set_use_enumeration, 3},
     {"_tiledb_libtiledb_zip_coords_numeric", (DL_FUNC) &_tiledb_libtiledb_zip_coords_numeric, 2},
     {"_tiledb_libtiledb_zip_coords_integer", (DL_FUNC) &_tiledb_libtiledb_zip_coords_integer, 2},
     {"_tiledb_libtiledb_create_group", (DL_FUNC) &_tiledb_libtiledb_create_group, 2},
