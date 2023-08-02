@@ -8,7 +8,7 @@
 
 * The array schema version is now accessible via a function (#575)
 
-* Use of TileDB Embedded was upgraded to release 2.15.3 (#576)
+* Use of TileDB Embedded was upgraded to release 2.16.1 (#576)
 
 * The tile extend getter function is now able to access a wider range of possible values (#577)
 
