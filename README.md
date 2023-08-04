@@ -9,13 +9,13 @@
 The TileDB R package offers an [R](https://www.r-project.org/) interface to the [storage
 engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
 
-Note that the R interface to TileDB is under development, and the API is subject to change.
 
 ## Documentation
 
 Documentation is available for [the R
 package](https://tiledb-inc.github.io/TileDB-R/) as well as for the [TileDB
 API](https://docs.tiledb.com/main/).
+
 
 ## Installation
 
@@ -38,7 +38,7 @@ The most recent released version can be installed from
     > remotes::install_github("TileDB-Inc/TileDB-R")
     ...
     > library(tiledb)
-    TileDB R 0.19.1 with TileDB Embedded 2.15.2 on Ubuntu 22.04.
+    TileDB R 0.20.2 with TileDB Embedded 2.16.2 on Ubuntu 22.04.
     See https://tiledb.com for more information about TileDB.
     > help(package=tiledb)
 
@@ -49,6 +49,7 @@ If the TileDB library is installed in a custom location, you need to pass the ex
 
 Note that the TileDB R package is always developed and tested against the latest stable version
 of TileDB, but should also build against the newest development version.
+
 
 ## Quick Links
 
