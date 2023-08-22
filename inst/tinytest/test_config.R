@@ -71,3 +71,7 @@ expect_equal(tiledb:::libtiledb_config_get(cfg@ptr, param)[[1]], newval)
 tiledb:::libtiledb_config_unset(cfg@ptr, param) # resets, not unsets
 expect_equal(tiledb:::libtiledb_config_get(cfg@ptr, param)[[1]], origval)
 #})
+
+
+if (tiledb_version(TRUE) < "2.17.0") exit_file("Remainder needs 2.17.* or later")
+expect_true(nzchar(tiledb_config_as_built_json()))  # only test for non-zero instead of parsing

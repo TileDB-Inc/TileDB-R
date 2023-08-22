@@ -134,6 +134,10 @@ libtiledb_config_dump <- function(config) {
     invisible(.Call(`_tiledb_libtiledb_config_dump`, config))
 }
 
+libtiledb_as_built_dump <- function() {
+    .Call(`_tiledb_libtiledb_as_built_dump`)
+}
+
 libtiledb_dim <- function(ctx, name, type, domain, tile_extent) {
     .Call(`_tiledb_libtiledb_dim`, ctx, name, type, domain, tile_extent)
 }

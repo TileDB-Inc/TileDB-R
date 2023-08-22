@@ -625,6 +625,15 @@ void libtiledb_config_dump(XPtr<tiledb::Config> config) {
   }
 }
 
+// Placed here as it relates to config. (New as of 2.17, uses experimental header)
+// [[Rcpp::export]]
+std::string libtiledb_as_built_dump() {
+    std::string str = "";
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    str = tiledb::AsBuilt::dump();
+#endif
+    return str;
+}
 
 /**
  * TileDB Dimension
