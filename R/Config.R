@@ -251,3 +251,21 @@ tiledb_config_unset <- function(config, param) {
             `The 'param' argument must be of type character` = is.character(param))
   libtiledb_config_unset(config@ptr, param)
 }
+
+#' Display the 'AsBuilt' JSON string
+#'
+#' @return Nothing is returned but as a side-effect the 'AsBuilt' string is displayed
+#' @export
+tiledb_config_as_built_show <- function() {
+    stopifnot("Accessing 'AsBuilt' requires TileDB 2.17 or newer" = tiledb_version(TRUE) >= "2.17.0")
+    cat(libtiledb_as_built_dump(), "\n")
+}
+
+#' Return the 'AsBuilt' JSON string
+#'
+#' @return The JSON string containing 'AsBuilt' information
+#' @export
+tiledb_config_as_built_json <- function() {
+    stopifnot("Accessing 'AsBuilt' requires TileDB 2.17 or newer" = tiledb_version(TRUE) >= "2.17.0")
+    libtiledb_as_built_dump()
+}

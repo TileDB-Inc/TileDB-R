@@ -11,8 +11,6 @@ This function requires TileDB Embedded 2.0.3 or later.
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-if (tiledb_version(TRUE) >= "2.0.3") {
-  txt <- tiledb_stats_raw_dump()
-  cat(txt, "\n")
-}
+txt <- tiledb_stats_raw_dump()
+cat(txt, "\n")
 }

@@ -364,6 +364,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_as_built_dump
+std::string libtiledb_as_built_dump();
+RcppExport SEXP _tiledb_libtiledb_as_built_dump() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(libtiledb_as_built_dump());
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_dim
 XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx, std::string name, std::string type, SEXP domain, SEXP tile_extent);
 RcppExport SEXP _tiledb_libtiledb_dim(SEXP ctxSEXP, SEXP nameSEXP, SEXP typeSEXP, SEXP domainSEXP, SEXP tile_extentSEXP) {
@@ -3316,6 +3326,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_config_get", (DL_FUNC) &_tiledb_libtiledb_config_get, 2},
     {"_tiledb_libtiledb_config_unset", (DL_FUNC) &_tiledb_libtiledb_config_unset, 2},
     {"_tiledb_libtiledb_config_dump", (DL_FUNC) &_tiledb_libtiledb_config_dump, 1},
+    {"_tiledb_libtiledb_as_built_dump", (DL_FUNC) &_tiledb_libtiledb_as_built_dump, 0},
     {"_tiledb_libtiledb_dim", (DL_FUNC) &_tiledb_libtiledb_dim, 5},
     {"_tiledb_libtiledb_dim_get_name", (DL_FUNC) &_tiledb_libtiledb_dim_get_name, 1},
     {"_tiledb_libtiledb_dim_get_domain", (DL_FUNC) &_tiledb_libtiledb_dim_get_domain, 1},
