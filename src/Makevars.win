@@ -6,7 +6,7 @@ PKG_LIBS = \
 	-L$(RWINLIB)/lib$(subst gcc,,$(COMPILED_BY))$(R_ARCH) \
 	-L$(RWINLIB)/lib$(R_ARCH)$(CRT) \
 	-ltiledbstatic -lbz2 -lzstd -llz4 -lz -lspdlog \
-	-lwebp -lwebpdecoder -lwebpdemux -lwebpmux \
+	-lwebp -lwebpdecoder -lwebpdemux -lwebpmux -lsharpyuv \
         -llibmagic -lpcre2-posix -lpcre2-8 \
 	-laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common \
 	-lShlwapi -lBcrypt -lRpcrt4 -lWininet -lWinhttp -lws2_32 -lVersion -lUserenv
