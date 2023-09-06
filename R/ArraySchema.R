@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2022 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,16 @@
 #' An S4 class for the TileDB array schema
 #'
 #' @slot ptr An external pointer to the underlying implementation
+#' @slot arrptr An optional external pointer to the underlying array, or NULL if missing
 #' @exportClass tiledb_array_schema
 setClass("tiledb_array_schema",
-         slots = list(ptr = "externalptr"))
+         slots = list(ptr = "externalptr",
+                      arrptr = "ANY"))
 
-tiledb_array_schema.from_ptr <- function(ptr) {
-  stopifnot(`The 'ptr' argument must be a non NULL externalptr to a tiledb_array_schema instance` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr) )
-  new("tiledb_array_schema", ptr = ptr)
+tiledb_array_schema.from_ptr <- function(ptr, arrptr=NULL) {
+    stopifnot("The 'ptr' argument must be an external pointer to a tiledb_array_schema instance"
+              = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
+    new("tiledb_array_schema", ptr = ptr, arrptr = arrptr)
 }
 
 #' Constructs a `tiledb_array_schema` object
@@ -43,7 +46,8 @@ tiledb_array_schema.from_ptr <- function(ptr) {
 #' @param offsets_filter_list (optional)
 #' @param validity_filter_list (optional)
 #' @param capacity (optional)
-#' @param allows_dups (optional, requires \sQuote{spars} to be TRUE)
+#' @param allows_dups (optional, requires \sQuote{sparse} to be TRUE)
+#' @param enumerations (optional) named list of enumerations
 #' @param ctx tiledb_ctx object (optional)
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -68,6 +72,7 @@ tiledb_array_schema <- function(domain,
                                 validity_filter_list = NULL,
                                 capacity = 10000L,
                                 allows_dups = FALSE,
+                                enumerations = NULL,
                                 ctx = tiledb_get_context()) {
     if (!missing(attrs) && length(attrs) != 0) {
         is_attr <- function(obj) is(obj, "tiledb_attr")
@@ -97,7 +102,7 @@ tiledb_array_schema <- function(domain,
 
     ptr <- libtiledb_array_schema(ctx@ptr, domain@ptr, attr_ptr_list, cell_order, tile_order,
                                   coords_filter_list_ptr, offsets_filter_list_ptr,
-                                  validity_filter_list_ptr, sparse)
+                                  validity_filter_list_ptr, sparse, enumerations)
     libtiledb_array_schema_set_capacity(ptr, capacity)
     if (allows_dups) libtiledb_array_schema_set_allows_dups(ptr, TRUE)
     invisible(new("tiledb_array_schema", ptr = ptr))
@@ -145,7 +150,7 @@ setMethod("show", signature(object = "tiledb_array_schema"),
     nfo <- nfilters(fl$offsets)
     nfv <- nfilters(fl$validity)
     cat("tiledb_array_schema(\n    domain=", .as_text_domain(domain(object)), ",\n",
-        "    attrs=c(\n        ", paste(sapply(attrs(object), .as_text_attribute), collapse=",\n        "), "\n    ),\n",
+        "    attrs=c(\n        ", paste(sapply(attrs(object), .as_text_attribute, arrptr=object@arrptr), collapse=",\n        "), "\n    ),\n",
         "    cell_order=\"", cell_order(object), "\", ",
         "tile_order=\"", tile_order(object), "\", ",
         "capacity=", capacity(object), ", ",
@@ -155,11 +160,8 @@ setMethod("show", signature(object = "tiledb_array_schema"),
         sep="")
     if (nfc > 0) cat("    coords_filter_list=", .as_text_filter_list(fl$coords), if (nfo + nfv > 0) "," else "", "\n", sep="")
     if (nfo > 0) cat("    offsets_filter_list=", .as_text_filter_list(fl$offsets), if (nfv > 0) ",\n" else "", sep="")
-    if (nfv > 0)
-        cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
+    if (nfv > 0) cat("    validity_filter_list=", .as_text_filter_list(fl$validity), "\n", sep="")
     cat(")\n", sep="")
-    #cat("tiledb_array_create(uri=tempfile(), schema=sch)) # or assign your URI here\n")
-
 })
 
 #' @rdname generics
@@ -539,6 +541,22 @@ tiledb_schema_get_dim_attr_status <- function(sch) {
   dims <- tiledb::dimensions(dom)
   attrs <- tiledb::attrs(sch)
   return(c(rep(1L, length(dims)), rep(2L, length(attrs))))
+}
+
+##' Get Dimension or Attribute Status
+##'
+##' Note that this function is an unexported internal function.
+##'
+##' @param sch A TileDB Schema object
+##' @return An integer vector where each element corresponds to a schema entry,
+##' and a value of one signals dimension and a value of two an attribute.
+tiledb_schema_get_enumeration_status <- function(sch) {
+    stopifnot("The 'sch' argument must be a schema" = is(sch, "tiledb_array_schema"))
+    dom <- tiledb::domain(sch)
+    dims <- tiledb::dimensions(dom)
+    attrs <- tiledb::attrs(sch)
+    return(c(rep(FALSE, length(dims)),
+             sapply(attrs, tiledb_attribute_has_enumeration)))
 }
 
 

@@ -246,7 +246,7 @@ setMethod("schema", "tiledb_array", function(object, ...) {
   }  else {
     schema_xptr <- libtiledb_array_schema_load(ctx@ptr, uri)
   }
-  return(tiledb_array_schema.from_ptr(schema_xptr))
+  return(tiledb_array_schema.from_ptr(schema_xptr, object@ptr))
 })
 
 ## unexported helper function to deal with ... args / enckey in next method
@@ -257,6 +257,13 @@ setMethod("schema", "tiledb_array", function(object, ...) {
     schema_xptr <- libtiledb_array_schema_load(ctxptr, uri)
   }
 }
+.array_open <- function(ctxptr, uri, enckey=character()) {
+    if (length(enckey) > 0) {
+        arr_xptr <- libtiledb_array_open_with_key(ctxptr, uri, "READ", enckey)
+    } else {
+        arr_xptr <- libtiledb_array_open(ctxptr, uri, "READ")
+    }
+}
 
 #' Return a schema from a URI character value
 #'
@@ -264,9 +271,10 @@ setMethod("schema", "tiledb_array", function(object, ...) {
 #' @param ... Extra parameters such as \sQuote{enckey}, the encryption key
 #' @return The scheme for the object
 setMethod("schema", "character", function(object, ...) {
-  ctx <- tiledb_get_context()
-  schema_xptr <- .array_schema_load(ctx@ptr, object, ...)
-  return(tiledb_array_schema.from_ptr(schema_xptr))
+    ctx <- tiledb_get_context()
+    schema_xptr <- .array_schema_load(ctx@ptr, object, ...)
+    array_xptr <- .array_open(ctx@ptr, object, ...)
+    return(tiledb_array_schema.from_ptr(schema_xptr, array_xptr))
 })
 
 
@@ -540,17 +548,21 @@ setMethod("[", "tiledb_array",
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
   dimnullable <- sapply(dims, function(d) FALSE)
+  dimdictionary <- sapply(dims, function(d) FALSE)
 
   attrs <- tiledb::attrs(schema(x))
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
+  attrdictionary <- unname(sapply(attrs, function(a) libtiledb_attribute_has_enumeration(ctx@ptr, a@ptr)))
+
   if (length(sel)==1 && is.na(sel[1])) {            # special case of NA selecting no attrs
     attrnames <- character()
     attrtypes <- character()
     attrvarnum <- integer()
     attrnullable <- logical()
+    attrdictionary <- logical()
   }
 
   if (length(sel) != 0 && !any(is.na(sel))) {
@@ -562,6 +574,7 @@ setMethod("[", "tiledb_array",
     attrtypes <- attrtypes[ind]
     attrvarnum <- attrvarnum[ind]
     attrnullable <- attrnullable[ind]
+    attrdictionary <- attrdictionary[ind]
   }
 
   if (x@extended) {                     # if true return dimensions and attributes
@@ -569,12 +582,15 @@ setMethod("[", "tiledb_array",
       alltypes <- c(dimtypes, attrtypes)
       allvarnum <- c(dimvarnum, attrvarnum)
       allnullable <- c(dimnullable, attrnullable)
+      alldictionary <- c(dimdictionary, attrdictionary)
   } else {                              # otherwise only return attributes
       allnames <- attrnames
       alltypes <- attrtypes
       allvarnum <- attrvarnum
       allnullable <- attrnullable
+      alldictionary <- attrdictionary
   }
+
   ## A preference can be set in a local per-user configuration file; if no value
   ## is set a fallback from the TileDB config object is used.
   memory_budget <- get_allocation_size_preference()
@@ -597,6 +613,15 @@ setMethod("[", "tiledb_array",
       arrptr <- libtiledb_array_reopen(arrptr)
   }
 
+  ## dictionaries are schema-level objects to fetch them now where we expect to have some
+  dictionaries <- vector(mode="list", length=length(allnames))
+  names(dictionaries) <- allnames
+  for (ii in seq_along(dictionaries)) {
+      if (isTRUE(alldictionary[ii])) {
+          dictionaries[[ii]] <- tiledb_attribute_get_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
+      }
+  }
+
   ## helper function to sweep over names and types of domain
   getDomain <- function(nm, tp) {
     if (tp %in% c("ASCII", "CHAR", "UTF8")) {
@@ -606,6 +631,7 @@ setMethod("[", "tiledb_array",
     }
   }
   nonemptydom <- mapply(getDomain, dimnames, dimtypes, SIMPLIFY=FALSE)
+
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
   qryptr <- libtiledb_query_set_layout(qryptr,
@@ -705,7 +731,7 @@ setMethod("[", "tiledb_array",
       }
       x@selected_ranges[[3]] <- k
   }
-  ## (i,j,k) are now done and transferred to x@select_ranges
+  ## (i,j,k) are now done and transferred to x@selected_ranges
 
   ## pointer to subarray needed for iterated setting of points from selected_ranges
   ## and selected_points across all possible dimensions
@@ -781,7 +807,17 @@ setMethod("[", "tiledb_array",
               vec <- length_from_vlcbuf(buf)
               libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1]
           } else {
-              libtiledb_query_get_buffer_ptr(buf, asint64)
+              col <- libtiledb_query_get_buffer_ptr(buf, asint64)
+              if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
+                  dct <- dictionaries[[name]]               # access it from utility
+                  ## the following expands out to a char vector first; we can do better
+                  ##   col <- factor(dct[col+1], levels=dct)
+                  ## so we do it "by hand"
+                  col <- col + 1L # adjust for zero-index C/C++ layer
+                  attr(col, "levels") <- dct
+                  attr(col, "class")  <- "factor"
+              }
+              col
           }
       }
       reslist <- mapply(getResultShmem, buflist, allnames, allvarnum, SIMPLIFY=FALSE)
@@ -881,9 +917,16 @@ setMethod("[", "tiledb_array",
           if (status != "COMPLETE") spdl::debug("['['] query returned '{}'.", status)
 
           if (use_arrow) {
-              rl <- libtiledb_to_arrow(abptr, qryptr)
-              overallresults[[counter]] <- .as_arrow_table(rl)
-              spdl::info("['['] received arrow table {}", counter)
+              rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
+              at <- .as_arrow_table(rl)
+              ## if dictionaries are to be injected at the R level, this does it
+              #for (n in names(dictionaries)) {
+              #    if (!is.null(dictionaries[[n]])) {
+              #        at[[n]] <- arrow::DictionaryArray$create(at[[n]]$as_vector(), dictionaries[[n]])
+              #    }
+              #}
+              overallresults[[counter]] <- at
+              spdl::debug("['['] received arrow table {}", counter)
           }
 
           ## close array
@@ -922,17 +965,32 @@ setMethod("[", "tiledb_array",
               getResult <- function(buf, name, varnum, estsz, qryptr) {
                   has_dumpbuffers <- length(x@dumpbuffers) > 0
                   ## message("For ", name, " seeing ", estsz, " and ", varnum)
+                  spdl::debug("[getResult] name {} estsz {} varnum {}", name, estsz, varnum)
                   if (is.na(varnum)) {
+                      spdl::debug("[getResult] varnum before libtiledb_query_result_buffer_elements_vec");
                       vec <- libtiledb_query_result_buffer_elements_vec(qryptr, name)
                       if (has_dumpbuffers) {
                           vlcbuf_to_shmem(x@dumpbuffers, name, buf, vec)
                       }
+                      spdl::debug("[getResult] varnum before libtiledb_query_get_buffer_var_char");
                       libtiledb_query_get_buffer_var_char(buf, vec[1], vec[2])[,1][seq_len(estsz)]
                   } else {
                       if (has_dumpbuffers) {
                           vecbuf_to_shmem(x@dumpbuffers, name, buf, estsz, varnum)
                       }
                       libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
+                      spdl::debug("[getResult] calling libtiledb_query_get_buffer_ptr")
+                      col <- libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
+                      if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
+                          dct <- dictionaries[[name]]           # access it from utility
+                          ## the following expands out to a char vector first; we can do better
+                          ##   col <- factor(dct[col+1], levels=dct)
+                          ## so we do it "by hand"
+                          col <- col + 1L # adjust for zero-index C/C++ layer
+                          attr(col, "levels") <- dct
+                          attr(col, "class")  <- "factor"
+                      }
+                      col
                   }
               }
               spdl::debug("['['] getting results")
@@ -970,7 +1028,7 @@ setMethod("[", "tiledb_array",
       } else {
           res <- do.call(rbind, overallresults)
       }
-      spdl::info("['['] returning 'res'")
+      spdl::debug("['['] returning 'res'")
       res
   }                                     # end of 'big else' for query build, submission and read
 
@@ -1291,6 +1349,9 @@ setMethod("[<-", "tiledb_array",
         col <- value[[k]]
         if (is.list(col)) {
             col <- unname(do.call(c, col))
+        }
+        if (is.factor(col)) {
+            col <- as.integer(col) - 1 		# zero based in C++ so offsetting
         }
         nr <- NROW(col)
         spdl::debug("[tiledb_array] '[<-' alloc buf {} '{}': {}, rows: {} null: {} asint64: {}", k, colnam, alltypes[k], nr, allnullable[k], asint64)
@@ -2060,11 +2121,12 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
 })
 
 # unexported helper
-.fill_schema_info_list <- function(uri) {
-    sch <- schema(uri)
+.fill_schema_info_list <- function(ta) {
+    sch <- schema(ta)
     list(names=tiledb_schema_get_names(sch),
          types=tiledb_schema_get_types(sch),
-         status=tiledb_schema_get_dim_attr_status(sch))
+         status=tiledb_schema_get_dim_attr_status(sch),
+         enum=tiledb_schema_get_enumeration_status(sch))
 }
 
 

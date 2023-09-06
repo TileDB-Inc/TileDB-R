@@ -39,8 +39,8 @@ check_arrow_array_tag <- function(xp) {
     .Call(`_tiledb_check_arrow_array_tag`, xp)
 }
 
-libtiledb_to_arrow <- function(ab, qry) {
-    .Call(`_tiledb_libtiledb_to_arrow`, ab, qry)
+libtiledb_to_arrow <- function(ab, qry, dicts) {
+    .Call(`_tiledb_libtiledb_to_arrow`, ab, qry, dicts)
 }
 
 libtiledb_allocate_column_buffers <- function(ctx, qry, uri, names, memory_budget) {
@@ -298,8 +298,20 @@ libtiledb_attribute_get_nullable <- function(attr) {
     .Call(`_tiledb_libtiledb_attribute_get_nullable`, attr)
 }
 
-libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, validity_filter_list = NULL, sparse = FALSE) {
-    .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, validity_filter_list, sparse)
+libtiledb_attribute_has_enumeration <- function(ctx, attr) {
+    .Call(`_tiledb_libtiledb_attribute_has_enumeration`, ctx, attr)
+}
+
+libtiledb_attribute_get_enumeration <- function(ctx, attr, arr) {
+    .Call(`_tiledb_libtiledb_attribute_get_enumeration`, ctx, attr, arr)
+}
+
+libtiledb_attribute_set_enumeration <- function(ctx, attr, enum_name) {
+    .Call(`_tiledb_libtiledb_attribute_set_enumeration`, ctx, attr, enum_name)
+}
+
+libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, validity_filter_list = NULL, sparse = FALSE, enumerations_list = NULL) {
+    .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, validity_filter_list, sparse, enumerations_list)
 }
 
 libtiledb_array_schema_create <- function(ctx, atstr) {
@@ -420,6 +432,10 @@ libtiledb_array_schema_check <- function(schema) {
 
 libtiledb_array_schema_version <- function(schema) {
     .Call(`_tiledb_libtiledb_array_schema_version`, schema)
+}
+
+libtiledb_array_schema_set_enumeration <- function(ctx, schema, attr, enum_name, values, nullable = FALSE, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema_set_enumeration`, ctx, schema, attr, enum_name, values, nullable, ordered)
 }
 
 libtiledb_array_schema_evolution <- function(ctx) {
@@ -564,6 +580,18 @@ libtiledb_array_open_timestamp_end <- function(array) {
 
 libtiledb_array_delete_fragments <- function(array, tstamp_start, tstamp_end) {
     invisible(.Call(`_tiledb_libtiledb_array_delete_fragments`, array, tstamp_start, tstamp_end))
+}
+
+libtiledb_array_has_enumeration <- function(ctx, arr, name) {
+    .Call(`_tiledb_libtiledb_array_has_enumeration`, ctx, arr, name)
+}
+
+libtiledb_array_get_enumeration <- function(ctx, arr, name) {
+    .Call(`_tiledb_libtiledb_array_get_enumeration`, ctx, arr, name)
+}
+
+libtiledb_array_has_enumeration_vector <- function(ctx, array) {
+    .Call(`_tiledb_libtiledb_array_has_enumeration_vector`, ctx, array)
 }
 
 libtiledb_query <- function(ctx, array, type) {
@@ -764,6 +792,10 @@ libtiledb_query_condition_init <- function(query_cond, attr_name, condition_valu
 
 libtiledb_query_condition_combine <- function(lhs, rhs, str) {
     .Call(`_tiledb_libtiledb_query_condition_combine`, lhs, rhs, str)
+}
+
+libtiledb_query_condition_set_use_enumeration <- function(ctx, cond, use_enumeration) {
+    invisible(.Call(`_tiledb_libtiledb_query_condition_set_use_enumeration`, ctx, cond, use_enumeration))
 }
 
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {

@@ -15,6 +15,7 @@ tiledb_array_schema(
   validity_filter_list = NULL,
   capacity = 10000L,
   allows_dups = FALSE,
+  enumerations = NULL,
   ctx = tiledb_get_context()
 )
 }
@@ -37,7 +38,9 @@ tiledb_array_schema(
 
 \item{capacity}{(optional)}
 
-\item{allows_dups}{(optional, requires \sQuote{spars} to be TRUE)}
+\item{allows_dups}{(optional, requires \sQuote{sparse} to be TRUE)}
+
+\item{enumerations}{(optional) named list of enumerations}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }

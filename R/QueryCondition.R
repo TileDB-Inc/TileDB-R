@@ -60,7 +60,7 @@ tiledb_query_condition <- function(ctx = tiledb_get_context()) {
 #' @return The initialized 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_query_condition()) {
-    stopifnot("Argument 'qc' with query condition object required" = is(qc, "tiledb_query_condition"),
+    stopifnot("Argument 'qc' with query condition object required" = inherits(qc, "tiledb_query_condition"),
               "Argument 'attr' must be character" = is.character(attr),
               "Argument 'value' must be of length one" = (is.vector(value) ||
                                                           bit64::is.integer64(value) ||
@@ -164,8 +164,8 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
             if (debug) cat("-- [", as.character(x[2]), "]",
                            " ", as.character(x[1]),
                            " [", as.character(x[3]), "]\n", sep="")
-            .makeExpr(x[[2]])
-            .makeExpr(x[[3]])
+            .makeExpr(x[[2]], debug=debug)
+            .makeExpr(x[[3]], debug=debug)
             tiledb_query_condition_combine(.makeExpr(x[[2]]),
                                            .makeExpr(x[[3]]),
                                            .mapBoolToCharacter(as.character(x[1])))
@@ -182,6 +182,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
             attr <- as.character(x[2])
             ch <- as.character(x[3])
             dtype <- .getType(ch, use_int64)
+            is_enum <- FALSE # default is no
             if (.hasArray) {
                 ind <- match(attr, ta@sil$names)
                 if (!is.finite(ind)) {
@@ -193,10 +194,19 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                     return(NULL)
                 }
                 dtype <- ta@sil$types[ind]
+                is_enum <- ta@sil$enum[ind]
             }
             if (debug) cat("   [", attr,"] ",
                            op, " (aka ", .mapOpToCharacter(op), ")",
                            " [",ch, "] ", dtype, "\n", sep="")
+
+            ## take care of factor (aka "enum" case) and set the daat type to ASCII
+            if (dtype == "INT32" && is_enum) {
+                if (debug) cat("   [factor column] ", ch, " ", attr, " ", dtype, " --> ASCII", " ", is_enum, "\n")
+                dtype <- "ASCII"
+            }
+
+            ## general case of extracting appropriate value give type info
             tiledb_query_condition_init(attr = attr,
                                         value = switch(dtype,
                                                        ASCII = ch,
@@ -214,4 +224,21 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
 
     e <- substitute(expr)
     .makeExpr(e, debug)
+}
+
+#' Enable use of enumeration in query condition
+#'
+#' Set a boolean toggle to signal use of enumeration in query condtion (TileDB 2.17 or later)
+#' @param qc A 'tiledb_query_condition' object
+#' @param use_enum A boolean to set (if TRUE) or unset (if FALSE) enumeration use
+#' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+#' context object is retrieved
+#' @return Nothing is retuned, the function is invoked for the side effect
+#' @export
+tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiledb_get_context()) {
+    stopifnot("Argument 'qc' must be a query condition object" = is(qc, "tiledb_query_condition"),
+              "Argument 'use_enum' must be logical" = is.logical(use_enum),
+              "The argument must be a ctx object" = is(ctx, "tiledb_ctx"),
+              "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0")
+    libtiledb_query_condition_set_use_enumeration(ctx@ptr, qc@ptr, use_enum)
 }

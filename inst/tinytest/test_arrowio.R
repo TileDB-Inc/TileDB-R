@@ -106,7 +106,7 @@ for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "u
     expect_equal(v$as_vector(), 4:7)
 }
 
-
+## n=15
 ## round-turn test 2: create arrow object, write tiledb second via zero-copy
 dir.create(tmp <- tempfile())
 n <- 10L
@@ -169,6 +169,7 @@ for (i in 1:10) {
   tiledb_arrow_schema_del(l[[2]])
 }
 
+## n=15
 expect_true(is(df, "data.frame"))
 expect_equal(dim(df), c(n, 10))
 for (i in c(1:7,9:10)) {
@@ -176,7 +177,7 @@ for (i in c(1:7,9:10)) {
 }
 expect_equivalent(df[,8], as.integer64(1:10))
 
-
+## n=27
 ## test support for return_as="arrow"
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 library(palmerpenguins)
@@ -190,7 +191,6 @@ for (arg in c("arrow", "arrow_table")) {
     expect_equal(res$num_rows, 344)
     expect_equal(res$num_columns, 8)
 }
-
 ## test support for return as Date (GH Issue 533)
 uri <- tempfile()
 D <- data.frame(val = 100 + 0:4,

@@ -355,34 +355,75 @@ Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t 
 
 // [[Rcpp::export]]
 Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
-                              Rcpp::XPtr<tiledb::Query> qry) {
+                              Rcpp::XPtr<tiledb::Query> qry,
+                              Rcpp::List dicts) {
     check_xptr_tag<tiledb::ArrayBuffers>(ab);
     check_xptr_tag<tiledb::Query>(qry);
     std::vector<std::string> names = ab->names();
     auto ncol = names.size();
+    std::vector<std::string> dictnames = dicts.names();
     Rcpp::XPtr<ArrowSchema> schemaxp = schema_owning_xptr();
     Rcpp::XPtr<ArrowArray> arrayxp = array_owning_xptr();
     schemaxp = schema_setup_struct(schemaxp, ncol);
     arrayxp = array_setup_struct(arrayxp, ncol);
 
     arrayxp->length = 0;
-
     for (size_t i=0; i<ncol; i++) {
         // this allocates, and properly wraps as external pointers controlling lifetime
         Rcpp::XPtr<ArrowSchema> chldschemaxp = schema_owning_xptr();
         Rcpp::XPtr<ArrowArray> chldarrayxp = array_owning_xptr();
-
+        bool is_factor = dicts[i] != R_NilValue;
         auto buf = ab->at(names[i]);        // buf is a shared_ptr to ColumnBuffer
         buf->update_size(*qry);
-        spdl::info(tfm::format("[libtiledb_to_arrow] Accessing %s at %d use_count=%d sz %d nm %s tp %d",
-                               names[i], i, buf.use_count(), buf->size(), buf->name(), buf->type()));
+        spdl::info(tfm::format("[libtiledb_to_arrow] Accessing %s (%s:%s) at %d use_count=%d sz %d nm %s tp %d",
+                               names[i], dictnames[i], (is_factor ? "<factor>" : ""), i,
+                               buf.use_count(), buf->size(), buf->name(), buf->type()));
 
         // this is pair of array and schema pointer
         auto pp = tiledb::ArrowAdapter::to_arrow(buf);
+
         spdl::info(tfm::format("[libtiledb_to_arrow] Incoming name %s length %d",
                                std::string(pp.second->name), pp.first->length));
         memcpy((void*) chldschemaxp, pp.second.get(), sizeof(ArrowSchema));
         memcpy((void*) chldarrayxp, pp.first.get(), sizeof(ArrowArray));
+        if (is_factor) {
+            // this could be rewritten if we generalized ColumnBuffer to allow passing of
+            std::vector<std::string> svec = Rcpp::as<std::vector<std::string>>(dicts[i]);
+            Rcpp::XPtr<ArrowSchema> dschxp = schema_owning_xptr();
+            Rcpp::XPtr<ArrowArray> darrxp = array_owning_xptr();
+            dschxp = schema_setup_struct(dschxp, 0);
+            darrxp = array_setup_struct(darrxp, 0);
+
+            dschxp->format = "u";
+            dschxp->flags |= ARROW_FLAG_NULLABLE;
+            darrxp->length = svec.size();
+            darrxp->null_count = 0;
+            darrxp->n_buffers = 3; // we always have three for dictionairies
+            darrxp->buffers = (const void**)malloc(sizeof(void*) * darrxp->n_buffers);
+            darrxp->buffers[0] = nullptr;  // validity
+
+            size_t nv = svec.size();
+            std::string str = "";
+            std::vector<int32_t> offsets(nv+1);
+            int32_t cumlen = 0;
+            for (size_t i = 0; i < nv; i++) {
+                std::string s = svec[i];
+                offsets[i] = cumlen;
+                str += s;
+                cumlen += s.length();
+            }
+            offsets[nv] = cumlen;
+            darrxp->buffers[2] = (const char*)malloc(sizeof(char) * cumlen);
+            std::memcpy((void*) darrxp->buffers[2], str.data(), (sizeof(char) * cumlen));
+            darrxp->buffers[1] = (const char*)malloc(sizeof(int32_t) * (nv + 1));
+            std::memcpy((void*) darrxp->buffers[1], offsets.data(), (sizeof(int32_t) * (nv + 1)));
+
+            spdl::debug(tfm::format("[libtiledb_to_arrow] dict %s fmt %s -- len %d nbuf %d str %s",
+                                    names[i], dschxp->format, darrxp->length, darrxp->n_buffers, str));
+            chldschemaxp->dictionary = dschxp;
+            chldarrayxp->dictionary = darrxp;
+        }
+
         schemaxp->children[i] = chldschemaxp;
         arrayxp->children[i] = chldarrayxp;
 
@@ -393,6 +434,7 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
     }
     Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayxp,
                                        Rcpp::Named("schema") = schemaxp);
+    spdl::trace("[libtiledb_to_arrow] returning from libtiledb_to_arrow");
     return as;
 }
 
@@ -405,13 +447,14 @@ Rcpp::XPtr<tiledb::ArrayBuffers> libtiledb_allocate_column_buffers(Rcpp::XPtr<ti
                                                                    const size_t memory_budget) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Query>(qry);
-    // allocate the ArrayBuffers object we will with ColumnBuffer objects and return
+    // allocate the ArrayBuffers object we will fill with ColumnBuffer objects and return
     auto abp = new tiledb::ArrayBuffers;
     // get the array and its pointer
     auto arrsp = std::make_shared<tiledb::Array>(*ctx.get(), uri, TILEDB_READ);
     for (auto name: names) {
         // returns a shared pointer to new column buffer for 'name'
-        auto cbsp = tiledb::ColumnBuffer::create(arrsp, name, memory_budget);
+        spdl::debug(tfm::format("[libtiledb_alloocate_column_buffers] creating %s", name));
+        auto cbsp = tiledb::ColumnBuffer::create(arrsp, name, memory_budget, *ctx.get());
         abp->emplace(name, cbsp);
         cbsp->attach(*qry.get());
         spdl::debug(tfm::format("[libtiledb_alloocate_column_buffers] emplaced %s cnt %d membudget %d",

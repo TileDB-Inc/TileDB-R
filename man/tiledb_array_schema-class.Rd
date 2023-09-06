@@ -11,5 +11,7 @@ An S4 class for the TileDB array schema
 
 \describe{
 \item{\code{ptr}}{An external pointer to the underlying implementation}
+
+\item{\code{arrptr}}{An optional external pointer to the underlying array, or NULL if missing}
 }}
 

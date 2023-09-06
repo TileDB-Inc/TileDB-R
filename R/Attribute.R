@@ -42,6 +42,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @param ncells (default 1) The number of cells, use \code{NA} to signal variable length
 #' @param nullable (default FALSE) A logical switch whether the attribute can have missing
 #' values
+#' @param enumeration (default NULL) A character vector of dictionary values
 #' @param ctx tiledb_ctx object (optional)
 #' @return `tiledb_dim` object
 #' @examples
@@ -58,6 +59,7 @@ tiledb_attr <- function(name,
                         filter_list = tiledb_filter_list(),
                         ncells = 1,
                         nullable = FALSE,
+                        enumeration = NULL,
                         ctx = tiledb_get_context()
                         ) {
     if (missing(name)) name <- ""
@@ -66,7 +68,10 @@ tiledb_attr <- function(name,
               `The 'name' argument must be a scalar string` = is.scalar(name, "character"),
               `The 'filter_list' argument must be a tiledb_filter_list instance` = is(filter_list, "tiledb_filter_list"))
     ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells, nullable)
-    new("tiledb_attr", ptr = ptr)
+    attr <- new("tiledb_attr", ptr = ptr)
+    if (!is.null(enumeration))
+        attr <- tiledb_attribute_set_enumeration_name(attr, name, ctx)
+    invisible(attr)
 }
 
 #' Raw display of an attribute object
@@ -81,13 +86,23 @@ setMethod("raw_dump",
           definition = function(object) libtiledb_attribute_dump(object@ptr))
 
 # internal function returning text use here and in other higher-level show() methods
-.as_text_attribute <- function(object) {
+.as_text_attribute <- function(object, arrptr=NULL) {
     fl <- filter_list(object)
+    ndct <- 0 				# default
+    dct <- character()		# default
+    if (!is.null(arrptr)) {
+        if (!libtiledb_array_is_open_for_reading(arrptr)) arrptr <- libtiledb_array_open_with_ptr(arrptr, "READ")
+        if (tiledb_attribute_has_enumeration(object)) {
+            dct <- tiledb_attribute_get_enumeration_ptr(object, arrptr)
+            ndct <- length(dct)
+        }
+    }
     txt <- paste0("tiledb_attr(name=\"", name(object), "\", ",
                   "type=\"", datatype(object), "\", ",
                   "ncells=", cell_val_num(object), ", ",
                   "nullable=", tiledb_attribute_get_nullable(object),
-                  if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)))
+                  if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)),
+                  if (ndct > 0) paste0(", dictionary=c(\"", paste(dct[seq(1, min(5, ndct))], collapse="\",\""), if (ndct > 5) "\",...", "\")"))
     txt <- paste0(txt, ")")
     txt
 }
@@ -312,4 +327,51 @@ tiledb_attribute_set_nullable <- function(attr, flag) {
 tiledb_attribute_get_nullable <- function(attr) {
     stopifnot(`The argument must be an attribute` = is(attr, "tiledb_attr"))
     libtiledb_attribute_get_nullable(attr@ptr)
+}
+
+#' Test if TileDB Attribute has an Enumeration
+#'
+#' @param attr A TileDB Attribute object
+#' @param ctx A Tiledb Context object (optional)
+#' @return A logical value indicating if the attribute has an enumeration
+#' @export
+tiledb_attribute_has_enumeration <- function(attr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"))
+    libtiledb_attribute_has_enumeration(ctx@ptr, attr@ptr)
+}
+
+#' Get the TileDB Attribute Enumeration
+#'
+#' @param attr A TileDB Attribute object
+#' @param arr A Tiledb Array object
+#' @param ctx A Tiledb Context object (optional)
+#' @return A character vector with the enumeration (of length zero if none)
+#' @export
+tiledb_attribute_get_enumeration <- function(attr, arr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'arr' argument must be an array" = is(arr, "tiledb_array"))
+    libtiledb_attribute_get_enumeration(ctx@ptr, attr@ptr, arr@ptr)
+}
+
+#' @rdname tiledb_attribute_get_enumeration
+#' @param arrptr A Tiledb Array object pointer
+#' @export
+tiledb_attribute_get_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'arr' argument must be an external pointer" = is(arrptr, "externalptr"))
+    libtiledb_attribute_get_enumeration(ctx@ptr, attr@ptr, arrptr)
+}
+
+#' Set a TileDB Attribute Enumeration Name
+#'
+#' @param attr A TileDB Attribute object
+#' @param enum_name A character value with the enumeration value
+#' @param ctx A Tiledb Context object (optional)
+#' @return The modified TileDB Attribute object
+#' @export
+tiledb_attribute_set_enumeration_name <- function(attr, enum_name, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'enum_name' argument must be character" = is.character(enum_name))
+    attr@ptr <- libtiledb_attribute_set_enumeration(ctx@ptr, attr@ptr, enum_name)
+    attr
 }

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2022 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -97,9 +97,12 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
     if (class(obj)[1] != "data.frame") obj <- as.data.frame(obj)
 
     ## turn factor columns in char columns
-    factcols <- grep("factor", sapply(obj, class))
-    if (length(factcols) > 0) {
-        for (i in factcols) obj[,i] <- as.character(obj[,i])
+    ## TODO: add an option
+    if (tiledb_version(TRUE) < "2.17.0") {
+        factcols <- grep("factor", sapply(obj, class))
+        if (length(factcols) > 0) {
+            for (i in factcols) obj[,i] <- as.character(obj[,i])
+        }
     }
 
     ## Create default filter_list from filter vector, 'NONE' and 'ZSTD' is default
@@ -127,6 +130,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         makeDim <- function(ind) {
             idxcol <- dimobj[,ind]
             idxnam <- colnames(dimobj)[ind]
+            if (inherits(idxcol, "factor")) idxcol <- as.character(idxcol)
             col_domain <- if (is.null(tile_domain)) {                   # default case
                               c(min(idxcol), max(idxcol))               #   use range
                           } else if (is.list(tile_domain)) {            # but if list
@@ -190,9 +194,14 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         dom <- tiledb_domain(dims = dimensions)
     }
 
+    ## the simple helper function used create attribute_i given index i
+    ## we now make it a little bit more powerful yet clumsy but returning a
+    ## three element list at each element where the list contains the attribute
+    ## along with the optional factor levels vector (and the corresponding column name)
     makeAttr <- function(ind) {
         col <- obj[,ind]
         colname <- colnames(obj)[ind]
+        lvls <- NULL 			# by default no factor levels
         if (inherits(col, "AsIs")) {
             ## we just look at the first list column, others have to have same type and length
             cl <- class(obj[,ind][[1]])
@@ -217,8 +226,15 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
             tp <- "INT64"
         else if (cl == "logical")
             tp <- if (tiledb_version(TRUE) >= "2.10.0") "BOOL" else "INT32"
+        else if (cl == "factor") {
+            lvls <- levels(col) 		# extract factor levels
+            if (length(lvls) > .Machine$integer.max)
+                stop("Cannot represent this many levels for ", colname, call. = FALSE)
+            tp <- "INT32"
+        }
         else
             stop("Currently unsupported type: ", cl)
+
         filters <- if (colname %in% names(filter_list)) {
                        tiledb_filter_list(sapply(filter_list[[colname]], tiledb_filter))
                    } else {
@@ -227,15 +243,24 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         if (debug) {
             cat(sprintf("Setting attribute name %s type %s\n", colname, tp))
         }
-        tiledb_attr(colname,
-                    type = tp,
-                    ncells = if (tp %in% c("CHAR","ASCII")) NA_integer_ else nc,
-                    filter_list = filters,
-                    nullable = any(is.na(col)))
+        attr <- tiledb_attr(colname,
+                            type = tp,
+                            ncells = if (tp %in% c("CHAR","ASCII")) NA_integer_ else nc,
+                            filter_list = filters,
+                            nullable = any(is.na(col)),
+                            enumeration = lvls)
+        list(attr=attr, lvls=lvls, name=colname)
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]
-    attributes <- if (length(cols) > 0) sapply(cols, makeAttr) else list()
+    attributes <- enumerations <- list() 		# fallback
+    if (length(cols) > 0) {
+        a_e <- lapply(cols, makeAttr)
+        attributes <- lapply(a_e, "[[", 1)
+        enumerations <- lapply(a_e, "[[", 2)
+        colnames <- lapply(a_e, "[[", 3)
+        names(enumerations) <- colnames
+    }
     schema <- tiledb_array_schema(dom,
                                   attrs = attributes,
                                   cell_order = cell_order,
@@ -244,8 +269,10 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                                   coords_filter_list = tiledb_filter_list(sapply(coords_filters, tiledb_filter)),
                                   offsets_filter_list = tiledb_filter_list(sapply(offsets_filters, tiledb_filter)),
                                   validity_filter_list = tiledb_filter_list(sapply(validity_filters, tiledb_filter)),
-                                  capacity=capacity)
+                                  capacity = capacity,
+                                  enumerations = if (length(enumerations) > 0) enumerations else NULL)
     allows_dups(schema) <- allows_dups
+
     if (mode != "append")
         tiledb_array_create(uri, schema)
 

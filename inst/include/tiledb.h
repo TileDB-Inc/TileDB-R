@@ -9,6 +9,12 @@
 #if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR >= 4
 #include <tiledb/tiledb_experimental>
 #endif
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR >= 17
+#include <tiledb/array_experimental.h>
+#include <tiledb/attribute_experimental.h>
+#include <tiledb/enumeration_experimental.h>
+#include <tiledb/query_condition_experimental.h>
+#endif
 
 // Use the 'finalizer on exit' toggle in the XPtr template to ensure
 // we do in fact finalize on exit too (and not only on garbage

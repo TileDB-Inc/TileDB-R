@@ -1573,9 +1573,68 @@ bool libtiledb_attribute_get_nullable(XPtr<tiledb::Attribute> attr) {
     return attr->nullable();
 }
 
+// [[Rcpp::export]]
+bool libtiledb_attribute_has_enumeration(XPtr<tiledb::Context> ctx,
+                                         XPtr<tiledb::Attribute> attr) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+    bool res = false;
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enmr = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
+    if (enmr != std::nullopt) {
+        res = true;
+    }
+#endif
+    return res;
+}
+
+// [[Rcpp::export]]
+std::vector<std::string> libtiledb_attribute_get_enumeration(XPtr<tiledb::Context> ctx,
+                                                             XPtr<tiledb::Attribute> attr,
+                                                             XPtr<tiledb::Array> arr) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+    check_xptr_tag<tiledb::Array>(arr);
+    std::vector<std::string> res;
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enmrname = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
+    if (enmrname == std::nullopt) {
+        Rcpp::stop("No enumeration name for attribute");
+    }
+    auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), enmrname.value());
+    if (enmr.ptr() == nullptr) {
+        Rcpp::stop("No enumeration for given attribute.");
+    }
+    res = enmr.as_vector<std::string>();
+#endif
+    return res;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Attribute> libtiledb_attribute_set_enumeration(XPtr<tiledb::Context> ctx,
+                                                            XPtr<tiledb::Attribute> attr,
+                                                            const std::string &enum_name) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    tiledb::AttributeExperimental::set_enumeration_name(*ctx.get(), *attr.get(), enum_name);
+#endif
+    return attr;
+}
+
 /**
  * TileDB Array Schema
  */
+
+// forward declaration
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_enumeration(XPtr<tiledb::Context> ctx,
+                                                                 XPtr<tiledb::ArraySchema> schema,
+                                                                 XPtr<tiledb::Attribute> attr,
+                                                                 const std::string enum_name,
+                                                                 std::vector<std::string> values,
+                                                                 bool nullable,
+                                                                 bool ordered);
+
 //[[Rcpp::export]]
 XPtr<tiledb::ArraySchema>
 libtiledb_array_schema(XPtr<tiledb::Context> ctx,
@@ -1586,7 +1645,8 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
                        Nullable<XPtr<tiledb::FilterList>> coords_filter_list = R_NilValue,
                        Nullable<XPtr<tiledb::FilterList>> offsets_filter_list = R_NilValue,
                        Nullable<XPtr<tiledb::FilterList>> validity_filter_list = R_NilValue,
-                       bool sparse = false) {
+                       bool sparse = false,
+                       Nullable<List> enumerations_list = R_NilValue) {
     // check that external pointers are supported
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Domain>(domain);
@@ -1595,10 +1655,6 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
         for (R_xlen_t i=0; i < nattr; i++)  {
             XPtr<tiledb::Attribute> attr = as<XPtr<tiledb::Attribute>>(attributes[i]);
             check_xptr_tag<tiledb::Attribute>(attr);
-            // SEXP attr = attributes[i];
-            // if (TYPEOF(attr) != EXTPTRSXP) {
-            //     Rcpp::stop("Invalid attribute object at index %d (type %s)", i, Rcpp::type2name(attr));
-            // }
         }
     }
     auto _cell_order = _string_to_tiledb_layout(cell_order);
@@ -1606,6 +1662,24 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
     auto schptr = new tiledb::ArraySchema(tiledb::ArraySchema(*ctx.get(), sparse ? TILEDB_SPARSE : TILEDB_DENSE));
     auto schema = make_xptr<tiledb::ArraySchema>(schptr);
     schema->set_domain(*domain.get());
+
+    // Deal with enumerations before attributes (that use them) are added
+    if (enumerations_list.isNotNull()) {
+        List enumerations(enumerations_list); // instantiate from now known non-null Nullable<List> wrapper
+        CharacterVector enumnames = enumerations.names();
+        R_xlen_t nenum = enumerations.length();
+        for (R_xlen_t i=0; i < nenum; i++)  {
+            bool nn = enumerations[i] == R_NilValue;
+            if (nn == false) {
+                XPtr<tiledb::Attribute> attr = as<XPtr<tiledb::Attribute>>(attributes[i]);
+                std::vector<std::string> enums = as<std::vector<std::string>>(enumerations[i]);
+                std::string enum_name = std::string(enumnames[i]);
+                libtiledb_array_schema_set_enumeration(ctx, schema, attr, enum_name, enums, false, false);
+            }
+        }
+    }
+
+    // Now add attributes
     if (nattr > 0) {
         for (SEXP a : attributes) {
             auto attr = as<XPtr<tiledb::Attribute>>(a);
@@ -1872,6 +1946,26 @@ int libtiledb_array_schema_version(XPtr<tiledb::ArraySchema> schema) {
   return static_cast<int32_t>(schema->version());
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_enumeration(XPtr<tiledb::Context> ctx,
+                                                                 XPtr<tiledb::ArraySchema> schema,
+                                                                 XPtr<tiledb::Attribute> attr,
+                                                                 const std::string enum_name,
+                                                                 std::vector<std::string> values,
+                                                                 bool nullable = false,
+                                                                 bool ordered = false) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::ArraySchema>(schema);
+    check_xptr_tag<tiledb::Attribute>(attr);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enumeration = tiledb::Enumeration::create(*ctx.get(), enum_name, values);
+    tiledb::ArraySchemaExperimental::add_enumeration(*ctx.get(), *schema.get(), enumeration);
+    tiledb::AttributeExperimental::set_enumeration_name(*ctx.get(), *attr.get(), enum_name);
+#endif
+    return schema;
+}
+
+
 /**
  * TileDB Array Schema Evolution
  */
@@ -1914,6 +2008,8 @@ libtiledb_array_schema_evolution_array_evolve(XPtr<tiledb::ArraySchemaEvolution>
     auto ptr = new tiledb::ArraySchemaEvolution(res);
     return make_xptr<tiledb::ArraySchemaEvolution>(ptr);
 }
+
+
 
 /**
  * TileDB Array
@@ -2457,6 +2553,57 @@ void libtiledb_array_delete_fragments(XPtr<tiledb::Array> array,
     uint64_t ts_ms_en = static_cast<uint64_t>(std::round(tstamp_end.getFractionalTimestamp() * 1000));
     array->delete_fragments(uri, ts_ms_st, ts_ms_en);
 #endif
+}
+
+// [[Rcpp::export]]
+bool libtiledb_array_has_enumeration(XPtr<tiledb::Context> ctx,
+                                     XPtr<tiledb::Array> arr,
+                                     const std::string name) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Array>(arr);
+    bool res = false;
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), name);
+    if (enmr.ptr() != nullptr) {
+        res = true;
+    }
+#endif
+    return res;
+}
+
+// [[Rcpp::export]]
+std::vector<std::string> libtiledb_array_get_enumeration(XPtr<tiledb::Context> ctx,
+                                                         XPtr<tiledb::Array> arr,
+                                                         const std::string name) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Array>(arr);
+    std::vector<std::string> res;
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), name);
+    if (enmr.ptr() == nullptr) {
+        Rcpp::stop("No enumeration named '%s' in array.");
+    }
+    res = enmr.as_vector<std::string>();
+#endif
+    return res;
+}
+
+// quick and dirty checker for an entire array
+// [[Rcpp::export]]
+Rcpp::LogicalVector libtiledb_array_has_enumeration_vector(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Array>(array);
+    Rcpp::XPtr<tiledb::ArraySchema> arrsch = libtiledb_array_get_schema(array);
+    Rcpp::List attrs = libtiledb_array_schema_attributes(arrsch);
+    size_t n = attrs.size();
+    Rcpp::LogicalVector has_enum = Rcpp::LogicalVector(n);
+    Rcpp::CharacterVector attr_names(n);
+    for (size_t i = 0; i < n; i++) {
+        has_enum[i] = libtiledb_attribute_has_enumeration(ctx, attrs[i]);
+        attr_names[i] = libtiledb_attribute_get_name(attrs[i]);
+    }
+    has_enum.attr("names") = attr_names;
+    return has_enum;
 }
 
 
@@ -3008,9 +3155,11 @@ IntegerVector length_from_vlcbuf(XPtr<vlc_buf_t> buf) {
 
 // [[Rcpp::export]]
 RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = false) {
+  spdl::debug("[libtiledb_query_get_buffer_ptr] before buf type check");
   check_xptr_tag<query_buf_t>(buf);
   std::string dtype = _tiledb_datatype_to_string(buf->dtype);
   //Rcpp::Rcout << dtype << " " << buf->ncells << " " << buf->size << " " << buf->nullable << std::endl;
+  spdl::debug(tfm::format("[libtiledb_query_get_buffer_ptr] type %s", dtype));
   if (dtype == "INT32") {
     IntegerVector v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
@@ -3336,7 +3485,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         double end = as<double>(ends);
         double stride = (strides == R_NilValue) ? 0 : Rcpp::as<double_t>(strides);
         subarr->add_range(uidx, start, end, stride);
-        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %d by %d", typestr, uidx, start, end, stride));
+        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %f to %f by %f", typestr, uidx, start, end, stride));
     } else if (typestr == "INT64") {
         int64_t start = makeScalarInteger64(as<double>(starts));
         int64_t end = makeScalarInteger64(as<double>(ends));
@@ -3410,9 +3559,7 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         float end = as<float>(ends);
         float stride = (strides == R_NilValue) ? 0 : Rcpp::as<float>(strides);
         subarr->add_range(uidx, start, end, stride);
-        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %f by %f", typestr, uidx, start, end, stride));
-    } else {
-        Rcpp::stop("Invalid data type for adding range to query: '%s'", Rcpp::type2name(starts));
+        spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %f to %f by %f", typestr, uidx, start, end, stride));
     }
     return subarr;
 }
@@ -3672,6 +3819,17 @@ XPtr<tiledb::QueryCondition> libtiledb_query_condition_combine(XPtr<tiledb::Quer
     tiledb::QueryCondition res = lhs->combine(*rhs.get(), op);
     auto query_cond = make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
     return query_cond;
+}
+
+// [[Rcpp::export]]
+void libtiledb_query_condition_set_use_enumeration(XPtr<tiledb::Context> ctx,
+                                                   XPtr<tiledb::QueryCondition> cond,
+                                                   bool use_enumeration) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::QueryCondition>(cond);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    tiledb::QueryConditionExperimental::set_use_enumeration(*ctx.get(), *cond.get(), use_enumeration);
+#endif
 }
 
 

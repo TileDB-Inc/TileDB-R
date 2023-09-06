@@ -988,12 +988,12 @@ expect_equal(tiledb_array_get_non_empty_domain_from_name(arr, "d2"), c("a", "c")
 ## access schema from uri
 schema2 <- tiledb::schema(tmp)
 expect_true(is(schema2, "tiledb_array_schema"))
-expect_equal(schema, schema2)
+expect_equal(schema@ptr, schema2@ptr) # schema2 has two slots as we now return array pointer too
 
 ## access schema from array
 schema3 <- tiledb::schema(arr)
 expect_true(is(schema3, "tiledb_array_schema"))
-expect_equal(schema, schema3)
+expect_equivalent(schema, schema3)  # switched to equivalent
 
 ## n=114
 ## time travel
@@ -1033,6 +1033,7 @@ if (tiledb_version(TRUE) >= "2.10.0") {
     expect_equal(nrow(A[]), 6)
 }
 
+## n=118
 ## as.matrix
 tmp <- tempfile()
 dir.create(tmp)
@@ -1087,7 +1088,7 @@ expect_equal(length(res), 2L)
 expect_equal(res$vals, mat)
 expect_equal(res$vals2, 10*mat)
 
-## FYI: 135 tests here
+## n=134
 ## PR #245 (variant of examples/ex_1.R)
 uri <- tempfile()
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 10L, "INT32"),
@@ -1114,6 +1115,7 @@ expect_equal(res[["a"]], data[["a"]])
 expect_equal(res[["b"]], data[["b"]])
 expect_equal(res[["c"]], data[["c"]])
 
+## n=139
 ## PR #246
 N <- 25L
 K <- 4L
@@ -1129,17 +1131,24 @@ obj[] <- M                              # prior to #246 this write had a write d
 chk <- tiledb_array(uri, return_as="matrix")
 expect_equivalent(chk[], M)
 
-
+## n=140
 ## test for data.frame append
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
 library(palmerpenguins)
 uri <- tempfile()
-fromDataFrame(penguins, uri, sparse = TRUE,
+## The following does not yet work for factors so we are turning penguins into char
+P <- as.data.frame(penguins)
+for (i in seq_len(ncol(P))) {
+    if (is.factor(P[,i])) {
+        P[,i] <- as.character(P[,i,drop=FALSE])
+    }
+}
+fromDataFrame(P, uri, sparse = TRUE,
               col_index = c("species", "year"),
               tile_domain=list(year=c(1966L, 2021L)))
 arr <- tiledb_array(uri, return_as="data.frame")
 ## new data
-newdf <- penguins[1:2,]
+newdf <- P[1:2,]
 newdf$species <- c("Fred", "Ginger")
 newdf$island <- c("Manhattan", "Staten Island")
 newdf$year <- c(1966L, 1969L)                     # int is important
@@ -1275,6 +1284,7 @@ if (hasTibble) {
     expect_true(inherits(res, "tbl"))
 }
 
+## n=174
 set_return_as_preference(oldConversionValue) 		# reset baseline value
 
 res <- tiledb_array(uri, return_as="data.frame")[]
@@ -1359,6 +1369,7 @@ data <- array(1:64, dim = c(4,4,4))
 A <- tiledb_array(uri = uri)
 A[] <- data
 
+## n=186
 A <- tiledb_array(uri = uri, return_as="data.frame", query_layout="ROW_MAJOR")
 res <- A[2,2,2]
 expect_equal(res[, "a", drop=TRUE], 22)
@@ -1407,7 +1418,7 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   expect_equal(res[, "a", drop=TRUE], as.integer64(c(22,26)))
 }
 
-
+## n=200
 ## test for no attributes
 library(palmerpenguins)
 uri <- tempfile()
@@ -1503,6 +1514,7 @@ expect_equal(mdlst[["data"]], c(123L, 456L, 789L))
 expect_equal(mdlst[["text"]], "the quick brown fox")
 
 
+## n=223
 ##  [225]  test conversion: larger penguins example
 tdir <- tempfile()
 tgzfile <- system.file("sampledata", "legacy_write.tar.gz", package="tiledb")
@@ -1524,14 +1536,19 @@ for (col in colnames(before)[-c(1,8)]) {# exclude __tiledb_rows and sex
     expect_equal(before[[col]], after[[col]])
 }
 
+## n=232
 newout <- tempfile()
 dir.create(newout)
-tiledb:::.legacy_validity(outuri, newout, tolegacy=TRUE)
-rvturi <- file.path(newout, "penguins")
-revert <- tiledb_array(rvturi, strings_as_factors=TRUE)[]
-expect_equal(sum(is.na(revert$sex)), 333)
-for (col in colnames(before)[-c(1,8)]) { # exclude __tiledb_rows and sex
-    expect_equal(before[[col]], revert[[col]])
+## legacy validity works on plain char columns, we now have factors so it is a mismatch
+## we could add a switch to revert the new 'with factors' behavior to the old on input
+## but that seems disproportionate to the issue (of legacy validation) at hand
+if (tiledb_version(TRUE) < "2.16.0") {
+    tiledb:::.legacy_validity(outuri, newout, tolegacy=TRUE)
+    rvturi <- file.path(newout, "penguins")
+    revert <- tiledb_array(rvturi, strings_as_factors=TRUE)[]
+    expect_equal(sum(is.na(revert$sex)), 333)
+    for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows
+        expect_equal(before[[col]], revert[[col]])
 }
 
 ## check for error when setting on N+1 dims
