@@ -873,6 +873,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_attribute_is_ordered_enumeration
+bool libtiledb_attribute_is_ordered_enumeration(XPtr<tiledb::Context> ctx, XPtr<tiledb::Attribute> attr, XPtr<tiledb::Array> arr);
+RcppExport SEXP _tiledb_libtiledb_attribute_is_ordered_enumeration(SEXP ctxSEXP, SEXP attrSEXP, SEXP arrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type arr(arrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_is_ordered_enumeration(ctx, attr, arr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_schema
 XPtr<tiledb::ArraySchema> libtiledb_array_schema(XPtr<tiledb::Context> ctx, XPtr<tiledb::Domain> domain, List attributes, std::string cell_order, std::string tile_order, Nullable<XPtr<tiledb::FilterList>> coords_filter_list, Nullable<XPtr<tiledb::FilterList>> offsets_filter_list, Nullable<XPtr<tiledb::FilterList>> validity_filter_list, bool sparse, Nullable<List> enumerations_list);
 RcppExport SEXP _tiledb_libtiledb_array_schema(SEXP ctxSEXP, SEXP domainSEXP, SEXP attributesSEXP, SEXP cell_orderSEXP, SEXP tile_orderSEXP, SEXP coords_filter_listSEXP, SEXP offsets_filter_listSEXP, SEXP validity_filter_listSEXP, SEXP sparseSEXP, SEXP enumerations_listSEXP) {
@@ -3477,6 +3490,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_attribute_has_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_has_enumeration, 2},
     {"_tiledb_libtiledb_attribute_get_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_get_enumeration, 3},
     {"_tiledb_libtiledb_attribute_set_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_set_enumeration, 3},
+    {"_tiledb_libtiledb_attribute_is_ordered_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_is_ordered_enumeration, 3},
     {"_tiledb_libtiledb_array_schema", (DL_FUNC) &_tiledb_libtiledb_array_schema, 10},
     {"_tiledb_libtiledb_array_schema_create", (DL_FUNC) &_tiledb_libtiledb_array_schema_create, 2},
     {"_tiledb_libtiledb_array_schema_load", (DL_FUNC) &_tiledb_libtiledb_array_schema_load, 2},

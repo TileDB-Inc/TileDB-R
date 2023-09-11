@@ -90,19 +90,22 @@ setMethod("raw_dump",
     fl <- filter_list(object)
     ndct <- 0 				# default
     dct <- character()		# default
+    ord <- FALSE            # default
     if (!is.null(arrptr)) {
         if (!libtiledb_array_is_open_for_reading(arrptr)) arrptr <- libtiledb_array_open_with_ptr(arrptr, "READ")
         if (tiledb_attribute_has_enumeration(object)) {
             dct <- tiledb_attribute_get_enumeration_ptr(object, arrptr)
+            ord <- tiledb_attribute_is_ordered_enumeration_ptr(object, arrptr)
             ndct <- length(dct)
         }
     }
+    dictionary_txt <- if (ord) "ordered_dictionary" else "dictionary"
     txt <- paste0("tiledb_attr(name=\"", name(object), "\", ",
                   "type=\"", datatype(object), "\", ",
                   "ncells=", cell_val_num(object), ", ",
                   "nullable=", tiledb_attribute_get_nullable(object),
                   if (nfilters(fl) > 0) paste0(", filter_list=", .as_text_filter_list(fl)),
-                  if (ndct > 0) paste0(", dictionary=c(\"", paste(dct[seq(1, min(5, ndct))], collapse="\",\""), if (ndct > 5) "\",...", "\")"))
+                  if (ndct > 0) paste0(", ", dictionary_txt, "=c(\"", paste(dct[seq(1, min(5, ndct))], collapse="\",\""), if (ndct > 5) "\",...", "\")"))
     txt <- paste0(txt, ")")
     txt
 }
@@ -340,6 +343,14 @@ tiledb_attribute_has_enumeration <- function(attr, ctx = tiledb_get_context()) {
     libtiledb_attribute_has_enumeration(ctx@ptr, attr@ptr)
 }
 
+#' @noRd
+#' @export
+tiledb_attribute_is_ordered_enumeration_ptr <- function(attrptr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attrptr' argument must be an external pointer" = is(attr, "tiledb_attr"))
+    libtiledb_attribute_is_ordered_enumeration(ctx@ptr, attrptr)
+}
+
+
 #' Get the TileDB Attribute Enumeration
 #'
 #' @param attr A TileDB Attribute object
@@ -374,4 +385,12 @@ tiledb_attribute_set_enumeration_name <- function(attr, enum_name, ctx = tiledb_
               "The 'enum_name' argument must be character" = is.character(enum_name))
     attr@ptr <- libtiledb_attribute_set_enumeration(ctx@ptr, attr@ptr, enum_name)
     attr
+}
+
+#' @noRd
+#' @export
+tiledb_attribute_is_ordered_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'arr' argument must be an external pointer" = is(arrptr, "externalptr"))
+    libtiledb_attribute_is_ordered_enumeration(ctx@ptr, attr@ptr, arrptr)
 }

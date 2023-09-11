@@ -1622,6 +1622,28 @@ XPtr<tiledb::Attribute> libtiledb_attribute_set_enumeration(XPtr<tiledb::Context
     return attr;
 }
 
+// [[Rcpp::export]]
+bool libtiledb_attribute_is_ordered_enumeration(XPtr<tiledb::Context> ctx,
+                                                XPtr<tiledb::Attribute> attr,
+                                                XPtr<tiledb::Array> arr) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+    check_xptr_tag<tiledb::Array>(arr);
+    bool res = false;
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enmrname = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
+    if (enmrname == std::nullopt) {
+        Rcpp::stop("No enumeration name for attribute");
+    }
+    auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), enmrname.value());
+    if (enmr.ptr() != nullptr) {
+        res = enmr.ordered();
+    }
+#endif
+    return res;
+}
+
+
 /**
  * TileDB Array Schema
  */
@@ -1674,7 +1696,14 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
                 XPtr<tiledb::Attribute> attr = as<XPtr<tiledb::Attribute>>(attributes[i]);
                 std::vector<std::string> enums = as<std::vector<std::string>>(enumerations[i]);
                 std::string enum_name = std::string(enumnames[i]);
-                libtiledb_array_schema_set_enumeration(ctx, schema, attr, enum_name, enums, false, false);
+                bool is_ordered = false; // default
+                // 'ordered' is an attribute off the CharacterVector
+                CharacterVector enumvect = enumerations[i];
+                if (enumvect.hasAttribute("ordered")) {
+                    is_ordered = (as<bool>(enumvect.attr("ordered")) == true);
+                }
+                libtiledb_array_schema_set_enumeration(ctx, schema, attr, enum_name, enums,
+                                                       false, is_ordered);
             }
         }
     }
@@ -1958,7 +1987,7 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema_set_enumeration(XPtr<tiledb::Co
     check_xptr_tag<tiledb::ArraySchema>(schema);
     check_xptr_tag<tiledb::Attribute>(attr);
 #if TILEDB_VERSION >= TileDB_Version(2,17,0)
-    auto enumeration = tiledb::Enumeration::create(*ctx.get(), enum_name, values);
+    auto enumeration = tiledb::Enumeration::create(*ctx.get(), enum_name, values, ordered);
     tiledb::ArraySchemaExperimental::add_enumeration(*ctx.get(), *schema.get(), enumeration);
     tiledb::AttributeExperimental::set_enumeration_name(*ctx.get(), *attr.get(), enum_name);
 #endif

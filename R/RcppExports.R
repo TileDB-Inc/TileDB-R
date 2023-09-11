@@ -310,6 +310,10 @@ libtiledb_attribute_set_enumeration <- function(ctx, attr, enum_name) {
     .Call(`_tiledb_libtiledb_attribute_set_enumeration`, ctx, attr, enum_name)
 }
 
+libtiledb_attribute_is_ordered_enumeration <- function(ctx, attr, arr) {
+    .Call(`_tiledb_libtiledb_attribute_is_ordered_enumeration`, ctx, attr, arr)
+}
+
 libtiledb_array_schema <- function(ctx, domain, attributes, cell_order, tile_order, coords_filter_list = NULL, offsets_filter_list = NULL, validity_filter_list = NULL, sparse = FALSE, enumerations_list = NULL) {
     .Call(`_tiledb_libtiledb_array_schema`, ctx, domain, attributes, cell_order, tile_order, coords_filter_list, offsets_filter_list, validity_filter_list, sparse, enumerations_list)
 }

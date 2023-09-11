@@ -30,7 +30,7 @@ arr@dumpbuffers <- character()          			# turn buffer store off again
 pathroot <- file.path("/", "dev", "shm", "penguins", "buffers", "data")
 arr@buffers <- sapply(colnames(v3), function(x) file.path(pathroot, x), simplify=FALSE)
 v4 <- arr[]
-expect_true(all.equal(v3, v4))
+expect_equivalent(v3, v4)
 ## list columns
 D <- data.frame(a=1:5,
                 b=I(split(c(1:4,NA,NA,7:10), ceiling((1:10)/2))),
