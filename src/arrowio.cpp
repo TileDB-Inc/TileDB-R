@@ -402,7 +402,8 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
             dschxp->format = "u";
             dschxp->flags |= ARROW_FLAG_NULLABLE;
             if (is_ordered) {
-                dschxp->flags |= ARROW_FLAG_DICTIONARY_ORDERED;
+                dschxp->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this line appears ignore
+                chldschemaxp->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this one matters more
             }
             darrxp->length = svec.size();
             darrxp->null_count = 0;
