@@ -1436,7 +1436,7 @@ attrs(arr) <- NA_character_
 expect_true(is.na(attrs(arr)))
 
 v <- tiledb_version()
-if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L, 12L, 14L)) exit_file("Skip remainder for 2.{4,10,14}.*")
+if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L, 11L, 12L, 14L)) exit_file("Skip remainder for 2.{4,10:12,14}.*")
 
 ## n=204
 ## CI issues at GitHub for r-release on Windows Server 2019
