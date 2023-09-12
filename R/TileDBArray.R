@@ -616,9 +616,12 @@ setMethod("[", "tiledb_array",
   ## dictionaries are schema-level objects to fetch them now where we expect to have some
   dictionaries <- vector(mode="list", length=length(allnames))
   names(dictionaries) <- allnames
+  ordered_dict <- dictionaries
   for (ii in seq_along(dictionaries)) {
       if (isTRUE(alldictionary[ii])) {
           dictionaries[[ii]] <- tiledb_attribute_get_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
+          ordered_dict[[ii]] <- tiledb_attribute_is_ordered_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
+          attr(dictionaries[[ii]], "ordered") <- ordered_dict[[ii]]
       }
   }
 
@@ -809,13 +812,14 @@ setMethod("[", "tiledb_array",
           } else {
               col <- libtiledb_query_get_buffer_ptr(buf, asint64)
               if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
-                  dct <- dictionaries[[name]]               # access it from utility
+                  dct <- dictionaries[[name]]           # access it from utility
+                  ord <- ordered_dict[[name]]
                   ## the following expands out to a char vector first; we can do better
                   ##   col <- factor(dct[col+1], levels=dct)
                   ## so we do it "by hand"
                   col <- col + 1L # adjust for zero-index C/C++ layer
                   attr(col, "levels") <- dct
-                  attr(col, "class")  <- "factor"
+                  attr(col, "class")  <- if (ord) c("ordered", "factor") else "factor"
               }
               col
           }
@@ -983,12 +987,13 @@ setMethod("[", "tiledb_array",
                       col <- libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
                       if (!is.null(dictionaries[[name]])) { 	# if there is a dictionary
                           dct <- dictionaries[[name]]           # access it from utility
+                          ord <- ordered_dict[[name]]
                           ## the following expands out to a char vector first; we can do better
                           ##   col <- factor(dct[col+1], levels=dct)
                           ## so we do it "by hand"
                           col <- col + 1L # adjust for zero-index C/C++ layer
                           attr(col, "levels") <- dct
-                          attr(col, "class")  <- "factor"
+                          attr(col, "class")  <- if (ord) c("ordered", "factor") else "factor"
                       }
                       col
                   }

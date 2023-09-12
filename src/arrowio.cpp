@@ -373,10 +373,15 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
         Rcpp::XPtr<ArrowSchema> chldschemaxp = schema_owning_xptr();
         Rcpp::XPtr<ArrowArray> chldarrayxp = array_owning_xptr();
         bool is_factor = dicts[i] != R_NilValue;
+        bool is_ordered = false;
+        if (is_factor) {
+            Rcpp::CharacterVector cvec = dicts[i];
+            is_ordered = cvec.attr("ordered");
+        }
         auto buf = ab->at(names[i]);        // buf is a shared_ptr to ColumnBuffer
         buf->update_size(*qry);
         spdl::info(tfm::format("[libtiledb_to_arrow] Accessing %s (%s:%s) at %d use_count=%d sz %d nm %s tp %d",
-                               names[i], dictnames[i], (is_factor ? "<factor>" : ""), i,
+                               names[i], dictnames[i], (is_factor ? (is_ordered ? "<ordered>" : "<factor>") : ""), i,
                                buf.use_count(), buf->size(), buf->name(), buf->type()));
 
         // this is pair of array and schema pointer
@@ -396,6 +401,10 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
 
             dschxp->format = "u";
             dschxp->flags |= ARROW_FLAG_NULLABLE;
+            if (is_ordered) {
+                dschxp->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this line appears ignore
+                chldschemaxp->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this one matters more
+            }
             darrxp->length = svec.size();
             darrxp->null_count = 0;
             darrxp->n_buffers = 3; // we always have three for dictionairies

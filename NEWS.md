@@ -6,7 +6,9 @@
 
 * Built-time configuration of TileDB Embedded can now be accessed as a JSON string (#584)
 
-* Enumeration types (i.e. what R calls factors) are now supported (#562)
+* Enumeration types (i.e. what R calls `factor` variables) are now supported (#562)
+
+* Enumeration support has been extended to `ordered` types (#586)
 
 
 # tiledb 0.20.3

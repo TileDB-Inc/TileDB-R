@@ -202,6 +202,7 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         col <- obj[,ind]
         colname <- colnames(obj)[ind]
         lvls <- NULL 			# by default no factor levels
+        ordrd <- FALSE
         if (inherits(col, "AsIs")) {
             ## we just look at the first list column, others have to have same type and length
             cl <- class(obj[,ind][[1]])
@@ -226,10 +227,11 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
             tp <- "INT64"
         else if (cl == "logical")
             tp <- if (tiledb_version(TRUE) >= "2.10.0") "BOOL" else "INT32"
-        else if (cl == "factor") {
+        else if (cl == "factor" || cl == "ordered") {
             lvls <- levels(col) 		# extract factor levels
             if (length(lvls) > .Machine$integer.max)
                 stop("Cannot represent this many levels for ", colname, call. = FALSE)
+            attr(lvls, "ordered") <- cl == "ordered"
             tp <- "INT32"
         }
         else
@@ -249,16 +251,16 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                             filter_list = filters,
                             nullable = any(is.na(col)),
                             enumeration = lvls)
-        list(attr=attr, lvls=lvls, name=colname)
+        list(attr=attr, lvls=lvls, name=colname) # return a list of three with levels and names
     }
     cols <- seq_len(dims[2])
     if (!is.null(col_index)) cols <- cols[-col_index]
     attributes <- enumerations <- list() 		# fallback
     if (length(cols) > 0) {
         a_e <- lapply(cols, makeAttr)
-        attributes <- lapply(a_e, "[[", 1)
-        enumerations <- lapply(a_e, "[[", 2)
-        colnames <- lapply(a_e, "[[", 3)
+        attributes <- lapply(a_e, "[[", 1) 		# get attributes from list
+        enumerations <- lapply(a_e, "[[", 2)    # get enumeration levels (with 'ordered' attribute)
+        colnames <- lapply(a_e, "[[", 3)        # get column names
         names(enumerations) <- colnames
     }
     schema <- tiledb_array_schema(dom,
