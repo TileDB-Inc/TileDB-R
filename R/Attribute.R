@@ -343,14 +343,6 @@ tiledb_attribute_has_enumeration <- function(attr, ctx = tiledb_get_context()) {
     libtiledb_attribute_has_enumeration(ctx@ptr, attr@ptr)
 }
 
-#' @noRd
-#' @export
-tiledb_attribute_is_ordered_enumeration_ptr <- function(attrptr, ctx = tiledb_get_context()) {
-    stopifnot("The 'attrptr' argument must be an external pointer" = is(attr, "tiledb_attr"))
-    libtiledb_attribute_is_ordered_enumeration(ctx@ptr, attrptr)
-}
-
-
 #' Get the TileDB Attribute Enumeration
 #'
 #' @param attr A TileDB Attribute object
@@ -369,7 +361,7 @@ tiledb_attribute_get_enumeration <- function(attr, arr, ctx = tiledb_get_context
 #' @export
 tiledb_attribute_get_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
     stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
-              "The 'arr' argument must be an external pointer" = is(arrptr, "externalptr"))
+              "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr"))
     libtiledb_attribute_get_enumeration(ctx@ptr, attr@ptr, arrptr)
 }
 
@@ -387,7 +379,12 @@ tiledb_attribute_set_enumeration_name <- function(attr, enum_name, ctx = tiledb_
     attr
 }
 
-#' @noRd
+#' Check if TileDB Attribute Enumeration is Ordered
+#'
+#' @param attr A Tiledb Array object
+#' @param arrptr A Tiledb Array object pointer
+#' @param ctx A Tiledb Context object (optional)
+#' @return A character vector with the enumeration (of length zero if none)
 #' @export
 tiledb_attribute_is_ordered_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
     stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
