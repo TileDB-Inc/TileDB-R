@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.21.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -135,6 +135,16 @@
           <code><a href="tiledb_config.html">tiledb_config()</a></code> 
         </dt>
         <dd>Creates a <code>tiledb_config</code> object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_config_as_built_json.html">tiledb_config_as_built_json()</a></code> 
+        </dt>
+        <dd>Return the 'AsBuilt' JSON string</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_config_as_built_show.html">tiledb_config_as_built_show()</a></code> 
+        </dt>
+        <dd>Display the 'AsBuilt' JSON string</dd>
       </dl><dl><dt>
           
           <code><a href="tiledb_config_load.html">tiledb_config_load()</a></code> 
@@ -453,6 +463,11 @@
         <dd>Get the non-empty domain from a TileDB Array by name</dd>
       </dl><dl><dt>
           
+          <code><a href="tiledb_array_has_enumeration.html">tiledb_array_has_enumeration()</a></code> 
+        </dt>
+        <dd>Check for Enumeration (aka Factor aka Dictionary)</dd>
+      </dl><dl><dt>
+          
           <code><a href="tiledb_array_is_heterogeneous.html">tiledb_array_is_heterogeneous()</a></code> 
         </dt>
         <dd>Check for Heterogeneous Domain</dd>
@@ -754,6 +769,11 @@ This is only valid for sparse arrays.</dd>
         <dd>Return the number of scalar values per attribute cell</dd>
       </dl><dl><dt>
           
+          <code><a href="tiledb_attribute_get_enumeration.html">tiledb_attribute_get_enumeration()</a></code> <code><a href="tiledb_attribute_get_enumeration.html">tiledb_attribute_get_enumeration_ptr()</a></code> 
+        </dt>
+        <dd>Get the TileDB Attribute Enumeration</dd>
+      </dl><dl><dt>
+          
           <code><a href="tiledb_attribute_get_fill_value.html">tiledb_attribute_get_fill_value()</a></code> 
         </dt>
         <dd>Get the fill value for a TileDB Attribute</dd>
@@ -764,6 +784,16 @@ This is only valid for sparse arrays.</dd>
         <dd>Get the TileDB Attribute Nullable flag value</dd>
       </dl><dl><dt>
           
+          <code><a href="tiledb_attribute_has_enumeration.html">tiledb_attribute_has_enumeration()</a></code> 
+        </dt>
+        <dd>Test if TileDB Attribute has an Enumeration</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_attribute_is_ordered_enumeration_ptr.html">tiledb_attribute_is_ordered_enumeration_ptr()</a></code> 
+        </dt>
+        <dd>Check if TileDB Attribute Enumeration is Ordered</dd>
+      </dl><dl><dt>
+          
           <code><a href="tiledb_attribute_is_variable_sized.html">tiledb_attribute_is_variable_sized()</a></code> 
         </dt>
         <dd>Check whether TileDB Attribute is variable-sized</dd>
@@ -772,6 +802,11 @@ This is only valid for sparse arrays.</dd>
           <code><a href="tiledb_attribute_set_cell_val_num.html">`cell_val_num&lt;-`()</a></code> <code><a href="tiledb_attribute_set_cell_val_num.html">tiledb_attribute_set_cell_val_num()</a></code> 
         </dt>
         <dd>Set the number of scalar values per attribute cell</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_attribute_set_enumeration_name.html">tiledb_attribute_set_enumeration_name()</a></code> 
+        </dt>
+        <dd>Set a TileDB Attribute Enumeration Name</dd>
       </dl><dl><dt>
           
           <code><a href="tiledb_attribute_set_fill_value.html">tiledb_attribute_set_fill_value()</a></code> 
@@ -1257,6 +1292,11 @@ This is only valid for sparse arrays.</dd>
           <code><a href="tiledb_query_condition_init.html">tiledb_query_condition_init()</a></code> 
         </dt>
         <dd>Initialize a 'tiledb_query_condition' object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_query_condition_set_use_enumeration.html">tiledb_query_condition_set_use_enumeration()</a></code> 
+        </dt>
+        <dd>Enable use of enumeration in query condition</dd>
       </dl><dl><dt>
           
           <code><a href="tiledb_query_create_buffer_ptr.html">tiledb_query_create_buffer_ptr()</a></code> 
@@ -2133,6 +2173,52 @@ This is only valid for sparse arrays.</dd>
           <code><a href="limitTileDBCores.html">limitTileDBCores()</a></code> 
         </dt>
         <dd>Limit TileDB core use to a given number of cores</dd>
+      </dl></div><div class="section level2">
+      <h2 id="enumeration">Enumeration<a class="anchor" aria-label="anchor" href="#enumeration"></a></h2>
+      
+      <p class="section-desc"></p><p>support for factor and ordered</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="tiledb_array_has_enumeration.html">tiledb_array_has_enumeration()</a></code> 
+        </dt>
+        <dd>Check for Enumeration (aka Factor aka Dictionary)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_attribute_get_enumeration.html">tiledb_attribute_get_enumeration()</a></code> <code><a href="tiledb_attribute_get_enumeration.html">tiledb_attribute_get_enumeration_ptr()</a></code> 
+        </dt>
+        <dd>Get the TileDB Attribute Enumeration</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_attribute_has_enumeration.html">tiledb_attribute_has_enumeration()</a></code> 
+        </dt>
+        <dd>Test if TileDB Attribute has an Enumeration</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_attribute_is_ordered_enumeration_ptr.html">tiledb_attribute_is_ordered_enumeration_ptr()</a></code> 
+        </dt>
+        <dd>Check if TileDB Attribute Enumeration is Ordered</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_attribute_set_enumeration_name.html">tiledb_attribute_set_enumeration_name()</a></code> 
+        </dt>
+        <dd>Set a TileDB Attribute Enumeration Name</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_query_condition_set_use_enumeration.html">tiledb_query_condition_set_use_enumeration()</a></code> 
+        </dt>
+        <dd>Enable use of enumeration in query condition</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_schema_get_enumeration_status.html">tiledb_schema_get_enumeration_status()</a></code> 
+        </dt>
+        <dd>Get Dimension or Attribute Status</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

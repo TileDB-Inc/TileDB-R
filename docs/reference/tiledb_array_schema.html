@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.21.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,6 +77,7 @@
 <span>  validity_filter_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  capacity <span class="op">=</span> <span class="fl">10000L</span>,</span>
 <span>  allows_dups <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  enumerations <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ctx <span class="op">=</span> <span class="fu"><a href="tiledb_get_context.html">tiledb_get_context</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -120,7 +121,11 @@
 
 
 <dt>allows_dups</dt>
-<dd><p>(optional, requires ‘spars’ to be TRUE)</p></dd>
+<dd><p>(optional, requires ‘sparse’ to be TRUE)</p></dd>
+
+
+<dt>enumerations</dt>
+<dd><p>(optional) named list of enumerations</p></dd>
 
 
 <dt>ctx</dt>

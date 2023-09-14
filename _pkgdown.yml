@@ -151,6 +151,10 @@ reference:
   - starts_with("tiledb_version")
   - matches("tiledb-package")
   - matches("limitTileDBCores")
+- title: Enumeration
+  desc: support for factor and ordered
+  contents:
+  - matches("enumeration")
 
 authors:
   TileDB, Inc.:

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.20.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.21.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,6 +72,7 @@
 <span>  filter_list <span class="op">=</span> <span class="fu"><a href="tiledb_filter_list.html">tiledb_filter_list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  ncells <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  nullable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  enumeration <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ctx <span class="op">=</span> <span class="fu"><a href="tiledb_get_context.html">tiledb_get_context</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -98,6 +99,10 @@ that this is a <em>required</em> parameter.</p></dd>
 <dt>nullable</dt>
 <dd><p>(default FALSE) A logical switch whether the attribute can have missing
 values</p></dd>
+
+
+<dt>enumeration</dt>
+<dd><p>(default NULL) A character vector of dictionary values</p></dd>
 
 
 <dt>ctx</dt>
