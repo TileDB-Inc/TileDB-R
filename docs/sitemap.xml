@@ -481,6 +481,9 @@
     <loc>/reference/tiledb_array_get_non_empty_domain_from_name.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_array_has_enumeration.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_array_is_heterogeneous.html</loc>
   </url>
   <url>
@@ -559,16 +562,28 @@
     <loc>/reference/tiledb_attribute_get_cell_val_num.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_attribute_get_enumeration.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_attribute_get_fill_value.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_attribute_get_nullable.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_attribute_has_enumeration.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_attribute_is_ordered_enumeration_ptr.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_attribute_is_variable_sized.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_attribute_set_cell_val_num.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_attribute_set_enumeration_name.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_attribute_set_fill_value.html</loc>
@@ -581,6 +596,12 @@
   </url>
   <url>
     <loc>/reference/tiledb_config.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_config_as_built_json.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_config_as_built_show.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_config_load.html</loc>
@@ -901,6 +922,9 @@
     <loc>/reference/tiledb_query_condition_init.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_query_condition_set_use_enumeration.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_query_create_buffer_ptr.html</loc>
   </url>
   <url>
@@ -989,6 +1013,9 @@
   </url>
   <url>
     <loc>/reference/tiledb_schema_get_dim_attr_status.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_schema_get_enumeration_status.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_schema_get_names.html</loc>
