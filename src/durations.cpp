@@ -1,6 +1,5 @@
 #include <tiledb.h>
-
-Rcpp::NumericVector makeNanotime(const std::vector<int64_t>& vec); // in utilities.cpp
+#include <RcppInt64>            // for toNanotime
 
 std::vector<int64_t> dates_to_int64(Rcpp::DateVector dv, tiledb_datatype_t dtype) {
   size_t n = dv.size();
@@ -154,7 +153,7 @@ Rcpp::NumericVector int64_to_subnano(std::vector<int64_t> iv, tiledb_datatype_t 
       Rcpp::stop("Inapplicable conversion tiledb_datatype_t (%d) for int64 to subnano conversion", dtype);
     }
   }
-  return makeNanotime(iv);
+  return toNanotime(iv);
 }
 
 // Check whether a column datatype is date or datetime

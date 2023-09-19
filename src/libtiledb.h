@@ -29,6 +29,10 @@
 // logging support in RcppSpdlog namespace without making recourse to fmt::format
 #include <tinyspdl.h>
 
+// int64 conversion helpers from header package RcppInt64
+// using narrower include of just functions.h
+#include <rcppint64_bits/functions.h>
+
 #include "nanoarrow.h"
 
 // Version
@@ -48,11 +52,11 @@ Rcpp::CharacterVector tiledb_config_get(Rcpp::XPtr<tiledb::Config> xconfig,
 void tiledb_config_dump(Rcpp::XPtr<tiledb::Config> config);
 
 // Conversion helpers
-Rcpp::NumericVector makeNanotime(const std::vector<int64_t>& vec);
-Rcpp::NumericVector makeInteger64(const std::vector<int64_t>& vec);
-int64_t makeScalarInteger64(const double val);
-std::vector<int64_t> getInt64Vector(Rcpp::NumericVector vec);
-bool isInteger64(Rcpp::NumericVector v);
+//Rcpp::NumericVector makeNanotime(const std::vector<int64_t>& vec);
+//Rcpp::NumericVector makeInteger64(const std::vector<int64_t>& vec);
+//int64_t makeScalarInteger64(const double val);
+//std::vector<int64_t> getInt64Vector(Rcpp::NumericVector vec);
+//bool isInteger64(Rcpp::NumericVector v);
 bool is_datetime_column(const tiledb_datatype_t dtype);
 
 // duration helpers
