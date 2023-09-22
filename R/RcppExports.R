@@ -458,6 +458,14 @@ libtiledb_array_schema_evolution_array_evolve <- function(ase, uri) {
     .Call(`_tiledb_libtiledb_array_schema_evolution_array_evolve`, ase, uri)
 }
 
+libtiledb_array_schema_evolution_add_enumeration <- function(ctx, ase, enum_name, values, nullable = FALSE, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_add_enumeration`, ctx, ase, enum_name, values, nullable, ordered)
+}
+
+libtiledb_array_schema_evolution_drop_enumeration <- function(ase, attrname) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_drop_enumeration`, ase, attrname)
+}
+
 libtiledb_array_create <- function(uri, schema) {
     .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }

@@ -1310,6 +1310,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_schema_evolution_add_enumeration
+XPtr<tiledb::ArraySchemaEvolution> libtiledb_array_schema_evolution_add_enumeration(XPtr<tiledb::Context> ctx, XPtr<tiledb::ArraySchemaEvolution> ase, const std::string& enum_name, std::vector<std::string> values, bool nullable, bool ordered);
+RcppExport SEXP _tiledb_libtiledb_array_schema_evolution_add_enumeration(SEXP ctxSEXP, SEXP aseSEXP, SEXP enum_nameSEXP, SEXP valuesSEXP, SEXP nullableSEXP, SEXP orderedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchemaEvolution> >::type ase(aseSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type enum_name(enum_nameSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type values(valuesSEXP);
+    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
+    Rcpp::traits::input_parameter< bool >::type ordered(orderedSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_evolution_add_enumeration(ctx, ase, enum_name, values, nullable, ordered));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_schema_evolution_drop_enumeration
+XPtr<tiledb::ArraySchemaEvolution> libtiledb_array_schema_evolution_drop_enumeration(XPtr<tiledb::ArraySchemaEvolution> ase, const std::string& attrname);
+RcppExport SEXP _tiledb_libtiledb_array_schema_evolution_drop_enumeration(SEXP aseSEXP, SEXP attrnameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchemaEvolution> >::type ase(aseSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type attrname(attrnameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_evolution_drop_enumeration(ase, attrname));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_array_create
 std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> schema);
 RcppExport SEXP _tiledb_libtiledb_array_create(SEXP uriSEXP, SEXP schemaSEXP) {
@@ -3527,6 +3555,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_schema_evolution_add_attribute", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_add_attribute, 2},
     {"_tiledb_libtiledb_array_schema_evolution_drop_attribute", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_drop_attribute, 2},
     {"_tiledb_libtiledb_array_schema_evolution_array_evolve", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_array_evolve, 2},
+    {"_tiledb_libtiledb_array_schema_evolution_add_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_add_enumeration, 6},
+    {"_tiledb_libtiledb_array_schema_evolution_drop_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_drop_enumeration, 2},
     {"_tiledb_libtiledb_array_create", (DL_FUNC) &_tiledb_libtiledb_array_create, 2},
     {"_tiledb_libtiledb_array_create_with_key", (DL_FUNC) &_tiledb_libtiledb_array_create_with_key, 3},
     {"_tiledb_libtiledb_array_open", (DL_FUNC) &_tiledb_libtiledb_array_open, 3},

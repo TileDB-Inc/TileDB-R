@@ -81,3 +81,42 @@ tiledb_array_schema_evolution_array_evolve <- function(object, uri) {
     object@ptr <- libtiledb_array_schema_evolution_array_evolve(object@ptr, uri)
     invisible(object)
 }
+
+#' Add an Enumeration to a TileDB Array Schema Evolution object
+#'
+#' @param object A TileDB 'array_schema_evolution' object
+#' @param name A character value with the name for the Enumeration
+#' @param enums A character vector
+#' @param ordered (optional) A boolean switch whether the enumeration is ordered
+#' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+#' context object is retrieved
+#' @return The modified 'array_schema_evolution' object, invisibly
+#' @export
+tiledb_array_schema_evolution_add_enumeration <- function(object, name, enums, ordered=FALSE,
+                                                          ctx = tiledb_get_context()) {
+    stopifnot("The first argument must be an Array Schema Evolution object" =
+                  is(object, "tiledb_array_schema_evolution"),
+              "The 'name' argument must be a scalar character object" =
+                  is.character(name) && length(name) == 1,
+              "The 'enumlist' argument must be a character object" = is.character(enums),
+              "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0",
+              "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"))
+    object@ptr <- libtiledb_array_schema_evolution_add_enumeration(ctx@ptr, object@ptr, name,
+                                                                   enums, FALSE, ordered)
+    invisible(object)
+}
+
+#' Drop an Enumeration given by name from a TileDB Array Schema Evolution object
+#'
+#' @param object A TileDB 'array_schema_evolution' object
+#' @param attrname A character variable with an attribute name
+#' @return The modified 'array_schema_evolution' object, invisibly
+#' @export
+tiledb_array_schema_evolution_drop_enumeration <- function(object, attrname) {
+    stopifnot("The first argument must be an Array Schema Evolution object" =
+                  is(object, "tiledb_array_schema_evolution"),
+              "The 'attrname' argument must be a character variable" = is.character(attrname),
+              "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0")
+    object@ptr <- libtiledb_array_schema_evolution_drop_enumeration(object@ptr, attrname)
+    invisible(object)
+}

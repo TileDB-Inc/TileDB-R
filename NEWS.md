@@ -1,3 +1,12 @@
+# tiledb ongoing development
+
+* This release of the R package builds against [TileDB 2.17.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.0), and has also been tested against earlier releases as well as the development version (#583, #587)
+
+## Improvements
+
+* Array schema evolution has been extended to support enumerations (#590)
+
+
 # tiledb 0.21.0
 
 * This release of the R package builds against [TileDB 2.17.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.0), and has also been tested against earlier releases as well as the development version (#583, #587)

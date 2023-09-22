@@ -2038,6 +2038,37 @@ libtiledb_array_schema_evolution_array_evolve(XPtr<tiledb::ArraySchemaEvolution>
     return make_xptr<tiledb::ArraySchemaEvolution>(ptr);
 }
 
+//[[Rcpp::export]]
+XPtr<tiledb::ArraySchemaEvolution>
+libtiledb_array_schema_evolution_add_enumeration(XPtr<tiledb::Context> ctx,
+                                                 XPtr<tiledb::ArraySchemaEvolution> ase,
+                                                 const std::string & enum_name,
+                                                 std::vector<std::string> values,
+                                                 bool nullable = false,
+                                                 bool ordered = false) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::ArraySchemaEvolution>(ase);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enumeration = tiledb::Enumeration::create(*ctx.get(), enum_name, values, ordered);
+    tiledb::ArraySchemaEvolution res = ase->add_enumeration(enumeration);
+    auto ptr = new tiledb::ArraySchemaEvolution(res);
+    return make_xptr<tiledb::ArraySchemaEvolution>(ptr);
+#endif
+    return ase;
+}
+
+//[[Rcpp::export]]
+XPtr<tiledb::ArraySchemaEvolution>
+libtiledb_array_schema_evolution_drop_enumeration(XPtr<tiledb::ArraySchemaEvolution> ase,
+                                                  const std::string & attrname) {
+    check_xptr_tag<tiledb::ArraySchemaEvolution>(ase);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    tiledb::ArraySchemaEvolution res = ase->drop_attribute(attrname);
+    auto ptr = new tiledb::ArraySchemaEvolution(res);
+    return make_xptr<tiledb::ArraySchemaEvolution>(ptr);
+#endif
+    return ase;
+}
 
 
 /**
