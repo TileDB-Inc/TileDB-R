@@ -94,7 +94,7 @@ tiledb_array_schema_evolution_array_evolve <- function(object, uri) {
 #' @export
 tiledb_array_schema_evolution_add_enumeration <- function(object, name, enums, ordered=FALSE,
                                                           ctx = tiledb_get_context()) {
-    stopifnot("The first argument must be a Array Schema Evolution object" =
+    stopifnot("The first argument must be an Array Schema Evolution object" =
                   is(object, "tiledb_array_schema_evolution"),
               "The 'name' argument must be a scalar character object" =
                   is.character(name) && length(name) == 1,
@@ -113,7 +113,7 @@ tiledb_array_schema_evolution_add_enumeration <- function(object, name, enums, o
 #' @return The modified 'array_schema_evolution' object, invisibly
 #' @export
 tiledb_array_schema_evolution_drop_enumeration <- function(object, attrname) {
-    stopifnot("The first argument must be a Array Schema Evolution object" =
+    stopifnot("The first argument must be an Array Schema Evolution object" =
                   is(object, "tiledb_array_schema_evolution"),
               "The 'attrname' argument must be character variable" = is.character(attrname),
               "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0")
