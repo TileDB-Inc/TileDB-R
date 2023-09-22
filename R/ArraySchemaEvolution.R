@@ -115,7 +115,7 @@ tiledb_array_schema_evolution_add_enumeration <- function(object, name, enums, o
 tiledb_array_schema_evolution_drop_enumeration <- function(object, attrname) {
     stopifnot("The first argument must be an Array Schema Evolution object" =
                   is(object, "tiledb_array_schema_evolution"),
-              "The 'attrname' argument must be character variable" = is.character(attrname),
+              "The 'attrname' argument must be a character variable" = is.character(attrname),
               "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0")
     object@ptr <- libtiledb_array_schema_evolution_drop_enumeration(object@ptr, attrname)
     invisible(object)
