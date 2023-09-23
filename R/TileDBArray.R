@@ -923,6 +923,22 @@ setMethod("[", "tiledb_array",
           if (use_arrow) {
               rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
               at <- .as_arrow_table(rl)
+
+              ## special case from schema evolution could have added twice so correcting
+              for (n in colnames(at)) {
+                  v <- at[[n]]$as_vector()
+                  lvls <- levels(v)
+                  if (inherits(v, "factor")) {
+                      vec <- as.integer(v)
+                      if (min(vec, na.rm=TRUE) == 2 && max(vec, na.rm=TRUE) == length(lvls) + 1) {
+                          vec <- vec - 1L
+                          attr(vec, "levels") <- attr(v, "levels")
+                          class(vec) <- class(v)
+                          at[[n]] <- vec
+                      }
+                  }
+              }
+
               ## if dictionaries are to be injected at the R level, this does it
               #for (n in names(dictionaries)) {
               #    if (!is.null(dictionaries[[n]])) {
