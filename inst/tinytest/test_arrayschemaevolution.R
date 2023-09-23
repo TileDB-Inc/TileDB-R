@@ -64,6 +64,7 @@ expect_equal(levels(res$val), enums)
 expect_equal(as.integer(res$val), c(1:5,5:1))
 
 ## check as arrow
+if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
 arr <- tiledb_array(uri, return_as="arrow")
 res <- arr[]
 v <- res[["val"]]$as_vector()

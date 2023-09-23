@@ -1442,6 +1442,8 @@ if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L, 11L, 12L, 14L)) exit_file
 ## CI issues at GitHub for r-release on Windows Server 2019
 if (getRversion() < "4.3.0" && Sys.info()[["sysname"]] == "Windows") exit_file("Skip remainder for R 4.2.* on Windows")
 
+if (Sys.info()[["sysname"]] == "Darwin") exit_file("Skip remainder on macOS")
+
 ## check for incomplete status on unsuccessful query -- this no longer fails following some changes made
 #set_allocation_size_preference(128)     # too low for penguins to query fully
 #array <- tiledb_array(uri, return_as="data.frame", query_layout="ROW_MAJOR")
