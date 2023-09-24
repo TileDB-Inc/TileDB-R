@@ -930,6 +930,7 @@ setMethod("[", "tiledb_array",
                   lvls <- levels(v)
                   if (inherits(v, "factor")) {
                       vec <- as.integer(v)
+                      vec[vec == - .Machine$integer.max] <- NA_integer_
                       if (min(vec, na.rm=TRUE) == 2 && max(vec, na.rm=TRUE) == length(lvls) + 1) {
                           vec <- vec - 1L
                           attr(vec, "levels") <- attr(v, "levels")
