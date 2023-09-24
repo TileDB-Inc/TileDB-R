@@ -36,7 +36,7 @@ jobs:
         if: failure()
 
       - name: Show test log
-        run: cat $HOME/work/TileDB-R/TileDB-R/tiledb.Rcheck/00check.out
+        run: cat $HOME/work/TileDB-R/TileDB-R/tiledb.Rcheck/00check.log
         if: failure()
 
       #- name: Coverage

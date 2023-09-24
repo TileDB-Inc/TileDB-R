@@ -48,7 +48,7 @@ tiledb_array_schema_evolution_array_evolve(ase, uri)
 
 ## Second add enumeration under a name
 ase <- tiledb_array_schema_evolution()
-enums <- c("red", "blue", "green", "orange", "pink")
+enums <- c("blue", "green", "orange", "pink", "red")
 ase <- tiledb_array_schema_evolution_add_enumeration(ase, "frobo", enums)
 
 ## Third connect the attribute to the enum and add it back in
