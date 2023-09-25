@@ -4,7 +4,7 @@
 
 ## Improvements
 
-* Array schema evolution has been extended to support enumerations (#590)
+* Array schema evolution has been extended to support enumerations (#590, #591)
 
 
 # tiledb 0.21.0
