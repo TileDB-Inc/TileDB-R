@@ -101,11 +101,6 @@ tiledb_array_schema_evolution_add_enumeration <- function(object, name, enums, o
               "The 'enumlist' argument must be a character object" = is.character(enums),
               "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0",
               "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"))
-    srted <- sort(enums)
-    if (!isTRUE(all.equal(enums, srted))) {
-        warning("Enumeration levels were not sorted so rearranging.")
-        enums <- srted
-    }
     object@ptr <- libtiledb_array_schema_evolution_add_enumeration(ctx@ptr, object@ptr, name,
                                                                    enums, FALSE, ordered)
     invisible(object)

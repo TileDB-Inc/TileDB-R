@@ -10,6 +10,10 @@
 
 * Use of TileDB Embedded was upgraded to release 2.17.1 (#593)
 
+## Bug Fixes
+
+* An added sorting of factor levels insert has been reverted (#594)
+
 
 # tiledb 0.21.0
 
