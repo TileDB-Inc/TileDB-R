@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2021-2022 TileDB Inc.
+//  Copyright (c) 2021-2023 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -85,7 +85,7 @@ void getValidityMapFromInt64(Rcpp::NumericVector & vec, std::vector<uint8_t> & m
     if (static_cast<size_t>(vec.size()) != nc * map.size())
         Rcpp::stop("Unequal length between vector (%d) and map * nc (%d) in int64 getter.", vec.size(), nc * map.size());
 
-    std::vector<int64_t> ivec = getInt64Vector(vec);
+    std::vector<int64_t> ivec = fromInteger64(vec);
 
     for (auto i=0; i < vec.size(); i += nc) {
         uint8_t m = 1;  // default to no NA/NaN

@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2022 TileDB Inc.
+//  Copyright (c) 2017-2023 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -73,21 +73,21 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "INT64") {
-    int64_t start = makeScalarInteger64(as<double>(starts));
-    int64_t end = makeScalarInteger64(as<double>(ends));
+    int64_t start = fromInteger64(as<double>(starts));
+    int64_t end = fromInteger64(as<double>(ends));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
-      int64_t stride = makeScalarInteger64(as<double>(strides));
+      int64_t stride = fromInteger64(as<double>(strides));
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "UINT64") {
-    uint64_t start = static_cast<uint64_t>(makeScalarInteger64(as<double>(starts)));
-    uint64_t end = static_cast<uint64_t>(makeScalarInteger64(as<double>(ends)));
+    uint64_t start = static_cast<uint64_t>(fromInteger64(as<double>(starts)));
+    uint64_t end = static_cast<uint64_t>(fromInteger64(as<double>(ends)));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
-      uint64_t stride = makeScalarInteger64(as<double>(strides));
+      uint64_t stride = fromInteger64(as<double>(strides));
       query->add_range(uidx, start, end, stride);
     }
   } else if (typestr == "UINT32") {
@@ -145,9 +145,9 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
              typestr == "DATETIME_MS"    ||
              typestr == "DATETIME_US"   ) {
     //int64_t start = date_to_int64(as<Date>(starts), _string_to_tiledb_datatype(typestr));
-    int64_t start = makeScalarInteger64(as<double>(starts));
+    int64_t start = fromInteger64(as<double>(starts));
     //int64_t end = date_to_int64(as<Date>(ends), _string_to_tiledb_datatype(typestr));
-    int64_t end = makeScalarInteger64(as<double>(ends));
+    int64_t end = fromInteger64(as<double>(ends));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {
@@ -159,8 +159,8 @@ XPtr<tiledb::Query> libtiledb_query_add_range_with_type(XPtr<tiledb::Query> quer
              typestr == "DATETIME_FS" ||
              typestr == "DATETIME_PS" ||
              typestr == "DATETIME_AS") {
-    int64_t start = makeScalarInteger64(as<double>(starts));
-    int64_t end = makeScalarInteger64(as<double>(ends));
+    int64_t start = fromInteger64(as<double>(starts));
+    int64_t end = fromInteger64(as<double>(ends));
     if (strides == R_NilValue) {
       query->add_range(uidx, start, end);
     } else {

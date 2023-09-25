@@ -754,13 +754,13 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
         if (dv.size() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        std::vector<int64_t> domain_vec = getInt64Vector(Rcpp::NumericVector(dv));
+        std::vector<int64_t> domain_vec = fromInteger64(Rcpp::NumericVector(dv));
         std::array<int64_t, 2> _domain = {domain_vec[0], domain_vec[1]};
         Rcpp::NumericVector ext(tile_extent);
         if (!isInteger64(ext)) {
             Rcpp::stop("tile exent for INT64 domain must be an integer64 type in R");
         }
-        int64_t _tile_extent = makeScalarInteger64(ext[0]);
+        int64_t _tile_extent = fromInteger64(ext[0]);
         auto dim = new tiledb::Dimension(tiledb::Dimension::create<int64_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
@@ -774,13 +774,13 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
         if (dv.size() != 2) {
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
-        std::vector<int64_t> domain_vec = getInt64Vector(Rcpp::NumericVector(dv));
+        std::vector<int64_t> domain_vec = fromInteger64(Rcpp::NumericVector(dv));
         std::array<uint64_t, 2> _domain = { static_cast<uint64_t>(domain_vec[0]), static_cast<uint64_t>(domain_vec[1])};
         Rcpp::NumericVector ext(tile_extent);
         if (!isInteger64(ext)) {
             Rcpp::stop("tile exent for UINT64 domain must be an integer64 type in R");
         }
-        uint64_t _tile_extent = static_cast<uint64_t>(makeScalarInteger64(ext[0]));
+        uint64_t _tile_extent = static_cast<uint64_t>(fromInteger64(ext[0]));
         auto dim = new tiledb::Dimension(tiledb::Dimension::create<uint64_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
@@ -908,7 +908,7 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
         Rcpp::stop("tiledb_dim domain UINT32 value not representable as an R integer64 type");
       }
       std::vector<int64_t> v = { static_cast<int64_t>(d1), static_cast<int64_t>(d2) };
-      return makeInteger64(v);
+      return toInteger64(v);
     }
     case TILEDB_INT64: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT64>::type;
@@ -918,7 +918,7 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
           return NumericVector({static_cast<double>(d1), static_cast<double>(d2)});
       }
       std::vector<int64_t> v = { d1, d2 };
-      return makeInteger64(v);
+      return toInteger64(v);
     }
     case TILEDB_UINT64: {
       using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT64>::type;
@@ -928,7 +928,7 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
           return NumericVector({static_cast<double>(d1), static_cast<double>(d2)});
       }
       std::vector<int64_t> v = { static_cast<int64_t>(d1), static_cast<int64_t>(d2) };
-      return makeInteger64(v);
+      return toInteger64(v);
     }
     case TILEDB_DATETIME_YEAR:
     case TILEDB_DATETIME_MONTH:
@@ -949,7 +949,7 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
       if (d1 <= R_NaInt || d1 > std::numeric_limits<int32_t>::max() ||
           d2 <= R_NaInt || d2 > std::numeric_limits<int32_t>::max()) {
           std::vector<int64_t> v{d1, d2};     // return as int64
-          return makeInteger64(v);            // which 'travels' as a double
+          return toInteger64(v);              // which 'travels' as a double
       }
       return IntegerVector({static_cast<int32_t>(d1), static_cast<int32_t>(d2)});
     }
@@ -1027,7 +1027,7 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       auto t = dim->tile_extent<DataType>();
       if (t <= R_NaInt || t > std::numeric_limits<int32_t>::max()) {
           std::vector<int64_t> v{t};         // return as int64
-          return makeInteger64(v);           // which 'travels' as a double
+          return toInteger64(v);             // which 'travels' as a double
       }
       // 'else' i.e. default cast to int32
       return Rcpp::wrap(static_cast<int32_t>(t));
@@ -1042,7 +1042,7 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       if (t > std::numeric_limits<int32_t>::max()) {
           auto tt = static_cast<int64_t>(t); // avoids a 'narrowing' watnings
           std::vector<int64_t> v{ tt };      // return as int64
-          return makeInteger64(v);           // which 'travels' as a double
+          return toInteger64(v);             // which 'travels' as a double
       }
       return Rcpp::wrap(static_cast<int32_t>(t));
     }
@@ -1309,7 +1309,7 @@ XPtr<tiledb::Filter> libtiledb_filter_set_option(XPtr<tiledb::Filter> filter, st
         return filter;
     } else if (filter_option == TILEDB_SCALE_FLOAT_BYTEWIDTH) {
         double dblval = Rcpp::as<double>(valuesxp);
-        int64_t int64val = makeScalarInteger64(dblval);
+        int64_t int64val = fromInteger64(dblval);
         uint64_t value = static_cast<uint64_t>(int64val);
         spdl::debug(tfm::format("[libtiledb_filter_set_option] setting %s to %ld", filter_option_str, value));
         filter->set_option(filter_option, &value);
@@ -1712,6 +1712,7 @@ libtiledb_array_schema(XPtr<tiledb::Context> ctx,
     if (nattr > 0) {
         for (SEXP a : attributes) {
             auto attr = as<XPtr<tiledb::Attribute>>(a);
+            spdl::debug(tfm::format("[libtiledb_array_schema] About to attr %s", libtiledb_attribute_get_name(attr)));
             schema->add_attribute(*attr.get());
         }
     }
@@ -2260,11 +2261,11 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
   if (typestr == "INT64") {
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (typestr == "UINT64") {
     auto p = array->non_empty_domain<uint64_t>(name);
     std::vector<int64_t> v{ static_cast<int64_t>(p.first), static_cast<int64_t>(p.second) };
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (typestr == "INT32") {
     auto p = array->non_empty_domain<int32_t>(name);
     return NumericVector::create(p.first, p.second);
@@ -2304,11 +2305,11 @@ NumericVector libtiledb_array_get_non_empty_domain_from_name(XPtr<tiledb::Array>
     // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (typestr == "DATETIME_NS") {
     auto p = array->non_empty_domain<int64_t>(name);
     std::vector<int64_t> v{p.first, p.second};
-    return makeNanotime(v);
+    return toNanotime(v);
   } else {
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
@@ -2324,11 +2325,11 @@ NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array
   if (typestr == "INT64") {
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (typestr == "UINT64") {
     auto p = array->non_empty_domain<uint64_t>(idx);
     std::vector<int64_t> v{ static_cast<int64_t>(p.first), static_cast<int64_t>(p.second) };
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (typestr == "INT32") {
     auto p = array->non_empty_domain<int32_t>(idx);
     return NumericVector::create(p.first, p.second);
@@ -2368,11 +2369,11 @@ NumericVector libtiledb_array_get_non_empty_domain_from_index(XPtr<tiledb::Array
     // type_check() from exception.h gets invoked and wants an int64_t
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (typestr == "DATETIME_NS") {
     auto p = array->non_empty_domain<int64_t>(idx);
     std::vector<int64_t> v{p.first, p.second};
-    return makeNanotime(v);
+    return toNanotime(v);
   } else {
     Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
     return NumericVector::create(NA_REAL, NA_REAL); // not reached
@@ -2423,7 +2424,7 @@ bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
     case REALSXP: {
       Rcpp::NumericVector v(obj);
       if (isInteger64(v)) {
-          std::vector<int64_t> iv = getInt64Vector(v);
+          std::vector<int64_t> iv = fromInteger64(v);
           array->put_metadata(key.c_str(), TILEDB_INT64, iv.size(), (void*) &iv[0]);
       } else {
           array->put_metadata(key.c_str(), TILEDB_FLOAT64, v.size(), v.begin());
@@ -2519,7 +2520,7 @@ SEXP _metadata_to_sexp(const tiledb_datatype_t v_type, const uint32_t v_num, con
   } else if (v_type == TILEDB_INT64) {
     std::vector<int64_t> iv(v_num);
     std::memcpy(&(iv[0]), v, v_num*sizeof(int64_t));
-    return makeInteger64(iv);
+    return toInteger64(iv);
   } else if (v_type == TILEDB_UINT64) {
     return copy_int_vector<uint64_t>(v_num, v);
   } else {
@@ -3107,7 +3108,7 @@ XPtr<query_buf_t> libtiledb_query_buffer_assign_ptr(XPtr<query_buf_t> buf, std::
     // R has no native uint64_t representation so this comes in as numeric; we then
     // use our int64_t <-> integer64 machinery for null maps but store as uint64_t
     NumericVector v(vec);
-    std::vector<int64_t> iv = getInt64Vector(v);
+    std::vector<int64_t> iv = fromInteger64(v);
     if (buf->nullable)
         getValidityMapFromInt64(v, buf->validity_map, buf->numvar);
     auto n = v.length();
@@ -3256,18 +3257,18 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     NumericVector res = wrap(iv);
     if (buf->nullable)
         setValidityMapForNumeric(res, buf->validity_map, buf->numvar);
-    //return makeInteger64(iv); // we could return as int64,
+    //return toInteger64(iv); // we could return as int64,
     return res;                 // but current 'contract' is return as NumericVector
   } else if (dtype == "INT64") {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
     if (buf->nullable)
         setValidityMapForInt64(v, buf->validity_map, buf->numvar);
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (asint64 && is_datetime_column(buf->dtype)) {
     std::vector<int64_t> v(buf->ncells);
     std::memcpy(&(v[0]), (void*) buf->vec.data(), buf->ncells * buf->size);
-    return makeInteger64(v);
+    return toInteger64(v);
   } else if (dtype == "DATETIME_FS" ||
              dtype == "DATETIME_PS" ||
              dtype == "DATETIME_AS") {
@@ -3296,7 +3297,7 @@ RObject libtiledb_query_get_buffer_ptr(XPtr<query_buf_t> buf, bool asint64 = fal
     int n = buf->ncells;
     std::vector<int64_t> vec(n);
     std::memcpy(vec.data(), buf->vec.data(), n*buf->size);
-    return makeNanotime(vec);
+    return toNanotime(vec);
   } else if (dtype == "INT16") {
     size_t n = buf->ncells;
     std::vector<int16_t> intvec(n);
@@ -3547,15 +3548,15 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
         subarr->add_range(uidx, start, end, stride);
         spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %f to %f by %f", typestr, uidx, start, end, stride));
     } else if (typestr == "INT64") {
-        int64_t start = makeScalarInteger64(as<double>(starts));
-        int64_t end = makeScalarInteger64(as<double>(ends));
-        int64_t stride = (strides == R_NilValue) ? 0 : makeScalarInteger64(as<double>(strides));
+        int64_t start = fromInteger64(as<double>(starts));
+        int64_t end = fromInteger64(as<double>(ends));
+        int64_t stride = (strides == R_NilValue) ? 0 : fromInteger64(as<double>(strides));
         subarr->add_range(uidx, start, end, stride);
         spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %d by %d", typestr, uidx, start, end, stride));
     } else if (typestr == "UINT64") {
-        uint64_t start = static_cast<uint64_t>(makeScalarInteger64(as<double>(starts)));
-        uint64_t end = static_cast<uint64_t>(makeScalarInteger64(as<double>(ends)));
-        uint64_t stride = (strides == R_NilValue) ? 0 : makeScalarInteger64(as<double>(strides));
+        uint64_t start = static_cast<uint64_t>(fromInteger64(as<double>(starts)));
+        uint64_t end = static_cast<uint64_t>(fromInteger64(as<double>(ends)));
+        uint64_t stride = (strides == R_NilValue) ? 0 : fromInteger64(as<double>(strides));
         subarr->add_range(uidx, start, end, stride);
         spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %d by %d", typestr, uidx, start, end, stride));
     } else if (typestr == "UINT32") {
@@ -3601,9 +3602,9 @@ XPtr<tiledb::Subarray> libtiledb_subarray_add_range_with_type(XPtr<tiledb::Subar
                typestr == "DATETIME_FS"    ||
                typestr == "DATETIME_PS"    ||
                typestr == "DATETIME_AS") {
-        int64_t start = makeScalarInteger64(as<double>(starts));
-        int64_t end = makeScalarInteger64(as<double>(ends));
-        int64_t stride = (strides == R_NilValue) ? 0 : makeScalarInteger64(as<double>(strides));
+        int64_t start = fromInteger64(as<double>(starts));
+        int64_t end = fromInteger64(as<double>(ends));
+        int64_t stride = (strides == R_NilValue) ? 0 : fromInteger64(as<double>(strides));
         subarr->add_range(uidx, start, end, stride);
         spdl::debug(tfm::format("[libtiledb_subarry_add_range_with type] %s dim %d added %d to %d by %d", typestr, uidx, start, end, stride));
     } else if (typestr == "ASCII" || typestr == "CHAR") {
@@ -3834,7 +3835,7 @@ void libtiledb_query_condition_init(XPtr<tiledb::QueryCondition> query_cond,
         uint64_t cond_val_size = sizeof(double);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else if (cond_val_type == "INT64" || cond_val_type == "UINT64") {
-        int64_t v = makeScalarInteger64( as<double>(condition_value) );
+        int64_t v = fromInteger64( as<double>(condition_value) );
         uint64_t cond_val_size = sizeof(int64_t);
         query_cond->init(attr_name, (void*) &v, cond_val_size, op);
     } else if (cond_val_type == "INT8" || cond_val_type == "UINT8") {
@@ -4173,8 +4174,8 @@ Rcpp::IntegerVector libtiledb_vfs_read(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_
   check_xptr_tag<tiledb::Context>(ctxxp);
   check_xptr_tag<vfs_fh_t>(fh);
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
-  std::int64_t offs = makeScalarInteger64(offset);
-  std::int64_t nb = makeScalarInteger64(nbytes);
+  std::int64_t offs = fromInteger64(offset);
+  std::int64_t nb = fromInteger64(nbytes);
   Rcpp::IntegerVector buf(nb/4);
   tiledb_vfs_read(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh), offs, &(buf[0]), nb);
   return buf;
@@ -4272,12 +4273,12 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tile
     if (typestr == "INT64") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
-        return makeInteger64(non_empty_dom);
+        return toInteger64(non_empty_dom);
     } else if (typestr == "UINT64") {
         std::vector<uint64_t> ned(2);
         fi->get_non_empty_domain(fid, did, &ned[0]);
         std::vector<int64_t> v{ static_cast<int64_t>(ned[0]), static_cast<int64_t>(ned[1]) };
-        return makeInteger64(v);
+        return toInteger64(v);
     } else if (typestr == "INT32") {
         std::vector<int32_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
@@ -4325,11 +4326,11 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_index(XPtr<tile
         // type_check() from exception.h gets invoked and wants an int64_t
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
-        return makeInteger64(non_empty_dom);
+        return toInteger64(non_empty_dom);
     } else if (typestr == "DATETIME_NS") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, did, &non_empty_dom[0]);
-        return makeNanotime(non_empty_dom);
+        return toNanotime(non_empty_dom);
     } else {
         Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
         return NumericVector::create(NA_REAL, NA_REAL); // not reached
@@ -4345,12 +4346,12 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiled
     if (typestr == "INT64") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
-        return makeInteger64(non_empty_dom);
+        return toInteger64(non_empty_dom);
     } else if (typestr == "UINT64") {
         std::vector<uint64_t> ned(2);
         fi->get_non_empty_domain(fid, dim_name, &ned[0]);
         std::vector<int64_t> v{ static_cast<int64_t>(ned[0]), static_cast<int64_t>(ned[1]) };
-        return makeInteger64(v);
+        return toInteger64(v);
     } else if (typestr == "INT32") {
         std::vector<int32_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
@@ -4398,11 +4399,11 @@ Rcpp::NumericVector libtiledb_fragment_info_get_non_empty_domain_name(XPtr<tiled
         // type_check() from exception.h gets invoked and wants an int64_t
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
-        return makeInteger64(non_empty_dom);
+        return toInteger64(non_empty_dom);
     } else if (typestr == "DATETIME_NS") {
         std::vector<int64_t> non_empty_dom(2);
         fi->get_non_empty_domain(fid, dim_name, &non_empty_dom[0]);
-        return makeNanotime(non_empty_dom);
+        return toNanotime(non_empty_dom);
     } else {
         Rcpp::stop("Currently unsupported tiledb domain type: '%s'", typestr.c_str());
         return NumericVector::create(NA_REAL, NA_REAL); // not reached
