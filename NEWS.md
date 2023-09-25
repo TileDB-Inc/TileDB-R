@@ -1,6 +1,6 @@
 # tiledb ongoing development
 
-* This release of the R package builds against [TileDB 2.17.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.0), and has also been tested against earlier releases as well as the development version (#583, #587)
+* This release of the R package builds against [TileDB 2.17.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.1), and has also been tested against earlier releases as well as the development version (#593)
 
 ## Improvements
 
@@ -8,12 +8,16 @@
 
 * Conversion to and from `integer64` (and `nanotime`) now use package [RcppInt64](https://cran.r-project.org/package=RcppInt64) (#592)
 
+* Use of TileDB Embedded was upgraded to release 2.17.1 (#593)
+
 
 # tiledb 0.21.0
 
 * This release of the R package builds against [TileDB 2.17.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.0), and has also been tested against earlier releases as well as the development version (#583, #587)
 
 ## Improvements
+
+* Use of TileDB Embedded was upgraded to release 2.17.0 (#583,#587)
 
 * Built-time configuration of TileDB Embedded can now be accessed as a JSON string (#584)
 
