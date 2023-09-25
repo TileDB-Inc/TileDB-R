@@ -6,6 +6,8 @@
 
 * Array schema evolution has been extended to support enumerations (#590, #591)
 
+* Conversion to and from `integer64` (and `nanotime`) now use package [RcppInt64](https://cran.r-project.org/package=RcppInt64) (#592)
+
 
 # tiledb 0.21.0
 
