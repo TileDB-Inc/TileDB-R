@@ -517,10 +517,16 @@
     <loc>/reference/tiledb_array_schema_evolution_add_attribute.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_array_schema_evolution_add_enumeration.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_array_schema_evolution_array_evolve.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_array_schema_evolution_drop_attribute.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_array_schema_evolution_drop_enumeration.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_array_schema_get_allows_dups.html</loc>
