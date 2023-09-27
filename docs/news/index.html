@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.21.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.21.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,11 +60,26 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.21.1" id="tiledb-0211">tiledb 0.21.1<a class="anchor" aria-label="anchor" href="#tiledb-0211"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.1" class="external-link">TileDB 2.17.1</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/593" class="external-link">#593</a>)</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-21-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-21-1"></a></h3>
+<ul><li><p>Array schema evolution has been extended to support enumerations (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/590" class="external-link">#590</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/591" class="external-link">#591</a>)</p></li>
+<li><p>Conversion to and from <code>integer64</code> (and <code>nanotime</code>) now use package <a href="https://cran.r-project.org/package=RcppInt64" class="external-link">RcppInt64</a> (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/592" class="external-link">#592</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.17.1 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/593" class="external-link">#593</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-21-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-21-1"></a></h3>
+<ul><li>An added sorting of factor levels insert has been reverted (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/594" class="external-link">#594</a>)</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.21.0" id="tiledb-0210">tiledb 0.21.0<a class="anchor" aria-label="anchor" href="#tiledb-0210"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.0" class="external-link">TileDB 2.17.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/583" class="external-link">#583</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/587" class="external-link">#587</a>)</li>
 </ul><div class="section level3">
 <h3 id="improvements-0-21-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-21-0"></a></h3>
-<ul><li><p>Built-time configuration of TileDB Embedded can now be accessed as a JSON string (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/584" class="external-link">#584</a>)</p></li>
+<ul><li><p>Use of TileDB Embedded was upgraded to release 2.17.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/583" class="external-link">#583</a>,#587)</p></li>
+<li><p>Built-time configuration of TileDB Embedded can now be accessed as a JSON string (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/584" class="external-link">#584</a>)</p></li>
 <li><p>Enumeration types (i.e. what R calls <code>factor</code> variables) are now supported (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/562" class="external-link">#562</a>)</p></li>
 <li><p>Enumeration support has been extended to <code>ordered</code> types (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/586" class="external-link">#586</a>)</p></li>
 </ul></div>
