@@ -810,6 +810,10 @@ libtiledb_query_condition_set_use_enumeration <- function(ctx, cond, use_enumera
     invisible(.Call(`_tiledb_libtiledb_query_condition_set_use_enumeration`, ctx, cond, use_enumeration))
 }
 
+libtiledb_query_condition_create <- function(ctx, name, vec, cond_op_string) {
+    .Call(`_tiledb_libtiledb_query_condition_create`, ctx, name, vec, cond_op_string)
+}
+
 libtiledb_zip_coords_numeric <- function(coords, coord_length) {
     .Call(`_tiledb_libtiledb_zip_coords_numeric`, coords, coord_length)
 }
