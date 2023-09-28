@@ -1,3 +1,12 @@
+# tiledb ongoing development
+
+* This release of the R package builds against [TileDB 2.17.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.1), and has also been tested against earlier releases as well as the development version (#593)
+
+## Bug Fixes
+
+* The DESCRIPTION file now correctly refers to macOS 10.14 (#596)
+
+
 # tiledb 0.21.1
 
 * This release of the R package builds against [TileDB 2.17.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.1), and has also been tested against earlier releases as well as the development version (#593)

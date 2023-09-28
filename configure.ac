@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.20.1])
+AC_INIT([TileDB-R],[0.21.1])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
