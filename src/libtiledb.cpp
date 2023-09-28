@@ -3932,7 +3932,7 @@ libtiledb_query_condition_create(XPtr<tiledb::Context> ctx, const std::string& n
         auto qc = tiledb::QueryConditionExperimental::create(*ctx.get(), name, sv, op);
         return make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(qc));
     } else {
-        Rcpp::stop("No support (yet) for type '%s'.", Rf_type2char(TYPEOF(vec)));
+        Rcpp::stop("No support (yet) for type '%s'.", Rcpp::type2name(vec));
     }
 #endif
     return make_xptr<tiledb::QueryCondition>(R_NilValue);

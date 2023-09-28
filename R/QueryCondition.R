@@ -200,7 +200,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                            op, " (aka ", .mapOpToCharacter(op), ")",
                            " [",ch, "] ", dtype, "\n", sep="")
 
-            ## take care of factor (aka "enum" case) and set the daat type to ASCII
+            ## take care of factor (aka "enum" case) and set the data type to ASCII
             if (dtype == "INT32" && is_enum) {
                 if (debug) cat("   [factor column] ", ch, " ", attr, " ", dtype, " --> ASCII", " ", is_enum, "\n")
                 dtype <- "ASCII"
