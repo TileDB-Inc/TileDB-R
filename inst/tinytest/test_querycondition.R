@@ -166,6 +166,7 @@ expect_true(all(res$year == 2009))
 
 unlink(uri, recursive=TRUE)
 
+## n=15
 ## parse query condition support
 uri <- tempfile()
 fromDataFrame(penguins, uri, sparse=TRUE)
@@ -319,17 +320,17 @@ arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, year == 2009)))
 
-qc <- parse_query_condition(year < 2009 || year < 2010)
+qc <- parse_query_condition(year < 2009 || year < 2010, arr)
 arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]),
              sum(with(penguins, year < 2010)))
 
 ## Last two with single & or |
-qc <- parse_query_condition(year <= 2009 & year >= 2009)
+qc <- parse_query_condition(year <= 2009 & year >= 2009, arr)
 arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]), sum(with(penguins, year == 2009)))
 
-qc <- parse_query_condition(year < 2009 | year < 2010)
+qc <- parse_query_condition(year < 2009 | year < 2010, arr)
 arr <- tiledb_array(uri, return_as="data.frame", query_condition=qc)
 expect_equal(NROW(arr[]), sum(with(penguins, year < 2010)))
 
