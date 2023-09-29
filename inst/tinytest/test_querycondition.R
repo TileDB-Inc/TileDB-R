@@ -184,7 +184,9 @@ expect_equal(NROW(res), 34L)
 expect_true(all(res$bill_length_mm < 40))
 expect_true(all(res$year == 2009))
 
-if (tiledb_version(TRUE) >= "2.10.0") { # the OR operator is more recent than query conditions overall
+## the OR operator is more recent than query conditions overall
+## and this translates to the new-in-2.17.0 set version
+if (tiledb_version(TRUE) >= "2.17.0") {
     qc3 <- parse_query_condition(island %in% c("Dream", "Biscoe"), arr)
     arrwithqc3 <- tiledb_array(uri, return_as="data.frame", strings_as_factors=TRUE, query_condition=qc3)
     res <- arrwithqc3[]
