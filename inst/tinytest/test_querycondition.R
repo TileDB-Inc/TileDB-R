@@ -439,3 +439,47 @@ arr <- tiledb_array(uri, extended=FALSE, return_as="data.frame")
 qc <- parse_query_condition(datetime > "2023-01-05 00:00:00" && date <= "2023-01-10", ta=arr)
 query_condition(arr) <- qc
 if (!isWindows) expect_equal(nrow(arr[]), 5)
+
+## Test minimal version
+if (tiledb_version(TRUE) < "2.17.0") exit_file("Remainder needs 2.17.* or later")
+uri <- tempfile()
+fromDataFrame(penguins, uri)
+
+## Int in and not in
+qc <- tiledb_query_condition_create("year", c(2009L, 2007L), "IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$year != "2008"))
+
+qc <- tiledb_query_condition_create("year", c(2009L, 2007L), "NOT_IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$year == "2008"))
+
+## Double
+qc <- tiledb_query_condition_create("bill_length_mm", c(32.1,33.1,33.5), "IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$bill_length_mm <= 33.5))
+expect_equal(nrow(res), 3)
+
+## Character (automagically converted from factor)
+qc <- tiledb_query_condition_create("island", c("Biscoe", "Dream"), "IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+tt <- table(res$island)
+expect_equal(tt[["Biscoe"]], 168)
+expect_equal(tt[["Dream"]], 124)
+
+qc <- tiledb_query_condition_create("island", c("Biscoe", "Dream"), "NOT_IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+tt <- table(res$island)
+expect_equal(tt[["Torgersen"]], 52)
+
+## int64
+df <- data.frame(ind=1:10, val=as.integer64(1:10))
+uri <- tempfile()
+fromDataFrame(df, uri)
+qc <- tiledb_query_condition_create("val", as.integer64(6:10), "IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$val >= as.integer64(6)))
+
+qc <- tiledb_query_condition_create("val", as.integer64(6:10), "NOT_IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$val <= as.integer64(5)))

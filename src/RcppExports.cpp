@@ -2388,6 +2388,20 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_query_condition_create
+XPtr<tiledb::QueryCondition> libtiledb_query_condition_create(XPtr<tiledb::Context> ctx, const std::string& name, SEXP vec, const std::string& cond_op_string);
+RcppExport SEXP _tiledb_libtiledb_query_condition_create(SEXP ctxSEXP, SEXP nameSEXP, SEXP vecSEXP, SEXP cond_op_stringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type vec(vecSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type cond_op_string(cond_op_stringSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_condition_create(ctx, name, vec, cond_op_string));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_zip_coords_numeric
 NumericVector libtiledb_zip_coords_numeric(List coords, R_xlen_t coord_length);
 RcppExport SEXP _tiledb_libtiledb_zip_coords_numeric(SEXP coordsSEXP, SEXP coord_lengthSEXP) {
@@ -3643,6 +3657,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_condition_init", (DL_FUNC) &_tiledb_libtiledb_query_condition_init, 5},
     {"_tiledb_libtiledb_query_condition_combine", (DL_FUNC) &_tiledb_libtiledb_query_condition_combine, 3},
     {"_tiledb_libtiledb_query_condition_set_use_enumeration", (DL_FUNC) &_tiledb_libtiledb_query_condition_set_use_enumeration, 3},
+    {"_tiledb_libtiledb_query_condition_create", (DL_FUNC) &_tiledb_libtiledb_query_condition_create, 4},
     {"_tiledb_libtiledb_zip_coords_numeric", (DL_FUNC) &_tiledb_libtiledb_zip_coords_numeric, 2},
     {"_tiledb_libtiledb_zip_coords_integer", (DL_FUNC) &_tiledb_libtiledb_zip_coords_integer, 2},
     {"_tiledb_libtiledb_create_group", (DL_FUNC) &_tiledb_libtiledb_create_group, 2},

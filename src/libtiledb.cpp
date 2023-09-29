@@ -3762,6 +3762,12 @@ const char* _tiledb_query_condition_op_to_string(tiledb_query_condition_op_t op)
         return "EQ";
     case TILEDB_NE:
         return "NE";
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    case TILEDB_IN:
+        return "IN";
+    case TILEDB_NOT_IN:
+        return "NOT_IN";
+#endif
     default:
         Rcpp::stop("Unknown condition op (%d)", op);
     }
@@ -3780,6 +3786,12 @@ tiledb_query_condition_op_t _tiledb_query_string_to_condition_op(const std::stri
         return TILEDB_EQ;
     } else if (opstr == "NE") {
         return TILEDB_NE;
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    } else if (opstr == "IN") {
+        return TILEDB_IN;
+    } else if (opstr == "NOT_IN") {
+        return TILEDB_NOT_IN;
+#endif
     } else {
         Rcpp::stop("Unknown TileDB op string '%s'", opstr.c_str());
     }
@@ -3891,6 +3903,39 @@ void libtiledb_query_condition_set_use_enumeration(XPtr<tiledb::Context> ctx,
 #if TILEDB_VERSION >= TileDB_Version(2,17,0)
     tiledb::QueryConditionExperimental::set_use_enumeration(*ctx.get(), *cond.get(), use_enumeration);
 #endif
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::QueryCondition>
+libtiledb_query_condition_create(XPtr<tiledb::Context> ctx, const std::string& name,
+                                 SEXP vec, const std::string& cond_op_string) {
+    check_xptr_tag<tiledb::Context>(ctx);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    tiledb_query_condition_op_t op = _tiledb_query_string_to_condition_op(cond_op_string);
+    // consider three cases of 'vec' based on R types:  int, double and int64-as-double
+    if (TYPEOF(vec) == INTSXP) {
+        std::vector<int32_t> iv = Rcpp::as<std::vector<int32_t>>(vec);
+        auto qc = tiledb::QueryConditionExperimental::create<int32_t>(*ctx.get(), name, iv, op);
+        return make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(qc));
+    } else if (TYPEOF(vec) == REALSXP) {
+        if (Rcpp::isInteger64(vec)) {
+            std::vector<int64_t> dv = Rcpp::fromInteger64(Rcpp::NumericVector(vec));
+            auto qc = tiledb::QueryConditionExperimental::create<int64_t>(*ctx.get(), name, dv, op);
+            return make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(qc));
+        } else {
+            std::vector<double> dv = Rcpp::as<std::vector<double>>(vec);
+            auto qc = tiledb::QueryConditionExperimental::create<double>(*ctx.get(), name, dv, op);
+            return make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(qc));
+        }
+    } else if (TYPEOF(vec) == STRSXP) {
+        std::vector<std::string> sv = Rcpp::as<std::vector<std::string>>(vec);
+        auto qc = tiledb::QueryConditionExperimental::create(*ctx.get(), name, sv, op);
+        return make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(qc));
+    } else {
+        Rcpp::stop("No support (yet) for type '%s'.", Rcpp::type2name(vec));
+    }
+#endif
+    return make_xptr<tiledb::QueryCondition>(R_NilValue);
 }
 
 

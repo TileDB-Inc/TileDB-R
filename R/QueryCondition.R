@@ -200,7 +200,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                            op, " (aka ", .mapOpToCharacter(op), ")",
                            " [",ch, "] ", dtype, "\n", sep="")
 
-            ## take care of factor (aka "enum" case) and set the daat type to ASCII
+            ## take care of factor (aka "enum" case) and set the data type to ASCII
             if (dtype == "INT32" && is_enum) {
                 if (debug) cat("   [factor column] ", ch, " ", attr, " ", dtype, " --> ASCII", " ", is_enum, "\n")
                 dtype <- "ASCII"
@@ -238,7 +238,31 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
 tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiledb_get_context()) {
     stopifnot("Argument 'qc' must be a query condition object" = is(qc, "tiledb_query_condition"),
               "Argument 'use_enum' must be logical" = is.logical(use_enum),
-              "The argument must be a ctx object" = is(ctx, "tiledb_ctx"),
+              "The 'ctx' argument must be a context object" = is(ctx, "tiledb_ctx"),
               "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0")
     libtiledb_query_condition_set_use_enumeration(ctx@ptr, qc@ptr, use_enum)
+}
+
+#' create a query condition for vector 'IN' and 'NOT_IN' operations
+#'
+#' Uses \sQuote{IN} and \sQuote{NOT_IN} operators on given attribute
+#' @param name A character value with the scheme attribute name
+#' @param values A vector wiith the given values, supported types are integer, double,
+#' integer64 and charactor
+#' @param op (optional) A character value with the chosen set operation, this must be one of
+#' \sQuote{IN} or \sQuote{NOT_IN}; default to \sQuote{IN}
+#' @param ctx (optional) A TileDB Ctx object; if not supplied the default
+#' context object is retrieved
+#' @return A query condition object is returned
+#' @export
+tiledb_query_condition_create <- function(name, values, op = "IN", ctx = tiledb_get_context()) {
+    stopifnot("Argument 'name' must be character" = is.character(name),
+              "Argument 'values' must be int, double, int64 ir char" =
+                  (is.numeric(values) || bit64::is.integer64(values) || is.character(values)),
+              "Argument 'op' must be one of 'IN' or 'NOT_IN'" = op %in% c("IN", "NOT_IN"),
+              "The 'ctx' argument must be a context object" = is(ctx, "tiledb_ctx"),
+              "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0")
+    ptr <- tiledb:::libtiledb_query_condition_create(ctx@ptr, name, values, op)
+    qc <- new("tiledb_query_condition", ptr = ptr, init = TRUE)
+    invisible(qc)
 }
