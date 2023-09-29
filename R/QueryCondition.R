@@ -243,11 +243,11 @@ tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiled
     libtiledb_query_condition_set_use_enumeration(ctx@ptr, qc@ptr, use_enum)
 }
 
-#' Perform set operations via query condition
+#' create a query condition for vector 'IN' and 'NOT_IN' operations
 #'
 #' Uses \sQuote{IN} and \sQuote{NOT_IN} operators on given attribute
 #' @param name A character value with the scheme attribute name
-#' @param values A vector wiith the given values, supported type are integer, double,
+#' @param values A vector wiith the given values, supported types are integer, double,
 #' integer64 and charactor
 #' @param op (optional) A character value with the chosen set operation, this must be one of
 #' \sQuote{IN} or \sQuote{NOT_IN}; default to \sQuote{IN}
@@ -255,7 +255,7 @@ tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiled
 #' context object is retrieved
 #' @return A query condition object is returned
 #' @export
-tiledb_query_condition_set_comparison <- function(name, values, op = "IN", ctx = tiledb_get_context()) {
+tiledb_query_condition_create <- function(name, values, op = "IN", ctx = tiledb_get_context()) {
     stopifnot("Argument 'name' must be character" = is.character(name),
               "Argument 'values' must be int, double, int64 ir char" =
                   (is.numeric(values) || bit64::is.integer64(values) || is.character(values)),
