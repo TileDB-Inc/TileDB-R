@@ -166,6 +166,7 @@ expect_true(all(res$year == 2009))
 
 unlink(uri, recursive=TRUE)
 
+## n=15
 ## parse query condition support
 uri <- tempfile()
 fromDataFrame(penguins, uri, sparse=TRUE)
@@ -183,7 +184,9 @@ expect_equal(NROW(res), 34L)
 expect_true(all(res$bill_length_mm < 40))
 expect_true(all(res$year == 2009))
 
-if (tiledb_version(TRUE) >= "2.10.0") { # the OR operator is more recent than query conditions overall
+## the OR operator is more recent than query conditions overall
+## and this translates to the new-in-2.17.0 set version
+if (tiledb_version(TRUE) >= "2.17.0") {
     qc3 <- parse_query_condition(island %in% c("Dream", "Biscoe"), arr)
     arrwithqc3 <- tiledb_array(uri, return_as="data.frame", strings_as_factors=TRUE, query_condition=qc3)
     res <- arrwithqc3[]
@@ -481,5 +484,57 @@ res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
 expect_true(all(res$val >= as.integer64(6)))
 
 qc <- tiledb_query_condition_create("val", as.integer64(6:10), "NOT_IN")
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$val <= as.integer64(5)))
+
+## new parse tests
+uri <- tempfile()
+fromDataFrame(penguins, uri)
+## %in% and %nin%
+arr <- tiledb_array(uri) # to get the types correct we need array info
+res <- tiledb_array(uri, return_as="data.frame",
+                    query_condition=parse_query_condition(year %in% c(2007, 2009), arr))[]
+expect_true(all(res$year != "2008"))
+
+res <- tiledb_array(uri, return_as="data.frame",
+                    query_condition=parse_query_condition(year %nin% c(2007, 2009), arr))[]
+expect_true(all(res$year == "2008"))
+
+## double
+res <- tiledb_array(uri, return_as="data.frame",
+                    query_condition=parse_query_condition(bill_length_mm %in% c(32.1,33.1,33.5),arr))[]
+expect_true(all(res$bill_length_mm <= 33.5))
+expect_equal(nrow(res), 3)
+
+## Character (automagically converted from factor)
+res <- tiledb_array(uri, return_as="data.frame",
+                    query_condition=parse_query_condition(island %in% c("Biscoe", "Dream"), arr))[]
+tt <- table(res$island)
+expect_equal(tt[["Biscoe"]], 168)
+expect_equal(tt[["Dream"]], 124)
+
+## Character (automagically converted from factor)
+res <- tiledb_array(uri, return_as="data.frame",
+                    query_condition=parse_query_condition(island %nin% c("Biscoe", "Dream"), arr))[]
+tt <- table(res$island)
+expect_equal(tt[["Torgersen"]], 52)
+
+## Combo
+qc <- parse_query_condition(year %in% c(2007, 2009) && island %nin% c("Biscoe", "Dream"), arr)
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$year != "2008"))
+expect_true(all(res$island == "Torgersen"))
+
+
+## int64
+df <- data.frame(ind=1:10, val=as.integer64(1:10))
+uri <- tempfile()
+fromDataFrame(df, uri)
+arr <- tiledb_array(uri)
+qc <- parse_query_condition(val %in% as.integer64(6:10), arr)
+res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
+expect_true(all(res$val >= as.integer64(6)))
+
+qc <- parse_query_condition(val %nin% as.integer64(6:10), arr)
 res <- tiledb_array(uri, return_as="data.frame", query_condition=qc)[]
 expect_true(all(res$val <= as.integer64(5)))

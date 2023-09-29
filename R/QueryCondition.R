@@ -102,8 +102,14 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 
 #' Create a 'tiledb_query_condition' object from an expression
 #'
-#' The grammar for query conditions is at present constraint to six operators
-#' and three boolean types.
+#' The grammar for query conditions is at present constraint to eight operators (\code{">"},
+#' \code{">="}, \code{"<"}, \code{"<="}, \code{"=="}, \code{"!="}, \code{"%in%"}, \code{"%nin%"}),
+#' and three boolean operators (\code{"&&"}, also as \code{"&"}, (\code{"||"}, also as \code{"|"},
+#' and \code{"!"} for negation.  Note that we locally define \code{"%nin%"} as \code{Negate()} call
+#' around \code{%in%)} which extends R a little for this use case.
+#'
+#' Expressions are parsed locally by this function. The \code{debug=TRUE} option may help in an issue
+#' has to be diagnosed.
 #'
 #' @param expr An expression that is understood by the TileDB grammar for query conditions.
 #' @param ta An optional tiledb_array object that the query condition is applied to
@@ -127,14 +133,32 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_int64=FALSE) {
     .hasArray <- !is.null(ta) && is(ta, "tiledb_array")
     if (.hasArray && length(ta@sil) == 0) ta@sil <- .fill_schema_info_list(ta@uri)
-    .isComparisonOperator <- function(x) tolower(as.character(x)) %in% c(">", ">=", "<", "<=", "==", "!=", "%in%")
+    `%!in%` <- Negate(`%in%`)
+    .isComparisonOperator <- function(x) tolower(as.character(x)) %in% c(">", ">=", "<", "<=", "==", "!=", "%in%", "%nin%")
     .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!", "&", "|")
     .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
     .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
     .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
-    .isInOperator <- function(x) tolower(as.character(x)) == "%in%"
+    .isInOperator <- function(x) tolower(as.character(x)) %in% c("%in%", "%nin%")
     .errorFunction <- if (strict) stop else warning
-    .getType <- function(x, use_int64=FALSE) {
+    .getInd <- function(attr, ta) {
+        ind <- match(attr, ta@sil$names)
+        if (!is.finite(ind)) {
+            .errorFunction("No attribute '", attr, "' present.", call. = FALSE)
+            return(NULL)
+        }
+        if (ta@sil$status[ind] != 2) {
+            .errorFunction("Argument '", attr, "' is not an attribute.", call. = FALSE)
+            return(NULL)
+        }
+        ind
+    }
+    .getType <- function(x, tp, use_int64=FALSE) {
+        if (.hasArray) {
+            ind <- .getInd(tp, ta)
+            dtype <- ta@sil$types[ind]
+            return(dtype)
+        }
         if (isTRUE(.isInteger(x))) { if (use_int64) "INT64" else "INT32" }
         else if (isTRUE(.isDouble(x))) "FLOAT64"
         else "ASCII"
@@ -174,14 +198,21 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
                            " ", as.character(x[1]),
                            " [", as.character(x[3]), "]\n", sep="")
             attr <- as.character(x[2])
+            op <- tolower(as.character(x[1]))
+            tdbop <- if (op == "%in%") "IN" else "NOT_IN"
+            ind <- .getInd(attr, ta)
+            dtype <- ta@sil$types[ind]
+            is_enum <- ta@sil$enum[ind]
             vals <- eval(parse(text=as.character(x[3])))
-            eqconds <- Map(.neweqcond, vals, attr)
-            orcond <- Reduce(.neworcond, eqconds)
+            if (dtype == "INT32" && !is_enum) vals <- if (use_int64) bit64::as.integer64(vals) else as.integer(vals)
+            return(tiledb_query_condition_create(attr, vals, tdbop))
+            #eqconds <- Map(.neweqcond, vals, attr)
+            #orcond <- Reduce(.neworcond, eqconds)
         } else if (.isComparisonOperator(x[1])) {
             op <- as.character(x[1])
             attr <- as.character(x[2])
             ch <- as.character(x[3])
-            dtype <- .getType(ch, use_int64)
+            dtype <- .getType(ch, attr, use_int64)
             is_enum <- FALSE # default is no
             if (.hasArray) {
                 ind <- match(attr, ta@sil$names)
@@ -262,7 +293,7 @@ tiledb_query_condition_create <- function(name, values, op = "IN", ctx = tiledb_
               "Argument 'op' must be one of 'IN' or 'NOT_IN'" = op %in% c("IN", "NOT_IN"),
               "The 'ctx' argument must be a context object" = is(ctx, "tiledb_ctx"),
               "This function needs TileDB 2.17.0 or later" = tiledb_version(TRUE) >= "2.17.0")
-    ptr <- tiledb:::libtiledb_query_condition_create(ctx@ptr, name, values, op)
+    ptr <- libtiledb_query_condition_create(ctx@ptr, name, values, op)
     qc <- new("tiledb_query_condition", ptr = ptr, init = TRUE)
     invisible(qc)
 }

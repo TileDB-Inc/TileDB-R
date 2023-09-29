@@ -30,8 +30,15 @@ default is false to remain as a default four-byte \code{int}}
 A \code{tiledb_query_condition} object
 }
 \description{
-The grammar for query conditions is at present constraint to six operators
-and three boolean types.
+The grammar for query conditions is at present constraint to eight operators (\code{">"},
+\code{">="}, \code{"<"}, \code{"<="}, \code{"=="}, \code{"!="}, \code{"\%in\%"}, \code{"\%nin\%"}),
+and three boolean operators (\code{"&&"}, also as \code{"&"}, (\code{"||"}, also as \code{"|"},
+and \code{"!"} for negation.  Note that we locally define \code{"\%nin\%"} as \code{Negate()} call
+around \code{\%in\%)} which extends R a little for this use case.
+}
+\details{
+Expressions are parsed locally by this function. The \code{debug=TRUE} option may help in an issue
+has to be diagnosed.
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}

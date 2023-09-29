@@ -6,6 +6,8 @@
 
 * Set conditions are supported in query condition expressions (#597)
 
+* Query conditions expression parsing via `parse_query_conditions` was extended simmilarly (#598)
+
 ## Bug Fixes
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)
