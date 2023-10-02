@@ -8,6 +8,8 @@
 
 * Query conditions expression parsing via `parse_query_conditions` was extended simmilarly (#598)
 
+* Array fragment deletions uses a new static method (with TileDB 2.18.0 or later) (#599)
+
 ## Bug Fixes
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)
