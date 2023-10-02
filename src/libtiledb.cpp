@@ -2605,14 +2605,19 @@ Rcpp::Datetime libtiledb_array_open_timestamp_end(XPtr<tiledb::Array> array) {
 }
 
 // [[Rcpp::export]]
-void libtiledb_array_delete_fragments(XPtr<tiledb::Array> array,
+void libtiledb_array_delete_fragments(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array,
                                       Rcpp::Datetime tstamp_start, Rcpp::Datetime tstamp_end) {
 #if TILEDB_VERSION >= TileDB_Version(2,12,0)
+    check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Array>(array);
     const std::string uri = array->uri();
     uint64_t ts_ms_st = static_cast<uint64_t>(std::round(tstamp_start.getFractionalTimestamp() * 1000));
     uint64_t ts_ms_en = static_cast<uint64_t>(std::round(tstamp_end.getFractionalTimestamp() * 1000));
+#if TILEDB_VERSION >= TileDB_Version(2,18,0)
+    tiledb::Array::delete_fragments(*ctx.get(), uri, ts_ms_st, ts_ms_en);
+#else
     array->delete_fragments(uri, ts_ms_st, ts_ms_en);
+#endif
 #endif
 }
 
