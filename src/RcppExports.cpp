@@ -1710,14 +1710,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_array_delete_fragments
-void libtiledb_array_delete_fragments(XPtr<tiledb::Array> array, Rcpp::Datetime tstamp_start, Rcpp::Datetime tstamp_end);
-RcppExport SEXP _tiledb_libtiledb_array_delete_fragments(SEXP arraySEXP, SEXP tstamp_startSEXP, SEXP tstamp_endSEXP) {
+void libtiledb_array_delete_fragments(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array, Rcpp::Datetime tstamp_start, Rcpp::Datetime tstamp_end);
+RcppExport SEXP _tiledb_libtiledb_array_delete_fragments(SEXP ctxSEXP, SEXP arraySEXP, SEXP tstamp_startSEXP, SEXP tstamp_endSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
     Rcpp::traits::input_parameter< Rcpp::Datetime >::type tstamp_start(tstamp_startSEXP);
     Rcpp::traits::input_parameter< Rcpp::Datetime >::type tstamp_end(tstamp_endSEXP);
-    libtiledb_array_delete_fragments(array, tstamp_start, tstamp_end);
+    libtiledb_array_delete_fragments(ctx, array, tstamp_start, tstamp_end);
     return R_NilValue;
 END_RCPP
 }
@@ -3602,7 +3603,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_open_timestamp_start", (DL_FUNC) &_tiledb_libtiledb_array_open_timestamp_start, 1},
     {"_tiledb_libtiledb_array_set_open_timestamp_end", (DL_FUNC) &_tiledb_libtiledb_array_set_open_timestamp_end, 2},
     {"_tiledb_libtiledb_array_open_timestamp_end", (DL_FUNC) &_tiledb_libtiledb_array_open_timestamp_end, 1},
-    {"_tiledb_libtiledb_array_delete_fragments", (DL_FUNC) &_tiledb_libtiledb_array_delete_fragments, 3},
+    {"_tiledb_libtiledb_array_delete_fragments", (DL_FUNC) &_tiledb_libtiledb_array_delete_fragments, 4},
     {"_tiledb_libtiledb_array_has_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_has_enumeration, 3},
     {"_tiledb_libtiledb_array_get_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_get_enumeration, 3},
     {"_tiledb_libtiledb_array_has_enumeration_vector", (DL_FUNC) &_tiledb_libtiledb_array_has_enumeration_vector, 2},

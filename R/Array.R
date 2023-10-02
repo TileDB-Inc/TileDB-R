@@ -152,13 +152,14 @@ tiledb_array_is_heterogeneous <- function(arr) {
 ##' @param arr A TileDB Array object as for example returned by \code{tiledb_array()}
 ##' @param ts_start A Datetime object that will be converted to millisecond granularity
 ##' @param ts_end A Datetime object that will be converted to millisecond granularity
+##' @param ctx A tiledb_ctx object (optional)
 ##' @return A boolean indicating success
 ##' @export
-tiledb_array_delete_fragments <- function(arr, ts_start, ts_end) {
+tiledb_array_delete_fragments <- function(arr, ts_start, ts_end, ctx = tiledb_get_context()) {
     stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
               "The 'ts_start' argument must a time object" = inherits(ts_start, "POSIXct"),
               "The 'ts_end' argument must a time object" = inherits(ts_end, "POSIXct"))
-    libtiledb_array_delete_fragments(arr@ptr, ts_start, ts_end)
+    libtiledb_array_delete_fragments(ctx@ptr, arr@ptr, ts_start, ts_end)
     invisible(TRUE)
 }
 

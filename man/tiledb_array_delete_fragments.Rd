@@ -4,7 +4,12 @@
 \alias{tiledb_array_delete_fragments}
 \title{Delete fragments written between the start and end times given}
 \usage{
-tiledb_array_delete_fragments(arr, ts_start, ts_end)
+tiledb_array_delete_fragments(
+  arr,
+  ts_start,
+  ts_end,
+  ctx = tiledb_get_context()
+)
 }
 \arguments{
 \item{arr}{A TileDB Array object as for example returned by \code{tiledb_array()}}
@@ -12,6 +17,8 @@ tiledb_array_delete_fragments(arr, ts_start, ts_end)
 \item{ts_start}{A Datetime object that will be converted to millisecond granularity}
 
 \item{ts_end}{A Datetime object that will be converted to millisecond granularity}
+
+\item{ctx}{A tiledb_ctx object (optional)}
 }
 \value{
 A boolean indicating success

@@ -590,8 +590,8 @@ libtiledb_array_open_timestamp_end <- function(array) {
     .Call(`_tiledb_libtiledb_array_open_timestamp_end`, array)
 }
 
-libtiledb_array_delete_fragments <- function(array, tstamp_start, tstamp_end) {
-    invisible(.Call(`_tiledb_libtiledb_array_delete_fragments`, array, tstamp_start, tstamp_end))
+libtiledb_array_delete_fragments <- function(ctx, array, tstamp_start, tstamp_end) {
+    invisible(.Call(`_tiledb_libtiledb_array_delete_fragments`, ctx, array, tstamp_start, tstamp_end))
 }
 
 libtiledb_array_has_enumeration <- function(ctx, arr, name) {
