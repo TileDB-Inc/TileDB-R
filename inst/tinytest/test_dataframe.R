@@ -144,6 +144,8 @@ suppressMessages({
   library(bit64)
 })
 
+prevTZ <- Sys.getenv("TZ")
+on.exit(Sys.setenv(TZ=prevTZ))
 Sys.setenv(TZ="")
 df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)),
                  double_range=seq(-1000, 1000, length=nobs),
