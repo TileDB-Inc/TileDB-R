@@ -12,6 +12,8 @@
 
 * The included `nanoarrow` header and source file have been updated to release 0.3.0 (#600)
 
+* Query conditions expression parsing requirements are stated and tested more clearly (#601)
+
 ## Bug Fixes
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)

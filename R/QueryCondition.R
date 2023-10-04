@@ -108,11 +108,15 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #' and \code{"!"} for negation.  Note that we locally define \code{"%nin%"} as \code{Negate()} call
 #' around \code{%in%)} which extends R a little for this use case.
 #'
-#' Expressions are parsed locally by this function. The \code{debug=TRUE} option may help in an issue
-#' has to be diagnosed.
+#' Expressions are parsed locally by this function. The \code{debug=TRUE} option may help if an issue
+#' has to be diagnosed. In most cases of an errroneous parse, it generally helps to supply the
+#' \code{tiledb_array} providing schema information. One example are numeric and integer columns where
+#' the data type is difficult to guess. Also, when using the \code{"%in%"} or \code{"%nin%"} operators,
+#' the argument is mandatory.
 #'
 #' @param expr An expression that is understood by the TileDB grammar for query conditions.
-#' @param ta An optional tiledb_array object that the query condition is applied to
+#' @param ta A tiledb_array object that the query condition is applied to; this argument is optional
+#' in some cases but required in some others.
 #' @param debug A boolean toogle to enable more verbose operations, defaults
 #' to 'FALSE'.
 #' @param strict A boolean toogle to, if set, errors if a non-existing attribute is selected
@@ -142,6 +146,7 @@ parse_query_condition <- function(expr, ta=NULL, debug=FALSE, strict=TRUE, use_i
     .isInOperator <- function(x) tolower(as.character(x)) %in% c("%in%", "%nin%")
     .errorFunction <- if (strict) stop else warning
     .getInd <- function(attr, ta) {
+        if (isFALSE(.hasArray)) stop("The 'ta' argument is required for this type of parse", call. = FALSE)
         ind <- match(attr, ta@sil$names)
         if (!is.finite(ind)) {
             .errorFunction("No attribute '", attr, "' present.", call. = FALSE)
