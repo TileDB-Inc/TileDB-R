@@ -1,6 +1,6 @@
 # tiledb ongoing development
 
-* This release of the R package builds against [TileDB 2.17.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.1), and has also been tested against earlier releases as well as the development version (#593)
+* This release of the R package builds against [TileDB 2.17.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.2), and has also been tested against earlier releases as well as the development version (#602)
 
 ## Improvements
 
@@ -13,6 +13,8 @@
 * The included `nanoarrow` header and source file have been updated to release 0.3.0 (#600)
 
 * Query conditions expression parsing requirements are stated and tested more clearly (#601)
+
+* Use of TileDB Embedded was upgraded to release 2.17.2 (#602)
 
 ## Bug Fixes
 
