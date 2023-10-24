@@ -20,6 +20,11 @@
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)
 
+## Build and Test Systems
+
+* The nighly valgrind run was updated to include release 2.17 (#603)
+
+
 
 # tiledb 0.21.1
 

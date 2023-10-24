@@ -81,6 +81,7 @@ install.r \
     nycflights13 \
     palmerpenguins \
     Rcpp \
+    RcppInt64 \
     RcppSpdlog \
     simplermarkdown \
     spdl \
