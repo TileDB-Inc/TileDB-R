@@ -3881,6 +3881,48 @@ XPtr<tiledb::Context> libtiledb_query_get_ctx(XPtr<tiledb::Query> query) {
     return make_xptr<tiledb::Context>(new tiledb::Context(ctx));
 }
 
+// [[Rcpp::export]]
+SEXP libtiledb_query_apply_aggregate(XPtr<tiledb::Query> query,
+                                     std::string attribute_name,
+                                     std::string operator_name,
+                                     bool nullable = false) {
+#if TILEDB_VERSION >= TileDB_Version(2,18,0)
+    check_xptr_tag<tiledb::Query>(query);
+    tiledb::QueryChannel channel = tiledb::QueryExperimental::get_default_channel(*query.get());
+    tiledb::ChannelOperation operation;
+    if (operator_name == "Sum") {
+        operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::SumOperator>(*query.get(), attribute_name);
+    } else if (operator_name == "Min") {
+        operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::MinOperator>(*query.get(), attribute_name);
+    } else if (operator_name == "Max") {
+        operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::MaxOperator>(*query.get(), attribute_name);
+    } else if (operator_name == "Mean") {
+        operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::MeanOperator>(*query.get(), attribute_name);
+    } else if (operator_name == "NullCount") {
+        operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::NullCountOperator>(*query.get(), attribute_name);
+    } else {
+        Rcpp::stop("Invalid aggregation operator '%s' specified.", operator_name.c_str());
+    }
+    channel.apply_aggregate(operator_name, operation);
+    std::vector<uint8_t> nulls = { 0 };
+    uint64_t size = 1;
+    if (operator_name != "NullCount") {
+        double result = 0;
+        query->set_data_buffer(operator_name, &result, size);
+        if (nullable) query->set_validity_buffer(operator_name, nulls);
+        query->submit();
+        return Rcpp::wrap(result);
+    } else {
+        uint64_t result = 0;
+        query->set_data_buffer(operator_name, &result, size);
+        // no validity buffer for NullCount
+        query->submit();
+        return Rcpp::wrap(result);
+    }
+#else
+    return Rcpp::wrap(R_NaReal);
+#endif
+}
 
 /**
  * Query Condition

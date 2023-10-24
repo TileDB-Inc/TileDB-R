@@ -814,6 +814,10 @@ libtiledb_query_get_ctx <- function(query) {
     .Call(`_tiledb_libtiledb_query_get_ctx`, query)
 }
 
+libtiledb_query_apply_aggregate <- function(query, attribute_name, operator_name, nullable = FALSE) {
+    .Call(`_tiledb_libtiledb_query_apply_aggregate`, query, attribute_name, operator_name, nullable)
+}
+
 libtiledb_query_condition <- function(ctx) {
     .Call(`_tiledb_libtiledb_query_condition`, ctx)
 }
