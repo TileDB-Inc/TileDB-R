@@ -442,6 +442,10 @@ libtiledb_array_schema_set_enumeration <- function(ctx, schema, attr, enum_name,
     .Call(`_tiledb_libtiledb_array_schema_set_enumeration`, ctx, schema, attr, enum_name, values, nullable, ordered)
 }
 
+libtiledb_array_schema_set_enumeration_empty <- function(ctx, schema, attr, enum_name, type_name, cell_val_num = 1L, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema_set_enumeration_empty`, ctx, schema, attr, enum_name, type_name, cell_val_num, ordered)
+}
+
 libtiledb_array_schema_evolution <- function(ctx) {
     .Call(`_tiledb_libtiledb_array_schema_evolution`, ctx)
 }
@@ -460,6 +464,10 @@ libtiledb_array_schema_evolution_array_evolve <- function(ase, uri) {
 
 libtiledb_array_schema_evolution_add_enumeration <- function(ctx, ase, enum_name, values, nullable = FALSE, ordered = FALSE) {
     .Call(`_tiledb_libtiledb_array_schema_evolution_add_enumeration`, ctx, ase, enum_name, values, nullable, ordered)
+}
+
+libtiledb_array_schema_evolution_add_enumeration_empty <- function(ctx, ase, enum_name, type_name, cell_val_num = 1L, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_add_enumeration_empty`, ctx, ase, enum_name, type_name, cell_val_num, ordered)
 }
 
 libtiledb_array_schema_evolution_drop_enumeration <- function(ase, attrname) {
