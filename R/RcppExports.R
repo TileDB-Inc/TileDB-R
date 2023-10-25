@@ -442,8 +442,8 @@ libtiledb_array_schema_set_enumeration <- function(ctx, schema, attr, enum_name,
     .Call(`_tiledb_libtiledb_array_schema_set_enumeration`, ctx, schema, attr, enum_name, values, nullable, ordered)
 }
 
-libtiledb_array_schema_set_enumeration_empty <- function(ctx, schema, attr, enum_name, type_name, cell_val_num = 1L, ordered = FALSE) {
-    .Call(`_tiledb_libtiledb_array_schema_set_enumeration_empty`, ctx, schema, attr, enum_name, type_name, cell_val_num, ordered)
+libtiledb_array_schema_set_enumeration_empty <- function(ctx, schema, attr, enum_name, type_str, cell_val_num, ordered) {
+    .Call(`_tiledb_libtiledb_array_schema_set_enumeration_empty`, ctx, schema, attr, enum_name, type_str, cell_val_num, ordered)
 }
 
 libtiledb_array_schema_evolution <- function(ctx) {
@@ -466,12 +466,16 @@ libtiledb_array_schema_evolution_add_enumeration <- function(ctx, ase, enum_name
     .Call(`_tiledb_libtiledb_array_schema_evolution_add_enumeration`, ctx, ase, enum_name, values, nullable, ordered)
 }
 
-libtiledb_array_schema_evolution_add_enumeration_empty <- function(ctx, ase, enum_name, type_name, cell_val_num = 1L, ordered = FALSE) {
-    .Call(`_tiledb_libtiledb_array_schema_evolution_add_enumeration_empty`, ctx, ase, enum_name, type_name, cell_val_num, ordered)
+libtiledb_array_schema_evolution_add_enumeration_empty <- function(ctx, ase, enum_name, type_str, cell_val_num, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_add_enumeration_empty`, ctx, ase, enum_name, type_str, cell_val_num, ordered)
 }
 
 libtiledb_array_schema_evolution_drop_enumeration <- function(ase, attrname) {
     .Call(`_tiledb_libtiledb_array_schema_evolution_drop_enumeration`, ase, attrname)
+}
+
+libtiledb_array_schema_evolution_extend_enumeration <- function(ctx, ase, array, enum_name, new_values, nullable = FALSE, ordered = FALSE) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_extend_enumeration`, ctx, ase, array, enum_name, new_values, nullable, ordered)
 }
 
 libtiledb_array_create <- function(uri, schema) {

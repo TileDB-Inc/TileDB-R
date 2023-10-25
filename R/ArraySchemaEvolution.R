@@ -120,3 +120,31 @@ tiledb_array_schema_evolution_drop_enumeration <- function(object, attrname) {
     object@ptr <- libtiledb_array_schema_evolution_drop_enumeration(object@ptr, attrname)
     invisible(object)
 }
+
+#' Evolve an Array Schema by adding an empty Enumeration
+#'
+#' @param asc An ArraySchemaEvolution object
+#' @param enum_name A character value with the Enumeration name
+#' @param type_str A character value with the TileDB type, defaults to \sQuote{ASCII}
+#' @param cell_val_num An integer with number values per cell, defaults to \code{NA_integer_} to
+#' flag the \code{NA} value use for character values
+#' @param ordered A logical value indicated standard \code{factor} (when \code{FALSE}, the default)
+#' or \code{ordered} (when \code{TRUE})
+#' @param ctx Optional tiledb_ctx object
+#' @export
+tiledb_array_schema_evolution_add_enumeration_empty <- function(ase, enum_name, type_str = "ASCII",
+                                                                cell_val_num = NA_integer_,
+                                                                ordered = FALSE,
+                                                                ctx = tiledb_get_context()) {
+    stopifnot("The first argument must be an Array Schema Evolution object" =
+                  is(object, "tiledb_array_schema_evolution"),
+              "Argument 'enum_name' must be character" = is.character(enum_name),
+              "Argument 'type_str' must be character" = is.character(type_str),
+              "Argument 'cell_val_num' must be integer" = is.integer(cell_val_num),
+              "Argument 'ordered' must be logical" = is.logical(ordered),
+              "Argument 'ctx' must be a 'tiledb_ctx'" = is(ctx, "tiledb_ctx"))
+    ase@ptr <- libtiledb_array_schema_evolution_add_enumeration_empty(ctx@ptr, ase@ptr,
+                                                               enum_name, type_str, cell_val_num,
+                                                               ordered)
+    ase
+}
