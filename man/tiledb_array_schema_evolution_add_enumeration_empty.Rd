@@ -21,7 +21,7 @@ tiledb_array_schema_evolution_add_enumeration_empty(
 \item{cell_val_num}{An integer with number values per cell, defaults to \code{NA_integer_} to
 flag the \code{NA} value use for character values}
 
-\item{ordered}{A logical value indicated standard \code{factor} (when \code{FALSE}, the default)
+\item{ordered}{A logical value indicating standard \code{factor} (when \code{FALSE}, the default)
 or \code{ordered} (when \code{TRUE})}
 
 \item{ctx}{Optional tiledb_ctx object}
