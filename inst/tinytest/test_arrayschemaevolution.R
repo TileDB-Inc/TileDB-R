@@ -71,3 +71,39 @@ v <- res[["val"]]$as_vector()
 expect_true(is.factor(v))
 expect_equal(levels(v), enums)
 expect_equal(as.integer(v), c(1:5,5:1))
+
+
+## -- testing 'create empty following by extending'
+if (tiledb_version(TRUE) < "2.17.3") exit_file("Needs TileDB 2.17.3 or later")
+uri <- tempfile()
+dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 20L), 10L, "INT32"))
+attrs <- c(tiledb_attr("a", type = "INT32"), tiledb_attr("b", type = "INT32"))
+schema <- tiledb_array_schema(dom, attrs = attrs, sparse = TRUE)
+schema <- tiledb_array_schema_set_enumeration_empty(schema, attrs[[2]], "an_enum")
+tiledb_array_create(uri, schema)
+df <- data.frame(rows = 1:10, a = 100 + 0:9, b = rep(c(1L, 2L), each=5))
+A <- tiledb_array(uri)
+A[] <- df
+arr <- tiledb_array(uri, return_as="data.frame")[]
+expect_true(is.factor(arr[, "b"]))
+expect_equal(levels(arr[, "b"]), character()) # empty levels vector
+## now alter array
+ase <- tiledb_array_schema_evolution()
+arr <- tiledb_array(uri)
+arr <- tiledb_array_open(arr, "READ")
+ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, "an_enum", c("red", "green"))
+tiledb_array_schema_evolution_array_evolve(ase, uri)
+arr <- tiledb_array(uri, return_as="data.frame")[]
+expect_equal(levels(arr[, "b"]), c("red", "green"))
+## append to array
+df <- data.frame(rows = 11:20, a = 100 + 10:19, b = rep(c(3L, 4L), each=5))
+A <- tiledb_array(uri)
+A[] <- df
+## and alter again
+ase <- tiledb_array_schema_evolution()
+arr <- tiledb_array(uri)
+arr <- tiledb_array_open(arr, "READ")
+ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, "an_enum", c("blue", "orange"))
+tiledb_array_schema_evolution_array_evolve(ase, uri)
+arr <- tiledb_array(uri, return_as="data.frame")[]
+expect_equal(levels(arr[, "b"]), c("red", "green", "blue", "orange"))

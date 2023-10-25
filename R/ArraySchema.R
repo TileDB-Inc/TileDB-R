@@ -873,3 +873,31 @@ describe <- function(arr) {
     .describe_attrs(obj$attr)
     .describe_schema(obj$array)
 }
+
+#' Add an empty Enumeration to a Schema
+#'
+#' @param schema An Array Schema
+#' @param attr An Attribute for which an empty Enumeration will be added
+#' @param enum_name A character value with the Enumeration name
+#' @param type_str A character value with the TileDB type, defaults to \sQuote{ASCII}
+#' @param cell_val_num An integer with number values per cell, defaults to \code{NA_integer_} to
+#' flag the \code{NA} value use for character values
+#' @param ordered A logical value indicated standard \code{factor} (when \code{FALSE}, the default)
+#' or \code{ordered} (when \code{TRUE})
+#' @param ctx Optional tiledb_ctx object
+#' @export
+tiledb_array_schema_set_enumeration_empty <- function(schema, attr, enum_name,
+                                                      type_str = "ASCII", cell_val_num = NA_integer_,
+                                                      ordered = FALSE, ctx = tiledb_get_context()) {
+    stopifnot("Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
+              "Argument 'attr' must be a 'tiledb_attribute'" = is(attr, "tiledb_attr"),
+              "Argument 'enum_name' must be character" = is.character(enum_name),
+              "Argument 'type_str' must be character" = is.character(type_str),
+              "Argument 'cell_val_num' must be integer" = is.integer(cell_val_num),
+              "Argument 'ordered' must be logical" = is.logical(ordered),
+              "Argument 'ctx' must be a 'tiledb_ctx'" = is(ctx, "tiledb_ctx"))
+    schema@ptr <- libtiledb_array_schema_set_enumeration_empty(ctx@ptr, schema@ptr, attr@ptr,
+                                                               enum_name, type_str, cell_val_num,
+                                                               ordered)
+    schema
+}

@@ -16,6 +16,8 @@
 
 * Use of TileDB Embedded was upgraded to release 2.17.2 (#602)
 
+* Enumeration (aka 'factor') support has been extended for 'empty' creation and subsequent extension with new levelss (#605)
+
 ## Bug Fixes
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)
