@@ -1,6 +1,6 @@
 # tiledb ongoing development
 
-* This release of the R package builds against [TileDB 2.17.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.2), and has also been tested against earlier releases as well as the development version (#602)
+* This release of the R package builds against [TileDB 2.17.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.3), and has also been tested against earlier releases as well as the development version (#602)
 
 ## Improvements
 
@@ -17,6 +17,8 @@
 * Use of TileDB Embedded was upgraded to release 2.17.2 (#602)
 
 * Enumeration (aka 'factor') support has been extended for 'empty' creation and subsequent extension with new levelss (#605)
+
+* Use of TileDB Embedded was upgraded to release 2.17.3 (#606)
 
 ## Bug Fixes
 
