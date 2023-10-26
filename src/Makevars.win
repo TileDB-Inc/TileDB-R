@@ -5,7 +5,7 @@ PKG_CPPFLAGS = -I. -I../inst/include -I$(RWINLIB)/include -I$(RWINLIB)/include/t
 PKG_LIBS = \
 	-L$(RWINLIB)/lib$(subst gcc,,$(COMPILED_BY))$(R_ARCH) \
 	-L$(RWINLIB)/lib$(R_ARCH)$(CRT) \
-	-ltiledbstatic -lbz2 -lzstd -llz4 -lz -lspdlog \
+	-ltiledbstatic -lbz2 -lzstd -llz4 -lz -lspdlog -lfmt \
 	-lwebp -lwebpdecoder -lwebpdemux -lwebpmux -lsharpyuv \
         -llibmagic -lpcre2-posix -lpcre2-8 \
 	-laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-c-event-stream -laws-checksums -laws-c-common \
