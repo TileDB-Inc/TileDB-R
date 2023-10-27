@@ -1,0 +1,20 @@
+CXX_STD = CXX17
+RWINLIB = ../windows/rwinlib-tiledb
+
+PKG_CPPFLAGS = -I. -I../inst/include -I$(RWINLIB)/include -I$(RWINLIB)/include/tiledb -DTILEDB_STATIC_DEFINE -DTILEDB_SILENT_BUILD
+PKG_LIBS = \
+	-L$(RWINLIB)/lib$(subst gcc,,$(COMPILED_BY))$(R_ARCH) \
+	-L$(RWINLIB)/lib \
+	-ltiledbstatic -lbz2 -lzstd -llz4 -lz -lspdlog -lfmt \
+	-lwebp -lwebpdecoder -lwebpdemux -lwebpmux -lsharpyuv \
+        -llibmagic -lpcre2-posix -lpcre2-8 \
+	-laws-cpp-sdk-identity-management -laws-cpp-sdk-cognito-identity -laws-cpp-sdk-sts -laws-cpp-sdk-s3 -laws-cpp-sdk-core -laws-crt-cpp -laws-c-mqtt -laws-c-event-stream -laws-c-s3 -laws-c-auth -laws-c-http -laws-c-io -lNcrypt -lCrypt32 -lSecur32 -laws-c-compression -laws-c-cal -lcrypto -laws-c-sdkutils -laws-checksums -laws-c-common \
+	-lShlwapi -lBcrypt -lRpcrt4 -lWininet -lWinhttp -lws2_32 -lVersion -lUserenv
+
+all: clean winlibs
+
+winlibs:
+	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" "../tools/winlibs.R"
+
+clean:
+	rm -f $(SHLIB) $(OBJECTS)
