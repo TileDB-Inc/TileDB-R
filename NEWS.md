@@ -20,6 +20,8 @@
 
 * Use of TileDB Embedded was upgraded to release 2.17.3 (#606)
 
+* Factor variables with (unlikely) int64 indices are supported (#607)
+
 ## Bug Fixes
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)
