@@ -48,3 +48,22 @@ expect_equal(tiledb_vfs_remove_file(newuri), newuri)
 expect_false(file.exists(newuri))
 
 #})
+
+if (requireNamespace("palmerpenguins", quietly=TRUE)) {
+    pp <- palmerpenguins::penguins
+    urirds <- tempfile()
+
+    saveRDS(pp, urirds)
+    newrds <- tempfile()
+
+    if (Sys.info()[["sysname"]] != "Windows") {
+        ## check file copy
+        expect_equal(tiledb_vfs_copy_file(urirds, newrds), newrds)
+        expect_equal(pp, readRDS(newrds))
+    }
+
+    uriser <- tempfile()
+    expect_equal(tiledb_vfs_serialize(pp, uriser), uriser)
+
+    expect_equal(pp, tiledb_vfs_unserialize(uriser))
+}

@@ -22,6 +22,8 @@
 
 * Factor variables with (unlikely) int64 indices are supported (#607)
 
+* R objects can be (de-)serialized to and from VFS paths (#608)
+
 ## Bug Fixes
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)

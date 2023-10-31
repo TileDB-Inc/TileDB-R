@@ -9,10 +9,10 @@ tiledb_vfs_read(fh, offset, nbytes, ctx = tiledb_get_context())
 \arguments{
 \item{fh}{A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}}
 
-\item{offset}{A scalar integer64 value with the byte offset from the beginning of the file
+\item{offset}{A scalar value with the byte offset from the beginning of the file
 with a of zero.}
 
-\item{nbytes}{A scalar integer64 value with the number of bytes to be read.}
+\item{nbytes}{A scalar value with the number of bytes to be read.}
 
 \item{ctx}{(optional) A TileDB Ctx object}
 }

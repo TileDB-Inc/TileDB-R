@@ -942,6 +942,10 @@ libtiledb_vfs_ls <- function(vfs, uri) {
     .Call(`_tiledb_libtiledb_vfs_ls`, vfs, uri)
 }
 
+libtiledb_vfs_copy_file <- function(vfs, old_uri, new_uri) {
+    .Call(`_tiledb_libtiledb_vfs_copy_file`, vfs, old_uri, new_uri)
+}
+
 libtiledb_stats_enable <- function() {
     invisible(.Call(`_tiledb_libtiledb_stats_enable`))
 }
