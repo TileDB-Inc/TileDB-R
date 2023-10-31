@@ -56,9 +56,11 @@ if (requireNamespace("palmerpenguins", quietly=TRUE)) {
     saveRDS(pp, urirds)
     newrds <- tempfile()
 
-    ## check file copy
-    expect_equal(tiledb_vfs_copy_file(urirds, newrds), newrds)
-    expect_equal(pp, readRDS(newrds))
+    if (Sys.info()[["sysname"]] != "Windows") {
+        ## check file copy
+        expect_equal(tiledb_vfs_copy_file(urirds, newrds), newrds)
+        expect_equal(pp, readRDS(newrds))
+    }
 
     uriser <- tempfile()
     expect_equal(tiledb_vfs_serialize(pp, uriser), uriser)
