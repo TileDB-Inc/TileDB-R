@@ -1008,6 +1008,9 @@ setMethod("[", "tiledb_array",
 
                           col <- col + 1L # adjust for zero-index C/C++ layer
 
+                          if (inherits(col, "integer64")) # can happen when Python writes
+                              col <- as.integer(col)
+
                           ## special case from schema evolution could have added twice so correct
                           if (min(col, na.rm=TRUE) == 2 && max(col, na.rm=TRUE) == length(dct) + 1)
                               col <- col - 1L
