@@ -4320,6 +4320,13 @@ std::vector<std::string> libtiledb_vfs_ls(XPtr<tiledb::VFS> vfs, std::string uri
     return vfs->ls(uri);
 }
 
+// [[Rcpp::export]]
+std::string libtiledb_vfs_copy_file(XPtr<tiledb::VFS> vfs, std::string old_uri, std::string new_uri) {
+    check_xptr_tag<tiledb::VFS>(vfs);
+    vfs->copy_file(old_uri, new_uri);
+    return new_uri;
+}
+
 /**
  * Stats
  */

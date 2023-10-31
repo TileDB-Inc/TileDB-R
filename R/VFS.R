@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2021 TileDB Inc.
+#  Copyright (c) 2017-2023 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -342,20 +342,22 @@ tiledb_vfs_write <- function(fh, vec, ctx = tiledb_get_context()) {
 #' also possible to \code{memcpy} to the contiguous memory of an integer vector should other
 #' (non-R) data be transferred.
 #' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
-#' @param offset A scalar integer64 value with the byte offset from the beginning of the file
+#' @param offset A scalar value with the byte offset from the beginning of the file
 #' with a of zero.
-#' @param nbytes A scalar integer64 value with the number of bytes to be read.
+#' @param nbytes A scalar value with the number of bytes to be read.
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The binary file content is returned as an integer vector.
 #' @export
 tiledb_vfs_read <- function(fh, offset, nbytes, ctx = tiledb_get_context()) {
-  if (missing(offset)) offset <- bit64::as.integer64(0)
-  stopifnot(`Argument 'fh' must be an external pointer` = is(fh, "externalptr"),
-            `Argument 'offset' must be integer64` = is(offset, "integer64"),
-            `Argument 'nbytes' currently a required parameter` = !missing(nbytes),
-            `Argument 'nbytes' must be integer64` = is(nbytes, "integer64"),
-            `Argument 'ctx' must a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
-  libtiledb_vfs_read(ctx@ptr, fh, offset, nbytes)
+    if (missing(offset)) offset <- bit64::as.integer64(0)
+    if (is.numeric(offset)) offset <- bit64::as.integer64(offset)
+    if (is.numeric(nbytes)) nbytes <- bit64::as.integer64(nbytes)
+    stopifnot("Argument 'fh' must be an external pointer" = is(fh, "externalptr"),
+              "Argument 'offset' must be integer64" = is(offset, "integer64"),
+              "Argument 'nbytes' currently a required parameter" = !missing(nbytes),
+              "Argument 'nbytes' must be integer64" = is(nbytes, "integer64"),
+              "Argument 'ctx' must a tiledb_ctx object" = is(ctx, "tiledb_ctx"))
+    libtiledb_vfs_read(ctx@ptr, fh, offset, nbytes)
 }
 
 #' Return VFS Directory Size
@@ -380,4 +382,69 @@ tiledb_vfs_ls <- function(uri, vfs = tiledb_get_vfs()) {
   stopifnot(`Argument 'vfs' must a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
             `Argument 'uri' must be character` = is.character(uri))
   libtiledb_vfs_ls(vfs@ptr, uri)
+}
+
+#' Unserialize an R Object from a VFS-accessible URI
+#'
+#' @param uri Character variable with a URI describing a file path to an RDS file
+#' @param vfs A TileDB VFS object; default is to use a cached value.
+#' @return The unserialized object
+#' @export
+tiledb_vfs_unserialize <- function(uri, vfs = tiledb_get_vfs()) {
+    stopifnot("Argument 'vfs' must a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+              "Argument 'uri' must be character" = is.character(uri))
+    n <- tiledb_vfs_file_size(uri)
+    file <- tiledb_vfs_open(uri, "READ")
+    vec <- tiledb_vfs_read(file, 0, n)
+    tiledb_vfs_close(file)
+    ## The gzcon(rawConnection()) idea is from https://stackoverflow.com/a/58136567/508431
+    ## The packBits(intToBits()) part on the int vector read is from a friend via slack
+    obj <- unserialize(gzcon(rawConnection(packBits(intToBits(vec)))))
+    obj
+}
+
+
+#' Serialize an R Object to a VFS-accessible URI
+#'
+#' @param obj An R object which will be passed to \code{serialize()}
+#' @param uri Character variable with a URI describing a file path to an RDS file
+#' @param vfs A TileDB VFS object; default is to use a cached value.
+#' @return The uri is returned invisibly
+#' @export
+tiledb_vfs_serialize <- function(obj, uri, vfs = tiledb_get_vfs()) {
+    stopifnot("Argument 'vfs' must a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+              "Argument 'uri' must be character" = is.character(uri))
+    ## We could not find a direct conversion of the 'raw' vector we get from serialize()
+    ## into a format that corresponded to what saveRDS() writes so we cheat a little
+    tf <- tempfile()
+    saveRDS(obj, tf)
+
+    ## Read local file
+    file <- tiledb_vfs_open(tf, "READ")
+    vec <- tiledb_vfs_read(file, 0, tiledb_vfs_file_size(tf))
+    tiledb_vfs_close(file)
+
+    ## Now write 'vec' to the target URI
+    file <- tiledb_vfs_open(uri, "WRITE")
+    tiledb_vfs_write(file, vec)
+    tiledb_vfs_sync(file)
+    tiledb_vfs_close(file)
+
+    unlink(tf)
+    invisible(uri)
+}
+
+#' Copy a file to VFS
+#'
+#' @param file Character variable with a local file path
+#' @param uri Character variable with a URI describing a file path
+#' @param vfs A TileDB VFS object; default is to use a cached value.
+#' @return The uri value of the removed file
+#' @export
+tiledb_vfs_copy_file <- function(file, uri, vfs = tiledb_get_vfs()) {
+    stopifnot("Argument 'vfs' must a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+              "Argument 'uri' must be character" = is.character(uri),
+              "Argument 'file' must be character and point to a file" =
+                  is.character(uri) && file.exists(file))
+    libtiledb_vfs_copy_file(vfs@ptr, file, uri)
 }
