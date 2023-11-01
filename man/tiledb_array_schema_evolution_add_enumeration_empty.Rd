@@ -14,6 +14,8 @@ tiledb_array_schema_evolution_add_enumeration_empty(
 )
 }
 \arguments{
+\item{ase}{An ArraySchemaEvolution object}
+
 \item{enum_name}{A character value with the Enumeration name}
 
 \item{type_str}{A character value with the TileDB type, defaults to \sQuote{ASCII}}
@@ -25,8 +27,6 @@ flag the \code{NA} value use for character values}
 or \code{ordered} (when \code{TRUE})}
 
 \item{ctx}{Optional tiledb_ctx object}
-
-\item{asc}{An ArraySchemaEvolution object}
 }
 \description{
 Evolve an Array Schema by adding an empty Enumeration

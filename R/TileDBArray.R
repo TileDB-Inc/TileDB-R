@@ -619,8 +619,18 @@ setMethod("[", "tiledb_array",
   ordered_dict <- dictionaries
   for (ii in seq_along(dictionaries)) {
       if (isTRUE(alldictionary[ii])) {
-          dictionaries[[ii]] <- tiledb_attribute_get_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
-          ordered_dict[[ii]] <- tiledb_attribute_is_ordered_enumeration_ptr(attrs[[allnames[ii]]], arrptr)
+          attr <- attrs[[allnames[ii]]]
+          tpstr <- tiledb_attribute_get_enumeration_type_ptr(attr, arrptr)
+          if (tpstr %in% c("ASCII", "UTF8")) {
+              dictionaries[[ii]] <- tiledb_attribute_get_enumeration_ptr(attr, arrptr)
+          } else if (tpstr %in% c("FLOAT32", "FLOAT64", "BOOL",
+                                  "UINT8", "UINT16", "UINT32", "UINT64",
+                                  "INT8", "INT16", "INT32", "INT64")) {
+              dictionaries[[ii]] <- tiledb_attribute_get_enumeration_vector_ptr(attr, arrptr)
+          } else {
+              stop("Unsupported enumeration vector payload of type '%s'", tpstr, call. = FALSE)
+          }
+          ordered_dict[[ii]] <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
           attr(dictionaries[[ii]], "ordered") <- ordered_dict[[ii]]
       }
   }
@@ -1015,8 +1025,12 @@ setMethod("[", "tiledb_array",
                           if (min(col, na.rm=TRUE) == 2 && max(col, na.rm=TRUE) == length(dct) + 1)
                               col <- col - 1L
 
-                          attr(col, "levels") <- dct
-                          attr(col, "class")  <- if (ord) c("ordered", "factor") else "factor"
+                          if (inherits(dct, "character")) {
+                              attr(col, "levels") <- dct
+                              attr(col, "class")  <- if (ord) c("ordered", "factor") else "factor"
+                          } else {
+                              col <- dct[col]
+                          }
                       }
                       col
                   }

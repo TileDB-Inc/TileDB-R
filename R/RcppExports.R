@@ -302,6 +302,14 @@ libtiledb_attribute_has_enumeration <- function(ctx, attr) {
     .Call(`_tiledb_libtiledb_attribute_has_enumeration`, ctx, attr)
 }
 
+libtiledb_attribute_get_enumeration_type <- function(ctx, attr, arr) {
+    .Call(`_tiledb_libtiledb_attribute_get_enumeration_type`, ctx, attr, arr)
+}
+
+libtiledb_attribute_get_enumeration_vector <- function(ctx, attr, arr) {
+    .Call(`_tiledb_libtiledb_attribute_get_enumeration_vector`, ctx, attr, arr)
+}
+
 libtiledb_attribute_get_enumeration <- function(ctx, attr, arr) {
     .Call(`_tiledb_libtiledb_attribute_get_enumeration`, ctx, attr, arr)
 }

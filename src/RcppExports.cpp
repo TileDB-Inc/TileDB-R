@@ -847,6 +847,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_attribute_get_enumeration_type
+Rcpp::String libtiledb_attribute_get_enumeration_type(XPtr<tiledb::Context> ctx, XPtr<tiledb::Attribute> attr, XPtr<tiledb::Array> arr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_enumeration_type(SEXP ctxSEXP, SEXP attrSEXP, SEXP arrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type arr(arrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_enumeration_type(ctx, attr, arr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_attribute_get_enumeration_vector
+SEXP libtiledb_attribute_get_enumeration_vector(XPtr<tiledb::Context> ctx, XPtr<tiledb::Attribute> attr, XPtr<tiledb::Array> arr);
+RcppExport SEXP _tiledb_libtiledb_attribute_get_enumeration_vector(SEXP ctxSEXP, SEXP attrSEXP, SEXP arrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Attribute> >::type attr(attrSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type arr(arrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_attribute_get_enumeration_vector(ctx, attr, arr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_attribute_get_enumeration
 std::vector<std::string> libtiledb_attribute_get_enumeration(XPtr<tiledb::Context> ctx, XPtr<tiledb::Attribute> attr, XPtr<tiledb::Array> arr);
 RcppExport SEXP _tiledb_libtiledb_attribute_get_enumeration(SEXP ctxSEXP, SEXP attrSEXP, SEXP arrSEXP) {
@@ -3594,6 +3620,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_attribute_set_nullable", (DL_FUNC) &_tiledb_libtiledb_attribute_set_nullable, 2},
     {"_tiledb_libtiledb_attribute_get_nullable", (DL_FUNC) &_tiledb_libtiledb_attribute_get_nullable, 1},
     {"_tiledb_libtiledb_attribute_has_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_has_enumeration, 2},
+    {"_tiledb_libtiledb_attribute_get_enumeration_type", (DL_FUNC) &_tiledb_libtiledb_attribute_get_enumeration_type, 3},
+    {"_tiledb_libtiledb_attribute_get_enumeration_vector", (DL_FUNC) &_tiledb_libtiledb_attribute_get_enumeration_vector, 3},
     {"_tiledb_libtiledb_attribute_get_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_get_enumeration, 3},
     {"_tiledb_libtiledb_attribute_set_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_set_enumeration, 3},
     {"_tiledb_libtiledb_attribute_is_ordered_enumeration", (DL_FUNC) &_tiledb_libtiledb_attribute_is_ordered_enumeration, 3},

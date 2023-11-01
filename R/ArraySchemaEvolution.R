@@ -123,7 +123,7 @@ tiledb_array_schema_evolution_drop_enumeration <- function(object, attrname) {
 
 #' Evolve an Array Schema by adding an empty Enumeration
 #'
-#' @param asc An ArraySchemaEvolution object
+#' @param ase An ArraySchemaEvolution object
 #' @param enum_name A character value with the Enumeration name
 #' @param type_str A character value with the TileDB type, defaults to \sQuote{ASCII}
 #' @param cell_val_num An integer with number values per cell, defaults to \code{NA_integer_} to
@@ -137,7 +137,7 @@ tiledb_array_schema_evolution_add_enumeration_empty <- function(ase, enum_name, 
                                                                 ordered = FALSE,
                                                                 ctx = tiledb_get_context()) {
     stopifnot("Argument 'ase' must be an Array Schema Evolution object" =
-                  is(object, "tiledb_array_schema_evolution"),
+                  is(ase, "tiledb_array_schema_evolution"),
               "Argument 'enum_name' must be character" = is.character(enum_name),
               "Argument 'type_str' must be character" = is.character(type_str),
               "Argument 'cell_val_num' must be integer" = is.integer(cell_val_num),
