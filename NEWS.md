@@ -30,6 +30,8 @@
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)
 
+* The (explicitly) 'batched reader now ensure a correct layout for sparse arrays (#610)
+
 ## Build and Test Systems
 
 * The nighly valgrind run was updated to include release 2.17 (#603)

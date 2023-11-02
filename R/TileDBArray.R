@@ -647,9 +647,8 @@ setMethod("[", "tiledb_array",
 
   ## open query
   qryptr <- libtiledb_query(ctx@ptr, arrptr, "READ")
-  qryptr <- libtiledb_query_set_layout(qryptr,
-                                       if (isTRUE(nchar(layout) > 0)) layout
-                                       else { if (sparse) "UNORDERED" else "COL_MAJOR" })
+  qryptr <- libtiledb_query_set_layout(qryptr, if (isTRUE(nzchar(layout))) layout
+                                               else { if (sparse) "UNORDERED" else "COL_MAJOR" })
 
   ## ranges seem to interfere with the byte/element adjustment below so set up toggle
   rangeunset <- TRUE

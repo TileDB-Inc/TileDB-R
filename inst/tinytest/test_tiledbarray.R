@@ -1460,10 +1460,8 @@ if (Sys.getenv("IS_COVR", "no") == "no") {
     res2 <- tiledb:::fetchBatched(arr, lst)
     expect_false(completedBatched(lst))
     res3 <- tiledb:::fetchBatched(arr, lst)
-    expect_false(completedBatched(lst))
-    res4 <- tiledb:::fetchBatched(arr, lst)
     expect_true(completedBatched(lst))
-    expect_equal(nrow(res1) + nrow(res2) + nrow(res3) + nrow(res4), 344)
+    expect_equal(nrow(res1) + nrow(res2) + nrow(res3), 344)
     set_allocation_size_preference(1024*1024)
 }
 
