@@ -1589,6 +1589,68 @@ bool libtiledb_attribute_has_enumeration(XPtr<tiledb::Context> ctx,
 }
 
 // [[Rcpp::export]]
+Rcpp::String libtiledb_attribute_get_enumeration_type(XPtr<tiledb::Context> ctx,
+                                                      XPtr<tiledb::Attribute> attr,
+                                                      XPtr<tiledb::Array> arr) {
+
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+    check_xptr_tag<tiledb::Array>(arr);
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enmrname = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
+    if (enmrname == std::nullopt) {
+        Rcpp::stop("No enumeration name for attribute");
+    }
+    auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), enmrname.value());
+    if (enmr.ptr() == nullptr) {
+        Rcpp::stop("No enumeration for given attribute.");
+    }
+    Rcpp::String res = Rcpp::as<Rcpp::String>(Rcpp::wrap(_tiledb_datatype_to_string(enmr.type())));
+#else
+    Rcpp::String res = Rcpp::as<Rcpp::String>(NA_STRING);
+#endif
+    return res;
+}
+
+// [[Rcpp::export]]
+SEXP libtiledb_attribute_get_enumeration_vector(XPtr<tiledb::Context> ctx,
+                                                XPtr<tiledb::Attribute> attr,
+                                                XPtr<tiledb::Array> arr) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Attribute>(attr);
+    check_xptr_tag<tiledb::Array>(arr);
+    SEXP res = R_NilValue;
+#if TILEDB_VERSION >= TileDB_Version(2,17,0)
+    auto enmrname = tiledb::AttributeExperimental::get_enumeration_name(*ctx.get(), *attr.get());
+    if (enmrname == std::nullopt) {
+        Rcpp::stop("No enumeration name for attribute");
+    }
+    auto enmr = tiledb::ArrayExperimental::get_enumeration(*ctx.get(), *arr.get(), enmrname.value());
+    if (enmr.ptr() == nullptr) {
+        Rcpp::stop("No enumeration for given attribute.");
+    }
+    auto dtype = enmr.type();
+    if (dtype == TILEDB_FLOAT32 || dtype == TILEDB_FLOAT64) {
+        auto v = enmr.as_vector<double>();
+        res = Rcpp::wrap(v);
+    } else if (dtype == TILEDB_INT8 || dtype == TILEDB_INT16 || dtype == TILEDB_INT32 ||
+               dtype == TILEDB_UINT8 || dtype == TILEDB_UINT16 || dtype == TILEDB_UINT32) {
+        auto v = enmr.as_vector<int32_t>();
+        res = Rcpp::wrap(v);
+    } else if (dtype == TILEDB_INT64 || dtype == TILEDB_UINT64) {
+        auto v = enmr.as_vector<int64_t>();
+        res = Rcpp::toInteger64(v);
+    } else if (dtype == TILEDB_BOOL) {
+        auto v = enmr.as_vector<bool>();
+        res = Rcpp::wrap(v);
+    } else {
+        Rcpp::stop("Unsupported non-string type '%s'", _tiledb_datatype_to_string(dtype));
+    }
+#endif
+    return res;
+}
+
+// [[Rcpp::export]]
 std::vector<std::string> libtiledb_attribute_get_enumeration(XPtr<tiledb::Context> ctx,
                                                              XPtr<tiledb::Attribute> attr,
                                                              XPtr<tiledb::Array> arr) {
@@ -1609,6 +1671,7 @@ std::vector<std::string> libtiledb_attribute_get_enumeration(XPtr<tiledb::Contex
 #endif
     return res;
 }
+
 
 // [[Rcpp::export]]
 XPtr<tiledb::Attribute> libtiledb_attribute_set_enumeration(XPtr<tiledb::Context> ctx,

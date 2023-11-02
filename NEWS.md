@@ -24,6 +24,8 @@
 
 * R objects can be (de-)serialized to and from VFS paths (#608)
 
+* Enumeration support has been extended to some cases only supported by Arrow (#609)
+
 ## Bug Fixes
 
 * The DESCRIPTION file now correctly refers to macOS 10.14 (#596)

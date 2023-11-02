@@ -388,6 +388,30 @@ tiledb_attribute_set_enumeration_name <- function(attr, enum_name, ctx = tiledb_
 #' @export
 tiledb_attribute_is_ordered_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
     stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
-              "The 'arr' argument must be an external pointer" = is(arrptr, "externalptr"))
+              "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr"))
     libtiledb_attribute_is_ordered_enumeration(ctx@ptr, attr@ptr, arrptr)
+}
+
+# internal function to access enumeration data type
+#' @noRd
+tiledb_attribute_get_enumeration_type <- function(attr, arr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'arr' argument must be an array" = is(arr, "tiledb_array"))
+    libtiledb_attribute_get_enumeration_type(ctx@ptr, attr@ptr, arr@ptr)
+}
+
+# internal function to access enumeration data type
+#' @noRd
+tiledb_attribute_get_enumeration_type_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr"))
+    libtiledb_attribute_get_enumeration_type(ctx@ptr, attr@ptr, arrptr)
+}
+
+# internal function to get (non-string) enumeration vector
+#' @noRd
+tiledb_attribute_get_enumeration_vector_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+    stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
+              "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr"))
+    libtiledb_attribute_get_enumeration_vector(ctx@ptr, attr@ptr, arrptr)
 }
