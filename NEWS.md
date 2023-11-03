@@ -1,6 +1,6 @@
-# tiledb ongoing development
+# tiledb 0.21.2
 
-* This release of the R package builds against [TileDB 2.17.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.3), and has also been tested against earlier releases as well as the development version (#602)
+* This release of the R package builds against [TileDB 2.17.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.4), and has also been tested against earlier releases as well as the development version (#611)
 
 ## Improvements
 
@@ -25,6 +25,8 @@
 * R objects can be (de-)serialized to and from VFS paths (#608)
 
 * Enumeration support has been extended to some cases only supported by Arrow (#609)
+
+* Use of TileDB Embedded was upgraded to release 2.17.4 (#611)
 
 ## Bug Fixes
 
