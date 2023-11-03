@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.21.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.21.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,34 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.21.2" id="tiledb-0212">tiledb 0.21.2<a class="anchor" aria-label="anchor" href="#tiledb-0212"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.4" class="external-link">TileDB 2.17.4</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/611" class="external-link">#611</a>)</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-21-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-21-2"></a></h3>
+<ul><li><p>Set conditions are supported in query condition expressions (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/597" class="external-link">#597</a>)</p></li>
+<li><p>Query conditions expression parsing via <code>parse_query_conditions</code> was extended simmilarly (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/598" class="external-link">#598</a>)</p></li>
+<li><p>Array fragment deletions uses a new static method (with TileDB 2.18.0 or later) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/599" class="external-link">#599</a>)</p></li>
+<li><p>The included <code>nanoarrow</code> header and source file have been updated to release 0.3.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/600" class="external-link">#600</a>)</p></li>
+<li><p>Query conditions expression parsing requirements are stated and tested more clearly (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/601" class="external-link">#601</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.17.2 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/602" class="external-link">#602</a>)</p></li>
+<li><p>Enumeration (aka ‘factor’) support has been extended for ‘empty’ creation and subsequent extension with new levelss (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/605" class="external-link">#605</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.17.3 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/606" class="external-link">#606</a>)</p></li>
+<li><p>Factor variables with (unlikely) int64 indices are supported (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/607" class="external-link">#607</a>)</p></li>
+<li><p>R objects can be (de-)serialized to and from VFS paths (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/608" class="external-link">#608</a>)</p></li>
+<li><p>Enumeration support has been extended to some cases only supported by Arrow (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/609" class="external-link">#609</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.17.4 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/611" class="external-link">#611</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-21-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-21-2"></a></h3>
+<ul><li><p>The DESCRIPTION file now correctly refers to macOS 10.14 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/596" class="external-link">#596</a>)</p></li>
+<li><p>The (explicitly) ’batched reader now ensure a correct layout for sparse arrays (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/610" class="external-link">#610</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-21-2">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-21-2"></a></h3>
+<ul><li>The nighly valgrind run was updated to include release 2.17 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/603" class="external-link">#603</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.21.1" id="tiledb-0211">tiledb 0.21.1<a class="anchor" aria-label="anchor" href="#tiledb-0211"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.1" class="external-link">TileDB 2.17.1</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/593" class="external-link">#593</a>)</li>
