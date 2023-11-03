@@ -1,2 +1,2 @@
-version: 2.18.0-rc0
-sha: a3c4865
+version: 2.18.0-rc1
+sha: 3af8017
