@@ -107,3 +107,38 @@ ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, "an_enum", c("
 tiledb_array_schema_evolution_array_evolve(ase, uri)
 arr <- tiledb_array(uri, return_as="data.frame")[]
 expect_equal(levels(arr[, "b"]), c("red", "green", "blue", "orange"))
+
+
+## -- testing query condition on non int32 columns
+run_int_col_test <- function(coltype) {
+    uri <- tempfile()
+    enums <- c("blue", "green", "red")
+    dom <- tiledb_domain(dims = tiledb_dim(name="dim", domain=c(0L,100L), tile=10L, type="INT32"))
+    attrs <- c(tiledb_attr(name="fct", type = coltype, enumeration=enums),
+               tiledb_attr(name="dbl", type = "FLOAT64"))
+    schema <- tiledb_array_schema(domain=dom, attrs=attrs, sparse=TRUE, enumerations=list(fct=enums))
+    tiledb_array_create(uri, schema)
+
+    set.seed(42)
+    df <- data.frame(dim = 1:10, fct = sample(1:length(enums), 10, replace=TRUE) - 1, dbl = rnorm(10))
+    arr <- tiledb_array(uri)
+    arr[] <- df
+
+    qc <-
+    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct == blue, arr))[]
+    expect_equal(nrow(res), 5)
+
+    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct == green, arr))[]
+    expect_equal(nrow(res), 3)
+
+    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct == red, arr))[]
+    expect_equal(nrow(res), 2)
+
+    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct != blue, arr))[]
+    expect_equal(nrow(res), 5)
+
+    expect_error(tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct > blue, arr))[])
+
+    unlink(uri)
+}
+sapply(c("INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32"), run_int_col_test)
