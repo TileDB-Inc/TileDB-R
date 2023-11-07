@@ -3,6 +3,8 @@
 [![valgrind](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/valgrind.yaml/badge.svg)](https://github.com/TileDB-Inc/TileDB-R/actions/workflows/valgrind.yaml)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tiledb?color=brightgreen)](https://cran.r-project.org/package=tiledb)
 [![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
+[![r-universe](https://tiledb-inc.r-universe.dev/badges/tiledb)](https://tiledb-inc.r-universe.dev/tiledb)
+[![Anaconda](https://anaconda.org/conda-forge/r-tiledb/badges/version.svg)](https://anaconda.org/conda-forge/r-tiledb)
 
 # <a href="https://tiledb.com/"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
 
@@ -38,7 +40,7 @@ The most recent released version can be installed from
     > remotes::install_github("TileDB-Inc/TileDB-R")
     ...
     > library(tiledb)
-    TileDB R 0.21.1 with TileDB Embedded 2.17.1 on Ubuntu 22.04.
+    TileDB R 0.21.3 with TileDB Embedded 2.17.4 on Ubuntu 22.04.
     See https://tiledb.com for more information about TileDB.
     > help(package=tiledb)
 
