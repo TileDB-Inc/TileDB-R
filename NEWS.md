@@ -6,6 +6,10 @@
 
 * Query conditioning parsing now supports `factor` index columns other than the standard `integer` type (#614)
 
+## Build and Test Systems
+
+* The nighly valgrind run was updated to include release 2.18 (#615)
+
 ## Documentation
 
 * The pkgdown documentation has been updated for release 0.21.2 (#613)
