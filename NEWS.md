@@ -12,7 +12,7 @@
 
 ## Documentation
 
-* The pkgdown documentation has been updated for release 0.21.2 (#613)
+* The pkgdown documentation has been updated for release 0.21.2 (#613) and release 0.21.3 (#616)
 
 
 # tiledb 0.21.2
