@@ -1,4 +1,4 @@
-# ongoing development
+# tiledb 0.21.3
 
 * This release of the R package builds against [TileDB 2.17.4](https://github.com/TileDB-Inc/TileDB/releases/tag/2.17.4), and has also been tested against earlier releases as well as the development version (#611)
 
@@ -12,7 +12,7 @@
 
 ## Documentation
 
-* The pkgdown documentation has been updated for release 0.21.2 (#613)
+* The pkgdown documentation has been updated for release 0.21.2 (#613) and release 0.21.3 (#616)
 
 
 # tiledb 0.21.2
