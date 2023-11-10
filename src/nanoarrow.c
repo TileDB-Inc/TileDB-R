@@ -296,7 +296,8 @@ static void ArrowSchemaRelease(struct ArrowSchema* schema) {
   schema->release = NULL;
 }
 
-static const char* ArrowSchemaFormatTemplate(enum ArrowType type) {
+//static
+const char* ArrowSchemaFormatTemplate(enum ArrowType type) {
   switch (type) {
     case NANOARROW_TYPE_UNINITIALIZED:
       return NULL;
@@ -363,7 +364,8 @@ static const char* ArrowSchemaFormatTemplate(enum ArrowType type) {
   }
 }
 
-static int ArrowSchemaInitChildrenIfNeeded(struct ArrowSchema* schema,
+//static
+int ArrowSchemaInitChildrenIfNeeded(struct ArrowSchema* schema,
                                            enum ArrowType type) {
   switch (type) {
     case NANOARROW_TYPE_LIST:
