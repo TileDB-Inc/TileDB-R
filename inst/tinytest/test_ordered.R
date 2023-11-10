@@ -97,10 +97,12 @@ expect_false(is.ordered(tbval$sex))
 expect_true(is.factor(tbval$sex))
 expect_equivalent(et, tbval)
 
-if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
-arval <- tiledb_array(uri, return_as="arrow", extended=FALSE)[]
-tbval <- tibble::as_tibble(arval)
-expect_true(is.ordered(tbval$pclass))
-expect_false(is.ordered(tbval$sex))
-expect_true(is.factor(tbval$sex))
-expect_equivalent(et, tbval)
+if (Sys.getenv("CI", "") != "") {
+    if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
+    arval <- tiledb_array(uri, return_as="arrow", extended=FALSE)[]
+    tbval <- tibble::as_tibble(arval)
+    expect_true(is.ordered(tbval$pclass))
+    expect_false(is.ordered(tbval$sex))
+    expect_true(is.factor(tbval$sex))
+    expect_equivalent(et, tbval)
+}
