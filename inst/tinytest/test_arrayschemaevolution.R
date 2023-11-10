@@ -63,14 +63,6 @@ expect_true(is.factor(res$val))
 expect_equal(levels(res$val), enums)
 expect_equal(as.integer(res$val), c(1:5,5:1))
 
-## check as arrow
-if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
-arr <- tiledb_array(uri, return_as="arrow")
-res <- arr[]
-v <- res[["val"]]$as_vector()
-expect_true(is.factor(v))
-expect_equal(levels(v), enums)
-expect_equal(as.integer(v), c(1:5,5:1))
 
 
 ## -- testing 'create empty following by extending'

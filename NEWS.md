@@ -1,5 +1,9 @@
 # ongoing development
 
+## Build and Test Systems
+
+* Some tests were refactored slightly for greater robustness (#618)
+
 ## Documentation
 
 * The README now contains badges for the r-universe and Anaconda versions (in addition to CRAN) (#617)

@@ -230,6 +230,7 @@ bool check_arrow_array_tag(Rcpp::XPtr<ArrowArray> xp) {
 // but do not set an XPtr finalizer
 Rcpp::XPtr<ArrowSchema> schema_owning_xptr(void) {
     struct ArrowSchema* schema = (struct ArrowSchema*)ArrowMalloc(sizeof(struct ArrowSchema));
+    spdl::trace(tfm::format("[schema_owning_xptr] Allocating %d bytes", sizeof(struct ArrowSchema)));
     if (schema == NULL) Rcpp::stop("Failed to allocate ArrowSchema");
     schema->release = NULL;
     Rcpp::XPtr<ArrowSchema> schema_xptr = make_xptr(schema, false);
@@ -240,6 +241,7 @@ Rcpp::XPtr<ArrowSchema> schema_owning_xptr(void) {
 // but do not set an XPtr finalizer
 Rcpp::XPtr<ArrowArray> array_owning_xptr(void) {
     struct ArrowArray* array = (struct ArrowArray*)ArrowMalloc(sizeof(struct ArrowArray));
+    spdl::trace(tfm::format("[array_owning_xptr] Allocating %d bytes", sizeof(struct ArrowArray)));
     if (array == NULL) Rcpp::stop("Failed to allocate ArrowArray");
     array->release = NULL;
     Rcpp::XPtr<ArrowArray> array_xptr = make_xptr(array, false);
@@ -250,13 +252,19 @@ Rcpp::XPtr<ArrowArray> array_owning_xptr(void) {
 inline void registerXptrFinalizer(SEXP s, R_CFinalizer_t f, bool onexit = true) {
     R_RegisterCFinalizerEx(s, f, onexit ? TRUE : FALSE);
 }
+extern "C" {
+    void ArrowArrayRelease(struct ArrowArray *array); 		// made non-static in nanoarrow.c
+    ArrowErrorCode ArrowArraySetStorageType(struct ArrowArray* array,	// ditto
+                                            enum ArrowType storage_type);
+    ArrowErrorCode localArrowSchemaSetType(struct ArrowSchema* schema, enum ArrowType type);
+}
 
 Rcpp::XPtr<ArrowSchema> schema_setup_struct(Rcpp::XPtr<ArrowSchema> schxp, int64_t n_children) {
     ArrowSchema* schema = schxp.get();
     auto type = NANOARROW_TYPE_STRUCT;
 
     ArrowSchemaInit(schema);    					// modified from ArrowSchemaInitFromType()
-    int result = ArrowSchemaSetType(schema, type);
+    int result = localArrowSchemaSetType(schema, type); // modified to call func with XPtr
     if (result != NANOARROW_OK) {
         schema->release(schema);
         Rcpp::stop("Error setting struct schema");
@@ -281,12 +289,6 @@ Rcpp::XPtr<ArrowSchema> schema_setup_struct(Rcpp::XPtr<ArrowSchema> schxp, int64
         }
     }
     return schxp;
-}
-
-extern "C" {
-    void ArrowArrayRelease(struct ArrowArray *array); 		// made non-static in nanoarrow.c
-    ArrowErrorCode ArrowArraySetStorageType(struct ArrowArray* array,	// ditto
-                                            enum ArrowType storage_type);
 }
 
 Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t n_children) {
@@ -350,7 +352,6 @@ Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t 
     array->n_children = n_children;
     return arrxp;
 }
-
 
 
 // [[Rcpp::export]]
@@ -470,4 +471,47 @@ Rcpp::XPtr<tiledb::ArrayBuffers> libtiledb_allocate_column_buffers(Rcpp::XPtr<ti
                                 name, cbsp.use_count(), memory_budget));
     }
     return make_xptr<tiledb::ArrayBuffers>(abp);
+}
+
+// added two local copies to inject xptr for format
+extern "C" {
+    const char* ArrowSchemaFormatTemplate(enum ArrowType type);  // remove static in nanoarrow
+    int ArrowSchemaInitChildrenIfNeeded(struct ArrowSchema* schema, enum ArrowType type); // ditto
+}
+ArrowErrorCode localArrowSchemaSetFormat(struct ArrowSchema* schema, const char* format) {
+    if (schema->format != NULL) {
+        ArrowFree((void*)schema->format);
+    }
+
+    if (format != NULL) {
+        size_t format_size = strlen(format) + 1;
+        schema->format = (const char*)ArrowMalloc(format_size);
+        if (schema->format == NULL) {
+            return ENOMEM;
+        }
+        Rcpp::XPtr<const char> schema_fmt_xp = make_xptr(schema->format, false);
+
+        memcpy((void*)schema->format, format, format_size);
+    } else {
+        schema->format = NULL;
+    }
+
+    return NANOARROW_OK;
+}
+ArrowErrorCode localArrowSchemaSetType(struct ArrowSchema* schema, enum ArrowType type) {
+    // We don't allocate the dictionary because it has to be nullptr
+    // for non-dictionary-encoded arrays.
+
+    // Set the format to a valid format string for type
+    const char* template_format = ArrowSchemaFormatTemplate(type);
+
+    // If type isn't recognized and not explicitly unset
+    if (template_format == NULL && type != NANOARROW_TYPE_UNINITIALIZED) {
+        return EINVAL;
+    }
+
+    NANOARROW_RETURN_NOT_OK(localArrowSchemaSetFormat(schema, template_format));
+
+    // For types with an umabiguous child structure, allocate children
+    return ArrowSchemaInitChildrenIfNeeded(schema, type);
 }
