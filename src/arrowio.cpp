@@ -223,7 +223,6 @@ bool check_arrow_array_tag(Rcpp::XPtr<ArrowArray> xp) {
 }
 
 
-
 // (Adapted) helper functions from nanoarrow
 //
 // Create an external pointer with the proper class and that will release any
