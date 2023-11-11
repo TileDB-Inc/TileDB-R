@@ -76,7 +76,11 @@ typedef std::unordered_map<std::string, std::shared_ptr<tiledb::ColumnBuffer>> m
 
 // C++ compiler complains about missing delete functionality when we use tiledb_vfs_fh_t directly
 struct vfs_fh {
-   void *fh;
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR >= 15
+    tiledb_vfs_fh_handle_t* fh;
+#else
+    tiledb_vfs_fh_t* fh;
+#endif
 };
 typedef struct vfs_fh vfs_fh_t;
 
