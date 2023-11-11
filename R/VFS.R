@@ -394,9 +394,10 @@ tiledb_vfs_unserialize <- function(uri, vfs = tiledb_get_vfs()) {
     stopifnot("Argument 'vfs' must a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
               "Argument 'uri' must be character" = is.character(uri))
     n <- tiledb_vfs_file_size(uri)
-    file <- tiledb_vfs_open(uri, "READ")
-    vec <- tiledb_vfs_read(file, 0, n)
-    tiledb_vfs_close(file)
+    fh <- tiledb_vfs_open(uri, "READ")
+    vec <- tiledb_vfs_read(fh, 0, n)
+    tiledb_vfs_close(fh)
+    libtiledb_vfs_fh_free(fh)
     ## The gzcon(rawConnection()) idea is from https://stackoverflow.com/a/58136567/508431
     ## The packBits(intToBits()) part on the int vector read is from a friend via slack
     obj <- unserialize(gzcon(rawConnection(packBits(intToBits(vec)))))
@@ -420,15 +421,17 @@ tiledb_vfs_serialize <- function(obj, uri, vfs = tiledb_get_vfs()) {
     saveRDS(obj, tf)
 
     ## Read local file
-    file <- tiledb_vfs_open(tf, "READ")
-    vec <- tiledb_vfs_read(file, 0, tiledb_vfs_file_size(tf))
-    tiledb_vfs_close(file)
+    fh <- tiledb_vfs_open(tf, "READ")
+    vec <- tiledb_vfs_read(fh, 0, tiledb_vfs_file_size(tf))
+    tiledb_vfs_close(fh)
+    libtiledb_vfs_fh_free(fh)
 
     ## Now write 'vec' to the target URI
-    file <- tiledb_vfs_open(uri, "WRITE")
-    tiledb_vfs_write(file, vec)
-    tiledb_vfs_sync(file)
-    tiledb_vfs_close(file)
+    fh <- tiledb_vfs_open(uri, "WRITE")
+    tiledb_vfs_write(fh, vec)
+    tiledb_vfs_sync(fh)
+    tiledb_vfs_close(fh)
+    libtiledb_vfs_fh_free(fh)
 
     unlink(tf)
     invisible(uri)

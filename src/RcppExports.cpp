@@ -2847,6 +2847,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_vfs_fh_free
+void libtiledb_vfs_fh_free(XPtr<vfs_fh_t> fhxp);
+RcppExport SEXP _tiledb_libtiledb_vfs_fh_free(SEXP fhxpSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<vfs_fh_t> >::type fhxp(fhxpSEXP);
+    libtiledb_vfs_fh_free(fhxp);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_stats_enable
 void libtiledb_stats_enable();
 RcppExport SEXP _tiledb_libtiledb_stats_enable() {
@@ -3783,6 +3793,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_vfs_dir_size", (DL_FUNC) &_tiledb_libtiledb_vfs_dir_size, 2},
     {"_tiledb_libtiledb_vfs_ls", (DL_FUNC) &_tiledb_libtiledb_vfs_ls, 2},
     {"_tiledb_libtiledb_vfs_copy_file", (DL_FUNC) &_tiledb_libtiledb_vfs_copy_file, 3},
+    {"_tiledb_libtiledb_vfs_fh_free", (DL_FUNC) &_tiledb_libtiledb_vfs_fh_free, 1},
     {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
     {"_tiledb_libtiledb_stats_reset", (DL_FUNC) &_tiledb_libtiledb_stats_reset, 0},

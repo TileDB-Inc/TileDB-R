@@ -4324,11 +4324,15 @@ XPtr<vfs_fh_t> libtiledb_vfs_open(XPtr<tiledb::Context> ctxxp, XPtr<tiledb::VFS>
   check_xptr_tag<tiledb::VFS>(vfsxp);
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
   std::shared_ptr<tiledb_vfs_t> vfs = vfsxp.get()->ptr();
+#if TILEDB_VERSION >= TileDB_Version(2,15,0)
+  tiledb_vfs_fh_handle_t *fh = nullptr;
+#else
   tiledb_vfs_fh_t *fh = nullptr;
+#endif
   tiledb_vfs_mode_t vfsmode = _string_to_tiledb_vfs_mode_t(mode);
   tiledb_vfs_open(ctx.get(), vfs.get(), uri.c_str(), vfsmode, &fh);
   XPtr<vfs_fh_t> ptr = make_xptr<vfs_fh_t>(new vfs_fh_t);
-  ptr->fh = static_cast<void*>(fh);
+  ptr->fh = fh;
   return ptr;
 }
 
@@ -4337,7 +4341,7 @@ void libtiledb_vfs_close(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh) {
   check_xptr_tag<tiledb::Context>(ctxxp);
   check_xptr_tag<vfs_fh_t>(fh);
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
-  tiledb_vfs_close(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh));
+  tiledb_vfs_close(ctx.get(), fh->fh);
 }
 
 // [[Rcpp::export]]
@@ -4346,8 +4350,7 @@ void libtiledb_vfs_write(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh,
   check_xptr_tag<tiledb::Context>(ctxxp);
   check_xptr_tag<vfs_fh_t>(fh);
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
-  tiledb_vfs_write(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh),
-                   &(vec[0]), vec.size()*sizeof(int));
+  tiledb_vfs_write(ctx.get(), fh->fh, &(vec[0]), vec.size()*sizeof(int));
 }
 
 // [[Rcpp::export]]
@@ -4359,7 +4362,7 @@ Rcpp::IntegerVector libtiledb_vfs_read(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_
   std::int64_t offs = fromInteger64(offset);
   std::int64_t nb = fromInteger64(nbytes);
   Rcpp::IntegerVector buf(nb/4);
-  tiledb_vfs_read(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh), offs, &(buf[0]), nb);
+  tiledb_vfs_read(ctx.get(), fh->fh, offs, &(buf[0]), nb);
   return buf;
 }
 
@@ -4368,7 +4371,7 @@ void libtiledb_vfs_sync(XPtr<tiledb::Context> ctxxp, XPtr<vfs_fh_t> fh) {
   check_xptr_tag<tiledb::Context>(ctxxp);
   check_xptr_tag<vfs_fh_t>(fh);
   std::shared_ptr<tiledb_ctx_t> ctx = ctxxp.get()->ptr();
-  tiledb_vfs_sync(ctx.get(), static_cast<tiledb_vfs_fh_t*>(fh->fh));
+  tiledb_vfs_sync(ctx.get(), fh->fh);
 }
 
 // [[Rcpp::export]]
@@ -4388,6 +4391,17 @@ std::string libtiledb_vfs_copy_file(XPtr<tiledb::VFS> vfs, std::string old_uri, 
     check_xptr_tag<tiledb::VFS>(vfs);
     vfs->copy_file(old_uri, new_uri);
     return new_uri;
+}
+
+// [[Rcpp::export]]
+void libtiledb_vfs_fh_free(XPtr<vfs_fh_t> fhxp) {
+    check_xptr_tag<vfs_fh_t>(fhxp);
+    spdl::trace("[libtiledb_vfs_clear_handle] entered");
+    vfs_fh_t* strptr = fhxp.get();
+#if TILEDB_VERSION >= TileDB_Version(2,15,0)
+    tiledb_vfs_fh_handle_t *fh = strptr->fh;
+    tiledb_vfs_fh_free(&fh);
+#endif
 }
 
 /**
