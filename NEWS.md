@@ -1,5 +1,9 @@
 # ongoing development
 
+## Bug Fixes
+
+* When using serializing via VFS (as added in #608) the filehandles is now properly released (#619)
+
 ## Build and Test Systems
 
 * Some tests were refactored slightly for greater robustness (#618)
