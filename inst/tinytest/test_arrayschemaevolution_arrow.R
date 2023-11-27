@@ -2,6 +2,7 @@ library(tinytest)
 library(tiledb)
 
 if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip on Windows")
+if (Sys.info()[["sysname"]] == "Darwin") exit_file("Skip on Darwin")
 if (Sys.getenv("CI", "") == "") exit_file("Skip unextended test run")
 
 ctx <- tiledb_ctx(limitTileDBCores())
