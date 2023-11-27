@@ -17,7 +17,7 @@ set -e
 
 CRAN=${CRAN:-"https://cloud.r-project.org"}
 OS=$(uname -s)
-RVER=${RVER:-"4.3.0"}
+RVER=${RVER:-"4.3.2"}
 
 ## Optional drat repos, unset by default
 DRAT_REPOS=${DRAT_REPOS:-""}
@@ -202,7 +202,7 @@ BootstrapLinuxOptions() {
 
 BootstrapMac() {
     # Install from latest CRAN binary build for OS X
-    wget ${CRAN}/bin/macosx/big-sur-x86_64/base/R-${RVER}-x86_64.pkg  -O /tmp/R-latest.pkg
+    wget -q ${CRAN}/bin/macosx/big-sur-x86_64/base/R-${RVER}-x86_64.pkg  -O /tmp/R-latest.pkg
 
     echo "Installing OS X binary package for R"
     sudo installer -pkg /tmp/R-latest.pkg -target /
@@ -383,7 +383,9 @@ RunTests() {
     if [[ "$_R_CHECK_CRAN_INCOMING_" == "FALSE" ]]; then
         echo "(CRAN incoming checks are off)"
     fi
-    _R_CHECK_CRAN_INCOMING_=${_R_CHECK_CRAN_INCOMING_} R CMD check "${FILE}" ${R_CHECK_ARGS} ${R_CHECK_INSTALL_ARGS}
+    _R_CHECK_TESTS_NLINES_=${_R_CHECK_TESTS_NLINES_} \
+    _R_CHECK_CRAN_INCOMING_=${_R_CHECK_CRAN_INCOMING_} \
+    R CMD check "${FILE}" ${R_CHECK_ARGS} ${R_CHECK_INSTALL_ARGS}
 
     if [[ -n "${WARNINGS_ARE_ERRORS}" ]]; then
         if DumpLogsByExtension "00check.log" | grep -q WARNING; then
