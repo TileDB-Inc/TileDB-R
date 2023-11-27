@@ -1,5 +1,11 @@
 # ongoing development
 
+* This release of the R package builds against [TileDB 2.18.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.0) and [TileDB 2.18.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.1), , and has also been tested against earlier releases as well as the development version (#620,#621)
+
+## Improvements
+
+* Use of TileDB Embedded was upgraded to release 2.18.0 (#620) and 2.18.1 (#621)
+
 ## Bug Fixes
 
 * When using serializing via VFS (as added in #608) the filehandles is now properly released (#619)
