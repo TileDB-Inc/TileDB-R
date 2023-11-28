@@ -215,13 +215,24 @@ if test x"${have_tiledb}" = x"no"; then
         if test x"${have_cmake}" != x"yes"; then
             AC_MSG_ERROR([please install 'cmake'])
         fi
+        AC_DEFUN([AC_PROG_CURL], [AC_CHECK_PROG(have_curl,curl,yes)])
+        AC_PROG_CURL
+        if test x"${have_curl}" != x"yes"; then
+            AC_MSG_ERROR([please install 'curl'])
+        fi
         AC_DEFUN([AC_PROG_GIT], [AC_CHECK_PROG(have_git,git,yes)])
         AC_PROG_GIT
         if test x"${have_git}" != x"yes"; then
             AC_MSG_ERROR([please install 'git'])
         fi
         AC_MSG_RESULT([installing TileDB via building locally...])
-        tools/buildTileDB.sh
+        if test x"${TILEDB_LIB_URL}" != x; then
+            AC_MSG_RESULT([using ${TILEDB_LIB_URL} ...])
+            tools/buildTileDB.sh ${TILEBD_LIB_URL}
+        else
+            AC_MSG_RESULT([using default url ...])
+            tools/buildTileDB.sh default
+        fi
 
     ## case two: download considered
     ##   - on macOS or Linux a 'fast and slim' build with external (pinned) library
