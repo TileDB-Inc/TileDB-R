@@ -649,6 +649,7 @@ LIBOBJS
 FILESYSTEM_HEADER_MISSSING
 CXX17_MACOS
 have_git
+have_curl
 have_cmake
 TILEDB_LIB_URL
 TILEDB_SILENT_BUILD
@@ -6210,6 +6211,52 @@ fi
             as_fn_error $? "please install 'cmake'" "$LINENO" 5
         fi
 
+        # Extract the first word of "curl", so it can be a program name with args.
+set dummy curl; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_prog_have_curl+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  if test -n "$have_curl"; then
+  ac_cv_prog_have_curl="$have_curl" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_prog_have_curl="yes"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+have_curl=$ac_cv_prog_have_curl
+if test -n "$have_curl"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $have_curl" >&5
+printf "%s\n" "$have_curl" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+        if test x"${have_curl}" != x"yes"; then
+            as_fn_error $? "please install 'curl'" "$LINENO" 5
+        fi
+
         # Extract the first word of "git", so it can be a program name with args.
 set dummy git; ac_word=$2
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -6257,7 +6304,15 @@ fi
         fi
         { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: installing TileDB via building locally..." >&5
 printf "%s\n" "installing TileDB via building locally..." >&6; }
-        tools/buildTileDB.sh
+        if test x"${TILEDB_LIB_URL}" != x; then
+            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: using ${TILEDB_LIB_URL} ..." >&5
+printf "%s\n" "using ${TILEDB_LIB_URL} ..." >&6; }
+            tools/buildTileDB.sh ${TILEBD_LIB_URL}
+        else
+            { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: using default url ..." >&5
+printf "%s\n" "using default url ..." >&6; }
+            tools/buildTileDB.sh default
+        fi
 
     ## case two: download considered
     ##   - on macOS or Linux a 'fast and slim' build with external (pinned) library
