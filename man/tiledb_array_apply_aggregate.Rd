@@ -4,16 +4,21 @@
 \alias{tiledb_array_apply_aggregate}
 \title{Run an aggregate query on the given array and attribute}
 \usage{
-tiledb_array_apply_aggregate(array, attrname, operation, nullable = TRUE)
+tiledb_array_apply_aggregate(
+  array,
+  attrname,
+  operation = c("Count", "NullCount", "Min", "Max", "Mean", "Sum"),
+  nullable = TRUE
+)
 }
 \arguments{
+\item{array}{A TileDB Array object}
+
 \item{attrname}{The name of an attribute}
 
 \item{operation}{The name of aggregation operation}
 
 \item{nullable}{A boolean toggle whether the attribute is nullable}
-
-\item{qry}{A TileDB Query object}
 }
 \value{
 The value of the aggregation
