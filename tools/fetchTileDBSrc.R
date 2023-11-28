@@ -33,7 +33,7 @@ if (arg == "default") {
 if (!file.exists("tiledb.tar,gz")) {
     cat("Downloading", url, "\n")
     op <- options()
-    options(timeout=60)
+    options(timeout=180)
     download.file(url, "tiledb.tar.gz", quiet=TRUE)
     options(op)
 }
