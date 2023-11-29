@@ -2415,6 +2415,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_query_apply_aggregate
+SEXP libtiledb_query_apply_aggregate(XPtr<tiledb::Query> query, std::string attribute_name, std::string operator_name, bool nullable);
+RcppExport SEXP _tiledb_libtiledb_query_apply_aggregate(SEXP querySEXP, SEXP attribute_nameSEXP, SEXP operator_nameSEXP, SEXP nullableSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
+    Rcpp::traits::input_parameter< std::string >::type attribute_name(attribute_nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type operator_name(operator_nameSEXP);
+    Rcpp::traits::input_parameter< bool >::type nullable(nullableSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_apply_aggregate(query, attribute_name, operator_name, nullable));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_query_condition
 XPtr<tiledb::QueryCondition> libtiledb_query_condition(XPtr<tiledb::Context> ctx);
 RcppExport SEXP _tiledb_libtiledb_query_condition(SEXP ctxSEXP) {
@@ -3758,6 +3772,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_get_schema", (DL_FUNC) &_tiledb_libtiledb_query_get_schema, 2},
     {"_tiledb_libtiledb_query_stats", (DL_FUNC) &_tiledb_libtiledb_query_stats, 1},
     {"_tiledb_libtiledb_query_get_ctx", (DL_FUNC) &_tiledb_libtiledb_query_get_ctx, 1},
+    {"_tiledb_libtiledb_query_apply_aggregate", (DL_FUNC) &_tiledb_libtiledb_query_apply_aggregate, 4},
     {"_tiledb_libtiledb_query_condition", (DL_FUNC) &_tiledb_libtiledb_query_condition, 1},
     {"_tiledb_libtiledb_query_condition_init", (DL_FUNC) &_tiledb_libtiledb_query_condition_init, 5},
     {"_tiledb_libtiledb_query_condition_combine", (DL_FUNC) &_tiledb_libtiledb_query_condition_combine, 3},

@@ -177,3 +177,33 @@ tiledb_array_has_enumeration <- function(arr) {
     }
     return(libtiledb_array_has_enumeration_vector(ctx@ptr, arr@ptr))
 }
+
+##' Run an aggregate query on the given array and attribute
+##'
+##' @param array A TileDB Array object
+##' @param attrname The name of an attribute
+##' @param operation The name of aggregation operation
+##' @param nullable A boolean toggle whether the attribute is nullable
+##' @return The value of the aggregation
+##' @export
+tiledb_array_apply_aggregate <- function(array, attrname,
+                                         operation = c("Count", "NullCount", "Min", "Max",
+                                                       "Mean", "Sum"),
+                                         nullable = TRUE) {
+    stopifnot("The 'query' argument must be a TileDB Array object" = is(array, "tiledb_array"),
+              "The 'attrname' argument must be character" = is.character(attrname),
+              "The 'operation' argument must be character" = is.character(operation),
+              "The 'nullable' argument must be logical" = is.logical(nullable))
+
+    operation <- match.arg(operation)
+
+    if (tiledb_array_is_open(array))
+        array <- tiledb_array_close(array)
+
+    query <- tiledb_query(array, "READ")
+
+    if (! tiledb_query_get_layout(query) %in% c("UNORDERED", "GLOBAL_ORDER"))
+        query <- tiledb_query_set_layout(query, "UNORDERED")
+
+    libtiledb_query_apply_aggregate(query@ptr, attrname, operation, nullable)
+}

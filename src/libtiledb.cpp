@@ -3881,6 +3881,112 @@ XPtr<tiledb::Context> libtiledb_query_get_ctx(XPtr<tiledb::Query> query) {
     return make_xptr<tiledb::Context>(new tiledb::Context(ctx));
 }
 
+template <typename T>
+SEXP apply_unary_aggregate(XPtr<tiledb::Query> query, std::string operator_name, bool nullable = false) {
+#if TILEDB_VERSION >= TileDB_Version(2,18,0)
+    T result = 0;
+    std::vector<uint8_t> nulls = { 0 };
+    uint64_t size = 1;
+    query->set_data_buffer(operator_name, &result, size);
+    if (nullable) query->set_validity_buffer(operator_name, nulls);
+    query->submit();
+    SEXP res = Rcpp::wrap(result);
+    return res;
+#else
+    return Rcpp::wrap(R_NaReal);
+#endif
+}
+
+// [[Rcpp::export]]
+SEXP libtiledb_query_apply_aggregate(XPtr<tiledb::Query> query,
+                                     std::string attribute_name,
+                                     std::string operator_name,
+                                     bool nullable = false) {
+#if TILEDB_VERSION >= TileDB_Version(2,18,0)
+    check_xptr_tag<tiledb::Query>(query);
+    tiledb::QueryChannel channel = tiledb::QueryExperimental::get_default_channel(*query.get());
+    if (operator_name == "Sum") {
+        tiledb::ChannelOperation operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::SumOperator>(*query.get(), attribute_name);
+        channel.apply_aggregate(operator_name, operation);
+    } else if (operator_name == "Min") {
+        tiledb::ChannelOperation operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::MinOperator>(*query.get(), attribute_name);
+        channel.apply_aggregate(operator_name, operation);
+    } else if (operator_name == "Max") {
+        tiledb::ChannelOperation operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::MaxOperator>(*query.get(), attribute_name);
+        channel.apply_aggregate(operator_name, operation);
+    } else if (operator_name == "Mean") {
+        tiledb::ChannelOperation operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::MeanOperator>(*query.get(), attribute_name);
+        channel.apply_aggregate(operator_name, operation);
+    } else if (operator_name == "NullCount") {
+        tiledb::ChannelOperation operation = tiledb::QueryExperimental::create_unary_aggregate<tiledb::NullCountOperator>(*query.get(), attribute_name);
+        channel.apply_aggregate(operator_name, operation);
+    } else if (operator_name == "Count") {
+        channel.apply_aggregate(operator_name, tiledb::CountOperation());
+    } else {
+        Rcpp::stop("Invalid aggregation operator '%s' specified.", operator_name.c_str());
+    }
+    std::vector<uint8_t> nulls = { 0 };
+    uint64_t size = 1;
+    if (operator_name == "NullCount" || operator_name == "Count") {
+        // Count and null count take uint64_t.
+        uint64_t result = 0;
+        query->set_data_buffer(operator_name, &result, size);
+        if (nullable && operator_name != "NullCount") {   // no validity buffer for NullCount
+            query->set_validity_buffer(operator_name, nulls);
+        }
+        query->submit();
+        return Rcpp::wrap(result);
+    } else if (operator_name == "Mean") {
+        // Mean always takes in a double.
+        return apply_unary_aggregate<double>(query, operator_name, nullable);
+    } else if (operator_name == "Sum") {
+        // Sum will take int64_t for signed integers, uint64_t for unsigned integers
+        // and double for floating point values.
+        tiledb::Context ctx = query->ctx();
+        auto arr = query->array();
+        auto sch = tiledb::ArraySchema(ctx, arr.uri());
+        auto attr = tiledb::Attribute(sch.attribute(attribute_name));
+        std::string type_name = _tiledb_datatype_to_string(attr.type());
+        if (type_name == "INT8" || type_name == "INT16" ||
+            type_name == "INT32" || type_name == "INT64") {
+            return apply_unary_aggregate<int64_t>(query, operator_name, nullable);
+        } else if (type_name == "UINT8" || type_name == "UINT16" ||
+                   type_name == "UINT32" || type_name == "UINT64") {
+            return apply_unary_aggregate<uint64_t>(query, operator_name, nullable);
+        } else if (type_name == "FLOAT32" || type_name == "FLOAT64") {
+            return apply_unary_aggregate<double>(query, operator_name, nullable);
+        } else {
+            Rcpp::stop("'Sum' operator not valid for attribute '%s' of type '%s'",
+                       attribute_name, type_name);
+        }
+    } else if (operator_name == "Min" || operator_name == "Max") {
+        // Min/max will take whatever the datatype of the column is.
+        tiledb::Context ctx = query->ctx();
+        auto arr = query->array();
+        auto sch = tiledb::ArraySchema(ctx, arr.uri());
+        auto attr = tiledb::Attribute(sch.attribute(attribute_name));
+        std::string type_name = _tiledb_datatype_to_string(attr.type());
+        switch (attr.type()) {
+        case TILEDB_INT8:    return apply_unary_aggregate<int16_t>(query, operator_name, nullable);  // int8_t bites char
+        case TILEDB_INT16:   return apply_unary_aggregate<int16_t>(query, operator_name, nullable);
+        case TILEDB_INT32:   return apply_unary_aggregate<int32_t>(query, operator_name, nullable);
+        case TILEDB_INT64:   return apply_unary_aggregate<int64_t>(query, operator_name, nullable);
+        case TILEDB_UINT8:   return apply_unary_aggregate<uint16_t>(query, operator_name, nullable); // uint8_t bites char
+        case TILEDB_UINT16:  return apply_unary_aggregate<uint16_t>(query, operator_name, nullable);
+        case TILEDB_UINT32:  return apply_unary_aggregate<uint32_t>(query, operator_name, nullable);
+        case TILEDB_UINT64:  return apply_unary_aggregate<uint64_t>(query, operator_name, nullable);
+        case TILEDB_FLOAT32: return apply_unary_aggregate<float>(query, operator_name, nullable);
+        case TILEDB_FLOAT64: return apply_unary_aggregate<double>(query, operator_name, nullable);
+        default: Rcpp::stop("'%s' is not defined for attribute '%s' of type '%s'",
+                            operator_name, attribute_name, type_name);
+        }
+    } else {
+        Rcpp::stop("'%s' is not implemented for '%s'", operator_name, attribute_name);
+    }
+#else
+    return Rcpp::wrap(R_NaReal);
+#endif
+}
 
 /**
  * Query Condition

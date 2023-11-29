@@ -8,7 +8,7 @@ ver <- dcf[[1, "version"]]
 if (!file.exists("../windows/rwinlib-tiledb/include/tiledb/tiledb.h")) {
     if (getRversion() < "4") stop("This package requires Rtools40 or newer")
     op <- options()
-    options(timeout=60)                 # CRAN request to have patient download settings
+    options(timeout=180)                # CRAN request to have patient download settings
     download.file(sprintf("https://github.com/TileDB-Inc/rwinlib-tiledb/archive/v%s.zip", ver), "lib.zip", quiet = TRUE)
     options(op)
     dir.create("../windows", showWarnings = FALSE)
