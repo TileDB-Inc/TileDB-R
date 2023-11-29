@@ -1,10 +1,12 @@
 # ongoing development
 
-* This release of the R package builds against [TileDB 2.18.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.0) and [TileDB 2.18.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.1), , and has also been tested against earlier releases as well as the development version (#620,#621)
+* This release of the R package builds against [TileDB 2.18.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.0), [TileDB 2.18.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.1),  [TileDB 2.18.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.2) and has also been tested against earlier releases as well as the development version (#620,#621,#624)
 
 ## Improvements
 
-* Use of TileDB Embedded was upgraded to release 2.18.0 (#620) and 2.18.1 (#621)
+* Use of TileDB Embedded was upgraded to release 2.18.0 (#620), 2.18.1 (#621), and 2.18.2 (#624)
+
+* Support for Aggregates has been added (#623)
 
 ## Bug Fixes
 
@@ -13,6 +15,8 @@
 ## Build and Test Systems
 
 * Some tests were refactored slightly for greater robustness (#618)
+
+* Support for download and build with an external TileDB Core source tarball has been added (#622)
 
 ## Documentation
 
