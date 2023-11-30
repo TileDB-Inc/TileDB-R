@@ -35,6 +35,7 @@ if [ ! -d tiledb-src ]; then
         mkdir tiledb-src
         tar xaf tiledb.tar.gz -C tiledb-src --strip-components 1
         rm tiledb.tar.gz
+	ls -a tiledb-src
     fi
 fi
 
