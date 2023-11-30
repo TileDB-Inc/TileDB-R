@@ -4,7 +4,6 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tiledb?color=brightgreen)](https://cran.r-project.org/package=tiledb)
 [![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
 [![r-universe](https://tiledb-inc.r-universe.dev/badges/tiledb)](https://tiledb-inc.r-universe.dev/tiledb)
-[![Anaconda](https://anaconda.org/conda-forge/r-tiledb/badges/version.svg)](https://anaconda.org/conda-forge/r-tiledb)
 
 # <a href="https://tiledb.com/"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
 

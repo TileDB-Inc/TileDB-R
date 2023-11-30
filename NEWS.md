@@ -20,7 +20,7 @@
 
 ## Documentation
 
-* The README now contains badges for the r-universe and Anaconda versions (in addition to CRAN) (#617)
+* The README now contains a badge for the r-universe version (in addition to CRAN) (#617)
 
 
 # tiledb 0.21.3
