@@ -8,8 +8,8 @@
 
 # <a href="https://tiledb.com/"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
 
-The TileDB R package offers an [R](https://www.r-project.org/) interface to the [storage
-engine](https://github.com/TileDB-Inc/TileDB) of [TileDB](https://tiledb.com/).
+The TileDB R package offers an [R](https://www.r-project.org/) interface to
+the [modern database](https://github.com/TileDB-Inc/TileDB) by [TileDB](https://tiledb.com/).
 
 
 ## Documentation
@@ -40,7 +40,7 @@ The most recent released version can be installed from
     > remotes::install_github("TileDB-Inc/TileDB-R")
     ...
     > library(tiledb)
-    TileDB R 0.21.3 with TileDB Embedded 2.17.4 on Ubuntu 22.04.
+    TileDB R 0.22.0 with TileDB Embedded 2.18.2 on Ubuntu 23.10.
     See https://tiledb.com for more information about TileDB.
     > help(package=tiledb)
 
