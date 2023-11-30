@@ -466,6 +466,9 @@
     <loc>/reference/tiledb_array.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_array_apply_aggregate.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_array_close.html</loc>
   </url>
   <url>

@@ -1,11 +1,11 @@
 Package: tiledb
 Type: Package
-Version: 0.21.3.3
-Title: Universal Storage Engine for Sparse and Dense Multidimensional Arrays
+Version: 0.22.0
+Title: Modern Database Engine for Multi-Modal Data via Sparse and Dense Multidimensional Arrays
 Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
  person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
-Description: The universal storage engine 'TileDB' introduces a
- powerful on-disk format for multi-dimensional arrays. It supports
+Description: The modern database 'TileDB' introduces a powerful on-disk
+ format for multi-modal data based on dimensional arrays. It supports
  dense and sparse arrays, dataframes and key-values stores, cloud
  storage ('S3', 'GCS', 'Azure'), chunked arrays, multiple compression,
  encryption and checksum filters, uses a fully multi-threaded
@@ -18,12 +18,13 @@ License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
 SystemRequirements: A C++17 compiler is required, and on macOS
- compilation for version 10.14 is required. Optionally cmake
- (only when TileDB source build selected), git (only when TileDB
- source build selected); on x86_64 and M1 platforms pre-built
- TileDB Embedded libraries are available at GitHub and are used
- if no TileDB installation is detected, and no other option to
- build or download was specified by the user.
+ compilation for version 10.14 is required. Optionally cmake (only
+ when TileDB source build selected), curl (only when TileDB source
+ build selected)), and git (only when TileDB source build selected);
+ on x86_64 and M1 platforms pre-built TileDB Embedded libraries are
+ available at GitHub and are used if no TileDB installation is
+ detected, and no other option to build or download was specified by
+ the user.
 Imports: methods, Rcpp (>= 1.0.8), nanotime, spdl
 LinkingTo: Rcpp, RcppInt64
 Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble, arrow
