@@ -20,7 +20,7 @@ fi
 cd src
 
 if [ ! -f tiledb.tar.gz ]; then
-    echo "Downloading ${url} as tiledb.tar.gz ..."
+    echo -n "Downloading ${url}: "
     ${R_HOME}/bin/Rscript ../tools/fetchTileDBSrc.R ${url}
 fi
 
@@ -46,9 +46,7 @@ fi
 ## Build
 mkdir build
 cd build
-../tiledb-src/bootstrap --force-build-all-deps --enable-serialization
-## NB: temporarily disabling and s3
-#../tiledb-src/bootstrap --force-build-all-deps
+../tiledb-src/bootstrap --force-build-all-deps --enable-s3 --enable-serialization
 make -j 2
 make -C tiledb install
 cd ..

@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.21.1])
+AC_INIT([TileDB-R],[0.22.0])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -140,16 +140,18 @@ fi
 ## (and sets by autconf standards the 'with_download' variable)
 AC_ARG_WITH([download],
             AS_HELP_STRING([--with-download=URL],[URL override for TileDB library to download]),
-            [TILEDB_LIB_URL="${with_download}"],
+            [TILEDB_LIB_URL="${with_download}"
+	     enable_building="yes"],
             [])
 
 ## Sanity checks
 if test ! -z "${with_tiledb}" -a x"${with_download}" = x"yes"; then
     AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling download of TileDB library.])
 fi
-if test ! -z "${with_download}" -a x"${enable_building}" = x"yes"; then
-    AC_MSG_ERROR([Conflicting choice of enabling download of TileDB and enabling building of TileDB.])
-fi
+## -- We allow this now as --with-download implies enable_building
+##if test ! -z "${with_download}" -a x"${enable_building}" = x"yes"; then
+##    AC_MSG_ERROR([Conflicting choice of enabling download of TileDB and enabling building of TileDB.])
+##fi
 AC_SUBST([TILEDB_LIB_URL], "${with_download}")
 
 ## Setup
@@ -227,11 +229,13 @@ if test x"${have_tiledb}" = x"no"; then
         fi
         AC_MSG_RESULT([installing TileDB via building locally...])
         if test x"${TILEDB_LIB_URL}" != x; then
-            AC_MSG_RESULT([using ${TILEDB_LIB_URL} ...])
-            tools/buildTileDB.sh ${TILEBD_LIB_URL}
+            #AC_MSG_RESULT([using ${TILEDB_LIB_URL} ...])
+            ## Important: unset LDFLAGS to not leak -ltiledb from pkg-config
+            LDFLAGS="${origLDFLAGS}" tools/buildTileDB.sh ${TILEDB_LIB_URL}
         else
-            AC_MSG_RESULT([using default url ...])
-            tools/buildTileDB.sh default
+            #AC_MSG_RESULT([using default url ...])
+            ## Important: unset LDFLAGS to not leak -ltiledb from pkg-config
+            LDFLAGS="${origLDFLAGS}" tools/buildTileDB.sh default
         fi
 
     ## case two: download considered
@@ -240,14 +244,8 @@ if test x"${have_tiledb}" = x"no"; then
     ##   - otherwise error
     ##   - but also check we're on x86_64 before downloading
     else
-        ## download URL given by user
-        if test x"${TILEDB_LIB_URL}" != x; then
-            AC_MSG_RESULT([downloading given TileDB library...])
-            ## we use the source download which takes this argument if one given
-            ## and downloads as the same file name
-            cd inst && ../tools/fetchTileDB.sh url ${TILEDB_LIB_URL} && cd ..
 
-        elif test x"${machine}" = x"x86_64" && test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
+        if test x"${machine}" = x"x86_64" && test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
             AC_MSG_RESULT([downloading x86_64 TileDB library...])
 
             osrel=`tools/getOsRelease.sh`

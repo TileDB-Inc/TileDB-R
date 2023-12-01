@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 if [ $# -lt 1 ] || { [ "$1" != "linux" ] && [ "$1" != "macos" ] && [ "$1" != "url" ]; }; then
     echo "Usage: fetchTileDB.sh (linux|macos|url) (givenurl|machine)"
     echo "where 'givenurl' and 'machine' are optional"
@@ -18,15 +20,14 @@ if [ ! -d tinytest ]; then
     exit 1
 fi
 
+## CRAN wants us permit different R binaries via different PATHs
+: ${R_HOME=`R RHOME`}
+
 tarball="tiledb.tar.gz"
 
 ## Download if need be
 if [ ! -f "${tarball}" ]; then
     ##echo "downloading '${tarball}'"
-    ## CRAN wants us permit different R binaries via different PATHs
-    if [ x"${R_HOME}" = x ]; then
-        R_HOME=`R RHOME`
-    fi
     ${R_HOME}/bin/Rscript ../tools/fetchTileDBLib.R ${os} ${url}
 fi
 

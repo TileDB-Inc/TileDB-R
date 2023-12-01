@@ -1,3 +1,10 @@
+# Ongoing development
+
+## Build and Test Systems
+
+* Builds from TileDB Core non-release tarballs are now supported via new configure option (#627)
+
+
 # tiledb 0.22.0
 
 * This release of the R package builds against [TileDB 2.18.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.0), [TileDB 2.18.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.1),  [TileDB 2.18.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.2) and has also been tested against earlier releases as well as the development version (#620,#621,#624)
