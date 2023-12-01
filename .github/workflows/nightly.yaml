@@ -17,20 +17,22 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: SessionInfo
-        run: R -q -e 'sessionInfo()'
+        run: Rscript -e 'sessionInfo()'
 
       - name: System Dependencies
         # this particular package needs cmake and curl and git to build
         run: apt update -qq && apt install --yes --no-install-recommends cmake curl git
 
       - name: Package Dependencies
-        run: R -q -e 'remotes::install_deps(".", dependencies=TRUE)'
+        run: Rscript -e 'remotes::install_deps(".", dependencies=TRUE)'
 
       - name: Build Package
         run: R CMD build --no-build-vignettes --no-manual .
 
       - name: Install Package
+        # running an install step gives better logging on standard out than R CMD check which tucks this away
         run: R CMD INSTALL --configure-args="--with-download=https://github.com/TileDB-Inc/TileDB/archive/refs/heads/dev.zip" $(ls -1tr *.tar.gz | tail -1)
 
-      #- name: Check Package
-      #  run: R CMD check --no-vignettes --no-manual $(ls -1tr *.tar.gz | tail -1)
+      - name: Run Tests
+        # given that the package is installed and uses tinytest, we can easily run its tests
+        run: Rscript -e 'tinytest::test_package("tiledb")'
