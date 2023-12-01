@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 if [ $# -lt 1 ] || { [ "$1" != "linux" ] && [ "$1" != "macos" ] && [ "$1" != "url" ]; }; then
     echo "Usage: fetchTileDB.sh (linux|macos|url) (givenurl|machine)"
     echo "where 'givenurl' and 'machine' are optional"
@@ -18,34 +20,32 @@ if [ ! -d tinytest ]; then
     exit 1
 fi
 
+## CRAN wants us permit different R binaries via different PATHs
+: ${R_HOME=`R RHOME`}
+
 tarball="tiledb.tar.gz"
 
 ## Download if need be
 if [ ! -f "${tarball}" ]; then
     ##echo "downloading '${tarball}'"
-    ## CRAN wants us permit different R binaries via different PATHs
-    if [ x"${R_HOME}" = x ]; then
-        R_HOME=`R RHOME`
-    fi
     ${R_HOME}/bin/Rscript ../tools/fetchTileDBLib.R ${os} ${url}
 fi
 
 ## Clean-up just in case
-#if [ -d tiledb ]; then
-#    rm -rf tiledb
-#fi
+if [ -d tiledb ]; then
+    rm -rf tiledb
+fi
 
 ## Expand tarball
-#if [ ! -d tiledb ]; then
-#    mkdir tiledb
-#    tar vxzf ${tarball} -C tiledb
-#    rm ${tarball}
-#    ls -a tiledb
-#fi
+if [ ! -d tiledb ]; then
+    mkdir tiledb
+    tar xzf ${tarball} -C tiledb
+    rm ${tarball}
+fi
 
 ## Copy tiledb/lib/ so that rpath relative path also works from
 ## source i.e. before the inst/ directory tree is installed
-#if [ ! -d ../tiledb/lib ]; then
-#    mkdir -p ../tiledb/lib/
-#    cp -a tiledb/lib/* ../tiledb/lib/
-#fi
+if [ ! -d ../tiledb/lib ]; then
+    mkdir -p ../tiledb/lib/
+    cp -a tiledb/lib/* ../tiledb/lib/
+fi
