@@ -9,30 +9,37 @@ on:
 jobs:
   dev:
     runs-on: ubuntu-latest
-
     container:
       image: rocker/r2u:latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: SessionInfo
         run: Rscript -e 'sessionInfo()'
-
       - name: System Dependencies
         # this particular package needs cmake and curl and git to build
         run: apt update -qq && apt install --yes --no-install-recommends cmake curl git
-
       - name: Package Dependencies
         run: Rscript -e 'remotes::install_deps(".", dependencies=TRUE)'
-
       - name: Build Package
         run: R CMD build --no-build-vignettes --no-manual .
-
       - name: Install Package
         # running an install step gives better logging on standard out than R CMD check which tucks this away
         run: R CMD INSTALL --configure-args="--with-download=https://github.com/TileDB-Inc/TileDB/archive/refs/heads/dev.zip" $(ls -1tr *.tar.gz | tail -1)
-
       - name: Run Tests
         # given that the package is installed and uses tinytest, we can easily run its tests
         run: Rscript -e 'tinytest::test_package("tiledb")'
+
+  create_issue_on_fail:
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    needs: test
+    if: failure() || cancelled()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Issue if Build Fails
+        uses: TileDB-Inc/github-actions/open-issue@main
+        with:
+          name: Nightly Dev Build
+          label: bug,nightly
+          assignee: eddelbuettel
