@@ -20,7 +20,7 @@ fi
 cd src
 
 if [ ! -f tiledb.tar.gz ]; then
-    echo "Downloading ${url} as tiledb.tar.gz ..."
+    echo -n "Downloading ${url}: "
     ${R_HOME}/bin/Rscript ../tools/fetchTileDBSrc.R ${url}
 fi
 
@@ -35,7 +35,6 @@ if [ ! -d tiledb-src ]; then
         mkdir tiledb-src
         tar xaf tiledb.tar.gz -C tiledb-src --strip-components 1
         rm tiledb.tar.gz
-	ls -a tiledb-src
     fi
 fi
 
