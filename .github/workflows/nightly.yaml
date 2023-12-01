@@ -1,10 +1,10 @@
 name: nightly
 
 on:
-  #schedule:
-  #  - cron: "17 01 * * *"
+  schedule:
+    - cron: "21 01 * * *"
   workflow_dispatch:
-  push:
+  # push:
 
 jobs:
   dev:
