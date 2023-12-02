@@ -33,7 +33,7 @@ jobs:
     permissions:
       issues: write
     runs-on: ubuntu-latest
-    needs: test
+    needs: dev
     if: failure() || cancelled()
     steps:
       - uses: actions/checkout@v4
