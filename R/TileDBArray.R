@@ -63,6 +63,7 @@
 #' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
 #' @slot buffers An optional list with full pathnames of shared memory buffers to read data from
 #' @slot strings_as_factors An optional logical to convert character columns to factor type
+#' @slot keep_open An optional logical to not close after read or write
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
 setClass("tiledb_array",
@@ -85,6 +86,7 @@ setClass("tiledb_array",
                       return_as = "character",
                       query_statistics = "logical",
                       strings_as_factors = "logical",
+                      keep_open = "logical",
                       sil = "list",
                       dumpbuffers = "character",
                       buffers = "list",
@@ -135,6 +137,7 @@ setClass("tiledb_array",
 #' \sQuote{query_statistics} of the return object.
 #' @param strings_as_factors An optional logical to convert character columns to factor type; defaults
 #' to the value of \code{getOption("stringsAsFactors", FALSE)}.
+#' @param keep_open An optional logical to not close after read or write
 #' @param sil optional A list, by default empty to store schema information when query objects are
 #' parsed.
 #' @param dumpbuffers An optional character variable with a directory name (relative to
@@ -163,14 +166,15 @@ tiledb_array <- function(uri,
                          return_as = get_return_as_preference(),
                          query_statistics = FALSE,
                          strings_as_factors = getOption("stringsAsFactors", FALSE),
+                         keep_open = FALSE,
                          sil = list(),
                          dumpbuffers = character(),
                          buffers = list(),
                          ctx = tiledb_get_context()) {
-  stopifnot(`Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
-            `Argument 'uri' must be a string scalar` = !missing(uri) && is.scalar(uri, "character"),
-            `At most one argument of as.data.frame, as.matrix and as.array can be selected` = sum(as.data.frame, as.matrix, as.array) <= 1,
-            `Argument 'as.matrix' cannot be selected for sparse arrays` = !(isTRUE(is.sparse) && as.matrix))
+  stopifnot("Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
+            "Argument 'uri' must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
+            "At most one argument of as.data.frame, as.matrix and as.array can be selected" = sum(as.data.frame, as.matrix, as.array) <= 1,
+            "Argument 'as.matrix' cannot be selected for sparse arrays" = !(isTRUE(is.sparse) && as.matrix))
   query_type <- match.arg(query_type)
   spdl::debug("[tiledb_array] query is {}", query_type)
   if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
@@ -205,7 +209,7 @@ tiledb_array <- function(uri,
     }
   }
   is.sparse <- is_sparse_status
-  array_xptr <- libtiledb_array_close(array_xptr)
+  if (!keep_open) array_xptr <- libtiledb_array_close(array_xptr)
   new("tiledb_array",
       ctx = ctx,
       uri = uri,
@@ -226,6 +230,7 @@ tiledb_array <- function(uri,
       return_as = return_as,
       query_statistics = query_statistics,
       strings_as_factors = strings_as_factors,
+      keep_open = keep_open,
       sil = sil,
       dumpbuffers = dumpbuffers,
       buffers = buffers,
@@ -307,6 +312,7 @@ setMethod("show", signature = "tiledb_array",
      ,"  return_as          = '", object@return_as, "'\n"
      ,"  query_statistics   = ", if (object@query_statistics) "TRUE" else "FALSE", "\n"
      ,"  strings_as_factors = ", if (object@strings_as_factors) "TRUE" else "FALSE", "\n"
+     ,"  keep_open          = ", if (object@keep_open) "TRUE" else "FALSE", "\n"
      ,sep="")
 })
 
@@ -441,6 +447,11 @@ setValidity("tiledb_array", function(object) {
   if (!is.logical(object@strings_as_factors)) {
     valid <- FALSE
     msg <- c(msg, "The 'strings_as_factors' slot does not contain a logical value.")
+  }
+
+  if (!is.logical(object@keep_open)) {
+    valid <- FALSE
+    msg <- c(msg, "The 'keep_open' slot does not contain a logical value.")
   }
 
   if (valid) TRUE else msg
@@ -961,7 +972,7 @@ setMethod("[", "tiledb_array",
 
           ## close array
           if (status == "COMPLETE") {
-              libtiledb_array_close(arrptr)
+              if (!x@keep_open) libtiledb_array_close(arrptr)
               .pkgenv[["query_status"]] <- status
               finished <- TRUE
           }
@@ -1410,7 +1421,7 @@ setMethod("[<-", "tiledb_array",
     }
 
     qryptr <- libtiledb_query_submit(qryptr)
-    libtiledb_array_close(arrptr)
+    if (!x@keep_open) libtiledb_array_close(arrptr)
 
   }
   invisible(x)

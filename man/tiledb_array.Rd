@@ -26,6 +26,7 @@ tiledb_array(
   return_as = get_return_as_preference(),
   query_statistics = FALSE,
   strings_as_factors = getOption("stringsAsFactors", FALSE),
+  keep_open = FALSE,
   sil = list(),
   dumpbuffers = character(),
   buffers = list(),
@@ -96,6 +97,8 @@ query statistics are returned (as a JSON string) via the attribute
 
 \item{strings_as_factors}{An optional logical to convert character columns to factor type; defaults
 to the value of \code{getOption("stringsAsFactors", FALSE)}.}
+
+\item{keep_open}{An optional logical to not close after read or write}
 
 \item{sil}{optional A list, by default empty to store schema information when query objects are
 parsed.}

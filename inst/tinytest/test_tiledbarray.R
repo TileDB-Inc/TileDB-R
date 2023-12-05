@@ -1570,3 +1570,13 @@ sch <- tiledb::schema(arr)
 ver <- tiledb_array_schema_version(sch)
 expect_true(inherits(ver, "integer"))
 expect_true(is.finite(ver))
+
+## check for optional 'keep open'
+uri <- tempfile()
+fromDataFrame(mtcars, uri)
+arr <- tiledb_array(uri)
+res <- arr[]
+expect_false(tiledb_array_is_open(arr))
+arr <- tiledb_array(uri, keep_open=TRUE)
+res <- arr[]
+expect_true(tiledb_array_is_open(arr))

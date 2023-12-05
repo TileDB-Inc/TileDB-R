@@ -70,6 +70,8 @@ parsing queries.}
 
 \item{\code{strings_as_factors}}{An optional logical to convert character columns to factor type}
 
+\item{\code{keep_open}}{An optional logical to not close after read or write}
+
 \item{\code{ptr}}{External pointer to the underlying implementation}
 }}
 
