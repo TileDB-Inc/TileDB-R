@@ -972,10 +972,7 @@ setMethod("[", "tiledb_array",
 
           ## close array
           if (status == "COMPLETE") {
-              if (!x@keep_open) {
-                  message("Closing array")
-                  libtiledb_array_close(arrptr)
-              }
+              if (!x@keep_open) libtiledb_array_close(arrptr)
               .pkgenv[["query_status"]] <- status
               finished <- TRUE
           }
