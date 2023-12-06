@@ -1580,3 +1580,5 @@ expect_false(tiledb_array_is_open(arr))
 arr <- tiledb_array(uri, keep_open=TRUE)
 res <- arr[]
 expect_true(tiledb_array_is_open(arr))
+arr <- tiledb_array_close(arr)
+expect_false(tiledb_array_is_open(arr))
