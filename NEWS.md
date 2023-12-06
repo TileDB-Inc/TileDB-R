@@ -4,6 +4,10 @@
 
 * A TileDB Array can now be opened in 'keep open' mode for subsequent use without re-opening (#630)
 
+## Bug Fixes
+
+* The read buffer is now correctly sized when implementing VFS serialization (#631)
+
 ## Build and Test Systems
 
 * Builds from TileDB Core non-release tarballs are now supported via new configure option (#627)
