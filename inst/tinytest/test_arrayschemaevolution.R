@@ -117,19 +117,19 @@ run_int_col_test <- function(coltype) {
     arr[] <- df
 
     qc <-
-    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct == blue, arr))[]
+    res <- tiledb_array(uri, return_as="data.frame", query_condition = parse_query_condition(fct == blue, arr))[]
     expect_equal(nrow(res), 5)
 
-    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct == green, arr))[]
+    res <- tiledb_array(uri, return_as="data.frame", query_condition = parse_query_condition(fct == green, arr))[]
     expect_equal(nrow(res), 3)
 
-    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct == red, arr))[]
+    res <- tiledb_array(uri, return_as="data.frame", query_condition = parse_query_condition(fct == red, arr))[]
     expect_equal(nrow(res), 2)
 
-    res <- tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct != blue, arr))[]
+    res <- tiledb_array(uri, return_as="data.frame", query_condition = parse_query_condition(fct != blue, arr))[]
     expect_equal(nrow(res), 5)
 
-    expect_error(tiledb_array(uri, return_as="data.table", query_condition = parse_query_condition(fct > blue, arr))[])
+    expect_error(tiledb_array(uri, return_as="data.frame", query_condition = parse_query_condition(fct > blue, arr))[])
 
     unlink(uri)
 }

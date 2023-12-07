@@ -12,6 +12,8 @@
 
 * Builds from TileDB Core non-release tarballs are now supported via new configure option (#627)
 
+* Tests are more careful about using suggested packages only when present (#632)
+
 
 # tiledb 0.22.0
 
