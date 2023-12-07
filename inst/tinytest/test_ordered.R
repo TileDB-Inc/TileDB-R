@@ -85,17 +85,21 @@ expect_false(is.ordered(dfval$sex))
 expect_true(is.factor(dfval$sex))
 expect_equivalent(et, dfval)
 
-dtval <- tiledb_array(uri, return_as="data.table", extended=FALSE)[]
-expect_true(is.ordered(dtval$pclass))
-expect_false(is.ordered(dtval$sex))
-expect_true(is.factor(dtval$sex))
-expect_equivalent(et, dtval)
+if (requireNamespace("data.table", quietly=TRUE)) {
+    dtval <- tiledb_array(uri, return_as="data.table", extended=FALSE)[]
+    expect_true(is.ordered(dtval$pclass))
+    expect_false(is.ordered(dtval$sex))
+    expect_true(is.factor(dtval$sex))
+    expect_equivalent(et, dtval)
+}
 
-tbval <- tiledb_array(uri, return_as="tibble", extended=FALSE)[]
-expect_true(is.ordered(tbval$pclass))
-expect_false(is.ordered(tbval$sex))
-expect_true(is.factor(tbval$sex))
-expect_equivalent(et, tbval)
+if (requireNamespace("tibble", quietly=TRUE)) {
+    tbval <- tiledb_array(uri, return_as="tibble", extended=FALSE)[]
+    expect_true(is.ordered(tbval$pclass))
+    expect_false(is.ordered(tbval$sex))
+    expect_true(is.factor(tbval$sex))
+    expect_equivalent(et, tbval)
+}
 
 if (Sys.getenv("CI", "") != "" && requireNamespace("arrow", quietly=TRUE)) {
     arval <- tiledb_array(uri, return_as="arrow", extended=FALSE)[]
