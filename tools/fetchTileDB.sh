@@ -41,6 +41,7 @@ if [ ! -d tiledb ]; then
     mkdir tiledb
     tar xzf ${tarball} -C tiledb
     rm ${tarball}
+    test -d tiledb/lib64 && mv tiledb/lib64 tiledb/lib
 fi
 
 ## Copy tiledb/lib/ so that rpath relative path also works from
