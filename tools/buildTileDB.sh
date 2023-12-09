@@ -46,7 +46,7 @@ fi
 ## Build
 mkdir build
 cd build
-../tiledb-src/bootstrap --force-build-all-deps --enable-s3 --enable-serialization
+../tiledb-src/bootstrap --force-build-all-deps --enable-s3 --enable-serialization --linkage=shared
 make -j 2
 make -C tiledb install
 cd ..
