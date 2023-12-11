@@ -7,17 +7,17 @@ on:
 
 jobs:
   valgrind:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     name: ${{ matrix.tag }}
 
     strategy:
       fail-fast: false
       matrix:
-        tag: [ release-2.17, release-2.18, dev ]
+        tag: [ release-2.18, release-2.19, dev ]
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install Dependencies
       run: sudo tools/ci/valgrind/installDependencies.sh
