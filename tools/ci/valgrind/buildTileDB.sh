@@ -39,7 +39,7 @@ echo "::group::Build from source"
 mkdir build
 cd build
 export AWSSDK_ROOT_DIR=/usr
-../bootstrap --prefix=/usr/local --enable-s3 --enable-serialization
+../bootstrap --prefix=/usr/local --enable-s3 --enable-serialization --linkage=shared
 make -j 8
 make -C tiledb install
 ldconfig

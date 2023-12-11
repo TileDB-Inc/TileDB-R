@@ -30,6 +30,7 @@ echo "::group::Install Binary Packages"
 # Install and skip recommended packages
 apt install --yes --no-install-recommends \
     cmake \
+    curl \
     git \
     libaws-c-common-dev \
     libaws-c-event-stream-dev \
