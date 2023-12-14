@@ -160,10 +160,10 @@ origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
-## Take care of 10.14 requirement for Intel macOS
+## Take care of 11 (aka 'Big Sur') requirement for Intel macOS, automatic on arm
 if test x"${uname}" = x"Darwin" -a x"${machine}" = x"x86_64"; then
     AC_MSG_CHECKING([for Darwin x86_64 use minimum version override])
-    CXX17_MACOS="-mmacosx-version-min=10.14"
+    CXX17_MACOS="-mmacosx-version-min=11"
     AC_MSG_RESULT([${CXX17_MACOS}])
 fi
 
