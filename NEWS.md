@@ -14,6 +14,12 @@
 
 * Tests are more careful about using suggested packages only when present (#632)
 
+* When building TileDB Core, shared linking is now requested explicitly (#634)
+
+* Nightly automated checks now include Core release-2.19 and add the 'curl' binary (#635)
+
+* Builds on maOS now set release 11 ('Big Sur') as the required minimum version (#636)
+
 
 # tiledb 0.22.0
 
