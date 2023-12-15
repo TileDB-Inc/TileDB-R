@@ -1261,23 +1261,27 @@ setMethod("[<-", "tiledb_array",
   dimtypes <- sapply(dims, function(d) libtiledb_dim_get_datatype(d@ptr))
   dimvarnum <- sapply(dims, function(d) libtiledb_dim_get_cell_val_num(d@ptr))
   dimnullable <- sapply(dims, function(d) FALSE)
+  dimdictionary <- sapply(dims, function(d) FALSE)
 
   attrs <- tiledb::attrs(schema(x))
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
   attrvarnum <- unname(sapply(attrs, function(a) libtiledb_attribute_get_cell_val_num(a@ptr)))
   attrnullable <- unname(sapply(attrs, function(a) libtiledb_attribute_get_nullable(a@ptr)))
+  attrdictionary <- unname(sapply(attrs, function(a) libtiledb_attribute_has_enumeration(ctx@ptr, a@ptr)))
 
   if (length(attrnames) > 0) {
       allnames <- c(dimnames, attrnames)
       alltypes <- c(dimtypes, attrtypes)
       allvarnum <- c(dimvarnum, attrvarnum)
       allnullable <- c(dimnullable, attrnullable)
+      alldictionary <- c(dimdictionary, attrdictionary)
   } else {
       allnames <- dimnames
       alltypes <- dimtypes
       allvarnum <- dimvarnum
       allnullable <- dimnullable
+      alldictionary <- dimdictionary
   }
 
   ## check we have complete columns (as we cannot write subset of attributes)
@@ -1336,6 +1340,7 @@ setMethod("[<-", "tiledb_array",
       allnames <- attrnames
       alltypes <- attrtypes
       allnullable <- attrnullable
+      alldictionary <- attrdictionary
     }
 
   ## Case 4: dense, list on RHS e.g. the ex_1.R example
@@ -1353,6 +1358,7 @@ setMethod("[<-", "tiledb_array",
     allnames <- attrnames
     alltypes <- attrtypes
     allnullable <- attrnullable
+    alldictionary <- attrdictionary
   }
 
   nc <- if (is.list(value)) length(value) else ncol(value)
@@ -1392,6 +1398,30 @@ setMethod("[<-", "tiledb_array",
     for (colnam in allnames) {
       ## when an index column is use this may be unordered to remap to position in 'nm' names
       k <- match(colnam, nm)
+
+      if (alldictionary[k]) {
+          spdl::debug("[tiledb_array] '[<-' column {} ({}) is factor", colnam, k)
+          new_levels <- levels(value[[k]])
+
+          attr <- attrs[[allnames[k]]]
+          tpstr <- tiledb_attribute_get_enumeration_type_ptr(attr, arrptr)
+          if (tpstr %in% c("ASCII", "UTF8")) {
+              dictionary <- tiledb_attribute_get_enumeration_ptr(attr, arrptr)
+          } else if (tpstr %in% c("FLOAT32", "FLOAT64", "BOOL", "UINT8", "UINT16", "UINT32", "UINT64",
+                                  "INT8", "INT16", "INT32", "INT64")) {
+              dictionary <- tiledb_attribute_get_enumeration_vector_ptr(attr, arrptr)
+          } else {
+              stop("Unsupported enumeration vector payload of type '%s'", tpstr, call. = FALSE)
+          }
+          if (length(setdiff(dictionary, new_levels)) > 0) {
+              is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
+              value[[k]] <- factor(value[[k]],
+                                   levels = unique(c(dictionary, new_levels)),
+                                   ordered = is_ordered)
+              spdl::debug("[tiledb_array] '[<-' releveled column {}", k)
+          }
+      }
+
       if (alltypes[k] %in% c("CHAR", "ASCII", "UTF8")) { # variable length
         txtvec <- as.character(value[[k]])
         spdl::debug("[tiledb_array] '[<-' alloc char buffer {} '{}': {}", k, colnam, alltypes[k])
