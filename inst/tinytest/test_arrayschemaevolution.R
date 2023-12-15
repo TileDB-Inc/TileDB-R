@@ -112,11 +112,10 @@ run_int_col_test <- function(coltype) {
     tiledb_array_create(uri, schema)
 
     set.seed(42)
-    df <- data.frame(dim = 1:10, fct = sample(1:length(enums), 10, replace=TRUE) - 1, dbl = rnorm(10))
+    df <- data.frame(dim = 1:10, fct = sample(enums, 10, replace=TRUE), dbl = rnorm(10))
     arr <- tiledb_array(uri)
     arr[] <- df
 
-    qc <-
     res <- tiledb_array(uri, return_as="data.frame", query_condition = parse_query_condition(fct == blue, arr))[]
     expect_equal(nrow(res), 5)
 
