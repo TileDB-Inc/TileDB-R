@@ -103,7 +103,6 @@ expect_equal(levels(arr[, "b"]), c("red", "green", "blue", "orange"))
 ## -- testing query condition on non int32 columns
 run_int_col_test <- function(coltype) {
     uri <- tempfile()
-
     enums <- c("blue", "green", "red")
     dom <- tiledb_domain(dims = tiledb_dim(name="dim", domain=c(0L,100L), tile=10L, type="INT32"))
     attrs <- c(tiledb_attr(name="fct", type = coltype, enumeration=enums),
