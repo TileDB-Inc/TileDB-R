@@ -1413,12 +1413,16 @@ setMethod("[<-", "tiledb_array",
           } else {
               stop("Unsupported enumeration vector payload of type '%s'", tpstr, call. = FALSE)
           }
-          if (length(setdiff(dictionary, new_levels)) > 0) {
+          added_enums <- setdiff(new_levels, dictionary)
+          if (length(added_enums) > 0) {
+              levels <- unique(c(dictionary, new_levels))
               is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
-              value[[k]] <- factor(value[[k]],
-                                   levels = unique(c(dictionary, new_levels)),
-                                   ordered = is_ordered)
+              value[[k]] <- factor(value[[k]], levels = levels, ordered = is_ordered)
               spdl::debug("[tiledb_array] '[<-' releveled column {}", k)
+              ase <- tiledb_array_schema_evolution()
+              arr <- tiledb_array_open(x)
+              ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, allnames[[k]], added_enums)
+              tiledb::tiledb_array_schema_evolution_array_evolve(ase, uri)
           }
       }
 
