@@ -64,7 +64,6 @@ expect_equal(levels(res$val), enums)
 expect_equal(as.integer(res$val), c(1:5,5:1))
 
 
-
 ## -- testing 'create empty following by extending'
 if (tiledb_version(TRUE) < "2.17.3") exit_file("Needs TileDB 2.17.3 or later")
 uri <- tempfile()
@@ -112,11 +111,10 @@ run_int_col_test <- function(coltype) {
     tiledb_array_create(uri, schema)
 
     set.seed(42)
-    df <- data.frame(dim = 1:10, fct = sample(1:length(enums), 10, replace=TRUE) - 1, dbl = rnorm(10))
+    df <- data.frame(dim = 1:10, fct = sample(length(enums), 10, replace=TRUE) - 1, dbl = rnorm(10))
     arr <- tiledb_array(uri)
     arr[] <- df
 
-    qc <-
     res <- tiledb_array(uri, return_as="data.frame", query_condition = parse_query_condition(fct == blue, arr))[]
     expect_equal(nrow(res), 5)
 
@@ -134,3 +132,49 @@ run_int_col_test <- function(coltype) {
     unlink(uri)
 }
 sapply(c("INT8", "INT16", "INT32", "UINT8", "UINT16", "UINT32"), run_int_col_test)
+
+
+## test that factor levels can grow without overlap
+uri <- tempfile()
+df1 <- data.frame(id = 1:3, obs = factor(c("A", "B", "A")))
+fromDataFrame(df1, uri, col_index=1, tile_domain=c(1L, 6L))
+
+## write with a factor with two elements but without one of the initial ones
+## while factor(c("B", "C", "B")) gets encoded as c(1,2,1) it should really
+## encoded as c(2,3,2) under levels that are c("A", "B", "C") -- and the
+## write method now does that
+df2 <- data.frame(id = 4:6, obs = factor(c("B", "C", "B")))
+fromDataFrame(df2, uri, col_index=1, mode="append")
+
+res <- tiledb_array(uri, return_as="data.frame")[]
+
+expect_equal(nrow(res), 6)
+expect_equal(nlevels(res[["obs"]]), 3)
+expect_equal(levels(res[["obs"]]), c("A", "B", "C"))
+expect_equal(as.integer(res[["obs"]]), c(1L, 2L, 1L, 2L, 3L, 2L))
+
+ref <- rbind(df1, df2)
+expect_equivalent(res, ref) # equivalent because of query status attribute
+
+
+## test that ordered factor levels can grow without overlap
+uri <- tempfile()
+df1 <- data.frame(id = 1:3, obs = ordered(c("A", "B", "A")))
+fromDataFrame(df1, uri, col_index=1, tile_domain=c(1L, 6L))
+
+## write with a factor with two elements but without one of the initial ones
+## while factor(c("B", "C", "B")) gets encoded as c(1,2,1) it should really
+## encoded as c(2,3,2) under levels that are c("A", "B", "C") -- and the
+## write method now does that
+df2 <- data.frame(id = 4:6, obs = ordered(c("B", "C", "B")))
+fromDataFrame(df2, uri, col_index=1, mode="append")
+
+res <- tiledb_array(uri, return_as="data.frame")[]
+
+expect_equal(nrow(res), 6)
+expect_equal(nlevels(res[["obs"]]), 3)
+expect_equal(levels(res[["obs"]]), c("A", "B", "C"))
+expect_equal(as.integer(res[["obs"]]), c(1L, 2L, 1L, 2L, 3L, 2L))
+
+ref <- rbind(df1, df2)
+expect_equivalent(res, ref) # equivalent because of query status attribute

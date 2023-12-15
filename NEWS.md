@@ -6,6 +6,8 @@
 
 * A TileDB Array can now be opened in 'keep open' mode for subsequent use without re-opening (#630)
 
+* Arrays with factor (or ordered) variables now grow their factor levels in appending writes (#639)
+
 ## Bug Fixes
 
 * The read buffer is now correctly sized when implementing VFS serialization (#631)
