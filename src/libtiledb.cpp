@@ -4279,20 +4279,14 @@ tiledb::Object::Type _string_to_object_type(std::string otype) {
 DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx,
                                 std::string uri, std::string order, bool recursive = false) {
   check_xptr_tag<tiledb::Context>(ctx);
-  tiledb_walk_order_t walk_order;
-  if (recursive) {
-    if (order == "PREORDER") {
-      walk_order = TILEDB_PREORDER;
-    } else if (order == "POSTORDER") {
-      walk_order = TILEDB_POSTORDER;
-    } else {
-      Rcpp::stop("invalid recursive walk order, must be \"PREORDER\" or \"POSTORDER\"");
-    }
-  }
   std::vector<std::string> uris;
   std::vector<std::string> types;
   tiledb::ObjectIter obj_iter(*ctx.get(), uri);
   if (recursive) {
+    if (!(order == "PREORDER") || (order == "POSTORDER")) {
+      Rcpp::stop("invalid recursive walk order, must be \"PREORDER\" or \"POSTORDER\"");
+    }
+    tiledb_walk_order_t walk_order = (order == "PREORDER") ? TILEDB_PREORDER : TILEDB_POSTORDER;
     obj_iter.set_recursive(walk_order);
   } else {
     obj_iter.set_non_recursive();

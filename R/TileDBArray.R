@@ -1400,7 +1400,7 @@ setMethod("[<-", "tiledb_array",
       k <- match(colnam, nm)
 
       if (alldictionary[k]) {
-          spdl::debug("[tiledb_array] '[<-' column {} ({}) is factor", colnam, k)
+          spdl::trace("[tiledb_array] '[<-' column {} ({}) is factor", colnam, k)
           new_levels <- levels(value[[k]])
 
           attr <- attrs[[allnames[k]]]
@@ -1415,12 +1415,16 @@ setMethod("[<-", "tiledb_array",
           }
           added_enums <- setdiff(new_levels, dictionary)
           if (length(added_enums) > 0) {
+              spdl::debug("[tiledb_array] '[<-' Adding levels {}", paste(added_enums, collapse=","))
               levels <- unique(c(dictionary, new_levels))
               is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
               value[[k]] <- factor(value[[k]], levels = levels, ordered = is_ordered)
-              spdl::debug("[tiledb_array] '[<-' releveled column {}", k)
+              spdl::trace("[tiledb_array] '[<-' releveled column {} {}", k, is_ordered)
               ase <- tiledb_array_schema_evolution()
-              arr <- tiledb_array_open(x)
+              if (!tiledb_array_is_open(x))
+                  arr <- tiledb_array_open(x)
+              else
+                  arr <- x
               ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, allnames[[k]], added_enums)
               tiledb::tiledb_array_schema_evolution_array_evolve(ase, uri)
           }
