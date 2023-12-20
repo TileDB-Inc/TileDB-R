@@ -8,6 +8,8 @@
 
 * Arrays with factor (or ordered) variables now grow their factor levels in appending writes (#639)
 
+* Initialization of object walk order in recursive mode is now more explicit (#640)
+
 ## Bug Fixes
 
 * The read buffer is now correctly sized when implementing VFS serialization (#631)

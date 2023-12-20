@@ -264,6 +264,13 @@ tiledb_config_as_built_show <- function() {
 #' Return the 'AsBuilt' JSON string
 #'
 #' @return The JSON string containing 'AsBuilt' information
+#' @example
+#' txt <- tiledb::tiledb_config_as_built_json()
+#' ## now eg either one of
+#' ##   sapply(jsonlite::fromJSON(txt)$as_built$parameters$storage_backends, \(x) x[[1]])
+#' ##   sapply(RcppSimdJson::fparse(txt)$as_built$parameters$storage_backends, \(x) x[[1]])
+#' ## will return a named vector such as
+#' ##   c(azure = FALSE, gcs = FALSE, hdfs = FALSE, s3 = TRUE)
 #' @export
 tiledb_config_as_built_json <- function() {
     stopifnot("Accessing 'AsBuilt' requires TileDB 2.17 or newer" = tiledb_version(TRUE) >= "2.17.0")
