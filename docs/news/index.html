@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.22.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.23.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,29 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.23.0" id="tiledb-0230">tiledb 0.23.0<a class="anchor" aria-label="anchor" href="#tiledb-0230"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.19.0" class="external-link">TileDB 2.19.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/641" class="external-link">#641</a>)</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-23-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-23-0"></a></h3>
+<ul><li><p>A TileDB Array can now be opened in ‘keep open’ mode for subsequent use without re-opening (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/630" class="external-link">#630</a>)</p></li>
+<li><p>Arrays with factor (or ordered) variables now grow their factor levels in appending writes (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/639" class="external-link">#639</a>)</p></li>
+<li><p>Initialization of object walk order in recursive mode is now more explicit (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/640" class="external-link">#640</a>)</p></li>
+<li><p>Use of TileDB Embedded was upgraded to release 2.18.3 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/638" class="external-link">#638</a>), and 2.19.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/641" class="external-link">#641</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-23-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-23-0"></a></h3>
+<ul><li>The read buffer is now correctly sized when implementing VFS serialization (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/631" class="external-link">#631</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-23-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-23-0"></a></h3>
+<ul><li><p>Builds from TileDB Core non-release tarballs are now supported via new configure option (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/627" class="external-link">#627</a>)</p></li>
+<li><p>Tests are more careful about using suggested packages only when present (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/632" class="external-link">#632</a>)</p></li>
+<li><p>When building TileDB Core, shared linking is now requested explicitly (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/634" class="external-link">#634</a>)</p></li>
+<li><p>Nightly automated checks now include Core release-2.19 and add the ‘curl’ binary (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/635" class="external-link">#635</a>)</p></li>
+<li><p>Builds on maOS now set release 11 (‘Big Sur’) as the required minimum version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/636" class="external-link">#636</a>)</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.22.0" id="tiledb-0220">tiledb 0.22.0<a class="anchor" aria-label="anchor" href="#tiledb-0220"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.0" class="external-link">TileDB 2.18.0</a>, <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.1" class="external-link">TileDB 2.18.1</a>, <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.2" class="external-link">TileDB 2.18.2</a> and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/620" class="external-link">#620</a>,#621,#624)</li>

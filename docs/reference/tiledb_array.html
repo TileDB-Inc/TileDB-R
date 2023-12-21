@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.22.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.23.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,6 +86,7 @@
 <span>  return_as <span class="op">=</span> <span class="fu"><a href="save_return_as_preference.html">get_return_as_preference</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  query_statistics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strings_as_factors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"stringsAsFactors"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  keep_open <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  sil <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  dumpbuffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  buffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -195,6 +196,10 @@ query statistics are returned (as a JSON string) via the attribute
 <dt>strings_as_factors</dt>
 <dd><p>An optional logical to convert character columns to factor type; defaults
 to the value of <code>getOption("stringsAsFactors", FALSE)</code>.</p></dd>
+
+
+<dt>keep_open</dt>
+<dd><p>An optional logical to not close after read or write</p></dd>
 
 
 <dt>sil</dt>

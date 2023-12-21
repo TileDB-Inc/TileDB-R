@@ -1,6 +1,6 @@
-# Ongoing development
+# tiledb 0.23.0
 
-* This release of the R package builds against [TileDB 2.18.3](https://github.com/TileDB-Inc/TileDB/releases/tag/2.18.3), and has also been tested against earlier releases as well as the development version (#638)
+* This release of the R package builds against [TileDB 2.19.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.19.0), and has also been tested against earlier releases as well as the development version (#641)
 
 ## Improvements
 
@@ -9,6 +9,8 @@
 * Arrays with factor (or ordered) variables now grow their factor levels in appending writes (#639)
 
 * Initialization of object walk order in recursive mode is now more explicit (#640)
+
+* Use of TileDB Embedded was upgraded to release 2.18.3 (#638), and 2.19.0 (#641)
 
 ## Bug Fixes
 
