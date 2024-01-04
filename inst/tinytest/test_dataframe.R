@@ -1,10 +1,14 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 ctx <- tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 #test_that("tiledb_fromdataframe", {
 uri <- tempfile()
@@ -84,7 +88,7 @@ expect_equal(df, chk[,-1])              # omit first col which is added
 
 if (tiledb_version(TRUE) < "2.1.0") exit_file("Remaining tests require TileDB 2.1.0 or later")
 
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 fromDataFrame(df, uri, col_index=1)
 arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
@@ -93,7 +97,7 @@ expect_equal(df[,2], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
 
 
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 fromDataFrame(df, uri, col_index="index")
 arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
@@ -106,7 +110,7 @@ olddf <- df
 df <- data.frame(chars=olddf$chars,
                  index=olddf$index,     # index not in first column
                  val=olddf$vals)
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 fromDataFrame(df, uri)
 arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
@@ -116,7 +120,7 @@ if (getRversion() < '4.0.0') {
 }
 expect_equal(df, chk[,-1])              # omit first col which is added
 
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 fromDataFrame(df, uri, col_index=2)
 arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
@@ -124,7 +128,7 @@ if (getRversion() < '4.0.0') chk$chars <- as.character(chk$chars)
 expect_equal(df[,1], na.omit(chk)[,2])  # compare column by column
 expect_equal(df[,3], na.omit(chk)[,3])
 
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 fromDataFrame(df, uri, col_index="index")
 arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
@@ -154,14 +158,14 @@ df <- data.frame(time=round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*3600)
                  nanotime=as.nanotime(Sys.time() + cumsum(runif(nobs)*3600)),
                  stringsAsFactors=FALSE)
 
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 fromDataFrame(df, uri, sparse=TRUE)
 
 chk <- tiledb_array(uri, return_as="data.frame", extended=FALSE)
 expect_equivalent(df, chk[])            # skip attribute
 
 for (i in seq_len(dim(df)[2])) {
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     fromDataFrame(df, uri, sparse=TRUE, col_index=i)
     chk <- tiledb_array(uri, return_as="data.frame")
     expect_equal(df, chk[][,colnames(df)]) 		# index col comes first so need re-order
@@ -181,7 +185,7 @@ df <- data.frame(time = round(Sys.time(), "secs") + trunc(cumsum(runif(nobs)*360
                  stringsAsFactors=FALSE)
 
 
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 fromDataFrame(df, uri, sparse=TRUE)
 
 chk <- tiledb_array(uri, return_as="data.frame", extended=FALSE)
@@ -189,9 +193,8 @@ newdf <- chk[]
 if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
 expect_equivalent(df, newdf)            # skip attribute
 
-
 for (i in seq_len(dim(df)[2])) {
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     fromDataFrame(df, uri, sparse=TRUE, col_index=i)
     chk <- tiledb_array(uri, return_as="data.frame")
     newdf <- chk[]
@@ -201,14 +204,14 @@ for (i in seq_len(dim(df)[2])) {
 
 combinations <- list(c(1,2), c(1,3), c(2,4), c(3,5), c(4,5), c(2,3,4))
 for (comb in combinations) {
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     fromDataFrame(df, uri, sparse=TRUE, col_index=comb) # by index
     chk <- tiledb_array(uri, return_as="data.frame")
     newdf <- chk[]
     if (getRversion() < '4.0.0') newdf$txt <- as.character(newdf$txt)
     expect_equal(df, newdf[][, colnames(df)])
 
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     fromDataFrame(df, uri, sparse=TRUE, col_index=colnames(df)[comb]) # by name
     chk <- tiledb_array(uri, return_as="data.frame")
     newdf <- chk[]
@@ -292,7 +295,6 @@ library(palmerpenguins)
 data <- penguins
 
 uri <- tempfile()
-
 fromDataFrame(data, uri, col_index=1:2, mode="schema_only")
 arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
@@ -305,7 +307,7 @@ chk <- arr[]
 expect_equal(nrow(chk), nrow(data))     # all data
 expect_equal(ncol(chk), ncol(data))     # all columns
 
-tiledb_vfs_remove_dir(uri)
+uri <- tempfile()
 fromDataFrame(data, uri, col_index=1:2) # default mode
 arr <- tiledb_array(uri, return_as="data.frame")
 chk <- arr[]
