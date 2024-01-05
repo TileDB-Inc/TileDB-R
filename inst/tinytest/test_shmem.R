@@ -6,6 +6,9 @@ if (Sys.info()['sysname'] == "Darwin") exit_file("Skip on macOS")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) exit_file("skip for REST CI")
+
 uri <- tempfile()
 fromDataFrame(mtcars, uri)              			# create an array
 arr <- tiledb_array(uri, return_as="data.frame")

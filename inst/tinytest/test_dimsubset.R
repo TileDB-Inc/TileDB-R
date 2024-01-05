@@ -5,10 +5,14 @@ library(tinytest)
 library(tiledb)
 library(RcppSpdlog)                     # use logging for some informal profiling
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 if (!requireNamespace("nycflights13", quietly=TRUE)) exit_file("Needed 'nycflights13' package missing")
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 log_setup("test_dimsubset", "warn")     # but set the default level to 'warn' -> silent, activate via 'info'
 ctx <- tiledb_ctx(limitTileDBCores())
@@ -16,7 +20,7 @@ log_info("ctx created")
 
 op <- options()
 options(stringsAsFactors=FALSE)       # accomodate R 3.*
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 
 library(nycflights13)
 

@@ -1,10 +1,14 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 .createArray <- function(tmp) {
   dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L,4L), 4L, "INT32"),
@@ -16,7 +20,6 @@ tiledb_ctx(limitTileDBCores())
 
 #test_that("tiledb_query constructor", {
 tmp <- tempfile()
-dir.create(tmp)
 arr <- .createArray(tmp)
 
 query <- tiledb_query(arr)
@@ -28,7 +31,6 @@ unlink(tmp, recursive=TRUE)
 
 #test_that("tiledb_query type", {
 tmp <- tempfile()
-dir.create(tmp)
 arr <- .createArray(tmp)
 
 query <- tiledb_query(arr)
@@ -44,7 +46,6 @@ unlink(tmp, recursive=TRUE)
 
 #test_that("tiledb_query layout", {
 tmp <- tempfile()
-dir.create(tmp)
 arr <- .createArray(tmp)
 
 query <- tiledb_query(arr)
@@ -57,7 +58,6 @@ unlink(tmp, recursive=TRUE)
 
 #test_that("tiledb_query basic query", {
 tmp <- tempfile()
-dir.create(tmp)
 arr <- .createArray(tmp)
 qry <- tiledb_query(arr, "WRITE")
 
@@ -92,7 +92,6 @@ if (requireNamespace("nanotime", quietly=TRUE)) {
   })
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(0, 1e12), 1, type = "DATETIME_NS")))
   schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a1", type = "INT32"),
@@ -150,7 +149,6 @@ if (requireNamespace("nanotime", quietly=TRUE)) {
 
 #test_that("tiledb_query subarray", {
 tmp <- tempfile()
-dir.create(tmp)
 
 dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 10L), 1L, type = "INT32"))
 schema <- tiledb_array_schema(dom,
@@ -247,7 +245,7 @@ expect_true(nchar(res) > 1000)  		# safe lower boundary
 
 res <- tiledb_ctx_stats()               # test here rather than in test_ctx to have real query
 expect_true(is.character(res))
-expect_true(nchar(res) > 1000)  		# safe lower boundary
+if (!isRESTCI) expect_true(nchar(res) > 1000)  		# safe lower boundary (but not for REST)
 
 ctx <- tiledb_ctx(oldcfg)               # reset config
 

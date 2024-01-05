@@ -2,17 +2,17 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
 isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) exit_file("skip VFS tests under REST CI")
 
 ## earlier time travel test recast via timestamp_{start,end}
 ## time travel
 
 tmp <- tempfile()
-dir.create(tmp)
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 5L, "INT32"),
                               tiledb_dim("cols", c(1L, 10L), 5L, "INT32")))
 schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)

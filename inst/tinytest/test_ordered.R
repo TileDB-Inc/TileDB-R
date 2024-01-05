@@ -4,6 +4,13 @@ library(tiledb)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
+
 if (tiledb_version(TRUE) < "2.17.0") exit_file("Remainder needs 2.17.* or later")
 
 ## A data.frame with an ordered column, taken from package `earth` and its `etitanic` cleaned

@@ -1,16 +1,19 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 isWindows <- Sys.info()[["sysname"]] == "Windows"
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
-#if (Sys.getenv("_RUNNING_UNDER_VALGRIND_", "FALSE") == "TRUE" && Sys.Date() < as.Date("2022-08-06")) exit_file("Skipping under valgrind until Aug 6")
 
 ## GitHub Actions had some jobs killed on the larger data portion so we dial mem use down
 if (Sys.getenv("CI") != "") set_allocation_size_preference(1024*1024*5)
 
 ctx <- tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 ## simple data.frame to test against
 D <- data.frame(a=1:20,
@@ -38,7 +41,6 @@ ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
 expect_equal(nrow(ndf), 1)
 expect_equal(ndf[1,"a"], 2L)
 tiledb_array_close(arr)
-rm(qry)
 
 ## check a >= 2
 qry <- tiledb_query(arr, "READ")
@@ -56,7 +58,6 @@ n <- tiledb_query_result_buffer_elements(qry, "a")
 ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
 expect_equal(nrow(ndf), 19)
 tiledb_array_close(arr)
-rm(qry)
 
 ## check a != 2 && a != 12
 qry <- tiledb_query(arr, "READ")
@@ -76,7 +77,6 @@ n <- tiledb_query_result_buffer_elements(qry, "a")
 ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
 expect_equal(nrow(ndf), 18)
 tiledb_array_close(arr)
-rm(qry)
 
 ## check a >=5 && b <= 115
 qry <- tiledb_query(arr, "READ")
@@ -96,7 +96,6 @@ n <- tiledb_query_result_buffer_elements(qry, "a")
 ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
 expect_equal(nrow(ndf), 10)
 tiledb_array_close(arr)
-rm(qry)
 
 ## check b == 115.5 (yes, yes, yes, we know EQ is dicey on floats; can remove this if it croaks)
 qry <- tiledb_query(arr, "READ")
@@ -114,7 +113,6 @@ n <- tiledb_query_result_buffer_elements(qry, "a")
 ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
 expect_equal(nrow(ndf), 1)
 tiledb_array_close(arr)
-rm(qry)
 
 ## check b >= 115.4 && b <= 115.6
 qry <- tiledb_query(arr, "READ")
@@ -134,8 +132,6 @@ n <- tiledb_query_result_buffer_elements(qry, "a")
 ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
 expect_equal(nrow(ndf), 1)
 tiledb_array_close(arr)
-rm(qry)
-
 
 ## tiledb_array support
 if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("remainder needs 'palmerpenguins'")
@@ -339,7 +335,7 @@ expect_equal(NROW(arr[]), sum(with(penguins, year < 2010)))
 ## query conditions over different types
 suppressMessages(library(bit64))
 n <- 20L
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 dim <- tiledb_dim("rows", domain=c(1L,n), type="INT32", tile=1L)
 dom <- tiledb_domain(dim)
 sch <- tiledb_array_schema(dom,

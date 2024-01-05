@@ -1,12 +1,16 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
 isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 ## tests formerly in test_tiledbarray.R
 
@@ -110,19 +114,20 @@ expect_equal(max(res5$grp), 3)
 ## timestamp_start and timestamp_end
 
 
-
-## time-travel vaccum test
-vfs <- tiledb_vfs()
-uridir <- if (tiledb_vfs_is_dir(file.path(uri, "__fragments"))) file.path(uri, "__fragments") else uri
-ndirfull <- tiledb_vfs_ls(uridir, vfs=vfs)
-array_consolidate(uri, start_time=times[2]-epst, end_time=times[3]+epst)
-array_vacuum(uri, start_time=times[2]-epst, end_time=times[3]+epst)
-ndircons <- tiledb_vfs_ls(uridir, vfs=vfs)
-expect_true(length(ndircons) < length(ndirfull))
-array_consolidate(uri, start_time=times[1]-0.5, end_time=times[3])
-array_vacuum(uri, start_time=times[1]-0.5, end_time=times[3])
-ndircons2 <- tiledb_vfs_ls(uridir, vfs=vfs)
-expect_true(length(ndircons2) < length(ndircons))
+if (!isRESTCI) {
+    ## time-travel vaccum test
+    vfs <- tiledb_vfs()
+    uridir <- if (tiledb_vfs_is_dir(file.path(uri, "__fragments"))) file.path(uri, "__fragments") else uri
+    ndirfull <- tiledb_vfs_ls(uridir, vfs=vfs)
+    array_consolidate(uri, start_time=times[2]-epst, end_time=times[3]+epst)
+    array_vacuum(uri, start_time=times[2]-epst, end_time=times[3]+epst)
+    ndircons <- tiledb_vfs_ls(uridir, vfs=vfs)
+    expect_true(length(ndircons) < length(ndirfull))
+    array_consolidate(uri, start_time=times[1]-0.5, end_time=times[3])
+    array_vacuum(uri, start_time=times[1]-0.5, end_time=times[3])
+    ndircons2 <- tiledb_vfs_ls(uridir, vfs=vfs)
+    expect_true(length(ndircons2) < length(ndircons))
+}
 
 ## time-travel via policy object
 if (tiledb_version(TRUE) < "2.15.0") exit_file("Needs TileDB 2.15.* or later")

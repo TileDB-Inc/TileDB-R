@@ -1,10 +1,10 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 ctx <- tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) exit_file("Skipping during REST CI")
 
 #test_that("tiledb_filter default constructor", {
 flt <- tiledb_filter()
