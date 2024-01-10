@@ -178,3 +178,14 @@ expect_equal(as.integer(res[["obs"]]), c(1L, 2L, 1L, 2L, 3L, 2L))
 
 ref <- rbind(df1, df2)
 expect_equivalent(res, ref) # equivalent because of query status attribute
+
+
+## another test for growing
+uri <- tempfile()
+df1 <- data.frame(rows=11:14, a=200+0:3, b=factor(rep(c("blue", "ornage"), each=2)))
+expect_silent(fromDataFrame(df1, uri, col_index=1, tile_domain=c(1L, 30L)))
+df2 <- data.frame(rows=21:24, a=300+0:3, b=factor(rep(c("brown", "yellow"), each=2)))
+expect_silent(fromDataFrame(df2, uri, mode="append", col_index=1))
+
+res <- tiledb_array(uri, return_as="data.frame")[]
+expect_equivalent(res, rbind(df1, df2))   # factors in data.frame get releveled too
