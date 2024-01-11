@@ -216,6 +216,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tiledb_datatype_max_value
+size_t tiledb_datatype_max_value(const std::string& datatype);
+RcppExport SEXP _tiledb_tiledb_datatype_max_value(SEXP datatypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string& >::type datatype(datatypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(tiledb_datatype_max_value(datatype));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_ctx
 XPtr<tiledb::Context> libtiledb_ctx(Nullable<XPtr<tiledb::Config>> config);
 RcppExport SEXP _tiledb_libtiledb_ctx(SEXP configSEXP) {
@@ -3589,6 +3600,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_tiledb_datatype_string_to_sizeof", (DL_FUNC) &_tiledb_tiledb_datatype_string_to_sizeof, 1},
     {"_tiledb_tiledb_datatype_R_type", (DL_FUNC) &_tiledb_tiledb_datatype_R_type, 1},
     {"_tiledb_libtiledb_version", (DL_FUNC) &_tiledb_libtiledb_version, 0},
+    {"_tiledb_tiledb_datatype_max_value", (DL_FUNC) &_tiledb_tiledb_datatype_max_value, 1},
     {"_tiledb_libtiledb_ctx", (DL_FUNC) &_tiledb_libtiledb_ctx, 1},
     {"_tiledb_libtiledb_ctx_config", (DL_FUNC) &_tiledb_libtiledb_ctx_config, 1},
     {"_tiledb_libtiledb_ctx_is_supported_fs", (DL_FUNC) &_tiledb_libtiledb_ctx_is_supported_fs, 2},

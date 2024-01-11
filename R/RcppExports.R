@@ -82,6 +82,10 @@ libtiledb_version <- function() {
     .Call(`_tiledb_libtiledb_version`)
 }
 
+tiledb_datatype_max_value <- function(datatype) {
+    .Call(`_tiledb_tiledb_datatype_max_value`, datatype)
+}
+
 libtiledb_ctx <- function(config = NULL) {
     .Call(`_tiledb_libtiledb_ctx`, config)
 }
