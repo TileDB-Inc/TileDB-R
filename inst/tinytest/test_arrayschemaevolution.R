@@ -189,3 +189,25 @@ expect_silent(fromDataFrame(df2, uri, mode="append", col_index=1))
 
 res <- tiledb_array(uri, return_as="data.frame")[]
 expect_equivalent(res, rbind(df1, df2))   # factors in data.frame get releveled too
+
+## check factor additions do not overflow
+for (tp in c("INT8", "UINT8")) {
+    uri <- tempfile()
+
+    dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 300L), 10L, "INT32"))
+    attrs <- c(tiledb_attr("a", type = "INT32"),
+               tiledb_attr("b", type = tp))
+    schema <- tiledb_array_schema(dom, attrs = attrs, sparse = TRUE)
+    schema <- tiledb_array_schema_set_enumeration_empty(schema, attrs[[2]], "b")
+    invisible(tiledb_array_create(uri, schema))
+
+    df <- data.frame(rows = 1:50, a = 100 + 0:49, b = factor(paste0("f", 101:150)))
+    expect_silent(fromDataFrame(df, uri, mode="append", col_index=1))
+
+    df <- data.frame(rows = 51:130, a = 200 + 0:79, b = factor(paste0("f", 151:230)))
+    if (tp == "INT8") {
+        expect_error(fromDataFrame(df, uri, mode="append", col_index=1))	# errors for INT8
+    } else {
+        expect_silent(fromDataFrame(df, uri, mode="append", col_index=1)) 	# passes for UINT8
+    }
+}
