@@ -1415,7 +1415,9 @@ setMethod("[<-", "tiledb_array",
           }
           added_enums <- setdiff(new_levels, dictionary)
           if (length(added_enums) > 0) {
-              spdl::debug("[tiledb_array] '[<-' Adding levels {}", paste(added_enums, collapse=","))
+              spdl::debug("[tiledb_array] '[<-' Adding levels '{}' at '{}' ({} + {})",
+                         paste(added_enums, collapse=","), allnames[[k]],
+                         length(dictionary), length(added_enums))
               levels <- unique(c(dictionary, new_levels))
               is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
               value[[k]] <- factor(value[[k]], levels = levels, ordered = is_ordered)
@@ -1427,6 +1429,7 @@ setMethod("[<-", "tiledb_array",
                   arr <- x
               ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, allnames[[k]], added_enums)
               tiledb::tiledb_array_schema_evolution_array_evolve(ase, uri)
+              value[[k]] <- factor(value[[k]], levels = unique(c(dictionary, added_enums)), ordered=is.ordered(value[[k]]))
           }
       }
 
@@ -1441,7 +1444,7 @@ setMethod("[<-", "tiledb_array",
             col <- unname(do.call(c, col))
         }
         if (is.factor(col)) {
-            col <- as.integer(col) - 1 		# zero based in C++ so offsetting
+            col <- as.integer(col) - 1L 		# zero based in C++ so offsetting
         }
         nr <- NROW(col)
         spdl::debug("[tiledb_array] '[<-' alloc buf {} '{}': {}, rows: {} null: {} asint64: {}", k, colnam, alltypes[k], nr, allnullable[k], asint64)
