@@ -1411,13 +1411,17 @@ setMethod("[<-", "tiledb_array",
                                   "INT8", "INT16", "INT32", "INT64")) {
               dictionary <- tiledb_attribute_get_enumeration_vector_ptr(attr, arrptr)
           } else {
-              stop("Unsupported enumeration vector payload of type '%s'", tpstr, call. = FALSE)
+              stop("Unsupported enumeration vector payload of type '", tpstr, "'.", call. = FALSE)
           }
           added_enums <- setdiff(new_levels, dictionary)
           if (length(added_enums) > 0) {
-              spdl::debug("[tiledb_array] '[<-' Adding levels '{}' at '{}' ({} + {})",
-                         paste(added_enums, collapse=","), allnames[[k]],
-                         length(dictionary), length(added_enums))
+              maxval <- tiledb_datatype_max_value(alltypes[k])
+              spdl::debug("[tiledb_array] '[<-' Adding levels '{}' at '{}' {} ({} + {} ? {})",
+                          paste(added_enums, collapse=","), allnames[k], alltypes[k], length(dictionary), length(added_enums), maxval);
+              if (length(dictionary) + length(added_enums) > maxval) {
+                  stop(sprintf("For column '%s' cannot add %d factor levels to existing %d for type '%s' with maximum value %d",
+                               colnam, length(added_enums), length(dictionary), alltypes[k], maxval), call. = FALSE)
+              }
               levels <- unique(c(dictionary, new_levels))
               is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
               value[[k]] <- factor(value[[k]], levels = levels, ordered = is_ordered)
@@ -1427,7 +1431,7 @@ setMethod("[<-", "tiledb_array",
                   arr <- tiledb_array_open(x)
               else
                   arr <- x
-              ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, allnames[[k]], added_enums)
+              ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, allnames[k], added_enums)
               tiledb::tiledb_array_schema_evolution_array_evolve(ase, uri)
               value[[k]] <- factor(value[[k]], levels = unique(c(dictionary, added_enums)), ordered=is.ordered(value[[k]]))
           }

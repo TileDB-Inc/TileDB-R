@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2023 TileDB Inc.
+//  Copyright (c) 2017-2024 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -491,6 +491,21 @@ NumericVector libtiledb_version() {
                                Named("patch") = std::get<2>(ver));
 }
 
+// [[Rcpp::export]]
+size_t tiledb_datatype_max_value(const std::string& datatype) {
+    tiledb_datatype_t dtype = _string_to_tiledb_datatype(datatype);
+    switch (dtype) {
+    case TILEDB_INT8:    return std::numeric_limits<int8_t>::max();
+    case TILEDB_UINT8:   return std::numeric_limits<uint8_t>::max();
+    case TILEDB_INT16:   return std::numeric_limits<int16_t>::max();
+    case TILEDB_UINT16:  return std::numeric_limits<uint16_t>::max();
+    case TILEDB_INT32:   return std::numeric_limits<int32_t>::max();
+    case TILEDB_UINT32:  return std::numeric_limits<uint32_t>::max();
+    case TILEDB_INT64:   return std::numeric_limits<int64_t>::max();
+    case TILEDB_UINT64:  return std::numeric_limits<uint64_t>::max();
+    default: Rcpp::stop("currently unsupported datatype (%s)", datatype);
+    }
+}
 
 /**
  * TileDB Context

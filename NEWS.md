@@ -1,3 +1,14 @@
+# Ongoing development
+
+## Improvements
+
+* Factor level additions now check for possible over in the index type (#645)
+
+## Bug Fixes
+
+* Factor level additions ensure the factor is relevelled under the full set of factors (#644)
+
+
 # tiledb 0.23.0
 
 * This release of the R package builds against [TileDB 2.19.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.19.0), and has also been tested against earlier releases as well as the development version (#641)
