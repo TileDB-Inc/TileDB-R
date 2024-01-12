@@ -1415,7 +1415,7 @@ setMethod("[<-", "tiledb_array",
           }
           added_enums <- setdiff(new_levels, dictionary)
           if (length(added_enums) > 0) {
-              maxval <- tiledb_datatype_max_value(alltypes[k])
+              maxval <- tiledb_datatype_max_value(alltypes[k]) + 1 # R vectors are 1-indexed
               spdl::debug("[tiledb_array] '[<-' Adding levels '{}' at '{}' {} ({} + {} ? {})",
                           paste(added_enums, collapse=","), allnames[k], alltypes[k], length(dictionary), length(added_enums), maxval);
               if (length(dictionary) + length(added_enums) > maxval) {
