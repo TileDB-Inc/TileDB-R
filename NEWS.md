@@ -2,11 +2,13 @@
 
 ## Improvements
 
-* Factor level additions now check for possible over in the index type (#645)
+* Factor level additions now check for possible over in the index type (#645, #646)
 
 ## Bug Fixes
 
 * Factor level additions ensure the factor is relevelled under the full set of factors (#644)
+
+* The example for `fromDataFrame()` has been updated, along with two other help files (#648)
 
 
 # tiledb 0.23.0
