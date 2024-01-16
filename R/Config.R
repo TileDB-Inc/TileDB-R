@@ -264,7 +264,7 @@ tiledb_config_as_built_show <- function() {
 #' Return the 'AsBuilt' JSON string
 #'
 #' @return The JSON string containing 'AsBuilt' information
-#' @example
+#' @examples
 #' txt <- tiledb::tiledb_config_as_built_json()
 #' ## now eg either one of
 #' ##   sapply(jsonlite::fromJSON(txt)$as_built$parameters$storage_backends, \(x) x[[1]])

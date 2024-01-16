@@ -2,6 +2,7 @@
 % Please edit documentation in R/TileDB-Package.R
 \docType{package}
 \name{tiledb-package}
+\alias{tiledb}
 \alias{tiledb-package}
 \title{tiledb - Interface to the TileDB Storage Manager API}
 \description{
@@ -10,3 +11,21 @@ The efficient multi-dimensional array management system
 reads. It features excellent compression, an efficient parallel I/O
 system which also scales well, and bindings to multiple languages.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/TileDB-Inc/TileDB-R}
+  \item Report bugs at \url{https://github.com/TileDB-Inc/TileDB-R/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Dirk Eddelbuettel \email{dirk@tiledb.com}
+
+Authors:
+\itemize{
+  \item TileDB, Inc. [copyright holder]
+}
+
+}
+\keyword{internal}

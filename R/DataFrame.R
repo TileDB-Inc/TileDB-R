@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -71,15 +71,12 @@
 ##' @return Null, invisibly.
 ##' @examples
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-##' \dontrun{
 ##' uri <- tempfile()
-##' ## turn factor into character
-##' irisdf <- within(iris, Species <- as.character(Species))
-##' fromDataFrame(irisdf, uri)
-##' arr <- tiledb_array(uri, return_as="data.frame", sparse=FALSE)
+##' fromDataFrame(iris, uri)
+##' arr <- tiledb_array(uri, return_as="data.frame", extended=FALSE)
 ##' newdf <- arr[]
-##' all.equal(iris, newdf)
-##' }
+##' all.equal(iris, newdf, check.attributes=FALSE)  # extra attribute on query in newdf
+##' all.equal(as.matrix(iris), as.matrix(newdf))	# also strips attribute
 ##' @export
 fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=sparse,
                           cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter="ZSTD",
