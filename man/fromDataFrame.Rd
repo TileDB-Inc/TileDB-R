@@ -92,13 +92,10 @@ At present, factor variable are converted to character.
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-\dontrun{
 uri <- tempfile()
-## turn factor into character
-irisdf <- within(iris, Species <- as.character(Species))
-fromDataFrame(irisdf, uri)
-arr <- tiledb_array(uri, return_as="data.frame", sparse=FALSE)
+fromDataFrame(iris, uri)
+arr <- tiledb_array(uri, return_as="data.frame", extended=FALSE)
 newdf <- arr[]
-all.equal(iris, newdf)
-}
+all.equal(iris, newdf, check.attributes=FALSE)  # extra attribute on query in newdf
+all.equal(as.matrix(iris), as.matrix(newdf))	# also strips attribute
 }
