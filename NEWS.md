@@ -10,6 +10,10 @@
 
 * The example for `fromDataFrame()` has been updated, along with two other help files (#648)
 
+## Build and Test Systems
+
+* The nighly valgrind run was updated to include release 2.20 (#649)
+
 
 # tiledb 0.23.0
 
