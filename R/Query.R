@@ -594,3 +594,23 @@ tiledb_query_ctx <- function(query) {
 #    stopifnot(`The 'query' must be a TileDB Query object` = is(query, "tiledb_query"))
 #    query@arr
 #}
+
+##' Run an aggregate oprtation on the given query attribute
+##'
+##' @param query A TileDB Query object
+##' @param attrname The name of an attribute
+##' @param operation The name of aggregation operation
+##' @param nullable A boolean toggle whether the attribute is nullable
+##' @return The value of the aggregation
+##' @export
+tiledb_query_apply_aggregate <- function(query, attrname,
+                                         operation = c("Count", "NullCount", "Min", "Max",
+                                                       "Mean", "Sum"),
+                                         nullable = TRUE) {
+    stopifnot("The 'query' argument must be a TileDB Query object" = is(query, "tiledb_query"),
+              "The 'attrname' argument must be character" = is.character(attrname),
+              "The 'operation' argument must be character" = is.character(operation),
+              "The 'nullable' argument must be logical" = is.logical(nullable))
+    operation <- match.arg(operation)
+    libtiledb_query_apply_aggregate(query@ptr, attrname, operation, nullable)
+}
