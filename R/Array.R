@@ -178,7 +178,10 @@ tiledb_array_has_enumeration <- function(arr) {
     return(libtiledb_array_has_enumeration_vector(ctx@ptr, arr@ptr))
 }
 
-##' Run an aggregate query on the given array and attribute
+##' Run an aggregate query on the given (sparse) array and attribute
+##'
+##' For dense arrays, use \code{tiledb_query_apply_aggregate} after setting an
+##' appropriate subarray.
 ##'
 ##' @param array A TileDB Array object
 ##' @param attrname The name of an attribute
@@ -190,7 +193,8 @@ tiledb_array_apply_aggregate <- function(array, attrname,
                                          operation = c("Count", "NullCount", "Min", "Max",
                                                        "Mean", "Sum"),
                                          nullable = TRUE) {
-    stopifnot("The 'query' argument must be a TileDB Array object" = is(array, "tiledb_array"),
+    stopifnot("The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
+              "The 'array' must be a sparse TileDB Array" = is.sparse(schema(array)),
               "The 'attrname' argument must be character" = is.character(attrname),
               "The 'operation' argument must be character" = is.character(operation),
               "The 'nullable' argument must be logical" = is.logical(nullable))

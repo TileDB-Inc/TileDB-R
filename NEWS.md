@@ -4,6 +4,8 @@
 
 * Factor level additions now check for possible over in the index type (#645, #646)
 
+* Aggregate operations can now be performed on dense arrays via a query object with appropriate subarray settings (#650)
+
 ## Bug Fixes
 
 * Factor level additions ensure the factor is relevelled under the full set of factors (#644)

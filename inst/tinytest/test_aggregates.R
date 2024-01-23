@@ -31,3 +31,16 @@ expect_equal(tiledb_array_apply_aggregate(arr, "year", "Min", FALSE), 2007)
 expect_equal(tiledb_array_apply_aggregate(arr, "year", "Max", FALSE), 2009)
 expect_equal(tiledb_array_apply_aggregate(arr, "year", "Sum", FALSE), 690762)
 expect_equal(tiledb_array_apply_aggregate(arr, "year", "Mean", FALSE), 2008.02906977)
+
+
+## also test on dense array via query argument
+if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+fromDataFrame(palmerpenguins::penguins, uri, sparse=FALSE)
+arr <- tiledb_array(uri, extended=FALSE)
+expect_error(tiledb_array_apply_aggregate(arr, "body_mass_g", "Min"))  # not via _array_ on dense
+qry <- tiledb_query(arr, "READ")
+qry <- tiledb_query_set_subarray(qry, c(1L, 344L)) 		# but with subarray via query
+expect_equal(tiledb_query_apply_aggregate(qry, "body_mass_g", "Min"), 2700)
+qry <- tiledb_query(arr, "READ")
+qry <- tiledb_query_set_subarray(qry, c(1L, 344L)) 		# but with subarray via query
+expect_equal(tiledb_query_apply_aggregate(qry, "body_mass_g", "Max"), 6300)
