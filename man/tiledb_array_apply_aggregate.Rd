@@ -2,7 +2,7 @@
 % Please edit documentation in R/Array.R
 \name{tiledb_array_apply_aggregate}
 \alias{tiledb_array_apply_aggregate}
-\title{Run an aggregate query on the given array and attribute}
+\title{Run an aggregate query on the given (sparse) array and attribute}
 \usage{
 tiledb_array_apply_aggregate(
   array,
@@ -24,5 +24,6 @@ tiledb_array_apply_aggregate(
 The value of the aggregation
 }
 \description{
-Run an aggregate query on the given array and attribute
+For dense arrays, use \code{tiledb_query_apply_aggregate} after setting an
+appropriate subarray.
 }
