@@ -1,5 +1,7 @@
 # Ongoing development
 
+* This release of the R package builds against [TileDB 2.20.0-rc0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.20-rc0), and has also been tested against earlier releases as well as the development version (#651)
+
 ## Improvements
 
 * Factor level additions now check for possible over in the index type (#645, #646)
