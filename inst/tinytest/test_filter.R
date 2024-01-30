@@ -1,9 +1,6 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 ctx <- tiledb_ctx(limitTileDBCores())
 
 #test_that("tiledb_filter default constructor", {
@@ -130,9 +127,7 @@ for (name in name_list) {
         if (tiledb_version(TRUE) < "2.9.0") next             # skip if not 2.9.0 or later
         dat2 <- dat2[, sapply(dat2, class) == "character"]
     }
-    basepath <- file.path(tempdir())
-    uri <- file.path(basepath, name)
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     fromDataFrame(dat3, uri, filter=name)
 
     if (is.na(match(name, c("NONE")))) {
@@ -143,6 +138,7 @@ for (name in name_list) {
         expect_true(size_curr < size_none)
         #message("None ", size_none, " vs ", name, " ", size_curr)
     }
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 }
 
 ## add some bulk checking for filters on float/double
@@ -156,9 +152,7 @@ for (name in name_list) {
     if (name == "SCALE_FLOAT") {
         if (tiledb_version(TRUE) < "2.11.0") next            # skip if not 2.11.0 or later
     }
-    basepath <- file.path(tempdir())
-    uri <- file.path(basepath, name)
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     fromDataFrame(dat4, uri, filter=name)
 
     if (is.na(match(name, c("NONE")))) {
@@ -169,8 +163,10 @@ for (name in name_list) {
         #expect_true(size_curr < size_none)
         #message("None ", size_none, " vs ", name, " ", size_curr)
     }
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 }
 
+## n==49
 ## scale_float with parameters (cf test in TileDB-Py PR #1195)
 if (tiledb_version(TRUE) >= "2.11.0") {
     dat4 <- data.frame(BL=dat$bill_length_mm,
@@ -186,26 +182,24 @@ if (tiledb_version(TRUE) >= "2.11.0") {
         tiledb_filter_set_option(flt, "SCALE_FLOAT_OFFSET", pars[i, "offset"])
         tiledb_filter_set_option(flt, "SCALE_FLOAT_BYTEWIDTH", pars[i, "bytewidth"])
 
-        uri <- file.path(tempdir())
+        uri <- tempfile()
         fromDataFrame(dat4, uri, filter_list=tiledb_filter_list(flt))
         res <- tiledb_array(uri, return_as="data.frame", extended=FALSE)[]
         expect_equivalent(dat4, res)
         if (dir.exists(uri)) unlink(uri, recursive=TRUE)
     }
-    if (!dir.exists(tempdir())) dir.create(tempdir())
 }
 
 if (tiledb_version(TRUE) >= "2.12.0") {
     D <- data.frame(index=sample(100, 26, FALSE),
                     key=LETTERS,
                     value=cumsum(runif(26)))
-    uri <- file.path(tempdir())
+    uri <- tempfile()
     fromDataFrame(D, uri, filter="FILTER_XOR")
     arr <- tiledb_array(uri, return_as="data.frame", extended=FALSE)[]
     expect_equal(D$value, arr$value)
 
     if (dir.exists(uri)) unlink(uri, recursive=TRUE)
-    if (!dir.exists(tempdir())) dir.create(tempdir())
 }
 
 rm(vfs)
