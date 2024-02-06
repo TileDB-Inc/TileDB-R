@@ -30,5 +30,5 @@ LinkingTo: Rcpp, RcppInt64
 Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble, arrow
 VignetteBuilder: simplermarkdown
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 Encoding: UTF-8

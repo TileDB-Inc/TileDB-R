@@ -13,7 +13,8 @@ The JSON string containing 'AsBuilt' information
 Return the 'AsBuilt' JSON string
 }
 \examples{
-txt <- tiledb::tiledb_config_as_built_json()
+if (tiledb_version(TRUE) > "2.17")
+    txt <- tiledb::tiledb_config_as_built_json()
 ## now eg either one of
 ##   sapply(jsonlite::fromJSON(txt)$as_built$parameters$storage_backends, \(x) x[[1]])
 ##   sapply(RcppSimdJson::fparse(txt)$as_built$parameters$storage_backends, \(x) x[[1]])
