@@ -15,7 +15,7 @@ Description: The modern database 'TileDB' introduces a powerful on-disk
  integrations.
 Copyright: TileDB, Inc.
 License: MIT + file LICENSE
-URL: https://github.com/TileDB-Inc/TileDB-R
+URL: https://github.com/TileDB-Inc/TileDB-R, https://tiledb-inc.github.io/TileDB-R/
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
 SystemRequirements: A C++17 compiler is required, and for macOS
  compilation version 11.0 or later is required. Optionally cmake (only
