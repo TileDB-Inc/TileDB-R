@@ -1,6 +1,6 @@
 # Ongoing development
 
-* This release of the R package builds against [TileDB 2.20.0-rc1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.20-rc1), and has also been tested against earlier releases as well as the development version (#651,#654)
+* This release of the R package builds against [TileDB 2.20.0-rc2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.20-rc2), and has also been tested against earlier releases as well as the development version (#651,#654, #658)
 
 ## Improvements
 
@@ -19,6 +19,10 @@
 ## Build and Test Systems
 
 * The nighly valgrind run was updated to include release 2.20 (#649)
+
+## Documentation
+
+* The DESCRIPTION file now contains a reference to the documentation site in its URL field (#656)
 
 
 # tiledb 0.23.0
