@@ -1,6 +1,6 @@
 # Ongoing development
 
-* This release of the R package builds against [TileDB 2.20.0-rc2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.20-rc2), and has also been tested against earlier releases as well as the development version (#651,#654, #658)
+* This release of the R package builds against [TileDB 2.20.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.20), and has also been tested against earlier releases as well as the development version (#651,#654,#658,#659)
 
 ## Improvements
 
