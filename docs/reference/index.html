@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.23.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.24.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -445,7 +445,7 @@
           
           <code><a href="tiledb_array_apply_aggregate.html">tiledb_array_apply_aggregate()</a></code> 
         </dt>
-        <dd>Run an aggregate query on the given array and attribute</dd>
+        <dd>Run an aggregate query on the given (sparse) array and attribute</dd>
       </dl><dl><dt>
           
           <code><a href="tiledb_array_close.html">tiledb_array_close()</a></code> 
@@ -1322,6 +1322,11 @@ This is only valid for sparse arrays.</dd>
           <code><a href="tiledb_query_alloc_buffer_ptr_char.html">tiledb_query_alloc_buffer_ptr_char()</a></code> 
         </dt>
         <dd>Allocate a Query buffer for reading a character attribute</dd>
+      </dl><dl><dt>
+          
+          <code><a href="tiledb_query_apply_aggregate.html">tiledb_query_apply_aggregate()</a></code> 
+        </dt>
+        <dd>Run an aggregate oprtation on the given query attribute</dd>
       </dl><dl><dt>
           
           <code><a href="tiledb_query_buffer_alloc_ptr.html">tiledb_query_buffer_alloc_ptr()</a></code> 
@@ -2238,11 +2243,6 @@ This is only valid for sparse arrays.</dd>
           <code><a href="tiledb_version.html">tiledb_version()</a></code> 
         </dt>
         <dd>The version of the libtiledb library</dd>
-      </dl><dl><dt>
-          
-          <code><a href="tiledb-package.html">tiledb-package</a></code> 
-        </dt>
-        <dd>tiledb - Interface to the TileDB Storage Manager API</dd>
       </dl><dl><dt>
           
           <code><a href="limitTileDBCores.html">limitTileDBCores()</a></code> 

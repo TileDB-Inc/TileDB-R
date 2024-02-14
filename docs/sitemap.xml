@@ -925,6 +925,9 @@
     <loc>/reference/tiledb_query_alloc_buffer_ptr_char_subarray.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_query_apply_aggregate.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_query_buffer_alloc_ptr.html</loc>
   </url>
   <url>
