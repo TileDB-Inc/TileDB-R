@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -85,21 +85,21 @@ tiledb_arrow_schema_del <- function(ptr) {
     .delete_arrow_schema_from_xptr(ptr)
 }
 
-##' @noRd
-.check_arrow_pointers <- function(arrlst) {
-    stopifnot("First argument must be an external pointer to ArrowArray" = check_arrow_array_tag(arrlst[[1]]),
-              "Second argument must be an external pointer to ArrowSchema" = check_arrow_schema_tag(arrlst[[2]]))
-}
+## ## ' @noRd
+## .check_arrow_pointers <- function(arrlst) {
+##     stopifnot("First argument must be an external pointer to ArrowArray" = check_arrow_array_tag(arrlst[[1]]),
+##               "Second argument must be an external pointer to ArrowSchema" = check_arrow_schema_tag(arrlst[[2]]))
+## }
 
-##' @noRd
-.as_arrow_table <- function(arrlst) {
-    .check_arrow_pointers(arrlst)
-    if (!requireNamespace("arrow", quietly=TRUE)) {
-        stop("This functionality requires the 'arrow' package to be installed.", call. = FALSE)
-    } else {
-        arrow::as_arrow_table(arrow::RecordBatch$import_from_c(arrlst[[1]], arrlst[[2]]))
-    }
-}
+## ## ' @noRd
+## .as_arrow_table <- function(arrlst) {
+##     .check_arrow_pointers(arrlst)
+##     if (!requireNamespace("arrow", quietly=TRUE)) {
+##         stop("This functionality requires the 'arrow' package to be installed.", call. = FALSE)
+##     } else {
+##         arrow::as_arrow_table(arrow::RecordBatch$import_from_c(arrlst[[1]], arrlst[[2]]))
+##     }
+## }
 
 ##' @noRd
 .tiledb_set_arrow_config <- function(ctx = tiledb_get_context()) {

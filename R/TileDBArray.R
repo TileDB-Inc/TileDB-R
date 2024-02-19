@@ -941,8 +941,10 @@ setMethod("[", "tiledb_array",
           if (status != "COMPLETE") spdl::debug("['['] query returned '{}'.", status)
 
           if (use_arrow) {
-              rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
-              at <- .as_arrow_table(rl)
+              ## rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
+              ## at <- .as_arrow_table(rl)
+              na <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
+              at <- arrow::as_arrow_table(na) # requires nanoarrow imported
 
               ## special case from schema evolution could have added twice so correcting
               for (n in colnames(at)) {
