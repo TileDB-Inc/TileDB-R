@@ -56,9 +56,9 @@ while (deltat < 30) {
         isTRUE(all.equal(NROW(res5), 20)) && 		            # expects 2 groups, 2 and 3, with 20 obs
         isTRUE(all.equal(min(res5$grp), 2)) &&
         isTRUE(all.equal(max(res5$grp), 3))) {
-        if (Sys.getenv("CI") != "") message("Success with gap time of ", deltat)
-        success <- TRUE
-        break
+           #if (Sys.getenv("CI") != "") message("Success with gap time of ", deltat)
+           success <- TRUE
+           break
     }
     deltat <- deltat * 5
 }

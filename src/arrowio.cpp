@@ -253,7 +253,7 @@ inline void registerXptrFinalizer(SEXP s, R_CFinalizer_t f, bool onexit = true) 
     R_RegisterCFinalizerEx(s, f, onexit ? TRUE : FALSE);
 }
 extern "C" {
-    void ArrowArrayRelease(struct ArrowArray *array); 		// made non-static in nanoarrow.c
+    void ArrowArrayReleaseInternal(struct ArrowArray *array); 		// made non-static in nanoarrow.c
     ArrowErrorCode ArrowArraySetStorageType(struct ArrowArray* array,	// ditto
                                             enum ArrowType storage_type);
     ArrowErrorCode localArrowSchemaSetType(struct ArrowSchema* schema, enum ArrowType type);
@@ -303,7 +303,7 @@ Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t 
     array->buffers = NULL;
     array->children = NULL;
     array->dictionary = NULL;
-    array->release = &ArrowArrayRelease;
+    array->release = &ArrowArrayReleaseInternal;
     array->private_data = NULL;
 
     auto private_data = (struct ArrowArrayPrivateData*) ArrowMalloc(sizeof(struct ArrowArrayPrivateData));
