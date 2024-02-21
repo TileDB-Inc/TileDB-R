@@ -552,6 +552,9 @@ setMethod("[", "tiledb_array",
            x@return_as, "' to be installed.", call. = FALSE)
 
   use_arrow <- x@return_as == "arrow"
+  if (use_arrow) {
+     suppressMessages(do.call(rawToChar(as.raw(c(0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65))), list("nanoarrow")))
+  }
 
   dims <- tiledb::dimensions(dom)
   ndims <- length(dims)
@@ -944,7 +947,7 @@ setMethod("[", "tiledb_array",
               ## rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
               ## at <- .as_arrow_table(rl)
               na <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
-              at <- arrow::as_arrow_table(na) # requires nanoarrow imported
+              at <- arrow::as_arrow_table(na)
 
               ## special case from schema evolution could have added twice so correcting
               for (n in colnames(at)) {

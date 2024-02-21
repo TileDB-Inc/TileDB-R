@@ -376,7 +376,6 @@ SEXP libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
     std::vector<std::string> dictnames = dicts.names();
 
     // Schema first
-    //Rcpp::XPtr<ArrowSchema> schemaxp = schema_owning_xptr();
     auto schemaxp = nanoarrow_schema_owning_xptr();
     auto sch = nanoarrow_output_schema_from_xptr(schemaxp);
     exitIfError(ArrowSchemaInitFromType(sch, NANOARROW_TYPE_STRUCT), "Bad schema init");
@@ -384,23 +383,15 @@ SEXP libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
     exitIfError(ArrowSchemaAllocateChildren(sch, ncol), "Bad schema children alloc");
 
     // Array second
-    //Rcpp::XPtr<ArrowArray> arrayxp = array_owning_xptr();
     auto arrayxp = nanoarrow_array_owning_xptr();
     auto arr = nanoarrow_output_array_from_xptr(arrayxp);
     exitIfError(ArrowArrayInitFromType(arr, NANOARROW_TYPE_STRUCT), "Bad array init");
     exitIfError(ArrowArrayAllocateChildren(arr, ncol), "Bad array children alloc");
 
-    //schemaxp = schema_setup_struct(schemaxp, ncol);
-    //arrayxp = array_setup_struct(arrayxp, ncol);
+    struct ArrowError ec;
 
-    //arrayxp->length = 0;
     arr->length = 0;
     for (size_t i=0; i<ncol; i++) {
-        // this allocates, and properly wraps as external pointers controlling lifetime
-        //Rcpp::XPtr<ArrowSchema> chldschemaxp = schema_owning_xptr();
-        //Rcpp::XPtr<ArrowArray> chldarrayxp = array_owning_xptr();
-        //auto chldschemaxp = sch->children[i];
-        //auto chldarrayxp = arr->children[i];
         bool is_factor = dicts[i] != R_NilValue;
         bool is_ordered = false;
         if (is_factor) {
@@ -420,8 +411,8 @@ SEXP libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
                                std::string(pp.second->name), pp.first->length));
         memcpy((void*) sch->children[i], pp.second.get(), sizeof(ArrowSchema));
         memcpy((void*) arr->children[i], pp.first.get(), sizeof(ArrowArray));
-        if (is_factor) {
-            // this could be rewritten if we generalized ColumnBuffer to allow passing of
+        if (is_factor) {        // create an arrow array of type string with the labels
+            // this could be rewritten if we generalized ColumnBuffer to allow passing of strings
             std::vector<std::string> svec = Rcpp::as<std::vector<std::string>>(dicts[i]);
             auto darrxp = nanoarrow_array_owning_xptr();
             auto darr = nanoarrow_output_array_from_xptr(darrxp);
@@ -436,7 +427,6 @@ SEXP libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
                 ArrowStringView asv = {str.data(), static_cast<int64_t>(str.size())};
                 exitIfError(ArrowArrayAppendString(darr, asv), "Bad string append");
             }
-            struct ArrowError ec;
             if (NANOARROW_OK != ArrowArrayFinishBuildingDefault(darr, &ec))
                 Rcpp::stop(ec.message);
 
@@ -446,34 +436,20 @@ SEXP libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
             arr->children[i]->dictionary = darr;
         }
 
-        //schemaxp->children[i] = chldschemaxp;
-        //arrayxp->children[i] = chldarrayxp;
-        //spdl::info("[libtiledb_to_arrow] Before assignment");
-        //sch->children[i] = chldschemaxp;
-        //arr->children[i] = chldarrayxp;
-
-        //if (pp.first->length > arrayxp->length) {
-        //    spdl::debug(tfm::format("[libtiledb_to_arrow] Setting array length to %d", pp.first->length));
-        //    arrayxp->length = pp.first->length;
-        //}
         if (pp.first->length > arr->length) {
            spdl::debug(tfm::format("[libtiledb_to_arrow] Setting array length to %d", pp.first->length));
            arr->length = pp.first->length;
         }
     }
     spdl::info("[libtiledb_to_arrow] After children loop");
-    //struct ArrowError ec;
     //if (NANOARROW_OK != ArrowArrayFinishBuildingDefault(arr, &ec))
     //    Rcpp::stop(ec.message);
-    //spdl::info("[libtiledb_to_arrow] ArrowArrayFinishBuildingDefault");
+    spdl::info("[libtiledb_to_arrow] ArrowArrayFinishBuildingDefault");
 
     // Nanoarrow special: stick schema into xptr tag to return single SEXP
     array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
 
-    //Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayxp,
-    //                                   Rcpp::Named("schema") = schemaxp);
     spdl::trace("[libtiledb_to_arrow] returning from libtiledb_to_arrow");
-    //return as;
     return arrayxp;
 }
 
