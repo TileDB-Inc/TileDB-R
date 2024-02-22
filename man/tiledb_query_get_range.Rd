@@ -5,25 +5,18 @@
 \title{Retrieve the query range for a query dimension and range index}
 \usage{
 tiledb_query_get_range(query, dimidx, rngidx)
-
-tiledb_query_get_range(query, dimidx, rngidx)
 }
 \arguments{
 \item{query}{A TileDB Query object}
 
-\item{dimidx}{An integer index selecting the dimension}
+\item{dimidx}{An integer or numeric index selecting the dimension}
 
-\item{rngidx}{An integer index selection the given range for the dimension}
+\item{rngidx}{An integer or numeric index selection the given range for the dimension}
 }
 \value{
 An integer vector with elements start, end and stride for the query
 range for the given dimension and range index
-
-An string vector with elements start and end for the query
-range for the given dimension and range index
 }
 \description{
 Retrieve the query range for a query dimension and range index
-
-Retrieve the query range for a variable-sized query dimension and range index
 }
