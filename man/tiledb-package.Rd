@@ -15,6 +15,7 @@ system which also scales well, and bindings to multiple languages.
 Useful links:
 \itemize{
   \item \url{https://github.com/TileDB-Inc/TileDB-R}
+  \item \url{https://tiledb-inc.github.io/TileDB-R/}
   \item Report bugs at \url{https://github.com/TileDB-Inc/TileDB-R/issues}
 }
 

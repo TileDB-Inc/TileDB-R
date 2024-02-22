@@ -526,12 +526,12 @@ tiledb_query_get_range <- function(query, dimidx, rngidx) {
 #' Retrieve the query range for a variable-sized query dimension and range index
 #'
 #' @param query A TileDB Query object
-#' @param dimidx An integer index selecting the dimension
+#' @param dimidx An integer index selecting the variable-sized dimension
 #' @param rngidx An integer index selection the given range for the dimension
 #' @return An string vector with elements start and end for the query
 #' range for the given dimension and range index
 #' @export
-tiledb_query_get_range <- function(query, dimidx, rngidx) {
+tiledb_query_get_range_var <- function(query, dimidx, rngidx) {
   stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"),
             `Argument 'dimidx' must be numeric` = is.numeric(dimidx),
             `Argument 'rngidx' must be numeric` = is.numeric(rngidx))
