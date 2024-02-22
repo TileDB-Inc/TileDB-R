@@ -22,7 +22,8 @@
 
 #include "libtiledb.h"
 #include "tiledb_version.h"
-#include <nanoarrow.h>          // for C interface to Arrow
+#include "nanoarrow/r.h"
+//#include <nanoarrow.h>          // for C interface to Arrow
 
 //#include <tiledb/arrowio>
 #include "tiledb_arrowio.h"
@@ -253,7 +254,7 @@ inline void registerXptrFinalizer(SEXP s, R_CFinalizer_t f, bool onexit = true) 
     R_RegisterCFinalizerEx(s, f, onexit ? TRUE : FALSE);
 }
 extern "C" {
-    void ArrowArrayRelease(struct ArrowArray *array); 		// made non-static in nanoarrow.c
+    void ArrowArrayReleaseInternal(struct ArrowArray *array); 		// made non-static in nanoarrow.c
     ArrowErrorCode ArrowArraySetStorageType(struct ArrowArray* array,	// ditto
                                             enum ArrowType storage_type);
     ArrowErrorCode localArrowSchemaSetType(struct ArrowSchema* schema, enum ArrowType type);
@@ -303,7 +304,7 @@ Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t 
     array->buffers = NULL;
     array->children = NULL;
     array->dictionary = NULL;
-    array->release = &ArrowArrayRelease;
+    array->release = &ArrowArrayReleaseInternal;
     array->private_data = NULL;
 
     auto private_data = (struct ArrowArrayPrivateData*) ArrowMalloc(sizeof(struct ArrowArrayPrivateData));
@@ -353,26 +354,44 @@ Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t 
     return arrxp;
 }
 
+inline void exitIfError(const ArrowErrorCode ec, const std::string& msg) {
+    if (ec != NANOARROW_OK) Rcpp::stop(msg);
+}
 
+// Attaches a schema to an array external pointer. The nanoarrow R package
+// attempts to do this whenever possible to avoid misinterpreting arrays.
+void array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr) {
+    R_SetExternalPtrTag(array_xptr, schema_xptr);
+}
+
+//  was: Rcpp::List
 // [[Rcpp::export]]
-Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
-                              Rcpp::XPtr<tiledb::Query> qry,
-                              Rcpp::List dicts) {
+nanoarrowXPtr libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
+                                 Rcpp::XPtr<tiledb::Query> qry,
+                                 Rcpp::List dicts) {
     check_xptr_tag<tiledb::ArrayBuffers>(ab);
     check_xptr_tag<tiledb::Query>(qry);
     std::vector<std::string> names = ab->names();
     auto ncol = names.size();
     std::vector<std::string> dictnames = dicts.names();
-    Rcpp::XPtr<ArrowSchema> schemaxp = schema_owning_xptr();
-    Rcpp::XPtr<ArrowArray> arrayxp = array_owning_xptr();
-    schemaxp = schema_setup_struct(schemaxp, ncol);
-    arrayxp = array_setup_struct(arrayxp, ncol);
 
-    arrayxp->length = 0;
+    // Schema first
+    auto schemaxp = nanoarrow_schema_owning_xptr();
+    auto sch = nanoarrow_output_schema_from_xptr(schemaxp);
+    exitIfError(ArrowSchemaInitFromType(sch, NANOARROW_TYPE_STRUCT), "Bad schema init");
+    exitIfError(ArrowSchemaSetName(sch, ""), "Bad schema name");
+    exitIfError(ArrowSchemaAllocateChildren(sch, ncol), "Bad schema children alloc");
+
+    // Array second
+    auto arrayxp = nanoarrow_array_owning_xptr();
+    auto arr = nanoarrow_output_array_from_xptr(arrayxp);
+    exitIfError(ArrowArrayInitFromType(arr, NANOARROW_TYPE_STRUCT), "Bad array init");
+    exitIfError(ArrowArrayAllocateChildren(arr, ncol), "Bad array children alloc");
+
+    struct ArrowError ec;
+
+    arr->length = 0;
     for (size_t i=0; i<ncol; i++) {
-        // this allocates, and properly wraps as external pointers controlling lifetime
-        Rcpp::XPtr<ArrowSchema> chldschemaxp = schema_owning_xptr();
-        Rcpp::XPtr<ArrowArray> chldarrayxp = array_owning_xptr();
         bool is_factor = dicts[i] != R_NilValue;
         bool is_ordered = false;
         if (is_factor) {
@@ -390,62 +409,51 @@ Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
 
         spdl::info(tfm::format("[libtiledb_to_arrow] Incoming name %s length %d",
                                std::string(pp.second->name), pp.first->length));
-        memcpy((void*) chldschemaxp, pp.second.get(), sizeof(ArrowSchema));
-        memcpy((void*) chldarrayxp, pp.first.get(), sizeof(ArrowArray));
-        if (is_factor) {
-            // this could be rewritten if we generalized ColumnBuffer to allow passing of
+        memcpy((void*) sch->children[i], pp.second.get(), sizeof(ArrowSchema));
+        memcpy((void*) arr->children[i], pp.first.get(), sizeof(ArrowArray));
+        if (is_factor) {        // create an arrow array of type string with the labels
+            // this could be rewritten if we generalized ColumnBuffer to allow passing of strings
             std::vector<std::string> svec = Rcpp::as<std::vector<std::string>>(dicts[i]);
-            Rcpp::XPtr<ArrowSchema> dschxp = schema_owning_xptr();
-            Rcpp::XPtr<ArrowArray> darrxp = array_owning_xptr();
-            dschxp = schema_setup_struct(dschxp, 0);
-            darrxp = array_setup_struct(darrxp, 0);
-
-            dschxp->format = "u";
-            dschxp->flags |= ARROW_FLAG_NULLABLE;
+            auto darrxp = nanoarrow_array_owning_xptr();
+            auto darr = nanoarrow_output_array_from_xptr(darrxp);
+            exitIfError(ArrowArrayInitFromType(darr, NANOARROW_TYPE_STRING), "Bad string array init");
+            exitIfError(ArrowArrayStartAppending(darr), "Bad string array append init");
+            auto dschxp = nanoarrow_schema_owning_xptr();
+            auto dsch = nanoarrow_output_schema_from_xptr(dschxp);
+            exitIfError(ArrowSchemaInitFromType(dsch, NANOARROW_TYPE_STRING), "Bad string schema init");
+            exitIfError(ArrowSchemaSetName(dsch, ""), "Bad string schema name");
             if (is_ordered) {
-                dschxp->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this line appears ignore
-                chldschemaxp->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this one matters more
+                dsch->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this line appears ignore
+                sch->children[i]->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this one matters more
             }
-            darrxp->length = svec.size();
-            darrxp->null_count = 0;
-            darrxp->n_buffers = 3; // we always have three for dictionairies
-            darrxp->buffers = (const void**)malloc(sizeof(void*) * darrxp->n_buffers);
-            darrxp->buffers[0] = nullptr;  // validity
-
-            size_t nv = svec.size();
-            std::string str = "";
-            std::vector<int32_t> offsets(nv+1);
-            int32_t cumlen = 0;
-            for (size_t i = 0; i < nv; i++) {
-                std::string s = svec[i];
-                offsets[i] = cumlen;
-                str += s;
-                cumlen += s.length();
+            for (auto str: svec) {
+                ArrowStringView asv = {str.data(), static_cast<int64_t>(str.size())};
+                exitIfError(ArrowArrayAppendString(darr, asv), "Bad string append");
             }
-            offsets[nv] = cumlen;
-            darrxp->buffers[2] = (const char*)malloc(sizeof(char) * cumlen);
-            std::memcpy((void*) darrxp->buffers[2], str.data(), (sizeof(char) * cumlen));
-            darrxp->buffers[1] = (const char*)malloc(sizeof(int32_t) * (nv + 1));
-            std::memcpy((void*) darrxp->buffers[1], offsets.data(), (sizeof(int32_t) * (nv + 1)));
+            if (NANOARROW_OK != ArrowArrayFinishBuildingDefault(darr, &ec))
+                Rcpp::stop(ec.message);
 
-            spdl::debug(tfm::format("[libtiledb_to_arrow] dict %s fmt %s -- len %d nbuf %d str %s",
-                                    names[i], dschxp->format, darrxp->length, darrxp->n_buffers, str));
-            chldschemaxp->dictionary = dschxp;
-            chldarrayxp->dictionary = darrxp;
+            spdl::debug(tfm::format("[libtiledb_to_arrow] dict %s fmt %s -- len %d nbuf %d",
+                                    names[i], dsch->format, darr->length, darr->n_buffers));
+            sch->children[i]->dictionary = dsch;
+            arr->children[i]->dictionary = darr;
         }
 
-        schemaxp->children[i] = chldschemaxp;
-        arrayxp->children[i] = chldarrayxp;
-
-        if (pp.first->length > arrayxp->length) {
-            spdl::debug(tfm::format("[libtiledb_to_arrow] Setting array length to %d", pp.first->length));
-            arrayxp->length = pp.first->length;
+        if (pp.first->length > arr->length) {
+           spdl::debug(tfm::format("[libtiledb_to_arrow] Setting array length to %d", pp.first->length));
+           arr->length = pp.first->length;
         }
     }
-    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayxp,
-                                       Rcpp::Named("schema") = schemaxp);
+    spdl::info("[libtiledb_to_arrow] After children loop");
+    //if (NANOARROW_OK != ArrowArrayFinishBuildingDefault(arr, &ec))
+    //    Rcpp::stop(ec.message);
+    spdl::info("[libtiledb_to_arrow] ArrowArrayFinishBuildingDefault");
+
+    // Nanoarrow special: stick schema into xptr tag to return single SEXP
+    array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
+
     spdl::trace("[libtiledb_to_arrow] returning from libtiledb_to_arrow");
-    return as;
+    return arrayxp;
 }
 
 

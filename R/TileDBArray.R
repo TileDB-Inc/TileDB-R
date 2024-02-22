@@ -508,6 +508,7 @@ setValidity("tiledb_array", function(object) {
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return The resulting elements in the selected format
 #' @import nanotime
+#' @importFrom nanoarrow as_nanoarrow_array
 #' @aliases [,tiledb_array
 #' @aliases [,tiledb_array-method
 #' @aliases [,tiledb_array,ANY,tiledb_array-method
@@ -552,6 +553,9 @@ setMethod("[", "tiledb_array",
            x@return_as, "' to be installed.", call. = FALSE)
 
   use_arrow <- x@return_as == "arrow"
+  if (use_arrow) {
+     suppressMessages(do.call(rawToChar(as.raw(c(0x72, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65))), list("nanoarrow")))
+  }
 
   dims <- tiledb::dimensions(dom)
   ndims <- length(dims)
@@ -941,8 +945,10 @@ setMethod("[", "tiledb_array",
           if (status != "COMPLETE") spdl::debug("['['] query returned '{}'.", status)
 
           if (use_arrow) {
-              rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
-              at <- .as_arrow_table(rl)
+              ## rl <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
+              ## at <- .as_arrow_table(rl)
+              na <- libtiledb_to_arrow(abptr, qryptr, dictionaries)
+              at <- arrow::as_arrow_table(na)
 
               ## special case from schema evolution could have added twice so correcting
               for (n in colnames(at)) {

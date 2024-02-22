@@ -2,9 +2,13 @@
 
 * This release of the R package builds against [TileDB 2.20.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.20.1), and has also been tested against earlier releases as well as the development version (#661)
 
+## Improvements
+
+* The vendored [nanoarrow](https://github.com/apache/arrow-nanoarrow) sources have been update to release 0.4.0, and use of its facilities has been extended (#663)
+
 ## Bug Fixes
 
-* The `tiledb_get_query_range_var()` accessor now correctly calls the range getter for variable-sized dimensions. (#662)
+* The `tiledb_get_query_range_var()` accessor now correctly calls the range getter for variable-sized dimensions (#662)
 
 
 # tiledb 0.24.0

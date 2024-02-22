@@ -115,7 +115,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_to_arrow
-Rcpp::List libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab, Rcpp::XPtr<tiledb::Query> qry, Rcpp::List dicts);
+nanoarrowXPtr libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab, Rcpp::XPtr<tiledb::Query> qry, Rcpp::List dicts);
 RcppExport SEXP _tiledb_libtiledb_to_arrow(SEXP abSEXP, SEXP qrySEXP, SEXP dictsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
