@@ -112,7 +112,6 @@ const tiledb_xptr_object tiledb_xptr_map_to_col_buf_t            { 230 };
 const tiledb_xptr_object tiledb_arrow_array_t                    { 300 };
 const tiledb_xptr_object tiledb_arrow_schema_t                   { 310 };
 
-
 // templated checkers for external pointer tags
 template <typename T> const int32_t XPtrTagType                            = tiledb_xptr_default; // clang++ wants a value
 template <> inline const int32_t XPtrTagType<tiledb::Array>                = tiledb_xptr_object_array;

@@ -366,9 +366,9 @@ void array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr) {
 
 //  was: Rcpp::List
 // [[Rcpp::export]]
-SEXP libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
-                        Rcpp::XPtr<tiledb::Query> qry,
-                        Rcpp::List dicts) {
+nanoarrowXPtr libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
+                                 Rcpp::XPtr<tiledb::Query> qry,
+                                 Rcpp::List dicts) {
     check_xptr_tag<tiledb::ArrayBuffers>(ab);
     check_xptr_tag<tiledb::Query>(qry);
     std::vector<std::string> names = ab->names();

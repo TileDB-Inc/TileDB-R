@@ -69,6 +69,8 @@ typedef struct query_buffer query_buf_t;
 // map from buffer names to shared_ptr to column_buffer
 typedef std::unordered_map<std::string, std::shared_ptr<tiledb::ColumnBuffer>> map_to_col_buf_t;
 
+// some lipstick on the pig that is a SEXP -- allow the nanoarrow ArrowArray XPtr be typedef'ed
+typedef SEXP nanoarrowXPtr;
 
 // C++ compiler complains about missing delete functionality when we use tiledb_vfs_fh_t directly
 struct vfs_fh {
