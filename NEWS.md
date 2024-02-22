@@ -2,6 +2,10 @@
 
 * This release of the R package builds against [TileDB 2.20.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.20.1), and has also been tested against earlier releases as well as the development version (#661)
 
+## Bug Fixes
+
+* The `tiledb_get_query_range_var()` accessor now correctly calls the range getter for variable-sized dimensions. (#662)
+
 
 # tiledb 0.24.0
 
