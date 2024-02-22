@@ -491,12 +491,6 @@ setValidity("tiledb_array", function(object) {
     bit64::as.integer64(val)
 }
 
-# ' @exportS3Method nanoarrow::as_arrow_table
-#as_arrow_table.nanoarrow_array <- function(x, ..., schema = NULL) {
-#    print(class(x))
-#    arrow::as_arrow_table(x, schema = schema)
-#}
-
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
 #' Heterogenous domains are supported, including timestamps and characters.
