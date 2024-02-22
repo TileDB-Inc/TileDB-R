@@ -422,7 +422,10 @@ SEXP libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
             auto dsch = nanoarrow_output_schema_from_xptr(dschxp);
             exitIfError(ArrowSchemaInitFromType(dsch, NANOARROW_TYPE_STRING), "Bad string schema init");
             exitIfError(ArrowSchemaSetName(dsch, ""), "Bad string schema name");
-
+            if (is_ordered) {
+                dsch->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this line appears ignore
+                sch->children[i]->flags |= ARROW_FLAG_DICTIONARY_ORDERED; // this one matters more
+            }
             for (auto str: svec) {
                 ArrowStringView asv = {str.data(), static_cast<int64_t>(str.size())};
                 exitIfError(ArrowArrayAppendString(darr, asv), "Bad string append");
