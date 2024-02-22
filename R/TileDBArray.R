@@ -491,6 +491,12 @@ setValidity("tiledb_array", function(object) {
     bit64::as.integer64(val)
 }
 
+# ' @exportS3Method nanoarrow::as_arrow_table
+#as_arrow_table.nanoarrow_array <- function(x, ..., schema = NULL) {
+#    print(class(x))
+#    arrow::as_arrow_table(x, schema = schema)
+#}
+
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
 #' Heterogenous domains are supported, including timestamps and characters.
@@ -508,6 +514,7 @@ setValidity("tiledb_array", function(object) {
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return The resulting elements in the selected format
 #' @import nanotime
+#' @importFrom nanoarrow as_nanoarrow_array
 #' @aliases [,tiledb_array
 #' @aliases [,tiledb_array-method
 #' @aliases [,tiledb_array,ANY,tiledb_array-method
