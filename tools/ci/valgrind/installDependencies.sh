@@ -74,11 +74,13 @@ echo "::endgroup::"
 echo "::group::Install R Packages"
 # This relies on bspm and installs binaries (i.e. r-cran-* packages)
 install.r \
+    arrow \
     bit64 \
     curl \
     data.table \
     Matrix \
     nanotime \
+    nanoarrow \
     nycflights13 \
     palmerpenguins \
     Rcpp \

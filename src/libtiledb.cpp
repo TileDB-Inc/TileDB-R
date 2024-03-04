@@ -4376,8 +4376,7 @@ std::string libtiledb_vfs_create_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
 // [[Rcpp::export]]
 bool libtiledb_vfs_is_dir(XPtr<tiledb::VFS> vfs, std::string uri) {
     check_xptr_tag<tiledb::VFS>(vfs);
-    auto ptr = vfs.get();
-    return ptr->is_dir(uri);
+    return vfs->is_dir(uri);
 }
 
 // [[Rcpp::export]]
