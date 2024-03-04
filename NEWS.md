@@ -10,6 +10,8 @@
 
 * The `tiledb_get_query_range_var()` accessor now correctly calls the range getter for variable-sized dimensions (#662)
 
+* The nighly valgrind check now installs to require `nanoarrow` package (#664)
+
 
 # tiledb 0.24.0
 
