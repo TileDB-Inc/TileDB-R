@@ -63,10 +63,13 @@ tiledb_attr <- function(name,
                         ctx = tiledb_get_context()
                         ) {
     if (missing(name)) name <- ""
-    stopifnot(`The 'type' argument for is mandatory` = !missing(type),
-              `The 'ctx' argument must be a tiledb_ctx` = is(ctx, "tiledb_ctx"),
-              `The 'name' argument must be a scalar string` = is.scalar(name, "character"),
-              `The 'filter_list' argument must be a tiledb_filter_list instance` = is(filter_list, "tiledb_filter_list"))
+    if (is.na(ncells)) ncells <- NA_integer_ 		# the specific NA for ints (as basic NA is bool)
+    stopifnot("The 'name' argument must be a scalar string" = is.scalar(name, "character"),
+              "The 'type' argument is mandatory" = !missing(type),
+              "The 'ncells' argument must be numeric or NA" = is.numeric(ncells) || is.na(ncells),
+              "The 'filter_list' argument must be a tiledb_filter_list instance" =
+                  is(filter_list, "tiledb_filter_list"),
+              "The 'ctx' argument must be a tiledb_ctx" = is(ctx, "tiledb_ctx"))
     ptr <- libtiledb_attribute(ctx@ptr, name, type, filter_list@ptr, ncells, nullable)
     attr <- new("tiledb_attr", ptr = ptr)
     if (!is.null(enumeration))
