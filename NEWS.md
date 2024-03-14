@@ -14,6 +14,11 @@
 
 * The nighly valgrind check now installs to require `nanoarrow` package (#664)
 
+## Build and Test Systems
+
+* The nighly valgrind run was updated to include release 2.21 (#669)
+
+
 
 # tiledb 0.24.0
 
