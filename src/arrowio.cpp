@@ -409,8 +409,9 @@ nanoarrowXPtr libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
 
         spdl::info(tfm::format("[libtiledb_to_arrow] Incoming name %s length %d",
                                std::string(pp.second->name), pp.first->length));
-        memcpy((void*) sch->children[i], pp.second.get(), sizeof(ArrowSchema));
-        memcpy((void*) arr->children[i], pp.first.get(), sizeof(ArrowArray));
+        ArrowArrayMove(pp.first.get(),   arr->children[i]);
+        ArrowSchemaMove(pp.second.get(), sch->children[i]);
+
         if (is_factor) {        // create an arrow array of type string with the labels
             // this could be rewritten if we generalized ColumnBuffer to allow passing of strings
             std::vector<std::string> svec = Rcpp::as<std::vector<std::string>>(dicts[i]);
