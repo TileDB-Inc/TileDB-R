@@ -1,15 +1,18 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 if (Sys.getenv("CI", "") == "") exit_file("Skip unextended test run")
 
 ctx <- tiledb_ctx(limitTileDBCores())
-
 if (!requireNamespace("arrow", quietly=TRUE)) exit_file("No 'arrow' package.")
 suppressMessages(library(arrow))
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 
 if (get_return_as_preference() != "asis") set_return_as_preference("asis") 		# baseline value
@@ -40,7 +43,7 @@ tiledb_arrow_array_del(aa)
 ## round-turn test 1: write tiledb first, create arrow object via zero-copy
 suppressMessages(library(bit64))
 n <- 10L
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 dim <- tiledb_dim("rows", domain=c(1L,n), type="INT32", tile=1L)
 dom <- tiledb_domain(dim)
 sch <- tiledb_array_schema(dom,
@@ -111,7 +114,7 @@ for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "u
 
 ## n=15
 ## round-turn test 2: create arrow object, write tiledb second via zero-copy
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 n <- 10L
 
 ## create a schema but don't fill it yet

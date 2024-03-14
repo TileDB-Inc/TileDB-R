@@ -1,16 +1,21 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 ctx <- tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 tmp <- tempfile()
 
 unlink_and_create_simple <- function(tmp) {
-  if (dir.exists(tmp)) unlink(tmp, recursive = TRUE, force = TRUE)
-  dir.create(tmp, recursive = TRUE)
+  if (missing(tmp)) tmp <- tempfile()
+  #if (dir.exists(tmp)) unlink(tmp, recursive = TRUE, force = TRUE)
+  #dir.create(tmp, recursive = TRUE)
 
   dim <- tiledb_dim("dim", domain = c(1L, 4L))
   dom <- tiledb_domain(c(dim))
@@ -32,7 +37,8 @@ unlink_and_create_simple <- function(tmp) {
   arr
 }
 
-unlink_and_create_ptr <- function(tmp) {
+unlink_and_create_ptr <- function() {
+  tmp <- tempfile()
   arr <- unlink_and_create_simple(tmp)
   tiledb_array_close(arr)
 
@@ -62,7 +68,7 @@ close_and_reopen <- function(arr, txt) {
 
 
 #test_that("Can check presence of metadata", {
-arr <- unlink_and_create_ptr(tmp)
+arr <- unlink_and_create_ptr()
 
 arr <- tiledb_array_open(arr, "READ")
 
@@ -75,7 +81,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #})
 
 #test_that("Can retrieve count of metadata", {
-arr <- unlink_and_create_ptr(tmp)
+arr <- unlink_and_create_ptr()
 
 arr <- tiledb_array_open(arr, "READ")
 
@@ -85,7 +91,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #})
 
 #test_that("Can get metadata", {
-arr <- unlink_and_create_ptr(tmp)
+arr <- unlink_and_create_ptr()
 
 arr <- tiledb_array_open(arr, "READ")
 
@@ -97,7 +103,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #})
 
 #test_that("Can put metadata", {
-arr <- unlink_and_create_ptr(tmp)
+arr <- unlink_and_create_ptr()
 
 if (tiledb:::libtiledb_array_is_open(arr@ptr)) tiledb_array_close(arr)
 arr <- tiledb_array_open(arr, "WRITE")
@@ -111,7 +117,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #})
 
 #test_that("Can do round trip", {
-arr <- unlink_and_create_simple(tmp)
+arr <- unlink_and_create_simple()
 
 vec <- c(1.1, 2.2, 3.3)
 expect_true(tiledb_put_metadata(arr, "dvec", vec))
@@ -140,7 +146,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #})
 
 #test_that("Can get by index", {
-arr <- unlink_and_create_ptr(tmp)
+arr <- unlink_and_create_ptr()
 
 arr <- tiledb_array_open(arr, "READ")
 
@@ -154,7 +160,7 @@ unlink(tmp, recursive = TRUE, force = TRUE)
 #})
 
 #test_that("Can get all", {
-arr <- unlink_and_create_ptr(tmp)
+arr <- unlink_and_create_ptr()
 
 arr <- tiledb_array_open(arr, "READ")
 
@@ -165,7 +171,7 @@ expect_true("txt" %in% names(res))
 #})
 
 #test_that("Can delete by key", {
-arr <- unlink_and_create_ptr(tmp)
+arr <- unlink_and_create_ptr()
 
 arrR <- tiledb_array_open(arr, "READ")
 

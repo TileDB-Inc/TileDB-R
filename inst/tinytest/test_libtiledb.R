@@ -1,10 +1,14 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 #test_that("version is valid", {
 ver <- tiledb_version()
@@ -33,13 +37,11 @@ expect_equal(unname(tiledb:::libtiledb_config_get(config, "don't exist")), NA_ch
 #})
 
 #test_that("construct libtiledb_config with an empty vector of paramters", {
-params = c()
+params <- c()
 default_config <- tiledb:::libtiledb_config()
 params_config <- tiledb:::libtiledb_config(params)
-expect_equal(
-  tiledb:::libtiledb_config_get(default_config, "sm.tile_cache_size"),
-  tiledb:::libtiledb_config_get(params_config, "sm.tile_cache_size")
-)
+expect_equal(tiledb:::libtiledb_config_get(default_config, "sm.tile_cache_size"),
+             tiledb:::libtiledb_config_get(params_config, "sm.tile_cache_size"))
 #})
 
 #test_that("tiledb_config can be converted to an R vector", {
@@ -92,7 +94,7 @@ dim <- tiledb:::libtiledb_dim(ctx, "d1", "FLOAT64", c(1.0, 100.0), 10.0)
 expect_true(is(dim, "externalptr"))
 #})
 
-
+# n=161
 #test_that("basic libtiledb_domain constructor works", {
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
@@ -120,6 +122,7 @@ attr <- tiledb:::libtiledb_attribute(ctx, "a1", "INT32", filter_list, 1, FALSE)
 expect_true(is(attr, "externalptr"))
 #})
 
+## n=164
 #test_that("basic float64 libtiledb_attr constructor works", {
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
@@ -143,7 +146,7 @@ expect_true(is(sch, "externalptr"))
 #})
 
 #test_that("basic dense vector libtiledb_array creation works", {
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
 dim <- tiledb:::libtiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
@@ -152,14 +155,13 @@ filter <- tiledb:::libtiledb_filter(ctx, "NONE")
 filter_list <- tiledb:::libtiledb_filter_list(ctx, c(filter))
 att <- tiledb:::libtiledb_attribute(ctx, "a1", "FLOAT64", filter_list, 1, FALSE)
 sch <- tiledb:::libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
-pth <- paste(tmp, "test_array", sep = "/")
-uri <- tiledb:::libtiledb_array_create(pth, sch)
-expect_true(dir.exists(pth))
+uri <- tiledb:::libtiledb_array_create(tmp, sch)
+if (!isRESTCI) expect_true(dir.exists(tmp))
 unlink(tmp, recursive = TRUE)
 #})
 
 #test_that("basic dense vector writes / reads works", {
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
 dim <- tiledb:::libtiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
@@ -168,8 +170,7 @@ filter <- tiledb:::libtiledb_filter(ctx, "NONE")
 filter_list <- tiledb:::libtiledb_filter_list(ctx, c(filter))
 att <- tiledb:::libtiledb_attribute(ctx, "a1", "FLOAT64", filter_list, 1, FALSE)
 sch <- tiledb:::libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
-pth <- paste(tmp, "test_dense_read_write", sep = "/")
-uri <- tiledb:::libtiledb_array_create(pth, sch)
+uri <- tiledb:::libtiledb_array_create(tmp, sch)
 
 dat <- c(3, 2, 1)
 arr <- tiledb:::libtiledb_array_open(ctx, uri, "WRITE")
@@ -190,7 +191,7 @@ unlink(tmp, recursive = TRUE)
 #})
 
 #test_that("basic dense vector read subarray works", {
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
 dim <- tiledb:::libtiledb_dim(ctx, "d1", "INT32", c(1L, 3L), 3L)
@@ -199,8 +200,7 @@ filter <- tiledb:::libtiledb_filter(ctx, "NONE")
 filter_list <- tiledb:::libtiledb_filter_list(ctx, c(filter))
 att <- tiledb:::libtiledb_attribute(ctx, "a1", "FLOAT64", filter_list, 1, FALSE)
 sch <- tiledb:::libtiledb_array_schema(ctx, dom, c(att), cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", sparse = FALSE)
-pth <- paste(tmp, "test_dense_read_write", sep = "/")
-uri <- tiledb:::libtiledb_array_create(pth, sch)
+uri <- tiledb:::libtiledb_array_create(tmp, sch)
 
 dat <- c(3, 2, 1)
 arr <- tiledb:::libtiledb_array_open(ctx, uri, "WRITE")
@@ -222,6 +222,9 @@ expect_equal(res, dat[sub])
 unlink(tmp, recursive = TRUE)
 #})
 
+if (isRESTCI) exit_file("skip VFS tests")
+
+## n=170
 #test_that("basic tiledb vfs constructor works", {
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
@@ -234,25 +237,21 @@ expect_true(is(vfs, "externalptr"))
 #})
 
 #test_that("basic vfs is_dir, is_file functionality works", {
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 
 ##ctx <- tiledb:::libtiledb_ctx()
 ctx <- tiledb_get_context()@ptr
 vfs <- tiledb:::libtiledb_vfs(ctx)
 
 ## test dir
-expect_true(tiledb:::libtiledb_vfs_is_dir(vfs, tmp))
+expect_false(tiledb:::libtiledb_vfs_is_dir(vfs, tmp))
 expect_false(tiledb:::libtiledb_vfs_is_dir(vfs, "i don't exist"))
 
-test_file_path <- paste("file:/", tmp, "test_file", sep = "/")
-test_file <- file(test_file_path, "wb")
+test_file <- file(tmp, "wb")
 writeChar(c("foo", "bar", "baz"), test_file)
 close(test_file)
 
 ## test file
-if(.Platform$OS.type != "windows") {
-  expect_true(tiledb:::libtiledb_vfs_is_file(vfs, test_file_path))
-}
-expect_false(tiledb:::libtiledb_vfs_is_file(vfs, tmp))
+expect_true(tiledb:::libtiledb_vfs_is_file(vfs, tmp))
 unlink(tmp, recursive = TRUE)
 #})

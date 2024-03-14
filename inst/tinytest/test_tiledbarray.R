@@ -1,22 +1,28 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-isMacOS <- (Sys.info()['sysname'] == "Darwin")
-
 ctx <- tiledb_ctx(limitTileDBCores())
 
+isMacOS <- (Sys.info()['sysname'] == "Darwin")
 hasDataTable <- requireNamespace("data.table", quietly=TRUE)
 hasTibble <- requireNamespace("tibble", quietly=TRUE)
+isCI <- Sys.getenv("CI") != ""
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
 
 ## GitHub Actions had some jobs killed on the larger data portion so we dial mem use down
-if (Sys.getenv("CI") != "") set_allocation_size_preference(1024*1024*5)
+if (isCI) set_allocation_size_preference(1024*1024*5)
+
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
+
 
 #test_that("test tiledb_array read/write sparse array with heterogenous date domains", {
 op <- options()
 options(stringsAsFactors=FALSE)       # accomodate R 3.*
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 
 d1  <- tiledb_dim("d1",
                   domain = c(as.Date("2001-01-02"), as.Date("2099-12-31")), tile=1L,
@@ -39,12 +45,12 @@ expect_equal(arr[]$val, df[,"val"])
 
 unlink(tmp, recursive = TRUE)
 options(op)
-#})
+
 
 #test_that("test tiledb_array read/write sparse array with heterogenous msec domains", {
 op <- options()
 options(stringsAsFactors=FALSE)       # accomodate R 3.*
-dir.create(tmp <- tempfile())
+tmp <- tempfile()
 
 d1  <- tiledb_dim("d1", domain = c(0, 1e18), tile=1000L, type="DATETIME_MS")
 d2  <- tiledb_dim("d2", domain = NULL, tile = NULL, type="ASCII")
@@ -65,7 +71,6 @@ expect_equal(arr[]$val, df[,"val"])
 
 unlink(tmp, recursive = TRUE)
 options(op)
-#})
 
 
 #test_that("test full write-read cycle on sample data using fromDataFrame", {
@@ -82,7 +87,7 @@ options(stringsAsFactors=FALSE)       # accomodate R 3.*
 
 dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
 
-dir.create(tmpuri <- tempfile())
+tmpuri <- tempfile()
 fromDataFrame(dat[,-1], tmpuri)
 
 arr <- tiledb_array(tmpuri, return_as="data.frame")
@@ -91,7 +96,7 @@ expect_equal(dat[,-1], newdat[,-1])
 
 unlink(tmpuri, recursive = TRUE)
 options(op)
-#})
+
 
 #test_that("test full write-read cycle on sample data using schema", {
 op <- options()
@@ -107,7 +112,7 @@ options(stringsAsFactors=FALSE)       # accomodate R 3.*
 
 dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
 
-dir.create(tmpuri <- tempfile())
+tmpuri <- tempfile()
 
 n <- nrow(dat)
 dim <- tiledb_dim("rows", domain=c(1L,n), type="INT32", tile=1L)
@@ -142,10 +147,7 @@ expect_equivalent(dat, newdat)
 
 unlink(tmpuri, recursive = TRUE)
 options(op)
-#})
 
-## (some) r-universe builds are/were breaking here
-if (Sys.getenv("MY_UNIVERSE", "") != "") exit_file("Skip remainder at r-universe")
 
 #test_that("test extended flag on reading", {
 op <- options()
@@ -187,7 +189,6 @@ expect_equal(dat1, dat2)
 
 unlink(tmpuri, recursive = TRUE)
 options(op)
-#})
 
 
 #test_that("test attrs column selection on reading", {
@@ -204,7 +205,7 @@ options(stringsAsFactors=FALSE)       # accomodate R 3.*
 
 dat <- readRDS(system.file("sampledata", "bankSample.rds", package="tiledb"))
 
-dir.create(tmpuri <- tempfile())
+tmpuri <- tempfile()
 fromDataFrame(dat[,-1], tmpuri)
 
 arr <- tiledb_array(tmpuri, return_as="data.frame", extended=FALSE)
@@ -220,14 +221,14 @@ expect_equal(colnames(dat), sels)
 
 unlink(tmpuri, recursive = TRUE)
 options(op)
-#})
+
 
 #test_that("test range selection on reading", {
 
 set.seed(100)
 y <- matrix((1:10) + runif(10)/10, 10)
 
-rc <- dir.create(tmpuri <- tempfile())
+tmpuri <- tempfile()
 d1  <- tiledb_dim("d1", domain = c(1L, 25L), type="INT32", tile=1L)
 d2  <- tiledb_dim("d2", domain = c(1L, 25L), type="INT32", tile=1L)
 dom <- tiledb_domain(c(d1, d2))
@@ -278,11 +279,10 @@ expect_equal(nrow(val), 10)
 expect_equal(val[,"d1"], val[,"d2"])
 
 unlink(tmpuri, recursive = TRUE)
-#})
+
 
 #test_that("test range selection edge cases", {
 tmp <- tempfile()
-dir.create(tmp)
 
 d1  <- tiledb_dim("d1", domain = c(1L, 10L))
 d2  <- tiledb_dim("d2", domain = c(1L, 10L))
@@ -308,13 +308,11 @@ selected_points(x) <- list(2,2)         # same, but via points
 val <- x[]
 expect_equal(nrow(val), 0L)
 
-
 unlink(tmp, recursive = TRUE)
-#})
+
 
 #test_that("test range selection edge cases sparse", {
 tmp <- tempfile()
-dir.create(tmp)
 
 d1  <- tiledb_dim("d1", domain = c(1, 100))
 d2  <- tiledb_dim("d2", domain = c(1, 100))
@@ -344,11 +342,10 @@ val <- x[]
 expect_equal(nrow(val), 0L)
 
 unlink(tmp, recursive = TRUE)
-#})
+
 
 #test_that("test range selection for multiple dimensions", {
 tmp <- tempfile()
-dir.create(tmp)
 
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 4L), 4L, "INT32"),
                               tiledb_dim("d2", c(1L, 4L), 4L, "INT32"),
@@ -380,15 +377,13 @@ selected_points(A) <- list(1, 2, NULL, 4)
 expect_equal(nrow(A[]), 0L)
 
 unlink(tmp, recursive = TRUE)
-#})
+
 
 #test_that("test int64 dimension for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
-
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   ## We use
@@ -417,12 +412,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   expect_silent(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "INT64"))
 }
 
+
 #test_that("test uint64 dimension for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   ## We use
@@ -451,11 +446,11 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   expect_silent(tiledb_dim("rows", as.integer64(c(1,4)), 4L, "UINT64"))
 }
 
+
 #test_that("test uint32 dimension for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT32"),
@@ -479,12 +474,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test int16 dimension for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT16"),
@@ -507,13 +502,13 @@ if (requireNamespace("bit64", quietly=TRUE)) {
 
   unlink(tmp, recursive = TRUE)
 }
+
 
 #test_that("test uint16 dimension for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT16"),
@@ -537,12 +532,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test int8 dimension for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT8"),
@@ -565,13 +560,13 @@ if (requireNamespace("bit64", quietly=TRUE)) {
 
   unlink(tmp, recursive = TRUE)
 }
+
 
 #test_that("test uint8 dimension for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT8"),
@@ -595,12 +590,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test int8 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT8"),
@@ -626,12 +621,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test uint8 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT8"),
@@ -657,12 +652,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test int16 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT16"),
@@ -688,12 +683,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test uint16 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT16"),
@@ -719,12 +714,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test int32 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT32"),
@@ -750,12 +745,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test uint32 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "UINT32"),
@@ -781,12 +776,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test int64 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", as.integer64(c(1,4)), as.integer64(4), "INT64"),
@@ -813,12 +808,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test uint64 dimension for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", as.integer64(c(1,4)), as.integer64(4), "UINT64"),
@@ -845,12 +840,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test all integer types as attributes for dense arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT32"),
@@ -902,12 +897,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 #test_that("test all integer types as attributes for sparse arrays", {
 if (requireNamespace("bit64", quietly=TRUE)) {
   suppressMessages(library(bit64))
 
   tmp <- tempfile()
-  dir.create(tmp)
 
   ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4]
   dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L,4L), 4L, "INT32"),
@@ -958,12 +953,12 @@ if (requireNamespace("bit64", quietly=TRUE)) {
   unlink(tmp, recursive = TRUE)
 }
 
+
 if (tiledb_version(TRUE) >= "2.8.0" && tiledb_version(TRUE) < "2.10.0") exit_file("2.8.* and 2.9.* skip remainder")
 
 ## n=104
 ## non-empty domain, var and plain
 tmp <- tempfile()
-dir.create(tmp)
 
 ## create 4x4 with single attribute
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 4L), 4L, "INT32"),
@@ -995,10 +990,10 @@ schema3 <- tiledb::schema(arr)
 expect_true(is(schema3, "tiledb_array_schema"))
 expect_equivalent(schema, schema3)  # switched to equivalent
 
+
 ## n=114
 ## time travel
 tmp <- tempfile()
-dir.create(tmp)
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 5L, "INT32"),
                               tiledb_dim("cols", c(1L, 10L), 5L, "INT32")))
 schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
@@ -1033,10 +1028,10 @@ if (tiledb_version(TRUE) >= "2.10.0") {
     expect_equal(nrow(A[]), 6)
 }
 
+
 ## n=118
 ## as.matrix
 tmp <- tempfile()
-dir.create(tmp)
 ## Generate a matrix
 n <- 5L
 k <- 4L
@@ -1088,6 +1083,7 @@ expect_equal(length(res), 2L)
 expect_equal(res$vals, mat)
 expect_equal(res$vals2, 10*mat)
 
+
 ## n=134
 ## PR #245 (variant of examples/ex_1.R)
 uri <- tempfile()
@@ -1115,6 +1111,7 @@ expect_equal(res[["a"]], data[["a"]])
 expect_equal(res[["b"]], data[["b"]])
 expect_equal(res[["c"]], data[["c"]])
 
+
 ## n=139
 ## PR #246
 N <- 25L
@@ -1130,6 +1127,7 @@ M <- matrix(runif(N*K), N, K)
 obj[] <- M                              # prior to #246 this write had a write data type
 chk <- tiledb_array(uri, return_as="matrix")
 expect_equivalent(chk[], M)
+
 
 ## n=140
 ## test for data.frame append
@@ -1180,6 +1178,7 @@ res2 <- arr[]
 expect_equal(nrow(res2), 2)
 expect_equal(res1, res2)
 
+
 ## FYI: 152 tests here
 ## check for strings_as_factors
 arr <- tiledb_array(uri, return_as="data.frame")
@@ -1216,6 +1215,7 @@ expect_equal(sum(is.na(res[1:3,1:2])), 6) # arr[1:3,1:2] all NA
 expect_equal(res[1:3,3:4], mat[1:3,3:4])
 expect_equal(res[4:5,1:4], mat[4:5,1:4])
 
+
 ## issue 259 dense array with n>2 dimensions
 dom <- tiledb_domain(dims = list(tiledb_dim("rows", c(1L, 10L), 10L, "INT32"),
                                  tiledb_dim("cols", c(1L, 5L), 5L, "INT32"),
@@ -1237,20 +1237,20 @@ res <- chk[]
 expect_equal(dim(res), c(100,6))
 expect_equal(colnames(res), c("rows", "cols", "time", "a", "b", "c"))
 
-## consolidate
-expect_equal(array_consolidate(uri), NULL)
-expect_error(array_consolidate(uri, start_time="abc")) # not a datetime
-expect_error(array_consolidate(uri, end_time="def"))   # not a datetime
-now <- Sys.time()
-expect_equal(array_consolidate(uri, start_time=now-60, end_time=now), NULL)
+if (!isRESTCI) {
+    ## consolidate
+    expect_equal(array_consolidate(uri), NULL)
+    expect_error(array_consolidate(uri, start_time="abc")) # not a datetime
+    expect_error(array_consolidate(uri, end_time="def"))   # not a datetime
+    now <- Sys.time()
+    expect_equal(array_consolidate(uri, start_time=now-60, end_time=now), NULL)
 
-## vaccum
-expect_equal(array_vacuum(uri), NULL)
-expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
-expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
-expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
-
-
+    ## vaccum
+    expect_equal(array_vacuum(uri), NULL)
+    expect_error(array_vacuum(uri, start_time="abc")) # not a datetime
+    expect_error(array_vacuum(uri, end_time="def"))   # not a datetime
+    expect_equal(array_vacuum(uri, start_time=now-60, end_time=now), NULL)
+}
 
 ## test return preference
 uri <- tempfile()
@@ -1301,6 +1301,7 @@ if (hasTibble) {
     expect_true(inherits(res, "tbl"))
 }
 
+
 ## n=178
 ## test return_as for array and matrix
 uri <- tempfile()
@@ -1325,6 +1326,7 @@ res <- tiledb_array(uri)[]
 expect_true(inherits(res, "matrix"))
 
 set_return_as_preference(oldConversionValue) 		# reset baseline value
+
 
 ## test query_statistics setter and getter
 uri <- tempfile()
@@ -1442,7 +1444,7 @@ if (v[["major"]] == 2L && v[["minor"]] %in% c(4L, 10L, 11L, 12L, 14L)) exit_file
 ## CI issues at GitHub for r-release on Windows Server 2019
 if (getRversion() < "4.3.0" && Sys.info()[["sysname"]] == "Windows") exit_file("Skip remainder for R 4.2.* on Windows")
 
-if (Sys.info()[["sysname"]] == "Darwin") exit_file("Skip remainder on macOS")
+if (isMacOS) exit_file("Skip remainder on macOS")
 
 ## check for incomplete status on unsuccessful query -- this no longer fails following some changes made
 #set_allocation_size_preference(128)     # too low for penguins to query fully
@@ -1475,81 +1477,83 @@ expect_equal(sum(is.na(oo$sex)), sum(is.na(pp$sex)))
 expect_equal(sum(oo$sex == "male"), sum(pp$sex == "male"))
 expect_equal(sum(oo$sex == "female"), sum(pp$sex == "female"))
 
+if (!isRESTCI) {
+    ## [214]  legacy validity mode
+    tdir <- tempfile()
+    tgzfile <- system.file("sampledata", "legacy_validity.tar.gz", package="tiledb")
+    untar(tarfile = tgzfile, exdir = tdir)
+    uri <- file.path(tdir, "legacy_validity")
+    cfg <- tiledb_config()
+    oldcfg <- cfg
+    cfg["r.legacy_validity_mode"] <- "true"
+    ctx <- tiledb_ctx(cfg)
+    arr <- tiledb_array(uri, strings_as_factors=FALSE, return_as="data.frame")[]
+    expect_equal(dim(arr)[1], 10)
+    expect_equal(dim(arr)[2], 3)
+    expect_equivalent(arr, data.frame(key=1:10,
+                                      val1=c(letters[1:4], NA, letters[6:7], NA, letters[9:10]),
+                                      val2=LETTERS[1:10]))
+    expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
+    ctx <- tiledb_ctx(oldcfg)               # reset config
 
-## [214]  legacy validity mode
-tdir <- tempfile()
-tgzfile <- system.file("sampledata", "legacy_validity.tar.gz", package="tiledb")
-untar(tarfile = tgzfile, exdir = tdir)
-uri <- file.path(tdir, "legacy_validity")
-cfg <- tiledb_config()
-oldcfg <- cfg
-cfg["r.legacy_validity_mode"] <- "true"
-ctx <- tiledb_ctx(cfg)
-arr <- tiledb_array(uri, strings_as_factors=FALSE, return_as="data.frame")[]
-expect_equal(dim(arr)[1], 10)
-expect_equal(dim(arr)[2], 3)
-expect_equivalent(arr, data.frame(key=1:10,
-                                  val1=c(letters[1:4], NA, letters[6:7], NA, letters[9:10]),
-                                  val2=LETTERS[1:10]))
-expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
-ctx <- tiledb_ctx(oldcfg)               # reset config
-
-##  [218]  test conversion with metadata
-outdir <- tempfile()
-dir.create(outdir)
-tiledb:::.legacy_validity(uri, outdir, fromlegacy=TRUE)
-outuri <- file.path(outdir, "legacy_validity")
-chk <- tiledb_array(outuri, return_as="data.frame")[]
-expect_equal(dim(arr)[1], 10)
-expect_equal(dim(arr)[2], 3)
-expect_equivalent(arr, data.frame(key=1:10,
-                                  val1=c(letters[1:4], NA, letters[6:7], NA, letters[9:10]),
-                                  val2=LETTERS[1:10]))
-expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
-arr <- tiledb_array(outuri)
-arr <- tiledb_array_open(arr, "READ")
-expect_equal(tiledb_num_metadata(arr), 2) 	# two sets of meta data
-mdlst <- tiledb_get_all_metadata(arr)
-expect_equal(mdlst[["data"]], c(123L, 456L, 789L))
-expect_equal(mdlst[["text"]], "the quick brown fox")
+    ##  [218]  test conversion with metadata
+    outdir <- tempfile()
+    dir.create(outdir)
+    tiledb:::.legacy_validity(uri, outdir, fromlegacy=TRUE)
+    outuri <- file.path(outdir, "legacy_validity")
+    chk <- tiledb_array(outuri, return_as="data.frame")[]
+    expect_equal(dim(arr)[1], 10)
+    expect_equal(dim(arr)[2], 3)
+    expect_equivalent(arr, data.frame(key=1:10,
+                                      val1=c(letters[1:4], NA, letters[6:7], NA, letters[9:10]),
+                                      val2=LETTERS[1:10]))
+    expect_equal(arr$val1, c(letters[1:4], NA, letters[6:7], NA, letters[9:10]))
+    arr <- tiledb_array(outuri)
+    arr <- tiledb_array_open(arr, "READ")
+    expect_equal(tiledb_num_metadata(arr), 2) 	# two sets of meta data
+    mdlst <- tiledb_get_all_metadata(arr)
+    expect_equal(mdlst[["data"]], c(123L, 456L, 789L))
+    expect_equal(mdlst[["text"]], "the quick brown fox")
 
 
-## n=223
-##  [225]  test conversion: larger penguins example
-tdir <- tempfile()
-tgzfile <- system.file("sampledata", "legacy_write.tar.gz", package="tiledb")
-untar(tarfile = tgzfile, exdir = tdir)
-inuri <- file.path(tdir, "legacy_write", "penguins")
+    ## n=223
+    ##  [225]  test conversion: larger penguins example
+    tdir <- tempfile()
+    tgzfile <- system.file("sampledata", "legacy_write.tar.gz", package="tiledb")
+    untar(tarfile = tgzfile, exdir = tdir)
+    inuri <- file.path(tdir, "legacy_write", "penguins")
 
-outdir <- tempfile()
-dir.create(outdir)
-cfg["r.legacy_validity_mode"] <- "false" 	# reset to no conversion to read 'before'
-ctx <- tiledb_ctx(cfg)
-before <- tiledb_array(inuri, strings_as_factors=TRUE)[]
-expect_equal(sum(is.na(before$sex)), 333)
+    outdir <- tempfile()
+    dir.create(outdir)
+    cfg["r.legacy_validity_mode"] <- "false" 	# reset to no conversion to read 'before'
+    ctx <- tiledb_ctx(cfg)
+    before <- tiledb_array(inuri, strings_as_factors=TRUE)[]
+    expect_equal(sum(is.na(before$sex)), 333)
 
-tiledb:::.legacy_validity(inuri, outdir, fromlegacy=TRUE)
-outuri <- file.path(outdir, "penguins")
-after <- tiledb_array(outuri, strings_as_factors=TRUE)[]
-expect_equal(sum(is.na(after$sex)), 11)
-for (col in colnames(before)[-c(1,8)]) {# exclude __tiledb_rows and sex
-    expect_equal(before[[col]], after[[col]])
+    tiledb:::.legacy_validity(inuri, outdir, fromlegacy=TRUE)
+    outuri <- file.path(outdir, "penguins")
+    after <- tiledb_array(outuri, strings_as_factors=TRUE)[]
+    expect_equal(sum(is.na(after$sex)), 11)
+    for (col in colnames(before)[-c(1,8)]) {# exclude __tiledb_rows and sex
+        expect_equal(before[[col]], after[[col]])
+    }
+
+
+    ## n=232
+    newout <- tempfile()
+    ## legacy validity works on plain char columns, we now have factors so it is a mismatch
+    ## we could add a switch to revert the new 'with factors' behavior to the old on input
+    ## but that seems disproportionate to the issue (of legacy validation) at hand
+    if (tiledb_version(TRUE) < "2.16.0") {
+        tiledb:::.legacy_validity(outuri, newout, tolegacy=TRUE)
+        rvturi <- file.path(newout, "penguins")
+        revert <- tiledb_array(rvturi, strings_as_factors=TRUE)[]
+        expect_equal(sum(is.na(revert$sex)), 333)
+        for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows
+            expect_equal(before[[col]], revert[[col]])
+    }
 }
 
-## n=232
-newout <- tempfile()
-dir.create(newout)
-## legacy validity works on plain char columns, we now have factors so it is a mismatch
-## we could add a switch to revert the new 'with factors' behavior to the old on input
-## but that seems disproportionate to the issue (of legacy validation) at hand
-if (tiledb_version(TRUE) < "2.16.0") {
-    tiledb:::.legacy_validity(outuri, newout, tolegacy=TRUE)
-    rvturi <- file.path(newout, "penguins")
-    revert <- tiledb_array(rvturi, strings_as_factors=TRUE)[]
-    expect_equal(sum(is.na(revert$sex)), 333)
-    for (col in colnames(before)[-c(1,8)]) # exclude __tiledb_rows
-        expect_equal(before[[col]], revert[[col]])
-}
 
 ## check for error when setting on N+1 dims
 D <- data.frame(i=1:10, j=101:110, k=letters[1:10])

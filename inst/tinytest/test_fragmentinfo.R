@@ -1,14 +1,18 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
 isMacOS <- (Sys.info()['sysname'] == "Darwin")
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
+
 uri <- tempfile()
-if (dir.exists(uri)) unlink(uri, TRUE)
 
 ## create simple array
 set.seed(123)
@@ -60,6 +64,8 @@ D2 <- data.frame(keys = 11:20,
                  vals = sample(100, 10, TRUE))
 arr <- tiledb_array(uri, "WRITE")
 arr[] <- D2
+
+if (isRESTCI) exit_file("Skip consolidation during REST CI")
 
 array_consolidate(uri)                  # written twice so consolidate
 

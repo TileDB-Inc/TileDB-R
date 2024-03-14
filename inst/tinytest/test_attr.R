@@ -3,8 +3,14 @@ library(tiledb)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 isWindows <- Sys.info()[["sysname"]] == "Windows"
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 #test_that("tiledb_attr constructor works", {
 a1 <- tiledb_attr(type = "FLOAT64")
@@ -54,7 +60,6 @@ expect_true(is.na(tiledb::cell_val_num(attrs)))
 #})
 
 #test_that("tiledb_attr set fill", {
-if (isOldWindows) exit_file("skip remainder of this file on old Windows releases")
 
 ## test for default
 dom <- tiledb_domain(dims = tiledb_dim("rows", c(1L, 4L), 4L, "INT32"))
@@ -238,7 +243,7 @@ expect_equal(D, res)
 
 
 ## lower-level testing tiledb_query_set_buffer
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+uri <- tempfile()
 v <- D[, "val"]
 v[3] <- TRUE                            # without nullable for simplicity
 dim <- tiledb_dim(name = "dim", domain = c(0L, 3L), type = "INT32")

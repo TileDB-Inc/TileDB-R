@@ -6,6 +6,13 @@ if (!requireNamespace("palmerpenguins", quietly=TRUE)) exit_file("Remainder need
 
 tiledb_ctx(limitTileDBCores())
 
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
+
 library(palmerpenguins)
 uri <- tempfile()
 expect_silent(fromDataFrame(penguins, uri, sparse=TRUE))

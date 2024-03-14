@@ -1,10 +1,14 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 ctx <- tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 #test_that("tiledb_dim default constructor", {
 dim <- tiledb_dim("foo", c(1, 100))
@@ -92,7 +96,6 @@ suppressMessages({
 })
 atttype <- "INT32"
 intmax <- .Machine$integer.max         # shorthand
-uri <- tempfile()
 dimtypes <- c("ASCII",  		# Variable length string
               "INT8",   		# 8-bit integer
               "UINT8",  		# 8-bit unsigned integer
@@ -119,7 +122,7 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_AS"     # attosecond
               )
 for (dtype in dimtypes) {
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     dom <- switch(dtype,
                   "ASCII"          = NULL,
                   "INT8"           =,
@@ -287,7 +290,7 @@ dimtypes <- c("ASCII",  		# Variable length string
               "DATETIME_AS"     # attosecond
               )
 for (dtype in dimtypes) {
-    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
     dom <- switch(dtype,
                   "ASCII"          = NULL,
                   "INT8"           =,

@@ -1,10 +1,16 @@
 library(tinytest)
 library(tiledb)
 
-#isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
 if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip on Windows")
 
 ctx <- tiledb_ctx(limitTileDBCores())
+
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) {
+    ## we can rely on the normal tempfile semantics but override the tmpdir
+    ## argument to be our REST CI base url in the unit test namespace
+    tempfile <- function() { base::tempfile(tmpdir="tiledb://unit") }
+}
 
 if (tiledb_version(TRUE) < "2.11.0") exit_file("Needs TileDB 2.11.* or later")
 

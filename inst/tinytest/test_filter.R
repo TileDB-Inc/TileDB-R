@@ -3,6 +3,9 @@ library(tiledb)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
+isRESTCI <- Sys.getenv("TILEDB_CLOUD_REST_BIN", "") != ""
+if (isRESTCI) exit_file("Skipping during REST CI")
+
 #test_that("tiledb_filter default constructor", {
 flt <- tiledb_filter()
 expect_true(is(flt, "tiledb_filter"))
