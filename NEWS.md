@@ -14,6 +14,8 @@
 
 * The nighly valgrind check now installs to require `nanoarrow` package (#664)
 
+* Variable cell numbers can now set consistently for all attribute types (#670)
+
 ## Build and Test Systems
 
 * The nighly valgrind run was updated to include release 2.21 (#669)
