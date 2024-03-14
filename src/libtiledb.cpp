@@ -1394,11 +1394,12 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                                             int ncells,
                                             bool nullable) {
     check_xptr_tag<tiledb::Context>(ctx);
+    spdl::debug(tfm::format("[libtiledb_attribute] Attr name %s type %s ncells %d nullable %s",
+                            name, type, ncells, nullable ? "true" : "false"));
     tiledb_datatype_t attr_dtype = _string_to_tiledb_datatype(type);
     if (ncells < 1 && ncells != R_NaInt) {
         Rcpp::stop("ncells must be >= 1 (or NA for variable cells)");
     }
-
     // placeholder, overwritten in all branches below
     XPtr<tiledb::Attribute> attr = XPtr<tiledb::Attribute>(static_cast<tiledb::Attribute*>(nullptr));
 
@@ -1432,11 +1433,6 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                attr_dtype == TILEDB_STRING_ASCII ||
                attr_dtype == TILEDB_STRING_UTF8) {
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
-        uint64_t num = static_cast<uint64_t>(ncells);
-        if (ncells == R_NaInt) {
-            num = TILEDB_VAR_NUM;           // R's NA is different from TileDB's NA
-        }
-        attr->set_cell_val_num(num);
 #if TILEDB_VERSION >= TileDB_Version(2,10,0)
     } else if (attr_dtype == TILEDB_BOOL) {
         attr = make_xptr<tiledb::Attribute>(new tiledb::Attribute(*ctx.get(), name, attr_dtype));
@@ -1450,6 +1446,9 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                    "and character (CHAR,ASCII,UTF8) attributes are supported "
                    "-- seeing %s which is not", type.c_str());
     }
+    // R's NA is different from TileDB's NA so test for NA_integer_, else cast
+    uint64_t num = (ncells == R_NaInt) ? TILEDB_VAR_NUM : static_cast<uint64_t>(ncells);
+    attr->set_cell_val_num(num);
     attr->set_filter_list(*fltrlst);
     attr->set_nullable(nullable);
     return attr;
