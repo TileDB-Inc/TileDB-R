@@ -4,12 +4,16 @@
 \alias{tiledb_object_walk}
 \title{Recursively discover TileDB resources at a given root URI path}
 \usage{
-tiledb_object_walk(uri, order = "PREORDER", ctx = tiledb_get_context())
+tiledb_object_walk(
+  uri,
+  order = c("PREORDER", "POSTORDER"),
+  ctx = tiledb_get_context()
+)
 }
 \arguments{
 \item{uri}{root uri path to walk}
 
-\item{order}{(default "PREORDER") specify "POSTORDER" for "POSTORDER" traversal}
+\item{order}{traversal order, one of "PREORDER" and "POSTORDER" (default "PREORDER")}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }
