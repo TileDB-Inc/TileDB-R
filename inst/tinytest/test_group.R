@@ -169,3 +169,21 @@ expect_true(is(grp@ptr, "externalptr"))
 expect_true(tiledb_group_is_open(grp))
 expect_equal(tiledb_group_member_count(grp), 2)
 grp <- tiledb_group_close(grp)
+
+
+## Some 'Object' tests
+expect_equal(tiledb_object_type(uri), "GROUP")
+for (name in c("anny", "bob", "chloe", "dave"))
+    expect_equal(tiledb_object_type(file.path(uri, name)), "ARRAY")
+expect_equal(tiledb_object_type(file.path(uri, "NOPE")), "INVALID")
+
+old_uri <- file.path(uri, "bob")
+new_uri <- file.path(uri, "bill")
+expect_equal(tiledb_object_mv(old_uri, new_uri), new_uri)
+expect_equal(tiledb_object_type(new_uri), "ARRAY")
+expect_equal(tiledb_object_type(old_uri), "INVALID")
+dir_info <- tiledb_object_ls(uri)
+expect_equal(dim(dir_info), c(4,2))
+dir_info <- tiledb_object_walk(uri, "POSTORDER")
+expect_equal(dim(dir_info), c(4,2))
+expect_error(tiledb_object_walk(uri, "FRODO"))
