@@ -4292,29 +4292,25 @@ tiledb::Object::Type _string_to_object_type(std::string otype) {
 // [[Rcpp::export]]
 DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx,
                                 std::string uri, std::string order, bool recursive = false) {
-  check_xptr_tag<tiledb::Context>(ctx);
-  std::vector<std::string> uris;
-  std::vector<std::string> types;
-  tiledb::ObjectIter obj_iter(*ctx.get(), uri);
-  if (recursive) {
-    if (!(order == "PREORDER") || (order == "POSTORDER")) {
-      Rcpp::stop("invalid recursive walk order, must be \"PREORDER\" or \"POSTORDER\"");
+    check_xptr_tag<tiledb::Context>(ctx);
+    std::vector<std::string> uris;
+    std::vector<std::string> types;
+    tiledb::ObjectIter obj_iter(*ctx.get(), uri);
+    if (recursive) {
+        if (! ((order == "PREORDER") || (order == "POSTORDER"))) {
+            Rcpp::stop("invalid recursive walk order, must be \"PREORDER\" or \"POSTORDER\"");
+        }
+        tiledb_walk_order_t walk_order = (order == "PREORDER") ? TILEDB_PREORDER : TILEDB_POSTORDER;
+        obj_iter.set_recursive(walk_order);
+    } else {
+        obj_iter.set_non_recursive();
     }
-    tiledb_walk_order_t walk_order = (order == "PREORDER") ? TILEDB_PREORDER : TILEDB_POSTORDER;
-    obj_iter.set_recursive(walk_order);
-  } else {
-    obj_iter.set_non_recursive();
-  }
-  for (const auto& object : obj_iter) {
-    uris.push_back(object.uri());
-    types.push_back(_object_type_to_string(object.type()));
-  }
-  Rcpp::StringVector r_uris(uris.size());
-  r_uris = uris;
-  Rcpp::StringVector r_types(types.size());
-  r_types = types;
-  return Rcpp::DataFrame::create(Rcpp::Named("TYPE") = r_types,
-                                 Rcpp::Named("URI") = r_uris);
+    for (const auto& object : obj_iter) {
+        uris.push_back(object.uri());
+        types.push_back(_object_type_to_string(object.type()));
+    }
+    return Rcpp::DataFrame::create(Rcpp::Named("TYPE") = uris,
+                                   Rcpp::Named("URI") = types);
 }
 
 /**

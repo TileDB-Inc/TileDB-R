@@ -16,10 +16,13 @@
 
 * Variable cell numbers can now set consistently for all attribute types (#670)
 
+* Object walk traversal order detection has been corrected (#671)
+
 ## Build and Test Systems
 
 * The nighly valgrind run was updated to include release 2.21 (#669)
 
+* Unit tests have been added for the TileDB 'object' functions (#671)
 
 
 # tiledb 0.24.0
