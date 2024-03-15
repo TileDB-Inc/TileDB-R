@@ -94,24 +94,26 @@ uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 tiledb_array_create(uri, sch)
 arr <- tiledb_array(uri, return_as="asis", extended=FALSE)
-val <- arr[1:4][[1]]
-## when fill value has been set, expect value
-expect_equal(val, rep(42, 4))
-expect_equal(tiledb_attribute_get_fill_value(attr), 42)
+if (tiledb_version(TRUE) > "2.14.0") {
+    val <- arr[1:4][[1]]
+    ## when fill value has been set, expect value
+    expect_equal(val, rep(42, 4))
+    expect_equal(tiledb_attribute_get_fill_value(attr), 42)
 
-attr <- tiledb_attr("b", type = "CHAR", ncells = NA)
-tiledb_attribute_set_fill_value(attr, "abc")
-sch <- tiledb_array_schema(dom, attr)
-uri <- tempfile()
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
-tiledb_array_create(uri, sch)
-#arr <- tiledb_dense(uri)
-#val <- arr[]
-expect_equal(tiledb_attribute_get_fill_value(attr), "abc")
+    attr <- tiledb_attr("b", type = "CHAR", ncells = NA)
+    tiledb_attribute_set_fill_value(attr, "abc")
+    sch <- tiledb_array_schema(dom, attr)
 
-if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    uri <- tempfile()
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
+    tiledb_array_create(uri, sch)
+    #arr <- tiledb_dense(uri)
+    #val <- arr[]
+    expect_equal(tiledb_attribute_get_fill_value(attr), "abc")
+
+    if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 #})
-
+}
 
 ## datetimes test (cf ex_aggdatetimes)
 suppressMessages({
@@ -181,7 +183,6 @@ expect_true(tiledb_attribute_get_nullable(attrib))
 attrib <- tiledb_attr("a",  type = "FLOAT64", nullable=FALSE)
 expect_false(tiledb_attribute_get_nullable(attrib))
 
-
 uri <- tempfile()
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 
@@ -238,6 +239,7 @@ expect_equal(D, res)
 
 
 ## lower-level testing tiledb_query_set_buffer
+if (tiledb_version(TRUE) < "2.14.0") exit_file("Remainder needs 2.14.* or later")
 if (dir.exists(uri)) unlink(uri, recursive=TRUE)
 v <- D[, "val"]
 v[3] <- TRUE                            # without nullable for simplicity
