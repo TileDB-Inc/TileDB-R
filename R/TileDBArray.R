@@ -1038,7 +1038,7 @@ setMethod("[", "tiledb_array",
                               col <- as.integer(col)
 
                           ## special case from schema evolution could have added twice so correct
-                          if (min(col, na.rm=TRUE) == 2 && max(col, na.rm=TRUE) == length(dct) + 1)
+                          if (length(col) > 0 && min(col, na.rm=TRUE) == 2 && max(col, na.rm=TRUE) == length(dct) + 1)
                               col <- col - 1L
 
                           if (inherits(dct, "character")) {

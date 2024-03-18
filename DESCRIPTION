@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.24.0.9
+Version: 0.24.0.10
 Title: Modern Database Engine for Multi-Modal Data via Sparse and Dense Multidimensional Arrays
 Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
  person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
