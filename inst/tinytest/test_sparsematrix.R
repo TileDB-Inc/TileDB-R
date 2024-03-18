@@ -1,9 +1,6 @@
 library(tinytest)
 library(tiledb)
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 ctx <- tiledb_ctx(limitTileDBCores())
 
 if (!requireNamespace("Matrix", quietly=TRUE)) exit_file("Need the 'Matrix' package")

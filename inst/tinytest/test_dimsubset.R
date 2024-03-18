@@ -5,9 +5,6 @@ library(tinytest)
 library(tiledb)
 library(RcppSpdlog)                     # use logging for some informal profiling
 
-isOldWindows <- Sys.info()[["sysname"]] == "Windows" && grepl('Windows Server 2008', osVersion)
-if (isOldWindows) exit_file("skip this file on old Windows releases")
-
 if (!requireNamespace("nycflights13", quietly=TRUE)) exit_file("Needed 'nycflights13' package missing")
 
 log_setup("test_dimsubset", "warn")     # but set the default level to 'warn' -> silent, activate via 'info'
