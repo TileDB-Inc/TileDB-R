@@ -1580,3 +1580,19 @@ res <- arr[]
 expect_true(tiledb_array_is_open(arr))
 arr <- tiledb_array_close(arr)
 expect_false(tiledb_array_is_open(arr))
+
+## tiledb_array_upgrade_version, re-using an old array as an upgrade candidate
+tdir <- tempfile()
+tgzfile <- system.file("sampledata", "legacy_write.tar.gz", package="tiledb")
+untar(tarfile = tgzfile, exdir = tdir)
+uri <- file.path(tdir, "legacy_write", "penguins")
+oldarr <- tiledb_array(uri)
+oldsch <- tiledb::schema(oldarr)    # explicit namespace to not get arrow::schema
+oldver <- tiledb_array_schema_version(oldsch)
+expect_silent(tiledb_array_upgrade_version(oldarr))
+rc <- tiledb_array_close(oldarr)
+newarr <- tiledb_array(uri)
+newsch <- tiledb::schema(newarr)    # explicit namespace to not get arrow::schema
+newver <- tiledb_array_schema_version(newsch)
+rc <- tiledb_array_close(newarr)
+expect_true(newver > oldver)

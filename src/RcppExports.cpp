@@ -1847,6 +1847,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_upgrade_version
+void libtiledb_array_upgrade_version(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array, std::string& uri, Rcpp::Nullable<XPtr<tiledb::Config>> cfg);
+RcppExport SEXP _tiledb_libtiledb_array_upgrade_version(SEXP ctxSEXP, SEXP arraySEXP, SEXP uriSEXP, SEXP cfgSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< std::string& >::type uri(uriSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<XPtr<tiledb::Config>> >::type cfg(cfgSEXP);
+    libtiledb_array_upgrade_version(ctx, array, uri, cfg);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_query
 XPtr<tiledb::Query> libtiledb_query(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array, std::string type);
 RcppExport SEXP _tiledb_libtiledb_query(SEXP ctxSEXP, SEXP arraySEXP, SEXP typeSEXP) {
@@ -3737,6 +3750,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_has_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_has_enumeration, 3},
     {"_tiledb_libtiledb_array_get_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_get_enumeration, 3},
     {"_tiledb_libtiledb_array_has_enumeration_vector", (DL_FUNC) &_tiledb_libtiledb_array_has_enumeration_vector, 2},
+    {"_tiledb_libtiledb_array_upgrade_version", (DL_FUNC) &_tiledb_libtiledb_array_upgrade_version, 4},
     {"_tiledb_libtiledb_query", (DL_FUNC) &_tiledb_libtiledb_query, 3},
     {"_tiledb_libtiledb_query_type", (DL_FUNC) &_tiledb_libtiledb_query_type, 1},
     {"_tiledb_libtiledb_query_set_layout", (DL_FUNC) &_tiledb_libtiledb_query_set_layout, 2},

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -210,4 +210,19 @@ tiledb_array_apply_aggregate <- function(array, attrname,
         query <- tiledb_query_set_layout(query, "UNORDERED")
 
     libtiledb_query_apply_aggregate(query@ptr, attrname, operation, nullable)
+}
+
+##' Upgrade an Array to the current TileDB Array Schema Format
+##'
+##' @param array A TileDB Array object
+##' @param config A TileDB Configuration (optional, default NULL)
+##' @param ctx A tiledb_ctx object (optional)
+##' @return Nothing is returned as the function is invoked for its side effect
+##' @export
+tiledb_array_upgrade_version <- function(array, config = NULL, ctx = tiledb_get_context()) {
+    stopifnot("The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
+              "The 'config' argument must be NULL or a TileDB Config" =
+                  is.null(config) || is(config, "tiledb_config"))
+    libtiledb_array_upgrade_version(ctx@ptr, array@ptr, array@uri,
+                                    if (is.null(config)) NULL else config@ptr)
 }

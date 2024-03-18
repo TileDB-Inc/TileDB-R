@@ -2818,6 +2818,21 @@ Rcpp::LogicalVector libtiledb_array_has_enumeration_vector(XPtr<tiledb::Context>
     return has_enum;
 }
 
+// [[Rcpp::export]]
+void libtiledb_array_upgrade_version(XPtr<tiledb::Context> ctx,
+                                     XPtr<tiledb::Array> array,
+                                     std::string& uri,
+                                     Rcpp::Nullable<XPtr<tiledb::Config>> cfg = R_NilValue) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Array>(array);
+    if (cfg.isNull()) {
+        array->upgrade_version(*ctx.get(), uri);
+    } else {
+        XPtr<tiledb::Config> config(cfg);
+        array->upgrade_version(*ctx.get(), uri, config.get());
+    }
+}
+
 
 /**
  * Query
