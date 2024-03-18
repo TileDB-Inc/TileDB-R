@@ -10,6 +10,8 @@
 
 * Query conditions can be expressed against non-existing enumeration (_i.e._, `factor`) values when TileDB Core 2.21.0 or later is used (#674)
 
+* The `tiledb_array_upgrade_version` helper function to upgrade an schema version is now available (#675)
+
 ## Bug Fixes
 
 * The `tiledb_get_query_range_var()` accessor now correctly calls the range getter for variable-sized dimensions (#662)

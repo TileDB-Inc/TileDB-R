@@ -630,6 +630,10 @@ libtiledb_array_has_enumeration_vector <- function(ctx, array) {
     .Call(`_tiledb_libtiledb_array_has_enumeration_vector`, ctx, array)
 }
 
+libtiledb_array_upgrade_version <- function(ctx, array, uri, cfg = NULL) {
+    invisible(.Call(`_tiledb_libtiledb_array_upgrade_version`, ctx, array, uri, cfg))
+}
+
 libtiledb_query <- function(ctx, array, type) {
     .Call(`_tiledb_libtiledb_query`, ctx, array, type)
 }
