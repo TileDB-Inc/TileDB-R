@@ -8,6 +8,8 @@
 
 * The vendored [nanoarrow](https://github.com/apache/arrow-nanoarrow) sources have been update to release 0.4.0, and use of its facilities has been extended (#663)
 
+* Query conditions can be expressed against non-existing enumeration (_i.e._, `factor`) values when TileDB Core 2.21.0 or later is used (#674)
+
 ## Bug Fixes
 
 * The `tiledb_get_query_range_var()` accessor now correctly calls the range getter for variable-sized dimensions (#662)
@@ -22,7 +24,9 @@
 
 * The nighly valgrind run was updated to include release 2.21 (#669)
 
-* Unit tests have been added for the TileDB 'object' functions (#671)
+* Unit tests have been added for the TileDB 'object' functions (#671, #672)
+
+* Obsolete checks for an ancient Windows version have been removed from the unit tests (#673)
 
 
 # tiledb 0.24.0
