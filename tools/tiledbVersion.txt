@@ -1,2 +1,2 @@
-version: 2.21.0-rc1
+version: 2.21.0
 sha: 0ea9c13
