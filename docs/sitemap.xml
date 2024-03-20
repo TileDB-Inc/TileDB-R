@@ -565,6 +565,9 @@
     <loc>/reference/tiledb_array_schema_version.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_array_upgrade_version.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_arrow_array_ptr.html</loc>
   </url>
   <url>
@@ -992,6 +995,9 @@
   </url>
   <url>
     <loc>/reference/tiledb_query_get_range_num.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tiledb_query_get_range_var.html</loc>
   </url>
   <url>
     <loc>/reference/tiledb_query_import_buffer.html</loc>
