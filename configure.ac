@@ -2,7 +2,7 @@
 
 ##  MIT License
 ##
-##  Copyright (c) 2017-2023 TileDB Inc.
+##  Copyright (c) 2017-2024 TileDB Inc.
 ##
 ##  Permission is hereby granted, free of charge, to any person obtaining a copy
 ##  of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.24.0])
+AC_INIT([TileDB-R],[0.25.0])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -80,7 +80,7 @@ fi
 ## If we have pkg-config, use it to test minimal version
 if test x"${have_pkg_config}" != x"no"; then
     AC_MSG_CHECKING([for pkg-config checking TileDB version])
-    if pkg-config --atleast-version=2.0.0 tiledb; then
+    if pkg-config --atleast-version=2.7.0 tiledb; then
         AC_MSG_RESULT([>= 2.7.0])
     else
         AC_MSG_RESULT([insufficient])
@@ -111,7 +111,8 @@ machine=`uname -m`
 ## -- Part 2: User preferences --------------------------------------------------
 ##
 ## Allow forced build override, value of 'yes' or 'no' set in enable_building variable
-## (and sets by autoconf standards the 'enable_building' variable to 'yes' or 'no')
+## (and sets by autoconf standards the 'enable_building' variable to 'yes' if selected
+## otherwise the default is "" ie empty string and not 'no')
 AC_ARG_ENABLE([building],
           AS_HELP_STRING([--enable-building],[build TileDB library instead of downloading prebuilt]))
           #[building="${enable_building}"
@@ -160,9 +161,9 @@ origLDFLAGS="${LDFLAGS}"
 CPPFLAGS="${origCPPFLAGS} ${TILEDB_INCLUDE}"
 LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
-## Take care of 11 (aka 'Big Sur') requirement for Intel macOS, automatic on arm
-if test x"${uname}" = x"Darwin" -a x"${machine}" = x"x86_64"; then
-    AC_MSG_CHECKING([for Darwin x86_64 use minimum version override])
+## Take care of 11 (aka 'Big Sur') requirement for macOS
+if test x"${uname}" = x"Darwin"; then
+    AC_MSG_CHECKING([for Darwin use minimum version override])
     CXX17_MACOS="-mmacosx-version-min=11"
     AC_MSG_RESULT([${CXX17_MACOS}])
 fi
@@ -208,6 +209,8 @@ fi
 ## to test one can force some selections here
 #have_tiledb="no"
 #enable_building="no"
+#echo "have_tiledb=${have_tiledb}"
+#echo "enable_building=${enable_building}"
 if test x"${have_tiledb}" = x"no"; then
 
     ## case one: build is selected (or forced) so try building TileDB
