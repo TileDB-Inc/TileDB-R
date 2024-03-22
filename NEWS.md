@@ -2,6 +2,10 @@
 
 * This release of the R package builds against [TileDB 2.21.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.21.1), and has also been tested against earlier releases as well as the development version (#679)
 
+## Build and Test Systems
+
+* The `configure` and `Makevars.in` received a minor update correcting small issues (#680)
+
 
 # tiledb 0.25.0
 

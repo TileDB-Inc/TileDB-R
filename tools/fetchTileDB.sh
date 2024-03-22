@@ -20,7 +20,7 @@ if [ ! -d tinytest ]; then
     exit 1
 fi
 
-## CRAN wants us permit different R binaries via different PATHs
+## CRAN wants us to permit different R binaries via different PATHs
 : ${R_HOME=`R RHOME`}
 
 tarball="tiledb.tar.gz"
