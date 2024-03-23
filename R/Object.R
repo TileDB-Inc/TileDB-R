@@ -43,7 +43,7 @@ tiledb_object_type <- function(uri, ctx = tiledb_get_context()) {
 #'
 #' Raises an error if the uri is invalid, or the uri resource is not a tiledb object
 #'
-#' @param uri path which to create group
+#' @param uri path to TileDB resource
 #' @param ctx tiledb_ctx object (optional)
 #' @return uri of removed TileDB resource
 #' @export

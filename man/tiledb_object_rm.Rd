@@ -7,7 +7,7 @@
 tiledb_object_rm(uri, ctx = tiledb_get_context())
 }
 \arguments{
-\item{uri}{path which to create group}
+\item{uri}{path to TileDB resource}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }
