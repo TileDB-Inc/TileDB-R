@@ -279,7 +279,7 @@ tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiled
     libtiledb_query_condition_set_use_enumeration(ctx@ptr, qc@ptr, use_enum)
 }
 
-#' create a query condition for vector 'IN' and 'NOT_IN' operations
+#' Create a query condition for vector 'IN' and 'NOT_IN' operations
 #'
 #' Uses \sQuote{IN} and \sQuote{NOT_IN} operators on given attribute
 #' @param name A character value with the scheme attribute name

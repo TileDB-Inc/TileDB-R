@@ -2,7 +2,7 @@
 % Please edit documentation in R/QueryCondition.R
 \name{tiledb_query_condition_create}
 \alias{tiledb_query_condition_create}
-\title{create a query condition for vector 'IN' and 'NOT_IN' operations}
+\title{Create a query condition for vector 'IN' and 'NOT_IN' operations}
 \usage{
 tiledb_query_condition_create(
   name,
