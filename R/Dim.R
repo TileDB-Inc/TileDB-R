@@ -239,7 +239,7 @@ setMethod("tiledb_ndim", "tiledb_dim",
 #'
 #' @export
 is.anonymous.tiledb_dim <- function(object) {
-  stopifnot(`Argument 'object' must a tiledb_dim object` = is(object, "tiledb_dim"))
+  stopifnot(`Argument 'object' must be a tiledb_dim object` = is(object, "tiledb_dim"))
   name <- libtiledb_dim_get_name(object@ptr)
   return(nchar(name) == 0)
 }

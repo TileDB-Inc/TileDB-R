@@ -603,7 +603,7 @@ tiledb_array_schema_get_capacity <- function(object) {
 #' @export
 tiledb_array_schema_set_capacity <- function(x, value) {
   stopifnot(`The first argument must be a tiledb_array_schema object` = is(x, "tiledb_array_schema"),
-            `The second argumebt must a int or numeric value` = is.numeric(value))
+            `The second argumebt must be a int or numeric value` = is.numeric(value))
   libtiledb_array_schema_set_capacity(x@ptr, value)
   x
 }
@@ -700,7 +700,7 @@ has_attribute <- function(schema, attr) {
 #' @return A list containing two data frames, one describing the overall array as well as one
 #' with descriptions about dimensions and attributes in the schema
 tiledb_schema_object <- function(array) {
-    stopifnot(`Argument must a 'tiledb_array'` = is(array, "tiledb_array"))
+    stopifnot(`Argument must be a 'tiledb_array'` = is(array, "tiledb_array"))
 
     ctx <- array@ctx
     uri <- array@uri
