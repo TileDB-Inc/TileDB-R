@@ -33,7 +33,7 @@ tiledb_dim.from_ptr <- function(ptr) {
   return(new("tiledb_dim", ptr = ptr))
 }
 
-#' Contructs a `tiledb_dim` object
+#' Constructs a `tiledb_dim` object
 #'
 #' @param name The dimension name / label string.  This argument is required.
 #' @param domain The dimension (inclusive) domain. The domain of a dimension
@@ -126,7 +126,7 @@ tiledb_dim <- function(name, domain, tile, type,
                   "type=\"", datatype(object), "\"",
                   if (nf == 0) ")" else ", ")
     if (nf > 0) {
-        txt <- paste0(txt, "filters=", .as_text_filter_list(fl), ")")
+        txt <- paste0(txt, "filter_list=", .as_text_filter_list(fl), ")")
     }
     txt
 }
@@ -239,7 +239,7 @@ setMethod("tiledb_ndim", "tiledb_dim",
 #'
 #' @export
 is.anonymous.tiledb_dim <- function(object) {
-  stopifnot(`Argument 'object' must a tiledb_dim object` = is(object, "tiledb_dim"))
+  stopifnot(`Argument 'object' must be a tiledb_dim object` = is(object, "tiledb_dim"))
   name <- libtiledb_dim_get_name(object@ptr)
   return(nchar(name) == 0)
 }

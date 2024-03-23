@@ -2,7 +2,7 @@
 % Please edit documentation in R/Attribute.R
 \name{tiledb_attr}
 \alias{tiledb_attr}
-\title{Contructs a \code{tiledb_attr} object}
+\title{Constructs a \code{tiledb_attr} object}
 \usage{
 tiledb_attr(
   name,
@@ -35,7 +35,7 @@ values}
 \code{tiledb_dim} object
 }
 \description{
-Contructs a \code{tiledb_attr} object
+Constructs a \code{tiledb_attr} object
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}

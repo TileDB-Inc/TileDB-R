@@ -40,7 +40,7 @@
 #' @export
 tiledb_array_create <- function(uri, schema, encryption_key) {
     stopifnot(`The 'uri' argument must be a string scalar` = !missing(uri) && is.scalar(uri, "character"),
-              `The 'schema' argument must a tiledb_array_schema object` = !missing(schema) && is(schema, "tiledb_array_schema"))
+              `The 'schema' argument must be a tiledb_array_schema object` = !missing(schema) && is(schema, "tiledb_array_schema"))
     if (missing(encryption_key)) {
         invisible(libtiledb_array_create(uri, schema@ptr))
     } else {
@@ -82,7 +82,7 @@ tiledb_array_open <- function(arr,
 ##' @export
 tiledb_array_open_at <- function(arr, type=c("READ","WRITE"), timestamp) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
-            "The 'timestamp' argument must a time object" = inherits(timestamp, "POSIXct"))
+            "The 'timestamp' argument must be a time object" = inherits(timestamp, "POSIXct"))
   type <- match.arg(type)
   ctx <- tiledb_get_context()
   if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
@@ -157,8 +157,8 @@ tiledb_array_is_heterogeneous <- function(arr) {
 ##' @export
 tiledb_array_delete_fragments <- function(arr, ts_start, ts_end, ctx = tiledb_get_context()) {
     stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
-              "The 'ts_start' argument must a time object" = inherits(ts_start, "POSIXct"),
-              "The 'ts_end' argument must a time object" = inherits(ts_end, "POSIXct"))
+              "The 'ts_start' argument must be a time object" = inherits(ts_start, "POSIXct"),
+              "The 'ts_end' argument must be a time object" = inherits(ts_end, "POSIXct"))
     libtiledb_array_delete_fragments(ctx@ptr, arr@ptr, ts_start, ts_end)
     invisible(TRUE)
 }
