@@ -2,9 +2,17 @@
 
 * This release of the R package builds against [TileDB 2.21.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.21.1), and has also been tested against earlier releases as well as the development version (#679)
 
+## Improvements
+
+* The display of a `filter_list` not labels is correctly as a filter list (@cgiachalis in #681)
+
 ## Build and Test Systems
 
 * The `configure` and `Makevars.in` received a minor update correcting small issues (#680)
+
+## Documentation
+
+* A number of minor typographical and grammar errors in the function documentation has been corrected (@cgiachalis in #681)
 
 
 # tiledb 0.25.0
