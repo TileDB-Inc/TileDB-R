@@ -126,7 +126,7 @@ tiledb_dim <- function(name, domain, tile, type,
                   "type=\"", datatype(object), "\"",
                   if (nf == 0) ")" else ", ")
     if (nf > 0) {
-        txt <- paste0(txt, "filters=", .as_text_filter_list(fl), ")")
+        txt <- paste0(txt, "filter_list=", .as_text_filter_list(fl), ")")
     }
     txt
 }
