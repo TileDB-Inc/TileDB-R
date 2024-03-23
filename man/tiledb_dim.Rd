@@ -2,7 +2,7 @@
 % Please edit documentation in R/Dim.R
 \name{tiledb_dim}
 \alias{tiledb_dim}
-\title{Contructs a \code{tiledb_dim} object}
+\title{Constructs a \code{tiledb_dim} object}
 \usage{
 tiledb_dim(
   name,
@@ -34,7 +34,7 @@ is no filter}
 \code{tiledb_dim} object
 }
 \description{
-Contructs a \code{tiledb_dim} object
+Constructs a \code{tiledb_dim} object
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}

@@ -33,7 +33,7 @@ tiledb_attr.from_ptr <- function(ptr) {
   new("tiledb_attr", ptr = ptr)
 }
 
-#' Contructs a `tiledb_attr` object
+#' Constructs a `tiledb_attr` object
 #'
 #' @param name The dimension name / label string; if missing default `""` is used.
 #' @param type The tiledb_attr TileDB datatype string; if missing the user is alerted
