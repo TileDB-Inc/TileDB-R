@@ -247,3 +247,9 @@ Rcpp::XPtr<tiledb::ArrayBuffers> libtiledb_allocate_column_buffers(Rcpp::XPtr<ti
     }
     return make_xptr<tiledb::ArrayBuffers>(abp);
 }
+
+// [[Rcpp::export]]
+Rcpp::List nanoarrow2list(nanoarrowS3 naarrptr) {
+    auto schptr = _array_xptr_get_schema(naarrptr);
+    return Rcpp::List::create(naarrptr, schptr);
+}

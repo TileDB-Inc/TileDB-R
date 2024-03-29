@@ -80,6 +80,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// nanoarrow2list
+Rcpp::List nanoarrow2list(nanoarrowS3 naarrptr);
+RcppExport SEXP _tiledb_nanoarrow2list(SEXP naarrptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< nanoarrowS3 >::type naarrptr(naarrptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(nanoarrow2list(naarrptr));
+    return rcpp_result_gen;
+END_RCPP
+}
 // makeQueryWrapper
 SEXP makeQueryWrapper(SEXP qp);
 RcppExport SEXP _tiledb_makeQueryWrapper(SEXP qpSEXP) {
@@ -3539,6 +3550,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_arrow_table", (DL_FUNC) &_tiledb_libtiledb_query_export_arrow_table, 3},
     {"_tiledb_libtiledb_to_arrow", (DL_FUNC) &_tiledb_libtiledb_to_arrow, 3},
     {"_tiledb_libtiledb_allocate_column_buffers", (DL_FUNC) &_tiledb_libtiledb_allocate_column_buffers, 5},
+    {"_tiledb_nanoarrow2list", (DL_FUNC) &_tiledb_nanoarrow2list, 1},
     {"_tiledb_makeQueryWrapper", (DL_FUNC) &_tiledb_makeQueryWrapper, 1},
     {"_tiledb_libtiledb_query_add_range_with_type", (DL_FUNC) &_tiledb_libtiledb_query_add_range_with_type, 6},
     {"_tiledb_libtiledb_query_add_range", (DL_FUNC) &_tiledb_libtiledb_query_add_range, 5},

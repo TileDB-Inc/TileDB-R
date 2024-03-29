@@ -21,6 +21,10 @@ libtiledb_allocate_column_buffers <- function(ctx, qry, uri, names, memory_budge
     .Call(`_tiledb_libtiledb_allocate_column_buffers`, ctx, qry, uri, names, memory_budget)
 }
 
+nanoarrow2list <- function(naarrptr) {
+    .Call(`_tiledb_nanoarrow2list`, naarrptr)
+}
+
 makeQueryWrapper <- function(qp) {
     .Call(`_tiledb_makeQueryWrapper`, qp)
 }
