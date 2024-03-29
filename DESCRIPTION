@@ -1,30 +1,27 @@
 Package: tiledb
 Type: Package
-Version: 0.25.0.3
-Title: Modern Database Engine for Multi-Modal Data via Sparse and Dense Multidimensional Arrays
+Version: 0.25.0.4
+Title: Modern Database Engine for Complex Data Based on Multi-Dimensional Arrays
 Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
- person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
+  person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
 Description: The modern database 'TileDB' introduces a powerful on-disk
- format for multi-modal data based on dimensional arrays. It supports
- dense and sparse arrays, dataframes and key-values stores, cloud
- storage ('S3', 'GCS', 'Azure'), chunked arrays, multiple compression,
- encryption and checksum filters, uses a fully multi-threaded
- implementation, supports parallel I/O, data versioning ('time
- travel'), metadata and groups. It is implemented as an embeddable
- cross-platform C++ library with APIs from several languages, and
- integrations.
+  format for storing and accessing any complex data based on multi-dimensional
+  arrays. It supports dense and sparse arrays, dataframes and key-values stores,
+  cloud storage ('S3', 'GCS', 'Azure'), chunked arrays, multiple compression,
+  encryption and checksum filters, uses a fully multi-threaded implementation,
+  supports parallel I/O, data versioning ('time travel'), metadata and groups.
+  It is implemented as an embeddable cross-platform C++ library with APIs from
+  several languages, and integrations. This package provides the R support.
 Copyright: TileDB, Inc.
 License: MIT + file LICENSE
 URL: https://github.com/TileDB-Inc/TileDB-R, https://tiledb-inc.github.io/TileDB-R/
 BugReports: https://github.com/TileDB-Inc/TileDB-R/issues
-SystemRequirements: A C++17 compiler is required, and for macOS
- compilation version 11.0 or later is required. Optionally cmake (only
- when TileDB source build selected), curl (only when TileDB source
- build selected)), and git (only when TileDB source build selected);
- on x86_64 and M1 platforms pre-built TileDB Embedded libraries are
- available at GitHub and are used if no TileDB installation is
- detected, and no other option to build or download was specified by
- the user.
+SystemRequirements: A C++17 compiler is required; on macOS compilation version 11.0
+  or later is required. Optionally cmake (only when TileDB source build selected),
+  curl (only when TileDB source build selected)), and git (only when TileDB source
+  build selected); on x86_64 and M1 platforms pre-built TileDB Embedded libraries
+  are available at GitHub and are used if no TileDB installation is detected, and
+  no other option to build or download was specified by the user.
 Imports: methods, Rcpp (>= 1.0.8), nanotime, spdl, nanoarrow
 LinkingTo: Rcpp, RcppInt64, nanoarrow
 Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble, arrow
