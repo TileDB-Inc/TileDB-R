@@ -13,7 +13,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // libtiledb_query_export_buffer
-nanoarrowXPtr libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string& name);
+nanoarrowS3 libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string& name);
 RcppExport SEXP _tiledb_libtiledb_query_export_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -26,7 +26,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_import_buffer
-XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string& name, nanoarrowXPtr naptr);
+XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string& name, nanoarrowS3 naptr);
 RcppExport SEXP _tiledb_libtiledb_query_import_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP, SEXP naptrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -34,13 +34,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< std::string& >::type name(nameSEXP);
-    Rcpp::traits::input_parameter< nanoarrowXPtr >::type naptr(naptrSEXP);
+    Rcpp::traits::input_parameter< nanoarrowS3 >::type naptr(naptrSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_query_import_buffer(ctx, query, name, naptr));
     return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_query_export_arrow_table
-nanoarrowXPtr libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::vector<std::string> names);
+nanoarrowS3 libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::vector<std::string> names);
 RcppExport SEXP _tiledb_libtiledb_query_export_arrow_table(SEXP ctxSEXP, SEXP querySEXP, SEXP namesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -53,7 +53,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_to_arrow
-nanoarrowXPtr libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab, Rcpp::XPtr<tiledb::Query> qry, Rcpp::List dicts);
+nanoarrowS3 libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab, Rcpp::XPtr<tiledb::Query> qry, Rcpp::List dicts);
 RcppExport SEXP _tiledb_libtiledb_to_arrow(SEXP abSEXP, SEXP qrySEXP, SEXP dictsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

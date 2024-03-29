@@ -23,23 +23,22 @@
 #include "libtiledb.h"
 #include "tiledb_version.h"
 #include "nanoarrow/r.h"
-//#include <nanoarrow.h>          // for C interface to Arrow
 
-//#include <tiledb/arrowio>
 #include "tiledb_arrowio.h"
 
 #include "column_buffer.h"
 #include "arrow_adapter.h"
 
 
-void array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr); // forward declaration, see below
-SEXP array_xptr_get_schema(SEXP array_xptr);
+void _array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr); // forward declaration, see below
+SEXP _array_xptr_get_schema(SEXP array_xptr);
 inline void exitIfError(const ArrowErrorCode ec, const std::string& msg);
+inline void* _getPtr(SEXP p) { return R_ExternalPtrAddr(p); }
 
 // [[Rcpp::export]]
-nanoarrowXPtr libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
-                                            XPtr<tiledb::Query> query,
-                                            std::string& name) {
+nanoarrowS3 libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
+                                          XPtr<tiledb::Query> query,
+                                          std::string& name) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Query>(query);
 
@@ -54,7 +53,7 @@ nanoarrowXPtr libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
     spdl::debug(tfm::format("[libtiledb_query_export_buffer] name '%s'", name.c_str()));
 
     // Nanoarrow special: stick schema into xptr tag to return single SEXP
-    array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
+    _array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
     return arrayxp;
 }
 
@@ -62,25 +61,25 @@ nanoarrowXPtr libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
 XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
                                                   XPtr<tiledb::Query> query,
                                                   std::string& name,
-                                                  nanoarrowXPtr naptr) {
+                                                  nanoarrowS3 naptr) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Query>(query);
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
     // get schema xptr out of array xptr tag
-    auto schptr = array_xptr_get_schema(naptr);
+    auto schptr = _array_xptr_get_schema(naptr);
 
     adapter.import_buffer(name.c_str(),
-                          (struct ArrowArray*) R_ExternalPtrAddr(naptr),
-                          (struct ArrowSchema*) R_ExternalPtrAddr(schptr));
+                          (struct ArrowArray*) _getPtr(naptr),
+                          (struct ArrowSchema*) _getPtr(schptr));
 
     return(query);
 }
 
 // [[Rcpp::export]]
-nanoarrowXPtr libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
-                                                  XPtr<tiledb::Query> query,
-                                                  std::vector<std::string> names) {
+nanoarrowS3 libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
+                                               XPtr<tiledb::Query> query,
+                                               std::vector<std::string> names) {
     check_xptr_tag<tiledb::Context>(ctx);
     check_xptr_tag<tiledb::Query>(query);
     size_t ncol = names.size();
@@ -112,7 +111,7 @@ nanoarrowXPtr libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
     }
 
     // Nanoarrow special: stick schema into xptr tag to return single SEXP
-    array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
+    _array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
     return arrayxp;
 }
 
@@ -123,19 +122,19 @@ inline void exitIfError(const ArrowErrorCode ec, const std::string& msg) {
 
 // Attaches a schema to an array external pointer. The nanoarrow R package
 // attempts to do this whenever possible to avoid misinterpreting arrays.
-void array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr) {
+void _array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr) {
     R_SetExternalPtrTag(array_xptr, schema_xptr);
 }
 // Reverse: peel the schema out of the array via the XPtr tag
-SEXP array_xptr_get_schema(SEXP array_xptr) {
+SEXP _array_xptr_get_schema(SEXP array_xptr) {
     return R_ExternalPtrTag(array_xptr);
 }
 
 //  was: Rcpp::List
 // [[Rcpp::export]]
-nanoarrowXPtr libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
-                                 Rcpp::XPtr<tiledb::Query> qry,
-                                 Rcpp::List dicts) {
+nanoarrowS3 libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
+                               Rcpp::XPtr<tiledb::Query> qry,
+                               Rcpp::List dicts) {
     check_xptr_tag<tiledb::ArrayBuffers>(ab);
     check_xptr_tag<tiledb::Query>(qry);
     std::vector<std::string> names = ab->names();
@@ -218,7 +217,7 @@ nanoarrowXPtr libtiledb_to_arrow(Rcpp::XPtr<tiledb::ArrayBuffers> ab,
     spdl::info("[libtiledb_to_arrow] ArrowArrayFinishBuildingDefault");
 
     // Nanoarrow special: stick schema into xptr tag to return single SEXP
-    array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
+    _array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
 
     spdl::trace("[libtiledb_to_arrow] returning from libtiledb_to_arrow");
     return arrayxp;
