@@ -20,17 +20,14 @@ expect_true(is(batch, "RecordBatch"))
 expect_true(is(as.data.frame(batch), "data.frame"))
 
 ## allocate two structures (and release at end)
-aa <- tiledb_arrow_array_ptr()
-as <- tiledb_arrow_schema_ptr()
+aa <- nanoarrow::nanoarrow_allocate_array()
+as <- nanoarrow::nanoarrow_allocate_schema()
 arrow:::ExportRecordBatch(batch, aa, as)
 
 newrb <- arrow:::ImportRecordBatch(aa, as)
 expect_true(is(newrb, "RecordBatch"))
 expect_true(is(as.data.frame(newrb), "data.frame"))
 expect_equal(batch, newrb)
-
-tiledb_arrow_schema_del(as)
-tiledb_arrow_array_del(aa)
 
 
 ## round-turn test 1: write tiledb first, create arrow object via zero-copy

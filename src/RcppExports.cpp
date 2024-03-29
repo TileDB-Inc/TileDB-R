@@ -12,46 +12,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// allocate_arrow_array_as_xptr
-SEXP allocate_arrow_array_as_xptr();
-RcppExport SEXP _tiledb_allocate_arrow_array_as_xptr() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(allocate_arrow_array_as_xptr());
-    return rcpp_result_gen;
-END_RCPP
-}
-// allocate_arrow_schema_as_xptr
-SEXP allocate_arrow_schema_as_xptr();
-RcppExport SEXP _tiledb_allocate_arrow_schema_as_xptr() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(allocate_arrow_schema_as_xptr());
-    return rcpp_result_gen;
-END_RCPP
-}
-// delete_arrow_array_from_xptr
-void delete_arrow_array_from_xptr(SEXP sxp);
-RcppExport SEXP _tiledb_delete_arrow_array_from_xptr(SEXP sxpSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type sxp(sxpSEXP);
-    delete_arrow_array_from_xptr(sxp);
-    return R_NilValue;
-END_RCPP
-}
-// delete_arrow_schema_from_xptr
-void delete_arrow_schema_from_xptr(SEXP sxp);
-RcppExport SEXP _tiledb_delete_arrow_schema_from_xptr(SEXP sxpSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type sxp(sxpSEXP);
-    delete_arrow_schema_from_xptr(sxp);
-    return R_NilValue;
-END_RCPP
-}
 // libtiledb_query_export_buffer
 nanoarrowXPtr libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string& name);
 RcppExport SEXP _tiledb_libtiledb_query_export_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP) {
@@ -3596,10 +3556,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tiledb_allocate_arrow_array_as_xptr", (DL_FUNC) &_tiledb_allocate_arrow_array_as_xptr, 0},
-    {"_tiledb_allocate_arrow_schema_as_xptr", (DL_FUNC) &_tiledb_allocate_arrow_schema_as_xptr, 0},
-    {"_tiledb_delete_arrow_array_from_xptr", (DL_FUNC) &_tiledb_delete_arrow_array_from_xptr, 1},
-    {"_tiledb_delete_arrow_schema_from_xptr", (DL_FUNC) &_tiledb_delete_arrow_schema_from_xptr, 1},
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_libtiledb_query_export_arrow_table", (DL_FUNC) &_tiledb_libtiledb_query_export_arrow_table, 3},
