@@ -13,16 +13,6 @@ libtiledb_query_export_arrow_table <- function(ctx, query, names) {
     .Call(`_tiledb_libtiledb_query_export_arrow_table`, ctx, query, names)
 }
 
-#' @noRd
-check_arrow_schema_tag <- function(xp) {
-    .Call(`_tiledb_check_arrow_schema_tag`, xp)
-}
-
-#' @noRd
-check_arrow_array_tag <- function(xp) {
-    .Call(`_tiledb_check_arrow_array_tag`, xp)
-}
-
 libtiledb_to_arrow <- function(ab, qry, dicts) {
     .Call(`_tiledb_libtiledb_to_arrow`, ab, qry, dicts)
 }

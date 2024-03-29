@@ -40,7 +40,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_export_arrow_table
-Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::vector<std::string> names);
+nanoarrowXPtr libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::vector<std::string> names);
 RcppExport SEXP _tiledb_libtiledb_query_export_arrow_table(SEXP ctxSEXP, SEXP querySEXP, SEXP namesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -49,28 +49,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
     Rcpp::traits::input_parameter< std::vector<std::string> >::type names(namesSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_query_export_arrow_table(ctx, query, names));
-    return rcpp_result_gen;
-END_RCPP
-}
-// check_arrow_schema_tag
-bool check_arrow_schema_tag(Rcpp::XPtr<ArrowSchema> xp);
-RcppExport SEXP _tiledb_check_arrow_schema_tag(SEXP xpSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<ArrowSchema> >::type xp(xpSEXP);
-    rcpp_result_gen = Rcpp::wrap(check_arrow_schema_tag(xp));
-    return rcpp_result_gen;
-END_RCPP
-}
-// check_arrow_array_tag
-bool check_arrow_array_tag(Rcpp::XPtr<ArrowArray> xp);
-RcppExport SEXP _tiledb_check_arrow_array_tag(SEXP xpSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::XPtr<ArrowArray> >::type xp(xpSEXP);
-    rcpp_result_gen = Rcpp::wrap(check_arrow_array_tag(xp));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3559,8 +3537,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
     {"_tiledb_libtiledb_query_import_buffer", (DL_FUNC) &_tiledb_libtiledb_query_import_buffer, 4},
     {"_tiledb_libtiledb_query_export_arrow_table", (DL_FUNC) &_tiledb_libtiledb_query_export_arrow_table, 3},
-    {"_tiledb_check_arrow_schema_tag", (DL_FUNC) &_tiledb_check_arrow_schema_tag, 1},
-    {"_tiledb_check_arrow_array_tag", (DL_FUNC) &_tiledb_check_arrow_array_tag, 1},
     {"_tiledb_libtiledb_to_arrow", (DL_FUNC) &_tiledb_libtiledb_to_arrow, 3},
     {"_tiledb_libtiledb_allocate_column_buffers", (DL_FUNC) &_tiledb_libtiledb_allocate_column_buffers, 5},
     {"_tiledb_makeQueryWrapper", (DL_FUNC) &_tiledb_makeQueryWrapper, 1},
