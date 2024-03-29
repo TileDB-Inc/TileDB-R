@@ -19,19 +19,15 @@ batch <- record_batch(df)
 expect_true(is(batch, "RecordBatch"))
 expect_true(is(as.data.frame(batch), "data.frame"))
 
-
 ## allocate two structures (and release at end)
-aa <- tiledb_arrow_array_ptr()
-as <- tiledb_arrow_schema_ptr()
+aa <- nanoarrow::nanoarrow_allocate_array()
+as <- nanoarrow::nanoarrow_allocate_schema()
 arrow:::ExportRecordBatch(batch, aa, as)
 
 newrb <- arrow:::ImportRecordBatch(aa, as)
 expect_true(is(newrb, "RecordBatch"))
 expect_true(is(as.data.frame(newrb), "data.frame"))
 expect_equal(batch, newrb)
-
-tiledb_arrow_schema_del(as)
-tiledb_arrow_array_del(aa)
 
 
 ## round-turn test 1: write tiledb first, create arrow object via zero-copy
@@ -74,7 +70,6 @@ tiledb_query_finalize(qry)
 #arr <- tiledb_array(tmp, return_as="data.frame")
 #print(arr[])
 
-
 arr <- tiledb_array(tmp)
 qry <- tiledb_query(arr, "READ")
 dimptr <- tiledb_query_buffer_alloc_ptr(qry, "INT32", n)
@@ -90,18 +85,20 @@ tiledb_query_submit(qry)
 tiledb_query_finalize(qry)
 
 res <- tiledb_query_export_buffer(qry, "rows")
-v <- Array$create(arrow:::ImportArray(res[[1]], res[[2]]))
-tiledb_arrow_array_del(res[[1]])
-tiledb_arrow_schema_del(res[[2]])
+#v <- Array$create(arrow:::ImportArray(res[[1]], res[[2]]))
+v <- Array$create(res)
+#tiledb_arrow_array_del(res[[1]])
+#tiledb_arrow_schema_del(res[[2]])
 
 expect_equal(v$as_vector(), 4:7)
 
 for (col in c("int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "uint64", "float64")) {
     qry <- tiledb_query_set_buffer_ptr(qry, col, attrlst[[col]])
     res <- tiledb_query_export_buffer(qry, col)
-    v <- Array$create(arrow:::ImportArray(res[[1]], res[[2]]))
-    tiledb_arrow_array_del(res[[1]])
-    tiledb_arrow_schema_del(res[[2]])
+    v <- Array$create(res)
+    #v <- Array$create(arrow:::ImportArray(res[[1]], res[[2]]))
+    #tiledb_arrow_array_del(res[[1]])
+    #tiledb_arrow_schema_del(res[[2]])
 
     expect_equal(v$as_vector(), 4:7)
 }
@@ -112,6 +109,8 @@ dir.create(tmp <- tempfile())
 n <- 10L
 
 ## create a schema but don't fill it yet
+#spdl::log("debug")
+
 dim <- tiledb_dim("rows", domain=c(1L,n), type="INT32", tile=1L)
 dom <- tiledb_domain(dim)
 sch <- tiledb_array_schema(dom,
@@ -127,6 +126,7 @@ sch <- tiledb_array_schema(dom,
                            sparse = TRUE)
 tiledb_array_create(tmp, sch)
 
+#exit_file("aa")
 ## create an arrow 'record batch' with a number of (correcsponding) columns
 rb <- record_batch("rows"   = Array$create(1:n, int32()),
                    "int8"   = Array$create(1:n, int8()),
@@ -144,17 +144,21 @@ rb <- record_batch("rows"   = Array$create(1:n, int32()),
 arr <- tiledb_array(tmp)
 qry <- tiledb_query(arr, "WRITE")
 
+#spdl::log("debug")
 nms <- rb$names()
 lst <- list()
 for (nam in nms) {
     vec <- rb[[nam]]                    # can access by name
-    aa <- tiledb_arrow_array_ptr()
-    as <- tiledb_arrow_schema_ptr()
-    arrow:::ExportArray(vec, aa, as)
+    na <- nanoarrow::as_nanoarrow_array(vec)
+    #print(na)
+    #print(class(na))
+    #aa <- tiledb_arrow_array_ptr()
+    #as <- tiledb_arrow_schema_ptr()
+    #arrow:::ExportArray(vec, aa, as)
 
-    qry <- tiledb_query_import_buffer(qry, nam, list(aa, as))
+    qry <- tiledb_query_import_buffer(qry, nam, na)
 
-    lst[[nam]] <- list(aa=aa, as=as)
+    #lst[[nam]] <- list(aa=aa, as=as)
 }
 tiledb_query_set_layout(qry, "UNORDERED")
 tiledb_query_submit(qry)
@@ -162,12 +166,14 @@ tiledb_query_finalize(qry)
 
 arr <- tiledb_array(tmp, return_as="data.frame")
 df <- arr[]
+#print(df)
+#q()
 
-for (i in 1:10) {
-  l <- lst[[i]]
-  tiledb_arrow_array_del(l[[1]])
-  tiledb_arrow_schema_del(l[[2]])
-}
+#for (i in 1:10) {
+#  l <- lst[[i]]
+#  tiledb_arrow_array_del(l[[1]])
+#  tiledb_arrow_schema_del(l[[2]])
+#}
 
 ## n=15
 expect_true(is(df, "data.frame"))

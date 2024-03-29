@@ -6,6 +6,8 @@
 
 * The display of a `filter_list` not labels is correctly as a filter list (@cgiachalis in #681)
 
+* The Arrow integration has been simplified using [nanoarrow](https://github.com/apache/arrow-nanoarrow) returning a single `nanoarrow` object; an unexported helper function `nanoarrow2list()` is provided to matching the previous interface (#682)
+
 ## Build and Test Systems
 
 * The `configure` and `Makevars.in` received a minor update correcting small issues (#680)
