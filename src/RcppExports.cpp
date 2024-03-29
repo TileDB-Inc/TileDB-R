@@ -53,29 +53,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // libtiledb_query_export_buffer
-Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name);
+nanoarrowXPtr libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string& name);
 RcppExport SEXP _tiledb_libtiledb_query_export_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
-    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< std::string& >::type name(nameSEXP);
     rcpp_result_gen = Rcpp::wrap(libtiledb_query_export_buffer(ctx, query, name));
     return rcpp_result_gen;
 END_RCPP
 }
 // libtiledb_query_import_buffer
-XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string name, Rcpp::List arrowpointers);
-RcppExport SEXP _tiledb_libtiledb_query_import_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP, SEXP arrowpointersSEXP) {
+XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx, XPtr<tiledb::Query> query, std::string& name, nanoarrowXPtr naptr);
+RcppExport SEXP _tiledb_libtiledb_query_import_buffer(SEXP ctxSEXP, SEXP querySEXP, SEXP nameSEXP, SEXP naptrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
     Rcpp::traits::input_parameter< XPtr<tiledb::Query> >::type query(querySEXP);
-    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type arrowpointers(arrowpointersSEXP);
-    rcpp_result_gen = Rcpp::wrap(libtiledb_query_import_buffer(ctx, query, name, arrowpointers));
+    Rcpp::traits::input_parameter< std::string& >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< nanoarrowXPtr >::type naptr(naptrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_query_import_buffer(ctx, query, name, naptr));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2020-2023 TileDB Inc.
+//  Copyright (c) 2020-2024 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -110,6 +110,10 @@ Pointer<ArrowSchema> allocate_arrow_schema() { return {}; }
 void delete_arrow_array(Pointer<ArrowArray> ptr)   { ptr.finalize(); }
 void delete_arrow_schema(Pointer<ArrowSchema> ptr) { ptr.finalize(); }
 
+void array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr); // forward declaration, see below
+SEXP array_xptr_get_schema(SEXP array_xptr);
+inline void exitIfError(const ArrowErrorCode ec, const std::string& msg);
+
 // [[Rcpp::export(.allocate_arrow_array_as_xptr)]]
 SEXP allocate_arrow_array_as_xptr() {
     return allocate_arrow_array();
@@ -133,34 +137,43 @@ void delete_arrow_schema_from_xptr(SEXP sxp) {
 }
 
 // [[Rcpp::export]]
-Rcpp::List libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
-                                         XPtr<tiledb::Query> query,
-                                         std::string name) {
+nanoarrowXPtr libtiledb_query_export_buffer(XPtr<tiledb::Context> ctx,
+                                            XPtr<tiledb::Query> query,
+                                            std::string& name) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Query>(query);
+
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    //auto arrptr = allocate_arrow_array(); 	// external pointer object
-    //auto schptr = allocate_arrow_schema();
-    auto schptr = schema_owning_ptr();
-    auto arrptr = array_owning_ptr();
-    adapter.export_buffer(name.c_str(),
-                          static_cast<void*>(arrptr),
-                          static_cast<void*>(schptr));
+    auto schemaxp = nanoarrow_schema_owning_xptr();
+    auto sch = nanoarrow_output_schema_from_xptr(schemaxp);
+    auto arrayxp = nanoarrow_array_owning_xptr();
+    auto arr = nanoarrow_output_array_from_xptr(arrayxp);
+
+    adapter.export_buffer(name.c_str(), arr, sch);
     spdl::debug(tfm::format("[libtiledb_query_export_buffer] name '%s'", name.c_str()));
-    SEXP xpschema = R_MakeExternalPtr((void*) schptr, R_NilValue, R_NilValue);
-    SEXP xparray = R_MakeExternalPtr((void*) arrptr, R_NilValue, R_NilValue);
-    return Rcpp::List::create(xparray, xpschema);
+
+    // Nanoarrow special: stick schema into xptr tag to return single SEXP
+    array_xptr_set_schema(arrayxp, schemaxp); 			// embed schema in array
+    return arrayxp;
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_import_buffer(XPtr<tiledb::Context> ctx,
                                                   XPtr<tiledb::Query> query,
-                                                  std::string name,
-                                                  Rcpp::List arrowpointers) {
+                                                  std::string& name,
+                                                  nanoarrowXPtr naptr) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Query>(query);
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
+    // get schema xptr out of array xptr tag
+    auto schptr = array_xptr_get_schema(naptr);
+
     adapter.import_buffer(name.c_str(),
-                          R_ExternalPtrAddr(arrowpointers[0]),
-                          R_ExternalPtrAddr(arrowpointers[1]));
+                          (struct ArrowArray*) R_ExternalPtrAddr(naptr),
+                          (struct ArrowSchema*) R_ExternalPtrAddr(schptr));
+
     return(query);
 }
 
@@ -173,39 +186,37 @@ Rcpp::XPtr<ArrowArray> array_setup_struct(Rcpp::XPtr<ArrowArray> arrxp, int64_t 
 Rcpp::List libtiledb_query_export_arrow_table(XPtr<tiledb::Context> ctx,
                                               XPtr<tiledb::Query> query,
                                               std::vector<std::string> names) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Query>(query);
     size_t ncol = names.size();
     tiledb::arrow::ArrowAdapter adapter(ctx, query);
 
-    Rcpp::XPtr<ArrowSchema> schemap = schema_owning_xptr();
-    Rcpp::XPtr<ArrowArray> arrayp = array_owning_xptr();
-    schemap = schema_setup_struct(schemap, ncol);
-    arrayp = array_setup_struct(arrayp, ncol);
+    auto schemaxp = nanoarrow_schema_owning_xptr();
+    auto sch = nanoarrow_output_schema_from_xptr(schemaxp);
+    exitIfError(ArrowSchemaInitFromType(sch, NANOARROW_TYPE_STRUCT), "Bad schema init");
+    exitIfError(ArrowSchemaSetName(sch, ""), "Bad schema name");
+    exitIfError(ArrowSchemaAllocateChildren(sch, ncol), "Bad schema children alloc");
 
-    arrayp->length = 0;
+    auto arrayxp = nanoarrow_array_owning_xptr();
+    auto arr = nanoarrow_output_array_from_xptr(arrayxp);
+    exitIfError(ArrowArrayInitFromType(arr, NANOARROW_TYPE_STRUCT), "Bad array init");
+    exitIfError(ArrowArrayAllocateChildren(arr, ncol), "Bad array children alloc");
 
+    arr->length = 0;
     for (size_t i=0; i<ncol; i++) {
-        // this allocates, and properly wraps as external pointers controlling lifetime
-        ArrowSchema* chldschemap = schema_owning_ptr();
-        ArrowArray* chldarrayp = array_owning_ptr();
-
         spdl::debug(tfm::format("[libtiledb_query_export_arrow_table] Accessing %s at %d", names[i], i));
-        adapter.export_buffer(names[i].c_str(), (void*) chldarrayp, (void*) chldschemap);
 
-        spdl::debug(tfm::format("[libtiledb_query_export_arrow_table] Setting children %s at %d", names[i], i));
-        schemap->children[i] = chldschemap;
-        arrayp->children[i] = chldarrayp;
+        adapter.export_buffer(names[i].c_str(), arr->children[i], sch->children[i]);
 
-        if (chldarrayp->length > arrayp->length) {
-            spdl::info(tfm::format("[libtiledb_query_export_arrow_table] Setting array length to %d", chldarrayp->length));
-            arrayp->length = chldarrayp->length;
+        if (arr->children[i]->length > arr->length) {
+            spdl::info(tfm::format("[libtiledb_query_export_arrow_table] Setting array length to %d", arr->children[i]->length));
+            arr->length = arr->children[i]->length;
         }
         spdl::info(tfm::format("[libtiledb_query_export_arrow_table] Seeing %s (%s) at length %d null_count %d buffers %d",
-                               names[i], chldschemap->format, chldarrayp->length, chldarrayp->null_count, chldarrayp->n_buffers));
-
+                               names[i], sch->children[i]->format, arr->children[i]->length, arr->children[i]->null_count, arr->children[i]->n_buffers));
     }
-
-    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayp,
-                                       Rcpp::Named("schema") = schemap);
+    Rcpp::List as = Rcpp::List::create(Rcpp::Named("array_data") = arrayxp,
+                                       Rcpp::Named("schema") = schemaxp);
     return as;
 }
 
@@ -362,6 +373,10 @@ inline void exitIfError(const ArrowErrorCode ec, const std::string& msg) {
 // attempts to do this whenever possible to avoid misinterpreting arrays.
 void array_xptr_set_schema(SEXP array_xptr, SEXP schema_xptr) {
     R_SetExternalPtrTag(array_xptr, schema_xptr);
+}
+// Reverse: peel the schema out of the array via the XPtr tag
+SEXP array_xptr_get_schema(SEXP array_xptr) {
+    return R_ExternalPtrTag(array_xptr);
 }
 
 //  was: Rcpp::List

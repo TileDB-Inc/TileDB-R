@@ -21,8 +21,8 @@ libtiledb_query_export_buffer <- function(ctx, query, name) {
     .Call(`_tiledb_libtiledb_query_export_buffer`, ctx, query, name)
 }
 
-libtiledb_query_import_buffer <- function(ctx, query, name, arrowpointers) {
-    .Call(`_tiledb_libtiledb_query_import_buffer`, ctx, query, name, arrowpointers)
+libtiledb_query_import_buffer <- function(ctx, query, name, naptr) {
+    .Call(`_tiledb_libtiledb_query_import_buffer`, ctx, query, name, naptr)
 }
 
 libtiledb_query_export_arrow_table <- function(ctx, query, names) {
