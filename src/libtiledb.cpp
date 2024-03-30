@@ -4324,8 +4324,8 @@ DataFrame libtiledb_object_walk(XPtr<tiledb::Context> ctx,
         uris.push_back(object.uri());
         types.push_back(_object_type_to_string(object.type()));
     }
-    return Rcpp::DataFrame::create(Rcpp::Named("TYPE") = uris,
-                                   Rcpp::Named("URI") = types);
+    return Rcpp::DataFrame::create(Rcpp::Named("TYPE") = types,
+                                   Rcpp::Named("URI") = uris);
 }
 
 /**
