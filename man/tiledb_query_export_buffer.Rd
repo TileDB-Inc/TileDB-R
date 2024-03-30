@@ -14,8 +14,8 @@ tiledb_query_export_buffer(query, name, ctx = tiledb_get_context())
 \item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
-A two-element vector where the two elements are
-external pointers to the Arrow array and schema
+A \code{nanoarrow} object (which is an external pointer to an Arrow Array
+with the Arrow Schema stored as the external pointer tag) classed as an S3 object
 }
 \description{
 This function exports the named buffer from a \sQuote{READ} query

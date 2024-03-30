@@ -57,35 +57,6 @@ tiledb_query_import_buffer <- function(query, name, nanoarrowptr, ctx = tiledb_g
     query
 }
 
-##' Allocate (or Release) Arrow Array and Schema Pointers
-##'
-##' These functions allocate (and free) appropriate pointer objects
-##' for, respectively, Arrow array and schema objects.
-##' @param ptr A external pointer object previously allocated with these functions
-##' @return The allocating functions return the requested pointer
-##' @export
-tiledb_arrow_array_ptr <- function() {
-    res <- .allocate_arrow_array_as_xptr()
-}
-
-##' @rdname tiledb_arrow_array_ptr
-##' @export
-tiledb_arrow_schema_ptr <- function() {
-    res <- .allocate_arrow_schema_as_xptr()
-}
-
-##' @rdname tiledb_arrow_array_ptr
-##' @export
-tiledb_arrow_array_del <- function(ptr) {
-    .delete_arrow_array_from_xptr(ptr)
-}
-
-##' @rdname tiledb_arrow_array_ptr
-##' @export
-tiledb_arrow_schema_del <- function(ptr) {
-    .delete_arrow_schema_from_xptr(ptr)
-}
-
 ##' @noRd
 .tiledb_set_arrow_config <- function(ctx = tiledb_get_context()) {
     cfg <- tiledb_config()        # for var-num columns such as char we need these
