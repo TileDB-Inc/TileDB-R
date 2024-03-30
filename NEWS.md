@@ -20,6 +20,10 @@
 
 * A number of minor typographical and grammar errors in the function documentation has been corrected (@cgiachalis in #681)
 
+## Deprecations
+
+* Functions `tiledb_arrow_array_ptr()`, `tiledb_arrow_schmea_ptr()`, `tiledb_arrow_array_del()` and `tiledb_arrow_schema_del()` are deprecated (in favor of using the corresponding `nanoarrow` functions) and will be removed in a future release (#685)
+
 
 # tiledb 0.25.0
 
