@@ -8,6 +8,10 @@
 
 * The Arrow integration has been simplified using [nanoarrow](https://github.com/apache/arrow-nanoarrow) returning a single `nanoarrow` object; an unexported helper function `nanoarrow2list()` is provided to matching the previous interface (#682)
 
+## Bug Fixes
+
+* The column headers now correspond to the column content in the two-column `data.frame` returns by `tiledb_object_walk` (#684 closing #683)
+
 ## Build and Test Systems
 
 * The `configure` and `Makevars.in` received a minor update correcting small issues (#680)
