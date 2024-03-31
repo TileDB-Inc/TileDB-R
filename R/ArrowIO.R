@@ -57,24 +57,6 @@ tiledb_query_import_buffer <- function(query, name, nanoarrowptr, ctx = tiledb_g
     query
 }
 
-##' @noRd
-.tiledb_set_arrow_config <- function(ctx = tiledb_get_context()) {
-    cfg <- tiledb_config()        # for var-num columns such as char we need these
-    cfg["sm.var_offsets.bitsize"] <- "64"
-    cfg["sm.var_offsets.mode"] <- "elements"
-    cfg["sm.var_offsets.extra_element"] <- "true"
-    ctx <- tiledb_ctx(cfg)
-}
-
-##' @noRd
-.tiledb_unset_arrow_config <- function(ctx = tiledb_get_context()) {
-    cfg <- tiledb_config()        # for var-num columns such as char we need these
-    cfg["sm.var_offsets.bitsize"] <- "64"
-    cfg["sm.var_offsets.mode"] <- "bytes"
-    cfg["sm.var_offsets.extra_element"] <- "false"
-    ctx <- tiledb_ctx(cfg)
-}
-
 ##' (Deprecated) Allocate (or Release) Arrow Array and Schema Pointers
 ##'
 ##' These functions allocate (and free) appropriate pointer objects
@@ -108,4 +90,22 @@ tiledb_arrow_array_del <- function(ptr) {
 tiledb_arrow_schema_del <- function(ptr) {
     .Deprecated(msg="tiledb_arrow_schema_del() is deprecated, please use nanoarrow::nanoarrow_pointer_release() instead.")
     nanoarrow::nanoarrow_pointer_release(ptr)
+}
+
+##' @noRd
+.tiledb_set_arrow_config <- function(ctx = tiledb_get_context()) {
+    cfg <- tiledb_config()        # for var-num columns such as char we need these
+    cfg["sm.var_offsets.bitsize"] <- "64"
+    cfg["sm.var_offsets.mode"] <- "elements"
+    cfg["sm.var_offsets.extra_element"] <- "true"
+    ctx <- tiledb_ctx(cfg)
+}
+
+##' @noRd
+.tiledb_unset_arrow_config <- function(ctx = tiledb_get_context()) {
+    cfg <- tiledb_config()        # for var-num columns such as char we need these
+    cfg["sm.var_offsets.bitsize"] <- "64"
+    cfg["sm.var_offsets.mode"] <- "bytes"
+    cfg["sm.var_offsets.extra_element"] <- "false"
+    ctx <- tiledb_ctx(cfg)
 }
