@@ -7,7 +7,7 @@
 tiledb_query_import_buffer(
   query,
   name,
-  arrowpointers,
+  nanoarrowptr,
   ctx = tiledb_get_context()
 )
 }
@@ -16,8 +16,8 @@ tiledb_query_import_buffer(
 
 \item{name}{A character variable identifying the buffer}
 
-\item{arrowpointers}{A two-element list vector with two external pointers
-to an Arrow Array and Schema, respectively}
+\item{nanoarrowptr}{A \code{nanoarrow} object (which is an external pointer to an Arrow Array
+with the Arrow Schema stored as the external pointer tag) classed as an S3 object}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }

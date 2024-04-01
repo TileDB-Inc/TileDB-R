@@ -5,7 +5,7 @@
 \alias{tiledb_arrow_schema_ptr}
 \alias{tiledb_arrow_array_del}
 \alias{tiledb_arrow_schema_del}
-\title{Allocate (or Release) Arrow Array and Schema Pointers}
+\title{(Deprecated) Allocate (or Release) Arrow Array and Schema Pointers}
 \usage{
 tiledb_arrow_array_ptr()
 
@@ -23,5 +23,7 @@ The allocating functions return the requested pointer
 }
 \description{
 These functions allocate (and free) appropriate pointer objects
-for, respectively, Arrow array and schema objects.
+for, respectively, Arrow array and schema objects. These functions are
+deprecated and will be removed, it is recommended to rely directly on
+the \code{nanoarrow} replacements.
 }

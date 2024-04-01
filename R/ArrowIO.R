@@ -57,33 +57,39 @@ tiledb_query_import_buffer <- function(query, name, nanoarrowptr, ctx = tiledb_g
     query
 }
 
-##' Allocate (or Release) Arrow Array and Schema Pointers
+##' (Deprecated) Allocate (or Release) Arrow Array and Schema Pointers
 ##'
 ##' These functions allocate (and free) appropriate pointer objects
-##' for, respectively, Arrow array and schema objects.
+##' for, respectively, Arrow array and schema objects. These functions are
+##' deprecated and will be removed, it is recommended to rely directly on
+##' the `nanoarrow` replacements.
 ##' @param ptr A external pointer object previously allocated with these functions
 ##' @return The allocating functions return the requested pointer
 ##' @export
 tiledb_arrow_array_ptr <- function() {
-    res <- .allocate_arrow_array_as_xptr()
+    .Deprecated(msg="tiledb_arrow_array_ptr() is deprecated, please use nanoarrow::nanoarrow_allocate_array() instead.")
+    res <- nanoarrow::nanoarrow_allocate_array()
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_schema_ptr <- function() {
-    res <- .allocate_arrow_schema_as_xptr()
+    .Deprecated(msg="tiledb_arrow_schema_ptr() is deprecated, please use nanoarrow::nanoarrow_allocate_schema() instead.")
+    res <- nanoarrow::nanoarrow_allocate_schema()
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_array_del <- function(ptr) {
-    .delete_arrow_array_from_xptr(ptr)
+    .Deprecated(msg="tiledb_arrow_array_del() is deprecated, please use nanoarrow::nanoarrow_pointer_release() instead.")
+    nanoarrow::nanoarrow_pointer_release(ptr)
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_schema_del <- function(ptr) {
-    .delete_arrow_schema_from_xptr(ptr)
+    .Deprecated(msg="tiledb_arrow_schema_del() is deprecated, please use nanoarrow::nanoarrow_pointer_release() instead.")
+    nanoarrow::nanoarrow_pointer_release(ptr)
 }
 
 ##' @noRd
