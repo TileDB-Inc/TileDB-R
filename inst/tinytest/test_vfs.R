@@ -64,3 +64,9 @@ if (requireNamespace("palmerpenguins", quietly=TRUE)) {
 
     expect_equal(pp, tiledb_vfs_unserialize(uriser))
 }
+
+if (tiledb_version(TRUE) >= '2.21.0' && nzchar(Sys.getenv("AWS_ACCESS_KEY_ID"))) {
+    expect_silent(dat <- tiledb::tiledb_vfs_ls_recursive("s3://tiledb-test-arrays/1.4/customer"))
+    expect_true(inherits(dat, "data.frame"))
+    expect_true(nrow(dat) > 400)
+}
