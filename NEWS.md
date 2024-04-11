@@ -10,6 +10,8 @@
 
 * An new accessor for recursive listings of (currently S3-only) URI is now available (with TileDB Core >= 2.22.0) (#691)
 
+* Initial support for TILEDB_GEOM_WKB and TILEB_GEOM_WKT has been added (with TileDB Core >= 2.21.0) (#692)
+
 ## Bug Fixes
 
 * The column headers now correspond to the column content in the two-column `data.frame` returns by `tiledb_object_walk` (#684 closing #683)
