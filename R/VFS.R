@@ -466,6 +466,6 @@ tiledb_vfs_ls_recursive <- function(uri, vfs = tiledb_get_vfs(), ctx = tiledb_ge
     stopifnot("Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
               "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
               "Argument 'uri' must be character variable" = is.character(uri),
-              "This function needs TileDB 2.21.0 or later" = tiledb_version(TRUE) >= "2.17.0")
+              "This function needs TileDB 2.22.0 or later" = tiledb_version(TRUE) >= "2.22.0")
     libtiledb_vfs_ls_recursive(ctx@ptr, vfs@ptr, uri)
 }
