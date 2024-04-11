@@ -4528,6 +4528,38 @@ void libtiledb_vfs_fh_free(XPtr<vfs_fh_t> fhxp) {
 #endif
 }
 
+// [[Rcpp::export]]
+Rcpp::DataFrame libtiledb_vfs_ls_recursive(XPtr<tiledb::Context> ctx,
+                                           XPtr<tiledb::VFS> vfs,
+                                           const std::string& uri) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::VFS>(vfs);
+
+#if TILEDB_VERSION >= TileDB_Version(2,21,0)
+    // standard / default list object (a vector of a pair<string, uint64_t?>) and callback
+    tiledb::VFSExperimental::LsObjects ls_objects;
+    tiledb::VFSExperimental::LsCallback cb = [&](const std::string_view& path, uint64_t size) {
+        ls_objects.emplace_back(path, size);
+        return true;  // Continue traversal to next entry.
+    };
+    tiledb::VFSExperimental::ls_recursive(*ctx.get(), *vfs.get(), uri, cb);
+
+    size_t n = ls_objects.size();
+    Rcpp::CharacterVector path(n);
+    std::vector<int64_t> size(n);
+    for (size_t i=0; i<n; i++) {
+        auto obj = ls_objects[i];
+        path[i] = obj.first;
+        size[i] = static_cast<int64_t>(obj.second);
+    }
+    return Rcpp::DataFrame::create(Rcpp::Named("path") = path,
+                                   Rcpp::Named("size") = Rcpp::toInteger64(size));
+#else
+    return Rcpp::DataFrame::create(Rcpp::Named("path") = Rcpp::CharacterVector(),
+                                   Rcpp::Named("size") = Rcpp::NumericVector());
+#endif
+}
+
 /**
  * Stats
  */

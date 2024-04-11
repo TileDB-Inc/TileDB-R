@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -450,4 +450,22 @@ tiledb_vfs_copy_file <- function(file, uri, vfs = tiledb_get_vfs()) {
               "Argument 'file' must be character and point to a file" =
                   is.character(uri) && file.exists(file))
     libtiledb_vfs_copy_file(vfs@ptr, file, uri)
+}
+
+#' Recursively list objects from given URI
+#'
+#' This functionality is currently limited to S3 URIs.
+#'
+#' @param uri Character variable with a URI describing a file path
+#' @param vfs (optiona) A TileDB VFS object; default is to use a cached value.
+#' @param ctx (optional) A TileDB Ctx object
+#' @return A data.frame object with two columns for the full path and the object
+#' size in bytes
+#' @export
+tiledb_vfs_ls_recursive <- function(uri, vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
+    stopifnot("Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+              "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
+              "Argument 'uri' must be character variable" = is.character(uri),
+              "This function needs TileDB 2.21.0 or later" = tiledb_version(TRUE) >= "2.17.0")
+    libtiledb_vfs_ls_recursive(ctx@ptr, vfs@ptr, uri)
 }
