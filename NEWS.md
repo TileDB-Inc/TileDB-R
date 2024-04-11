@@ -8,7 +8,7 @@
 
 * The Arrow integration has been simplified using [nanoarrow](https://github.com/apache/arrow-nanoarrow) returning a single `nanoarrow` object; an unexported helper function `nanoarrow2list()` is provided to matching the previous interface (#682, #685)
 
-* An new accessor for recursive listings of (currently S3-only) URI is now available (with TileDB Core >= 2.21.0) (#691)
+* An new accessor for recursive listings of (currently S3-only) URI is now available (with TileDB Core >= 2.22.0) (#691)
 
 ## Bug Fixes
 
@@ -18,7 +18,7 @@
 
 * The `configure` and `Makevars.in` received a minor update correcting small issues (#680)
 
-* The nightly valgrind run was updated to include release 2.22 (#687)
+* The nightly valgrind run was updated to include release 2.22.0 (#687)
 
 ## Documentation
 
