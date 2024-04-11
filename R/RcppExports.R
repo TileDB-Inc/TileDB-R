@@ -948,6 +948,10 @@ libtiledb_vfs_fh_free <- function(fhxp) {
     invisible(.Call(`_tiledb_libtiledb_vfs_fh_free`, fhxp))
 }
 
+libtiledb_vfs_ls_recursive <- function(ctx, vfs, uri) {
+    .Call(`_tiledb_libtiledb_vfs_ls_recursive`, ctx, vfs, uri)
+}
+
 libtiledb_stats_enable <- function() {
     invisible(.Call(`_tiledb_libtiledb_stats_enable`))
 }

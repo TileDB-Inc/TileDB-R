@@ -2844,6 +2844,19 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_vfs_ls_recursive
+Rcpp::DataFrame libtiledb_vfs_ls_recursive(XPtr<tiledb::Context> ctx, XPtr<tiledb::VFS> vfs, const std::string& uri);
+RcppExport SEXP _tiledb_libtiledb_vfs_ls_recursive(SEXP ctxSEXP, SEXP vfsSEXP, SEXP uriSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::VFS> >::type vfs(vfsSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type uri(uriSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_ls_recursive(ctx, vfs, uri));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_stats_enable
 void libtiledb_stats_enable();
 RcppExport SEXP _tiledb_libtiledb_stats_enable() {
@@ -3779,6 +3792,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_vfs_ls", (DL_FUNC) &_tiledb_libtiledb_vfs_ls, 2},
     {"_tiledb_libtiledb_vfs_copy_file", (DL_FUNC) &_tiledb_libtiledb_vfs_copy_file, 3},
     {"_tiledb_libtiledb_vfs_fh_free", (DL_FUNC) &_tiledb_libtiledb_vfs_fh_free, 1},
+    {"_tiledb_libtiledb_vfs_ls_recursive", (DL_FUNC) &_tiledb_libtiledb_vfs_ls_recursive, 3},
     {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
     {"_tiledb_libtiledb_stats_disable", (DL_FUNC) &_tiledb_libtiledb_stats_disable, 0},
     {"_tiledb_libtiledb_stats_reset", (DL_FUNC) &_tiledb_libtiledb_stats_reset, 0},

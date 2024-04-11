@@ -36,7 +36,7 @@
     return("")
 }
 
-.onLoad <- function(libname, pkgName) {
+.onLoad <- function(libname, pkgname) {
     ## create a slot for ctx in the per-package enviroment but do no fill it yet to allow 'lazy load'
     ## this entry is generally accessed with a (non-exported) getter and setter in R/Ctx.R
     .pkgenv[["ctx"]] <- NULL
@@ -57,7 +57,7 @@
     .set_compile_link_options()
 }
 
-.onAttach <- function(libname, pkgName) {
+.onAttach <- function(libname, pkgname) {
     if (interactive()) {
         packageStartupMessage("TileDB R ", packageVersion("tiledb"),
                               " with TileDB Embedded ", format(tiledb_version(TRUE)),
