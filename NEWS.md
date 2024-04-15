@@ -20,7 +20,7 @@
 
 * The `configure` and `Makevars.in` received a minor update correcting small issues (#680)
 
-* The nightly valgrind run was updated to include release 2.22.0 (#687)
+* The nightly valgrind run was updated to include release 2.22.0 (#687), release 2.19 and 2.20 have been removed (#695)
 
 ## Documentation
 
