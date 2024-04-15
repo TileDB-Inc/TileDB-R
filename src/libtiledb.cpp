@@ -3561,14 +3561,6 @@ XPtr<tiledb::Query> libtiledb_query_submit(XPtr<tiledb::Query> query) {
 }
 
 // [[Rcpp::export]]
-XPtr<tiledb::Query> libtiledb_query_submit_async(XPtr<tiledb::Query> query) {
-  check_xptr_tag<tiledb::Query>(query);
-  spdl::trace("[libtiledb_query_submit_async]");
-  query->submit_async();
-  return query;
-}
-
-// [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_finalize(XPtr<tiledb::Query> query) {
   check_xptr_tag<tiledb::Query>(query);
   spdl::trace("[libtiledb_query_finalize]");

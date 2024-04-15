@@ -297,7 +297,9 @@ tiledb_query_submit <- function(query) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_submit_async <- function(query) {
-  stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
+  stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"))
+  ## Deprecated April 2024, to be removed April 2025 or later
+  .Deprecated(msg="tiledb_query_submit_async() is deprecated, use tiledb_query_submit() instead.")
   libtiledb_query_submit_async(query@ptr)
   invisible(query)
 }
