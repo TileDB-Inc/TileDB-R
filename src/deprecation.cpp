@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2023 TileDB Inc.
+//  Copyright (c) 2017-2024 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -225,5 +225,14 @@ XPtr<tiledb::Query> libtiledb_query_add_range(XPtr<tiledb::Query> query, int iid
     } else {
         Rcpp::stop("Invalid data type for query range: '%s'", Rcpp::type2name(starts));
     }
+    return query;
+}
+
+// Deprecated in Core April 2024
+// [[Rcpp::export]]
+XPtr<tiledb::Query> libtiledb_query_submit_async(XPtr<tiledb::Query> query) {
+    check_xptr_tag<tiledb::Query>(query);
+    spdl::trace("[libtiledb_query_submit_async]");
+    query->submit_async();
     return query;
 }
