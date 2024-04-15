@@ -30,6 +30,7 @@
 
 * Functions `tiledb_arrow_array_ptr()`, `tiledb_arrow_schmea_ptr()`, `tiledb_arrow_array_del()` and `tiledb_arrow_schema_del()` are deprecated (in favor of using the corresponding `nanoarrow` functions) and will be removed in a future release (#685)
 
+* The function `tiledb_query_submit_async()` is marked as deprecated (as is the underlying C++ function) and slated for removal in a future release (#694)
 
 # tiledb 0.25.0
 
