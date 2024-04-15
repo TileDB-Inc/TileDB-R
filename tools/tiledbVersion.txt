@@ -1,2 +1,2 @@
-version: 2.22.0-rc1
+version: 2.22.0
 sha: 52e981e
