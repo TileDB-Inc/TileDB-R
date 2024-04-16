@@ -158,9 +158,6 @@ expect_equal(as.numeric(tiledb_fragment_info_get_timestamp_range(fi,2))*1000, c(
 
 
 ## tests formerly in test_timetravel_extra.R
-isMacOS <- (Sys.info()['sysname'] == "Darwin")
-
-ctx <- tiledb_ctx(limitTileDBCores())
 
 ## earlier time travel test recast via timestamp_{start,end}
 ## time travel

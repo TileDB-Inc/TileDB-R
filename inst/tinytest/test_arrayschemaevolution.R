@@ -215,8 +215,6 @@ for (tp in c("INT8", "UINT8")) {
 if (Sys.info()[["sysname"]] == "Windows") exit_file("Skip on Windows")
 if (Sys.getenv("CI", "") == "") exit_file("Skip unextended test run")
 
-ctx <- tiledb_ctx(limitTileDBCores())
-
 if (tiledb_version(TRUE) < "2.17.0") exit_file("Needs TileDB 2.17.* or later")
 
 df <- data.frame(key=letters[1:10], val=c(1:5,5:1))

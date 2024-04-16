@@ -1602,8 +1602,6 @@ expect_true(newver > oldver)
 isMacOS <- (Sys.info()['sysname'] == "Darwin")
 if (tiledb_version(TRUE) < "2.7.0") exit_file("Needs TileDB 2.7.* or later")
 
-ctx <- tiledb_ctx(limitTileDBCores())
-
 hasDataTable <- requireNamespace("data.table", quietly=TRUE)
 hasTibble <- requireNamespace("tibble", quietly=TRUE)
 
