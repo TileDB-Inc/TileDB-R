@@ -6,11 +6,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.25.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.26.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,35 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.26.0" id="tiledb-0260">tiledb 0.26.0<a class="anchor" aria-label="anchor" href="#tiledb-0260"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.22.0" class="external-link">TileDB 2.22.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/679" class="external-link">#679</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/686" class="external-link">#686</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/693" class="external-link">#693</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/696" class="external-link">#696</a>)</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-26-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-26-0"></a></h3>
+<ul><li><p>The display of a <code>filter_list</code> is now labeled correctly as a filter list (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/issues/681" class="external-link">#681</a> addressing <a href="https://github.com/TileDB-Inc/TileDB-R/issues/678" class="external-link">#678</a>)</p></li>
+<li><p>The Arrow integration has been simplified using <a href="https://github.com/apache/arrow-nanoarrow" class="external-link">nanoarrow</a> returning a single <code>nanoarrow</code> object; an unexported helper function <code>nanoarrow2list()</code> is provided to matching the previous interface (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/682" class="external-link">#682</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/685" class="external-link">#685</a>)</p></li>
+<li><p>An new accessor for recursive listings of (currently S3-only) URI is now available (with TileDB Core &gt;= 2.22.0) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/691" class="external-link">#691</a>)</p></li>
+<li><p>Initial support for TILEDB_GEOM_WKB and TILEB_GEOM_WKT has been added (with TileDB Core &gt;= 2.21.0) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/692" class="external-link">#692</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-26-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-26-0"></a></h3>
+<ul><li>The column headers now correspond to the column content in the two-column <code>data.frame</code> returns by <code>tiledb_object_walk</code> (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/684" class="external-link">#684</a> closing <a href="https://github.com/TileDB-Inc/TileDB-R/issues/683" class="external-link">#683</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-26-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-26-0"></a></h3>
+<ul><li><p>The <code>configure</code> and <code>Makevars.in</code> received a minor update correcting small issues (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/680" class="external-link">#680</a>)</p></li>
+<li><p>The nightly valgrind run was updated to include release 2.22.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/687" class="external-link">#687</a>), release 2.19 and 2.20 have been removed (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/695" class="external-link">#695</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-26-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-26-0"></a></h3>
+<ul><li>A number of minor typographical and grammar errors in the function documentation has been corrected (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/issues/681" class="external-link">#681</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecations-0-26-0">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-26-0"></a></h3>
+<ul><li><p>Functions <code><a href="../reference/tiledb_arrow_array_ptr.html">tiledb_arrow_array_ptr()</a></code>, <code>tiledb_arrow_schmea_ptr()</code>, <code><a href="../reference/tiledb_arrow_array_ptr.html">tiledb_arrow_array_del()</a></code> and <code><a href="../reference/tiledb_arrow_array_ptr.html">tiledb_arrow_schema_del()</a></code> are deprecated (in favor of using the corresponding <code>nanoarrow</code> functions) and will be removed in a future release (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/685" class="external-link">#685</a>)</p></li>
+<li><p>The function <code><a href="../reference/tiledb_query_submit_async.html">tiledb_query_submit_async()</a></code> is marked as deprecated (as is the underlying C++ function) and slated for removal in a future release (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/694" class="external-link">#694</a>)</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.25.0" id="tiledb-0250">tiledb 0.25.0<a class="anchor" aria-label="anchor" href="#tiledb-0250"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.21.0" class="external-link">TileDB 2.21.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/661" class="external-link">#661</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/666" class="external-link">#666</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/668" class="external-link">#668</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/676" class="external-link">#676</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/677" class="external-link">#677</a>)</li>
 </ul><div class="section level3">
@@ -71,13 +100,13 @@
 <div class="section level3">
 <h3 id="bug-fixes-0-25-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-25-0"></a></h3>
 <ul><li><p>The <code>tiledb_get_query_range_var()</code> accessor now correctly calls the range getter for variable-sized dimensions (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/662" class="external-link">#662</a>)</p></li>
-<li><p>The nighly valgrind check now installs to require <code>nanoarrow</code> package (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/664" class="external-link">#664</a>)</p></li>
+<li><p>The nightly valgrind check now installs to require <code>nanoarrow</code> package (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/664" class="external-link">#664</a>)</p></li>
 <li><p>Variable cell numbers can now set consistently for all attribute types (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/670" class="external-link">#670</a>)</p></li>
 <li><p>Object walk traversal order detection has been corrected (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/671" class="external-link">#671</a>)</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="build-and-test-systems-0-25-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-25-0"></a></h3>
-<ul><li><p>The nighly valgrind run was updated to include release 2.21 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/669" class="external-link">#669</a>)</p></li>
+<ul><li><p>The nightly valgrind run was updated to include release 2.21 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/669" class="external-link">#669</a>)</p></li>
 <li><p>Unit tests have been added for the TileDB ‘object’ functions (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/671" class="external-link">#671</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/672" class="external-link">#672</a>)</p></li>
 <li><p>Obsolete checks for an ancient Windows version have been removed from the unit tests (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/673" class="external-link">#673</a>)</p></li>
 </ul></div>
@@ -98,7 +127,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="build-and-test-systems-0-24-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-24-0"></a></h3>
-<ul><li>The nighly valgrind run was updated to include release 2.20 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/649" class="external-link">#649</a>)</li>
+<ul><li>The nightly valgrind run was updated to include release 2.20 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/649" class="external-link">#649</a>)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-24-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-24-0"></a></h3>
@@ -159,7 +188,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="build-and-test-systems-0-21-3">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-21-3"></a></h3>
-<ul><li>The nighly valgrind run was updated to include release 2.18 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/615" class="external-link">#615</a>)</li>
+<ul><li>The nightly valgrind run was updated to include release 2.18 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/615" class="external-link">#615</a>)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-21-3">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-21-3"></a></h3>
@@ -191,7 +220,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="build-and-test-systems-0-21-2">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-21-2"></a></h3>
-<ul><li>The nighly valgrind run was updated to include release 2.17 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/603" class="external-link">#603</a>)</li>
+<ul><li>The nightly valgrind run was updated to include release 2.17 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/603" class="external-link">#603</a>)</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -934,7 +963,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
     </footer></div>
