@@ -1,3 +1,10 @@
+# Ongoing development
+
+## Build and Test Systems
+
+* The test files receives a minor refactoring absorbing two files (#698)
+
+
 # tiledb 0.26.0
 
 * This release of the R package builds against [TileDB 2.22.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.22.0), and has also been tested against earlier releases as well as the development version (#679, #686, #693, #696)
