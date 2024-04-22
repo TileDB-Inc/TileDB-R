@@ -486,15 +486,6 @@ const size_t _tiledb_datatype_sizeof(const tiledb_datatype_t dtype) {
   }
 }
 
-tiledb_encryption_type_t _string_to_tiledb_encryption_type_t(std::string encstr) {
-    tiledb_encryption_type_t enc;
-    int rc = tiledb_encryption_type_from_str(encstr.c_str(), &enc);
-    if (rc == TILEDB_OK)
-        return enc;
-    Rcpp::stop("Unknow TileDB encryption type '%s'", encstr.c_str());
-}
-
-
 // [[Rcpp::export]]
 NumericVector libtiledb_version() {
   auto ver = tiledb::version();
@@ -2238,16 +2229,6 @@ std::string libtiledb_array_create(std::string uri, XPtr<tiledb::ArraySchema> sc
   check_xptr_tag<tiledb::ArraySchema>(schema);
   tiledb::Array::create(uri, *schema.get());
   return uri;
-}
-
-// [[Rcpp::export]]
-std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema,
-                                            std::string encryption_key) {
-    check_xptr_tag<tiledb::ArraySchema>(schema);
-    tiledb::Array::create(uri, *schema.get(),
-                          _string_to_tiledb_encryption_type_t("AES_256_GCM"),
-                          encryption_key);
-    return uri;
 }
 
 // [[Rcpp::export]]
