@@ -182,28 +182,30 @@ createBatched <- function(x) {
 
     ## if ranges selected, use those
     for (k in seq_len(length(x@selected_ranges))) {
+        sbrptr <- libtiledb_subarray(qryptr)
         if (is.null(x@selected_ranges[[k]])) {
             ##cat("Adding null dim", k, "on", dimtypes[k], "\n")
             vec <- .map2integer64(nonemptydom[[k]], dimtypes[k])
             if (vec[1] != 0 && vec[2] != 0) { # corner case of A[] on empty array
-                qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+                sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, k-1L, dimtypes[k], vec[1], vec[2])
                 rangeunset <- FALSE
             }
         } else if (is.null(nrow(x@selected_ranges[[k]]))) {
             ##cat("Adding nrow null dim", k, "on", dimtypes[k], "\n")
             vec <- x@selected_ranges[[k]]
             vec <- .map2integer64(vec, dimtypes[k])
-            qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], min(vec), max(vec))
+            sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, k-1L, dimtypes[k], min(vec), max(vec))
             rangeunset <- FALSE
         } else {
             ##cat("Adding non-zero dim", k, "on", dimtypes[k], "\n")
             m <- x@selected_ranges[[k]]
             for (i in seq_len(nrow(m))) {
                 vec <- .map2integer64(c(m[i,1], m[i,2]), dimtypes[k])
-                qryptr <- libtiledb_query_add_range_with_type(qryptr, k-1, dimtypes[k], vec[1], vec[2])
+                sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, k-1L, dimtypes[k], vec[1], vec[2])
             }
             rangeunset <- FALSE
         }
+        qryptr <- libtiledb_query_set_subarray_object(qryptr, sbrptr)
     }
 
     buflist <- vector(mode="list", length=length(allnames))

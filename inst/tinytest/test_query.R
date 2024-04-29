@@ -52,6 +52,7 @@ expect_equal(tiledb_query_get_layout(tiledb_query_set_layout(query, "UNORDERED")
 unlink(tmp, recursive=TRUE)
 #})
 
+## N=9
 #test_that("tiledb_query basic query", {
 tmp <- tempfile()
 dir.create(tmp)
@@ -81,6 +82,7 @@ expect_equal(dat$d2, d2)
 unlink(tmp, recursive=TRUE)
 #})
 
+## N=13
 #test_that("tiledb_query alloc and range", {
 if (requireNamespace("nanotime", quietly=TRUE)) {
   suppressMessages({
