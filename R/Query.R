@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -419,7 +419,10 @@ tiledb_query_add_range_with_type <- function(query, idx, datatype, lowval, highv
             `Argument 'lowval' must be numeric` = is.numeric(lowval),
             `Argument 'highval' must be numeric` = is.numeric(highval),
             `Argument 'stride' must be numeric (or NULL)` = is.null(stride) || is.numeric(lowval))
-  query@ptr <- libtiledb_query_add_range_with_type(query@ptr, idx, datatype, lowval, highval, stride)
+  ## The (initial) Query member function is deprecated, we now use a subarray
+  sbrptr <- libtiledb_subarray(query@ptr)
+  sbrptr <- libtiledb_subarray_add_range_with_type(sbrptr, idx, datatype, lowval, highval, stride)
+  query@ptr <- libtiledb_query_set_subarray_object(query@ptr, sbrptr)
   invisible(query)
 }
 

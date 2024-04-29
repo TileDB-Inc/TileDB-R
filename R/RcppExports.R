@@ -29,12 +29,12 @@ makeQueryWrapper <- function(qp) {
     .Call(`_tiledb_makeQueryWrapper`, qp)
 }
 
-libtiledb_query_add_range_with_type <- function(query, iidx, typestr, starts, ends, strides = NULL) {
-    .Call(`_tiledb_libtiledb_query_add_range_with_type`, query, iidx, typestr, starts, ends, strides)
+libtiledb_query_submit_async <- function(query) {
+    .Call(`_tiledb_libtiledb_query_submit_async`, query)
 }
 
-libtiledb_query_add_range <- function(query, iidx, starts, ends, strides = NULL) {
-    .Call(`_tiledb_libtiledb_query_add_range`, query, iidx, starts, ends, strides)
+libtiledb_array_create_with_key <- function(uri, schema, encryption_key) {
+    .Call(`_tiledb_libtiledb_array_create_with_key`, uri, schema, encryption_key)
 }
 
 tiledb_datatype_string_to_sizeof <- function(str) {
@@ -472,10 +472,6 @@ libtiledb_array_create <- function(uri, schema) {
     .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }
 
-libtiledb_array_create_with_key <- function(uri, schema, encryption_key) {
-    .Call(`_tiledb_libtiledb_array_create_with_key`, uri, schema, encryption_key)
-}
-
 libtiledb_array_open <- function(ctx, uri, type) {
     .Call(`_tiledb_libtiledb_array_open`, ctx, uri, type)
 }
@@ -702,10 +698,6 @@ libtiledb_query_get_buffer_ptr <- function(buf, asint64 = FALSE) {
 
 libtiledb_query_submit <- function(query) {
     .Call(`_tiledb_libtiledb_query_submit`, query)
-}
-
-libtiledb_query_submit_async <- function(query) {
-    .Call(`_tiledb_libtiledb_query_submit_async`, query)
 }
 
 libtiledb_query_finalize <- function(query) {
