@@ -4,6 +4,15 @@
 
 * The test files receives a minor refactoring absorbing two files (#698)
 
+## Deprecations
+
+* Function `libtiledb_array_create_with_key`, accessing a deprecated Core function, is now in `src/deprecated.cpp` and will be removed at later point (#699)
+
+## Removals
+
+* Functions `libtiledb_query_add_range_with_type` and `libtiledb_query_add_range`, deprecated in release 0.17.1 in January 2023, have been now removed (#700).
+
+
 
 # tiledb 0.26.0
 
