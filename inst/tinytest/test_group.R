@@ -201,4 +201,4 @@ expect_true(tiledb_group_is_open(grp))
 expect_equal(tiledb_group_query_type(grp), "MODIFY_EXCLUSIVE")
 tiledb_group_delete(grp, uri)
 
-expect_error(grp <- tiledb_group(uri))  # no longer exists
+if (tiledb_version(TRUE) >= "2.16.0") expect_error(grp <- tiledb_group(uri))  # no longer exists

@@ -379,6 +379,6 @@ tiledb_group_delete <- function(grp, uri, recursive = FALSE) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
               "The 'uri' argument must be a character variable" = inherits(uri, "character"),
               "The 'recursive' argument be logical" = is(recursive, "logical"),
-              "This function needs TileDB 2.12.*" = tiledb_version(TRUE) >= "2.12.0")
+              "This function needs TileDB 2.14.*" = tiledb_version(TRUE) >= "2.14.0")
     libtiledb_group_delete(grp@ptr, uri, isTRUE(recursive))
 }

@@ -5168,7 +5168,11 @@ void libtiledb_group_delete(XPtr<tiledb::Group> grp,
                             const std::string& uri,
                             const bool recursive = false) {
     check_xptr_tag<tiledb::Group>(grp);
+#if TILEDB_VERSION >= TileDB_Version(2,14,0)
     grp->delete_group(uri, recursive);
+#else
+    Rcpp::message(Rcpp::wrap("This function is only available with TileDB Core 2.14.0 or later"));
+#endif
 }
 
 
