@@ -143,7 +143,7 @@ expect_true(obj[2] %in% c(file.path(tiledb_group_uri(grp), "chloe"),
 expect_true(is.character(obj[3]))
 expect_true(obj[3] %in% c("name_is_chloe", ""))
 
-obj <- tiledb_group_member(grp, 1) 									# group member with no name
+obj <- tiledb_group_member(grp, 1) 		# group member with no name
 expect_true(obj[2] %in% c(file.path(tiledb_group_uri(grp), "chloe"),
                           file.path(tiledb_group_uri(grp), "anny")))
 expect_true(obj[3] %in% c("name_is_chloe", ""))
@@ -185,3 +185,20 @@ expect_equal(dim(dir_info), c(4,2))
 dir_info <- tiledb_object_walk(uri, "POSTORDER")
 expect_equal(dim(dir_info), c(4,2))
 expect_error(tiledb_object_walk(uri, "FRODO"))
+
+
+## delete
+uri <- tempfile()
+expect_stdout(chk <- tiledb_group_create(uri))     # returns uri
+expect_silent(grp <- tiledb_group(uri, "WRITE"))
+uri2 <- file.path(uri, "bob")
+fromDataFrame(data.frame(key=1:3, val=letters[1:3]), uri2)
+grp <- tiledb_group_add_member(grp, uri2, FALSE) 	# use absolute URL
+grp <- tiledb_group_close(grp)
+
+grp <- tiledb_group_open(grp, "MODIFY_EXCLUSIVE")
+expect_true(tiledb_group_is_open(grp))
+expect_equal(tiledb_group_query_type(grp), "MODIFY_EXCLUSIVE")
+tiledb_group_delete(grp, uri)
+
+expect_error(grp <- tiledb_group(uri))  # no longer exists

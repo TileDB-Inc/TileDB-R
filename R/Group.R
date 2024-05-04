@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2022 TileDB Inc.
+#  Copyright (c) 2022-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -59,12 +59,15 @@ tiledb_group <- function(uri, type = c("READ", "WRITE"),
 ##' Open a TileDB Group
 ##'
 ##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param type A character value that must be either \sQuote{READ} or \sQuote{WRITE}
+##' @param type A character value that must be either \sQuote{READ}, \sQuote{WRITE}
+##' or \sQuote{MODIFY_EXCLUSIVE}
 ##' @return The TileDB Group object but opened for reading or writing
 ##' @export
-tiledb_group_open <- function(grp, type=c("READ","WRITE")) {
+tiledb_group_open <- function(grp, type=c("READ","WRITE","MODIFY_EXCLUSIVE")) {
     stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
+              "This function needs TileDB 2.8.*" = .tiledb28(),
+              "Using 'MODIFY_EXCLUSIVE' needs TileDB 2.12.* or later" =
+                  type != "MODIFY_EXCLUSIVE" || tiledb_version(TRUE) >= "2.12.0")
     type <- match.arg(type)
     grp@ptr <- libtiledb_group_open(grp@ptr, type)
     grp
@@ -358,3 +361,24 @@ tiledb_group_is_relative <- function(grp, name) {
 setMethod("show", signature(object = "tiledb_group"), function(object) {
     cat(libtiledb_group_dump(object@ptr, FALSE))
 })
+
+
+#' Deletes all written data from a 'tiledb_group' object
+#'
+#' The group must be opened in \sQuote{MODIFY_EXCLUSIVE} mode, otherwise the function
+#' will error out.
+#'
+#' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+#' @param uri Character variable with the URI of the group item to be deleted
+#' @param recursive A logical value indicating whether all data iniside the
+#' group is to be delet
+#' @return Nothing is returned, the function is invoked for the side-effect of
+#' group data removal.
+#' @export
+tiledb_group_delete <- function(grp, uri, recursive = FALSE) {
+    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+              "The 'uri' argument must be a character variable" = inherits(uri, "character"),
+              "The 'recursive' argument be logical" = is(recursive, "logical"),
+              "This function needs TileDB 2.12.*" = tiledb_version(TRUE) >= "2.12.0")
+    libtiledb_group_delete(grp@ptr, uri, isTRUE(recursive))
+}
