@@ -1132,6 +1132,10 @@ libtiledb_group_is_relative <- function(grp, name) {
     .Call(`_tiledb_libtiledb_group_is_relative`, grp, name)
 }
 
+libtiledb_group_delete <- function(grp, uri, recursive = FALSE) {
+    invisible(.Call(`_tiledb_libtiledb_group_delete`, grp, uri, recursive))
+}
+
 libtiledb_filestore_schema_create <- function(ctx, uri) {
     .Call(`_tiledb_libtiledb_filestore_schema_create`, ctx, uri)
 }
