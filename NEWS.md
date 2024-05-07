@@ -10,6 +10,8 @@
 
 * The test files receives a minor refactoring absorbing two files (#698)
 
+* The nightly valgrind run was updated to include release 2.23.0, release 2.21 has been removed (#703)
+
 ## Deprecations
 
 * Function `libtiledb_array_create_with_key`, accessing a deprecated Core function, is now in `src/deprecated.cpp` and will be removed at later point (#699)
