@@ -1,2 +1,2 @@
-version: 2.23.0-rc0
+version: 2.23.0
 sha: 152093b
