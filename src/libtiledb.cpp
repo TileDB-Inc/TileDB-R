@@ -2591,7 +2591,7 @@ bool libtiledb_array_put_metadata(XPtr<tiledb::Array> array,
       break;
     }
     default: {
-      Rcpp::stop("No support (yet) for type '%d'.", TYPEOF(obj));
+      Rcpp::stop("No support (yet) for type '%s'.", Rf_type2char(TYPEOF(obj)));
       break; // not reached
     }
   }
@@ -5016,7 +5016,7 @@ bool libtiledb_group_put_metadata(XPtr<tiledb::Group> grp, std::string key, SEXP
         break;// not reached
     }
     default: {
-        Rcpp::stop("No support (yet) for type '%d'.", TYPEOF(obj));
+        Rcpp::stop("No support (yet) for type '%s'.", Rf_type2char(TYPEOF(obj)));
         break; // not reached
     }
     }
