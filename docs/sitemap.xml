@@ -820,6 +820,9 @@
     <loc>/reference/tiledb_group_create.html</loc>
   </url>
   <url>
+    <loc>/reference/tiledb_group_delete.html</loc>
+  </url>
+  <url>
     <loc>/reference/tiledb_group_delete_metadata.html</loc>
   </url>
   <url>
