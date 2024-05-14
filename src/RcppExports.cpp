@@ -3537,6 +3537,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// vfile_
+SEXP vfile_(SEXP description_, SEXP mode_, SEXP verbosity_);
+RcppExport SEXP _tiledb_vfile_(SEXP description_SEXP, SEXP mode_SEXP, SEXP verbosity_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type description_(description_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type mode_(mode_SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type verbosity_(verbosity_SEXP);
+    rcpp_result_gen = Rcpp::wrap(vfile_(description_, mode_, verbosity_));
+    return rcpp_result_gen;
+END_RCPP
+}
+
+RcppExport SEXP tldb_init_(SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
@@ -3832,6 +3847,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
     {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 2},
+    {"_tiledb_vfile_", (DL_FUNC) &_tiledb_vfile_, 3},
+    {"tldb_init_", (DL_FUNC) &tldb_init_, 2},
     {NULL, NULL, 0}
 };
 
