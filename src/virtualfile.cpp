@@ -1,7 +1,8 @@
 
-#include <Rcpp/Lighter>
-
-#include "connection/connection.h"
+#include <Rcpp/Lighter>         				// for Rcpp
+#include <tinyspdl.h>                           // for spdl logging
+#include "connection/connection.h"              // for connections
+#include "tiledb.h"
 
 extern "C" SEXP vfile_c_impl_(SEXP, SEXP, SEXP);
 
@@ -10,7 +11,7 @@ extern "C" SEXP vfile_c_impl_(SEXP, SEXP, SEXP);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // [[Rcpp::export]]
 SEXP vfile_(SEXP description_, SEXP mode_, SEXP verbosity_) {
-
+    spdl::debug("[vfile_] entered");
     return vfile_c_impl_(description_, mode_, verbosity_);
 }
 
@@ -26,6 +27,9 @@ typedef struct {
     FILE *fp;          // FilePointer if accessing a file
     Rconnection inner; // inner connection if accessing a connection
     int verbosity;     // For debugging!
+    tiledb::Context *ctx;
+    tiledb::VFS *vfs;
+    char* uri;
 } vfile_state;
 
 Rboolean vfile_open(struct Rconn *rconn);
@@ -45,10 +49,13 @@ int vfile_vfprintf(struct Rconn *rconn, const char* fmt, va_list ap);
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 SEXP vfile_c_impl_(SEXP description_, SEXP mode_, SEXP verbosity_) {
 
+    spdl::debug("[vfile_c_impl_] entered");
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Initialize User State
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     vfile_state *vstate = (vfile_state *)calloc(1, sizeof(vfile_state));
+    vstate->ctx = new tiledb::Context();
+    vstate->vfs = new tiledb::VFS(*vstate->ctx);
     vstate->verbosity = Rf_asInteger(verbosity_);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,6 +65,8 @@ SEXP vfile_c_impl_(SEXP description_, SEXP mode_, SEXP verbosity_) {
     if (TYPEOF(description_) == STRSXP) {
         vstate->is_file = TRUE;
         description = (char *)CHAR(STRING_ELT(description_, 0));
+        spdl::debug(tfm::format("[vfile_c_impl_] file %s", description));
+        vstate->uri = description;
     } else {
         /* vstate->is_file = FALSE; */
         /* description = "vfile(connection)"; */
@@ -400,6 +409,8 @@ Rboolean vfile_open(struct Rconn *rconn) {
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0)
         Rprintf("vfile_open('%s', mode = '%s')\n", rconn->description, rconn->mode);
+    spdl::debug(tfm::format("[vfile_open] entered for '%s' with '%s'",
+                            rconn->description, rconn->mode));
 
     if (rconn->isopen) {
         Rf_error("vfile(): Connection is already open. Cannot open twice");
@@ -427,10 +438,10 @@ Rboolean vfile_open(struct Rconn *rconn) {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     if (rconn->canread) {
         if (vstate->is_file) {
-            vstate->fp = fopen(rconn->description, "rb");
-            if (vstate->fp == NULL) {
-                Rf_error("vfile_(): Couldn't open input file '%s' with mode '%s'", rconn->description, rconn->mode);
-            }
+            // vstate->fp = fopen(rconn->description, "rb");
+            // if (vstate->fp == NULL) {
+            //     Rf_error("vfile_(): Couldn't open input file '%s' with mode '%s'", rconn->description, rconn->mode);
+            // }
         } else {
             /* memset(vstate->inner->mode, '\0', 5); */
             /* strcpy(vstate->inner->mode, "rb"); */
@@ -441,10 +452,10 @@ Rboolean vfile_open(struct Rconn *rconn) {
         }
     } else {
         if (vstate->is_file) {
-            vstate->fp = fopen(rconn->description, "wb");
-            if (vstate->fp == NULL) {
-                Rf_error("vfile_(): Couldn't open output file '%s' with mode '%s'", rconn->description, rconn->mode);
-            }
+            // vstate->fp = fopen(rconn->description, "wb");
+            // if (vstate->fp == NULL) {
+            //     Rf_error("vfile_(): Couldn't open output file '%s' with mode '%s'", rconn->description, rconn->mode);
+            // }
         } else {
             /* memset(vstate->inner->mode, '\0', 5); */
             /* strcpy(vstate->inner->mode, "wb"); */
@@ -465,6 +476,7 @@ Rboolean vfile_open(struct Rconn *rconn) {
 //    by the garbage collector.
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void vfile_close(struct Rconn *rconn) {
+    spdl::debug("[vfile_close] entered");
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0)Rprintf("vfile_close('%s')\n", rconn->description);
@@ -491,9 +503,12 @@ void vfile_close(struct Rconn *rconn) {
 //   - Only really have to take care of 'rconn->private_ptr' (?)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void vfile_destroy(struct Rconn *rconn) {
+    spdl::debug("[vfile_destroy] entered");
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0) Rprintf("vfile_destroy()\n");
+    delete vstate->ctx;
+    delete vstate->vfs;
 
     free(vstate);
 }
@@ -504,6 +519,7 @@ void vfile_destroy(struct Rconn *rconn) {
 // @return int - a character, or R_EOF
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int vfile_fgetc_internal(struct Rconn *rconn) {
+    spdl::debug("[vfile_fgetc_internal] entered");
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0) Rprintf("vfile_fgetc_internal()\n");
@@ -558,10 +574,14 @@ int vfile_fflush(struct Rconn *rconn) {
 // readBin()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 size_t vfile_read(void *dst, size_t size, size_t nitems, struct Rconn *rconn) {
+    spdl::debug("[vfile_read] entered");
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0) Rprintf("vfile_read(size = %zu, nitems = %zu)\n", size, nitems);
+    spdl::debug(tfm::format("[vfile_read] reading from '%s' up to size '%zu' itmes '%zu'",
+                            vstate->uri, size, nitems));
 
+#if 0
     if (vstate->is_file && feof(vstate->fp)) {
         return 0;
     }
@@ -580,8 +600,20 @@ size_t vfile_read(void *dst, size_t size, size_t nitems, struct Rconn *rconn) {
         /*   vstate->inner->EOF_signalled = TRUE; */
         /* } */
     }
-
     return nread;
+#else
+    tiledb::Context ctx{*vstate->ctx};
+    tiledb::VFS vfs{*vstate->vfs};
+    tiledb::VFS::filebuf sbuf(vfs);
+    sbuf.open(vstate->uri, std::ios::in);
+    std::istream is(&sbuf);
+    if (!is.good()) {
+        Rcpp::stop("Error opening uri '%s'\n", vstate->uri);
+    }
+    auto nread = vfs.file_size(vstate->uri);
+    is.read((char*)dst, nread);
+    return nread;
+#endif
 }
 
 
@@ -594,6 +626,7 @@ size_t vfile_read(void *dst, size_t size, size_t nitems, struct Rconn *rconn) {
 // @return int - a (re-encoded) character, or R_EOF
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int vfile_fgetc(struct Rconn *rconn) {
+    spdl::debug("[vfile_fgetc] entered");
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 1) Rprintf("vfile_fgetc()\n");
@@ -620,6 +653,7 @@ int vfile_fgetc(struct Rconn *rconn) {
 // writeBin()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 size_t vfile_write(const void *src, size_t size, size_t nitems, struct Rconn *rconn) {
+    spdl::debug("[vfile_write] entered");
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0) Rprintf("vfile_write(size = %zu, nitems = %zu)\n", size, nitems);
@@ -642,6 +676,7 @@ size_t vfile_write(const void *src, size_t size, size_t nitems, struct Rconn *rc
 // @return int - number of characters printed, negative on failure
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int vfile_vfprintf(struct Rconn *rconn, const char* fmt, va_list ap) {
+    spdl::debug("[vfile_vfprintf] entered");
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
 
