@@ -623,7 +623,7 @@ size_t vfile_read(void *dst, size_t size, size_t nitems, struct Rconn *rconn) {
     if (!is.good()) {
         Rcpp::stop("Error opening uri '%s'\n", vstate->uri);
     }
-    auto file_size = vstate->vfs->file_size(vstate->uri);
+    size_t file_size = static_cast<size_t>(vstate->vfs->file_size(vstate->uri));
     auto nread = std::min(size * nitems, file_size);
     is.read((char*)dst, nread);
     return nread;
@@ -680,10 +680,10 @@ size_t vfile_write(const void *src, size_t size, size_t nitems, struct Rconn *rc
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0) Rprintf("vfile_write(size = %zu, nitems = %zu)\n", size, nitems);
 
-    size_t wlen;
+    size_t wlen = 0;
     if (vstate->is_file) {
         wlen = fwrite(src, 1, size * nitems, vstate->fp);
-    } else {
+    /* } else { */
         /* wlen = R_WriteConnection(vstate->inner, (void *)src, size * nitems); */
     }
 
