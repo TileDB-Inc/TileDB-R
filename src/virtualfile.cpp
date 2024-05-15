@@ -30,6 +30,8 @@ typedef struct {
     tiledb::Context *ctx;
     tiledb::VFS *vfs;
     char* uri;
+    std::vector<std::byte> buf;
+    size_t nread;
 } vfile_state;
 
 Rboolean vfile_open(struct Rconn *rconn);
@@ -466,6 +468,19 @@ Rboolean vfile_open(struct Rconn *rconn) {
         }
     }
 
+    if (rconn->text) {
+        tiledb::VFS::filebuf sbuf(*vstate->vfs);
+        sbuf.open(vstate->uri, std::ios::in);
+        std::istream is(&sbuf);
+        if (!is.good()) {
+            Rcpp::stop("Error opening uri '%s' in text mode\n", vstate->uri);
+        }
+        auto file_size = vstate->vfs->file_size(vstate->uri);
+        vstate->buf.resize(file_size);
+        is.read((char*) vstate->buf.data(), file_size);
+        vstate->nread = 0;
+    }
+
     return TRUE;
 }
 
@@ -578,7 +593,7 @@ size_t vfile_read(void *dst, size_t size, size_t nitems, struct Rconn *rconn) {
 
     vfile_state *vstate = (vfile_state *)rconn->private_ptr;
     if (vstate->verbosity > 0) Rprintf("vfile_read(size = %zu, nitems = %zu)\n", size, nitems);
-    spdl::debug(tfm::format("[vfile_read] reading from '%s' up to size '%zu' itmes '%zu'",
+    spdl::debug(tfm::format("[vfile_read] reading from '%s' up to size '%zu' times '%zu'",
                             vstate->uri, size, nitems));
 
 #if 0
@@ -602,15 +617,14 @@ size_t vfile_read(void *dst, size_t size, size_t nitems, struct Rconn *rconn) {
     }
     return nread;
 #else
-    tiledb::Context ctx{*vstate->ctx};
-    tiledb::VFS vfs{*vstate->vfs};
-    tiledb::VFS::filebuf sbuf(vfs);
+    tiledb::VFS::filebuf sbuf(*vstate->vfs);
     sbuf.open(vstate->uri, std::ios::in);
     std::istream is(&sbuf);
     if (!is.good()) {
         Rcpp::stop("Error opening uri '%s'\n", vstate->uri);
     }
-    auto nread = vfs.file_size(vstate->uri);
+    auto file_size = vstate->vfs->file_size(vstate->uri);
+    auto nread = std::min(size * nitems, file_size);
     is.read((char*)dst, nread);
     return nread;
 #endif
@@ -633,6 +647,7 @@ int vfile_fgetc(struct Rconn *rconn) {
 
     int c;
 
+#if 0
     if (vstate->is_file) {
         c = fgetc(vstate->fp);
     } else {
@@ -643,6 +658,13 @@ int vfile_fgetc(struct Rconn *rconn) {
         } else {
             c = (int)cchar;
         }
+    }
+#endif
+
+    if (vstate->nread == vstate->buf.size()) {
+        c = -1;
+    } else {
+        c = static_cast<int>(vstate->buf[vstate->nread++]);
     }
 
     return c;
