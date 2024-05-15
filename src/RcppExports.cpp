@@ -3538,15 +3538,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // vfile_
-SEXP vfile_(SEXP description_, SEXP mode_, SEXP verbosity_);
-RcppExport SEXP _tiledb_vfile_(SEXP description_SEXP, SEXP mode_SEXP, SEXP verbosity_SEXP) {
+SEXP vfile_(SEXP description, SEXP mode, SEXP verbosity);
+RcppExport SEXP _tiledb_vfile_(SEXP descriptionSEXP, SEXP modeSEXP, SEXP verbositySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type description_(description_SEXP);
-    Rcpp::traits::input_parameter< SEXP >::type mode_(mode_SEXP);
-    Rcpp::traits::input_parameter< SEXP >::type verbosity_(verbosity_SEXP);
-    rcpp_result_gen = Rcpp::wrap(vfile_(description_, mode_, verbosity_));
+    Rcpp::traits::input_parameter< SEXP >::type description(descriptionSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type mode(modeSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type verbosity(verbositySEXP);
+    rcpp_result_gen = Rcpp::wrap(vfile_(description, mode, verbosity));
     return rcpp_result_gen;
 END_RCPP
 }

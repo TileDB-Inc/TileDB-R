@@ -22,10 +22,12 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' tmp <- tempfile()
 #' dat <- as.raw(1:255)
 #' writeBin(dat, vfile(tmp))
 #' readBin(vfile(tmp),  raw(), 1000)
+#' }
 vfile <- function(description, open = "", verbosity = 1) {
     if (is.character(description)) {
         description <- normalizePath(description, mustWork = FALSE)

@@ -10,9 +10,9 @@ extern "C" SEXP vfile_c_impl_(SEXP, SEXP, SEXP);
 // Initialize a vfile() R connection object to return to the user
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // [[Rcpp::export]]
-SEXP vfile_(SEXP description_, SEXP mode_, SEXP verbosity_) {
+SEXP vfile_(SEXP description, SEXP mode, SEXP verbosity) {
     spdl::debug("[vfile_] entered");
-    return vfile_c_impl_(description_, mode_, verbosity_);
+    return vfile_c_impl_(description, mode, verbosity);
 }
 
 extern "C" {

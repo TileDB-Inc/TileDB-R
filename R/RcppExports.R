@@ -1184,7 +1184,7 @@ vlcbuf_from_shmem <- function(datapath, dtype) {
     .Call(`_tiledb_vlcbuf_from_shmem`, datapath, dtype)
 }
 
-vfile_ <- function(description_, mode_, verbosity_) {
-    .Call(`_tiledb_vfile_`, description_, mode_, verbosity_)
+vfile_ <- function(description, mode, verbosity) {
+    .Call(`_tiledb_vfile_`, description, mode, verbosity)
 }
 
