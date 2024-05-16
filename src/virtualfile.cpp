@@ -468,7 +468,7 @@ Rboolean vfile_open(struct Rconn *rconn) {
         }
     }
 
-    if (rconn->text) {
+    if (rconn->text && rconn->canread) {
         tiledb::VFS::filebuf sbuf(*vstate->vfs);
         sbuf.open(vstate->uri, std::ios::in);
         std::istream is(&sbuf);
@@ -479,6 +479,15 @@ Rboolean vfile_open(struct Rconn *rconn) {
         vstate->buf.resize(file_size);
         is.read((char*) vstate->buf.data(), file_size);
         vstate->nread = 0;
+        sbuf.close();
+    }
+
+    if (rconn->canwrite) {
+        if (vstate->vfs->is_file(vstate->uri)) {
+            if (vstate->verbosity > 0)
+                Rprintf("Uri '%s' exists, removing", vstate->uri);
+            vstate->vfs->remove_file(vstate->uri);
+        }
     }
 
     return TRUE;
@@ -621,11 +630,12 @@ size_t vfile_read(void *dst, size_t size, size_t nitems, struct Rconn *rconn) {
     sbuf.open(vstate->uri, std::ios::in);
     std::istream is(&sbuf);
     if (!is.good()) {
-        Rcpp::stop("Error opening uri '%s'\n", vstate->uri);
+        Rcpp::stop("Error opening uri '%s' for reads\n", vstate->uri);
     }
     size_t file_size = static_cast<size_t>(vstate->vfs->file_size(vstate->uri));
     auto nread = std::min(size * nitems, file_size);
     is.read((char*)dst, nread);
+    sbuf.close();
     return nread;
 #endif
 }
@@ -681,12 +691,24 @@ size_t vfile_write(const void *src, size_t size, size_t nitems, struct Rconn *rc
     if (vstate->verbosity > 0) Rprintf("vfile_write(size = %zu, nitems = %zu)\n", size, nitems);
 
     size_t wlen = 0;
+#if 0
     if (vstate->is_file) {
         wlen = fwrite(src, 1, size * nitems, vstate->fp);
     /* } else { */
         /* wlen = R_WriteConnection(vstate->inner, (void *)src, size * nitems); */
     }
-
+#else
+    tiledb::VFS::filebuf sbuf(*vstate->vfs);
+    sbuf.open(vstate->uri, std::ios::out);
+    std::ostream os(&sbuf);
+    if (!os.good()) {
+        Rcpp::stop("Error opening uri '%s' for writes\n", vstate->uri);
+    }
+    wlen = size * nitems;
+    os.write((char*)src, wlen);
+    os.flush();
+    sbuf.close();
+#endif
     return wlen;
 }
 
@@ -742,12 +764,23 @@ int vfile_vfprintf(struct Rconn *rconn, const char* fmt, va_list ap) {
     display_buf[40] = '\0';
     if (vstate->verbosity > 0) Rprintf("vfile_vfprintf('%s ...')\n", display_buf);
 
+#if 0
     if (vstate->is_file) {
         fwrite(str_buf, 1, wlen, vstate->fp);
     } else {
         /* R_WriteConnection(vstate->inner, str_buf, wlen);   */
     }
-
+#else
+    tiledb::VFS::filebuf sbuf(*vstate->vfs);
+    sbuf.open(vstate->uri, std::ios::app);
+    std::ostream os(&sbuf);
+    if (!os.good()) {
+        Rcpp::stop("Error opening uri '%s' for writes\n", vstate->uri);
+    }
+    os.write((char*)str_buf, wlen);
+    os.flush();
+    sbuf.close();
+#endif
     return wlen;
 }
 
