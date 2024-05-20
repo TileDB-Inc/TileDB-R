@@ -3551,7 +3551,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP tldb_init_(SEXP, SEXP);
+RcppExport SEXP tldb_init_(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
@@ -3848,7 +3848,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
     {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 2},
     {"_tiledb_vfile_", (DL_FUNC) &_tiledb_vfile_, 3},
-    {"tldb_init_", (DL_FUNC) &tldb_init_, 2},
+    {"tldb_init_", (DL_FUNC) &tldb_init_, 1},
     {NULL, NULL, 0}
 };
 

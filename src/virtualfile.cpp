@@ -789,13 +789,10 @@ int vfile_vfprintf(struct Rconn *rconn, const char* fmt, va_list ap) {
 // Setup initialization
 
 SEXP new_connection_xptr;
-SEXP read_connection_xptr;
 
-extern "C" void tldb_init_(SEXP nc_xptr, SEXP rc_xptr) {
+extern "C" void tldb_init_(SEXP nc_xptr) {
     new_connection_xptr = nc_xptr;
     R_PreserveObject(nc_xptr);
-    read_connection_xptr = rc_xptr;
-    R_PreserveObject(rc_xptr);
 }
 
 SEXP new_connection(const char* description, const char* mode,

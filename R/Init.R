@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@
 
     lib_path <- system.file("lib", .Platform$r_arch, paste0("libconnection", .Platform$dynlib.ext), package = "tiledb")
     res <- dyn.load(lib_path)
-    .Call(`tldb_init_`, res$new_connection$address, res$read_connection$address, PACKAGE="tiledb")
+    .Call(`tldb_init_`, res$new_connection$address, PACKAGE="tiledb")
 }
 
 .onUnload <- function(libname) {
