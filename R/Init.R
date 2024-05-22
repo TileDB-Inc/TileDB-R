@@ -58,7 +58,7 @@
 
     lib_path <- system.file("lib", .Platform$r_arch, paste0("libconnection", .Platform$dynlib.ext), package = "tiledb")
     res <- dyn.load(lib_path)
-    .Call(`tldb_init_`, res$new_connection$address, PACKAGE="tiledb")
+    .Call(`_tiledb_tldb_init_`, res$new_connection$address, PACKAGE="tiledb")
 }
 
 .onUnload <- function(libname) {

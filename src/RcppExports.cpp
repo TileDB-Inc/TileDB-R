@@ -3537,21 +3537,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// vfile_
-SEXP vfile_(SEXP description, SEXP mode, SEXP verbosity);
-RcppExport SEXP _tiledb_vfile_(SEXP descriptionSEXP, SEXP modeSEXP, SEXP verbositySEXP) {
+// vfs_file
+SEXP vfs_file(std::string description, std::string mode, int verbosity);
+RcppExport SEXP _tiledb_vfs_file(SEXP descriptionSEXP, SEXP modeSEXP, SEXP verbositySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type description(descriptionSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type mode(modeSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type verbosity(verbositySEXP);
-    rcpp_result_gen = Rcpp::wrap(vfile_(description, mode, verbosity));
+    Rcpp::traits::input_parameter< std::string >::type description(descriptionSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mode(modeSEXP);
+    Rcpp::traits::input_parameter< int >::type verbosity(verbositySEXP);
+    rcpp_result_gen = Rcpp::wrap(vfs_file(description, mode, verbosity));
     return rcpp_result_gen;
 END_RCPP
 }
-
-RcppExport SEXP tldb_init_(SEXP);
+// tldb_init_
+void tldb_init_(SEXP nc_xptr);
+RcppExport SEXP _tiledb_tldb_init_(SEXP nc_xptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type nc_xptr(nc_xptrSEXP);
+    tldb_init_(nc_xptr);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_query_export_buffer", (DL_FUNC) &_tiledb_libtiledb_query_export_buffer, 3},
@@ -3847,8 +3855,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
     {"_tiledb_vlcbuf_from_shmem", (DL_FUNC) &_tiledb_vlcbuf_from_shmem, 2},
-    {"_tiledb_vfile_", (DL_FUNC) &_tiledb_vfile_, 3},
-    {"tldb_init_", (DL_FUNC) &tldb_init_, 1},
+    {"_tiledb_vfs_file", (DL_FUNC) &_tiledb_vfs_file, 3},
+    {"_tiledb_tldb_init_", (DL_FUNC) &_tiledb_tldb_init_, 1},
     {NULL, NULL, 0}
 };
 

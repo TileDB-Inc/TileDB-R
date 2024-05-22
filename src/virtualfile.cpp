@@ -6,13 +6,39 @@
 
 extern "C" SEXP vfile_c_impl_(SEXP, SEXP, SEXP);
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Initialize a vfile() R connection object to return to the user
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//' Create a custom file connection
+//'
+//' @details
+//' This \code{vfs_file()} connection works like the \code{file()} connection in R itself.
+//'
+//' This connection works with both ASCII and binary data, e.g. using
+//' \code{readLines()} and \code{readBin()}.
+//'
+//' @param description path to a filename; contrary to \code{rconnection} a connection
+//' object is not supported.
+//' @param open character string. A description of how to open the connection if
+//' it is to be opened upon creation e.g. "rb". Default "" (empty string) means
+//' to not open the connection on creation - user must still call \code{open()}.
+//' Note: If an "open" string is provided, the user must still call \code{close()}
+//' otherwise the contents of the file aren't completely flushed until the
+//' connection is garbage collected.
+//' @param verbosity integer value 0, 1, or 2. Default: 0.
+//' Set to \code{0} for no debugging messages, \code{1} for some high-level messages
+//' and \code{verbosity = 2} for all debugging messages.
+//'
+//' @export
+//'
+//' @examples
+//' \dontrun{
+//' tmp <- tempfile()
+//' dat <- as.raw(1:255)
+//' writeBin(dat, vfs_file(tmp))
+//' readBin(vfs_file(tmp),  raw(), 1000)
+//' }
 // [[Rcpp::export]]
-SEXP vfile_(SEXP description, SEXP mode, SEXP verbosity) {
+SEXP vfs_file(std::string description, std::string mode = "", int verbosity = 0) {
     spdl::debug("[vfile_] entered");
-    return vfile_c_impl_(description, mode, verbosity);
+    return vfile_c_impl_(Rcpp::wrap(description), Rcpp::wrap(mode), Rcpp::wrap(verbosity));
 }
 
 extern "C" {
@@ -790,7 +816,8 @@ int vfile_vfprintf(struct Rconn *rconn, const char* fmt, va_list ap) {
 
 SEXP new_connection_xptr;
 
-extern "C" void tldb_init_(SEXP nc_xptr) {
+// [[Rcpp::export]]
+void tldb_init_(SEXP nc_xptr) {
     new_connection_xptr = nc_xptr;
     R_PreserveObject(nc_xptr);
 }
