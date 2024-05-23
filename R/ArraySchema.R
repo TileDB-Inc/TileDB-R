@@ -530,7 +530,8 @@ tiledb_schema_get_types <- function(sch) {
 
 ##' Get Dimension or Attribute Status
 ##'
-##' Note that this function is an unexported internal function.
+##' Note that this function is an unexported internal function that can be called
+##' using the colons as in \code{tiledb:::tiledb_schema_get_dim_attr_status(sch)}.
 ##'
 ##' @param sch A TileDB Schema object
 ##' @return An integer vector where each element corresponds to a schema entry,
@@ -545,7 +546,8 @@ tiledb_schema_get_dim_attr_status <- function(sch) {
 
 ##' Get Dimension or Attribute Status
 ##'
-##' Note that this function is an unexported internal function.
+##' Note that this function is an unexported internal function that can be called
+##' using the colons as in \code{tiledb:::tiledb_schema_get_enumeration_status(sch)}.
 ##'
 ##' @param sch A TileDB Schema object
 ##' @return An integer vector where each element corresponds to a schema entry,
@@ -862,6 +864,9 @@ tiledb_schema_object <- function(array) {
 }
 
 #' Describe a TileDB array schema via code to create it
+#'
+#' Note that this function is an unexported internal function that can be called
+#' using the colons as in \code{tiledb:::describe(arr)}.
 #'
 #' @param arr A TileDB Array object
 #' @return Nothing is returned as the function is invoked for the side effect
