@@ -1,3 +1,12 @@
+# Ongoing development
+
+* This release of the R package builds against [TileDB 2.23.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.23.0), and has also been tested against earlier releases as well as the development version (#701, #704)
+
+## Improvements
+
+* Three internal and unexported helper functions now document more clearly how they can be called explicitly. (#709)
+
+
 # tiledb 0.27.0
 
 * This release of the R package builds against [TileDB 2.23.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.23.0), and has also been tested against earlier releases as well as the development version (#701, #704)
