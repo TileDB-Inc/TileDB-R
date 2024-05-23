@@ -14,5 +14,6 @@ An integer vector where each element corresponds to a schema entry,
 and a value of one signals dimension and a value of two an attribute.
 }
 \description{
-Note that this function is an unexported internal function.
+Note that this function is an unexported internal function that can be called
+using the colons as in \code{tiledb:::tiledb_schema_get_dim_attr_status(sch)}.
 }
