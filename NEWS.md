@@ -6,6 +6,12 @@
 
 * Three internal and unexported helper functions now document more clearly how they can be called explicitly. (#709)
 
+* Reading and writing of text- and binary files supported by a VFS backend is now supported. (#710)
+
+## Build and Test Systems
+
+* Building TileDB Embedded from source now uses `install-tiledb` as a single CMake step. (#711)
+
 
 # tiledb 0.27.0
 

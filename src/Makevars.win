@@ -16,10 +16,18 @@ PKG_LIBS = \
 	-lBCrypt -lKernel32 -lRpcrt4 -lWininet -lWinhttp -lWs2_32 -lShlwapi -lUserenv -lversion -lws2_32 \
 	-lsharpyuv
 
-all: clean winlibs
+LIB_CON = ../inst/lib$(R_ARCH)/libconnection.dll
+
+all: winlibs $(OBJECTS) $(SHLIB) $(LIB_CON)
+
+$(LIB_CON): connection/connection.o
+	mkdir -p $(dir $(LIB_CON))
+	$(SHLIB_LINK) $(LIBR) -o $@ $^
 
 winlibs:
 	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" "../tools/winlibs.R"
 
 clean:
-	rm -f $(SHLIB) $(OBJECTS)
+	rm -f $(SHLIB) $(OBJECTS) $(LIB_CON) connection/connection.o
+
+.PHONY: all clean
