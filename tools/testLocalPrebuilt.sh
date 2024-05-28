@@ -35,7 +35,7 @@ mkdir tiledb
 cd TileDB-${ver}
 mkdir build
 cd build
-../bootstrap --prefix=../../tiledb --disable-tbb
+../bootstrap --prefix=../../tiledb
 make -j4 install-tiledb
 
 ## cleanup
