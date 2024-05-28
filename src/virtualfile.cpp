@@ -1,4 +1,10 @@
 
+// This file borrows, with acknowledgements, from the MIT-licensed code in the
+// repository at https://github.com/coolbutuseless/rconnection and adapts it (in
+// a slightly simplified version) to TileDB. It also uses the approach employed
+// in the also MIT-licensed repository https://github.com/r-lib/archive to deploy
+// a connection from within R without triggering a warning from package checks.
+
 #include <Rcpp/Lighter>         				// for Rcpp
 #include <tinyspdl.h>                           // for spdl logging
 #include "connection/connection.h"              // for connections
