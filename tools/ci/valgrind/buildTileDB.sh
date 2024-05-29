@@ -40,7 +40,7 @@ mkdir build
 cd build
 export AWSSDK_ROOT_DIR=/usr
 ../bootstrap --prefix=/usr/local --enable-s3 --enable-serialization --linkage=shared
-make -j 8 install-tiledb
+make -j 8 tiledb install-tiledb
 ldconfig
 cd ../..
 rm -rf tiledb
