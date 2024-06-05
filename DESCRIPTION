@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.27.0.3
+Version: 0.27.0.4
 Title: Modern Database Engine for Complex Data Based on Multi-Dimensional Arrays
 Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
   person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
