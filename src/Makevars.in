@@ -24,6 +24,7 @@ all: $(OBJECTS) $(LIB_CON) $(SHLIB)
 $(LIB_CON): connection/connection.o
 	@mkdir -p $(LIB_CON_DIR)
 	@$(SHLIB_LINK) $(SHLIB_LIBADD) $(LIBR) -o $@ $^
+	@rm $^
 
 clean:
 	rm -f $(SHLIB) $(OBJECTS) $(LIB_CON) connection/connection.o
