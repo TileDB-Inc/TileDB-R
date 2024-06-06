@@ -172,26 +172,25 @@ invisible( tiledb_array_create(tmp, schema) )
 I <- c(1, 2, 2)
 J <- c(1, 4, 3)
 data <- c(1L, 2L, 3L)
-now1 <- Sys.time()
-A <- tiledb_array(uri = tmp, timestamp_start=now1)
+now1 <- as.POSIXct(60, tz="UTC") 		# the epoch plus one minute
+A <- tiledb_array(uri = tmp, timestamp_start=now1, timestamp_end=now1)
 A[I, J] <- data
 
-deltat <- 0.1
+deltat <- 1 							# delta of 1 second
 epst <- deltat/2
-Sys.sleep(deltat)
 
 I <- c(8, 6, 9)
 J <- c(5, 7, 8)
 data <- c(11L, 22L, 33L)
 now2 <- Sys.time()
-A <- tiledb_array(uri = tmp, timestamp_start=now2)
+A <- tiledb_array(uri = tmp, timestamp_start=now2, timestamp_end=now2)
 A[I, J] <- data
 
 A <- tiledb_array(uri = tmp, return_as="data.frame", timestamp_end=now1 - epst)
-expect_equal(nrow(A[]), 0)
+expect_equal(nrow(A[]), 0) 			# no rows before start
 A <- tiledb_array(uri = tmp, return_as="data.frame", timestamp_start=now1 + epst)
-expect_equal(nrow(A[]), 3)
+expect_equal(nrow(A[]), 3) 			# three rows in first write at now1
 A <- tiledb_array(uri = tmp, return_as="data.frame", timestamp_start=now1 - epst, timestamp_end=now2 - epst)
-expect_equal(nrow(A[]), 3)
+expect_equal(nrow(A[]), 3)			# three rows if end before now2
 A <- tiledb_array(uri = tmp, return_as="data.frame", timestamp_start=now1 - epst, timestamp_end=now2 + epst)
-expect_true(nrow(A[]) >= 3)
+expect_true(nrow(A[]) >= 3)			# all data from before now1 to after now2
