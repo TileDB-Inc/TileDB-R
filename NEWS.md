@@ -12,6 +12,8 @@
 
 * Building TileDB Embedded from source now uses `tiledb install-tiledb` as targets in a single CMake step. (#711, #713)
 
+* The time-travel tests now uses absolute (given) timestamps for writes as well as reads. (#716)
+
 
 # tiledb 0.27.0
 
