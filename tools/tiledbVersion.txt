@@ -1,3 +1,2 @@
-version: 2.24.0-rc1
+version: 2.24.0
 sha: ff3879b
-
