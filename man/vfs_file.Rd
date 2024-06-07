@@ -10,16 +10,16 @@ vfs_file(description, mode = "", verbosity = 0L)
 \item{description}{path to a filename; contrary to \code{rconnection} a connection
 object is not supported.}
 
-\item{verbosity}{integer value 0, 1, or 2. Default: 0.
-Set to \code{0} for no debugging messages, \code{1} for some high-level messages
-and \code{verbosity = 2} for all debugging messages.}
-
-\item{open}{character string. A description of how to open the connection if
+\item{mode}{character string. A description of how to open the connection if
 it is to be opened upon creation e.g. "rb". Default "" (empty string) means
 to not open the connection on creation - user must still call \code{open()}.
 Note: If an "open" string is provided, the user must still call \code{close()}
 otherwise the contents of the file aren't completely flushed until the
 connection is garbage collected.}
+
+\item{verbosity}{integer value 0, 1, or 2. Default: 0.
+Set to \code{0} for no debugging messages, \code{1} for some high-level messages
+and \code{verbosity = 2} for all debugging messages.}
 }
 \description{
 Create a custom file connection

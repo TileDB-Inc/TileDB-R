@@ -1191,4 +1191,7 @@
   <url>
     <loc>/reference/version.html</loc>
   </url>
+  <url>
+    <loc>/reference/vfs_file.html</loc>
+  </url>
 </urlset>

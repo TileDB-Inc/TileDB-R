@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.27.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.28.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,20 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.28.0" id="tiledb-0280">tiledb 0.28.0<a class="anchor" aria-label="anchor" href="#tiledb-0280"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.24.0" class="external-link">TileDB 2.24.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/714" class="external-link">#714</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/715" class="external-link">#715</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/717" class="external-link">#717</a>)</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-28-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-28-0"></a></h3>
+<ul><li><p>Three internal and unexported helper functions now document more clearly how they can be called explicitly. (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/709" class="external-link">#709</a>)</p></li>
+<li><p>Reading and writing of text- and binary files supported by a VFS backend is now supported. (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/710" class="external-link">#710</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-28-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-28-0"></a></h3>
+<ul><li><p>Building TileDB Embedded from source now uses <code>tiledb install-tiledb</code> as targets in a single CMake step. (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/711" class="external-link">#711</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/713" class="external-link">#713</a>)</p></li>
+<li><p>The time-travel tests now uses absolute (given) timestamps for writes as well as reads. (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/716" class="external-link">#716</a>)</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.27.0" id="tiledb-0270">tiledb 0.27.0<a class="anchor" aria-label="anchor" href="#tiledb-0270"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.23.0" class="external-link">TileDB 2.23.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/701" class="external-link">#701</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/704" class="external-link">#704</a>)</li>
