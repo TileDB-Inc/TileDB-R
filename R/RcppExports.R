@@ -1194,7 +1194,7 @@ vlcbuf_from_shmem <- function(datapath, dtype) {
 #'
 #' @param description path to a filename; contrary to \code{rconnection} a connection
 #' object is not supported.
-#' @param open character string. A description of how to open the connection if
+#' @param mode character string. A description of how to open the connection if
 #' it is to be opened upon creation e.g. "rb". Default "" (empty string) means
 #' to not open the connection on creation - user must still call \code{open()}.
 #' Note: If an "open" string is provided, the user must still call \code{close()}

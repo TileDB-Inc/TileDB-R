@@ -14,7 +14,7 @@ object is not supported.}
 Set to \code{0} for no debugging messages, \code{1} for some high-level messages
 and \code{verbosity = 2} for all debugging messages.}
 
-\item{open}{character string. A description of how to open the connection if
+\item{mode}{character string. A description of how to open the connection if
 it is to be opened upon creation e.g. "rb". Default "" (empty string) means
 to not open the connection on creation - user must still call \code{open()}.
 Note: If an "open" string is provided, the user must still call \code{close()}
