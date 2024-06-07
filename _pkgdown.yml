@@ -122,6 +122,7 @@ reference:
   - starts_with("tiledb_vfs")
   - matches("tiledb_get_vfs")
   - matches("tiledb_set_vfs")
+  - matches("vfs_file")
 - title: Filestore
   desc: filestore functionality
   contents:
