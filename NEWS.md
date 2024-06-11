@@ -1,3 +1,10 @@
+# Ongoing development
+
+## Improvements
+
+* When creating arrays with `fromDataFrame`, start and/or end timestamps can now be specified (#719)
+
+
 # tiledb 0.28.0
 
 * This release of the R package builds against [TileDB 2.24.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.24.0), and has also been tested against earlier releases as well as the development version (#714, #715, #717)
