@@ -340,3 +340,27 @@ fromDataFrame(D, uri, col_index=1)
 arr <- tiledb_array(uri, return_as="data.frame")
 res <- arr[]
 expect_equivalent(res, D)
+
+
+## fromDataFrame with timestamps
+D <- data.frame(key=(1:10)*10, value=letters[1:10])
+uri <- tempfile()
+now <- Sys.time()
+fromDataFrame(D, uri)         # no timestamps
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame")[]), 10)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_end=as.POSIXct(100, origin="1970-01-01"))[]),  0)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_start=now + 1)[]), 0)
+unlink(uri, recursive=TRUE)
+
+fromDataFrame(D, uri, timestamps=as.POSIXct(100, origin="1970-01-01"))         # end timestamps
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame")[]), 10)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_end=as.POSIXct(50, origin="1970-01-01"))[]), 0)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_start=as.POSIXct(50, origin="1970-01-01"))[]), 10)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_start=as.POSIXct(150, origin="1970-01-01"))[]), 0)
+unlink(uri, recursive=TRUE)
+
+fromDataFrame(D, uri, timestamps=c(as.POSIXct(100, origin="1970-01-01"), as.POSIXct(100, origin="1970-01-01"))) # start and end
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame")[]), 10)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_end=as.POSIXct(50, origin="1970-01-01"))[]), 0)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_start=as.POSIXct(50, origin="1970-01-01"))[]), 10)
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame", timestamp_start=as.POSIXct(150, origin="1970-01-01"))[]), 0)

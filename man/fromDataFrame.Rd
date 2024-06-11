@@ -21,7 +21,8 @@ fromDataFrame(
   coords_filters = "ZSTD",
   offsets_filters = "ZSTD",
   validity_filters = "RLE",
-  debug = FALSE
+  debug = FALSE,
+  timestamps = as.POSIXct(double(), origin = "1970-01-01")
 )
 }
 \arguments{
@@ -74,6 +75,11 @@ or attributes. The \code{filter} argument still applies for all unnamed argument
 \item{validity_filters}{A character vector with filters for coordinates, default is \code{RLE}.}
 
 \item{debug}{Logical flag to select additional output.}
+
+\item{timestamps}{Vector with up to two \code{POSIXct} variables denoting open intervals; default
+is length zero where start and end are set (implicitly) to current time; in case of one value it
+is used as the interval end, and in case of two values they are taken as start and end. This
+applies to write and append modes only and not to schema creation.}
 }
 \value{
 Null, invisibly.

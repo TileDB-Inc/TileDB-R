@@ -68,6 +68,10 @@
 ##' @param offsets_filters A character vector with filters for coordinates, default is \code{ZSTD}.
 ##' @param validity_filters A character vector with filters for coordinates, default is \code{RLE}.
 ##' @param debug Logical flag to select additional output.
+##' @param timestamps Vector with up to two \code{POSIXct} variables denoting open intervals; default
+##' is length zero where start and end are set (implicitly) to current time; in case of one value it
+##' is used as the interval end, and in case of two values they are taken as start and end. This
+##' applies to write and append modes only and not to schema creation.
 ##' @return Null, invisibly.
 ##' @examples
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
@@ -83,10 +87,13 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
                           capacity = 10000L, tile_domain = NULL, tile_extent = NULL,
                           mode = c("ingest", "schema_only", "append"), filter_list = NULL,
                           coords_filters = "ZSTD", offsets_filters = "ZSTD",
-                          validity_filters = "RLE", debug = FALSE) {
+                          validity_filters = "RLE", debug = FALSE,
+                          timestamps = as.POSIXct(double(), origin="1970-01-01")) {
 
     stopifnot("Argument 'obj' should be a 'data.frame' (or a related object)" = inherits(obj, "data.frame"),
-              "Argument 'uri' should be a character variable" = is.character(uri))
+              "Argument 'uri' should be a character variable" = is.character(uri),
+              "Argument 'timestamps' must be a POSIXct vector" = inherits(timestamps, "POSIXct"),
+              "Argument 'timestamps' must be 0, 1 or 2 values" = length(timestamps) %in% c(0L, 1L, 2L))
     if (!is.null(col_index) && is.character(col_index)) col_index <- match(col_index, colnames(obj))
     dims <- dim(obj)
     mode <- match.arg(mode)
@@ -276,7 +283,10 @@ fromDataFrame <- function(obj, uri, col_index=NULL, sparse=TRUE, allows_dups=spa
         tiledb_array_create(uri, schema)
 
     if (mode != "schema_only") {
-        df <- tiledb_array(uri, query_type = "WRITE")
+        df <- switch(length(timestamps) + 1, 		# switch takes ints starting at one
+                     tiledb_array(uri, query_type = "WRITE"),
+                     tiledb_array(uri, query_type = "WRITE", timestamp_end=timestamps[1]),
+                     tiledb_array(uri, query_type = "WRITE", timestamp_start=timestamps[1], timestamp_end=timestamps[2]))
         ## when setting an index when likely want 'sparse write to dense array
         if (!is.null(col_index) && !sparse)
             query_layout(df) <- "UNORDERED"

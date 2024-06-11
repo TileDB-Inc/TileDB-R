@@ -172,7 +172,7 @@ invisible( tiledb_array_create(tmp, schema) )
 I <- c(1, 2, 2)
 J <- c(1, 4, 3)
 data <- c(1L, 2L, 3L)
-now1 <- as.POSIXct(60, tz="UTC") 		# the epoch plus one minute
+now1 <- as.POSIXct(60, tz="UTC", origin="1970-01-01") 	# the epoch plus one minute
 A <- tiledb_array(uri = tmp, timestamp_start=now1, timestamp_end=now1)
 A[I, J] <- data
 
