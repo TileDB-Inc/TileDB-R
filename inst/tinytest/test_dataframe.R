@@ -343,6 +343,7 @@ expect_equivalent(res, D)
 
 
 ## fromDataFrame with timestamps
+if (tiledb_version(TRUE) < "2.15.0") exit_file("Remaining tests require TileDB 2.15.0 or later")
 D <- data.frame(key=(1:10)*10, value=letters[1:10])
 uri <- tempfile()
 now <- Sys.time()
