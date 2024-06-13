@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [ release-2.22, release-2.23, dev ]
+        tag: [ release-2.23, release-2.24, dev ]
 
     steps:
     - name: Checkout
