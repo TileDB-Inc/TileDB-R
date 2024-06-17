@@ -43,6 +43,8 @@ CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 CXX11FLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
 CXX17FLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
+DYLIB_EXT=`"${R_HOME}/bin/R" CMD config DYLIB_EXT`
+
 AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
@@ -286,8 +288,10 @@ if test x"${have_tiledb}" = x"no"; then
 
 fi
 
+
 AC_SUBST([CXX17_MACOS])
 AC_SUBST([FILESYSTEM_HEADER_MISSSING])
+AC_SUBST([DYLIB_EXT])
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT

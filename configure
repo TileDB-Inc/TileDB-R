@@ -646,6 +646,7 @@ ac_includes_default="\
 ac_header_cxx_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+DYLIB_EXT
 FILESYSTEM_HEADER_MISSSING
 CXX17_MACOS
 have_git
@@ -2155,6 +2156,8 @@ CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 CXX11FLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
 CXX17FLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
+DYLIB_EXT=`"${R_HOME}/bin/R" CMD config DYLIB_EXT`
+
 ac_ext=cpp
 ac_cpp='$CXXCPP $CPPFLAGS'
 ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -6371,6 +6374,8 @@ printf "%s\n" "using inst/tiledb/{lib,include}" >&6; }
     LDFLAGS="${origLDFLAGS} ${TILEDB_LIBS} ${TILEDB_RPATH}"
 
 fi
+
+
 
 
 
