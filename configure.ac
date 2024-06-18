@@ -168,6 +168,8 @@ if test x"${uname}" = x"Darwin"; then
     AC_MSG_CHECKING([for Darwin use minimum version override])
     CXX17_MACOS="-mmacosx-version-min=11"
     AC_MSG_RESULT([${CXX17_MACOS}])
+    ## Obscure but important override: we may have gotten .dylib, but we prefer .so
+    DYLIB_EXT=".so"
 fi
 
 ## Take care of riscv64 machines and need for -latomic

@@ -6058,6 +6058,8 @@ printf %s "checking for Darwin use minimum version override... " >&6; }
     CXX17_MACOS="-mmacosx-version-min=11"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: ${CXX17_MACOS}" >&5
 printf "%s\n" "${CXX17_MACOS}" >&6; }
+    ## Obscure but important override: we may have gotten .dylib, but we prefer .so
+    DYLIB_EXT=".so"
 fi
 
 ## Take care of riscv64 machines and need for -latomic
