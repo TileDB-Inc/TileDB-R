@@ -1,2 +1,2 @@
-version: 2.24.0
-sha: ff3879b
+version: 2.24.1
+sha: db03540
