@@ -4,6 +4,12 @@
 
 * When creating arrays with `fromDataFrame`, start and/or end timestamps can now be specified (#719)
 
+## Build and Test Systems
+
+* The nighly continuous integration matrix now included Core release 2.24.0 and 2.22.0 is dropped (#721)
+
+* The Conda build is now accomodating the change from #710 (#722)
+
 
 # tiledb 0.28.0
 

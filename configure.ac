@@ -24,7 +24,7 @@
 
 ## require at least autoconf 2.69
 AC_PREREQ([2.69])
-AC_INIT([TileDB-R],[0.26.0])
+AC_INIT([TileDB-R],[0.28.0])
 
 ## -- Part 1: Setup -------------------------------------------------------------
 ##
@@ -43,6 +43,8 @@ CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 CXX11FLAGS=`"${R_HOME}/bin/R" CMD config CXX11FLAGS`
 CXX17FLAGS=`"${R_HOME}/bin/R" CMD config CXX17FLAGS`
+DYLIB_EXT=`"${R_HOME}/bin/R" CMD config DYLIB_EXT`
+
 AC_LANG(C++)
 AC_REQUIRE_CPP
 AC_PROG_CXX
@@ -166,6 +168,10 @@ if test x"${uname}" = x"Darwin"; then
     AC_MSG_CHECKING([for Darwin use minimum version override])
     CXX17_MACOS="-mmacosx-version-min=11"
     AC_MSG_RESULT([${CXX17_MACOS}])
+    ## Obscure but important override: we may have gotten .dylib, but we prefer .so -- unless it is Conda
+    if test x"${CONDA_BUILD}" != x"1"; then
+       DYLIB_EXT=".so"
+    fi
 fi
 
 ## Take care of riscv64 machines and need for -latomic
@@ -286,8 +292,10 @@ if test x"${have_tiledb}" = x"no"; then
 
 fi
 
+
 AC_SUBST([CXX17_MACOS])
 AC_SUBST([FILESYSTEM_HEADER_MISSSING])
+AC_SUBST([DYLIB_EXT])
 
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
