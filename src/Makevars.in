@@ -27,6 +27,6 @@ $(LIB_CON): connection/connection.o
 	@rm $^
 
 clean:
-	rm -f $(SHLIB) $(OBJECTS) $(LIB_CON) connection/connection.o
+	@rm -f $(SHLIB) $(OBJECTS) $(LIB_CON) connection/connection.o
 
 .PHONY: all clean
