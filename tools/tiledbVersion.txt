@@ -1,2 +1,2 @@
-version: 2.24.1
-sha: db03540
+version: 2.24.2
+sha: 76cd03c
