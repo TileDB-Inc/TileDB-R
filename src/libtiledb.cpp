@@ -1228,7 +1228,13 @@ bool libtiledb_domain_has_dimension(XPtr<tiledb::Domain> domain, std::string nam
 // [[Rcpp::export]]
 void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   check_xptr_tag<tiledb::Domain>(domain);
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+  std::stringstream ss;
+  ss << *domain;
+  std::cout << ss.str();
+#else
   domain->dump();
+#endif
 }
 
 double _domain_datatype_time_scale_factor(tiledb_datatype_t dtype) {
@@ -1523,7 +1529,13 @@ bool libtiledb_attribute_is_variable_sized(XPtr<tiledb::Attribute> attr) {
 // [[Rcpp::export]]
 void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
   check_xptr_tag<tiledb::Attribute>(attr);
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+  std::stringstream ss;
+  ss << *attr;
+  std::cout << ss.str();
+#else
   attr->dump();
+#endif
 }
 
 // [[Rcpp::export]]
@@ -2040,7 +2052,13 @@ bool libtiledb_array_schema_sparse(XPtr<tiledb::ArraySchema> schema) {
 // [[Rcpp::export]]
 void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
   check_xptr_tag<tiledb::ArraySchema>(schema);
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+  std::stringstream ss;
+  ss << *schema;
+  std::cout << ss.str();
+#else
   schema->dump();
+#endif
 }
 
 // [[Rcpp::export]]
