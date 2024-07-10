@@ -1,3 +1,12 @@
+# Ongoing Development
+
+* This release of the R package builds against [TileDB 2.25.0-rc0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.25.0-rc0), and has also been tested against earlier releases as well as the development version (#728)
+
+## Improvements
+
+* Three deprecated calls to `dump()` methods for TileDB Embedded objects now use the preferred streaming alternatives (#727)
+
+
 # tiledb 0.28.2
 
 * This release of the R package builds against [TileDB 2.24.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.24.2), and has also been tested against earlier releases as well as the development version (#725)
