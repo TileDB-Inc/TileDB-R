@@ -1,5 +1,5 @@
 #!/bin/sh
 
-(cd src && make -f Makevars clean)
+(cd src && test -f Makevars && make -f Makevars clean)
 rm -f  src/Makevars src/*.o src/*.so config.log config.status inst/tiledb-*.tar.gz src/connection/*.o
 rm -rf tiledb.Rcheck autom4te.cache inst/tiledb/ inst/config.log inst/config.status tiledb/ inst/lib/
