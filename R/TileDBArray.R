@@ -1163,6 +1163,15 @@ setMethod("[", "tiledb_array",
     if (ncol(res) < 3) {
       stop("Seeing as.matrix argument with insufficient result set")
     }
+    ## special case of integer64
+    if (inherits(res[,1], "integer64")) {
+        res[,1] <- as.integer(res[,1])
+        if (min(res[,1]) == 0) res[,1] <- res[,1] + 1
+    }
+    if (ncol(res) >= 3 && inherits(res[,2], "integer64")) {
+        res[,2] <- as.integer(res[,2])
+        if (min(res[,2]) == 0) res[,2] <- res[,2] + 1
+    }
     if (!identical(unique(res[,1]), seq(1, length(unique(res[,1]))))) {
         cur <- unique(res[,1])
         for (l in seq_len(length(cur))) res[ which(res[,1] == cur[l]), 1 ] <- l

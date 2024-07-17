@@ -98,18 +98,33 @@ expect_error(tiledb:::libtiledb_array_schema_set_capacity(sch@ptr, -10))
 dir.create(uri <- tempfile())
 key <- "0123456789abcdeF0123456789abcdeF"
 
+oldconfig <- config <- tiledb_config()
+config <- tiledb_config()
+config["sm.encryption_type"] <- "AES_256_GCM";
+config["sm.encryption_key"] <- key
+ctx <- tiledb_ctx(config)
+
+## quick and direct test write with encryption
+expect_silent( fromDataFrame(palmerpenguins::penguins, uri) )
+
+## check access, here just schema return and number of rows when read
+expect_true(is(schema(uri), "tiledb_array_schema"))
+expect_equal(nrow(tiledb_array(uri, return_as="data.frame")[]), 344)
+
+unlink(uri, recursive=TRUE)
+
+## previous test
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
                               tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
 schema <- tiledb_array_schema(dom, attrs = c(tiledb_attr("a", type = "INT32")))
-
-##tiledb_array_create_with_key(uri, schema, key)
-## for now calling into function
-tiledb:::libtiledb_array_create_with_key(uri, schema@ptr, key)
-
-##expect_true(is(schema(A), "tiledb_dense"))
-## can't yet read / write as scheme getter not generalized for encryption
+tiledb_array_create(uri, schema, key)
+expect_true(is(schema(uri), "tiledb_array_schema"))
 
 unlink(uri, recursive=TRUE)
+
+ctx <- tiledb_ctx(oldconfig)  # reset to no encryption via previous config
+
+
 #})
 
 #test_that("tiledb_array_schema dups setter/getter",  {
