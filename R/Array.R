@@ -38,13 +38,25 @@
 #' }
 #'
 #' @export
-tiledb_array_create <- function(uri, schema, encryption_key) {
+tiledb_array_create <- function(uri, schema, encryption_key) { #, ctx = tiledb_get_context()) {
     stopifnot("The 'uri' argument must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
               "The 'schema' argument must be a tiledb_array_schema object" = !missing(schema) && is(schema, "tiledb_array_schema"))
-    if (missing(encryption_key)) {
-        invisible(libtiledb_array_create(uri, schema@ptr))
+    if (!missing(encryption_key)) {
+        ## old interface
+        needreset <- FALSE
+        config <- oldconfig <- tiledb_config()
+        if (config["sm.encryption_type"] != "AES_256_GCM" ||
+            config["sm.encryption_key"] != encryption_key) {
+            config["sm.encryption_type"] <- "AES_256_GCM"
+            config["sm.encryption_key"] <- encryption_key
+            ctx <- tiledb::tiledb_ctx(config)
+            needreset <- TRUE
+        }
+        uri <- libtiledb_array_create(uri, schema@ptr)
+        if (needreset) ctx <- tiledb::tiledb_ctx(oldconfig)
+        invisible(uri)
     } else {
-        invisible(libtiledb_array_create_with_key(uri, schema@ptr, encryption_key))
+        invisible(libtiledb_array_create(uri, schema@ptr))
     }
 }
 

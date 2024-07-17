@@ -31,12 +31,16 @@
 
 using namespace Rcpp;
 
-// Deprecated in Core April 2024
+// Deprecated in Core April 2024, removed July 2024
 // [[Rcpp::export]]
 XPtr<tiledb::Query> libtiledb_query_submit_async(XPtr<tiledb::Query> query) {
+#if TILEDB_VERSION < TileDB_Version(2,26,0)
     check_xptr_tag<tiledb::Query>(query);
     spdl::trace("[libtiledb_query_submit_async]");
     query->submit_async();
+#else
+    Rcpp::stop("This function was deprecated first, and is removed as of TileDB 2.26.0");
+#endif
     return query;
 }
 
@@ -49,13 +53,17 @@ tiledb_encryption_type_t _string_to_tiledb_encryption_type_t(std::string encstr)
     Rcpp::stop("Unknow TileDB encryption type '%s'", encstr.c_str());
 }
 
-// Deprecated in Core April 2024
+// Deprecated in Core April 2024, removed July 2024
 // [[Rcpp::export]]
 std::string libtiledb_array_create_with_key(std::string uri, XPtr<tiledb::ArraySchema> schema,
                                             std::string encryption_key) {
+#if TILEDB_VERSION < TileDB_Version(2,26,0)
     check_xptr_tag<tiledb::ArraySchema>(schema);
     tiledb::Array::create(uri, *schema.get(),
                           _string_to_tiledb_encryption_type_t("AES_256_GCM"),
                           encryption_key);
+#else
+    Rcpp::stop("This function was deprecated first, and is removed as of TileDB 2.26.0");
+#endif
     return uri;
 }
