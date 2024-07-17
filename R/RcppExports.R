@@ -1172,6 +1172,26 @@ libtiledb_mime_type_from_str <- function(mime_type) {
     .Call(`_tiledb_libtiledb_mime_type_from_str`, mime_type)
 }
 
+libtiledb_ndrectangle_create <- function(ctx, dom) {
+    .Call(`_tiledb_libtiledb_ndrectangle_create`, ctx, dom)
+}
+
+libtiledb_ndrectangle_set_range <- function(ndr, dom, dimname, start, end) {
+    .Call(`_tiledb_libtiledb_ndrectangle_set_range`, ndr, dom, dimname, start, end)
+}
+
+libtiledb_ndrectangle_get_range <- function(ndr, dimname, dtype) {
+    .Call(`_tiledb_libtiledb_ndrectangle_get_range`, ndr, dimname, dtype)
+}
+
+tiledb_current_domain_create <- function(ctx) {
+    .Call(`_tiledb_tiledb_current_domain_create`, ctx)
+}
+
+tiledb_current_domain_type <- function(cd) {
+    .Call(`_tiledb_tiledb_current_domain_type`, cd)
+}
+
 vecbuf_to_shmem <- function(dir, name, buf, sz, numvar) {
     invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz, numvar))
 }

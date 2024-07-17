@@ -122,4 +122,17 @@ namespace tiledb {
 }
 #endif
 
+#if TILEDB_VERSION_MAJOR == 2 && TILEDB_VERSION_MINOR < 25
+// we need a placeholder as tiledb::NDRectangle as it is in function signatures
+namespace tiledb {
+    class NDRectangle {
+    };
+}
+// we need a placeholder as tiledb::CurrentDomain as it is in function signatures
+namespace tiledb {
+    class CurrentDomain {
+    };
+}
+#endif
+
 #endif // __tiledb_h__

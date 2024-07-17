@@ -5351,3 +5351,101 @@ int32_t libtiledb_mime_type_from_str(std::string mime_type) {
     return -1;
 #endif
 }
+
+
+/**
+ * NDRectangle (2.25.0 or later)
+ */
+
+// [[Rcpp::export]]
+XPtr<tiledb::NDRectangle> libtiledb_ndrectangle_create(XPtr<tiledb::Context> ctx,
+                                                       XPtr<tiledb::Domain> dom) {
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+    auto ndr = new tiledb::NDRectangle(*ctx.get(), *dom.get());
+#else
+    auto ndr = new tiledb::NDRectangle();
+#endif
+    auto ptr = make_xptr<tiledb::NDRectangle>(ndr);
+    return ptr;
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::NDRectangle> libtiledb_ndrectangle_set_range(XPtr<tiledb::NDRectangle> ndr,
+                                                          XPtr<tiledb::Domain> dom,
+                                                          std::string& dimname,
+                                                          SEXP start, SEXP end) {
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+    auto dtype = dom->type(); 			// based on the type of the given domain
+    if (dtype == TILEDB_CHAR ||         // branch for 'string'
+        dtype == TILEDB_STRING_ASCII ||
+        dtype == TILEDB_STRING_UTF8) {
+        ndr->set_range(dimname, Rcpp::as<std::string>(start), Rcpp::as<std::string>(end));
+    } else if (dtype == TILEDB_INT64) {
+        ndr->set_range<int64_t>(dimname, Rcpp::fromInteger64(start), Rcpp::fromInteger64(end));
+    } else if (dtype == TILEDB_UINT64) {
+        ndr->set_range<int64_t>(dimname,
+                                static_cast<uint64_t>(Rcpp::fromInteger64(Rcpp::as<double>(start))),
+                                static_cast<uint64_t>(Rcpp::fromInteger64(Rcpp::as<double>(end))));
+    } else if (dtype == TILEDB_INT32) {
+        ndr->set_range<int32_t>(dimname, as<int32_t>(start), as<int32_t>(end));
+    } else {
+        Rcpp::stop("Domain datatype '%s' of dimname '%s' is not currently supported",
+                   _tiledb_datatype_to_string(dtype), dimname);
+    }
+#endif
+    return ndr;
+}
+
+// NB maybe not exporting as we need a type which we get from current domain
+// [[Rcpp::export]]
+SEXP libtiledb_ndrectangle_get_range(XPtr<tiledb::NDRectangle> ndr,
+                                     std::string& dimname, std::string& dtype) {
+    if (dtype == "CHAR" || dtype == "ASCII" || dtype == "UTF8") {
+        auto range = ndr->range<std::string>(dimname);
+        return Rcpp::CharacterVector::create(std::get<0>(range), std::get<1>(range));
+    } else if (dtype == "INT64") {
+        auto range = ndr->range<int64_t>(dimname);
+        return Rcpp::toInteger64( std::vector<int64_t>{ std::get<0>(range), std::get<1>(range) } );
+    } else if (dtype == "UINT64") {
+        auto range = ndr->range<uint64_t>(dimname);
+        return Rcpp::toInteger64( std::vector<int64_t>{ static_cast<int64_t>(std::get<0>(range)),
+                                                        static_cast<int64_t>(std::get<1>(range)) } );
+    } else if (dtype == "INT32") {
+        auto range = ndr->range<int32_t>(dimname);
+        return Rcpp::IntegerVector::create( std::get<0>(range), std::get<1>(range) );
+    } else {
+        Rcpp::stop("Domain datatype '%s' of dimname '%s' is not currently supported", dtype, dimname);
+
+    }
+}
+
+
+
+/**
+ * Current Domain (2.25.0 or later)
+ */
+
+// [[Rcpp::export]]
+XPtr<tiledb::CurrentDomain> tiledb_current_domain_create(XPtr<tiledb::Context> ctx) {
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+    auto cd = new tiledb::CurrentDomain(*ctx.get());
+#else
+    auto cd = new tiledb::CurrentDomain();
+#endif
+    auto ptr = make_xptr<tiledb::CurrentDomain>(cd);
+    return ptr;
+}
+
+// [[Rcpp::export]]
+std::string tiledb_current_domain_type(XPtr<tiledb::CurrentDomain> cd) {
+    auto tp = cd->type();
+    auto str = std::string(_tiledb_datatype_to_string(static_cast<tiledb_datatype_t>(tp)));
+    return str;
+}
+
+// // [[Rcpp::export]]
+// XPtr<tiledb::CurrentDomain> tiledb_current_domain_set_range(XPtr<tiledb::Context> ctx,
+//                                                             XPtr<tiledb::CurrentDomain> cd,
+//                                                             XPtr<tiledb::Domain> dom,
+//                                                             XPtr<tiledb::Context> ctx) {
+// }
