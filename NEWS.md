@@ -6,6 +6,14 @@
 
 * Three deprecated calls to `dump()` methods for TileDB Embedded objects now use the preferred streaming alternatives (#727)
 
+* Two already deprecated functions that are removed in TileDB 2.26.0 are no longer used (#732)
+
+* The vendored [nanoarrow](https://github.com/apache/arrow-nanoarrow) has been updated to its release [0.5.0](https://github.com/apache/arrow-nanoarrow/releases/tag/apache-arrow-nanoarrow-0.5.0) (#733)
+
+## Build and Test Systems
+
+* The nighly valgrind matrix now includes release 2.25.0 (#729)
+
 
 # tiledb 0.28.2
 
