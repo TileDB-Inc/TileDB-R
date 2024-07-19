@@ -69,3 +69,60 @@ expect_true(nchar(tiledb_fragment_info_get_to_vacuum_uri(fraginf, 0)) > 20)
 expect_true(nchar(tiledb_fragment_info_get_to_vacuum_uri(fraginf, 1)) > 20)
 expect_false(tiledb_fragment_info_has_consolidated_metadata(fraginf, 0))
 expect_equal(tiledb_fragment_info_get_unconsolidated_metadata_num(fraginf), 1)
+
+
+
+## fragment info deletion tests (for TileDB 2.18.0 or later)
+
+if (tiledb_version(TRUE) < "2.18.0") exit_file("Remainder needs 2.18.* or later")
+
+
+uri <- tempfile()
+if (dir.exists(uri)) unlink(uri, TRUE)
+
+makeSimpleArray <- function(uri) {
+    ## Create a simple two-column data.frame and write chunks of it
+    D <- data.frame(key = seq(1, 26), val = letters)
+    fromDataFrame(D[1:2,], uri, mode = "ingest", timestamps = as.POSIXct(1))
+    fromDataFrame(D[3:4,], uri, mode = "append", timestamps = as.POSIXct(2))
+    fromDataFrame(D[5:6,], uri, mode = "append", timestamps = as.POSIXct(3))
+    fromDataFrame(D[7:7,], uri, mode = "append", timestamps = as.POSIXct(4))
+    tiledb_array(uri)
+
+}
+arr <- makeSimpleArray(uri)
+
+### check we have four fragments
+expect_silent(fi <- tiledb_fragment_info(uri))
+expect_equal(tiledb_fragment_info_get_num(fi), 4)
+
+
+## delete from 1 to 2 leaving two
+expect_silent(tiledb_array_delete_fragments(arr, as.POSIXct(1), as.POSIXct(2)))
+expect_silent(fi <- tiledb_fragment_info(uri))
+expect_equal(tiledb_fragment_info_get_num(fi), 2)
+
+## delete at 4 leaving one
+expect_silent(tiledb_array_delete_fragments(arr, as.POSIXct(4), as.POSIXct(4)))
+expect_silent(fi <- tiledb_fragment_info(uri))
+expect_equal(tiledb_fragment_info_get_num(fi), 1)
+
+if (dir.exists(uri)) unlink(uri, TRUE)
+arr <- makeSimpleArray(uri)
+
+expect_silent(fi <- tiledb_fragment_info(uri))
+expect_equal(tiledb_fragment_info_get_num(fi), 4)
+expect_silent(fi <- tiledb_fragment_info(uri))
+## no function to fetch the vector at once so build it
+uris <- sapply(1:4, \(i) tiledb:::libtiledb_fragment_info_uri(fi@ptr, i-1))
+expect_equal(length(uris), 4)
+
+## delete from 1 to 2 leaving two
+expect_silent(tiledb_array_delete_fragments_list(arr, uris[1:2]))
+expect_silent(fi <- tiledb_fragment_info(uri))
+expect_equal(tiledb_fragment_info_get_num(fi), 2)
+
+## delete at 4 leaving one
+expect_silent(tiledb_array_delete_fragments_list(arr, uris[4]))
+expect_silent(fi <- tiledb_fragment_info(uri))
+expect_equal(tiledb_fragment_info_get_num(fi), 1)

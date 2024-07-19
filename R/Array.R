@@ -175,6 +175,24 @@ tiledb_array_delete_fragments <- function(arr, ts_start, ts_end, ctx = tiledb_ge
     invisible(TRUE)
 }
 
+##' Delete fragments written given by their URIs
+##'
+##' @param arr A TileDB Array object as for example returned by \code{tiledb_array()}
+##' @param fragments A character vector with fragment URIs
+##' @param ctx A tiledb_ctx object (optional)
+##' @return A boolean indicating success
+##' @export
+tiledb_array_delete_fragments_list <- function(arr, fragments, ctx = tiledb_get_context()) {
+    stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
+              "The 'fragments' argument must be a character vector" = is.character(fragments))
+    if (tiledb_version(TRUE) >= "2.18.0") {
+        libtiledb_array_delete_fragments_list(ctx@ptr, arr@ptr, fragments)
+    } else {
+        message("This function is only available with TileDB 2.18.0 or later")
+    }
+    invisible(TRUE)
+}
+
 ##' Check for Enumeration (aka Factor aka Dictionary)
 ##'
 ##' @param arr A TileDB Array object
