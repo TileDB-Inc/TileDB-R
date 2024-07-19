@@ -1738,6 +1738,18 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// libtiledb_array_delete_fragments_list
+void libtiledb_array_delete_fragments_list(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array, std::vector<std::string> fragments);
+RcppExport SEXP _tiledb_libtiledb_array_delete_fragments_list(SEXP ctxSEXP, SEXP arraySEXP, SEXP fragmentsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::Array> >::type array(arraySEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type fragments(fragmentsSEXP);
+    libtiledb_array_delete_fragments_list(ctx, array, fragments);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_array_has_enumeration
 bool libtiledb_array_has_enumeration(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> arr, const std::string name);
 RcppExport SEXP _tiledb_libtiledb_array_has_enumeration(SEXP ctxSEXP, SEXP arrSEXP, SEXP nameSEXP) {
@@ -3707,6 +3719,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_set_open_timestamp_end", (DL_FUNC) &_tiledb_libtiledb_array_set_open_timestamp_end, 2},
     {"_tiledb_libtiledb_array_open_timestamp_end", (DL_FUNC) &_tiledb_libtiledb_array_open_timestamp_end, 1},
     {"_tiledb_libtiledb_array_delete_fragments", (DL_FUNC) &_tiledb_libtiledb_array_delete_fragments, 4},
+    {"_tiledb_libtiledb_array_delete_fragments_list", (DL_FUNC) &_tiledb_libtiledb_array_delete_fragments_list, 3},
     {"_tiledb_libtiledb_array_has_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_has_enumeration, 3},
     {"_tiledb_libtiledb_array_get_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_get_enumeration, 3},
     {"_tiledb_libtiledb_array_has_enumeration_vector", (DL_FUNC) &_tiledb_libtiledb_array_has_enumeration_vector, 2},

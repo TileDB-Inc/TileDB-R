@@ -2779,6 +2779,22 @@ void libtiledb_array_delete_fragments(XPtr<tiledb::Context> ctx, XPtr<tiledb::Ar
 }
 
 // [[Rcpp::export]]
+void libtiledb_array_delete_fragments_list(XPtr<tiledb::Context> ctx, XPtr<tiledb::Array> array,
+                                           std::vector<std::string> fragments) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::Array>(array);
+    const std::string uri = array->uri();
+    size_t n = fragments.size();
+    std::vector<const char*> frags(n);
+    for (size_t i = 0; i < n; i++) {
+        frags[i] = fragments[i].c_str();
+    }
+#if TILEDB_VERSION >= TileDB_Version(2,18,0)
+    tiledb::Array::delete_fragments_list(*ctx.get(), uri, &frags[0], n);
+#endif
+}
+
+// [[Rcpp::export]]
 bool libtiledb_array_has_enumeration(XPtr<tiledb::Context> ctx,
                                      XPtr<tiledb::Array> arr,
                                      const std::string name) {
