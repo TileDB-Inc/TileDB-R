@@ -12,6 +12,8 @@
 
 * Fragments can now be removed by supplying a vector of fragment URIs (#734)
 
+* `NDRectangle` and `CurrentDomain` objects are supported (with 2.25.0 or newer) (#735)
+
 ## Build and Test Systems
 
 * The nighly valgrind matrix now includes release 2.25.0 (#729)
