@@ -12,6 +12,6 @@ An S4 class for a TileDB NDRectangle object
 \describe{
 \item{\code{ptr}}{An external pointer to the underlying NDRectangle object}
 
-\item{\code{domptr}}{An external pointer to the underlying Domain object}
+\item{\code{datatype}}{A character variable with the TileDB type of the corresponding domain}
 }}
 
