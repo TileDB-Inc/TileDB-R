@@ -1172,6 +1172,38 @@ libtiledb_mime_type_from_str <- function(mime_type) {
     .Call(`_tiledb_libtiledb_mime_type_from_str`, mime_type)
 }
 
+libtiledb_ndrectangle_create <- function(ctx, dom) {
+    .Call(`_tiledb_libtiledb_ndrectangle_create`, ctx, dom)
+}
+
+libtiledb_ndrectangle_set_range <- function(ndr, datatype, dimname, start, end) {
+    .Call(`_tiledb_libtiledb_ndrectangle_set_range`, ndr, datatype, dimname, start, end)
+}
+
+libtiledb_ndrectangle_get_range <- function(ndr, dimname, dtype) {
+    .Call(`_tiledb_libtiledb_ndrectangle_get_range`, ndr, dimname, dtype)
+}
+
+libtiledb_current_domain_create <- function(ctx) {
+    .Call(`_tiledb_libtiledb_current_domain_create`, ctx)
+}
+
+libtiledb_current_domain_type <- function(cd) {
+    .Call(`_tiledb_libtiledb_current_domain_type`, cd)
+}
+
+libtiledb_current_domain_set_ndrectangle <- function(cd, ndr) {
+    .Call(`_tiledb_libtiledb_current_domain_set_ndrectangle`, cd, ndr)
+}
+
+libtiledb_current_domain_get_ndrectangle <- function(cd) {
+    .Call(`_tiledb_libtiledb_current_domain_get_ndrectangle`, cd)
+}
+
+libtiledb_current_domain_is_empty <- function(cd) {
+    .Call(`_tiledb_libtiledb_current_domain_is_empty`, cd)
+}
+
 vecbuf_to_shmem <- function(dir, name, buf, sz, numvar) {
     invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz, numvar))
 }
