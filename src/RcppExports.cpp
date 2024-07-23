@@ -1259,6 +1259,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_array_schema_get_current_domain
+XPtr<tiledb::CurrentDomain> libtiledb_array_schema_get_current_domain(XPtr<tiledb::Context> ctx, XPtr<tiledb::ArraySchema> sch);
+RcppExport SEXP _tiledb_libtiledb_array_schema_get_current_domain(SEXP ctxSEXP, SEXP schSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type sch(schSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_array_schema_get_current_domain(ctx, sch));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_array_schema_set_current_domain
+void libtiledb_array_schema_set_current_domain(XPtr<tiledb::Context> ctx, XPtr<tiledb::ArraySchema> sch, XPtr<tiledb::CurrentDomain> cd);
+RcppExport SEXP _tiledb_libtiledb_array_schema_set_current_domain(SEXP ctxSEXP, SEXP schSEXP, SEXP cdSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Context> >::type ctx(ctxSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::ArraySchema> >::type sch(schSEXP);
+    Rcpp::traits::input_parameter< XPtr<tiledb::CurrentDomain> >::type cd(cdSEXP);
+    libtiledb_array_schema_set_current_domain(ctx, sch, cd);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_array_schema_evolution
 XPtr<tiledb::ArraySchemaEvolution> libtiledb_array_schema_evolution(XPtr<tiledb::Context> ctx);
 RcppExport SEXP _tiledb_libtiledb_array_schema_evolution(SEXP ctxSEXP) {
@@ -3776,6 +3800,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_array_schema_version", (DL_FUNC) &_tiledb_libtiledb_array_schema_version, 1},
     {"_tiledb_libtiledb_array_schema_set_enumeration", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_enumeration, 7},
     {"_tiledb_libtiledb_array_schema_set_enumeration_empty", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_enumeration_empty, 7},
+    {"_tiledb_libtiledb_array_schema_get_current_domain", (DL_FUNC) &_tiledb_libtiledb_array_schema_get_current_domain, 2},
+    {"_tiledb_libtiledb_array_schema_set_current_domain", (DL_FUNC) &_tiledb_libtiledb_array_schema_set_current_domain, 3},
     {"_tiledb_libtiledb_array_schema_evolution", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution, 1},
     {"_tiledb_libtiledb_array_schema_evolution_add_attribute", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_add_attribute, 2},
     {"_tiledb_libtiledb_array_schema_evolution_drop_attribute", (DL_FUNC) &_tiledb_libtiledb_array_schema_evolution_drop_attribute, 2},

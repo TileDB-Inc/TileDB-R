@@ -2118,6 +2118,32 @@ libtiledb_array_schema_set_enumeration_empty(XPtr<tiledb::Context> ctx,
     return schema;
 }
 
+// [[Rcpp::export]]
+XPtr<tiledb::CurrentDomain> libtiledb_array_schema_get_current_domain(XPtr<tiledb::Context> ctx,
+                                                                      XPtr<tiledb::ArraySchema> sch) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::ArraySchema>(sch);
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+    auto cd = tiledb::ArraySchemaExperimental::current_domain(*ctx.get(), *sch.get());
+#else
+    auto cd = tiledb::CurrentDomain(*ctx.get);
+#endif
+    auto ptr = make_xptr<tiledb::CurrentDomain>(new tiledb::CurrentDomain(cd));
+    return ptr;
+}
+
+// [[Rcpp::export]]
+void libtiledb_array_schema_set_current_domain(XPtr<tiledb::Context> ctx,
+                                               XPtr<tiledb::ArraySchema> sch,
+                                               XPtr<tiledb::CurrentDomain> cd) {
+    check_xptr_tag<tiledb::Context>(ctx);
+    check_xptr_tag<tiledb::ArraySchema>(sch);
+    check_xptr_tag<tiledb::CurrentDomain>(cd);
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+    tiledb::ArraySchemaExperimental::set_current_domain(*ctx.get(), *sch.get(), *cd.get());
+#endif
+}
+
 
 /**
  * TileDB Array Schema Evolution

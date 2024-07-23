@@ -436,6 +436,14 @@ libtiledb_array_schema_set_enumeration_empty <- function(ctx, schema, attr, enum
     .Call(`_tiledb_libtiledb_array_schema_set_enumeration_empty`, ctx, schema, attr, enum_name, type_str, cell_val_num, ordered)
 }
 
+libtiledb_array_schema_get_current_domain <- function(ctx, sch) {
+    .Call(`_tiledb_libtiledb_array_schema_get_current_domain`, ctx, sch)
+}
+
+libtiledb_array_schema_set_current_domain <- function(ctx, sch, cd) {
+    invisible(.Call(`_tiledb_libtiledb_array_schema_set_current_domain`, ctx, sch, cd))
+}
+
 libtiledb_array_schema_evolution <- function(ctx) {
     .Call(`_tiledb_libtiledb_array_schema_evolution`, ctx)
 }
