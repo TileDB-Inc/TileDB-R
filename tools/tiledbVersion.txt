@@ -1,2 +1,2 @@
-version: 2.25.0-rc0
-sha: ca07b03
+version: 2.25.0
+sha: bbcbd3f
