@@ -14,7 +14,7 @@ expect_silent(cd <- tiledb_current_domain())
 expect_true(tiledb_current_domain_is_empty(cd))
 expect_error(tiledb_current_domain_get_type(cd))
 
-expect_silent(tiledb_current_domain_set_ndrectangle(cd, ndr))
+expect_silent(cd <- tiledb_current_domain_set_ndrectangle(cd, ndr))
 expect_silent(newndr <- tiledb_current_domain_get_ndrectangle(cd))
 expect_silent(newtp <- tiledb_current_domain_get_type(cd))
 expect_true(is(newndr, "tiledb_ndrectangle"))
