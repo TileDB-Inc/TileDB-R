@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -905,4 +905,33 @@ tiledb_array_schema_set_enumeration_empty <- function(schema, attr, enum_name,
                                                                enum_name, type_str, cell_val_num,
                                                                ordered)
     schema
+}
+
+#' Get the Current Domain of an Array Schema
+#'
+#' Note that 'CurrendDomain' object may be empty.
+#' @param schema An Array Schema
+#' @param ctx Optional tiledb_ctx object
+#' @return A 'CurrendDomain' object
+#' @export
+tiledb_array_schema_get_current_domain <- function(schema, ctx = tiledb_get_context()) {
+    stopifnot("Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
+              "Argument 'ctx' must be a 'tiledb_ctx'" = is(ctx, "tiledb_ctx"))
+    cdptr <- libtiledb_array_schema_get_current_domain(ctx@ptr, schema@ptr)
+    new("tiledb_current_domain", ptr=cdptr)
+}
+
+#' Set a Current Domain of an Array Schema
+#'
+#' @param schema An Array Schema
+#' @param cd An CurrendDomain object
+#' @param ctx Optional tiledb_ctx object
+#' @return Nothing is returned from this function (but an error, should it occur is reported)
+#' @export
+tiledb_array_schema_set_current_domain <- function(schema, cd, ctx = tiledb_get_context()) {
+    stopifnot("Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
+              "Argument 'cd' must be a 'tiledb_current_domain'" = is(cd, "tiledb_current_domain"),
+              "Argument 'ctx' must be a 'tiledb_ctx'" = is(ctx, "tiledb_ctx"))
+    libtiledb_array_schema_set_current_domain(ctx@ptr, schema@ptr, cd@ptr)
+    invisible(NULL)
 }
