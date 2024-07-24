@@ -1,2 +1,2 @@
-version: 2.25.0-rc1
-sha: 9ac1c76
+version: 2.25.0
+sha: bbcbd3f
