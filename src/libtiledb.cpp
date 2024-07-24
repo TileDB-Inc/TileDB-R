@@ -2126,7 +2126,7 @@ XPtr<tiledb::CurrentDomain> libtiledb_array_schema_get_current_domain(XPtr<tiled
 #if TILEDB_VERSION >= TileDB_Version(2,25,0)
     auto cd = tiledb::ArraySchemaExperimental::current_domain(*ctx.get(), *sch.get());
 #else
-    auto cd = tiledb::CurrentDomain(*ctx.get);
+    auto cd = tiledb::CurrentDomain();
 #endif
     auto ptr = make_xptr<tiledb::CurrentDomain>(new tiledb::CurrentDomain(cd));
     return ptr;
