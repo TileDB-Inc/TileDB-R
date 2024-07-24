@@ -476,6 +476,10 @@ libtiledb_array_schema_evolution_extend_enumeration <- function(ctx, ase, array,
     .Call(`_tiledb_libtiledb_array_schema_evolution_extend_enumeration`, ctx, ase, array, enum_name, new_values, nullable, ordered)
 }
 
+libtiledb_array_schema_evolution_expand_current_domain <- function(ase, cd) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_expand_current_domain`, ase, cd)
+}
+
 libtiledb_array_create <- function(uri, schema) {
     .Call(`_tiledb_libtiledb_array_create`, uri, schema)
 }

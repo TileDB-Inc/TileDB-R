@@ -2264,6 +2264,18 @@ libtiledb_array_schema_evolution_extend_enumeration(XPtr<tiledb::Context> ctx,
     return ase;
 }
 
+//[[Rcpp::export]]
+XPtr<tiledb::ArraySchemaEvolution>
+libtiledb_array_schema_evolution_expand_current_domain(XPtr<tiledb::ArraySchemaEvolution> ase,
+                                                       XPtr<tiledb::CurrentDomain> cd) {
+    check_xptr_tag<tiledb::ArraySchemaEvolution>(ase);
+    check_xptr_tag<tiledb::CurrentDomain>(cd);
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
+    ase->expand_current_domain(*cd.get());
+#endif
+    return ase;
+}
+
 
 /**
  * TileDB Array

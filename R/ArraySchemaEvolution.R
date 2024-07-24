@@ -160,6 +160,7 @@ tiledb_array_schema_evolution_add_enumeration_empty <- function(ase, enum_name, 
 #' @param ordered A logical value indicating standard \code{factor} (when \code{FALSE}, the default)
 #' or \code{ordered} (when \code{TRUE})
 #' @param ctx Optional tiledb_ctx object
+#' @return The modified ArraySchemaEvolution object
 #' @export
 tiledb_array_schema_evolution_extend_enumeration <- function(ase, array, enum_name,
                                                              new_values, nullable = FALSE,
@@ -176,5 +177,20 @@ tiledb_array_schema_evolution_extend_enumeration <- function(ase, array, enum_na
     ase@ptr <- libtiledb_array_schema_evolution_extend_enumeration(ctx@ptr, ase@ptr, array@ptr,
                                                                    enum_name, new_values,
                                                                    nullable, ordered)
+    ase
+}
+
+#' Expand an the Current Domain of an Array via Array Schema Evolution
+#'
+#' @param ase An ArraySchemaEvolution object
+#' @param cd A CurrentDomain object
+#' @return The modified ArraySchemaEvolution object
+#' @export
+tiledb_array_schema_evolution_expand_current_domain <- function(ase, cd) {
+   stopifnot("Argument 'ase' must be an Array Schema Evolution object" =
+                  is(ase, "tiledb_array_schema_evolution"),
+              "Argument 'cd' must be a CurrentDomain object" = is(cd, "tiledb_current_domain"),
+              "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
+    ase@ptr <- libtiledb_array_schema_evolution_expand_current_domain(ase@ptr, cd@ptr)
     ase
 }

@@ -31,6 +31,9 @@ or \code{ordered} (when \code{TRUE})}
 
 \item{ctx}{Optional tiledb_ctx object}
 }
+\value{
+The modified ArraySchemaEvolution object
+}
 \description{
 Extend an Evolution via Array Schema Evolution
 }
