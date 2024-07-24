@@ -27,8 +27,9 @@ Set a range on a \code{tiledb_ndrectangle} object
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
-ndr <- tiledb_ndrectangle(dom)
-ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
-
+if (tiledb_version(TRUE) >= "2.25.0") {
+   dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+   ndr <- tiledb_ndrectangle(dom)
+   ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
+}
 }

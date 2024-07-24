@@ -17,6 +17,8 @@ Creates a \code{tiledb_current_domain} object
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-cd <-tiledb_current_domain()
+if (tiledb_version(TRUE) >= "2.25.0") {
+   cd <-tiledb_current_domain()
+}
 
 }

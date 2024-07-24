@@ -1231,7 +1231,7 @@ void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
 #if TILEDB_VERSION >= TileDB_Version(2,25,0)
   std::stringstream ss;
   ss << *domain;
-  std::cout << ss.str();
+  Rcpp::Rcout << ss.str();
 #else
   domain->dump();
 #endif
@@ -1532,7 +1532,7 @@ void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
 #if TILEDB_VERSION >= TileDB_Version(2,25,0)
   std::stringstream ss;
   ss << *attr;
-  std::cout << ss.str();
+  Rcpp::Rcout << ss.str();
 #else
   attr->dump();
 #endif
@@ -2055,7 +2055,7 @@ void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
 #if TILEDB_VERSION >= TileDB_Version(2,25,0)
   std::stringstream ss;
   ss << *schema;
-  std::cout << ss.str();
+  Rcpp::Rcout << ss.str();
 #else
   schema->dump();
 #endif

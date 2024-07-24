@@ -31,13 +31,15 @@ setClass("tiledb_ndrectangle",
 
 #' Creates a `tiledb_ndrectangle` object
 #'
-#' @param domain A TileDB Domain object for which the NDRectangle object is created
+#' @param dom A TileDB Domain object for which the NDRectangle object is created
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The `tiledb_ndrectangle` object
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
-#' ndr <- tiledb_ndrectangle(dom)
+#' if (tiledb_version(TRUE) >= "2.25.0") {
+#'    dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+#'    ndr <- tiledb_ndrectangle(dom)
+#' }
 #'
 #' @export
 tiledb_ndrectangle <- function(dom, ctx = tiledb_get_context()) {
@@ -62,10 +64,11 @@ tiledb_ndrectangle <- function(dom, ctx = tiledb_get_context()) {
 #' string dimensions.
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
-#' ndr <- tiledb_ndrectangle(dom)
-#' ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
-#'
+#' if (tiledb_version(TRUE) >= "2.25.0") {
+#'    dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+#'    ndr <- tiledb_ndrectangle(dom)
+#'    ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
+#' }
 #' @export
 tiledb_ndrectangle_set_range <- function(ndr, dimname, start, end) {
     stopifnot("The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
@@ -86,11 +89,12 @@ tiledb_ndrectangle_set_range <- function(ndr, dimname, start, end) {
 #' @return The `tiledb_ndrectangle` range as a two-element vector
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
-#' ndr <- tiledb_ndrectangle(dom)
-#' ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
-#' tiledb_ndrectangle_get_range(ndr, "d1")
-#'
+#' if (tiledb_version(TRUE) >= "2.25.0") {
+#'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+#'    ndr <- tiledb_ndrectangle(dom)
+#'    ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
+#'    tiledb_ndrectangle_get_range(ndr, "d1")
+#' }
 #' @export
 tiledb_ndrectangle_get_range <- function(ndr, dimname) {
     stopifnot("The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
