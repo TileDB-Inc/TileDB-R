@@ -866,7 +866,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
 
     } else if (dtype == TILEDB_STRING_ASCII) {
         if (Rf_isNull(domain) && Rf_isNull(tile_extent)) {
-            auto d = tiledb::Dimension::create(*ctx.get(), name, TILEDB_STRING_ASCII, nullptr, nullptr);
+            auto d = tiledb::Dimension::create(*ctx.get(), name, dtype, nullptr, nullptr);
             auto dim = new tiledb::Dimension(d);
             auto ptr = make_xptr<tiledb::Dimension>(dim);
             return ptr;

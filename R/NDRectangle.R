@@ -47,6 +47,7 @@ tiledb_ndrectangle <- function(dom, ctx = tiledb_get_context()) {
               "The second argment must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
               "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
     typestr <- datatype(dom)
+    names(typestr) <- sapply(dimensions(dom), name)
     ptr <- libtiledb_ndrectangle_create(ctx@ptr, dom@ptr)
     return(new("tiledb_ndrectangle", ptr = ptr, datatype = typestr))
 }
@@ -78,7 +79,8 @@ tiledb_ndrectangle_set_range <- function(ndr, dimname, start, end) {
               "The fourth argument must be scalar" = length(end) == 1,
               "The fourth and first argument must be of the same class" = class(start) == class(end),
               "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    ndr@ptr <- libtiledb_ndrectangle_set_range(ndr@ptr, ndr@datatype, dimname, start, end)
+    dtype <- unname(ndr@datatype[dimname])
+    ndr@ptr <- libtiledb_ndrectangle_set_range(ndr@ptr, dtype, dimname, start, end)
     invisible(ndr)
 }
 
@@ -101,6 +103,7 @@ tiledb_ndrectangle_get_range <- function(ndr, dimname) {
               "The second argument must a single character object" = is.character(dimname) &&
                   length(dimname) == 1,
               "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    rng <- libtiledb_ndrectangle_get_range(ndr@ptr, dimname, ndr@datatype)
+    dtype <- unname(ndr@datatype[dimname])
+    rng <- libtiledb_ndrectangle_get_range(ndr@ptr, dimname, dtype)
     rng
 }
