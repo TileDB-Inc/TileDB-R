@@ -42,6 +42,4 @@ expect_error(tiledb_ndrectangle_set_range(ndr, "strdim", 1L, 2))   # wrong type
 expect_silent(ndr <- tiledb_ndrectangle_set_range(ndr, "strdim", "aa", "zz"))
 
 expect_error(tiledb_ndrectangle_set_range(ndr, "notdim")) # wrong name
-## for reasons that are unclear this passes under dev aka 2.26.0 but creates CI issues with 2.25.0-rc0
-if (tiledb_version(TRUE) < "2.26.0") exit_file("These tests needs TileDB 2.26.0 or later")
 expect_equal(tiledb_ndrectangle_get_range(ndr, "strdim"), c("aa", "zz"))

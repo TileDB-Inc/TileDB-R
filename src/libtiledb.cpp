@@ -471,14 +471,18 @@ tiledb_vfs_mode_t _string_to_tiledb_vfs_mode_t(std::string modestr) {
   }
 }
 
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
 std::string _tiledb_current_domain_type_to_string(tiledb_current_domain_type_t type) {
     if (type == TILEDB_NDRECTANGLE) {
         return std::string{"NDRECTANGLE"};
     } else {
         Rcpp::stop("Unknown TileDB CurrentDomain type (%d)", (int32_t) type);
     }
+    return std::string();
 }
+#endif
 
+#if TILEDB_VERSION >= TileDB_Version(2,25,0)
 tiledb_current_domain_type_t _string_to_tiledb_current_domain_type(std::string typestr) {
     if (typestr == "NDRECTANGLE") {
         return TILEDB_NDRECTANGLE;
@@ -486,6 +490,7 @@ tiledb_current_domain_type_t _string_to_tiledb_current_domain_type(std::string t
         Rcpp::stop("Unknown TileDB CurrentDomain type '%s'", typestr.c_str());
     }
 }
+#endif
 
 // NB Limited type coverage here as aimed to sizing R allocations of either int, double or char
 // Also note that there is 'inline size_t type_size(tiledb_datatype_t type)' in core_interface.h

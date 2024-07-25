@@ -70,7 +70,6 @@ tiledb_current_domain_set_ndrectangle <- function(cd, ndr) {
                   is(cd, "tiledb_current_domain"),
               "The second argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
               "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    spdl::debug("[tiledb_current_domain_set_ndrectangle] before libtile call")
     cd@ptr <- libtiledb_current_domain_set_ndrectangle(cd@ptr, ndr@ptr)
     cd@datatype <- ndr@datatype
     cd
