@@ -7,9 +7,9 @@
 tiledb_ndrectangle(dom, ctx = tiledb_get_context())
 }
 \arguments{
-\item{ctx}{(optional) A TileDB Ctx object}
+\item{dom}{A TileDB Domain object for which the NDRectangle object is created}
 
-\item{domain}{A TileDB Domain object for which the NDRectangle object is created}
+\item{ctx}{(optional) A TileDB Ctx object}
 }
 \value{
 The \code{tiledb_ndrectangle} object
@@ -19,7 +19,9 @@ Creates a \code{tiledb_ndrectangle} object
 }
 \examples{
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
-ndr <- tiledb_ndrectangle(dom)
+if (tiledb_version(TRUE) >= "2.25.0") {
+   dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+   ndr <- tiledb_ndrectangle(dom)
+}
 
 }

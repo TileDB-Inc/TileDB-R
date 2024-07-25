@@ -436,6 +436,14 @@ libtiledb_array_schema_set_enumeration_empty <- function(ctx, schema, attr, enum
     .Call(`_tiledb_libtiledb_array_schema_set_enumeration_empty`, ctx, schema, attr, enum_name, type_str, cell_val_num, ordered)
 }
 
+libtiledb_array_schema_get_current_domain <- function(ctx, sch) {
+    .Call(`_tiledb_libtiledb_array_schema_get_current_domain`, ctx, sch)
+}
+
+libtiledb_array_schema_set_current_domain <- function(ctx, sch, cd) {
+    invisible(.Call(`_tiledb_libtiledb_array_schema_set_current_domain`, ctx, sch, cd))
+}
+
 libtiledb_array_schema_evolution <- function(ctx) {
     .Call(`_tiledb_libtiledb_array_schema_evolution`, ctx)
 }
@@ -466,6 +474,10 @@ libtiledb_array_schema_evolution_drop_enumeration <- function(ase, attrname) {
 
 libtiledb_array_schema_evolution_extend_enumeration <- function(ctx, ase, array, enum_name, new_values, nullable = FALSE, ordered = FALSE) {
     .Call(`_tiledb_libtiledb_array_schema_evolution_extend_enumeration`, ctx, ase, array, enum_name, new_values, nullable, ordered)
+}
+
+libtiledb_array_schema_evolution_expand_current_domain <- function(ase, cd) {
+    .Call(`_tiledb_libtiledb_array_schema_evolution_expand_current_domain`, ase, cd)
 }
 
 libtiledb_array_create <- function(uri, schema) {

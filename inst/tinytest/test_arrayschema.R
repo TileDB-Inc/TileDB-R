@@ -130,9 +130,8 @@ ctx <- tiledb_ctx(oldconfig)  # reset to no encryption via previous config
 #test_that("tiledb_array_schema dups setter/getter",  {
 dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
                               tiledb_dim("cols", c(1L, 4L), 4L, "INT32")))
-sch <- tiledb_array_schema(dom,
-                           attrs = c(tiledb_attr("a", type = "INT32")),
-                           sparse = TRUE)
+attr <- tiledb_attr("a", type = "INT32")
+sch <- tiledb_array_schema(dom, attrs = attr, sparse = TRUE)
 
 ## false by default
 expect_false(allows_dups(sch))
@@ -141,3 +140,13 @@ expect_false(allows_dups(sch))
 allows_dups(sch) <- TRUE
 expect_true(allows_dups(sch))
 #})
+
+
+## current domain
+if (tiledb_version(TRUE) < "2.25.0") exit_file("Needs TileDB 2.25.* or later")
+expect_error(tiledb_array_schema_get_current_domain(dom))           # wrong object
+expect_silent(cd <- tiledb_array_schema_get_current_domain(sch))
+expect_silent(tiledb_array_schema_set_current_domain(sch, cd))
+
+dsch <- tiledb_array_schema(dom, attrs = attr, sparse = FALSE)
+expect_error(tiledb_array_schema_set_current_domain(dsch, cd)) 		# not for dense
