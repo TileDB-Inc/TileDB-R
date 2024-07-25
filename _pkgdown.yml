@@ -2,6 +2,8 @@
 template:
   bootstrap: 5
 
+url: https://tiledb-inc.github.io/TileDB-R/
+
 articles:
 - title: TileDB R Introduction
   navbar: Introduction
@@ -156,6 +158,11 @@ reference:
   desc: support for factor and ordered
   contents:
   - matches("enumeration")
+- title: CurrentDomain
+  desc: support for current domain of sparse array
+  contents:
+  - matches("current_domain")
+  - matches("ndrectangle")
 
 authors:
   TileDB, Inc.:

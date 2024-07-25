@@ -1,6 +1,6 @@
-# Ongoing Development
+# tiledb 0.29.0
 
-* This release of the R package builds against [TileDB 2.25.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.25.0), and has also been tested against earlier releases as well as the development version (#728)
+* This release of the R package builds against [TileDB 2.25.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.25.0), and has also been tested against earlier releases as well as the development version (#728, #736)
 
 ## Improvements
 
@@ -12,7 +12,7 @@
 
 * Fragments can now be removed by supplying a vector of fragment URIs (#734)
 
-* `NDRectangle` and `CurrentDomain` objects are supported (with 2.25.0 or newer) (#735)
+* `NDRectangle` and `CurrentDomain` objects are supported (with 2.25.0 or newer) and can be used with `ArraySchema` and `ArraySchemeEvolution` domain of (#735, #737)
 
 ## Build and Test Systems
 
