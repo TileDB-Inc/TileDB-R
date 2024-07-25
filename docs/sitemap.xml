@@ -1,1197 +1,413 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/data-ingestion-from-sql.html</loc>
-  </url>
-  <url>
-    <loc>/articles/documentation.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/installation-options.html</loc>
-  </url>
-  <url>
-    <loc>/articles/introduction.html</loc>
-  </url>
-  <url>
-    <loc>/articles/md/data-ingestion-from-sql.html</loc>
-  </url>
-  <url>
-    <loc>/articles/md/documentation.html</loc>
-  </url>
-  <url>
-    <loc>/articles/md/installation-options.html</loc>
-  </url>
-  <url>
-    <loc>/articles/md/introduction.html</loc>
-  </url>
-  <url>
-    <loc>/articles/md/tiledb-mariadb-examples.html</loc>
-  </url>
-  <url>
-    <loc>/articles/rmd/data-ingestion-from-sql.html</loc>
-  </url>
-  <url>
-    <loc>/articles/rmd/documentation.html</loc>
-  </url>
-  <url>
-    <loc>/articles/rmd/installation-options.html</loc>
-  </url>
-  <url>
-    <loc>/articles/rmd/introduction.html</loc>
-  </url>
-  <url>
-    <loc>/articles/rmd/tiledb-mariadb-examples.html</loc>
-  </url>
-  <url>
-    <loc>/articles/tiledb-mariadb-examples.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/documentation.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/introduction.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/allows_dups-set-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/allows_dups-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/array_consolidate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/array_vacuum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.data.frame.tiledb_config.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as.vector.tiledb_config.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as_data_frame.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-set-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-set-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-tiledb_array-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-tiledb_array_schema-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-tiledb_array_schema-character-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-tiledb_array_schema-numeric-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-tiledb_dense-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/attrs-tiledb_sparse-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cell_order-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/cell_val_num-tiledb_attr-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/completedBatched.html</loc>
-  </url>
-  <url>
-    <loc>/reference/config-tiledb_ctx-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/createBatched.html</loc>
-  </url>
-  <url>
-    <loc>/reference/datatype-tiledb_attr-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/datatype-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/datatype-tiledb_domain-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/datetimes_as_int64-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/datetimes_as_int64-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/describe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dim.tiledb_array_schema.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dim.tiledb_dim.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dim.tiledb_domain.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dimensions-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dimensions-tiledb_domain-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/domain-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/domain-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extended-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extended-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fetchBatched.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_list-set-tiledb_attr-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_list-set-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_list-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_list-tiledb_attr-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter_list-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fromDataFrame.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fromMatrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fromSparseMatrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/generics.html</loc>
-  </url>
-  <url>
-    <loc>/reference/has_attribute.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.anonymous.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.anonymous.tiledb_dim.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.integral-tiledb_domain-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.sparse-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.sparse-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.sparse-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/limitTileDBCores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/max_chunk_size-tiledb_filter_list-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/name-tiledb_attr-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/name-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nfilters-tiledb_filter_list-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/parse_query_condition.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.tiledb_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/query_condition-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/query_condition-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/query_layout-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/query_layout-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/query_statistics-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/query_statistics-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/r_to_tiledb_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/raw_dump-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/raw_dump-tiledb_attr-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/raw_dump-tiledb_domain-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.array-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.array-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.data.frame-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.data.frame-set-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.data.frame-set-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.data.frame-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.data.frame-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.data.frame-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.matrix-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return.matrix-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return_as-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/return_as-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/save_allocation_size_preference.html</loc>
-  </url>
-  <url>
-    <loc>/reference/save_return_as_preference.html</loc>
-  </url>
-  <url>
-    <loc>/reference/schema-character-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/schema-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/schema-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/schema-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selected_points-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selected_points-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selected_ranges-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selected_ranges-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/set_max_chunk_size-tiledb_filter_list-numeric-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_attr-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_config-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_domain-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_filter-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_filter_list-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_group-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/show-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/statusBatched.html</loc>
-  </url>
-  <url>
-    <loc>/reference/strings_as_factors-set-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/strings_as_factors-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_array-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_config-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_config-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_dense-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_filter_list-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_filter_list-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_sparse-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset-tiledb_array-ANY-ANY-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset-tiledb_config-ANY-ANY-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset-tiledb_config-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset-tiledb_dense-ANY-ANY-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset-tiledb_dense-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset-tiledb_sparse-ANY-ANY-ANY-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subset-tiledb_sparse-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tdb_collect-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tdb_filter-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tdb_select-tiledb_array-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tile-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tile_order-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_apply_aggregate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_close.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_create.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_delete_fragments.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_get_non_empty_domain_from_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_get_non_empty_domain_from_name.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_has_enumeration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_is_heterogeneous.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_is_homogeneous.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_is_open.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_open.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_open_at.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_check.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution_add_attribute.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution_add_enumeration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution_add_enumeration_empty.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution_array_evolve.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution_drop_attribute.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution_drop_enumeration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_evolution_extend_enumeration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_get_allows_dups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_get_capacity.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_set_allows_dups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_set_capacity.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_set_coords_filter_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_set_enumeration_empty.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_set_offsets_filter_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_set_validity_filter_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_schema_version.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_array_upgrade_version.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_arrow_array_ptr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attr-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_get_cell_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_get_cell_val_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_get_enumeration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_get_fill_value.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_get_nullable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_has_enumeration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_is_ordered_enumeration_ptr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_is_variable_sized.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_set_cell_val_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_set_enumeration_name.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_set_fill_value.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_attribute_set_nullable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_config-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_config.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_config_as_built_json.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_config_as_built_show.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_config_load.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_config_save.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_config_unset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ctx-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ctx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ctx_set_default_tags.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ctx_set_tag.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ctx_stats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_datatype_R_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_delete_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_dense-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_dense.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_dim-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_dim.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_dim_get_cell_val_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_domain-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_domain.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_domain_get_dimension_from_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_domain_get_dimension_from_name.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_domain_has_dimension.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_error_message.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filestore_buffer_export.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filestore_buffer_import.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filestore_schema_create.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filestore_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filestore_uri_export.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filestore_uri_import.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter_get_option.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter_list-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter_list_get_max_chunk_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter_list_set_max_chunk_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter_set_option.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_filter_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_dense.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_dump.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_cell_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_non_empty_domain_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_non_empty_domain_name.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_non_empty_domain_var_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_non_empty_domain_var_name.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_timestamp_range.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_to_vacuum_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_to_vacuum_uri.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_unconsolidated_metadata_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_get_version.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_has_consolidated_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_sparse.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_fragment_info_uri.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_get_all_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_get_context.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_get_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_get_query_status.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_get_vfs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_add_member.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_close.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_create.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_delete.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_delete_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_get_all_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_get_config.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_get_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_get_metadata_from_index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_has_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_is_open.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_is_relative.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_member.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_member_count.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_member_dump.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_metadata_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_open.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_put_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_query_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_remove_member.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_set_config.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_group_uri.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_has_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_is_supported_fs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ndim-tiledb_array_schema-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ndim-tiledb_dim-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_ndim-tiledb_domain-method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_num_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_object_ls.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_object_mv.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_object_rm.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_object_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_object_walk.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_put_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_add_range.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_add_range_with_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_alloc_buffer_ptr_char.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_alloc_buffer_ptr_char_subarray.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_apply_aggregate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_buffer_alloc_ptr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_condition-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_condition.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_condition_combine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_condition_create.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_condition_init.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_condition_set_use_enumeration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_create_buffer_ptr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_create_buffer_ptr_char.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_ctx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_export_buffer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_finalize.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_buffer_char.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_buffer_ptr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_est_result_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_est_result_size_var.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_fragment_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_fragment_timestamp_range.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_fragment_uri.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_layout.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_range.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_range_num.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_get_range_var.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_import_buffer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_result_buffer_elements.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_result_buffer_elements_vec.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_set_buffer.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_set_buffer_ptr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_set_buffer_ptr_char.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_set_condition.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_set_layout.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_set_subarray.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_stats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_status.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_submit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_submit_async.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_query_type.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_schema_get_dim_attr_status.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_schema_get_enumeration_status.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_schema_get_names.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_schema_get_types.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_schema_object.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_set_context.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_set_vfs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_sparse-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_sparse.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_disable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_dump.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_enable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_print.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_raw_dump.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_raw_get.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_raw_print.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_stats_reset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_subarray-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_subarray.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_subarray_to_query.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_version.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs-class.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_close.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_copy_file.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_create_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_create_dir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_dir_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_empty_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_file_size.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_is_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_is_dir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_is_empty_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_is_file.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_ls.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_ls_recursive.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_move_dir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_move_file.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_open.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_read.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_remove_bucket.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_remove_dir.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_remove_file.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_serialize.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_sync.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_touch.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_unserialize.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tiledb_vfs_write.html</loc>
-  </url>
-  <url>
-    <loc>/reference/version.html</loc>
-  </url>
-  <url>
-    <loc>/reference/vfs_file.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/404.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/LICENSE-text.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/data-ingestion-from-sql.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/documentation.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/installation-options.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/introduction.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/md/data-ingestion-from-sql.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/md/documentation.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/md/installation-options.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/md/introduction.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/md/tiledb-mariadb-examples.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/rmd/data-ingestion-from-sql.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/rmd/documentation.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/rmd/installation-options.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/rmd/introduction.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/rmd/tiledb-mariadb-examples.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/articles/tiledb-mariadb-examples.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/authors.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/documentation.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/introduction.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/news/index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/allows_dups-set-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/allows_dups-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/array_consolidate.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/array_vacuum.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/as.data.frame.tiledb_config.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/as.vector.tiledb_config.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/as_data_frame.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-set-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-set-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-character-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-numeric-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_dense-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_sparse-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/cell_order-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/cell_val_num-tiledb_attr-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/completedBatched.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/config-tiledb_ctx-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/createBatched.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/datatype-tiledb_attr-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/datatype-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/datatype-tiledb_domain-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/datetimes_as_int64-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/datetimes_as_int64-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/describe.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dim.tiledb_array_schema.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dim.tiledb_dim.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dim.tiledb_domain.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dimensions-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dimensions-tiledb_domain-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/domain-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/domain-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/extended-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/extended-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/fetchBatched.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_attr-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_attr-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/fromDataFrame.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/fromMatrix.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/fromSparseMatrix.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/generics.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/has_attribute.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/is.anonymous.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/is.anonymous.tiledb_dim.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/is.integral-tiledb_domain-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/is.sparse-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/is.sparse-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/is.sparse-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/limitTileDBCores.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/max_chunk_size-tiledb_filter_list-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/name-tiledb_attr-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/name-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/nfilters-tiledb_filter_list-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/parse_query_condition.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/print.tiledb_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/query_condition-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/query_condition-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/query_layout-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/query_layout-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/query_statistics-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/query_statistics-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/r_to_tiledb_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_attr-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_domain-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.array-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.array-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-set-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-set-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.matrix-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.matrix-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return_as-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return_as-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/save_allocation_size_preference.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/save_return_as_preference.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/schema-character-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/schema-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/schema-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/schema-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/selected_points-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/selected_points-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/selected_ranges-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/selected_ranges-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/set_max_chunk_size-tiledb_filter_list-numeric-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_attr-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_config-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_domain-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_filter-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_filter_list-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_group-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/statusBatched.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/strings_as_factors-set-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/strings_as_factors-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_array-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_config-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_config-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_dense-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_filter_list-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_filter_list-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_sparse-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_array-ANY-ANY-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_config-ANY-ANY-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_config-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_dense-ANY-ANY-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_dense-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_sparse-ANY-ANY-ANY-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_sparse-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tdb_collect-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tdb_filter-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tdb_select-tiledb_array-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tile-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tile_order-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb-package.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_apply_aggregate.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_close.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_create.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_delete_fragments.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_delete_fragments_list.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_get_non_empty_domain_from_index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_get_non_empty_domain_from_name.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_has_enumeration.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_heterogeneous.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_homogeneous.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_open.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_open.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_open_at.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_check.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_attribute.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration_empty.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_array_evolve.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_drop_attribute.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_drop_enumeration.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_expand_current_domain.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_extend_enumeration.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_allows_dups.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_capacity.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_current_domain.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_allows_dups.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_capacity.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_coords_filter_list.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_current_domain.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_enumeration_empty.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_offsets_filter_list.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_validity_filter_list.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_version.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_upgrade_version.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_arrow_array_ptr.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attr-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attr.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_cell_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_cell_val_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_enumeration.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_fill_value.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_nullable.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_has_enumeration.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_is_ordered_enumeration_ptr.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_is_variable_sized.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_cell_val_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_enumeration_name.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_fill_value.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_nullable.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_as_built_json.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_as_built_show.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_load.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_save.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_unset.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx_set_default_tags.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx_set_tag.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx_stats.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_get_ndrectangle.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_get_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_is_empty.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_set_ndrectangle.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_datatype_R_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_delete_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dense-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dim-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dim.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dim_get_cell_val_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain_get_dimension_from_index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain_get_dimension_from_name.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain_has_dimension.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_error_message.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_buffer_export.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_buffer_import.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_schema_create.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_uri_export.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_uri_import.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_get_option.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_get_max_chunk_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_set_max_chunk_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_set_option.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_dense.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_dump.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_cell_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_name.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_var_index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_var_name.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_timestamp_range.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_to_vacuum_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_to_vacuum_uri.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_unconsolidated_metadata_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_version.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_has_consolidated_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_sparse.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_uri.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_all_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_context.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_query_status.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_vfs.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_add_member.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_close.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_create.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_delete.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_delete_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_all_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_config.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_metadata_from_index.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_has_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_is_open.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_is_relative.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_member.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_member_count.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_member_dump.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_metadata_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_open.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_put_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_query_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_remove_member.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_set_config.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_uri.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_has_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_is_supported_fs.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_array_schema-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_domain-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_get_range.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_set_range.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_num_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_ls.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_mv.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_rm.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_walk.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_put_metadata.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_add_range.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_add_range_with_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_alloc_buffer_ptr_char.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_alloc_buffer_ptr_char_subarray.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_apply_aggregate.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_buffer_alloc_ptr.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_combine.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_create.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_init.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_set_use_enumeration.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_create_buffer_ptr.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_create_buffer_ptr_char.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_ctx.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_export_buffer.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_finalize.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_buffer_char.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_buffer_ptr.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_est_result_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_est_result_size_var.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_timestamp_range.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_uri.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_layout.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range_num.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range_var.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_import_buffer.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements_vec.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer_ptr.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer_ptr_char.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_condition.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_layout.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_subarray.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_stats.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_status.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_submit.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_submit_async.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_type.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_dim_attr_status.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_enumeration_status.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_names.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_types.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_object.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_set_context.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_set_vfs.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_sparse-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_disable.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_dump.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_enable.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_print.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_raw_dump.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_raw_get.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_raw_print.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_reset.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_subarray-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_subarray.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_subarray_to_query.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_version.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_close.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_copy_file.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_create_bucket.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_create_dir.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_dir_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_empty_bucket.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_file_size.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_bucket.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_dir.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_empty_bucket.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_file.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_ls.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_ls_recursive.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_move_dir.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_move_file.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_open.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_read.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_remove_bucket.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_remove_dir.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_remove_file.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_serialize.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_sync.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_touch.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_unserialize.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_write.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/version.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/vfs_file.html</loc></url>
 </urlset>
+
