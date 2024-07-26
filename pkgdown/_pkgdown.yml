@@ -1,8 +1,7 @@
+url: https://tiledb-inc.github.io/TileDB-R/
 
 template:
   bootstrap: 5
-
-url: https://tiledb-inc.github.io/TileDB-R/
 
 articles:
 - title: TileDB R Introduction
