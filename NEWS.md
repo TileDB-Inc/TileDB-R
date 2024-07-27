@@ -1,3 +1,14 @@
+# Ongoing Development
+
+## Improvements
+
+* Error messages displayed when a mismatched external pointer is detected now show both expected and encountered types (#740)
+
+## Documentation
+
+* The documentation website now uses favicon symbols for all pages rendered (#739)
+
+
 # tiledb 0.29.0
 
 * This release of the R package builds against [TileDB 2.25.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.25.0), and has also been tested against earlier releases as well as the development version (#728, #736)

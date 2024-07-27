@@ -1,6 +1,6 @@
 //  MIT License
 //
-//  Copyright (c) 2017-2022 TileDB Inc.
+//  Copyright (c) 2017-2024 TileDB Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -127,7 +127,7 @@ template <> inline const int32_t XPtrTagType<tiledb::FilterList>           = til
 template <> inline const int32_t XPtrTagType<tiledb::FragmentInfo>         = tiledb_xptr_object_fragmentinfo;
 template <> inline const int32_t XPtrTagType<tiledb::Group>                = tiledb_xptr_object_group;
 template <> inline const int32_t XPtrTagType<tiledb::Query>                = tiledb_xptr_object_query;
-template <> inline const int32_t XPtrTagType<tiledb::QueryCondition>       = tiledb_xptr_object_query;
+template <> inline const int32_t XPtrTagType<tiledb::QueryCondition>       = tiledb_xptr_object_querycondition;
 template <> inline const int32_t XPtrTagType<tiledb::VFS>                  = tiledb_xptr_object_vfs;
 template <> inline const int32_t XPtrTagType<vfs_fh_t>                     = tiledb_xptr_vfs_fh_t;
 template <> inline const int32_t XPtrTagType<vlc_buf_t>                    = tiledb_xptr_vlc_buf_t;
@@ -141,6 +141,40 @@ template <> inline const int32_t XPtrTagType<map_to_col_buf_t>             = til
 template <> inline const int32_t XPtrTagType<ArrowArray>             	   = tiledb_arrow_array_t;
 template <> inline const int32_t XPtrTagType<ArrowSchema>             	   = tiledb_arrow_schema_t;
 
+constexpr const char* xptrObjToString(tiledb_xptr_object xp) {
+    switch (xp) {
+    case tiledb_xptr_default:                     return "Default";
+    case tiledb_xptr_object_array:                return "Array";
+    case tiledb_xptr_object_arrayschema:          return "ArraySchema";
+    case tiledb_xptr_object_arrayschemaevolution: return "ArraySchemaEvolution";
+    case tiledb_xptr_object_attribute:            return "Attribute";
+    case tiledb_xptr_object_config:               return "Config";
+    case tiledb_xptr_object_context:              return "Context";
+    case tiledb_xptr_object_dimension:            return "Dimension";
+    case tiledb_xptr_object_domain:               return "Domain";
+    case tiledb_xptr_object_filter:               return "Filter";
+    case tiledb_xptr_object_filterlist:           return "FilterList";
+    case tiledb_xptr_object_fragmentinfo:         return "FragmentInfo";
+    case tiledb_xptr_object_group:                return "Group";
+    case tiledb_xptr_object_query:                return "Query";
+    case tiledb_xptr_object_querycondition:       return "QueryCondition";
+    case tiledb_xptr_object_vfs:                  return "VFS";
+    case tiledb_xptr_vfs_fh_t:                    return "vfs_fh_t";
+    case tiledb_xptr_vlc_buf_t:                   return "vlc_buf_t";
+    case tiledb_xptr_vlv_buf_t:                   return "vlv_buf_t";
+    case tiledb_xptr_query_buf_t:                 return "query_buf_t";
+    case tiledb_xptr_object_subarray:             return "Subarray";
+    case tiledb_xptr_column_buffer:               return "ColumnBuffer";
+    case tiledb_xptr_array_buffers:               return "ArrayBuffers";
+    case tiledb_xptr_map_to_col_buf_t:            return "map_to_col_buf_t";
+    case tiledb_arrow_array_t:                    return "ArrowArray";
+    case tiledb_arrow_schema_t:                   return "ArrowSchema";
+    default: Rcpp::stop("Unimplemented case (%d)", xp);
+    }
+}
+
+
+
 template <typename T> XPtr<T> make_xptr(T* p, bool finalize=true) {
     return XPtr<T>(p, finalize, Rcpp::wrap(XPtrTagType<T>), R_NilValue);
 }
@@ -152,12 +186,15 @@ template <typename T> XPtr<T> make_xptr(SEXP p) {
 template<typename T> void check_xptr_tag(XPtr<T> ptr) {
     spdl::trace("[check_xptr_tag]");
     if (R_ExternalPtrTag(ptr) == R_NilValue) {
-        Rcpp::stop("External pointer without tag, expected tag %d\n", XPtrTagType<T>);
+        Rcpp::stop("External pointer without tag, expected tag '%s'\n",
+                   xptrObjToString((tiledb_xptr_object) XPtrTagType<T>) );
     }
     if (R_ExternalPtrTag(ptr) != R_NilValue) {
         int32_t tag = Rcpp::as<int32_t>(R_ExternalPtrTag(ptr));
         if (XPtrTagType<T> != tag) {
-            Rcpp::stop("Wrong tag type: expected %d but received %d\n", XPtrTagType<T>, tag);
+            Rcpp::stop("Wrong tag type: expected '%s' but received '%s'\n",
+                       xptrObjToString((tiledb_xptr_object) XPtrTagType<T>),
+                       xptrObjToString((tiledb_xptr_object) tag));
         }
     }
 }
