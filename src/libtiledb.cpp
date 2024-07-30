@@ -5511,12 +5511,12 @@ SEXP libtiledb_ndrectangle_get_range(XPtr<tiledb::NDRectangle> ndr,
                                             static_cast<int32_t>(range[1]) );
     } else if (dtype == "INT8") {
         auto range = ndr->range<int8_t>(dimname);
-        return Rcpp::IntegerVector::create( static_cast<int8_t>(range[0]),
-                                            static_cast<int8_t>(range[1]) );
+        return Rcpp::IntegerVector::create( static_cast<int32_t>(range[0]),
+                                            static_cast<int32_t>(range[1]) );
     } else if (dtype == "UINT8") {
         auto range = ndr->range<uint8_t>(dimname);
-        return Rcpp::IntegerVector::create( static_cast<uint8_t>(range[0]),
-                                            static_cast<uint8_t>(range[1]) );
+        return Rcpp::IntegerVector::create( static_cast<int32_t>(range[0]),
+                                            static_cast<int32_t>(range[1]) );
     } else {
         Rcpp::stop("Domain datatype '%s' of dimname '%s' is not currently supported", dtype, dimname);
     }
