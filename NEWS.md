@@ -4,6 +4,8 @@
 
 * Error messages displayed when a mismatched external pointer is detected now show both expected and encountered types (#740)
 
+* `NDRectangle` types can now be instantiated for more domain data types (#741)
+
 ## Documentation
 
 * The documentation website now uses favicon symbols for all pages rendered (#739)
