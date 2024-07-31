@@ -5468,8 +5468,14 @@ XPtr<tiledb::NDRectangle> libtiledb_ndrectangle_set_range(XPtr<tiledb::NDRectang
                                static_cast<int8_t>(Rcpp::as<int32_t>(end)));
     } else if (dtype == TILEDB_UINT8) {
         ndr->set_range<uint8_t>(dimname,
-                                 static_cast<uint8_t>(Rcpp::as<int32_t>(start)),
-                                 static_cast<uint8_t>(Rcpp::as<int32_t>(end)));
+                                static_cast<uint8_t>(Rcpp::as<int32_t>(start)),
+                                static_cast<uint8_t>(Rcpp::as<int32_t>(end)));
+    } else if (dtype == TILEDB_FLOAT64) {
+        ndr->set_range<double>(dimname, Rcpp::as<double>(start), Rcpp::as<double>(end));
+    } else if (dtype == TILEDB_FLOAT32) {
+        ndr->set_range<float>(dimname,
+                              static_cast<float>(Rcpp::as<double>(start)),
+                              static_cast<float>(Rcpp::as<double>(end)));
     } else {
         Rcpp::stop("Domain datatype '%s' of dimname '%s' is not currently supported",
                    _tiledb_datatype_to_string(dtype), dimname);
@@ -5517,6 +5523,13 @@ SEXP libtiledb_ndrectangle_get_range(XPtr<tiledb::NDRectangle> ndr,
         auto range = ndr->range<uint8_t>(dimname);
         return Rcpp::IntegerVector::create( static_cast<int32_t>(range[0]),
                                             static_cast<int32_t>(range[1]) );
+    } else if (dtype == "FLOAT64") {
+        auto range = ndr->range<double>(dimname);
+        return Rcpp::NumericVector::create(range[0], range[1]);
+    } else if (dtype == "FLOAT32") {
+        auto range = ndr->range<float>(dimname);
+        return Rcpp::NumericVector::create( static_cast<double>(range[0]),
+                                            static_cast<double>(range[1]));
     } else {
         Rcpp::stop("Domain datatype '%s' of dimname '%s' is not currently supported", dtype, dimname);
     }
