@@ -5537,6 +5537,40 @@ SEXP libtiledb_ndrectangle_get_range(XPtr<tiledb::NDRectangle> ndr,
     return R_NilValue;          // not reached
 }
 
+// [[Rcpp::export]]
+int libtiledb_ndrectangle_dim_num(XPtr<tiledb::NDRectangle> ndr) {
+    check_xptr_tag<tiledb::NDRectangle>(ndr);
+#if TILEDB_VERSION >= TileDB_Version(2,26,0)
+    return static_cast<int32_t>(ndr->dim_num());
+#else
+    return R_NaInt;
+#endif
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_ndrectangle_datatype(XPtr<tiledb::NDRectangle> ndr, const std::string& name) {
+    check_xptr_tag<tiledb::NDRectangle>(ndr);
+#if TILEDB_VERSION >= TileDB_Version(2,26,0)
+    return _tiledb_datatype_to_string(ndr->range_dtype(name));
+#else
+    Rcpp::stop("This function requires TileDB 2.26.0 or later.");
+    return std::string{Rcpp::as<std::string>(R_NaString)}; // not reached
+#endif
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_ndrectangle_datatype_by_ind(XPtr<tiledb::NDRectangle> ndr, int dim) {
+    check_xptr_tag<tiledb::NDRectangle>(ndr);
+#if TILEDB_VERSION >= TileDB_Version(2,26,0)
+    return _tiledb_datatype_to_string(ndr->range_dtype(static_cast<uint32_t>(dim)));
+#else
+    Rcpp::stop("This function requires TileDB 2.26.0 or later.");
+    return std::string{Rcpp::as<std::string>(R_NaString)}; // not reached
+#endif
+}
+
+
+
 
 
 /**

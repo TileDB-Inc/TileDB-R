@@ -257,7 +257,7 @@ expect_equal(levels(v), enums)
 expect_equal(as.integer(v), c(1:5,5:1))
 
 ## current domain
-if (tiledb_version(TRUE) < "2.25.0") exit_file("Needs TileDB 2.25.* or later")
+if (tiledb_version(TRUE) < "2.26.0") exit_file("Needs TileDB 2.26.* or later")
 uri <- tempfile()
 dim <- tiledb_dim("dim", c(1L, 1000L), 50L, type = "INT32")
 dom <- tiledb_domain(dim = dim)

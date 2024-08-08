@@ -23,11 +23,9 @@
 #' An S4 class for a TileDB CurrentDomain object
 #'
 #' @slot ptr An external pointer to the underlying CurrentDomain object
-#' @slot datatype An character variable describing the data type of the domain
 #' @exportClass tiledb_current_domain
 setClass("tiledb_current_domain",
-         slots = list(ptr = "externalptr",
-                      datatype = "character"))
+         slots = list(ptr = "externalptr"))
 
 #' Creates a `tiledb_current_domain` object
 #'
@@ -44,7 +42,7 @@ tiledb_current_domain <- function(ctx = tiledb_get_context()) {
     stopifnot("The first argment must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
               "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
     ptr <- libtiledb_current_domain_create(ctx@ptr)
-    return(new("tiledb_current_domain", ptr = ptr, datatype = NA_character_))
+    return(new("tiledb_current_domain", ptr = ptr))
 }
 
 #' Get `tiledb_current_domain` data type as string
@@ -71,7 +69,6 @@ tiledb_current_domain_set_ndrectangle <- function(cd, ndr) {
               "The second argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
               "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
     cd@ptr <- libtiledb_current_domain_set_ndrectangle(cd@ptr, ndr@ptr)
-    cd@datatype <- ndr@datatype
     cd
 }
 
@@ -85,8 +82,7 @@ tiledb_current_domain_get_ndrectangle <- function(cd) {
                   is(cd, "tiledb_current_domain"),
               "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
     ptr <- libtiledb_current_domain_get_ndrectangle(cd@ptr)
-    tpstr <- cd@datatype
-    return(new("tiledb_ndrectangle", ptr = ptr, datatype = tpstr))
+    return(new("tiledb_ndrectangle", ptr = ptr))
 }
 
 #' Test `tiledb_current_domain` object for being empty

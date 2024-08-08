@@ -11,7 +11,5 @@ An S4 class for a TileDB CurrentDomain object
 
 \describe{
 \item{\code{ptr}}{An external pointer to the underlying CurrentDomain object}
-
-\item{\code{datatype}}{An character variable describing the data type of the domain}
 }}
 
