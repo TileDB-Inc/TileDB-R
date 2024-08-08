@@ -107,3 +107,63 @@ tiledb_ndrectangle_get_range <- function(ndr, dimname) {
     rng <- libtiledb_ndrectangle_get_range(ndr@ptr, dimname, dtype)
     rng
 }
+
+#' Get the number of dimensions for `tiledb_ndrectangle` object
+#'
+#' @param ndr A TileDB NDRectangle object
+#' @return The number of dimentiones for the `tiledb_ndrectangle`
+#' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' if (tiledb_version(TRUE) >= "2.25.0") {
+#'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+#'    ndr <- tiledb_ndrectangle(dom)
+#'    tiledb_ndrectangle_dim_num(ndr)
+#' }
+#' @export
+tiledb_ndrectangle_dim_num <- function(ndr) {
+    stopifnot("The argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
+              "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0")
+    libtiledb_ndrectangle_dim_num(ndr@ptr)
+}
+
+#' Get the datatype of a named `tiledb_ndrectangle` dimension
+#'
+#' @param ndr A TileDB NDRectangle object
+#' @param dimname A character variable with the dimension for which to get a datatype
+#' @return The `tiledb_ndrectangle` dimension datatype as a character
+#' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' if (tiledb_version(TRUE) >= "2.25.0") {
+#'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+#'    ndr <- tiledb_ndrectangle(dom)
+#'    tiledb_ndrectangle_datatype(ndr, "d1")
+#' }
+#' @export
+tiledb_ndrectangle_datatype <- function(ndr, dimname) {
+    stopifnot("The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
+              "The second argument must a single character object" = is.character(dimname) &&
+                  length(dimname) == 1,
+              "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0")
+    libtiledb_ndrectangle_datatype(ndr@ptr, dimname)
+}
+
+#' Get the datatype of a `tiledb_ndrectangle` dimension by index
+#'
+#' @param ndr A TileDB NDRectangle object
+#' @param dim Am integer value for the dimension for which to get a datatype
+#' @return The `tiledb_ndrectangle` dimension datatype as a character
+#' @examples
+#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' if (tiledb_version(TRUE) >= "2.25.0") {
+#'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+#'    ndr <- tiledb_ndrectangle(dom)
+#'    tiledb_ndrectangle_datatype(ndr, 0)
+#' }
+#' @export
+tiledb_ndrectangle_datatype <- function(ndr, dim) {
+    stopifnot("The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
+              "The second argument must a single integer object" = is.integer(dim) &&
+                  length(dim) == 1,
+              "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0")
+    libtiledb_ndrectangle_datatype_by_ind(ndr@ptr, dim)
+}

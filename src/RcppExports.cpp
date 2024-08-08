@@ -3574,6 +3574,41 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_ndrectangle_dim_num
+int libtiledb_ndrectangle_dim_num(XPtr<tiledb::NDRectangle> ndr);
+RcppExport SEXP _tiledb_libtiledb_ndrectangle_dim_num(SEXP ndrSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::NDRectangle> >::type ndr(ndrSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_ndrectangle_dim_num(ndr));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_ndrectangle_datatype
+std::string libtiledb_ndrectangle_datatype(XPtr<tiledb::NDRectangle> ndr, const std::string& name);
+RcppExport SEXP _tiledb_libtiledb_ndrectangle_datatype(SEXP ndrSEXP, SEXP nameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::NDRectangle> >::type ndr(ndrSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type name(nameSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_ndrectangle_datatype(ndr, name));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_ndrectangle_datatype_by_ind
+std::string libtiledb_ndrectangle_datatype_by_ind(XPtr<tiledb::NDRectangle> ndr, int dim);
+RcppExport SEXP _tiledb_libtiledb_ndrectangle_datatype_by_ind(SEXP ndrSEXP, SEXP dimSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::NDRectangle> >::type ndr(ndrSEXP);
+    Rcpp::traits::input_parameter< int >::type dim(dimSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_ndrectangle_datatype_by_ind(ndr, dim));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_current_domain_create
 XPtr<tiledb::CurrentDomain> libtiledb_current_domain_create(XPtr<tiledb::Context> ctx);
 RcppExport SEXP _tiledb_libtiledb_current_domain_create(SEXP ctxSEXP) {
@@ -4002,6 +4037,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_ndrectangle_create", (DL_FUNC) &_tiledb_libtiledb_ndrectangle_create, 2},
     {"_tiledb_libtiledb_ndrectangle_set_range", (DL_FUNC) &_tiledb_libtiledb_ndrectangle_set_range, 5},
     {"_tiledb_libtiledb_ndrectangle_get_range", (DL_FUNC) &_tiledb_libtiledb_ndrectangle_get_range, 3},
+    {"_tiledb_libtiledb_ndrectangle_dim_num", (DL_FUNC) &_tiledb_libtiledb_ndrectangle_dim_num, 1},
+    {"_tiledb_libtiledb_ndrectangle_datatype", (DL_FUNC) &_tiledb_libtiledb_ndrectangle_datatype, 2},
+    {"_tiledb_libtiledb_ndrectangle_datatype_by_ind", (DL_FUNC) &_tiledb_libtiledb_ndrectangle_datatype_by_ind, 2},
     {"_tiledb_libtiledb_current_domain_create", (DL_FUNC) &_tiledb_libtiledb_current_domain_create, 1},
     {"_tiledb_libtiledb_current_domain_type", (DL_FUNC) &_tiledb_libtiledb_current_domain_type, 1},
     {"_tiledb_libtiledb_current_domain_set_ndrectangle", (DL_FUNC) &_tiledb_libtiledb_current_domain_set_ndrectangle, 2},

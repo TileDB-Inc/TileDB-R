@@ -1196,6 +1196,18 @@ libtiledb_ndrectangle_get_range <- function(ndr, dimname, dtype) {
     .Call(`_tiledb_libtiledb_ndrectangle_get_range`, ndr, dimname, dtype)
 }
 
+libtiledb_ndrectangle_dim_num <- function(ndr) {
+    .Call(`_tiledb_libtiledb_ndrectangle_dim_num`, ndr)
+}
+
+libtiledb_ndrectangle_datatype <- function(ndr, name) {
+    .Call(`_tiledb_libtiledb_ndrectangle_datatype`, ndr, name)
+}
+
+libtiledb_ndrectangle_datatype_by_ind <- function(ndr, dim) {
+    .Call(`_tiledb_libtiledb_ndrectangle_datatype_by_ind`, ndr, dim)
+}
+
 libtiledb_current_domain_create <- function(ctx) {
     .Call(`_tiledb_libtiledb_current_domain_create`, ctx)
 }
