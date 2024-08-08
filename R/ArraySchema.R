@@ -918,9 +918,7 @@ tiledb_array_schema_get_current_domain <- function(schema, ctx = tiledb_get_cont
     stopifnot("Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
               "Argument 'ctx' must be a 'tiledb_ctx'" = is(ctx, "tiledb_ctx"))
     cdptr <- libtiledb_array_schema_get_current_domain(ctx@ptr, schema@ptr)
-    typestr <- tiledb::datatype(tiledb::domain(schema))
-    names(typestr) <- sapply(tiledb::dimensions(tiledb::domain(schema)), name)
-    new("tiledb_current_domain", ptr=cdptr, datatype=typestr)
+    new("tiledb_current_domain", ptr=cdptr)
 }
 
 #' Set a Current Domain of an Array Schema
