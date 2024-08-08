@@ -22,6 +22,6 @@ Get the datatype of a \code{tiledb_ndrectangle} dimension by index
 if (tiledb_version(TRUE) >= "2.26.0") {
    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
    ndr <- tiledb_ndrectangle(dom)
-   tiledb_ndrectangle_datatype(ndr, 0)
+   tiledb_ndrectangle_datatype_by_ind(ndr, 0)
 }
 }
