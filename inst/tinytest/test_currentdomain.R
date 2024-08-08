@@ -3,7 +3,7 @@ library(tiledb)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.25.0") exit_file("These tests needs TileDB 2.25.0 or later")
+if (tiledb_version(TRUE) < "2.26.0") exit_file("These tests needs TileDB 2.26.0 or later")
 
 expect_silent(intdim <- tiledb_dim("dim", c(1L, 100L), type = "INT32"))
 expect_silent(intdom <- tiledb_domain(dim = intdim))
