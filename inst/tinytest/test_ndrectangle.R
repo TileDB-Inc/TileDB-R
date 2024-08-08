@@ -4,7 +4,7 @@ library(tiledb)
 
 ctx <- tiledb_ctx(limitTileDBCores())
 
-if (tiledb_version(TRUE) < "2.25.0") exit_file("These tests needs TileDB 2.25.0 or later")
+if (tiledb_version(TRUE) < "2.26.0") exit_file("These tests needs TileDB 2.26.0 or later")
 
 for (tp in c("INT32", "UINT32", "INT16", "UINT16", "INT64", "UINT64", "INT8", "UINT8", "FLOAT32", "FLOAT64")) {
     if (grepl("INT64", tp)) {

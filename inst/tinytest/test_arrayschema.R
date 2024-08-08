@@ -143,7 +143,7 @@ expect_true(allows_dups(sch))
 
 
 ## current domain
-if (tiledb_version(TRUE) < "2.25.0") exit_file("Needs TileDB 2.25.* or later")
+if (tiledb_version(TRUE) < "2.26.0") exit_file("Needs TileDB 2.26.* or later")
 expect_error(tiledb_array_schema_get_current_domain(dom))           # wrong object
 expect_silent(cd <- tiledb_array_schema_get_current_domain(sch))
 expect_silent(tiledb_array_schema_set_current_domain(sch, cd))
