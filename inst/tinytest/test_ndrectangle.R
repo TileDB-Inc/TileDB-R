@@ -43,6 +43,12 @@ for (tp in c("INT32", "UINT32", "INT16", "UINT16", "INT64", "UINT64", "INT8", "U
     } else {
         expect_equal(tiledb_ndrectangle_get_range(ndr, "dim"), c(1L, 20L))
     }
+
+    expect_equal(tiledb_ndrectangle_dim_num(ndr), 1)
+    expect_equal(tiledb_ndrectangle_datatype(ndr, "dim"), tp)
+    expect_error(tiledb_ndrectangle_datatype(ndr, "not_a_dim"))
+    expect_equal(tiledb_ndrectangle_datatype_by_ind(ndr, 0), tp)
+    expect_error(tiledb_ndrectangle_datatype_by_ind(ndr, 1))
 }
 
 ## ASCII

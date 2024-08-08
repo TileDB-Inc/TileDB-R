@@ -160,9 +160,9 @@ tiledb_ndrectangle_datatype <- function(ndr, dimname) {
 #'    tiledb_ndrectangle_datatype(ndr, 0)
 #' }
 #' @export
-tiledb_ndrectangle_datatype <- function(ndr, dim) {
+tiledb_ndrectangle_datatype_by_ind <- function(ndr, dim) {
     stopifnot("The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
-              "The second argument must a single integer object" = is.integer(dim) &&
+              "The second argument must a single numeric object" = is.numeric(dim) &&
                   length(dim) == 1,
               "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0")
     libtiledb_ndrectangle_datatype_by_ind(ndr@ptr, dim)
