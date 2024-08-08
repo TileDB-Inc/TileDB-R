@@ -61,7 +61,7 @@ tiledb_ndrectangle <- function(dom, ctx = tiledb_get_context()) {
 #' string dimensions.
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' if (tiledb_version(TRUE) >= "2.25.0") {
+#' if (tiledb_version(TRUE) >= "2.26.0") {
 #'    dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
 #'    ndr <- tiledb_ndrectangle(dom)
 #'    ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
@@ -87,7 +87,7 @@ tiledb_ndrectangle_set_range <- function(ndr, dimname, start, end) {
 #' @return The `tiledb_ndrectangle` range as a two-element vector
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' if (tiledb_version(TRUE) >= "2.25.0") {
+#' if (tiledb_version(TRUE) >= "2.26.0") {
 #'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
 #'    ndr <- tiledb_ndrectangle(dom)
 #'    ndr <- tiledb_ndrectangle_set_range(ndr, "d1", 50, 500)
@@ -110,7 +110,7 @@ tiledb_ndrectangle_get_range <- function(ndr, dimname) {
 #' @return The number of dimentiones for the `tiledb_ndrectangle`
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' if (tiledb_version(TRUE) >= "2.25.0") {
+#' if (tiledb_version(TRUE) >= "2.26.0") {
 #'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
 #'    ndr <- tiledb_ndrectangle(dom)
 #'    tiledb_ndrectangle_dim_num(ndr)
@@ -129,7 +129,7 @@ tiledb_ndrectangle_dim_num <- function(ndr) {
 #' @return The `tiledb_ndrectangle` dimension datatype as a character
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' if (tiledb_version(TRUE) >= "2.25.0") {
+#' if (tiledb_version(TRUE) >= "2.26.0") {
 #'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
 #'    ndr <- tiledb_ndrectangle(dom)
 #'    tiledb_ndrectangle_datatype(ndr, "d1")
@@ -150,7 +150,7 @@ tiledb_ndrectangle_datatype <- function(ndr, dimname) {
 #' @return The `tiledb_ndrectangle` dimension datatype as a character
 #' @examples
 #' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-#' if (tiledb_version(TRUE) >= "2.25.0") {
+#' if (tiledb_version(TRUE) >= "2.26.0") {
 #'    dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
 #'    ndr <- tiledb_ndrectangle(dom)
 #'    tiledb_ndrectangle_datatype(ndr, 0)

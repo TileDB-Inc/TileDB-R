@@ -190,7 +190,7 @@ tiledb_array_schema_evolution_expand_current_domain <- function(ase, cd) {
    stopifnot("Argument 'ase' must be an Array Schema Evolution object" =
                   is(ase, "tiledb_array_schema_evolution"),
               "Argument 'cd' must be a CurrentDomain object" = is(cd, "tiledb_current_domain"),
-              "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
+              "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0")
     ase@ptr <- libtiledb_array_schema_evolution_expand_current_domain(ase@ptr, cd@ptr)
     ase
 }
