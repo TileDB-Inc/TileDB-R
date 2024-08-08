@@ -5553,7 +5553,8 @@ std::string libtiledb_ndrectangle_datatype(XPtr<tiledb::NDRectangle> ndr, const 
 #if TILEDB_VERSION >= TileDB_Version(2,26,0)
     return _tiledb_datatype_to_string(ndr->range_dtype(name));
 #else
-    return R_NaString;
+    Rcpp::stop("This function requires TileDB 2.26.0 or later.");
+    return std::string{Rcpp::as<std::string>(R_NaString)}; // not reached
 #endif
 }
 
@@ -5563,7 +5564,8 @@ std::string libtiledb_ndrectangle_datatype_by_ind(XPtr<tiledb::NDRectangle> ndr,
 #if TILEDB_VERSION >= TileDB_Version(2,26,0)
     return _tiledb_datatype_to_string(ndr->range_dtype(static_cast<uint32_t>(dim)));
 #else
-    return R_NaString;
+    Rcpp::stop("This function requires TileDB 2.26.0 or later.");
+    return std::string{Rcpp::as<std::string>(R_NaString)}; // not reached
 #endif
 }
 
