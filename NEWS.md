@@ -1,5 +1,7 @@
 # Ongoing Development
 
+* This release of the R package builds against [TileDB 2.26.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.26.0), and has also been tested against earlier releases as well as the development version (#745)
+
 ## Improvements
 
 * Error messages displayed when a mismatched external pointer is detected now show both expected and encountered types (#740)
@@ -11,6 +13,12 @@
 ## Documentation
 
 * The documentation website now uses favicon symbols for all pages rendered (#739)
+
+## Build and Test Systems
+
+* The nighly valgrind matrix now includes release 2.26.0 (#744)
+
+* The continuous integration script has been updated reflecting external changes (#746)
 
 
 # tiledb 0.29.0
