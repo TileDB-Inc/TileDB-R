@@ -18,6 +18,8 @@
 
 * The nighly valgrind matrix now includes release 2.26.0 (#744)
 
+* The continuous integration script has been updated reflecting external changes (#746)
+
 
 # tiledb 0.29.0
 
