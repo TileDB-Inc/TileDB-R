@@ -15,9 +15,13 @@ set -e
 # Or ratherm set it for a lot noisier output
 # set -x
 
-CRAN=${CRAN:-"https://cloud.r-project.org"}
+# Where do we run? OS can be 'Linux' or 'Darwin', ARCH can be 'x86_64' or 'arm64'
 OS=$(uname -s)
-RVER=${RVER:-"4.3.2"}
+ARCH=$(uname -m)
+
+# Default CRAN repo (use the CDN) and R verssion
+CRAN=${CRAN:-"https://cloud.r-project.org"}
+RVER=${RVER:-"4.4.1"}
 
 ## Optional drat repos, unset by default
 DRAT_REPOS=${DRAT_REPOS:-""}
@@ -28,11 +32,14 @@ USE_BSPM=${USE_BSPM:-"TRUE"}
 ## Optional additional PPAs, unset by default
 ADDED_PPAS=${ADDED_PPAS:-""}
 
-## Optional trimming of extra apt source list entry, defaults to false
+## Optional trimming of extra apt source list entry, defaults to true
 TRIM_APT_SOURCES=${TRIM_APT_SOURCES:-"TRUE"}
 
 ## Optional setting of type argument in covr::coverage() call below, defaults to "tests"
 COVERAGE_TYPE=${COVERAGE_TYPE:-"tests"}
+
+## Let's see if the new runners with four virtual CPUs can be taken advantage of
+MAKEFLAGS=${MAKEFLAGS:-"-j 4"}
 
 R_BUILD_ARGS=${R_BUILD_ARGS-"--no-build-vignettes --no-manual"}
 R_CHECK_ARGS=${R_CHECK_ARGS-"--no-vignettes --no-manual --as-cran"}
@@ -59,15 +66,15 @@ Bootstrap() {
         exit 1
     fi
 
-    if ! (test -e .Rbuildignore && grep -q 'travis-tool' .Rbuildignore); then
-        echo '^travis-tool\.sh$' >>.Rbuildignore
-    fi
+    #if ! (test -e .Rbuildignore && grep -q 'travis-tool' .Rbuildignore); then
+    #    echo '^travis-tool\.sh$' >>.Rbuildignore
+    #fi
     if ! (test -e .Rbuildignore && grep -q 'run.sh' .Rbuildignore); then
         echo '^run\.sh$' >> .Rbuildignore
     fi
-    if ! (test -e .Rbuildignore && grep -q 'travis_wait' .Rbuildignore); then
-        echo '^travis_wait_.*\.log$' >> .Rbuildignore
-    fi
+    #if ! (test -e .Rbuildignore && grep -q 'travis_wait' .Rbuildignore); then
+    #    echo '^travis_wait_.*\.log$' >> .Rbuildignore
+    #fi
 
     # Make sure unit test package (among testthat, tinytest, RUnit) installed
     EnsureUnittestRunner
@@ -115,7 +122,6 @@ BootstrapLinux() {
     sudo apt update -qq && sudo apt install --yes --no-install-recommends wget ca-certificates dirmngr gnupg gpg-agent
     wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_key.asc | sudo tee -a /etc/apt/trusted.gpg.d/cranapt_key.asc
     echo "deb [arch=amd64] https://r2u.stat.illinois.edu/ubuntu $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list.d/cranapt.list
-#    echo "deb [arch=amd64] https://dirk.eddelbuettel.com/cranapt $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list.d/cranapt.list
     wget -q -O- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc  | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
     echo "deb [arch=amd64] https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" | sudo tee -a /etc/apt/sources.list.d/cran_r.list
     echo "Package: *" | sudo tee -a /etc/apt/preferences.d/99cranapt
@@ -125,21 +131,23 @@ BootstrapLinux() {
 
 
     ## Set up our CRAN mirror.
+    # No longer need c2d4u when using r2u
     ## Get the key if it is missing
-    if ! test -f /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc; then
-       wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
-    fi
+    #if ! test -f /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc; then
+    #   wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+    #fi
     ## Add the repo
     ## need pinning to ensure repo sorts higher, note we also pin r2u
     #echo "Package: *" | sudo tee /etc/apt/preferences.d/c2d4u-pin >/dev/null
     #echo "Pin: release o=LP-PPA-c2d4u.team-c2d4u4.0+" | sudo tee -a /etc/apt/preferences.d/c2d4u-pin >/dev/null
     #echo "Pin-Priority: 600" | sudo tee -a /etc/apt/preferences.d/c2d4u-pin >/dev/null
     ## now add repo (and update index)
-    # already done above:  sudo add-apt-repository -y "deb ${CRAN}/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
+    #sudo add-apt-repository -y "deb ${CRAN}/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
 
     # Add marutter's c2d4u repository.
     # R 4.0 (not needed as CRAN current) and c2d4u/4.0 variant as backup
     #sudo add-apt-repository -y "ppa:marutter/rrutter4.0"
+    # No longer need c2d4u when using r2u
     #sudo add-apt-repository -y "ppa:c2d4u.team/c2d4u4.0+"
 
     ## Added PPAs, if given
@@ -158,7 +166,7 @@ BootstrapLinux() {
     # --as-cran checks:
     #   https://stat.ethz.ch/pipermail/r-help//2012-September/335676.html
     # May 2020: we also need devscripts for checkbashism
-    # Sep 2020: add bspm, remotes
+    # Sep 2020: add bspm and remotes
     Retry sudo apt-get install -y --no-install-recommends r-base-dev r-recommended qpdf devscripts r-cran-bspm r-cran-remotes
 
     #sudo cp -ax /usr/lib/R/site-library/littler/examples/{build.r,check.r,install*.r,update.r} /usr/local/bin
@@ -190,23 +198,28 @@ BootstrapLinuxOptions() {
             texinfo lmodern
         # no longer exists: texlive-generic-recommended
     fi
-    #if [[ -n "$BOOTSTRAP_PANDOC" ]]; then
-    #    InstallPandoc 'linux/debian/x86_64'
-    #fi
     if [[ "${USE_BSPM}" != "FALSE" ]]; then
+        ## sudo Rscript --vanilla -e 'install.packages("bspm", repos="https://cran.r-project.org")'
+        ## sudo Rscript --vanilla -e 'remotes::install_github("Enchufa2/bspm")'
+        ## for now to get 0.4.0.1 with type="binary-source"
+        ## curl -OLs https://eddelbuettel.github.io/r-ci/bspm_0.4.0.1.tar.gz && sudo R CMD INSTALL bspm_0.4.0.1.tar.gz
+        ## 2023-02-20 for now stick with 0.3.10
+        ## sudo Rscript --vanilla -e 'remotes::install_url("https://cloud.r-project.org/src/contrib/Archive/bspm/bspm_0.3.10.tar.gz")'
+        ## 2023-03-17 back bspm now at 0.5.1
         echo "options(bspm.sudo = TRUE)" | sudo tee --append /etc/R/Rprofile.site >/dev/null
         echo "suppressMessages(bspm::enable())" | sudo tee --append /etc/R/Rprofile.site >/dev/null
         echo "options(bspm.version.check=FALSE)" | sudo tee --append /etc/R/Rprofile.site >/dev/null
+        #echo "options(bspm.sudo=TRUE)" | sudo tee --append /etc/R/Rprofile.site >/dev/null
     fi
 }
 
 BootstrapMac() {
-    # Install from latest CRAN binary build for OS X
-    wget -q ${CRAN}/bin/macosx/big-sur-x86_64/base/R-${RVER}-x86_64.pkg  -O /tmp/R-latest.pkg
+    # Install from latest CRAN binary build for OS X (given ${ARCH} from 'uname -m')
+    wget ${CRAN}/bin/macosx/big-sur-${ARCH}/base/R-${RVER}-${ARCH}.pkg  -O /tmp/R-latest.pkg
 
-    echo "Installing OS X binary package for R"
-    sudo installer -pkg /tmp/R-latest.pkg -target /
-    rm /tmp/R-latest.pkg
+    echo "Installing macOS binary package for R on ${ARCH}"
+    sudo installer -pkg "/tmp/R-latest.pkg" -target /
+    rm "/tmp/R-latest.pkg"
 
     # Process options
     BootstrapMacOptions
@@ -230,28 +243,31 @@ BootstrapMacOptions() {
         sudo tlmgr update --self
         sudo tlmgr install inconsolata upquote courier courier-scaled helvetic
     fi
-    #if [[ -n "$BOOTSTRAP_PANDOC" ]]; then
-    #    InstallPandoc 'mac'
-    #fi
 }
 
 EnsureDevtools() {
     ## deprecated 2020-Sep
     echo "Deprecated"
-    #if ! Rscript -e 'if (!("devtools" %in% rownames(installed.packages()))) q(status=1)' ; then
-    #    # Install devtools and testthat.
-    #    RBinaryInstall devtools testthat
-    #fi
 }
 
 EnsureUnittestRunner() {
-    sudo Rscript -e 'dcf <- read.dcf(file="DESCRIPTION")[1,]; if ("Suggests" %in% names(dcf)) { sug <- dcf[["Suggests"]]; pkg <- do.call(c, sapply(c("testthat", "tinytest", "RUnit"), function(p, sug) if (grepl(p, sug)) p else NULL, sug, USE.NAMES=FALSE)); if (!is.null(pkg)) install.packages(pkg) }'
+    if test -f DESCRIPTION; then
+        if [[ "Linux" == "${OS}" ]]; then
+            sudo Rscript -e 'dcf <- read.dcf(file="DESCRIPTION")[1,]; if ("Suggests" %in% names(dcf)) { sug <- dcf[["Suggests"]]; pkg <- do.call(c, sapply(c("testthat", "tinytest", "RUnit"), function(p, sug) if (grepl(p, sug)) p else NULL, sug, USE.NAMES=FALSE)); if (!is.null(pkg)) install.packages(pkg, type="binary-source") }'
+        else
+            sudo Rscript -e 'dcf <- read.dcf(file="DESCRIPTION")[1,]; if ("Suggests" %in% names(dcf)) { sug <- dcf[["Suggests"]]; pkg <- do.call(c, sapply(c("testthat", "tinytest", "RUnit"), function(p, sug) if (grepl(p, sug)) p else NULL, sug, USE.NAMES=FALSE)); if (!is.null(pkg)) install.packages(pkg) }'
+        fi
+    fi
 }
 
 InstallIfNotYetInstalled() {
     res=$(Rscript -e 'if (requireNamespace(commandArgs(TRUE), quietly=TRUE)) cat("YES") else cat("NO")' "$1")
     if [[ "${res}" != "YES" ]]; then
-        sudo Rscript -e 'install.packages(commandArgs(TRUE))' "$1"
+        if [[ "Linux" == "${OS}" ]]; then
+            sudo Rscript -e 'install.packages(commandArgs(TRUE), type="binary-source")' "$1"
+        else
+            sudo Rscript -e 'install.packages(commandArgs(TRUE))' "$1"
+        fi
     fi
 }
 
@@ -297,7 +313,22 @@ RInstall() {
     fi
 
     echo "Installing R package(s): $@"
-    sudo Rscript -e 'install.packages(commandArgs(TRUE))' "$@"
+    if [[ "Linux" == "${OS}" ]]; then
+        sudo Rscript -e 'install.packages(commandArgs(TRUE), type="binary-source")' "$@"
+    else
+        sudo Rscript -e 'install.packages(commandArgs(TRUE))' "$@"
+    fi
+}
+
+BiocInstall() {
+    if [[ "" == "$*" ]]; then
+        echo "No arguments to bioc_install"
+        exit 1
+    fi
+
+    echo "Installing R Bioconductor package(s): $@"
+    Rscript -e 'if (!requireNamespace("BiocManager", quietly=TRUE)) install.packages("BiocManager")'
+    Rscript -e "BiocManager::install(commandArgs(TRUE), update=FALSE)" "$@"
 }
 
 RBinaryInstall() {
@@ -370,6 +401,11 @@ Coverage() {
     AptGetInstall r-cran-covr
 
     Rscript -e "Sys.setenv(\"IS_COVR\"=\"yes\"); covr::codecov(type = '${COVERAGE_TYPE}', quiet = FALSE)"
+}
+
+UpdatePackages() {
+    echo "Updating Packages"
+    Rscript -e 'update.packages(ask=FALSE)'
 }
 
 RunTests() {
@@ -452,6 +488,11 @@ case $COMMAND in
         RInstall "$@"
         ;;
     ##
+    ## Install an R dependency from Bioconductor
+    "install_bioc"|"bioc_install")
+        BiocInstall "$@"
+        ;;
+    ##
     ## Install an R dependency as a binary (via c2d4u PPA)
     "install_r_binary"|"r_binary_install")
         RBinaryInstall "$@"
@@ -470,6 +511,17 @@ case $COMMAND in
     ## Install package dependencies and suggests from CRAN
     "install_all")
         InstallDepsAndSuggests
+        ;;
+    ##
+    ## Install package dependencies from Bioconductor and CRAN (needs devtools)
+    ## deprecated 2020-Sep
+    "install_bioc_deps")
+        InstallBiocDeps
+        ;;
+    ##
+    ## Update packages
+    "update_packages")
+        UpdatePackages
         ;;
     ##
     ## Run the actual tests, ie R CMD check
