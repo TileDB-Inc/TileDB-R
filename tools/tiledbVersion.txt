@@ -1,2 +1,2 @@
-version: 2.26.0-rc1
-sha: f5934ea
+version: 2.26.0-rc2
+sha: fba2ca4
