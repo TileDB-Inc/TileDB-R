@@ -18,8 +18,6 @@ based on a refactored implementation utilising newer TileDB features.
 
 \item{\code{is.sparse}}{A logical value whether the array is sparse or not}
 
-\item{\code{as.data.frame}}{A logical value}
-
 \item{\code{attrs}}{A character vector to select particular column \sQuote{attributes};
 default is an empty character vector implying \sQuote{all} columns, the special
 value \code{NA_character_} has the opposite effect and selects \sQuote{none}.}
@@ -38,10 +36,6 @@ describes the selected points for dimension i}
 \item{\code{datetimes_as_int64}}{A logical value}
 
 \item{\code{encryption_key}}{A character value}
-
-\item{\code{as.matrix}}{A logical value}
-
-\item{\code{as.array}}{A logical value}
 
 \item{\code{query_condition}}{A Query Condition object}
 

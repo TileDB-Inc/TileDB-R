@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2024 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription with the array URI
 #' @slot is.sparse A logical value whether the array is sparse or not
-#' @slot as.data.frame A logical value
 #' @slot attrs A character vector to select particular column \sQuote{attributes};
 #' default is an empty character vector implying \sQuote{all} columns, the special
 #' value \code{NA_character_} has the opposite effect and selects \sQuote{none}.
@@ -43,8 +42,6 @@
 #' @slot query_layout An optional character value
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
-#' @slot as.matrix A logical value
-#' @slot as.array A logical value
 #' @slot query_condition A Query Condition object
 #' @slot timestamp_start A POSIXct datetime variable for the inclusive interval start
 #' @slot timestamp_end A POSIXct datetime variable for the inclusive interval start
@@ -70,7 +67,6 @@ setClass("tiledb_array",
          slots = list(ctx = "tiledb_ctx",
                       uri = "character",
                       is.sparse = "logical",
-                      as.data.frame = "logical",
                       attrs = "character",
                       extended = "logical",
                       selected_ranges = "list",
@@ -78,8 +74,6 @@ setClass("tiledb_array",
                       query_layout = "character",
                       datetimes_as_int64 = "logical",
                       encryption_key = "character",
-                      as.matrix = "logical",
-                      as.array = "logical",
                       query_condition = "tiledb_query_condition",
                       timestamp_start = "POSIXct",
                       timestamp_end = "POSIXct",
@@ -99,7 +93,6 @@ setClass("tiledb_array",
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param is.sparse optional logical switch, defaults to "NA" letting array determine it
-#' @param as.data.frame optional logical switch, defaults to "FALSE"
 #' @param attrs optional character vector to select attributes, default is
 #' empty implying all are selected, the special value \code{NA_character_}
 #' has the opposite effect and implies no attributes are returned.
@@ -116,10 +109,6 @@ setClass("tiledb_array",
 #' \code{POSIXct} or \code{nanotime} objects.
 #' @param encryption_key optional A character value with an AES-256 encryption key
 #' in case the array was written with encryption.
-#' @param as.matrix optional logical switch, defaults to "FALSE"; currently limited to dense
-#' matrices; in the case of multiple attributes in query a list of matrices is returned
-#' @param as.array optional logical switch, defaults to "FALSE"; in the case of multiple
-#' attributes in query a list of arrays is returned
 #' @param query_condition optional \code{tiledb_query_condition} object, by default uninitialized
 #' without a condition; this functionality requires TileDB 2.3.0 or later
 #' @param timestamp_start optional A POSIXct Datetime value determining the inclusive time point
@@ -150,7 +139,6 @@ setClass("tiledb_array",
 tiledb_array <- function(uri,
                          query_type = c("READ", "WRITE"),
                          is.sparse = NA,
-                         as.data.frame = FALSE,
                          attrs = character(),
                          extended = TRUE,
                          selected_ranges = list(),
@@ -158,8 +146,6 @@ tiledb_array <- function(uri,
                          query_layout = character(),
                          datetimes_as_int64 = FALSE,
                          encryption_key = character(),
-                         as.matrix = FALSE,
-                         as.array = FALSE,
                          query_condition = new("tiledb_query_condition"),
                          timestamp_start = as.POSIXct(double(), origin="1970-01-01"),
                          timestamp_end = as.POSIXct(double(), origin="1970-01-01"),
@@ -173,23 +159,16 @@ tiledb_array <- function(uri,
                          ctx = tiledb_get_context()) {
   stopifnot("Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
             "Argument 'uri' must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
-            "At most one argument of as.data.frame, as.matrix and as.array can be selected" = sum(as.data.frame, as.matrix, as.array) <= 1,
-            "Argument 'as.matrix' cannot be selected for sparse arrays" = !(isTRUE(is.sparse) && as.matrix))
+            "Argument 'matrix' (for 'return_as') cannot be selected for sparse arrays" =
+                !(isTRUE(is.sparse) && return_as == "matrix"))
   query_type <- match.arg(query_type)
   spdl::debug("[tiledb_array] query is {}", query_type)
-  if (sum(as.data.frame, as.matrix, as.array) == 1 && return_as != "asis")
-      return_as <- "asis"
   if (length(encryption_key) > 0) {
     stopifnot("if used, argument aes_key must be character" = is.character(encryption_key))
     array_xptr <- libtiledb_array_open_with_key(ctx@ptr, uri, query_type, encryption_key)
   } else {
     array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
   }
-
-  ## Deprecated July 2023, to removed by July 2024 or later
-  if (as.data.frame) .Deprecated(old="as.data.frame", new=r"(return_as="data.frame")")
-  if (as.matrix) .Deprecated(old="as.matrix", new=r"(return_as="matrix")")
-  if (as.array) .Deprecated(old="as.array", new=r"(return_as="array")")
 
   if (length(timestamp_start) > 0) {
       libtiledb_array_set_open_timestamp_start(array_xptr, timestamp_start)
@@ -214,7 +193,6 @@ tiledb_array <- function(uri,
       ctx = ctx,
       uri = uri,
       is.sparse = is.sparse,
-      as.data.frame = as.data.frame,
       attrs = attrs,
       extended = extended,
       selected_ranges = selected_ranges,
@@ -222,8 +200,6 @@ tiledb_array <- function(uri,
       query_layout = query_layout,
       datetimes_as_int64 = datetimes_as_int64,
       encryption_key = encryption_key,
-      as.matrix = as.matrix,
-      as.array = as.array,
       query_condition = query_condition,
       timestamp_start = timestamp_start,
       timestamp_end = timestamp_end,
@@ -293,7 +269,6 @@ setMethod("show", signature = "tiledb_array",
      ,"  uri                = '", object@uri, "'\n"
      ,"  schema_version     = ", tiledb_array_schema_version(schema(object)), "\n"
      ,"  is.sparse          = ", if (object@is.sparse) "TRUE" else "FALSE", "\n"
-     ,"  as.data.frame      = ", if (object@as.data.frame) "TRUE" else "FALSE", "\n"
      ,"  attrs              = ", if (length(object@attrs) == 0) "(none)"
                             else paste(object@attrs, collapse=","), "\n"
      ,"  selected_ranges    = ", if (length(object@selected_ranges) > 0) sprintf("(%d non-null sets)", sum(sapply(object@selected_ranges, function(x) !is.null(x))))
@@ -304,8 +279,6 @@ setMethod("show", signature = "tiledb_array",
      ,"  query_layout       = ", if (length(object@query_layout) == 0) "(none)" else object@query_layout, "\n"
      ,"  datetimes_as_int64 = ", if (object@datetimes_as_int64) "TRUE" else "FALSE", "\n"
      ,"  encryption_key     = ", if (length(object@encryption_key) == 0) "(none)" else "(set)", "\n"
-     ,"  as.matrix          = ", if (object@as.matrix) "TRUE" else "FALSE", "\n"
-     ,"  as.array           = ", if (object@as.array) "TRUE" else "FALSE", "\n"
      ,"  query_condition    = ", if (isTRUE(object@query_condition@init)) "(set)" else "(none)", "\n"
      ,"  timestamp_start    = ", if (length(object@timestamp_start) == 0) "(none)" else format(object@timestamp_start), "\n"
      ,"  timestamp_end      = ", if (length(object@timestamp_end) == 0) "(none)" else format(object@timestamp_end), "\n"
@@ -333,11 +306,6 @@ setValidity("tiledb_array", function(object) {
   if (!is.logical(object@is.sparse)) {
     valid <- FALSE
     msg <- c(msg, "The 'is.sparse' slot does not contain a logical value.")
-  }
-
-  if (!is.logical(object@as.data.frame)) {
-    valid <- FALSE
-    msg <- c(msg, "The 'as.data.frame' slot does not contain a logical value.")
   }
 
   if (!is.character(object@attrs)) {
@@ -395,21 +363,6 @@ setValidity("tiledb_array", function(object) {
   if (!is.character(object@encryption_key)) {
     valid <- FALSE
     msg <- c(msg, "The 'encryption_key' slot does not contain a character vector.")
-  }
-
-  if (!is.logical(object@as.matrix)) {
-    valid <- FALSE
-    msg <- c(msg, "The 'as.matrix' slot does not contain a logical value.")
-  }
-
-  if (!is.logical(object@as.array)) {
-    valid <- FALSE
-    msg <- c(msg, "The 'as.array' slot does not contain a logical value.")
-  }
-
-  if (sum(c(object@as.data.frame, object@as.matrix, object@as.array)) > 1) {
-    valid <- FALSE
-    msg <- c(msg, "At most one of 'as.data.frame', 'as.matrix', 'as.array' slots can be set to 'TRUE'.")
   }
 
   if (!is(object@query_condition, "tiledb_query_condition")) {
@@ -1113,16 +1066,7 @@ setMethod("[", "tiledb_array",
   spdl::debug("['['] before preparing final data form")
   if (x@return_as == "asis") {
       spdl::debug("['['] return asis")
-      if (!x@as.data.frame && !x@as.matrix && !x@as.array) {
-          spdl::debug("['['] return asis list")
-          res <- as.list(res)
-      } else if (x@as.matrix) {
-          spdl::debug("['['] return asis to matrix")
-          res <- .convertToMatrix(res)
-      } else if (x@as.array) {
-          spdl::debug("['['] return asis to array")
-          res <- .convertToArray(dimnames, attrnames, res)
-      }
+      res <- as.list(res)
   } else if (x@return_as == "array") {       	# if a conversion preference has been given, use it
       res <- .convertToArray(dimnames, attrnames, res)
   } else if (x@return_as == "matrix") {
