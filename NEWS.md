@@ -1,6 +1,6 @@
 # Ongoing Development
 
-* This release of the R package builds against [TileDB 2.26.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.26.0), and has also been tested against earlier releases as well as the development version (#745)
+* This release of the R package builds against [TileDB 2.26.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.26.0), and has also been tested against earlier releases as well as the development version (#745, #749, #750)
 
 ## Improvements
 
@@ -19,6 +19,11 @@
 * The nighly valgrind matrix now includes release 2.26.0 (#744)
 
 * The continuous integration script has been updated reflecting external changes (#746)
+
+## Removals
+
+* Boolean arguments `as.data.frame`, `as.matrix` and `as.array` to the `tiledb_array()` accessor, deprecated in release 0.20.0 in July 2023 in favor of the more general `return_as="..."` form, have been removed. (#751)
+
 
 
 # tiledb 0.29.0
