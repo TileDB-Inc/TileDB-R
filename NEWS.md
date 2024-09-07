@@ -24,6 +24,9 @@
 
 * Boolean arguments `as.data.frame`, `as.matrix` and `as.array` to the `tiledb_array()` accessor, deprecated in release 0.20.0 in July 2023 in favor of the more general `return_as="..."` form, have been removed. (#751)
 
+## Deprecation
+
+* As BioConductor package \pkg{TileDBArray} still relies on `as.data.frame` it was temporarily re-admitted as an argument. It is expected to be removed following the upcoming 3.20 release of BioConducto.r (#752)
 
 
 # tiledb 0.29.0
