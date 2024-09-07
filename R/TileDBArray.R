@@ -133,6 +133,9 @@ setClass("tiledb_array",
 #' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
 #' @param buffers An optional list with full pathnames of shared memory buffers to read data from
 #' @param ctx optional tiledb_ctx
+#' @param as.data.frame An optional deprecated alternative to \code{return_as="data.frame"} which has
+#' been deprecated and removed, but is still used in one BioConductor package; this argument will be removed
+#' once the updated package has been released.
 #' @return tiledb_array object
 #' @importFrom spdl set_level
 #' @export
@@ -156,7 +159,8 @@ tiledb_array <- function(uri,
                          sil = list(),
                          dumpbuffers = character(),
                          buffers = list(),
-                         ctx = tiledb_get_context()) {
+                         ctx = tiledb_get_context(),
+                         as.data.frame = FALSE) {
   stopifnot("Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
             "Argument 'uri' must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
             "Argument 'matrix' (for 'return_as') cannot be selected for sparse arrays" =
@@ -168,6 +172,12 @@ tiledb_array <- function(uri,
     array_xptr <- libtiledb_array_open_with_key(ctx@ptr, uri, query_type, encryption_key)
   } else {
     array_xptr <- libtiledb_array_open(ctx@ptr, uri, query_type)
+  }
+
+  if (as.data.frame) {
+      ## accommodating TileDBArray prior to BioConductor 3.20
+      .Deprecated(old="as.data.frame", new=r"(return_as="data.frame")")
+      return_as <- "data.frame"
   }
 
   if (length(timestamp_start) > 0) {

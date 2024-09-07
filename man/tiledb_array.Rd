@@ -27,7 +27,8 @@ tiledb_array(
   sil = list(),
   dumpbuffers = character(),
   buffers = list(),
-  ctx = tiledb_get_context()
+  ctx = tiledb_get_context(),
+  as.data.frame = FALSE
 )
 
 tiledb_dense(...)
@@ -98,6 +99,10 @@ parsed.}
 \item{buffers}{An optional list with full pathnames of shared memory buffers to read data from}
 
 \item{ctx}{optional tiledb_ctx}
+
+\item{as.data.frame}{An optional deprecated alternative to \code{return_as="data.frame"} which has
+been deprecated and removed, but is still used in one BioConductor package; this argument will be removed
+once the updated package has been released.}
 
 \item{...}{Used as a pass-through for \code{tiledb_dense}
 and \code{tiledb_sparse} aliasing}
