@@ -1,2 +1,2 @@
-version: 2.26.0-rc2
-sha: fba2ca4
+version: 2.26.0-rc4
+sha: 9683584
