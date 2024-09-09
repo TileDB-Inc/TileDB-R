@@ -4942,7 +4942,13 @@ std::string libtiledb_fragment_info_to_vacuum_uri(XPtr<tiledb::FragmentInfo> fi,
 // [[Rcpp::export]]
 void libtiledb_fragment_info_dump(XPtr<tiledb::FragmentInfo> fi) {
     check_xptr_tag<tiledb::FragmentInfo>(fi);
-    return fi->dump();
+#if TILEDB_VERSION >= TileDB_Version(2,27,0)
+    std::stringstream ss;
+    ss << *fi;
+    Rcpp::Rcout << ss.str();
+#else
+    fi->dump();
+#endif
 }
 
 // [[Rcpp::export]]
