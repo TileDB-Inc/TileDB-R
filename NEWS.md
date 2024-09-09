@@ -10,6 +10,8 @@
 
 * `NDRectangle` objects can now return their number of dimensions and dimension data types (#743)
 
+* `FragmentInfo` objects are dump via the `<<` stringstream operator instead of a now-deprecated `dump()` method (#753)
+
 ## Documentation
 
 * The documentation website now uses favicon symbols for all pages rendered (#739)
