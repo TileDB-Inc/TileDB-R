@@ -307,6 +307,9 @@
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_domain-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle-class.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_datatype.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_datatype_by_ind.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_dim_num.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_get_range.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_set_range.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_num_metadata.html</loc></url>
