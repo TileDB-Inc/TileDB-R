@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.29.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.30.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,6 @@
 <span>  <span class="va">uri</span>,</span>
 <span>  query_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"READ"</span>, <span class="st">"WRITE"</span><span class="op">)</span>,</span>
 <span>  is.sparse <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  as.data.frame <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  attrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  extended <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  selected_ranges <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -65,8 +64,6 @@
 <span>  query_layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  datetimes_as_int64 <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  encryption_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  as.matrix <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  as.array <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  query_condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/methods/new.html" class="external-link">new</a></span><span class="op">(</span><span class="st">"tiledb_query_condition"</span><span class="op">)</span>,</span>
 <span>  timestamp_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,</span>
 <span>  timestamp_end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/double.html" class="external-link">double</a></span><span class="op">(</span><span class="op">)</span>, origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>,</span>
@@ -77,7 +74,8 @@
 <span>  sil <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  dumpbuffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  buffers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  ctx <span class="op">=</span> <span class="fu"><a href="tiledb_get_context.html">tiledb_get_context</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  ctx <span class="op">=</span> <span class="fu"><a href="tiledb_get_context.html">tiledb_get_context</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  as.data.frame <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">tiledb_dense</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
@@ -99,10 +97,6 @@
 
 <dt id="arg-is-sparse">is.sparse<a class="anchor" aria-label="anchor" href="#arg-is-sparse"></a></dt>
 <dd><p>optional logical switch, defaults to "NA" letting array determine it</p></dd>
-
-
-<dt id="arg-as-data-frame">as.data.frame<a class="anchor" aria-label="anchor" href="#arg-as-data-frame"></a></dt>
-<dd><p>optional logical switch, defaults to "FALSE"</p></dd>
 
 
 <dt id="arg-attrs">attrs<a class="anchor" aria-label="anchor" href="#arg-attrs"></a></dt>
@@ -140,16 +134,6 @@ representation as ‘raw’ <code>integer64</code> and not as <code>Date</code>,
 <dt id="arg-encryption-key">encryption_key<a class="anchor" aria-label="anchor" href="#arg-encryption-key"></a></dt>
 <dd><p>optional A character value with an AES-256 encryption key
 in case the array was written with encryption.</p></dd>
-
-
-<dt id="arg-as-matrix">as.matrix<a class="anchor" aria-label="anchor" href="#arg-as-matrix"></a></dt>
-<dd><p>optional logical switch, defaults to "FALSE"; currently limited to dense
-matrices; in the case of multiple attributes in query a list of matrices is returned</p></dd>
-
-
-<dt id="arg-as-array">as.array<a class="anchor" aria-label="anchor" href="#arg-as-array"></a></dt>
-<dd><p>optional logical switch, defaults to "FALSE"; in the case of multiple
-attributes in query a list of arrays is returned</p></dd>
 
 
 <dt id="arg-query-condition">query_condition<a class="anchor" aria-label="anchor" href="#arg-query-condition"></a></dt>
@@ -207,6 +191,12 @@ parsed.</p></dd>
 
 <dt id="arg-ctx">ctx<a class="anchor" aria-label="anchor" href="#arg-ctx"></a></dt>
 <dd><p>optional tiledb_ctx</p></dd>
+
+
+<dt id="arg-as-data-frame">as.data.frame<a class="anchor" aria-label="anchor" href="#arg-as-data-frame"></a></dt>
+<dd><p>An optional deprecated alternative to <code>return_as="data.frame"</code> which has
+been deprecated and removed, but is still used in one BioConductor package; this argument will be removed
+once the updated package has been released.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

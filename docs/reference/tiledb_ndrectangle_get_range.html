@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.29.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.30.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="tiledb_version.html">tiledb_version</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="st">"2.25.0"</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="tiledb_version.html">tiledb_version</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="st">"2.26.0"</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>   <span class="va">dom</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_domain.html">tiledb_domain</a></span><span class="op">(</span>dim <span class="op">=</span> <span class="fu"><a href="tiledb_dim.html">tiledb_dim</a></span><span class="op">(</span><span class="st">"d1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">100L</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"INT32"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>   <span class="va">ndr</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_ndrectangle.html">tiledb_ndrectangle</a></span><span class="op">(</span><span class="va">dom</span><span class="op">)</span></span></span>
 <span class="r-in"><span>   <span class="va">ndr</span> <span class="op">&lt;-</span> <span class="fu"><a href="tiledb_ndrectangle_set_range.html">tiledb_ndrectangle_set_range</a></span><span class="op">(</span><span class="va">ndr</span>, <span class="st">"d1"</span>, <span class="fl">50</span>, <span class="fl">500</span><span class="op">)</span></span></span>

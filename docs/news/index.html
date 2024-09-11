@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.29.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.30.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,34 @@
       <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.30.0" id="tiledb-0300">tiledb 0.30.0<a class="anchor" aria-label="anchor" href="#tiledb-0300"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.26.0" class="external-link">TileDB 2.26.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/745" class="external-link">#745</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/749" class="external-link">#749</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/750" class="external-link">#750</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/754" class="external-link">#754</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/755" class="external-link">#755</a>)</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-30-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-30-0"></a></h3>
+<ul><li><p>Error messages displayed when a mismatched external pointer is detected now show both expected and encountered types (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/740" class="external-link">#740</a>)</p></li>
+<li><p><code>NDRectangle</code> objects can now instantiate from more domain data types (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/741" class="external-link">#741</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/742" class="external-link">#742</a>)</p></li>
+<li><p><code>NDRectangle</code> objects can now return their number of dimensions and dimension data types (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/743" class="external-link">#743</a>)</p></li>
+<li><p><code>FragmentInfo</code> objects are dump via the <code>&lt;&lt;</code> stringstream operator instead of a now-deprecated <code><a href="https://rdrr.io/r/base/dump.html" class="external-link">dump()</a></code> method (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/753" class="external-link">#753</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-30-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-30-0"></a></h3>
+<ul><li>The documentation website now uses favicon symbols for all pages rendered (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/739" class="external-link">#739</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="build-and-test-systems-0-30-0">Build and Test Systems<a class="anchor" aria-label="anchor" href="#build-and-test-systems-0-30-0"></a></h3>
+<ul><li><p>The nighly valgrind matrix now includes release 2.26.0 (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/744" class="external-link">#744</a>)</p></li>
+<li><p>The continuous integration script has been updated reflecting external changes (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/746" class="external-link">#746</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="removals-0-30-0">Removals<a class="anchor" aria-label="anchor" href="#removals-0-30-0"></a></h3>
+<ul><li>Boolean arguments <code>as.data.frame</code>, <code>as.matrix</code> and <code>as.array</code> to the <code><a href="../reference/tiledb_array.html">tiledb_array()</a></code> accessor, deprecated in release 0.20.0 in July 2023 in favor of the more general <code>return_as="..."</code> form, have been removed. (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/751" class="external-link">#751</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecation-0-30-0">Deprecation<a class="anchor" aria-label="anchor" href="#deprecation-0-30-0"></a></h3>
+<ul><li>As BioConductor package  still relies on <code>as.data.frame</code> it was temporarily re-admitted as an argument. It is expected to be removed following the upcoming 3.20 release of BioConducto.r (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/752" class="external-link">#752</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.29.0" id="tiledb-0290">tiledb 0.29.0<a class="anchor" aria-label="anchor" href="#tiledb-0290"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.25.0" class="external-link">TileDB 2.25.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/728" class="external-link">#728</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/736" class="external-link">#736</a>)</li>
