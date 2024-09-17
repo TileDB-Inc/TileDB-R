@@ -1,2 +1,2 @@
-version: 2.26.0
-sha: 983b716
+version: 2.26.1
+sha: db1cee4
