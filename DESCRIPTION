@@ -2,8 +2,10 @@ Package: tiledb
 Type: Package
 Version: 0.30.1.2
 Title: Modern Database Engine for Complex Data Based on Multi-Dimensional Arrays
-Authors@R: c(person("TileDB, Inc.", role = c("aut", "cph")),
-  person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "cre"))
+Authors@R: c(
+  person("TileDB, Inc.", role = c("aut", "cph")),
+  person("Dirk", "Eddelbuettel", email = "dirk@tiledb.com", role = "aut"),
+  person("Isaiah", "Norton", email = "isaiah@tiledb.com", role = "cre"))
 Description: The modern database 'TileDB' introduces a powerful on-disk
   format for storing and accessing any complex data based on multi-dimensional
   arrays. It supports dense and sparse arrays, dataframes and key-values stores,
