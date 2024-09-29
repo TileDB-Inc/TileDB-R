@@ -42,4 +42,4 @@ jobs:
         with:
           name: Nightly Dev Build
           label: bug,nightly
-          assignee: eddelbuettel
+          assignee: ihnorton
