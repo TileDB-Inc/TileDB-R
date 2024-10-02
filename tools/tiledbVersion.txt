@@ -1,2 +1,2 @@
-version: 2.26.1
-sha: db1cee4
+version: 2.26.2
+sha: 30fc114
