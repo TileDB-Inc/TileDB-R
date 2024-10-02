@@ -757,7 +757,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
             Rcpp::stop("dimension domain must be a c(lower bound, upper bound) pair");
         }
         std::array<uint16_t, 2> _domain = {static_cast<uint16_t>(domain_vec[0]), static_cast<uint16_t>(domain_vec[1])};
-        int16_t _tile_extent = Rcpp::as<int16_t>(tile_extent);
+        uint16_t _tile_extent = Rcpp::as<uint16_t>(tile_extent);
         auto dim = new tiledb::Dimension(tiledb::Dimension::create<uint16_t>(*ctx.get(), name, _domain, _tile_extent));
         auto ptr = make_xptr<tiledb::Dimension>(dim);
         return ptr;
@@ -925,7 +925,7 @@ SEXP libtiledb_dim_get_domain(XPtr<tiledb::Dimension> dim) {
                             dim->domain<DataType>().second});
     }
     case TILEDB_UINT16: {
-      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT16>::type;
       return IntegerVector({dim->domain<DataType>().first,
                             dim->domain<DataType>().second});
     }
@@ -1027,7 +1027,7 @@ SEXP libtiledb_dim_get_tile_extent(XPtr<tiledb::Dimension> dim) {
       return Rcpp::wrap(static_cast<int32_t>(dim->tile_extent<DataType>()));
     }
     case TILEDB_UINT16: {
-      using DataType = tiledb::impl::tiledb_to_type<TILEDB_INT16>::type;
+      using DataType = tiledb::impl::tiledb_to_type<TILEDB_UINT16>::type;
       return Rcpp::wrap(static_cast<int32_t>(dim->tile_extent<DataType>()));
     }
     case TILEDB_INT32: {
