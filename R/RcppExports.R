@@ -43,11 +43,12 @@ tiledb_datatype_string_to_sizeof <- function(str) {
 
 #' Map from TileDB type to R datatype
 #'
-#' This function maps from the TileDB types to the (fewer) key datatypes in R. This
-#' can be lossy as TileDB integers range from (signed and unsigned) 8 to 64 bit whereas
-#' R only has (signed) 32 bit values. Similarly, R only has 64 bit doubles whereas TileDB
-#' has 32 and 64 bit floating point types. TileDB also has more character encodings, and the
-#' full range of (NumPy) date and time types.
+#' This function maps from the TileDB types to the (fewer) key datatypes in R.
+#' This can be lossy as TileDB integers range from (signed and unsigned) 8 to
+#' 64 bit whereas R only has (signed) 32 bit values. Similarly, R only has 64
+#' bit doubles whereas TileDB has 32 and 64 bit floating point types. TileDB
+#' also has more character encodings, and the full range of (NumPy) date and
+#' time types.
 #'
 #' @param datatype A string describing one TileDB datatype
 #' @return A string describing the closest match for an R datatype
@@ -1247,22 +1248,23 @@ vlcbuf_from_shmem <- function(datapath, dtype) {
 #' Create a custom file connection
 #'
 #' @details
-#' This \code{vfs_file()} connection works like the \code{file()} connection in R itself.
+#' This \code{vfs_file()} connection works like the \code{file()} connection
+#' in R itself.
 #'
 #' This connection works with both ASCII and binary data, e.g. using
 #' \code{readLines()} and \code{readBin()}.
 #'
-#' @param description path to a filename; contrary to \code{rconnection} a connection
-#' object is not supported.
-#' @param mode character string. A description of how to open the connection if
-#' it is to be opened upon creation e.g. "rb". Default "" (empty string) means
-#' to not open the connection on creation - user must still call \code{open()}.
-#' Note: If an "open" string is provided, the user must still call \code{close()}
-#' otherwise the contents of the file aren't completely flushed until the
-#' connection is garbage collected.
+#' @param description path to a filename; contrary to \code{rconnection} a
+#' connection object is not supported.
+#' @param mode character string. A description of how to open the connection
+#' if it is to be opened upon creation e.g. "rb". Default "" (empty string)
+#' means to not open the connection on creation - user must still call
+#' \code{open()}.  Note: If an "open" string is provided, the user must still
+#' call \code{close()} otherwise the contents of the file aren't completely
+#' flushed until the connection is garbage collected.
 #' @param verbosity integer value 0, 1, or 2. Default: 0.
-#' Set to \code{0} for no debugging messages, \code{1} for some high-level messages
-#' and \code{verbosity = 2} for all debugging messages.
+#' Set to \code{0} for no debugging messages, \code{1} for some high-level
+#' messages and \code{verbosity = 2} for all debugging messages.
 #'
 #' @export
 #'
