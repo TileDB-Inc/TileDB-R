@@ -1,3 +1,8 @@
+# Unreleased
+
+* Fix [#758](https://github.com/TileDB-Inc/TileDB-R/issues/758) "Can't read domain for dimensions of type UINT16"
+
+
 # tiledb 0.30.1
 
 * This release of the R package builds against [TileDB 2.26.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.26.1), and has also been tested against earlier releases as well as the development version (#757)
