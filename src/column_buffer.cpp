@@ -37,9 +37,10 @@
 // surface of code covered by this definition
 #define TILEDB_DEPRECATED
 
+#include "tinyspdl.h"
+
 #include "column_buffer.h"
 #include "tiledb_version.h"
-#include "tinyspdl.h"
 #if TILEDB_VERSION >= TileDB_Version(2, 17, 0)
 #include <tiledb/array_experimental.h>
 #include <tiledb/attribute_experimental.h>

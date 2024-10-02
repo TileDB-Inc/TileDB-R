@@ -6,9 +6,10 @@
 // deploy a connection from within R without triggering a warning from package
 // checks.
 
+#include <Rcpp/Lighter> // for Rcpp
+
 #include "connection/connection.h" // for connections
 #include "tiledb.h"
-#include <Rcpp/Lighter> // for Rcpp
 #include <tinyspdl.h>   // for spdl logging
 
 extern "C" SEXP vfile_c_impl_(SEXP, SEXP, SEXP);
