@@ -154,7 +154,11 @@ for (dtype in dimtypes) {
                    "INT64" = as.integer64(1000),
                    1000)                    # default is 1000
 
-    domain <- tiledb_domain(tiledb_dim("row", dom, tile, dtype))
+    dimension <- tiledb_dim("row", dom, tile, dtype)
+    if (dtype != "ASCII") { # no extent for string dims
+      expect_silent(tile(dimension))
+    }
+    domain <- tiledb_domain(dimension)
     attrib <- tiledb_attr("attr", type = "INT32")
     schema <- tiledb_array_schema(domain, attrib, sparse=TRUE)
     tiledb_array_create(uri, schema)
