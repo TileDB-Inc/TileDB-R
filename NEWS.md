@@ -1,7 +1,8 @@
 # Unreleased
 
-* Fix [#758](https://github.com/TileDB-Inc/TileDB-R/issues/758) "Can't read domain for dimensions of type UINT16"
+* [#760](https://github.com/TileDB-Inc/TileDB-R/issues/758) Fix MacOS `rpath`
 
+* [#758](https://github.com/TileDB-Inc/TileDB-R/issues/758) Fix "Can't read domain for dimensions of type UINT16"
 
 # tiledb 0.30.1
 
