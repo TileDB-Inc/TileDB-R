@@ -21,11 +21,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Dirk Eddelbuettel \email{dirk@tiledb.com}
+\strong{Maintainer}: Isaiah Norton \email{isaiah@tiledb.com}
 
 Authors:
 \itemize{
   \item TileDB, Inc. [copyright holder]
+  \item Dirk Eddelbuettel \email{dirk@tiledb.com}
 }
 
 }
