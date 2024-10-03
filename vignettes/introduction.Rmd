@@ -41,7 +41,7 @@ file system object. When TileDB has been built with S3 support, and with
 proper AWS credentials in the usual environment variables, URIs such as
 `s3://some/data/bucket` can be used where a local file would be used.
 See the script
-[ex_S3.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_S3.R)
+[ex_S3.R](https://github.com/TileDB-Inc/TileDB-R/blob/main/inst/examples/ex_S3.R)
 for an example.
 
 # Dense Arrays
@@ -49,7 +49,7 @@ for an example.
 ## Preliminaries
 
 These illustrations use the array created by the file
-[ex_1.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R)
+[ex_1.R](https://github.com/TileDB-Inc/TileDB-R/blob/main/inst/examples/ex_1.R)
 which one can run from within R, or on the command-line. To follow along
 with discussion that follows, it helps to run the example once to create
 the array after possibly adjusting the array location path from its
@@ -59,9 +59,9 @@ override).
 ## Basic Reading of Dense Arrays
 
 The file
-[ex_1.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_1.R)
+[ex_1.R](https://github.com/TileDB-Inc/TileDB-R/blob/main/inst/examples/ex_1.R)
 in the examples directory is a simple yet complete example extending
-[quickstart_dense.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/quickstart_dense.R)
+[quickstart_dense.R](https://github.com/TileDB-Inc/TileDB-R/blob/main/inst/examples/quickstart_dense.R)
 by adding a second and third attribute. In this as well as the following
 examples we will use `tiledb_array()` to access the array; the older
 variants `tiledb_dense()` and `tiledb_sparse()` remain supported but are
@@ -247,7 +247,7 @@ Attributes can be selected similarly.
 ## Date(time) Attributes
 
 Similar to the dense array case described earlier, the file
-[ex_2.R](https://github.com/TileDB-Inc/TileDB-R/blob/master/inst/examples/ex_2.R)
+[ex_2.R](https://github.com/TileDB-Inc/TileDB-R/blob/main/inst/examples/ex_2.R)
 illustrates some basic operations on sparse arrays. It also shows date
 and datetime types instead of just integer and double precision floats.
 
