@@ -27,13 +27,13 @@ Documentation for the TileDB R package is available via the `help()`
 function from within R as well as via the [package
 documentation](https://tiledb-inc.github.io/TileDB-R/) and an
 [introductory
-notebook](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/notebooks/).
+notebook](https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/notebooks/).
 Documentation about TileDB itself is [also
 available](https://docs.tiledb.com/main/).
 
 Several "quickstart" examples that are discussed on the website are
 available in the
-[examples](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples)
+[examples](https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/examples)
 directory. This vignette discusses similar examples.
 
 In the following examples, the URIs describing arrays point to local
@@ -290,7 +290,7 @@ function) as well as via a [website regrouping all
 documentation](https://tiledb-inc.github.io/TileDB-R/). Extended [API
 documentation](https://tiledb-inc.github.io/TileDB-R/documentation.html)
 is available, as is a
-[examples/](https://github.com/TileDB-Inc/TileDB-R/tree/master/inst/examples)
+[examples/](https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/examples)
 directory.
 
 TileDB itself has extensive
