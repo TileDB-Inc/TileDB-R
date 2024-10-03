@@ -55,7 +55,7 @@ class ArrowExporter;
 class ArrowAdapter {
 public:
   /* Constructs an ArrowAdapter wrapping the given TileDB C++ Query */
-  ArrowAdapter(Context* ctx, Query* query);
+  ArrowAdapter(Context *ctx, Query *query);
   ~ArrowAdapter();
 
   /**
@@ -67,7 +67,7 @@ public:
    * @param arrow_schema Pointer to pre-allocated ArrowSchema struct
    * @throws tiledb::TileDBError with error-specific message.
    */
-  void export_buffer(const char* name, void* arrow_array, void* arrow_schema);
+  void export_buffer(const char *name, void *arrow_array, void *arrow_schema);
 
   /**
    * Set named Query buffer from ArrowArray/ArrowSchema struct pair
@@ -79,14 +79,14 @@ public:
    * @param arrow_schema Pointer to pre-allocated ArrowSchema struct
    * @throws tiledb::TileDBError with error-specific message.
    */
-  void import_buffer(const char* name, void* arrow_array, void* arrow_schema);
+  void import_buffer(const char *name, void *arrow_array, void *arrow_schema);
 
 private:
-  ArrowImporter* importer_;
-  ArrowExporter* exporter_;
+  ArrowImporter *importer_;
+  ArrowExporter *exporter_;
 };
 
-}  // end namespace arrow
-}  // end namespace tiledb
+} // end namespace arrow
+} // end namespace tiledb
 
 #include "updated_arrow_io_impl.h"

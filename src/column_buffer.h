@@ -47,301 +47,277 @@ using namespace tiledb;
  *
  */
 class ColumnBuffer {
-    // inline static const size_t DEFAULT_ALLOC_BYTES = 1 << 24;  // 16 MiB
-    // inline static const std::string
-    //     CONFIG_KEY_INIT_BYTES = "soma.init_buffer_bytes";
+  // inline static const size_t DEFAULT_ALLOC_BYTES = 1 << 24;  // 16 MiB
+  // inline static const std::string
+  //     CONFIG_KEY_INIT_BYTES = "soma.init_buffer_bytes";
 
-   public:
-    //===================================================================
-    //= public static
-    //===================================================================
+public:
+  //===================================================================
+  //= public static
+  //===================================================================
 
-    /**
-     * @brief Create a ColumnBuffer from an array and column name.
-     *
-     * @param array TileDB array
-     * @param name TileDB dimension or attribute name
-     * @return ColumnBuffer
-     */
-    static std::shared_ptr<ColumnBuffer> create(
-        std::shared_ptr<Array> array, std::string_view name,
-        size_t memory_budget, tiledb::Context ctx);
+  /**
+   * @brief Create a ColumnBuffer from an array and column name.
+   *
+   * @param array TileDB array
+   * @param name TileDB dimension or attribute name
+   * @return ColumnBuffer
+   */
+  static std::shared_ptr<ColumnBuffer> create(std::shared_ptr<Array> array,
+                                              std::string_view name,
+                                              size_t memory_budget,
+                                              tiledb::Context ctx);
 
-    /**
-     * @brief Convert a bytemap to a bitmap in place.
-     *
-     */
-    static void to_bitmap(
-        tcb::span<uint8_t> bytemap);
+  /**
+   * @brief Convert a bytemap to a bitmap in place.
+   *
+   */
+  static void to_bitmap(tcb::span<uint8_t> bytemap);
 
-    /**
-     * @brief Cast a 64 bit int down to 32 bit for Date type.
-     *
-     */
-    static void date_cast_to_32bit(tcb::span<int64_t> data);
+  /**
+   * @brief Cast a 64 bit int down to 32 bit for Date type.
+   *
+   */
+  static void date_cast_to_32bit(tcb::span<int64_t> data);
 
-    //===================================================================
-    //= public non-static
-    //===================================================================
+  //===================================================================
+  //= public non-static
+  //===================================================================
 
-    /**
-     * @brief Construct a new ColumnBuffer object
-     *
-     * @param name Column name
-     * @param type TileDB datatype
-     * @param num_cells Number of cells to allocate for offsets and validity
-     * @param num_bytes Number of bytes to allocate for data
-     * @param is_var Column type is variable length
-     * @param is_nullable Column can contain null values
-     */
-    ColumnBuffer(
-        std::string_view name,
-        tiledb_datatype_t type,
-        size_t num_cells,
-        size_t num_bytes,
-        bool is_var = false,
-        bool is_nullable = false);
-        //std::optional<std::vector<std::string>> enumeration = std::nullopt);
+  /**
+   * @brief Construct a new ColumnBuffer object
+   *
+   * @param name Column name
+   * @param type TileDB datatype
+   * @param num_cells Number of cells to allocate for offsets and validity
+   * @param num_bytes Number of bytes to allocate for data
+   * @param is_var Column type is variable length
+   * @param is_nullable Column can contain null values
+   */
+  ColumnBuffer(std::string_view name, tiledb_datatype_t type, size_t num_cells,
+               size_t num_bytes, bool is_var = false, bool is_nullable = false);
+  // std::optional<std::vector<std::string>> enumeration = std::nullopt);
 
-    ColumnBuffer() = delete;
-    ColumnBuffer(const ColumnBuffer&) = delete;
-    ColumnBuffer(ColumnBuffer&&) = default;
+  ColumnBuffer() = delete;
+  ColumnBuffer(const ColumnBuffer &) = delete;
+  ColumnBuffer(ColumnBuffer &&) = default;
 
-    ~ColumnBuffer() {
-        spdl::trace(tfm::format("[ColumnBuffer] release '%s'", name_));
+  ~ColumnBuffer() {
+    spdl::trace(tfm::format("[ColumnBuffer] release '%s'", name_));
+  }
+
+  /**
+   * @brief Attach this ColumnBuffer to a TileDB query.
+   *
+   * @param query TileDB query
+   */
+  void attach(Query &query);
+
+  /**
+   * @brief Size num_cells_ to match the read query results.
+   *
+   * @param query TileDB query
+   */
+  size_t update_size(const Query &query);
+
+  /**
+   * @brief Return the number of cells in the buffer.
+   *
+   * @return size_t
+   */
+  size_t size() const { return num_cells_; }
+
+  /**
+   * @brief Return a view of the ColumnBuffer data.
+   *
+   * @tparam T Data type
+   * @return tcb::span<T> data view
+   */
+  template <typename T> tcb::span<T> data() {
+    return tcb::span<T>((T *)data_.data(), num_cells_);
+  }
+
+  /**
+   * @brief Return data in a vector of strings.
+   *
+   * @return std::vector<std::string>
+   */
+  std::vector<std::string> strings();
+
+  /**
+   * @brief Return a string_view of the string at the provided cell index.
+   *
+   * @param index Cell index
+   * @return std::string_view string view
+   */
+  std::string_view string_view(uint64_t index);
+
+  /**
+   * @brief Return a view of the ColumnBuffer offsets.
+   *
+   * @return tcb::span<uint64_t> offsets view
+   */
+  tcb::span<uint64_t> offsets() {
+    if (!is_var_) {
+      Rcpp::stop(std::string("[ColumnBuffer] Offsets buffer not defined for ") +
+                 name_);
     }
 
-    /**
-     * @brief Attach this ColumnBuffer to a TileDB query.
-     *
-     * @param query TileDB query
-     */
-    void attach(Query& query);
+    return tcb::span<uint64_t>(offsets_.data(), num_cells_);
+  }
 
-    /**
-     * @brief Size num_cells_ to match the read query results.
-     *
-     * @param query TileDB query
-     */
-    size_t update_size(const Query& query);
-
-    /**
-     * @brief Return the number of cells in the buffer.
-     *
-     * @return size_t
-     */
-    size_t size() const {
-        return num_cells_;
+  /**
+   * @brief Return a view of the validity buffer.
+   *
+   * @return tcb::span<uint8_t> validity view
+   */
+  tcb::span<uint8_t> validity() {
+    if (!is_nullable_) {
+      Rcpp::stop(
+          std::string("[ColumnBuffer] Validity buffer not defined for ") +
+          name_);
     }
+    return tcb::span<uint8_t>(validity_.data(), num_cells_);
+  }
 
-    /**
-     * @brief Return a view of the ColumnBuffer data.
-     *
-     * @tparam T Data type
-     * @return tcb::span<T> data view
-     */
-    template <typename T>
-    tcb::span<T> data() {
-        return tcb::span<T>((T*)data_.data(), num_cells_);
-    }
+  /**
+   * @brief Return the name of the buffer.
+   *
+   * @return std::string_view
+   */
+  std::string_view name() { return name_; }
 
-    /**
-     * @brief Return data in a vector of strings.
-     *
-     * @return std::vector<std::string>
-     */
-    std::vector<std::string> strings();
+  /**
+   * @brief Return the type of the buffer.
+   *
+   * @return tiledb_datatype_t type
+   */
+  tiledb_datatype_t type() const { return type_; }
 
-    /**
-     * @brief Return a string_view of the string at the provided cell index.
-     *
-     * @param index Cell index
-     * @return std::string_view string view
-     */
-    std::string_view string_view(uint64_t index);
+  /**
+   * @brief Return true if the buffer contains variable length data.
+   */
+  bool is_var() const { return is_var_; }
 
-    /**
-     * @brief Return a view of the ColumnBuffer offsets.
-     *
-     * @return tcb::span<uint64_t> offsets view
-     */
-    tcb::span<uint64_t> offsets() {
-        if (!is_var_) {
-            Rcpp::stop(std::string("[ColumnBuffer] Offsets buffer not defined for ") + name_);
-        }
+  /**
+   * @brief Return true if the buffer contains nullable data.
+   */
+  bool is_nullable() const { return is_nullable_; }
 
-        return tcb::span<uint64_t>(offsets_.data(), num_cells_);
-    }
+  /**
+   * @brief Convert the data bytemap to a bitmap in place.
+   *
+   */
+  void data_to_bitmap() { ColumnBuffer::to_bitmap(data<uint8_t>()); }
 
-    /**
-     * @brief Return a view of the validity buffer.
-     *
-     * @return tcb::span<uint8_t> validity view
-     */
-    tcb::span<uint8_t> validity() {
-        if (!is_nullable_) {
-            Rcpp::stop(std::string("[ColumnBuffer] Validity buffer not defined for ") + name_);
-        }
-        return tcb::span<uint8_t>(validity_.data(), num_cells_);
-    }
+  /**
+   * @brief Convert the validity bytemap to a bitmap in place.
+   *
+   */
+  void validity_to_bitmap() { ColumnBuffer::to_bitmap(validity()); }
 
-    /**
-     * @brief Return the name of the buffer.
-     *
-     * @return std::string_view
-     */
-    std::string_view name() {
-        return name_;
-    }
+  /**
+   * @brief Convert a date column to 32 bit int.
+   *
+   */
+  void date_cast() { ColumnBuffer::date_cast_to_32bit(data<int64_t>()); }
 
-    /**
-     * @brief Return the type of the buffer.
-     *
-     * @return tiledb_datatype_t type
-     */
-    tiledb_datatype_t type() const {
-        return type_;
-    }
+  // /**
+  //  * @brief Return true if the buffer has an associated enumeration
+  //  */
+  // bool has_enumeration() const {
+  //     return has_enumeration_;
+  // }
 
-    /**
-     * @brief Return true if the buffer contains variable length data.
-     */
-    bool is_var() const {
-        return is_var_;
-    }
+  // /**
+  //  * @brief Fill offsets_ and data_ from Enumeration (temporary)
+  //  */
+  // void from_enumeration(std::shared_ptr<std::vector<std::string>> enmr) {
+  //     size_t nlvl = enmr->size();
+  //     offsets_.resize(nlvl + 1);
+  //     std::string newstr = "";
+  //     uint64_t cumlen = 0;
+  //     for (size_t i = 0; i < nlvl; i++) {
+  //         offsets_[i] = cumlen;
+  //         std::string s{(*enmr)[i]};
+  //         newstr += s;
+  //         cumlen += s.length();
+  //     }
+  //     offsets_[nlvl] = cumlen;
+  //     type_ = TILEDB_STRING_UTF8;
+  //     num_cells_ = newstr.length();
+  //     data_.resize(num_cells_);
+  //     std::memcpy(data_.data(), newstr.data(), sizeof(char) * num_cells_);
+  //     spdl::warn(tfm::format("[from_enumeration] offsets vec length is %ld
+  //     last %ld is_var %d",
+  //                             offsets_.size(), cumlen, is_var_));
+  // }
 
-    /**
-     * @brief Return true if the buffer contains nullable data.
-     */
-    bool is_nullable() const {
-        return is_nullable_;
-    }
+  // /**
+  //  * @brief ColumnBuffer from Enumeration
+  //  */
+  // std::shared_ptr<std::vector<std::string>> get_enumeration() {
+  //     auto p = std::make_shared<std::vector<std::string>>(enmr_);
+  //     return p;
+  // }
 
-    /**
-     * @brief Convert the data bytemap to a bitmap in place.
-     *
-     */
-    void data_to_bitmap() {
-        ColumnBuffer::to_bitmap(data<uint8_t>());
-    }
+private:
+  //===================================================================
+  //= private static
+  //===================================================================
 
-    /**
-     * @brief Convert the validity bytemap to a bitmap in place.
-     *
-     */
-    void validity_to_bitmap() {
-        ColumnBuffer::to_bitmap(validity());
-    }
+  /**
+   * @brief Allocate and return a ColumnBuffer.
+   *
+   * @param array TileDB array
+   * @param name Column name
+   * @param type TileDB datatype
+   * @param is_var True if variable length data
+   * @param is_nullable True if nullable data
+   * @return ColumnBuffer
+   */
+  static std::shared_ptr<ColumnBuffer>
+  alloc(std::shared_ptr<Array> array, std::string_view name,
+        tiledb_datatype_t type, bool is_var, bool is_nullable,
+        size_t memory_budget, std::optional<std::vector<std::string>> enmr);
 
-    /**
-     * @brief Convert a date column to 32 bit int.
-     *
-     */
-    void date_cast() {
-        ColumnBuffer::date_cast_to_32bit(data<int64_t>());
-    }
+  //===================================================================
+  //= private non-static
+  //===================================================================
 
-    // /**
-    //  * @brief Return true if the buffer has an associated enumeration
-    //  */
-    // bool has_enumeration() const {
-    //     return has_enumeration_;
-    // }
+  // Name of the column from the schema.
+  std::string name_;
 
-    // /**
-    //  * @brief Fill offsets_ and data_ from Enumeration (temporary)
-    //  */
-    // void from_enumeration(std::shared_ptr<std::vector<std::string>> enmr) {
-    //     size_t nlvl = enmr->size();
-    //     offsets_.resize(nlvl + 1);
-    //     std::string newstr = "";
-    //     uint64_t cumlen = 0;
-    //     for (size_t i = 0; i < nlvl; i++) {
-    //         offsets_[i] = cumlen;
-    //         std::string s{(*enmr)[i]};
-    //         newstr += s;
-    //         cumlen += s.length();
-    //     }
-    //     offsets_[nlvl] = cumlen;
-    //     type_ = TILEDB_STRING_UTF8;
-    //     num_cells_ = newstr.length();
-    //     data_.resize(num_cells_);
-    //     std::memcpy(data_.data(), newstr.data(), sizeof(char) * num_cells_);
-    //     spdl::warn(tfm::format("[from_enumeration] offsets vec length is %ld last %ld is_var %d",
-    //                             offsets_.size(), cumlen, is_var_));
-    // }
+  // Data type of the column from the schema.
+  tiledb_datatype_t type_;
 
-    // /**
-    //  * @brief ColumnBuffer from Enumeration
-    //  */
-    // std::shared_ptr<std::vector<std::string>> get_enumeration() {
-    //     auto p = std::make_shared<std::vector<std::string>>(enmr_);
-    //     return p;
-    // }
+  // Bytes per element.
+  uint64_t type_size_;
 
+  // Number of cells.
+  uint64_t num_cells_;
 
-   private:
-    //===================================================================
-    //= private static
-    //===================================================================
+  // If true, the data type is variable length
+  bool is_var_;
 
-    /**
-     * @brief Allocate and return a ColumnBuffer.
-     *
-     * @param array TileDB array
-     * @param name Column name
-     * @param type TileDB datatype
-     * @param is_var True if variable length data
-     * @param is_nullable True if nullable data
-     * @return ColumnBuffer
-     */
-    static std::shared_ptr<ColumnBuffer> alloc(
-        std::shared_ptr<Array> array,
-        std::string_view name,
-        tiledb_datatype_t type,
-        bool is_var,
-        bool is_nullable,
-        size_t memory_budget,
-        std::optional<std::vector<std::string>> enmr);
+  // If true, the data is nullable
+  bool is_nullable_;
 
-    //===================================================================
-    //= private non-static
-    //===================================================================
+  // Data buffer.
+  std::vector<std::byte> data_;
 
-    // Name of the column from the schema.
-    std::string name_;
+  // Offsets buffer (optional).
+  std::vector<uint64_t> offsets_;
 
-    // Data type of the column from the schema.
-    tiledb_datatype_t type_;
+  // Validity buffer (optional).
+  std::vector<uint8_t> validity_;
 
-    // Bytes per element.
-    uint64_t type_size_;
+  // // If true, has an enumeration
+  // bool has_enumeration_;
 
-    // Number of cells.
-    uint64_t num_cells_;
-
-    // If true, the data type is variable length
-    bool is_var_;
-
-    // If true, the data is nullable
-    bool is_nullable_;
-
-    // Data buffer.
-    std::vector<std::byte> data_;
-
-    // Offsets buffer (optional).
-    std::vector<uint64_t> offsets_;
-
-    // Validity buffer (optional).
-    std::vector<uint8_t> validity_;
-
-    // // If true, has an enumeration
-    // bool has_enumeration_;
-
-    // // Enumeration buffer (optional).
-    // std::vector<std::string> enmr_;
-
+  // // Enumeration buffer (optional).
+  // std::vector<std::string> enmr_;
 };
 
-}  // namespace tiledb
+} // namespace tiledb
 #endif
