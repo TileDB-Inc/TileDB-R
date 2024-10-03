@@ -50,68 +50,6 @@ public:
     array->release = nullptr;
   }
 
-  // /**
-  //  * @brief Convert ColumnBuffer Enumeration to an Arrow array.
-  //  *
-  //  * @return auto [Arrow array, Arrow schema]
-  //  */
-  // static auto enumeration_to_arrow(std::shared_ptr<std::vector<std::string>>
-  // enmr) {
-  //     spdl::warn("[enumeration_to_arrow] entered");
-  //     std::unique_ptr<ArrowSchema> schema = std::make_unique<ArrowSchema>();
-  //     std::unique_ptr<ArrowArray> array = std::make_unique<ArrowArray>();
-
-  //     schema->format = to_arrow_format(TILEDB_STRING_UTF8).data();  //
-  //     mandatory schema->name = nullptr; // optional schema->metadata =
-  //     nullptr;                               // optional schema->flags = 0;
-  //     // optional schema->n_children = 0; // mandatory schema->children =
-  //     nullptr;                               // optional schema->dictionary =
-  //     nullptr;                             // optional schema->release =
-  //     &release_schema;                        // mandatory
-  //     schema->private_data = nullptr;                           // optional
-
-  //     int n_buffers = 3;      // known constant
-
-  //     auto column = std::make_shared<ColumnBuffer>("", TILEDB_STRING_UTF8,
-  //                                                  enmr->size(),
-  //                                                  enmr->size(), // two
-  //                                                  placeholders true, false);
-  //     column->from_enumeration(enmr);
-
-  //     // Create an ArrowBuffer to manage the lifetime of `column`.
-  //     // - `arrow_buffer` holds a shared_ptr to `column`, which increments
-  //     //   the use count and keeps the ColumnBuffer data alive.
-  //     // - When the arrow array is released, `array->release()` is called
-  //     with
-  //     //   `arrow_buffer` in `private_data`. `arrow_buffer` is deleted, which
-  //     //   decrements the the `column` use count. When the `column` use count
-  //     //   reaches 0, the ColumnBuffer data will be deleted.
-  //     auto arrow_buffer = new ArrowBuffer(column);
-
-  //     array->length = enmr->size();               // mandatory: length is
-  //     number of 'levels' array->null_count = 0;                      //
-  //     mandatory array->offset = 0;                          // mandatory
-  //     array->n_buffers = n_buffers;               // mandatory
-  //     array->n_children = 0;                      // mandatory
-  //     array->buffers = nullptr;                   // mandatory
-  //     array->children = nullptr;                  // optional
-  //     array->dictionary = nullptr;                // optional
-  //     array->release = &release_array;            // mandatory
-  //     array->private_data = (void*)arrow_buffer;  // mandatory
-
-  //     spdl::debug(tfm::format("[ArrowAdapter::enumeration_array] create
-  //     dictionary length '%d'",
-  //                             array->length));
-
-  //     array->buffers = (const void**)malloc(sizeof(void*) * n_buffers);
-  //     assert(array->buffers != nullptr);
-  //     array->buffers[0] = nullptr;  // validity
-  //     array->buffers[2] = column->data<void*>().data();  // data
-  //     array->buffers[1] = column->offsets().data();  // offsets
-
-  //     return std::pair(std::move(array), std::move(schema));
-  // }
-
   /**
    * @brief Convert ColumnBuffer to an Arrow array.
    *
@@ -179,17 +117,6 @@ public:
       column->validity_to_bitmap();
       array->buffers[0] = column->validity().data();
     }
-
-    // if (column->has_enumeration()) {
-    //     std::shared_ptr<std::vector<std::string>> enmr =
-    //     column->get_enumeration(); auto pp = enumeration_to_arrow(enmr);
-    //     array->dictionary = pp.first.get();
-    //     schema->dictionary = pp.second.get();
-    //     spdl::warn(tfm::format("[ArrowAdapter::to_arrow] name='%s' enum=%d
-    //     string=%s",
-    //                            column->name(), column->has_enumeration(),
-    //                            (char*)array->dictionary->buffers[2]));
-    // }
 
 #if TILEDB_VERSION >= TileDB_Version(2, 10, 0)
     /* Workaround to cast TILEDB_BOOL from uint8 to 1-bit Arrow boolean. */
