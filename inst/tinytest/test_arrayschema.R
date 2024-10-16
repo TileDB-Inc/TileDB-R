@@ -146,7 +146,10 @@ expect_true(allows_dups(sch))
 if (tiledb_version(TRUE) < "2.26.0") exit_file("Needs TileDB 2.26.* or later")
 expect_error(tiledb_array_schema_get_current_domain(dom))           # wrong object
 expect_silent(cd <- tiledb_array_schema_get_current_domain(sch))
-expect_silent(tiledb_array_schema_set_current_domain(sch, cd))
 
 dsch <- tiledb_array_schema(dom, attrs = attr, sparse = FALSE)
-expect_error(tiledb_array_schema_set_current_domain(dsch, cd)) 		# not for dense
+if (tiledb_version(TRUE) < "2.27.0") {
+  expect_error(tiledb_array_schema_set_current_domain(dsch, cd))
+} else {
+  expect_no_condition(tiledb_array_schema_set_current_domain(dsch, cd))
+}
