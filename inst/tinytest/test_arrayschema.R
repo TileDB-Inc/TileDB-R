@@ -151,5 +151,5 @@ dsch <- tiledb_array_schema(dom, attrs = attr, sparse = FALSE)
 if (tiledb_version(TRUE) < "2.27.0") {
   expect_error(tiledb_array_schema_set_current_domain(dsch, cd))
 } else {
-  expect_no_condition(tiledb_array_schema_set_current_domain(dsch, cd))
+  expect_silent(tiledb_array_schema_set_current_domain(dsch, cd))
 }
