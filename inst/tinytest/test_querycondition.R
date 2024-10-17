@@ -413,6 +413,10 @@ expect_equal(nrow(D), nrow(chk) + 2)
 chk <- tiledb_array(uri, query_condition=parse_query_condition(key == "ñ" || key == "Ø"), return_as="data.frame")[]
 expect_equal(nrow(chk), 2)
 
+## include two with parentheses
+chk <- tiledb_array(uri, query_condition=parse_query_condition((key == "ñ") || (key == "Ø")), return_as="data.frame")[]
+expect_equal(nrow(chk), 2)
+
 
 ## Test minimal version
 if (tiledb_version(TRUE) < "2.16.0") exit_file("Remainder needs 2.16.* or later")

@@ -46,3 +46,6 @@ docs/articles/md/
 docs/articles/rmd/
 docs/articles/water.css
 vignettes/md/
+# vim
+.sw?
+.*.sw?
