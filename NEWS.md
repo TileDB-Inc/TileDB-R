@@ -1,3 +1,10 @@
+# Unreleased
+
+* Update docs with correct S4 methods
+* Run `clang-format` on non-autogen C++ source code
+* Update unit tests to expect dense current domain
+* Support parentheses in query conditions
+
 # tiledb 0.30.2
 
 * This release of the R package builds against [TileDB 2.26.2](https://github.com/TileDB-Inc/TileDB/releases/tag/2.26.2), and has also been tested against earlier releases as well as the development version (#757)
