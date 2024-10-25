@@ -37,15 +37,17 @@ This function may still still change; the current implementation should be
 considered as an initial draft.
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 \dontrun{
-uri <- "quickstart_sparse"      ## as created by the other example
-arr <- tiledb_array(uri)        ## open array
-df <- arr[]                     ## read current content
+uri <- "quickstart_sparse" ## as created by the other example
+arr <- tiledb_array(uri) ## open array
+df <- arr[] ## read current content
 ## First approach: matching data.frame with appriate row and column
-newdf <- data.frame(rows=c(1,2,2), cols=c(1,3,4), a=df$a+100)
+newdf <- data.frame(rows = c(1, 2, 2), cols = c(1, 3, 4), a = df$a + 100)
 ## Second approach: supply indices explicitly
-arr[c(1,2), c(1,3)] <- c(42,43) ## two values
-arr[2, 4] <- 88                 ## or just one
+arr[c(1, 2), c(1, 3)] <- c(42, 43) ## two values
+arr[2, 4] <- 88 ## or just one
 }
 }

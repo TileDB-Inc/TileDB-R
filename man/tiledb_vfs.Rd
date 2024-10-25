@@ -18,7 +18,9 @@ The \code{tiledb_vfs} object
 Creates a \code{tiledb_vfs} object
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 # default configuration
 vfs <- tiledb_vfs()
 

@@ -21,7 +21,9 @@ of the of the \code{tiledb_ctx} object. Examples for this are
 create a context object, and \code{cfg <- config(ctx)} to retrieve it.
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 cfg <- tiledb_config()
 cfg["sm.tile_cache_size"]
 

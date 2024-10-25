@@ -16,7 +16,9 @@ TRUE or FALSE
 A TileDB dimension is anonymous if no name/label is defined
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 d1 <- tiledb_dim("d1", c(1L, 10L), 10L)
 is.anonymous(d1)
 

@@ -19,7 +19,9 @@ The uri path, invisibly
 Create a TileDB Group at the given path
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 \dontrun{
 pth <- tempdir()
 tiledb_group_create(pth)

@@ -16,7 +16,9 @@
 Retrieve the \code{tiledb_config} object from the \code{tiledb_ctx}
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 cfg <- config(ctx)
 cfg["sm.tile_cache_size"]

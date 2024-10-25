@@ -18,7 +18,9 @@ A boolean value indicating if it is a valid bucket
 Check for VFS Bucket
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 \dontrun{
 cfg <- tiledb_config()
 cfg["vfs.s3.region"] <- "us-west-1"

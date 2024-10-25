@@ -6,8 +6,12 @@
 \usage{
 tiledb_array_open(
   arr,
-  type = if (tiledb_version(TRUE) >= "2.12.0") c("READ", "WRITE", "DELETE",
-    "MODIFY_EXCLUSIVE") else c("READ", "WRITE")
+  type = if (tiledb_version(TRUE) >= "2.12.0") {
+     c("READ", "WRITE", "DELETE",
+    "MODIFY_EXCLUSIVE")
+ } else {
+     c("READ", "WRITE")
+ }
 )
 }
 \arguments{

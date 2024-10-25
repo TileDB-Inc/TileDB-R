@@ -18,7 +18,9 @@ in case the array should be encryption.}
 Creates a new TileDB array given an input schema.
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 \dontrun{
 pth <- tempdir()
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))

@@ -18,10 +18,12 @@ The \code{tiledb_ndrectangle} dimension datatype as a character
 Get the datatype of a \code{tiledb_ndrectangle} dimension by index
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 if (tiledb_version(TRUE) >= "2.26.0") {
-   dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
-   ndr <- tiledb_ndrectangle(dom)
-   tiledb_ndrectangle_datatype_by_ind(ndr, 0)
+  dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+  ndr <- tiledb_ndrectangle(dom)
+  tiledb_ndrectangle_datatype_by_ind(ndr, 0)
 }
 }

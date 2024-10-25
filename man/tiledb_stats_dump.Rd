@@ -14,7 +14,9 @@ if the empty string is passed then the result is displayed on stdout.}
 Dumps internal TileDB statistics to file or stdout
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 pth <- tempfile()
 tiledb_stats_dump(pth)
 cat(readLines(pth)[1:10], sep = "\n")

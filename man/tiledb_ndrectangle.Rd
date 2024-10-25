@@ -18,10 +18,12 @@ The \code{tiledb_ndrectangle} object
 Creates a \code{tiledb_ndrectangle} object
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 if (tiledb_version(TRUE) >= "2.25.0") {
-   dom <-tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
-   ndr <- tiledb_ndrectangle(dom)
+  dom <- tiledb_domain(dim = tiledb_dim("d1", c(1L, 100L), type = "INT32"))
+  ndr <- tiledb_ndrectangle(dom)
 }
 
 }

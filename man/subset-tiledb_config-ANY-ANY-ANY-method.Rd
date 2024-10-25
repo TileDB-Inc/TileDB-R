@@ -26,7 +26,9 @@ updated \code{tiledb_config} object
 Sets a config parameter value
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 cfg <- tiledb_config()
 cfg["sm.tile_cache_size"]
 

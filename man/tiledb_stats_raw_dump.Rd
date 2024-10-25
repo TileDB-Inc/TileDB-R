@@ -10,7 +10,9 @@ tiledb_stats_raw_dump()
 This function requires TileDB Embedded 2.0.3 or later.
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 txt <- tiledb_stats_raw_dump()
 cat(txt, "\n")
 }

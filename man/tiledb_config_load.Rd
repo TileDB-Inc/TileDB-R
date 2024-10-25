@@ -13,7 +13,9 @@ tiledb_config_load(path)
 Load a saved \code{tiledb_config} file from disk
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 tmp <- tempfile()
 cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 pth <- tiledb_config_save(cfg, tmp)
