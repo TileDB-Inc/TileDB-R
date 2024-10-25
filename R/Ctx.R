@@ -25,7 +25,8 @@
 #' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_ctx
 setClass("tiledb_ctx",
-         slots = list(ptr = "externalptr"))
+  slots = list(ptr = "externalptr")
+)
 
 #' Retrieve a TileDB context object from the package cache
 #'
@@ -37,11 +38,11 @@ tiledb_get_context <- function() {
 
   ## if null, create a new context (which caches it too) and return it
   if (is.null(ctx)) {
-    ctx <- tiledb_ctx(cached=FALSE)
+    ctx <- tiledb_ctx(cached = FALSE)
     ## if we wanted to _globally_ throttle we could do it here
     ## but as a general rule we do _not_ want to, and prefer
     ## throttling as an opt in we use in tests only
-    #cfg <- limitTileDBCores(verbose=TRUE)
+    # cfg <- limitTileDBCores(verbose=TRUE)
   }
 
   ctx
@@ -72,7 +73,9 @@ setContext <- function(ctx) tiledb_set_context(ctx)
 #' @param cached (optional) logical switch to force new creation
 #' @return `tiledb_ctx` object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' # default configuration
 #' ctx <- tiledb_ctx()
 #'
@@ -83,7 +86,6 @@ setContext <- function(ctx) tiledb_set_context(ctx)
 #' @importFrom methods is
 #' @export tiledb_ctx
 tiledb_ctx <- function(config = NULL, cached = TRUE) {
-
   ctx <- .pkgenv[["ctx"]]
 
   ## if not-NULL and no (new) config and cache use is requested, return it
@@ -122,17 +124,21 @@ setGeneric("config", function(object, ...) {
 #' @param object tiledb_ctx object
 #' @return `tiledb_config` object associated with the `tiledb_ctx` instance
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 #' cfg <- config(ctx)
 #' cfg["sm.tile_cache_size"]
 #'
 #' @export
-setMethod("config", signature(object = "tiledb_ctx"),
-          function(object = tiledb_get_context()) {
-            ptr <- libtiledb_ctx_config(object@ptr)
-            tiledb_config.from_ptr(ptr)
-          })
+setMethod(
+  "config", signature(object = "tiledb_ctx"),
+  function(object = tiledb_get_context()) {
+    ptr <- libtiledb_ctx_config(object@ptr)
+    tiledb_config.from_ptr(ptr)
+  }
+)
 
 #' Query if a TileDB backend is supported
 #'
@@ -147,14 +153,18 @@ setMethod("config", signature(object = "tiledb_ctx"),
 #' @param scheme URI string scheme ("file", "hdfs", "s3")
 #' @return TRUE if tiledb backend is supported, FALSE otherwise
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' tiledb_is_supported_fs("file")
 #' tiledb_is_supported_fs("s3")
 #'
 #' @export
 tiledb_is_supported_fs <- function(scheme, object = tiledb_get_context()) {
-  stopifnot(`The 'object' argument must be a tiledb_ctx object` = is(object, "tiledb_ctx"),
-            `The 'scheme' argument must be of type character` = is.character(scheme))
+  stopifnot(
+    `The 'object' argument must be a tiledb_ctx object` = is(object, "tiledb_ctx"),
+    `The 'scheme' argument must be of type character` = is.character(scheme)
+  )
   libtiledb_ctx_is_supported_fs(object@ptr, scheme)
 }
 
@@ -164,15 +174,19 @@ tiledb_is_supported_fs <- function(scheme, object = tiledb_get_context()) {
 #' @param key string
 #' @param value string
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' ctx <- tiledb_ctx(c("sm.tile_cache_size" = "10"))
 #' cfg <- tiledb_ctx_set_tag(ctx, "tag", "value")
 #'
 #' @export
 tiledb_ctx_set_tag <- function(object, key, value) {
-  stopifnot(`The 'object' argument must be a tiledb_ctx object` = is(object, "tiledb_ctx"),
-            `The 'key' argument must be of type character` = is.character(key),
-            `The 'value' argument must be of type character` = is.character(key))
+  stopifnot(
+    `The 'object' argument must be a tiledb_ctx object` = is(object, "tiledb_ctx"),
+    `The 'key' argument must be of type character` = is.character(key),
+    `The 'value' argument must be of type character` = is.character(key)
+  )
   return(libtiledb_ctx_set_tag(object@ptr, key, value))
 }
 
@@ -185,7 +199,7 @@ tiledb_ctx_set_default_tags <- function(object) {
   tiledb_ctx_set_tag(object, "x-tiledb-api-language", "r")
   tiledb_ctx_set_tag(object, "x-tiledb-api-language-version", as.character(packageVersion("tiledb")))
   info <- Sys.info()
-  tiledb_ctx_set_tag(object, "x-tiledb-api-sys-platform", paste(info["sysname"], info["release"], info["machine"], collapse=""))
+  tiledb_ctx_set_tag(object, "x-tiledb-api-sys-platform", paste(info["sysname"], info["release"], info["machine"], collapse = ""))
 }
 
 #' Return context statistics as a JSON string
@@ -194,6 +208,6 @@ tiledb_ctx_set_default_tags <- function(object) {
 #' @return A JSON-formatted string with context statistics
 #' @export
 tiledb_ctx_stats <- function(object = tiledb_get_context()) {
-    stopifnot(`The 'object' variable must be a TileDB Context object` = is(object, "tiledb_ctx"))
-    libtiledb_ctx_stats(object@ptr)
+  stopifnot(`The 'object' variable must be a TileDB Context object` = is(object, "tiledb_ctx"))
+  libtiledb_ctx_stats(object@ptr)
 }

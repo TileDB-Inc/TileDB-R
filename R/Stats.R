@@ -49,7 +49,9 @@ tiledb_stats_reset <- function() {
 #' @param path Character variable with path to stats file;
 #' if the empty string is passed then the result is displayed on stdout.
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' pth <- tempfile()
 #' tiledb_stats_dump(pth)
 #' cat(readLines(pth)[1:10], sep = "\n")
@@ -72,12 +74,14 @@ tiledb_stats_print <- function() {
 #'
 #' This function requires TileDB Embedded 2.0.3 or later.
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' txt <- tiledb_stats_raw_dump()
 #' cat(txt, "\n")
 #' @export
 tiledb_stats_raw_dump <- function() {
-    libtiledb_stats_raw_dump()
+  libtiledb_stats_raw_dump()
 }
 
 #' Print internal TileDB statistics as JSON
@@ -86,7 +90,7 @@ tiledb_stats_raw_dump <- function() {
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_print <- function() {
-    cat(libtiledb_stats_raw_dump(), "\n")
+  cat(libtiledb_stats_raw_dump(), "\n")
 }
 
 #' Gets internal TileDB statistics as JSON string
@@ -96,6 +100,6 @@ tiledb_stats_raw_print <- function() {
 #' It required TileDB Embedded 2.0.3 or later.
 #' @export
 tiledb_stats_raw_get <- function() {
-    .Deprecated(msg="Use 'tiledb_stats_raw_dump' instead of 'tiledb_stats_raw_get'.")
-    libtiledb_stats_raw_get()
- }
+  .Deprecated(msg = "Use 'tiledb_stats_raw_dump' instead of 'tiledb_stats_raw_get'.")
+  libtiledb_stats_raw_get()
+}

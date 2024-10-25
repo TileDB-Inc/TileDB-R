@@ -25,24 +25,29 @@
 #' @slot ptr An external pointer to the underlying CurrentDomain object
 #' @exportClass tiledb_current_domain
 setClass("tiledb_current_domain",
-         slots = list(ptr = "externalptr"))
+  slots = list(ptr = "externalptr")
+)
 
 #' Creates a `tiledb_current_domain` object
 #'
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The `tiledb_current_domain` object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' if (tiledb_version(TRUE) >= "2.25.0") {
-#'    cd <-tiledb_current_domain()
+#'   cd <- tiledb_current_domain()
 #' }
 #'
 #' @export
 tiledb_current_domain <- function(ctx = tiledb_get_context()) {
-    stopifnot("The first argment must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
-              "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    ptr <- libtiledb_current_domain_create(ctx@ptr)
-    return(new("tiledb_current_domain", ptr = ptr))
+  stopifnot(
+    "The first argment must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
+    "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
+  )
+  ptr <- libtiledb_current_domain_create(ctx@ptr)
+  return(new("tiledb_current_domain", ptr = ptr))
 }
 
 #' Get `tiledb_current_domain` data type as string
@@ -51,10 +56,12 @@ tiledb_current_domain <- function(ctx = tiledb_get_context()) {
 #' @return The datatype (as string) of the `tiledb_current_domain` object
 #' @export
 tiledb_current_domain_get_type <- function(cd) {
-    stopifnot("The first argment must be a TileDB CurrentDomain object" =
-                  is(cd, "tiledb_current_domain"),
-              "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    libtiledb_current_domain_type(cd@ptr)
+  stopifnot(
+    "The first argment must be a TileDB CurrentDomain object" =
+      is(cd, "tiledb_current_domain"),
+    "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
+  )
+  libtiledb_current_domain_type(cd@ptr)
 }
 
 #' Set a `tiledb_ndrectangle` in a `tiledb_current_domain` object
@@ -64,12 +71,14 @@ tiledb_current_domain_get_type <- function(cd) {
 #' @return The modifiled TileDB CurrendDomain object
 #' @export
 tiledb_current_domain_set_ndrectangle <- function(cd, ndr) {
-    stopifnot("The first argment must be a TileDB CurrentDomain object" =
-                  is(cd, "tiledb_current_domain"),
-              "The second argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
-              "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    cd@ptr <- libtiledb_current_domain_set_ndrectangle(cd@ptr, ndr@ptr)
-    cd
+  stopifnot(
+    "The first argment must be a TileDB CurrentDomain object" =
+      is(cd, "tiledb_current_domain"),
+    "The second argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
+    "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
+  )
+  cd@ptr <- libtiledb_current_domain_set_ndrectangle(cd@ptr, ndr@ptr)
+  cd
 }
 
 #' Get a `tiledb_ndrectangle` from a `tiledb_current_domain` object
@@ -78,11 +87,13 @@ tiledb_current_domain_set_ndrectangle <- function(cd, ndr) {
 #' @return The corresponding TileDB NDRectangle object
 #' @export
 tiledb_current_domain_get_ndrectangle <- function(cd) {
-    stopifnot("The first argment must be a TileDB CurrentDomain object" =
-                  is(cd, "tiledb_current_domain"),
-              "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    ptr <- libtiledb_current_domain_get_ndrectangle(cd@ptr)
-    return(new("tiledb_ndrectangle", ptr = ptr))
+  stopifnot(
+    "The first argment must be a TileDB CurrentDomain object" =
+      is(cd, "tiledb_current_domain"),
+    "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
+  )
+  ptr <- libtiledb_current_domain_get_ndrectangle(cd@ptr)
+  return(new("tiledb_ndrectangle", ptr = ptr))
 }
 
 #' Test `tiledb_current_domain` object for being empty
@@ -91,8 +102,10 @@ tiledb_current_domain_get_ndrectangle <- function(cd) {
 #' @return A boolean indicating whether the object is empty or not
 #' @export
 tiledb_current_domain_is_empty <- function(cd) {
-    stopifnot("The first argment must be a TileDB CurrentDomain object" =
-                  is(cd, "tiledb_current_domain"),
-              "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0")
-    libtiledb_current_domain_is_empty(cd@ptr)
+  stopifnot(
+    "The first argment must be a TileDB CurrentDomain object" =
+      is(cd, "tiledb_current_domain"),
+    "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
+  )
+  libtiledb_current_domain_is_empty(cd@ptr)
 }

@@ -25,12 +25,13 @@
 #' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_config
 setClass("tiledb_config",
-         slots = list(ptr = "externalptr"))
+  slots = list(ptr = "externalptr")
+)
 
 #' @importFrom methods new
 tiledb_config.from_ptr <- function(ptr) {
-    stopifnot(`ptr must be a non-NULL externalptr to a tiledb_config instance` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
-    new("tiledb_config", ptr = ptr)
+  stopifnot(`ptr must be a non-NULL externalptr to a tiledb_config instance` = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
+  new("tiledb_config", ptr = ptr)
 }
 
 #' Creates a `tiledb_config` object
@@ -44,7 +45,9 @@ tiledb_config.from_ptr <- function(ptr) {
 #' @param config (optional) character vector of config parameter names, values
 #' @return `tiledb_config` object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
 #'
@@ -74,7 +77,9 @@ tiledb_config <- function(config = NA_character_) {
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
 #' @return a config string value if parameter exists, else NA
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
 #' cfg["does_not_exist"]
@@ -82,9 +87,11 @@ tiledb_config <- function(config = NA_character_) {
 #' @aliases [,tiledb_config-method
 #' @aliases [,tiledb_config,ANY,tiledb_config-method
 #' @aliases [,tiledb_config,ANY,ANY,tiledb_config-method
-setMethod("[", "tiledb_config", function(x, i, j, ..., drop=FALSE) {
-  stopifnot(`The first subscript in tiledb_config subscript must be of type 'character'` = is.character(i),
-            `The second subscript is currently unused` = missing(j))
+setMethod("[", "tiledb_config", function(x, i, j, ..., drop = FALSE) {
+  stopifnot(
+    `The first subscript in tiledb_config subscript must be of type 'character'` = is.character(i),
+    `The second subscript is currently unused` = missing(j)
+  )
   tryCatch(libtiledb_config_get(x@ptr, i), error = function(e) NA)
 })
 
@@ -96,7 +103,9 @@ setMethod("[", "tiledb_config", function(x, i, j, ..., drop=FALSE) {
 #' @param value value to set, will be converted into a stringa
 #' @return updated `tiledb_config` object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' cfg <- tiledb_config()
 #' cfg["sm.tile_cache_size"]
 #'
@@ -109,9 +118,11 @@ setMethod("[", "tiledb_config", function(x, i, j, ..., drop=FALSE) {
 #' @aliases [<-,tiledb_config,ANY,tiledb_config-method
 #' @aliases [<-,tiledb_config,ANY,ANY,tiledb_config-method
 setMethod("[<-", "tiledb_config", function(x, i, j, value) {
-  stopifnot(`The first subscript in tiledb_config subscript must be of type 'character'` = is.character(i),
-            `The second subscript is currently unused` = missing(j),
-            `The value argument must be be int, numeric, character or logical` = is.logical(value) || is.character(value) || is.numeric(value))
+  stopifnot(
+    `The first subscript in tiledb_config subscript must be of type 'character'` = is.character(i),
+    `The second subscript is currently unused` = missing(j),
+    `The value argument must be be int, numeric, character or logical` = is.logical(value) || is.character(value) || is.numeric(value)
+  )
   if (is.logical(value)) {
     value <- if (isTRUE(value)) "true" else "false"
   } else {
@@ -125,7 +136,9 @@ setMethod("[<-", "tiledb_config", function(x, i, j, value) {
 #'
 #' @param object `tiledb_config` object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' cfg <- tiledb_config()
 #' show(cfg)
 #' @export
@@ -139,7 +152,9 @@ setMethod("show", signature(object = "tiledb_config"), function(object) {
 #' @param path The path to config file to be created
 #' @return path to created config file
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' tmp <- tempfile()
 #' cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 #' pth <- tiledb_config_save(cfg, tmp)
@@ -148,8 +163,10 @@ setMethod("show", signature(object = "tiledb_config"), function(object) {
 #'
 #' @export
 tiledb_config_save <- function(config, path) {
-  stopifnot(`The 'config' argument must be a tiledb_config object` = is(config, "tiledb_config"),
-            `The 'path' argument must be of type character` = is.character(path))
+  stopifnot(
+    `The 'config' argument must be a tiledb_config object` = is(config, "tiledb_config"),
+    `The 'path' argument must be of type character` = is.character(path)
+  )
   libtiledb_config_save_to_file(config@ptr, path)
 }
 
@@ -157,7 +174,9 @@ tiledb_config_save <- function(config, path) {
 #'
 #' @param path path to the config file
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' tmp <- tempfile()
 #' cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 #' pth <- tiledb_config_save(cfg, tmp)
@@ -177,12 +196,14 @@ tiledb_config_load <- function(path) {
 #' @param mode Character value `"any"`, currently unused
 #' @return a character vector of config parameter names, values
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' cfg <- tiledb_config()
 #' as.vector(cfg)
 #'
 #' @export
-as.vector.tiledb_config <- function(x, mode="any") {
+as.vector.tiledb_config <- function(x, mode = "any") {
   stopifnot(`The 'x' argument must be a tiledb_config object` = is(x, "tiledb_config"))
   libtiledb_config_vector(x@ptr)
 }
@@ -223,7 +244,7 @@ as.data.frame.tiledb_config <- function(x, ...) {
 #' @return The modified configuration object is returned invisibly.
 #' @importFrom stats na.omit
 #' @export
-limitTileDBCores <- function(ncores, verbose=FALSE) {
+limitTileDBCores <- function(ncores, verbose = FALSE) {
   if (missing(ncores)) {
     ## start with a simple fallback: 'Ncpus' (if set) or else 2
     ncores <- getOption("Ncpus", 2L)
@@ -236,7 +257,7 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
   cfg <- tiledb_config()
   cfg["sm.compute_concurrency_level"] <- ncores
   cfg["sm.io_concurrency_level"] <- ncores
-  if (verbose) message("Limiting TileDB to ",ncores," cores. See ?limitTileDBCores.")
+  if (verbose) message("Limiting TileDB to ", ncores, " cores. See ?limitTileDBCores.")
   invisible(cfg)
 }
 
@@ -247,8 +268,10 @@ limitTileDBCores <- function(ncores, verbose=FALSE) {
 #' @return The modified TileDB Config object
 #' @export
 tiledb_config_unset <- function(config, param) {
-  stopifnot(`The 'config' argument must be a tiledb_config object` = is(config, "tiledb_config"),
-            `The 'param' argument must be of type character` = is.character(param))
+  stopifnot(
+    `The 'config' argument must be a tiledb_config object` = is(config, "tiledb_config"),
+    `The 'param' argument must be of type character` = is.character(param)
+  )
   libtiledb_config_unset(config@ptr, param)
 }
 
@@ -257,16 +280,17 @@ tiledb_config_unset <- function(config, param) {
 #' @return Nothing is returned but as a side-effect the 'AsBuilt' string is displayed
 #' @export
 tiledb_config_as_built_show <- function() {
-    stopifnot("Accessing 'AsBuilt' requires TileDB 2.17 or newer" = tiledb_version(TRUE) >= "2.17.0")
-    cat(libtiledb_as_built_dump(), "\n")
+  stopifnot("Accessing 'AsBuilt' requires TileDB 2.17 or newer" = tiledb_version(TRUE) >= "2.17.0")
+  cat(libtiledb_as_built_dump(), "\n")
 }
 
 #' Return the 'AsBuilt' JSON string
 #'
 #' @return The JSON string containing 'AsBuilt' information
 #' @examples
-#' if (tiledb_version(TRUE) > "2.17")
-#'     txt <- tiledb::tiledb_config_as_built_json()
+#' if (tiledb_version(TRUE) > "2.17") {
+#'   txt <- tiledb::tiledb_config_as_built_json()
+#' }
 #' ## now eg either one of
 #' ##   sapply(jsonlite::fromJSON(txt)$as_built$parameters$storage_backends, \(x) x[[1]])
 #' ##   sapply(RcppSimdJson::fparse(txt)$as_built$parameters$storage_backends, \(x) x[[1]])
@@ -274,6 +298,6 @@ tiledb_config_as_built_show <- function() {
 #' ##   c(azure = FALSE, gcs = FALSE, hdfs = FALSE, s3 = TRUE)
 #' @export
 tiledb_config_as_built_json <- function() {
-    stopifnot("Accessing 'AsBuilt' requires TileDB 2.17 or newer" = tiledb_version(TRUE) >= "2.17.0")
-    libtiledb_as_built_dump()
+  stopifnot("Accessing 'AsBuilt' requires TileDB 2.17 or newer" = tiledb_version(TRUE) >= "2.17.0")
+  libtiledb_as_built_dump()
 }

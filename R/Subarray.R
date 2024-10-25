@@ -25,12 +25,15 @@
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_subarray
 setClass("tiledb_subarray",
-         slots = list(ptr = "externalptr"))
+  slots = list(ptr = "externalptr")
+)
 
 tiledb_subarray.from_ptr <- function(ptr) {
-    stopifnot("ptr must be a non-NULL externalptr to a tiledb_subarray" =
-                  !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
-    return(new("tiledb_subarray", ptr = ptr))
+  stopifnot(
+    "ptr must be a non-NULL externalptr to a tiledb_subarray" =
+      !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr)
+  )
+  return(new("tiledb_subarray", ptr = ptr))
 }
 
 #' Constructs a `tiledb_subarray` object from a TileDB Query
@@ -39,9 +42,9 @@ tiledb_subarray.from_ptr <- function(ptr) {
 #' @return tiledb_subarray object
 #' @export
 tiledb_subarray <- function(query) {
-    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"))
-    ptr <- libtiledb_subarray(query@ptr)
-    return(new("tiledb_subarray", ptr = ptr))
+  stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"))
+  ptr <- libtiledb_subarray(query@ptr)
+  return(new("tiledb_subarray", ptr = ptr))
 }
 
 #' Apply a Subarray to a Query
@@ -51,8 +54,10 @@ tiledb_subarray <- function(query) {
 #' @return tiledb_query object
 #' @export
 tiledb_subarray_to_query <- function(query, subarray) {
-    stopifnot("Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"),
-              "Argument 'subarray' must be a tiledb_subarray" = is(subarray, "tiledb_subarray"))
-    query@ptr <- libtiledb_query_set_subarray_object(query@ptr, subarray@ptr)
-    query
+  stopifnot(
+    "Argument 'query' must be a tiledb_query object" = is(query, "tiledb_query"),
+    "Argument 'subarray' must be a tiledb_subarray" = is(subarray, "tiledb_subarray")
+  )
+  query@ptr <- libtiledb_query_set_subarray_object(query@ptr, subarray@ptr)
+  query
 }

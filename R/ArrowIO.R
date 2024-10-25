@@ -31,10 +31,12 @@
 ##' with the Arrow Schema stored as the external pointer tag) classed as an S3 object
 ##' @export
 tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) {
-    stopifnot("The 'query' argument must be a tiledb query" = is(query, "tiledb_query"),
-              "The 'name' argument must be character" = is.character(name))
-    res <- libtiledb_query_export_buffer(ctx@ptr, query@ptr, name)
-    res
+  stopifnot(
+    "The 'query' argument must be a tiledb query" = is(query, "tiledb_query"),
+    "The 'name' argument must be character" = is.character(name)
+  )
+  res <- libtiledb_query_export_buffer(ctx@ptr, query@ptr, name)
+  res
 }
 
 ##' Import to Query Buffer from Pair of Arrow IO Pointers
@@ -49,12 +51,14 @@ tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) 
 ##' @return The update Query external pointer is returned
 ##' @export
 tiledb_query_import_buffer <- function(query, name, nanoarrowptr, ctx = tiledb_get_context()) {
-    stopifnot("The 'query' argument must be a tiledb query" = is(query, "tiledb_query"),
-              "The 'name' argument must be character" = is.character(name),
-              "The 'nanoarrowptr' argument must be an 'nanoarrow' array object" =
-                  inherits(nanoarrowptr, "nanoarrow_array"))
-    query@ptr <- libtiledb_query_import_buffer(ctx@ptr, query@ptr, name, nanoarrowptr)
-    query
+  stopifnot(
+    "The 'query' argument must be a tiledb query" = is(query, "tiledb_query"),
+    "The 'name' argument must be character" = is.character(name),
+    "The 'nanoarrowptr' argument must be an 'nanoarrow' array object" =
+      inherits(nanoarrowptr, "nanoarrow_array")
+  )
+  query@ptr <- libtiledb_query_import_buffer(ctx@ptr, query@ptr, name, nanoarrowptr)
+  query
 }
 
 ##' (Deprecated) Allocate (or Release) Arrow Array and Schema Pointers
@@ -67,45 +71,45 @@ tiledb_query_import_buffer <- function(query, name, nanoarrowptr, ctx = tiledb_g
 ##' @return The allocating functions return the requested pointer
 ##' @export
 tiledb_arrow_array_ptr <- function() {
-    .Deprecated(msg="tiledb_arrow_array_ptr() is deprecated, please use nanoarrow::nanoarrow_allocate_array() instead.")
-    res <- nanoarrow::nanoarrow_allocate_array()
+  .Deprecated(msg = "tiledb_arrow_array_ptr() is deprecated, please use nanoarrow::nanoarrow_allocate_array() instead.")
+  res <- nanoarrow::nanoarrow_allocate_array()
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_schema_ptr <- function() {
-    .Deprecated(msg="tiledb_arrow_schema_ptr() is deprecated, please use nanoarrow::nanoarrow_allocate_schema() instead.")
-    res <- nanoarrow::nanoarrow_allocate_schema()
+  .Deprecated(msg = "tiledb_arrow_schema_ptr() is deprecated, please use nanoarrow::nanoarrow_allocate_schema() instead.")
+  res <- nanoarrow::nanoarrow_allocate_schema()
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_array_del <- function(ptr) {
-    .Deprecated(msg="tiledb_arrow_array_del() is deprecated, please use nanoarrow::nanoarrow_pointer_release() instead.")
-    nanoarrow::nanoarrow_pointer_release(ptr)
+  .Deprecated(msg = "tiledb_arrow_array_del() is deprecated, please use nanoarrow::nanoarrow_pointer_release() instead.")
+  nanoarrow::nanoarrow_pointer_release(ptr)
 }
 
 ##' @rdname tiledb_arrow_array_ptr
 ##' @export
 tiledb_arrow_schema_del <- function(ptr) {
-    .Deprecated(msg="tiledb_arrow_schema_del() is deprecated, please use nanoarrow::nanoarrow_pointer_release() instead.")
-    nanoarrow::nanoarrow_pointer_release(ptr)
+  .Deprecated(msg = "tiledb_arrow_schema_del() is deprecated, please use nanoarrow::nanoarrow_pointer_release() instead.")
+  nanoarrow::nanoarrow_pointer_release(ptr)
 }
 
 ##' @noRd
 .tiledb_set_arrow_config <- function(ctx = tiledb_get_context()) {
-    cfg <- tiledb_config()        # for var-num columns such as char we need these
-    cfg["sm.var_offsets.bitsize"] <- "64"
-    cfg["sm.var_offsets.mode"] <- "elements"
-    cfg["sm.var_offsets.extra_element"] <- "true"
-    ctx <- tiledb_ctx(cfg)
+  cfg <- tiledb_config() # for var-num columns such as char we need these
+  cfg["sm.var_offsets.bitsize"] <- "64"
+  cfg["sm.var_offsets.mode"] <- "elements"
+  cfg["sm.var_offsets.extra_element"] <- "true"
+  ctx <- tiledb_ctx(cfg)
 }
 
 ##' @noRd
 .tiledb_unset_arrow_config <- function(ctx = tiledb_get_context()) {
-    cfg <- tiledb_config()        # for var-num columns such as char we need these
-    cfg["sm.var_offsets.bitsize"] <- "64"
-    cfg["sm.var_offsets.mode"] <- "bytes"
-    cfg["sm.var_offsets.extra_element"] <- "false"
-    ctx <- tiledb_ctx(cfg)
+  cfg <- tiledb_config() # for var-num columns such as char we need these
+  cfg["sm.var_offsets.bitsize"] <- "64"
+  cfg["sm.var_offsets.mode"] <- "bytes"
+  cfg["sm.var_offsets.extra_element"] <- "false"
+  ctx <- tiledb_ctx(cfg)
 }

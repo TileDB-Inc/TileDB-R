@@ -28,7 +28,9 @@
 #' in case the array should be encryption.
 #'
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' \dontrun{
 #' pth <- tempdir()
 #' dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 10L), type = "INT32")))
@@ -38,26 +40,28 @@
 #' }
 #'
 #' @export
-tiledb_array_create <- function(uri, schema, encryption_key) { #, ctx = tiledb_get_context()) {
-    stopifnot("The 'uri' argument must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
-              "The 'schema' argument must be a tiledb_array_schema object" = !missing(schema) && is(schema, "tiledb_array_schema"))
-    if (!missing(encryption_key)) {
-        ## old interface
-        needreset <- FALSE
-        config <- oldconfig <- tiledb_config()
-        if (config["sm.encryption_type"] != "AES_256_GCM" ||
-            config["sm.encryption_key"] != encryption_key) {
-            config["sm.encryption_type"] <- "AES_256_GCM"
-            config["sm.encryption_key"] <- encryption_key
-            ctx <- tiledb::tiledb_ctx(config)
-            needreset <- TRUE
-        }
-        uri <- libtiledb_array_create(uri, schema@ptr)
-        if (needreset) ctx <- tiledb::tiledb_ctx(oldconfig)
-        invisible(uri)
-    } else {
-        invisible(libtiledb_array_create(uri, schema@ptr))
+tiledb_array_create <- function(uri, schema, encryption_key) { # , ctx = tiledb_get_context()) {
+  stopifnot(
+    "The 'uri' argument must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
+    "The 'schema' argument must be a tiledb_array_schema object" = !missing(schema) && is(schema, "tiledb_array_schema")
+  )
+  if (!missing(encryption_key)) {
+    ## old interface
+    needreset <- FALSE
+    config <- oldconfig <- tiledb_config()
+    if (config["sm.encryption_type"] != "AES_256_GCM" ||
+      config["sm.encryption_key"] != encryption_key) {
+      config["sm.encryption_type"] <- "AES_256_GCM"
+      config["sm.encryption_key"] <- encryption_key
+      ctx <- tiledb::tiledb_ctx(config)
+      needreset <- TRUE
     }
+    uri <- libtiledb_array_create(uri, schema@ptr)
+    if (needreset) ctx <- tiledb::tiledb_ctx(oldconfig)
+    invisible(uri)
+  } else {
+    invisible(libtiledb_array_create(uri, schema@ptr))
+  }
 }
 
 ##' Open a TileDB Array
@@ -69,10 +73,11 @@ tiledb_array_create <- function(uri, schema, encryption_key) { #, ctx = tiledb_g
 ##' @importFrom methods .hasSlot
 ##' @export
 tiledb_array_open <- function(arr,
-                              type = if (tiledb_version(TRUE) >= "2.12.0")
-                                         c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
-                                     else
-                                         c("READ", "WRITE")) {
+                              type = if (tiledb_version(TRUE) >= "2.12.0") {
+                                c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
+                              } else {
+                                c("READ", "WRITE")
+                              }) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
   type <- match.arg(type)
 
@@ -92,9 +97,11 @@ tiledb_array_open <- function(arr,
 ##' @param timestamp A Datetime object that will be converted to millisecond granularity
 ##' @return The TileDB Array object but opened for reading or writing
 ##' @export
-tiledb_array_open_at <- function(arr, type=c("READ","WRITE"), timestamp) {
-  stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
-            "The 'timestamp' argument must be a time object" = inherits(timestamp, "POSIXct"))
+tiledb_array_open_at <- function(arr, type = c("READ", "WRITE"), timestamp) {
+  stopifnot(
+    "The 'arr' argument must be a tiledb_array object" = .isArray(arr),
+    "The 'timestamp' argument must be a time object" = inherits(timestamp, "POSIXct")
+  )
   type <- match.arg(type)
   ctx <- tiledb_get_context()
   if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
@@ -123,8 +130,8 @@ tiledb_array_close <- function(arr) {
 ##' @return A boolean indicating whether the TileDB Array object is open
 ##' @export
 tiledb_array_is_open <- function(arr) {
-    stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
-    libtiledb_array_is_open(arr@ptr)
+  stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
+  libtiledb_array_is_open(arr@ptr)
 }
 
 ##' Check for Homogeneous Domain
@@ -137,8 +144,10 @@ tiledb_array_is_homogeneous <- function(arr) {
   ## there is a non-exported call at the C level we could use instead
   sch <- schema(arr)
   dom <- domain(sch)
-  domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
-                       libtiledb_dim_get_datatype)
+  domaintype <- sapply(
+    libtiledb_domain_get_dimensions(dom@ptr),
+    libtiledb_dim_get_datatype
+  )
   n <- length(unique(domaintype))
   n == 1
 }
@@ -153,8 +162,10 @@ tiledb_array_is_heterogeneous <- function(arr) {
   ## there is a non-exported call at the C level we could use instead
   sch <- schema(arr)
   dom <- domain(sch)
-  domaintype <- sapply(libtiledb_domain_get_dimensions(dom@ptr),
-                       libtiledb_dim_get_datatype)
+  domaintype <- sapply(
+    libtiledb_domain_get_dimensions(dom@ptr),
+    libtiledb_dim_get_datatype
+  )
   n <- length(unique(domaintype))
   n > 1
 }
@@ -168,11 +179,13 @@ tiledb_array_is_heterogeneous <- function(arr) {
 ##' @return A boolean indicating success
 ##' @export
 tiledb_array_delete_fragments <- function(arr, ts_start, ts_end, ctx = tiledb_get_context()) {
-    stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
-              "The 'ts_start' argument must be a time object" = inherits(ts_start, "POSIXct"),
-              "The 'ts_end' argument must be a time object" = inherits(ts_end, "POSIXct"))
-    libtiledb_array_delete_fragments(ctx@ptr, arr@ptr, ts_start, ts_end)
-    invisible(TRUE)
+  stopifnot(
+    "The 'arr' argument must be a tiledb_array object" = .isArray(arr),
+    "The 'ts_start' argument must be a time object" = inherits(ts_start, "POSIXct"),
+    "The 'ts_end' argument must be a time object" = inherits(ts_end, "POSIXct")
+  )
+  libtiledb_array_delete_fragments(ctx@ptr, arr@ptr, ts_start, ts_end)
+  invisible(TRUE)
 }
 
 ##' Delete fragments written given by their URIs
@@ -183,14 +196,16 @@ tiledb_array_delete_fragments <- function(arr, ts_start, ts_end, ctx = tiledb_ge
 ##' @return A boolean indicating success
 ##' @export
 tiledb_array_delete_fragments_list <- function(arr, fragments, ctx = tiledb_get_context()) {
-    stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr),
-              "The 'fragments' argument must be a character vector" = is.character(fragments))
-    if (tiledb_version(TRUE) >= "2.18.0") {
-        libtiledb_array_delete_fragments_list(ctx@ptr, arr@ptr, fragments)
-    } else {
-        message("This function is only available with TileDB 2.18.0 or later")
-    }
-    invisible(TRUE)
+  stopifnot(
+    "The 'arr' argument must be a tiledb_array object" = .isArray(arr),
+    "The 'fragments' argument must be a character vector" = is.character(fragments)
+  )
+  if (tiledb_version(TRUE) >= "2.18.0") {
+    libtiledb_array_delete_fragments_list(ctx@ptr, arr@ptr, fragments)
+  } else {
+    message("This function is only available with TileDB 2.18.0 or later")
+  }
+  invisible(TRUE)
 }
 
 ##' Check for Enumeration (aka Factor aka Dictionary)
@@ -199,13 +214,13 @@ tiledb_array_delete_fragments_list <- function(arr, fragments, ctx = tiledb_get_
 ##' @return A boolean indicating if the array has homogeneous domains
 ##' @export
 tiledb_array_has_enumeration <- function(arr) {
-    stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
-    ctx <- tiledb_get_context()
-    if (!tiledb_array_is_open(arr)) {
-        arr <- tiledb_array_open(arr, "READ")
-        on.exit(tiledb_array_close(arr))
-    }
-    return(libtiledb_array_has_enumeration_vector(ctx@ptr, arr@ptr))
+  stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
+  ctx <- tiledb_get_context()
+  if (!tiledb_array_is_open(arr)) {
+    arr <- tiledb_array_open(arr, "READ")
+    on.exit(tiledb_array_close(arr))
+  }
+  return(libtiledb_array_has_enumeration_vector(ctx@ptr, arr@ptr))
 }
 
 ##' Run an aggregate query on the given (sparse) array and attribute
@@ -220,26 +235,32 @@ tiledb_array_has_enumeration <- function(arr) {
 ##' @return The value of the aggregation
 ##' @export
 tiledb_array_apply_aggregate <- function(array, attrname,
-                                         operation = c("Count", "NullCount", "Min", "Max",
-                                                       "Mean", "Sum"),
+                                         operation = c(
+                                           "Count", "NullCount", "Min", "Max",
+                                           "Mean", "Sum"
+                                         ),
                                          nullable = TRUE) {
-    stopifnot("The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
-              "The 'array' must be a sparse TileDB Array" = is.sparse(schema(array)),
-              "The 'attrname' argument must be character" = is.character(attrname),
-              "The 'operation' argument must be character" = is.character(operation),
-              "The 'nullable' argument must be logical" = is.logical(nullable))
+  stopifnot(
+    "The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
+    "The 'array' must be a sparse TileDB Array" = is.sparse(schema(array)),
+    "The 'attrname' argument must be character" = is.character(attrname),
+    "The 'operation' argument must be character" = is.character(operation),
+    "The 'nullable' argument must be logical" = is.logical(nullable)
+  )
 
-    operation <- match.arg(operation)
+  operation <- match.arg(operation)
 
-    if (tiledb_array_is_open(array))
-        array <- tiledb_array_close(array)
+  if (tiledb_array_is_open(array)) {
+    array <- tiledb_array_close(array)
+  }
 
-    query <- tiledb_query(array, "READ")
+  query <- tiledb_query(array, "READ")
 
-    if (! tiledb_query_get_layout(query) %in% c("UNORDERED", "GLOBAL_ORDER"))
-        query <- tiledb_query_set_layout(query, "UNORDERED")
+  if (!tiledb_query_get_layout(query) %in% c("UNORDERED", "GLOBAL_ORDER")) {
+    query <- tiledb_query_set_layout(query, "UNORDERED")
+  }
 
-    libtiledb_query_apply_aggregate(query@ptr, attrname, operation, nullable)
+  libtiledb_query_apply_aggregate(query@ptr, attrname, operation, nullable)
 }
 
 ##' Upgrade an Array to the current TileDB Array Schema Format
@@ -250,9 +271,13 @@ tiledb_array_apply_aggregate <- function(array, attrname,
 ##' @return Nothing is returned as the function is invoked for its side effect
 ##' @export
 tiledb_array_upgrade_version <- function(array, config = NULL, ctx = tiledb_get_context()) {
-    stopifnot("The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
-              "The 'config' argument must be NULL or a TileDB Config" =
-                  is.null(config) || is(config, "tiledb_config"))
-    libtiledb_array_upgrade_version(ctx@ptr, array@ptr, array@uri,
-                                    if (is.null(config)) NULL else config@ptr)
+  stopifnot(
+    "The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
+    "The 'config' argument must be NULL or a TileDB Config" =
+      is.null(config) || is(config, "tiledb_config")
+  )
+  libtiledb_array_upgrade_version(
+    ctx@ptr, array@ptr, array@uri,
+    if (is.null(config)) NULL else config@ptr
+  )
 }

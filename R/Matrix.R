@@ -36,53 +36,57 @@
 ##' @export
 fromMatrix <- function(obj,
                        uri,
-                       filter="ZSTD",
+                       filter = "ZSTD",
                        capacity = 10000L) {
+  stopifnot(
+    `Argument 'obj' must be matrix object` = inherits(obj, "matrix"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
 
-    stopifnot(`Argument 'obj' must be matrix object` = inherits(obj, "matrix"),
-              `Argument 'uri' must be character` = is.character(uri))
+  dims <- dim(obj)
+  dimnm <- dimnames(obj)
+  hasnames <- !is.null(dimnm) && !is.null(dimnm[[1]]) && !is.null(dimnm[[2]])
+  if (hasnames) {
+    dimr <- tiledb_dim(name = "rows", type = "ASCII", tile = NULL, domain = c(NULL, NULL))
+    dimc <- tiledb_dim(name = "cols", type = "ASCII", tile = NULL, domain = c(NULL, NULL))
+    dom <- tiledb_domain(dims = c(dimr, dimc))
+  } else {
+    dimr <- tiledb_dim(name = "rows", type = "INT32", tile = dims[1], domain = c(1L, dims[1]))
+    dimc <- tiledb_dim(name = "cols", type = "INT32", tile = dims[2], domain = c(1L, dims[2]))
+    dom <- tiledb_domain(dims = c(dimr, dimc))
+  }
 
-    dims <- dim(obj)
-    dimnm <- dimnames(obj)
-    hasnames <- !is.null(dimnm) && !is.null(dimnm[[1]]) && !is.null(dimnm[[2]])
-    if (hasnames) {
-        dimr <- tiledb_dim(name="rows", type = "ASCII", tile = NULL, domain = c(NULL, NULL))
-        dimc <- tiledb_dim(name="cols", type = "ASCII", tile = NULL, domain = c(NULL, NULL))
-        dom <- tiledb_domain(dims = c(dimr, dimc))
-    } else {
-        dimr <- tiledb_dim(name="rows", type = "INT32", tile = dims[1], domain = c(1L, dims[1]))
-        dimc <- tiledb_dim(name="cols", type = "INT32", tile = dims[2], domain = c(1L, dims[2]))
-        dom <- tiledb_domain(dims = c(dimr, dimc))
-    }
+  cl <- class(obj[1, 1])
+  if (cl == "integer") {
+    tp <- "INT32"
+  } else if (cl == "numeric") {
+    tp <- "FLOAT64"
+  } else {
+    stop("Currently unsupported type: ", cl)
+  }
 
-    cl <- class(obj[1,1])
-    if (cl == "integer")
-        tp <- "INT32"
-    else if (cl == "numeric")
-        tp <- "FLOAT64"
-    else
-        stop("Currently unsupported type: ", cl)
+  filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
 
-    filterlist <- tiledb_filter_list(sapply(filter, tiledb_filter))
-
-    attx <- tiledb_attr(name="x", type = tp, ncells = 1, filter_list = filterlist)
-    schema <- tiledb_array_schema(dom, attrs=attx, sparse = hasnames, capacity=capacity)
-    tiledb_array_create(uri, schema)
-    arr <- tiledb_array(uri)
-    if (hasnames) {
-        df <- data.frame(rows = rep(dimnm[[1]], dims[2]),
-                         cols = rep(dimnm[[2]], each=dims[1]),
-                         x = as.vector(obj))
-        arr[] <- df
-    } else {
-        arr[] <- obj
-    }
-    invisible(NULL)
+  attx <- tiledb_attr(name = "x", type = tp, ncells = 1, filter_list = filterlist)
+  schema <- tiledb_array_schema(dom, attrs = attx, sparse = hasnames, capacity = capacity)
+  tiledb_array_create(uri, schema)
+  arr <- tiledb_array(uri)
+  if (hasnames) {
+    df <- data.frame(
+      rows = rep(dimnm[[1]], dims[2]),
+      cols = rep(dimnm[[2]], each = dims[1]),
+      x = as.vector(obj)
+    )
+    arr[] <- df
+  } else {
+    arr[] <- obj
+  }
+  invisible(NULL)
 }
 
 ##' @rdname fromMatrix
 ##' @export
 toMatrix <- function(uri) {
-    stopifnot(`Argument 'uri' must be character` = is.character(uri))
-    tiledb_array(uri, return_as="matrix")[]
+  stopifnot(`Argument 'uri' must be character` = is.character(uri))
+  tiledb_array(uri, return_as = "matrix")[]
 }
