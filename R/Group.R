@@ -40,8 +40,9 @@ setClass("tiledb_group",
 #' @param cfg (optional) A TileConfig object
 #' @return A 'group' object
 #' @export
-tiledb_group <- function(uri, type = c("READ", "WRITE"),
-                         ctx = tiledb_get_context(), cfg = NULL) {
+tiledb_group <- function(
+    uri, type = c("READ", "WRITE"),
+    ctx = tiledb_get_context(), cfg = NULL) {
   stopifnot(
     "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
     "The 'uri' argument must be character" = is.character(uri),

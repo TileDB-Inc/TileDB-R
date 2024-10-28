@@ -99,8 +99,9 @@ tiledb_array_schema_evolution_array_evolve <- function(object, uri) {
 #' context object is retrieved
 #' @return The modified 'array_schema_evolution' object, invisibly
 #' @export
-tiledb_array_schema_evolution_add_enumeration <- function(object, name, enums, ordered = FALSE,
-                                                          ctx = tiledb_get_context()) {
+tiledb_array_schema_evolution_add_enumeration <- function(
+    object, name, enums, ordered = FALSE,
+    ctx = tiledb_get_context()) {
   stopifnot(
     "The first argument must be an Array Schema Evolution object" =
       is(object, "tiledb_array_schema_evolution"),
@@ -179,10 +180,11 @@ tiledb_array_schema_evolution_add_enumeration_empty <- function(ase, enum_name, 
 #' @param ctx Optional tiledb_ctx object
 #' @return The modified ArraySchemaEvolution object
 #' @export
-tiledb_array_schema_evolution_extend_enumeration <- function(ase, array, enum_name,
-                                                             new_values, nullable = FALSE,
-                                                             ordered = FALSE,
-                                                             ctx = tiledb_get_context()) {
+tiledb_array_schema_evolution_extend_enumeration <- function(
+    ase, array, enum_name,
+    new_values, nullable = FALSE,
+    ordered = FALSE,
+    ctx = tiledb_get_context()) {
   stopifnot(
     "Argument 'ase' must be an Array Schema Evolution object" =
       is(ase, "tiledb_array_schema_evolution"),

@@ -241,13 +241,14 @@ r_to_tiledb_type <- function(x) {
 }
 
 ## conversion helper from (and to) legacy validity map for nullable strings
-.legacy_validity <- function(inuri,
-                             outdir = NULL,
-                             fromlegacy = TRUE,
-                             tolegacy = FALSE,
-                             usetmp = FALSE,
-                             verbose = FALSE,
-                             debug = FALSE) {
+.legacy_validity <- function(
+    inuri,
+    outdir = NULL,
+    fromlegacy = TRUE,
+    tolegacy = FALSE,
+    usetmp = FALSE,
+    verbose = FALSE,
+    debug = FALSE) {
   stopifnot("'inuri' must be an existing directory" = dir.exists(inuri))
 
   if (verbose) {

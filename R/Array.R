@@ -72,12 +72,13 @@ tiledb_array_create <- function(uri, schema, encryption_key) { # , ctx = tiledb_
 ##' @return The TileDB Array object but opened for reading or writing
 ##' @importFrom methods .hasSlot
 ##' @export
-tiledb_array_open <- function(arr,
-                              type = if (tiledb_version(TRUE) >= "2.12.0") {
-                                c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
-                              } else {
-                                c("READ", "WRITE")
-                              }) {
+tiledb_array_open <- function(
+    arr,
+    type = if (tiledb_version(TRUE) >= "2.12.0") {
+      c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
+    } else {
+      c("READ", "WRITE")
+    }) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
   type <- match.arg(type)
 
@@ -234,12 +235,13 @@ tiledb_array_has_enumeration <- function(arr) {
 ##' @param nullable A boolean toggle whether the attribute is nullable
 ##' @return The value of the aggregation
 ##' @export
-tiledb_array_apply_aggregate <- function(array, attrname,
-                                         operation = c(
-                                           "Count", "NullCount", "Min", "Max",
-                                           "Mean", "Sum"
-                                         ),
-                                         nullable = TRUE) {
+tiledb_array_apply_aggregate <- function(
+    array, attrname,
+    operation = c(
+      "Count", "NullCount", "Min", "Max",
+      "Mean", "Sum"
+    ),
+    nullable = TRUE) {
   stopifnot(
     "The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
     "The 'array' must be a sparse TileDB Array" = is.sparse(schema(array)),

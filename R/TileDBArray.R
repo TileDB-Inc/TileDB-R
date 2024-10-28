@@ -142,28 +142,29 @@ setClass("tiledb_array",
 #' @return tiledb_array object
 #' @importFrom spdl set_level
 #' @export
-tiledb_array <- function(uri,
-                         query_type = c("READ", "WRITE"),
-                         is.sparse = NA,
-                         attrs = character(),
-                         extended = TRUE,
-                         selected_ranges = list(),
-                         selected_points = list(),
-                         query_layout = character(),
-                         datetimes_as_int64 = FALSE,
-                         encryption_key = character(),
-                         query_condition = new("tiledb_query_condition"),
-                         timestamp_start = as.POSIXct(double(), origin = "1970-01-01"),
-                         timestamp_end = as.POSIXct(double(), origin = "1970-01-01"),
-                         return_as = get_return_as_preference(),
-                         query_statistics = FALSE,
-                         strings_as_factors = getOption("stringsAsFactors", FALSE),
-                         keep_open = FALSE,
-                         sil = list(),
-                         dumpbuffers = character(),
-                         buffers = list(),
-                         ctx = tiledb_get_context(),
-                         as.data.frame = FALSE) {
+tiledb_array <- function(
+    uri,
+    query_type = c("READ", "WRITE"),
+    is.sparse = NA,
+    attrs = character(),
+    extended = TRUE,
+    selected_ranges = list(),
+    selected_points = list(),
+    query_layout = character(),
+    datetimes_as_int64 = FALSE,
+    encryption_key = character(),
+    query_condition = new("tiledb_query_condition"),
+    timestamp_start = as.POSIXct(double(), origin = "1970-01-01"),
+    timestamp_end = as.POSIXct(double(), origin = "1970-01-01"),
+    return_as = get_return_as_preference(),
+    query_statistics = FALSE,
+    strings_as_factors = getOption("stringsAsFactors", FALSE),
+    keep_open = FALSE,
+    sil = list(),
+    dumpbuffers = character(),
+    buffers = list(),
+    ctx = tiledb_get_context(),
+    as.data.frame = FALSE) {
   stopifnot(
     "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
     "Argument 'uri' must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
@@ -1829,9 +1830,10 @@ setReplaceMethod("datetimes_as_int64",
 #' @param ctx An option TileDB Context object
 #' @return NULL is returned invisibly
 #' @export
-array_consolidate <- function(uri, cfg = NULL,
-                              start_time, end_time,
-                              ctx = tiledb_get_context()) {
+array_consolidate <- function(
+    uri, cfg = NULL,
+    start_time, end_time,
+    ctx = tiledb_get_context()) {
   stopifnot(`Argument 'uri' must be character` = is.character(uri))
   if (is.null(cfg)) {
     cfg <- config(ctx)
@@ -1870,9 +1872,10 @@ array_consolidate <- function(uri, cfg = NULL,
 #' @param ctx An option TileDB Context object
 #' @return NULL is returned invisibly
 #' @export
-array_vacuum <- function(uri, cfg = NULL,
-                         start_time, end_time,
-                         ctx = tiledb_get_context()) {
+array_vacuum <- function(
+    uri, cfg = NULL,
+    start_time, end_time,
+    ctx = tiledb_get_context()) {
   stopifnot(`Argument 'uri' must be character` = is.character(uri))
   if (is.null(cfg)) {
     cfg <- config(ctx)

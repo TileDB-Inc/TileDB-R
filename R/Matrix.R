@@ -34,10 +34,11 @@
 ##' @return Null, invisibly.
 ##'
 ##' @export
-fromMatrix <- function(obj,
-                       uri,
-                       filter = "ZSTD",
-                       capacity = 10000L) {
+fromMatrix <- function(
+    obj,
+    uri,
+    filter = "ZSTD",
+    capacity = 10000L) {
   stopifnot(
     `Argument 'obj' must be matrix object` = inherits(obj, "matrix"),
     `Argument 'uri' must be character` = is.character(uri)

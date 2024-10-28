@@ -318,8 +318,9 @@ tiledb_set_vfs <- function(vfs) {
 #' @param ctx (optional) A TileDB Ctx object
 #' @return A TileDB VFS Filehandle object (as an external pointer)
 #' @export
-tiledb_vfs_open <- function(binfile, mode = c("READ", "WRITE", "APPEND"),
-                            vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
+tiledb_vfs_open <- function(
+    binfile, mode = c("READ", "WRITE", "APPEND"),
+    vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
   mode <- match.arg(mode)
   stopifnot(
     `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),

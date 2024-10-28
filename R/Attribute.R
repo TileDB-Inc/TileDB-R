@@ -61,13 +61,14 @@ tiledb_attr.from_ptr <- function(ptr) {
 #'
 #' @importFrom methods new
 #' @export
-tiledb_attr <- function(name,
-                        type,
-                        filter_list = tiledb_filter_list(),
-                        ncells = 1,
-                        nullable = FALSE,
-                        enumeration = NULL,
-                        ctx = tiledb_get_context()) {
+tiledb_attr <- function(
+    name,
+    type,
+    filter_list = tiledb_filter_list(),
+    ncells = 1,
+    nullable = FALSE,
+    enumeration = NULL,
+    ctx = tiledb_get_context()) {
   if (missing(name)) name <- ""
   if (is.na(ncells)) ncells <- NA_integer_ # the specific NA for ints (as basic NA is bool)
   stopifnot(

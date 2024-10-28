@@ -54,12 +54,13 @@
 ##' }
 ##' @importFrom methods as
 ##' @export
-fromSparseMatrix <- function(obj,
-                             uri,
-                             cell_order = "ROW_MAJOR",
-                             tile_order = "ROW_MAJOR",
-                             filter = "ZSTD",
-                             capacity = 10000L) {
+fromSparseMatrix <- function(
+    obj,
+    uri,
+    cell_order = "ROW_MAJOR",
+    tile_order = "ROW_MAJOR",
+    filter = "ZSTD",
+    capacity = 10000L) {
   stopifnot(
     `Argument 'obj' must be Matrix object` = inherits(obj, "Matrix"),
     `Argument 'obj' must be sparse` = is(obj, "sparseMatrix"),

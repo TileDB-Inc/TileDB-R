@@ -39,13 +39,14 @@ setClass("tiledb_query",
 #' @param ctx (optional) A TileDB Ctx object
 #' @return 'tiledb_query' object
 #' @export tiledb_query
-tiledb_query <- function(array,
-                         type = if (tiledb_version(TRUE) >= "2.12.0") {
-                           c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
-                         } else {
-                           c("READ", "WRITE")
-                         },
-                         ctx = tiledb_get_context()) {
+tiledb_query <- function(
+    array,
+    type = if (tiledb_version(TRUE) >= "2.12.0") {
+      c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
+    } else {
+      c("READ", "WRITE")
+    },
+    ctx = tiledb_get_context()) {
   stopifnot(`Argument 'arr' must be a tiledb_array object` = .isArray(array))
   type <- match.arg(type)
   array <- tiledb_array_open(array, type)
@@ -71,10 +72,11 @@ tiledb_query_type <- function(query) {
 #'   "COL_MAJOR", "ROW_MAJOR", "GLOBAL_ORDER", "UNORDERED")
 #' @return The modified query object, invisibly
 #' @export
-tiledb_query_set_layout <- function(query, layout = c(
-                                      "COL_MAJOR", "ROW_MAJOR",
-                                      "GLOBAL_ORDER", "UNORDERED"
-                                    )) {
+tiledb_query_set_layout <- function(
+    query, layout = c(
+      "COL_MAJOR", "ROW_MAJOR",
+      "GLOBAL_ORDER", "UNORDERED"
+    )) {
   stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
   layout <- match.arg(layout)
   libtiledb_query_set_layout(query@ptr, layout)
@@ -649,12 +651,13 @@ tiledb_query_ctx <- function(query) {
 ##' @param nullable A boolean toggle whether the attribute is nullable
 ##' @return The value of the aggregation
 ##' @export
-tiledb_query_apply_aggregate <- function(query, attrname,
-                                         operation = c(
-                                           "Count", "NullCount", "Min", "Max",
-                                           "Mean", "Sum"
-                                         ),
-                                         nullable = TRUE) {
+tiledb_query_apply_aggregate <- function(
+    query, attrname,
+    operation = c(
+      "Count", "NullCount", "Min", "Max",
+      "Mean", "Sum"
+    ),
+    nullable = TRUE) {
   stopifnot(
     "The 'query' argument must be a TileDB Query object" = is(query, "tiledb_query"),
     "The 'attrname' argument must be character" = is.character(attrname),

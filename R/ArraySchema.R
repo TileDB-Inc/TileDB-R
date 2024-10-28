@@ -72,18 +72,19 @@ tiledb_array_schema.from_ptr <- function(ptr, arrptr = NULL) {
 #' schema
 #'
 #' @export
-tiledb_array_schema <- function(domain,
-                                attrs,
-                                cell_order = "COL_MAJOR",
-                                tile_order = "COL_MAJOR",
-                                sparse = FALSE,
-                                coords_filter_list = NULL,
-                                offsets_filter_list = NULL,
-                                validity_filter_list = NULL,
-                                capacity = 10000L,
-                                allows_dups = FALSE,
-                                enumerations = NULL,
-                                ctx = tiledb_get_context()) {
+tiledb_array_schema <- function(
+    domain,
+    attrs,
+    cell_order = "COL_MAJOR",
+    tile_order = "COL_MAJOR",
+    sparse = FALSE,
+    coords_filter_list = NULL,
+    offsets_filter_list = NULL,
+    validity_filter_list = NULL,
+    capacity = 10000L,
+    allows_dups = FALSE,
+    enumerations = NULL,
+    ctx = tiledb_get_context()) {
   if (!missing(attrs) && length(attrs) != 0) {
     is_attr <- function(obj) is(obj, "tiledb_attr")
     if (is_attr(attrs)) { # if an attrs object given:
@@ -1006,9 +1007,10 @@ describe <- function(arr) {
 #' or \code{ordered} (when \code{TRUE})
 #' @param ctx Optional tiledb_ctx object
 #' @export
-tiledb_array_schema_set_enumeration_empty <- function(schema, attr, enum_name,
-                                                      type_str = "ASCII", cell_val_num = NA_integer_,
-                                                      ordered = FALSE, ctx = tiledb_get_context()) {
+tiledb_array_schema_set_enumeration_empty <- function(
+    schema, attr, enum_name,
+    type_str = "ASCII", cell_val_num = NA_integer_,
+    ordered = FALSE, ctx = tiledb_get_context()) {
   stopifnot(
     "Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
     "Argument 'attr' must be a 'tiledb_attribute'" = is(attr, "tiledb_attr"),
