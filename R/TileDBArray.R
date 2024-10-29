@@ -893,9 +893,16 @@ setMethod(
         MoreArgs = list(qryptr = qryptr), SIMPLIFY = TRUE
       )
       ## ensure > 0 for correct handling of zero-length outputs, ensure respecting memory budget
-      spdl::debug("['['] result of size estimates is {}", paste(ressizes, collapse = ","))
-      resrv <- max(1, min(memory_budget / 8, ressizes[ressizes > 0]))
+      spdl::debug("['['] result of size estimates is {}", paste(ressizes, collapse=","))
+      idx <- ressizes > 0
+      ressizes <- if (any(idx)) {
+        ressizes[idx] 
+      } else {
+        0
+      }
+      resrv <- max(1, min(memory_budget/8, ressizes))
       spdl::debug("['['] overall estimate {} rows", resrv)
+
 
       ## allocate and set buffers
       if (!use_arrow) {
