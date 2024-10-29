@@ -11,8 +11,9 @@
 
 \item{...}{One or more expressions that are parsed as query_condition objects}
 
-\item{strict}{A boolean toogle to, if set, errors if a non-existing attribute is selected
-or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.}
+\item{strict}{A boolean toogle to, if set, errors if a non-existing attribute
+is selected or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown
+by execution proceeds.}
 }
 \value{
 The tiledb_array object, permitting piping

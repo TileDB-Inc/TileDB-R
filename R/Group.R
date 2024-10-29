@@ -25,91 +25,113 @@
 #' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_group
 setClass("tiledb_group",
-         slots = list(ptr = "externalptr"))
+  slots = list(ptr = "externalptr")
+)
 
 .tiledb28 <- function() tiledb_version(TRUE) >= "2.8.0"
 
 #' Creates a 'tiledb_group' object
 #'
 #' @param uri Character variable with the URI of the new group object
-#' @param type Character variable with the query type value: one of \dQuote{READ}
-#' or \dQuote{WRITE}
+#' @param type Character variable with the query type value: one of 
+#' \dQuote{READ} or \dQuote{WRITE}
 #' @param ctx (optional) A TileDB Context object; if not supplied the default
 #' context object is retrieved
 #' @param cfg (optional) A TileConfig object
 #' @return A 'group' object
 #' @export
-tiledb_group <- function(uri, type = c("READ", "WRITE"),
-                         ctx = tiledb_get_context(), cfg = NULL) {
-    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
-              "The 'uri' argument must be character" = is.character(uri),
-              "This function needs TileDB 2.8.*" = .tiledb28(),
-              "The 'config argument must be a Config object" =
-                  is.null(cfg) || is(cfg, "tiledb_config"))
-    type <- match.arg(type)
-    if (is.null(cfg)) {
-        ptr <- libtiledb_group(ctx@ptr, uri, type)
-    } else {
-        ptr <- libtiledb_group_with_config(ctx@ptr, uri, type, cfg@ptr)
-    }
-    group <- new("tiledb_group", ptr = ptr)
-    invisible(group)
+tiledb_group <- function(
+  uri, 
+  type = c("READ", "WRITE"),
+  ctx = tiledb_get_context(), 
+  cfg = NULL
+) {
+  stopifnot(
+    "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+    "The 'uri' argument must be character" = is.character(uri),
+    "This function needs TileDB 2.8.*" = .tiledb28(),
+    "The 'config argument must be a Config object" =
+      is.null(cfg) || is(cfg, "tiledb_config")
+  )
+  type <- match.arg(type)
+  if (is.null(cfg)) {
+    ptr <- libtiledb_group(ctx@ptr, uri, type)
+  } else {
+    ptr <- libtiledb_group_with_config(ctx@ptr, uri, type, cfg@ptr)
+  }
+  group <- new("tiledb_group", ptr = ptr)
+  invisible(group)
 }
 
 ##' Open a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param type A character value that must be either \sQuote{READ}, \sQuote{WRITE}
-##' or \sQuote{MODIFY_EXCLUSIVE}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param type A character value that must be either \sQuote{READ}, 
+##' \sQuote{WRITE} or \sQuote{MODIFY_EXCLUSIVE}
 ##' @return The TileDB Group object but opened for reading or writing
 ##' @export
-tiledb_group_open <- function(grp, type=c("READ","WRITE","MODIFY_EXCLUSIVE")) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28(),
-              "Using 'MODIFY_EXCLUSIVE' needs TileDB 2.12.* or later" =
-                  type != "MODIFY_EXCLUSIVE" || tiledb_version(TRUE) >= "2.12.0")
-    type <- match.arg(type)
-    grp@ptr <- libtiledb_group_open(grp@ptr, type)
-    grp
+tiledb_group_open <- function(
+  grp, 
+  type = c("READ", "WRITE", "MODIFY_EXCLUSIVE")
+) {
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28(),
+    "Using 'MODIFY_EXCLUSIVE' needs TileDB 2.12.* or later" =
+      type != "MODIFY_EXCLUSIVE" || tiledb_version(TRUE) >= "2.12.0"
+  )
+  type <- match.arg(type)
+  grp@ptr <- libtiledb_group_open(grp@ptr, type)
+  grp
 }
 
 ##' Set a TileDB Config for a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param cfg A TileDB Config object
 ##' @return The TileDB Group object with added Config
 ##' @export
 tiledb_group_set_config <- function(grp, cfg) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'cfg' argument must be a tiledb_config object" = is(cfg, "tiledb_config"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    grp@ptr <- libtiledb_group_set_config(grp@ptr, cfg@ptr)
-    grp
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'cfg' argument must be a tiledb_config object" = is(cfg, "tiledb_config"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  grp@ptr <- libtiledb_group_set_config(grp@ptr, cfg@ptr)
+  grp
 }
 
 ##' Get a TileDB Config from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return The TileDB Config object of the TileDB Group object
 ##' @export
 tiledb_group_get_config <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    ptr <- libtiledb_group_get_config(grp@ptr)
-    cfg <- new("tiledb_config", ptr = ptr)
-    cfg
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  ptr <- libtiledb_group_get_config(grp@ptr)
+  cfg <- new("tiledb_config", ptr = ptr)
+  cfg
 }
 
 ##' Close a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return The TileDB Group object but closed for reading or writing
 ##' @export
 tiledb_group_close <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    grp@ptr <- libtiledb_group_close(grp@ptr)
-    grp
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  grp@ptr <- libtiledb_group_close(grp@ptr)
+  grp
 }
 
 #' Create a TileDB Group at the given path
@@ -119,7 +141,9 @@ tiledb_group_close <- function(grp) {
 #' context object is retrieved
 #' @return The uri path, invisibly
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' \dontrun{
 #' pth <- tempdir()
 #' tiledb_group_create(pth)
@@ -127,231 +151,289 @@ tiledb_group_close <- function(grp) {
 #' }
 #' @export
 tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
-    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
-              "The 'uri' argument must be character" = is.character(uri),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_create(ctx@ptr, uri)
-    invisible(uri)
+  stopifnot(
+    "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+    "The 'uri' argument must be character" = is.character(uri),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_create(ctx@ptr, uri)
+  invisible(uri)
 }
 
 ##' Test if TileDB Group is open
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A boolean indicating whether the TileDB Group object is open
 ##' @export
 tiledb_group_is_open <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_is_open(grp@ptr)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_is_open(grp@ptr)
 }
 
 ##' Return a TileDB Group URI
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A character value with the URI
 ##' @export
 tiledb_group_uri <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_uri(grp@ptr)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_uri(grp@ptr)
 }
 
 ##' Return a TileDB Group query type
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @return A character value with the query type i.e. one of \dQuote{READ} or \dQuote{WRITE}.
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @return A character value with the query type i.e. one of 
+##' \dQuote{READ} or \dQuote{WRITE}.
 ##' @export
 tiledb_group_query_type <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_query_type(grp@ptr)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_query_type(grp@ptr)
 }
 
 ##' Write Metadata to a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with they index under which the data will be written
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with they index under which the 
+##' data will be written
 ##' @param val An R object (numeric, int, or char vector) that will be stored
 ##' @return On success boolean \sQuote{TRUE} is returned
 ##' @export
 tiledb_group_put_metadata <- function(grp, key, val) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'key' argument must be character" = is.character(key),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_put_metadata(grp@ptr, key, val)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'key' argument must be character" = is.character(key),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_put_metadata(grp@ptr, key, val)
 }
 
 ##' Deletes Metadata from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with they index under which the data will be written
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with they index under which the 
+##' data will be written
 ##' @return The TileDB Group object, invisibly
 ##' @export
 tiledb_group_delete_metadata <- function(grp, key) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'key' argument must be character" = is.character(key),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    grp@ptr <- libtiledb_group_delete_metadata(grp@ptr, key)
-    invisible(grp)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'key' argument must be character" = is.character(key),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  grp@ptr <- libtiledb_group_delete_metadata(grp@ptr, key)
+  invisible(grp)
 }
 
 ##' Accesses Metadata from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with the key of the metadata object to be retrieved
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with the key of the metadata 
+##' object to be retrieved
 ##' @return The requested object, or NULL is not found
 ##' @export
 tiledb_group_get_metadata <- function(grp, key) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'key' argument must be character" = is.character(key),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_get_metadata(grp@ptr, key)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'key' argument must be character" = is.character(key),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_get_metadata(grp@ptr, key)
 }
 
 ##' Checks for Metadata in a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with they index under which the data will be written
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with they index under which the 
+##' data will be written
 ##' @return A boolean value indicating with the object is present
 ##' @export
 tiledb_group_has_metadata <- function(grp, key) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'key' argument must be character" = is.character(key),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_has_metadata(grp@ptr, key)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'key' argument must be character" = is.character(key),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_has_metadata(grp@ptr, key)
 }
 
 ##' Returns Number of Metadata Objects a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A numeric value with the number of metadata objects
 ##' @export
 tiledb_group_metadata_num <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_metadata_num(grp@ptr)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_metadata_num(grp@ptr)
 }
 
 
 ##' Accesses Metadata by Index from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param idx A numeric value with the index of the metadata object to be retrieved
 ##' @return The requested object, or NULL is not found
 ##' @export
 tiledb_group_get_metadata_from_index <- function(grp, idx) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'idx' argument must be numeric" = is.numeric(idx),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_get_metadata_from_index(grp@ptr, idx)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'idx' argument must be numeric" = is.numeric(idx),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_get_metadata_from_index(grp@ptr, idx)
 }
 
 
 ##' Return all Metadata from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A named List with all Metadata objects index
 ##' @export
 tiledb_group_get_all_metadata <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    n <- tiledb_group_metadata_num(grp)
-    res <- vector(mode="list", length=n)
-    for (i in seq_len(n)) {
-        obj <- tiledb_group_get_metadata_from_index(grp, i-1)
-        res[[i]] <- obj
-        names(res)[i] <- attr(obj, "key")
-    }
-    res
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  n <- tiledb_group_metadata_num(grp)
+  res <- vector(mode = "list", length = n)
+  for (i in seq_len(n)) {
+    obj <- tiledb_group_get_metadata_from_index(grp, i - 1)
+    res[[i]] <- obj
+    names(res)[i] <- attr(obj, "key")
+  }
+  res
 }
 
 
 ##' Add Member to TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param uri A character value with a new URI
-##' @param relative A logical value indicating whether URI is relative to the group
-##' @param name An optional character providing a name for the object, defaults to \code{NULL}
+##' @param relative A logical value indicating whether URI is 
+##' relative to the group
+##' @param name An optional character providing a name for the 
+##' object, defaults to \code{NULL}
 ##' @return The TileDB Group object, invisibly
 ##' @export
-tiledb_group_add_member <- function(grp, uri, relative, name=NULL) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'uri' argument must be character" = is.character(uri),
-              "The 'relative' argument must be logical" = is.logical(relative),
-              "The 'name' argument must be NULL or character" = is.null(name) || is.character(name),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    grp@ptr <- libtiledb_group_add_member(grp@ptr, uri, relative, name)
-    invisible(grp)
+tiledb_group_add_member <- function(grp, uri, relative, name = NULL) {
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'uri' argument must be character" = is.character(uri),
+    "The 'relative' argument must be logical" = is.logical(relative),
+    "The 'name' argument must be NULL or character" = is.null(name) || is.character(name),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  grp@ptr <- libtiledb_group_add_member(grp@ptr, uri, relative, name)
+  invisible(grp)
 }
 
 ##' Remove Member from TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param uri A character value with a the URI of the member to be removed, or (if added
-##' with a name) the name of the member
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param uri A character value with a the URI of the member to 
+##' be removed, or (if added with a name) the name of the member
 ##' @return The TileDB Group object, invisibly
 ##' @export
 tiledb_group_remove_member <- function(grp, uri) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'uri' argument must be character" = is.character(uri),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    grp@ptr <- libtiledb_group_remove_member(grp@ptr, uri)
-    invisible(grp)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'uri' argument must be character" = is.character(uri),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  grp@ptr <- libtiledb_group_remove_member(grp@ptr, uri)
+  invisible(grp)
 }
 
 ##' Get Member Count from TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return The Count of Members in the TileDB Group object
 ##' @export
 tiledb_group_member_count <- function(grp) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_member_count(grp@ptr)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_member_count(grp@ptr)
 }
 
 ##' Get a Member (Description) by Index from TileDB Group
 ##'
-##' This function returns a three-element character vector with the member object translated to
-##' character, uri, and optional name.
+##' This function returns a three-element character vector with the member 
+##' object translated to character, uri, and optional name.
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param idx A numeric value with the index of the metadata object to be retrieved
-##' @return A character vector with three elements: the member type, its uri, and name
-##' (or \code{""} if the member is unnamed).
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param idx A numeric value with the index of the metadata 
+##' object to be retrieved
+##' @return A character vector with three elements: the member 
+##' type, its uri, and name (or \code{""} if the member is unnamed).
 ##' @export
 tiledb_group_member <- function(grp, idx) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'idx' argument must be numeric" = is.numeric(idx),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_member(grp@ptr, idx)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'idx' argument must be numeric" = is.numeric(idx),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_member(grp@ptr, idx)
 }
 
 ##' Dump the TileDB Group to String
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param recursive A logical value indicating whether a recursive dump is desired, defaults
-##' to \sQuote{FALSE}. Note that recursive listings on remote object may be an expensive or
-##' slow operation.
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param recursive A logical value indicating whether a recursive 
+##' dump is desired, defaults to \sQuote{FALSE}. Note that recursive listings 
+##' on remote object may be an expensive or slow operation.
 ##' @return A character string
 ##' @export
 tiledb_group_member_dump <- function(grp, recursive = FALSE) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "This function needs TileDB 2.8.*" = .tiledb28())
-    libtiledb_group_dump(grp@ptr, recursive)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "This function needs TileDB 2.8.*" = .tiledb28()
+  )
+  libtiledb_group_dump(grp@ptr, recursive)
 }
 
 ##' Test if a Named Group is Using a Relative URI
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param name A character value with a group name
 ##' @return A boolean indicating whether the group uses a relative URI or not
 ##' @export
 tiledb_group_is_relative <- function(grp, name) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'name' argument must be a character variable" = inherits(name, "character"),
-              "This function needs TileDB 2.12.*" = tiledb_version(TRUE) >= "2.12.0")
-    libtiledb_group_is_relative(grp@ptr, name)
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'name' argument must be a character variable" = inherits(name, "character"),
+    "This function needs TileDB 2.12.*" = tiledb_version(TRUE) >= "2.12.0"
+  )
+  libtiledb_group_is_relative(grp@ptr, name)
 }
 
 #' Display the TileDB Group object to STDOUT
@@ -359,26 +441,29 @@ tiledb_group_is_relative <- function(grp, name) {
 #' @param object `tiledb_group` object
 #' @export
 setMethod("show", signature(object = "tiledb_group"), function(object) {
-    cat(libtiledb_group_dump(object@ptr, FALSE))
+  cat(libtiledb_group_dump(object@ptr, FALSE))
 })
 
 
 #' Deletes all written data from a 'tiledb_group' object
 #'
-#' The group must be opened in \sQuote{MODIFY_EXCLUSIVE} mode, otherwise the function
-#' will error out.
+#' The group must be opened in \sQuote{MODIFY_EXCLUSIVE} mode, otherwise 
+#' the function will error out.
 #'
-#' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+#' @param grp A TileDB Group object as for example returned by 
+#' \code{tiledb_group()}
 #' @param uri Character variable with the URI of the group item to be deleted
-#' @param recursive A logical value indicating whether all data iniside the
-#' group is to be delet
+#' @param recursive A logical value indicating whether all data inside the
+#' group is to be deleted
 #' @return Nothing is returned, the function is invoked for the side-effect of
 #' group data removal.
 #' @export
 tiledb_group_delete <- function(grp, uri, recursive = FALSE) {
-    stopifnot("The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
-              "The 'uri' argument must be a character variable" = inherits(uri, "character"),
-              "The 'recursive' argument be logical" = is(recursive, "logical"),
-              "This function needs TileDB 2.14.*" = tiledb_version(TRUE) >= "2.14.0")
-    libtiledb_group_delete(grp@ptr, uri, isTRUE(recursive))
+  stopifnot(
+    "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
+    "The 'uri' argument must be a character variable" = inherits(uri, "character"),
+    "The 'recursive' argument be logical" = is(recursive, "logical"),
+    "This function needs TileDB 2.14.*" = tiledb_version(TRUE) >= "2.14.0"
+  )
+  libtiledb_group_delete(grp@ptr, uri, isTRUE(recursive))
 }

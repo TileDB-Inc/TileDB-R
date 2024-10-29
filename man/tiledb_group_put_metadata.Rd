@@ -7,9 +7,11 @@
 tiledb_group_put_metadata(grp, key, val)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
-\item{key}{A character value with they index under which the data will be written}
+\item{key}{A character value with they index under which the
+data will be written}
 
 \item{val}{An R object (numeric, int, or char vector) that will be stored}
 }

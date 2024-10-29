@@ -7,10 +7,11 @@
 tiledb_vfs_read(fh, offset, nbytes, ctx = tiledb_get_context())
 }
 \arguments{
-\item{fh}{A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}}
+\item{fh}{A TileDB VFS Filehandle external pointer as returned from
+\code{tiledb_vfs_open}}
 
-\item{offset}{A scalar value with the byte offset from the beginning of the file
-with a of zero.}
+\item{offset}{A scalar value with the byte offset from the beginning of the
+file with a of zero.}
 
 \item{nbytes}{A scalar value with the number of bytes to be read.}
 
@@ -20,8 +21,9 @@ with a of zero.}
 The binary file content is returned as an integer vector.
 }
 \description{
-This interface currently defaults to reading an integer vector. This is suitable for R objects
-as a raw vector used for (de)serialization can be mapped easily to an integer vector. It is
-also possible to \code{memcpy} to the contiguous memory of an integer vector should other
-(non-R) data be transferred.
+This interface currently defaults to reading an integer vector. This is
+suitable for R objects as a raw vector used for (de)serialization can be
+mapped easily to an integer vector. It is also possible to \code{memcpy} to
+the contiguous memory of an integer vector should other (non-R) data
+be transferred.
 }

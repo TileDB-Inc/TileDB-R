@@ -45,12 +45,16 @@ the data type is difficult to guess. Also, when using the \code{"\%in\%"} or \co
 the argument is mandatory.
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 \dontrun{
-uri <- "mem://airquality"    # change to on-disk for persistence
-fromDataFrame(airquality, uri, col_index=c("Month", "Day"))  # dense array
+uri <- "mem://airquality" # change to on-disk for persistence
+fromDataFrame(airquality, uri, col_index = c("Month", "Day")) # dense array
 ## query condition on dense array requires extended=FALSE
-tiledb_array(uri, return_as="data.frame", extended=FALSE,
-             query_condition=parse_query_condition(Temp > 90))[]
+tiledb_array(uri,
+  return_as = "data.frame", extended = FALSE,
+  query_condition = parse_query_condition(Temp > 90)
+)[]
 }
 }

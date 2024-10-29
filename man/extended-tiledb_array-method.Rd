@@ -13,10 +13,11 @@ extended(object)
 \item{object}{A \code{tiledb_array} object}
 }
 \value{
-A logical value indicating whether an \code{extended} return is selected
+A logical value indicating whether an \code{extended}
+return is selected
 }
 \description{
-A \code{tiledb_array} object can be returned as \code{data.frame}. This methods
-returns the selection value for \sQuote{extended} format including row (and column,
-if present) indices.
+A \code{tiledb_array} object can be returned as \code{data.frame}. This
+methods returns the selection value for \sQuote{extended} format including
+row  (and column, if present) indices.
 }

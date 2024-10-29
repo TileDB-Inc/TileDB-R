@@ -4,6 +4,8 @@
 * Run `clang-format` on non-autogen C++ source code
 * Update unit tests to expect dense current domain
 * Support parentheses in query conditions
+* memory alloc: Accomodate zero buffer size estimate v2
+* Apply `styler::style_pkg()`
 
 # tiledb 0.30.2
 

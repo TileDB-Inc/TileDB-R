@@ -7,15 +7,17 @@
 tiledb_group_member(grp, idx)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
-\item{idx}{A numeric value with the index of the metadata object to be retrieved}
+\item{idx}{A numeric value with the index of the metadata
+object to be retrieved}
 }
 \value{
-A character vector with three elements: the member type, its uri, and name
-(or \code{""} if the member is unnamed).
+A character vector with three elements: the member
+type, its uri, and name (or \code{""} if the member is unnamed).
 }
 \description{
-This function returns a three-element character vector with the member object translated to
-character, uri, and optional name.
+This function returns a three-element character vector with the member
+object translated to character, uri, and optional name.
 }

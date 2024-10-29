@@ -13,7 +13,9 @@
 Prints the config object to STDOUT
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 cfg <- tiledb_config()
 show(cfg)
 }

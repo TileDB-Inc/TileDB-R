@@ -10,9 +10,11 @@
 \item{object}{A \code{tiledb_array} object}
 }
 \value{
-A logical value indicating whether \code{data.frame} return is selected
+A logical value indicating whether \code{data.frame} return
+is selected
 }
 \description{
 A \code{tiledb_array} object can be returned as an array (or list of arrays),
-or, if select, as a \code{data.frame}. This methods returns the selection value.
+or, if select, as a \code{data.frame}. This methods returns the
+selection value.
 }

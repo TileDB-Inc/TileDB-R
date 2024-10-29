@@ -28,6 +28,6 @@
 #' @return A character variable with the error message
 #' @export
 tiledb_error_message <- function(ctx = tiledb_get_context()) {
-    stopifnot(`The 'ctx' variable must be a TileDB Context object` = is(ctx, "tiledb_ctx"))
-    libtiledb_error_message(ctx@ptr)
+  stopifnot(`The 'ctx' variable must be a TileDB Context object` = is(ctx, "tiledb_ctx"))
+  libtiledb_error_message(ctx@ptr)
 }

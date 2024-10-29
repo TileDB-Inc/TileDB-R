@@ -24,8 +24,10 @@
 #'
 #' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_vfs
-setClass("tiledb_vfs",
-         slots = list(ptr = "externalptr"))
+setClass(
+  "tiledb_vfs",
+  slots = list(ptr = "externalptr")
+)
 
 #' Creates a `tiledb_vfs` object
 #'
@@ -33,13 +35,14 @@ setClass("tiledb_vfs",
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The `tiledb_vfs` object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' # default configuration
 #' vfs <- tiledb_vfs()
 #'
 #' @export
 tiledb_vfs <- function(config = NULL, ctx = tiledb_get_context()) {
-
   ## otherwise create a new ctx and cache it
   if (is.null(config)) {
     ptr <- libtiledb_vfs(ctx@ptr)
@@ -63,8 +66,10 @@ tiledb_vfs <- function(config = NULL, ctx = tiledb_get_context()) {
 #' @return The uri value
 #' @export
 tiledb_vfs_create_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_create_bucket(vfs@ptr, uri)
 }
 
@@ -75,8 +80,10 @@ tiledb_vfs_create_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value
 #' @export
 tiledb_vfs_remove_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_remove_bucket(vfs@ptr, uri)
 }
 
@@ -87,7 +94,9 @@ tiledb_vfs_remove_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return A boolean value indicating if it is a valid bucket
 #' @export
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' \dontrun{
 #' cfg <- tiledb_config()
 #' cfg["vfs.s3.region"] <- "us-west-1"
@@ -96,8 +105,10 @@ tiledb_vfs_remove_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' tiledb_vfs_is_bucket(vfs, "s3://tiledb-public-us-west-1/test-array-4x4")
 #' }
 tiledb_vfs_is_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_is_bucket(vfs@ptr, uri)
 }
 
@@ -108,7 +119,9 @@ tiledb_vfs_is_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return A boolean value indicating if it is an empty bucket
 #' @export
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' \dontrun{
 #' cfg <- tiledb_config()
 #' cfg["vfs.s3.region"] <- "us-west-1"
@@ -117,8 +130,10 @@ tiledb_vfs_is_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' tiledb_vfs_is_empty_bucket(vfs, "s3://tiledb-public-us-west-1/test-array-4x4")
 #' }
 tiledb_vfs_is_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_is_empty_bucket(vfs@ptr, uri)
 }
 
@@ -129,8 +144,10 @@ tiledb_vfs_is_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The URI value that was emptied
 #' @export
 tiledb_vfs_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_empty_bucket(vfs@ptr, uri)
 }
 
@@ -141,8 +158,10 @@ tiledb_vfs_empty_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value of the created directory
 #' @export
 tiledb_vfs_create_dir <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_create_dir(vfs@ptr, uri)
 }
 
@@ -153,8 +172,10 @@ tiledb_vfs_create_dir <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return A boolean value indicating if it is a directory
 #' @export
 tiledb_vfs_is_dir <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_is_dir(vfs@ptr, uri)
 }
 
@@ -165,8 +186,10 @@ tiledb_vfs_is_dir <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value of the removed directory
 #' @export
 tiledb_vfs_remove_dir <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   invisible(libtiledb_vfs_remove_dir(vfs@ptr, uri))
 }
 
@@ -177,8 +200,10 @@ tiledb_vfs_remove_dir <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return A boolean value indicating if it is a file
 #' @export
 tiledb_vfs_is_file <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_is_file(vfs@ptr, uri)
 }
 
@@ -189,8 +214,10 @@ tiledb_vfs_is_file <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value of the removed file
 #' @export
 tiledb_vfs_remove_file <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_remove_file(vfs@ptr, uri)
 }
 
@@ -201,8 +228,10 @@ tiledb_vfs_remove_file <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The size of the file
 #' @export
 tiledb_vfs_file_size <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_file_size(vfs@ptr, uri)
 }
 
@@ -214,9 +243,11 @@ tiledb_vfs_file_size <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The newuri value of the moved file
 #' @export
 tiledb_vfs_move_file <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'olduri' must be character` = is.character(olduri),
-            `Argument 'newuri' must be character` = is.character(newuri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'olduri' must be character` = is.character(olduri),
+    `Argument 'newuri' must be character` = is.character(newuri)
+  )
   libtiledb_vfs_move_file(vfs@ptr, olduri, newuri)
 }
 
@@ -228,9 +259,11 @@ tiledb_vfs_move_file <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
 #' @return The newuri value of the moved directory
 #' @export
 tiledb_vfs_move_dir <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'olduri' must be character` = is.character(olduri),
-            `Argument 'newuri' must be character` = is.character(newuri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'olduri' must be character` = is.character(olduri),
+    `Argument 'newuri' must be character` = is.character(newuri)
+  )
   libtiledb_vfs_move_dir(vfs@ptr, olduri, newuri)
 }
 
@@ -241,8 +274,10 @@ tiledb_vfs_move_dir <- function(olduri, newuri, vfs = tiledb_get_vfs()) {
 #' @return The uri value
 #' @export
 tiledb_vfs_touch <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_touch(vfs@ptr, uri)
 }
 
@@ -284,80 +319,100 @@ tiledb_set_vfs <- function(vfs) {
 #' @param ctx (optional) A TileDB Ctx object
 #' @return A TileDB VFS Filehandle object (as an external pointer)
 #' @export
-tiledb_vfs_open <- function(binfile, mode = c("READ", "WRITE", "APPEND"),
-                            vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
+tiledb_vfs_open <- function(
+  binfile, 
+  mode = c("READ", "WRITE", "APPEND"),
+  vfs = tiledb_get_vfs(),
+  ctx = tiledb_get_context()
+) {
   mode <- match.arg(mode)
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
-            `Argument 'binfile' must be character` = is.character(binfile))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"),
+    `Argument 'binfile' must be character` = is.character(binfile)
+  )
   libtiledb_vfs_open(ctx@ptr, vfs@ptr, binfile, mode)
 }
 
 #' Close a TileDB VFS Filehandle
 #'
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the close operation is returned.
 #' @export
 tiledb_vfs_close <- function(fh, ctx = tiledb_get_context()) {
-  stopifnot(`Argument 'fh' must be an external pointer` = is(fh, "externalptr"),
-            `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
+  stopifnot(
+    `Argument 'fh' must be an external pointer` = is(fh, "externalptr"),
+    `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx")
+  )
   libtiledb_vfs_close(ctx@ptr, fh)
 }
 
 #' Sync a TileDB VFS Filehandle
 #'
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the sync operation is returned.
 #' @export
 tiledb_vfs_sync <- function(fh, ctx = tiledb_get_context()) {
-  stopifnot(`Argument 'fh' must be an external pointer` = is(fh, "externalptr"),
-            `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
+  stopifnot(
+    `Argument 'fh' must be an external pointer` = is(fh, "externalptr"),
+    `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx")
+  )
   libtiledb_vfs_sync(ctx@ptr, fh)
 }
 
 #' Write to a TileDB VFS Filehandle
 #'
-#' This interface currently defaults to using an integer vector. This is suitable for R objects
-#' as the raw vector result from serialization can be mapped easily to an integer vector. It is
-#' also possible to \code{memcpy} to the contiguous memory of an integer vector should other
-#' (non-R) data be transferred.
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' This interface currently defaults to using an integer vector. This is suitable 
+#' for R objects as the raw vector result from serialization can be mapped easily 
+#' to an integer vector. It is also possible to \code{memcpy} to the contiguous 
+#' memory of an integer vector should other (non-R) data be transferred.
+#' 
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
 #' @param vec An integer vector of content to be written
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the write operation is returned.
 #' @export
 tiledb_vfs_write <- function(fh, vec, ctx = tiledb_get_context()) {
-  stopifnot(`Argument 'fh' must be an external pointer` = is(fh, "externalptr"),
-            `Argument 'vec' must be integer` = is.integer(vec),
-            `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))
+  stopifnot(
+    `Argument 'fh' must be an external pointer` = is(fh, "externalptr"),
+    `Argument 'vec' must be integer` = is.integer(vec),
+    `Argument 'ctx' must be a tiledb_ctx object` = is(ctx, "tiledb_ctx")
+  )
   libtiledb_vfs_write(ctx@ptr, fh, vec)
 }
 
 #' Read from a TileDB VFS Filehandle
 #'
-#' This interface currently defaults to reading an integer vector. This is suitable for R objects
-#' as a raw vector used for (de)serialization can be mapped easily to an integer vector. It is
-#' also possible to \code{memcpy} to the contiguous memory of an integer vector should other
-#' (non-R) data be transferred.
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
-#' @param offset A scalar value with the byte offset from the beginning of the file
-#' with a of zero.
+#' This interface currently defaults to reading an integer vector. This is 
+#' suitable for R objects as a raw vector used for (de)serialization can be 
+#' mapped easily to an integer vector. It is also possible to \code{memcpy} to 
+#' the contiguous memory of an integer vector should other (non-R) data 
+#' be transferred.
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
+#' @param offset A scalar value with the byte offset from the beginning of the 
+#' file with a of zero.
 #' @param nbytes A scalar value with the number of bytes to be read.
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The binary file content is returned as an integer vector.
 #' @export
 tiledb_vfs_read <- function(fh, offset, nbytes, ctx = tiledb_get_context()) {
-    if (missing(offset)) offset <- bit64::as.integer64(0)
-    if (is.numeric(offset)) offset <- bit64::as.integer64(offset)
-    if (is.numeric(nbytes)) nbytes <- bit64::as.integer64(nbytes)
-    stopifnot("Argument 'fh' must be an external pointer" = is(fh, "externalptr"),
-              "Argument 'offset' must be integer64" = is(offset, "integer64"),
-              "Argument 'nbytes' currently a required parameter" = !missing(nbytes),
-              "Argument 'nbytes' must be integer64" = is(nbytes, "integer64"),
-              "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"))
-    libtiledb_vfs_read(ctx@ptr, fh, offset, nbytes)
+  if (missing(offset)) offset <- bit64::as.integer64(0)
+  if (is.numeric(offset)) offset <- bit64::as.integer64(offset)
+  if (is.numeric(nbytes)) nbytes <- bit64::as.integer64(nbytes)
+  stopifnot(
+    "Argument 'fh' must be an external pointer" = is(fh, "externalptr"),
+    "Argument 'offset' must be integer64" = is(offset, "integer64"),
+    "Argument 'nbytes' currently a required parameter" = !missing(nbytes),
+    "Argument 'nbytes' must be integer64" = is(nbytes, "integer64"),
+    "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx")
+  )
+  libtiledb_vfs_read(ctx@ptr, fh, offset, nbytes)
 }
 
 #' Return VFS Directory Size
@@ -367,8 +422,10 @@ tiledb_vfs_read <- function(fh, offset, nbytes, ctx = tiledb_get_context()) {
 #' @return The size of the directory
 #' @export
 tiledb_vfs_dir_size <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_dir_size(vfs@ptr, uri)
 }
 
@@ -379,8 +436,10 @@ tiledb_vfs_dir_size <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The content of the directory, non-recursive
 #' @export
 tiledb_vfs_ls <- function(uri, vfs = tiledb_get_vfs()) {
-  stopifnot(`Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
-            `Argument 'uri' must be character` = is.character(uri))
+  stopifnot(
+    `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
+    `Argument 'uri' must be character` = is.character(uri)
+  )
   libtiledb_vfs_ls(vfs@ptr, uri)
 }
 
@@ -391,17 +450,19 @@ tiledb_vfs_ls <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The unserialized object
 #' @export
 tiledb_vfs_unserialize <- function(uri, vfs = tiledb_get_vfs()) {
-    stopifnot("Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
-              "Argument 'uri' must be character" = is.character(uri))
-    n <- tiledb_vfs_file_size(uri)
-    fh <- tiledb_vfs_open(uri, "READ")
-    vec <- tiledb_vfs_read(fh, 0, n)
-    tiledb_vfs_close(fh)
-    libtiledb_vfs_fh_free(fh)
-    ## The gzcon(rawConnection()) idea is from https://stackoverflow.com/a/58136567/508431
-    ## The packBits(intToBits()) part on the int vector read is from a friend via slack
-    obj <- unserialize(gzcon(rawConnection(packBits(intToBits(vec)))))
-    obj
+  stopifnot(
+    "Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+    "Argument 'uri' must be character" = is.character(uri)
+  )
+  n <- tiledb_vfs_file_size(uri)
+  fh <- tiledb_vfs_open(uri, "READ")
+  vec <- tiledb_vfs_read(fh, 0, n)
+  tiledb_vfs_close(fh)
+  libtiledb_vfs_fh_free(fh)
+  ## The gzcon(rawConnection()) idea is from https://stackoverflow.com/a/58136567/508431
+  ## The packBits(intToBits()) part on the int vector read is from a friend via slack
+  obj <- unserialize(gzcon(rawConnection(packBits(intToBits(vec)))))
+  obj
 }
 
 
@@ -413,28 +474,30 @@ tiledb_vfs_unserialize <- function(uri, vfs = tiledb_get_vfs()) {
 #' @return The uri is returned invisibly
 #' @export
 tiledb_vfs_serialize <- function(obj, uri, vfs = tiledb_get_vfs()) {
-    stopifnot("Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
-              "Argument 'uri' must be character" = is.character(uri))
-    ## We could not find a direct conversion of the 'raw' vector we get from serialize()
-    ## into a format that corresponded to what saveRDS() writes so we cheat a little
-    tf <- tempfile()
-    saveRDS(obj, tf)
+  stopifnot(
+    "Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+    "Argument 'uri' must be character" = is.character(uri)
+  )
+  ## We could not find a direct conversion of the 'raw' vector we get from serialize()
+  ## into a format that corresponded to what saveRDS() writes so we cheat a little
+  tf <- tempfile()
+  saveRDS(obj, tf)
 
-    ## Read local file
-    fh <- tiledb_vfs_open(tf, "READ")
-    vec <- tiledb_vfs_read(fh, 0, tiledb_vfs_file_size(tf))
-    tiledb_vfs_close(fh)
-    libtiledb_vfs_fh_free(fh)
+  ## Read local file
+  fh <- tiledb_vfs_open(tf, "READ")
+  vec <- tiledb_vfs_read(fh, 0, tiledb_vfs_file_size(tf))
+  tiledb_vfs_close(fh)
+  libtiledb_vfs_fh_free(fh)
 
-    ## Now write 'vec' to the target URI
-    fh <- tiledb_vfs_open(uri, "WRITE")
-    tiledb_vfs_write(fh, vec)
-    tiledb_vfs_sync(fh)
-    tiledb_vfs_close(fh)
-    libtiledb_vfs_fh_free(fh)
+  ## Now write 'vec' to the target URI
+  fh <- tiledb_vfs_open(uri, "WRITE")
+  tiledb_vfs_write(fh, vec)
+  tiledb_vfs_sync(fh)
+  tiledb_vfs_close(fh)
+  libtiledb_vfs_fh_free(fh)
 
-    unlink(tf)
-    invisible(uri)
+  unlink(tf)
+  invisible(uri)
 }
 
 #' Copy a file to VFS
@@ -445,11 +508,13 @@ tiledb_vfs_serialize <- function(obj, uri, vfs = tiledb_get_vfs()) {
 #' @return The uri value of the removed file
 #' @export
 tiledb_vfs_copy_file <- function(file, uri, vfs = tiledb_get_vfs()) {
-    stopifnot("Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
-              "Argument 'uri' must be character" = is.character(uri),
-              "Argument 'file' must be character and point to a file" =
-                  is.character(uri) && file.exists(file))
-    libtiledb_vfs_copy_file(vfs@ptr, file, uri)
+  stopifnot(
+    "Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+    "Argument 'uri' must be character" = is.character(uri),
+    "Argument 'file' must be character and point to a file" =
+      is.character(uri) && file.exists(file)
+  )
+  libtiledb_vfs_copy_file(vfs@ptr, file, uri)
 }
 
 #' Recursively list objects from given URI
@@ -462,10 +527,16 @@ tiledb_vfs_copy_file <- function(file, uri, vfs = tiledb_get_vfs()) {
 #' @return A data.frame object with two columns for the full path and the object
 #' size in bytes
 #' @export
-tiledb_vfs_ls_recursive <- function(uri, vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
-    stopifnot("Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
-              "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
-              "Argument 'uri' must be character variable" = is.character(uri),
-              "This function needs TileDB 2.22.0 or later" = tiledb_version(TRUE) >= "2.22.0")
-    libtiledb_vfs_ls_recursive(ctx@ptr, vfs@ptr, uri)
+tiledb_vfs_ls_recursive <- function(
+  uri, 
+  vfs = tiledb_get_vfs(),
+  ctx = tiledb_get_context()
+) {
+  stopifnot(
+    "Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+    "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
+    "Argument 'uri' must be character variable" = is.character(uri),
+    "This function needs TileDB 2.22.0 or later" = tiledb_version(TRUE) >= "2.22.0"
+  )
+  libtiledb_vfs_ls_recursive(ctx@ptr, vfs@ptr, uri)
 }

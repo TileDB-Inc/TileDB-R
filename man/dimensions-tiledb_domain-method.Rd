@@ -16,9 +16,13 @@ a list of tiledb_dim
 Returns a list of the tiledb_domain dimension objects
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
-dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 100L), type = "INT32"),
-                              tiledb_dim("d2", c(1L, 50L), type = "INT32")))
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
+dom <- tiledb_domain(dims = c(
+  tiledb_dim("d1", c(1L, 100L), type = "INT32"),
+  tiledb_dim("d2", c(1L, 50L), type = "INT32")
+))
 dimensions(dom)
 
 lapply(dimensions(dom), name)

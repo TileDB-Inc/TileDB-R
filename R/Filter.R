@@ -25,7 +25,8 @@
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_filter
 setClass("tiledb_filter",
-         slots = list(ptr = "externalptr"))
+  slots = list(ptr = "externalptr")
+)
 
 tiledb_filter.from_ptr <- function(ptr) {
   stopifnot("ptr must be a non-NULL externalptr to a tiledb_filter" = !missing(ptr) && is(ptr, "externalptr") && !is.null(ptr))
@@ -59,47 +60,57 @@ tiledb_filter.from_ptr <- function(ptr) {
 #' @param ctx tiledb_ctx object (optional)
 #' @return tiledb_filter object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' tiledb_filter("ZSTD")
 #'
 #' @export tiledb_filter
 tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
-  stopifnot("Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
-            "Argument 'filter' must be scalar string" = is.scalar(name, "character"))
+  stopifnot(
+    "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
+    "Argument 'filter' must be scalar string" = is.scalar(name, "character")
+  )
   ptr <- libtiledb_filter(ctx@ptr, name)
   return(new("tiledb_filter", ptr = ptr))
 }
 
 # internal function returning text use here and in other higher-level show() methods
 .as_text_filter <- function(object) {
-    flt <- tiledb_filter_type(object)
-    opt <- .getFilterOption(object)
-    if (opt == "NA") {
-        txt <- paste0("tiledb_filter(\"", flt, "\")")
-    } else {
-        prt <- strsplit(opt, "=")[[1]]
-        txt <- paste0("tiledb_filter_set_option(tiledb_filter(\"",
-                      flt, "\"),\"", prt[1], "\",", prt[2], ")")
-    }
-    txt
+  flt <- tiledb_filter_type(object)
+  opt <- .getFilterOption(object)
+  if (opt == "NA") {
+    txt <- paste0("tiledb_filter(\"", flt, "\")")
+  } else {
+    prt <- strsplit(opt, "=")[[1]]
+    txt <- paste0(
+      "tiledb_filter_set_option(tiledb_filter(\"",
+      flt, "\"),\"", prt[1], "\",", prt[2], ")"
+    )
+  }
+  txt
 }
 
 #' Prints a filter object
 #'
 #' @param object A filter object
 #' @export
-setMethod("show",
-          signature(object = "tiledb_filter"),
-          definition = function(object) {
+setMethod(
+  "show",
+  signature(object = "tiledb_filter"),
+  definition = function(object) {
     cat(.as_text_filter(object), "\n")
-})
+  }
+)
 
 #' Returns the type of the filter used
 #'
 #' @param object tiledb_filter
 #' @return TileDB filter type string
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' c <- tiledb_filter("ZSTD")
 #' tiledb_filter_type(c)
 #'
@@ -116,15 +127,19 @@ tiledb_filter_type <- function(object) {
 #' @param value int
 #' @return The modified filter object is returned.
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' c <- tiledb_filter("ZSTD")
-#' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
+#' tiledb_filter_set_option(c, "COMPRESSION_LEVEL", 5)
 #' tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
 #' @export
 tiledb_filter_set_option <- function(object, option, value) {
-  stopifnot("The 'object' argument must be a tiledb_filter" = is(object, "tiledb_filter"),
-            "The 'option' argument must be character" = is.character(option),
-            "The 'value' argument must be numeric or character or logical" = is.numeric(value) || is.character(value) || is.logical(value))
+  stopifnot(
+    "The 'object' argument must be a tiledb_filter" = is(object, "tiledb_filter"),
+    "The 'option' argument must be character" = is.character(option),
+    "The 'value' argument must be numeric or character or logical" = is.numeric(value) || is.character(value) || is.logical(value)
+  )
 
   object@ptr <- libtiledb_filter_set_option(object@ptr, option, value)
   return(object)
@@ -136,14 +151,18 @@ tiledb_filter_set_option <- function(object, option, value) {
 #' @param option string
 #' @return Integer value
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' c <- tiledb_filter("ZSTD")
-#' tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
+#' tiledb_filter_set_option(c, "COMPRESSION_LEVEL", 5)
 #' tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
 #'
 #' @export
 tiledb_filter_get_option <- function(object, option) {
-  stopifnot("The 'object' argument must be a tiledb_filter" = is(object, "tiledb_filter"),
-            "The 'option' argument must be character" = is.character(option))
+  stopifnot(
+    "The 'object' argument must be a tiledb_filter" = is(object, "tiledb_filter"),
+    "The 'option' argument must be character" = is.character(option)
+  )
   return(libtiledb_filter_get_option(object@ptr, option))
 }

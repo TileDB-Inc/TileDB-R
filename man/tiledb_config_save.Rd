@@ -18,7 +18,9 @@ path to created config file
 Save a \code{tiledb_config} object ot a local text file
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 tmp <- tempfile()
 cfg <- tiledb_config(c("sm.tile_cache_size" = "10"))
 pth <- tiledb_config_save(cfg, tmp)

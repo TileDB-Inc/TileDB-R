@@ -7,7 +7,8 @@
 tiledb_group_set_config(grp, cfg)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
 \item{cfg}{A TileDB Config object}
 }

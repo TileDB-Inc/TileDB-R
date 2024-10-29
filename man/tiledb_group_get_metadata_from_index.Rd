@@ -7,7 +7,8 @@
 tiledb_group_get_metadata_from_index(grp, idx)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
 \item{idx}{A numeric value with the index of the metadata object to be retrieved}
 }

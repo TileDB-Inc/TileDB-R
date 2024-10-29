@@ -18,6 +18,7 @@ strings_as_factors(x) <- value
 The modified \code{tiledb_array} array object
 }
 \description{
-A \code{tiledb_array} object containing character column can have those converted to
-factors variables. This methods sets the selection value for \sQuote{strings_as_factors}.
+A \code{tiledb_array} object containing character column can have those
+converted to factors variables. This methods sets the selection value for
+\sQuote{strings_as_factors}.
 }

@@ -20,8 +20,10 @@ The modified filter object is returned.
 Set the option for a filter
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 c <- tiledb_filter("ZSTD")
-tiledb_filter_set_option(c,"COMPRESSION_LEVEL", 5)
+tiledb_filter_set_option(c, "COMPRESSION_LEVEL", 5)
 tiledb_filter_get_option(c, "COMPRESSION_LEVEL")
 }

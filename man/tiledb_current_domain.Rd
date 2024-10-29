@@ -16,9 +16,11 @@ The \code{tiledb_current_domain} object
 Creates a \code{tiledb_current_domain} object
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 if (tiledb_version(TRUE) >= "2.25.0") {
-   cd <-tiledb_current_domain()
+  cd <- tiledb_current_domain()
 }
 
 }

@@ -38,10 +38,14 @@ values}
 Constructs a \code{tiledb_attr} object
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 flt <- tiledb_filter_list(list(tiledb_filter("GZIP")))
-attr <- tiledb_attr(name = "a1", type = "INT32",
-                    filter_list = flt)
+attr <- tiledb_attr(
+  name = "a1", type = "INT32",
+  filter_list = flt
+)
 attr
 
 }

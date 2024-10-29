@@ -28,7 +28,9 @@ object tiledb_filter
 Returns the filter at given index
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 flt <- tiledb_filter("ZSTD")
 tiledb_filter_set_option(flt, "COMPRESSION_LEVEL", 5)
 filter_list <- tiledb_filter_list(c(flt))

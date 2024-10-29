@@ -13,9 +13,11 @@ strings_as_factors(object)
 \item{object}{A \code{tiledb_array} object}
 }
 \value{
-A logical value indicating whether an \code{strings_as_factors} return is selected
+A logical value indicating whether an \code{strings_as_factors}
+return is selected
 }
 \description{
-A \code{tiledb_array} object containing character column can have those converted to
-factors variables. This methods returns the selection value for \sQuote{strings_as_factors}.
+A \code{tiledb_array} object containing character column can have those
+converted to factors variables. This methods returns the selection value
+for \sQuote{strings_as_factors}.
 }

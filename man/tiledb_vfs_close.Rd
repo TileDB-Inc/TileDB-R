@@ -7,7 +7,8 @@
 tiledb_vfs_close(fh, ctx = tiledb_get_context())
 }
 \arguments{
-\item{fh}{A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}}
+\item{fh}{A TileDB VFS Filehandle external pointer as returned from
+\code{tiledb_vfs_open}}
 
 \item{ctx}{(optional) A TileDB Ctx object}
 }

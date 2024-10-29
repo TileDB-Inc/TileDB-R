@@ -19,8 +19,9 @@ set_allocation_size_preference(value)
 \item{value}{A numeric value with the desired allocation size (in bytes).}
 }
 \value{
-For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
-side effect of storing the value. For the getters, the value as a numeric.
+For the setter, \code{TRUE} is returned invisibly but the function is
+invoked for the side effect of storing the value. For the getters, the
+value as a numeric.
 }
 \description{
 Save (or load) allocation size default preference in an optional

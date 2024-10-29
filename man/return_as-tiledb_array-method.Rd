@@ -15,13 +15,14 @@ return_as(object, ...)
 \item{...}{Currently unused}
 }
 \value{
-A character value indicating the preferred conversion where the value is
-one of \sQuote{asis} (the default), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame},
-\sQuote{data.table}, or \sQuote{tibble}.
+A character value indicating the preferred conversion where the value
+is one of \sQuote{asis} (the default), \sQuote{array},
+\sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, or \sQuote{tibble}.
 }
 \description{
-A \code{tiledb_array} object can be returned as a \sQuote{list} (default), \sQuote{array},
-\sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. This method
-permits to select a preference for the returned object. The default value of \sQuote{asis}
-means that no conversion is performed.
+A \code{tiledb_array} object can be returned as a \sQuote{list} (default),
+\sQuote{array}, \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or
+\sQuote{tibble}. This method permits to select a preference for the returned
+object. The default value of \sQuote{asis} means that no conversion
+is performed.
 }

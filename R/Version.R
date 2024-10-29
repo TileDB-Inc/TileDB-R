@@ -27,14 +27,17 @@
 #' @return An named int vector c(major, minor, patch), or if select,
 #' a \code{package_version} object
 #' @examples
-#' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+#' \dontshow{
+#' ctx <- tiledb_ctx(limitTileDBCores())
+#' }
 #' tiledb_version()
 #' tiledb_version(compact = TRUE)
 #' @export
 tiledb_version <- function(compact = FALSE) {
-    stopifnot(`Argument 'compact' must be logical` = is.logical(compact))
-    if (compact)
-        as.package_version(paste(unname(tiledb_version()), collapse="."))
-    else
-        libtiledb_version()
+  stopifnot(`Argument 'compact' must be logical` = is.logical(compact))
+  if (compact) {
+    as.package_version(paste(unname(tiledb_version()), collapse = "."))
+  } else {
+    libtiledb_version()
+  }
 }

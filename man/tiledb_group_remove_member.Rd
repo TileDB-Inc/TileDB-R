@@ -7,10 +7,11 @@
 tiledb_group_remove_member(grp, uri)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
-\item{uri}{A character value with a the URI of the member to be removed, or (if added
-with a name) the name of the member}
+\item{uri}{A character value with a the URI of the member to
+be removed, or (if added with a name) the name of the member}
 }
 \value{
 The TileDB Group object, invisibly

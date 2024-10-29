@@ -18,8 +18,8 @@ query_statistics(object, ...)
 A logical value indicating whether query statistics are returned.
 }
 \description{
-A \code{tiledb_array} object can, if requested, return query statistics as a JSON
-string in an attribute \sQuote{query_statistics} attached to the return object. The
-default value of the logical switch is \sQuote{FALSE}. This method returns the current
-value.
+A \code{tiledb_array} object can, if requested, return query statistics as a
+JSON string in an attribute \sQuote{query_statistics} attached to the return
+object. The default value of the logical switch is \sQuote{FALSE}. This
+method returns the current value.
 }

@@ -23,26 +23,30 @@ set_return_as_preference(
 \item{value}{A character variable with one of the six permitted values}
 }
 \value{
-For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
-side effect of storing the value. For either getter, the character value.
+For the setter, \code{TRUE} is returned invisibly but the function
+is  invoked for the side effect of storing the value. For either getter,
+the character value.
 }
 \description{
-Save (or load) \sQuote{return_as} conversion preference in an optional config file
+Save (or load) \sQuote{return_as} conversion preference in an
+optional config file
 }
 \details{
-The \code{tiledb_array} object can set a preference for conversion for each retrieved
-object. This preference can also be enconded in a configuration file as R (version
-4.0.0 or later) allows a user- and package specific configuration files.  These helper
-functions sets and retrieve the value, respectively, or retrieve the cached value from
-the package environment where is it set at package load.
+The \code{tiledb_array} object can set a preference for conversion for each
+retrieved object. This preference can also be encoded in a configuration
+file as R (version 4.0.0 or later) allows a user- and package specific
+configuration files. These helper functions set and retrieve the value,
+respectively, or retrieve the cached value from the package environment where
+it is set at package load.
 
-Note that the value must be one of \sQuote{asis} (the default), \sQuote{array},
-\sQuote{matrix}\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. The latter
-two require the corresponding package to be installed.
+Note that the value must be one of \sQuote{asis} (the default),
+\sQuote{array}, \sQuote{matrix}\sQuote{data.frame}, \sQuote{data.table} or
+\sQuote{tibble}. The latter two require the corresponding package to
+be installed.
 }
 \note{
 This function requires R version 4.0.0 or later to utilise the per-user
-config directory accessor function. For older R versions, please set the attribute
-directly when creating the \code{tiledb_array} object, or via the
+config directory accessor function. For older R versions, please set the
+attribute directly when creating the \code{tiledb_array} object, or via the
 \code{return_as()} method.
 }

@@ -37,7 +37,9 @@ is no filter}
 Constructs a \code{tiledb_dim} object
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 tiledb_dim(name = "d1", domain = c(1L, 10L), tile = 5L, type = "INT32")
 
 }

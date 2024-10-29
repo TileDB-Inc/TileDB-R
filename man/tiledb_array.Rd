@@ -40,7 +40,8 @@ tiledb_sparse(...)
 
 \item{query_type}{optionally loads the array in "READ" or "WRITE" only modes.}
 
-\item{is.sparse}{optional logical switch, defaults to "NA" letting array determine it}
+\item{is.sparse}{optional logical switch, defaults to "NA"
+letting array determine it}
 
 \item{attrs}{optional character vector to select attributes, default is
 empty implying all are selected, the special value \code{NA_character_}
@@ -58,50 +59,59 @@ describes the points selected in dimension i}
 \item{query_layout}{optional A value for the TileDB query layout, defaults to
 an empty character variable indicating no special layout is set}
 
-\item{datetimes_as_int64}{optional A logical value selecting date and datetime value
-representation as \sQuote{raw} \code{integer64} and not as \code{Date},
-\code{POSIXct} or \code{nanotime} objects.}
+\item{datetimes_as_int64}{optional A logical value selecting date  and
+datetime value representation as \sQuote{raw} \code{integer64} and not as
+\code{Date}, \code{POSIXct} or \code{nanotime} objects.}
 
-\item{encryption_key}{optional A character value with an AES-256 encryption key
-in case the array was written with encryption.}
+\item{encryption_key}{optional A character value with an AES-256 encryption
+key in case the array was written with encryption.}
 
-\item{query_condition}{optional \code{tiledb_query_condition} object, by default uninitialized
-without a condition; this functionality requires TileDB 2.3.0 or later}
+\item{query_condition}{optional \code{tiledb_query_condition} object, by
+default uninitialized without a condition; this functionality requires
+TileDB 2.3.0 or later}
 
-\item{timestamp_start}{optional A POSIXct Datetime value determining the inclusive time point
-at which the array is to be openened. No fragments written earlier will be considered.}
+\item{timestamp_start}{optional A POSIXct Datetime value determining the
+inclusive time point at which the array is to be openened. No fragments
+written earlier will be considered.}
 
-\item{timestamp_end}{optional A POSIXct Datetime value determining the inclusive time point
-until which the array is to be openened. No fragments written earlier later be considered.}
+\item{timestamp_end}{optional A POSIXct Datetime value determining the
+inclusive time point until which the array is to be openened. No fragments
+written earlier later be considered.}
 
-\item{return_as}{optional A character value with the desired \code{tiledb_array} conversion,
-permitted values are \sQuote{asis} (default, returning a list of columns), \sQuote{array},
-\sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, \sQuote{arrow_table},
-or \sQuote{arrow} (as an alias for \sQuote{arrow_table}; here \sQuote{data.table},
-\sQuote{tibble} and \sQuote{arrow} require the respective packages to be installed.
+\item{return_as}{optional A character value with the desired
+\code{tiledb_array} conversion, permitted values are \sQuote{asis} (default,
+returning a list of columns), \sQuote{array}, \sQuote{matrix},
+\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble},
+\sQuote{arrow_table}, or \sQuote{arrow} (as an alias for
+\sQuote{arrow_table}; here \sQuote{data.table}, \sQuote{tibble} and
+\sQuote{arrow} require the respective packages to be installed.
 The existing \code{as.*} arguments take precedent over this.}
 
-\item{query_statistics}{optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
-query statistics are returned (as a JSON string) via the attribute
-\sQuote{query_statistics} of the return object.}
+\item{query_statistics}{optional A logical value, defaults to \sQuote{FALSE};
+if \sQuote{TRUE} the query statistics are returned (as a JSON string) via
+the attribute \sQuote{query_statistics} of the return object.}
 
-\item{strings_as_factors}{An optional logical to convert character columns to factor type; defaults
-to the value of \code{getOption("stringsAsFactors", FALSE)}.}
+\item{strings_as_factors}{An optional logical to convert character columns to
+factor type; defaults to the value of
+\code{getOption("stringsAsFactors", FALSE)}.}
 
 \item{keep_open}{An optional logical to not close after read or write}
 
-\item{sil}{optional A list, by default empty to store schema information when query objects are
-parsed.}
+\item{sil}{optional A list, by default empty to store schema information
+when query objects are parsed.}
 
-\item{dumpbuffers}{An optional character variable with a directory name (relative to
-\code{/dev/shm}) for writing out results buffers (for internal use / testing)}
+\item{dumpbuffers}{An optional character variable with a directory name
+(relative to \code{/dev/shm}) for writing out results buffers (for
+internal use / testing)}
 
-\item{buffers}{An optional list with full pathnames of shared memory buffers to read data from}
+\item{buffers}{An optional list with full pathnames of shared memory buffers
+to read data from}
 
 \item{ctx}{optional tiledb_ctx}
 
-\item{as.data.frame}{An optional deprecated alternative to \code{return_as="data.frame"} which has
-been deprecated and removed, but is still used in one BioConductor package; this argument will be removed
+\item{as.data.frame}{An optional deprecated alternative to
+\code{return_as="data.frame"} which has been deprecated and removed, but is
+still used in one BioConductor package; this argument will be removed
 once the updated package has been released.}
 
 \item{...}{Used as a pass-through for \code{tiledb_dense}

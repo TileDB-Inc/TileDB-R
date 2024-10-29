@@ -31,12 +31,14 @@
 ##' @return An ArraySchema object corresponding to the supplied schema, or a default if missing
 ##' @export
 tiledb_filestore_schema_create <- function(uri = NULL, ctx = tiledb_get_context()) {
-    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
-              "The 'uri' argument must be character" = is.null(uri) || is.character(uri),
-              "The 'uri' must providing an existing file" = is.null(uri) || file.exists(uri),
-              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
-    arrptr <- libtiledb_filestore_schema_create(ctx@ptr, if (is.null(uri)) "" else uri)
-    tiledb_array_schema.from_ptr(arrptr)
+  stopifnot(
+    "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+    "The 'uri' argument must be character" = is.null(uri) || is.character(uri),
+    "The 'uri' must providing an existing file" = is.null(uri) || file.exists(uri),
+    "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0"
+  )
+  arrptr <- libtiledb_filestore_schema_create(ctx@ptr, if (is.null(uri)) "" else uri)
+  tiledb_array_schema.from_ptr(arrptr)
 }
 
 ##' Import a file into a TileDB Filestore
@@ -48,12 +50,14 @@ tiledb_filestore_schema_create <- function(uri = NULL, ctx = tiledb_get_context(
 ##' @return A boolean is returned to indicate successful completion
 ##' @export
 tiledb_filestore_uri_import <- function(filestore_uri, file_uri, ctx = tiledb_get_context()) {
-    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
-              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
-              "The 'file_uri' argument must be character" = is.character(file_uri),
-              "The 'file_uri' must providing an existing file" = file.exists(file_uri),
-              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
-    libtiledb_filestore_uri_import(ctx@ptr, filestore_uri, file_uri)
+  stopifnot(
+    "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+    "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+    "The 'file_uri' argument must be character" = is.character(file_uri),
+    "The 'file_uri' must providing an existing file" = file.exists(file_uri),
+    "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0"
+  )
+  libtiledb_filestore_uri_import(ctx@ptr, filestore_uri, file_uri)
 }
 
 ##' Export a file from a TileDB Filestore
@@ -65,11 +69,13 @@ tiledb_filestore_uri_import <- function(filestore_uri, file_uri, ctx = tiledb_ge
 ##' @return A boolean is returned to indicate successful completion
 ##' @export
 tiledb_filestore_uri_export <- function(file_uri, filestore_uri, ctx = tiledb_get_context()) {
-    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
-              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
-              "The 'file_uri' argument must be character" = is.character(file_uri),
-              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
-    libtiledb_filestore_uri_export(ctx@ptr, file_uri, filestore_uri)
+  stopifnot(
+    "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+    "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+    "The 'file_uri' argument must be character" = is.character(file_uri),
+    "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0"
+  )
+  libtiledb_filestore_uri_export(ctx@ptr, file_uri, filestore_uri)
 }
 
 ##' Import size bytes from a string into a TileDB Filestore
@@ -82,12 +88,14 @@ tiledb_filestore_uri_export <- function(file_uri, filestore_uri, ctx = tiledb_ge
 ##' @return A boolean is returned to indicate successful completion
 ##' @export
 tiledb_filestore_buffer_import <- function(filestore_uri, buf, bytes, ctx = tiledb_get_context()) {
-    if (missing(bytes)) bytes <- nchar(buf)
-    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
-              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
-              "The 'buf' argument must be character" = is.character(buf),
-              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
-    libtiledb_filestore_buffer_import(ctx@ptr, filestore_uri, buf, bytes)
+  if (missing(bytes)) bytes <- nchar(buf)
+  stopifnot(
+    "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+    "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+    "The 'buf' argument must be character" = is.character(buf),
+    "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0"
+  )
+  libtiledb_filestore_buffer_import(ctx@ptr, filestore_uri, buf, bytes)
 }
 
 ##' Export from a TileDB Filestore to a character variable
@@ -101,14 +109,16 @@ tiledb_filestore_buffer_import <- function(filestore_uri, buf, bytes, ctx = tile
 ##' bytes) is returned
 ##' @export
 tiledb_filestore_buffer_export <- function(filestore_uri, offset, bytes, ctx = tiledb_get_context()) {
-    if (missing(offset)) offset <- 0
-    if (missing(bytes)) bytes <- tiledb_filestore_size(filestore_uri, ctx=ctx)
-    stopifnot("The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
-              "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
-              "The 'offset' argument must be numeric" = is.numeric(offset),
-              "The 'bytes' argument must be numeric" = is.numeric(bytes),
-              "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0")
-    libtiledb_filestore_buffer_export(ctx@ptr, filestore_uri, offset, bytes)
+  if (missing(offset)) offset <- 0
+  if (missing(bytes)) bytes <- tiledb_filestore_size(filestore_uri, ctx = ctx)
+  stopifnot(
+    "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
+    "The 'filestore_uri' argument must be character" = is.character(filestore_uri),
+    "The 'offset' argument must be numeric" = is.numeric(offset),
+    "The 'bytes' argument must be numeric" = is.numeric(bytes),
+    "This function needs TileDB 2.9.0 or later" = tiledb_version(TRUE) >= "2.9.0"
+  )
+  libtiledb_filestore_buffer_export(ctx@ptr, filestore_uri, offset, bytes)
 }
 
 ##' Return (uncompressed) TileDB Filestore size
@@ -119,5 +129,5 @@ tiledb_filestore_buffer_export <- function(filestore_uri, offset, bytes, ctx = t
 ##' @return A numeric with the size is returned
 ##' @export
 tiledb_filestore_size <- function(filestore_uri, ctx = tiledb_get_context()) {
-    libtiledb_filestore_size(ctx@ptr, filestore_uri)
+  libtiledb_filestore_size(ctx@ptr, filestore_uri)
 }

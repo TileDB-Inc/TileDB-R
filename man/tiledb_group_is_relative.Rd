@@ -7,7 +7,8 @@
 tiledb_group_is_relative(grp, name)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
 \item{name}{A character value with a group name}
 }

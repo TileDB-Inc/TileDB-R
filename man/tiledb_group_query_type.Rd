@@ -7,10 +7,12 @@
 tiledb_group_query_type(grp)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 }
 \value{
-A character value with the query type i.e. one of \dQuote{READ} or \dQuote{WRITE}.
+A character value with the query type i.e. one of
+\dQuote{READ} or \dQuote{WRITE}.
 }
 \description{
 Return a TileDB Group query type

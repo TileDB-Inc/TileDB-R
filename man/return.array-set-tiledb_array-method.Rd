@@ -19,6 +19,6 @@ The modified \code{tiledb_array} array object
 }
 \description{
 A \code{tiledb_array} object can be returned as an array (or list of arrays),
-or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets the
-selection value for a \code{array}.
+or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets
+the selection value for a \code{array}.
 }

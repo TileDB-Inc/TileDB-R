@@ -16,7 +16,9 @@ TileDB filter type string
 Returns the type of the filter used
 }
 \examples{
-\dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
+\dontshow{
+ctx <- tiledb_ctx(limitTileDBCores())
+}
 c <- tiledb_filter("ZSTD")
 tiledb_filter_type(c)
 

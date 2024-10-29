@@ -7,7 +7,8 @@
 tiledb_array_delete_fragments_list(arr, fragments, ctx = tiledb_get_context())
 }
 \arguments{
-\item{arr}{A TileDB Array object as for example returned by \code{tiledb_array()}}
+\item{arr}{A TileDB Array object as for example returned by
+\code{tiledb_array()}}
 
 \item{fragments}{A character vector with fragment URIs}
 
