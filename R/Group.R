@@ -33,16 +33,19 @@ setClass("tiledb_group",
 #' Creates a 'tiledb_group' object
 #'
 #' @param uri Character variable with the URI of the new group object
-#' @param type Character variable with the query type value: one of \dQuote{READ}
-#' or \dQuote{WRITE}
+#' @param type Character variable with the query type value: one of 
+#' \dQuote{READ} or \dQuote{WRITE}
 #' @param ctx (optional) A TileDB Context object; if not supplied the default
 #' context object is retrieved
 #' @param cfg (optional) A TileConfig object
 #' @return A 'group' object
 #' @export
 tiledb_group <- function(
-    uri, type = c("READ", "WRITE"),
-    ctx = tiledb_get_context(), cfg = NULL) {
+  uri, 
+  type = c("READ", "WRITE"),
+  ctx = tiledb_get_context(), 
+  cfg = NULL
+) {
   stopifnot(
     "The 'ctx' argument must be a Context object" = is(ctx, "tiledb_ctx"),
     "The 'uri' argument must be character" = is.character(uri),
@@ -62,12 +65,16 @@ tiledb_group <- function(
 
 ##' Open a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param type A character value that must be either \sQuote{READ}, \sQuote{WRITE}
-##' or \sQuote{MODIFY_EXCLUSIVE}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param type A character value that must be either \sQuote{READ}, 
+##' \sQuote{WRITE} or \sQuote{MODIFY_EXCLUSIVE}
 ##' @return The TileDB Group object but opened for reading or writing
 ##' @export
-tiledb_group_open <- function(grp, type = c("READ", "WRITE", "MODIFY_EXCLUSIVE")) {
+tiledb_group_open <- function(
+  grp, 
+  type = c("READ", "WRITE", "MODIFY_EXCLUSIVE")
+) {
   stopifnot(
     "The 'grp' argument must be a tiledb_group object" = is(grp, "tiledb_group"),
     "This function needs TileDB 2.8.*" = .tiledb28(),
@@ -81,7 +88,8 @@ tiledb_group_open <- function(grp, type = c("READ", "WRITE", "MODIFY_EXCLUSIVE")
 
 ##' Set a TileDB Config for a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param cfg A TileDB Config object
 ##' @return The TileDB Group object with added Config
 ##' @export
@@ -97,7 +105,8 @@ tiledb_group_set_config <- function(grp, cfg) {
 
 ##' Get a TileDB Config from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return The TileDB Config object of the TileDB Group object
 ##' @export
 tiledb_group_get_config <- function(grp) {
@@ -112,7 +121,8 @@ tiledb_group_get_config <- function(grp) {
 
 ##' Close a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return The TileDB Group object but closed for reading or writing
 ##' @export
 tiledb_group_close <- function(grp) {
@@ -152,7 +162,8 @@ tiledb_group_create <- function(uri, ctx = tiledb_get_context()) {
 
 ##' Test if TileDB Group is open
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A boolean indicating whether the TileDB Group object is open
 ##' @export
 tiledb_group_is_open <- function(grp) {
@@ -165,7 +176,8 @@ tiledb_group_is_open <- function(grp) {
 
 ##' Return a TileDB Group URI
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A character value with the URI
 ##' @export
 tiledb_group_uri <- function(grp) {
@@ -178,8 +190,10 @@ tiledb_group_uri <- function(grp) {
 
 ##' Return a TileDB Group query type
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @return A character value with the query type i.e. one of \dQuote{READ} or \dQuote{WRITE}.
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @return A character value with the query type i.e. one of 
+##' \dQuote{READ} or \dQuote{WRITE}.
 ##' @export
 tiledb_group_query_type <- function(grp) {
   stopifnot(
@@ -191,8 +205,10 @@ tiledb_group_query_type <- function(grp) {
 
 ##' Write Metadata to a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with they index under which the data will be written
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with they index under which the 
+##' data will be written
 ##' @param val An R object (numeric, int, or char vector) that will be stored
 ##' @return On success boolean \sQuote{TRUE} is returned
 ##' @export
@@ -207,8 +223,10 @@ tiledb_group_put_metadata <- function(grp, key, val) {
 
 ##' Deletes Metadata from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with they index under which the data will be written
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with they index under which the 
+##' data will be written
 ##' @return The TileDB Group object, invisibly
 ##' @export
 tiledb_group_delete_metadata <- function(grp, key) {
@@ -223,8 +241,10 @@ tiledb_group_delete_metadata <- function(grp, key) {
 
 ##' Accesses Metadata from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with the key of the metadata object to be retrieved
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with the key of the metadata 
+##' object to be retrieved
 ##' @return The requested object, or NULL is not found
 ##' @export
 tiledb_group_get_metadata <- function(grp, key) {
@@ -238,8 +258,10 @@ tiledb_group_get_metadata <- function(grp, key) {
 
 ##' Checks for Metadata in a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param key A character value with they index under which the data will be written
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param key A character value with they index under which the 
+##' data will be written
 ##' @return A boolean value indicating with the object is present
 ##' @export
 tiledb_group_has_metadata <- function(grp, key) {
@@ -253,7 +275,8 @@ tiledb_group_has_metadata <- function(grp, key) {
 
 ##' Returns Number of Metadata Objects a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A numeric value with the number of metadata objects
 ##' @export
 tiledb_group_metadata_num <- function(grp) {
@@ -267,7 +290,8 @@ tiledb_group_metadata_num <- function(grp) {
 
 ##' Accesses Metadata by Index from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param idx A numeric value with the index of the metadata object to be retrieved
 ##' @return The requested object, or NULL is not found
 ##' @export
@@ -283,7 +307,8 @@ tiledb_group_get_metadata_from_index <- function(grp, idx) {
 
 ##' Return all Metadata from a TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return A named List with all Metadata objects index
 ##' @export
 tiledb_group_get_all_metadata <- function(grp) {
@@ -304,10 +329,13 @@ tiledb_group_get_all_metadata <- function(grp) {
 
 ##' Add Member to TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param uri A character value with a new URI
-##' @param relative A logical value indicating whether URI is relative to the group
-##' @param name An optional character providing a name for the object, defaults to \code{NULL}
+##' @param relative A logical value indicating whether URI is 
+##' relative to the group
+##' @param name An optional character providing a name for the 
+##' object, defaults to \code{NULL}
 ##' @return The TileDB Group object, invisibly
 ##' @export
 tiledb_group_add_member <- function(grp, uri, relative, name = NULL) {
@@ -324,9 +352,10 @@ tiledb_group_add_member <- function(grp, uri, relative, name = NULL) {
 
 ##' Remove Member from TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param uri A character value with a the URI of the member to be removed, or (if added
-##' with a name) the name of the member
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param uri A character value with a the URI of the member to 
+##' be removed, or (if added with a name) the name of the member
 ##' @return The TileDB Group object, invisibly
 ##' @export
 tiledb_group_remove_member <- function(grp, uri) {
@@ -341,7 +370,8 @@ tiledb_group_remove_member <- function(grp, uri) {
 
 ##' Get Member Count from TileDB Group
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @return The Count of Members in the TileDB Group object
 ##' @export
 tiledb_group_member_count <- function(grp) {
@@ -354,13 +384,15 @@ tiledb_group_member_count <- function(grp) {
 
 ##' Get a Member (Description) by Index from TileDB Group
 ##'
-##' This function returns a three-element character vector with the member object translated to
-##' character, uri, and optional name.
+##' This function returns a three-element character vector with the member 
+##' object translated to character, uri, and optional name.
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param idx A numeric value with the index of the metadata object to be retrieved
-##' @return A character vector with three elements: the member type, its uri, and name
-##' (or \code{""} if the member is unnamed).
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param idx A numeric value with the index of the metadata 
+##' object to be retrieved
+##' @return A character vector with three elements: the member 
+##' type, its uri, and name (or \code{""} if the member is unnamed).
 ##' @export
 tiledb_group_member <- function(grp, idx) {
   stopifnot(
@@ -373,10 +405,11 @@ tiledb_group_member <- function(grp, idx) {
 
 ##' Dump the TileDB Group to String
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
-##' @param recursive A logical value indicating whether a recursive dump is desired, defaults
-##' to \sQuote{FALSE}. Note that recursive listings on remote object may be an expensive or
-##' slow operation.
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
+##' @param recursive A logical value indicating whether a recursive 
+##' dump is desired, defaults to \sQuote{FALSE}. Note that recursive listings 
+##' on remote object may be an expensive or slow operation.
 ##' @return A character string
 ##' @export
 tiledb_group_member_dump <- function(grp, recursive = FALSE) {
@@ -389,7 +422,8 @@ tiledb_group_member_dump <- function(grp, recursive = FALSE) {
 
 ##' Test if a Named Group is Using a Relative URI
 ##'
-##' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+##' @param grp A TileDB Group object as for example returned by 
+##' \code{tiledb_group()}
 ##' @param name A character value with a group name
 ##' @return A boolean indicating whether the group uses a relative URI or not
 ##' @export
@@ -413,13 +447,14 @@ setMethod("show", signature(object = "tiledb_group"), function(object) {
 
 #' Deletes all written data from a 'tiledb_group' object
 #'
-#' The group must be opened in \sQuote{MODIFY_EXCLUSIVE} mode, otherwise the function
-#' will error out.
+#' The group must be opened in \sQuote{MODIFY_EXCLUSIVE} mode, otherwise 
+#' the function will error out.
 #'
-#' @param grp A TileDB Group object as for example returned by \code{tiledb_group()}
+#' @param grp A TileDB Group object as for example returned by 
+#' \code{tiledb_group()}
 #' @param uri Character variable with the URI of the group item to be deleted
-#' @param recursive A logical value indicating whether all data iniside the
-#' group is to be delet
+#' @param recursive A logical value indicating whether all data inside the
+#' group is to be deleted
 #' @return Nothing is returned, the function is invoked for the side-effect of
 #' group data removal.
 #' @export

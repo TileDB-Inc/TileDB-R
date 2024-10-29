@@ -7,7 +7,8 @@
 tiledb_group_is_open(grp)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 }
 \value{
 A boolean indicating whether the TileDB Group object is open

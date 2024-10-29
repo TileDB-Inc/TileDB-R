@@ -7,7 +7,8 @@
 tiledb_group_uri(grp)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 }
 \value{
 A character value with the URI

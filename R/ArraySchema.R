@@ -73,18 +73,19 @@ tiledb_array_schema.from_ptr <- function(ptr, arrptr = NULL) {
 #'
 #' @export
 tiledb_array_schema <- function(
-    domain,
-    attrs,
-    cell_order = "COL_MAJOR",
-    tile_order = "COL_MAJOR",
-    sparse = FALSE,
-    coords_filter_list = NULL,
-    offsets_filter_list = NULL,
-    validity_filter_list = NULL,
-    capacity = 10000L,
-    allows_dups = FALSE,
-    enumerations = NULL,
-    ctx = tiledb_get_context()) {
+  domain,
+  attrs,
+  cell_order = "COL_MAJOR",
+  tile_order = "COL_MAJOR",
+  sparse = FALSE,
+  coords_filter_list = NULL,
+  offsets_filter_list = NULL,
+  validity_filter_list = NULL,
+  capacity = 10000L,
+  allows_dups = FALSE,
+  enumerations = NULL,
+  ctx = tiledb_get_context()
+) {
   if (!missing(attrs) && length(attrs) != 0) {
     is_attr <- function(obj) is(obj, "tiledb_attr")
     if (is_attr(attrs)) { # if an attrs object given:
@@ -549,10 +550,14 @@ setGeneric("allows_dups<-", function(x, value) standardGeneric("allows_dups<-"))
 
 #' @rdname tiledb_array_schema_set_allows_dups
 #' @export
-setMethod("allows_dups<-", signature = "tiledb_array_schema", function(x, value) {
-  libtiledb_array_schema_set_allows_dups(x@ptr, value)
-  x
-})
+setMethod(
+  "allows_dups<-", 
+  signature = "tiledb_array_schema", 
+  definition = function(x, value) {
+    libtiledb_array_schema_set_allows_dups(x@ptr, value)
+    x
+  }
+)
 
 #' Sets toggle whether the array schema allows duplicate values or not.
 #' This is only valid for sparse arrays.
@@ -659,10 +664,14 @@ setMethod("capacity", signature = "tiledb_array_schema", function(object) {
 
 #' @rdname tiledb_array_schema_set_capacity
 #' @export
-setReplaceMethod("capacity", signature = "tiledb_array_schema", function(x, value) {
-  libtiledb_array_schema_set_capacity(x@ptr, value)
-  x
-})
+setReplaceMethod(
+  "capacity",
+  signature = "tiledb_array_schema", 
+  function(x, value) {
+    libtiledb_array_schema_set_capacity(x@ptr, value)
+    x
+  }
+)
 
 #' Retrieve schema capacity (for sparse fragments)
 #'
@@ -702,9 +711,13 @@ setGeneric("schema_check", function(object) standardGeneric("schema_check"))
 
 #' @rdname tiledb_array_schema_check
 #' @export
-setMethod("schema_check", signature = "tiledb_array_schema", function(object) {
-  libtiledb_array_schema_check(object@ptr)
-})
+setMethod(
+  "schema_check",
+  signature = "tiledb_array_schema", 
+  definition = function(object) {
+    libtiledb_array_schema_check(object@ptr)
+  }
+)
 
 ## -- To be removed by May 2023 or later
 
@@ -1008,9 +1021,14 @@ describe <- function(arr) {
 #' @param ctx Optional tiledb_ctx object
 #' @export
 tiledb_array_schema_set_enumeration_empty <- function(
-    schema, attr, enum_name,
-    type_str = "ASCII", cell_val_num = NA_integer_,
-    ordered = FALSE, ctx = tiledb_get_context()) {
+  schema, 
+  attr, 
+  enum_name,
+  type_str = "ASCII",
+  cell_val_num = NA_integer_,
+  ordered = FALSE, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
     "Argument 'attr' must be a 'tiledb_attribute'" = is(attr, "tiledb_attr"),
@@ -1035,7 +1053,10 @@ tiledb_array_schema_set_enumeration_empty <- function(
 #' @param ctx Optional tiledb_ctx object
 #' @return A 'CurrendDomain' object
 #' @export
-tiledb_array_schema_get_current_domain <- function(schema, ctx = tiledb_get_context()) {
+tiledb_array_schema_get_current_domain <- function(
+  schema, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
     "Argument 'ctx' must be a 'tiledb_ctx'" = is(ctx, "tiledb_ctx")
@@ -1051,7 +1072,11 @@ tiledb_array_schema_get_current_domain <- function(schema, ctx = tiledb_get_cont
 #' @param ctx Optional tiledb_ctx object
 #' @return Nothing is returned from this function (but an error, should it occur is reported)
 #' @export
-tiledb_array_schema_set_current_domain <- function(schema, cd, ctx = tiledb_get_context()) {
+tiledb_array_schema_set_current_domain <- function(
+  schema, 
+  cd, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "Argument 'schema' must be a 'tiledb_array_schema'" = is(schema, "tiledb_array_schema"),
     "Argument 'cd' must be a 'tiledb_current_domain'" = is(cd, "tiledb_current_domain"),

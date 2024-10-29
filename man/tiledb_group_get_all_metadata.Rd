@@ -7,7 +7,8 @@
 tiledb_group_get_all_metadata(grp)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 }
 \value{
 A named List with all Metadata objects index

@@ -22,31 +22,42 @@
 
 packageName <- function() "tiledb"
 
-##' Save (or load) \sQuote{return_as} conversion preference in an optional config file
+##' Save (or load) \sQuote{return_as} conversion preference in an 
+##' optional config file
 ##'
-##' The \code{tiledb_array} object can set a preference for conversion for each retrieved
-##' object. This preference can also be enconded in a configuration file as R (version
-##' 4.0.0 or later) allows a user- and package specific configuration files.  These helper
-##' functions sets and retrieve the value, respectively, or retrieve the cached value from
-##' the package environment where is it set at package load.
+##' The \code{tiledb_array} object can set a preference for conversion for each 
+##' retrieved object. This preference can also be encoded in a configuration 
+##' file as R (version 4.0.0 or later) allows a user- and package specific 
+##' configuration files. These helper functions set and retrieve the value, 
+##' respectively, or retrieve the cached value from the package environment where 
+##' it is set at package load.
 ##'
-##' Note that the value must be one of \sQuote{asis} (the default), \sQuote{array},
-##' \sQuote{matrix}\sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. The latter
-##' two require the corresponding package to be installed.
+##' Note that the value must be one of \sQuote{asis} (the default), 
+##' \sQuote{array}, \sQuote{matrix}\sQuote{data.frame}, \sQuote{data.table} or 
+##' \sQuote{tibble}. The latter two require the corresponding package to 
+##' be installed.
 ##'
 ##' @note This function requires R version 4.0.0 or later to utilise the per-user
-##' config directory accessor function. For older R versions, please set the attribute
-##' directly when creating the \code{tiledb_array} object, or via the
+##' config directory accessor function. For older R versions, please set the 
+##' attribute directly when creating the \code{tiledb_array} object, or via the
 ##' \code{return_as()} method.
+##' 
 ##' @title Store object conversion preference
 ##' @param value A character variable with one of the six permitted values
-##' @return For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
-##' side effect of storing the value. For either getter, the character value.
+##' @return For the setter, \code{TRUE} is returned invisibly but the function 
+##' is  invoked for the side effect of storing the value. For either getter, 
+##' the character value.
 ##' @export
-save_return_as_preference <- function(value = c(
-                                        "asis", "array", "matrix", "data.frame",
-                                        "data.table", "tibble"
-                                      )) {
+save_return_as_preference <- function(
+  value = c(
+    "asis",
+    "array",
+    "matrix",
+    "data.frame",
+    "data.table",
+    "tibble"
+  )
+) {
   stopifnot(`This function relies on R version 4.0.0 or later.` = R.version.string >= "4.0.0")
   value <- match.arg(value)
 
@@ -81,14 +92,19 @@ get_return_as_preference <- function() .pkgenv[["return_as"]]
 
 ##' @rdname save_return_as_preference
 ##' @export
-set_return_as_preference <- function(value = c(
-                                       "asis", "array", "matrix", "data.frame",
-                                       "data.table", "tibble"
-                                     )) {
+set_return_as_preference <- function(
+  value = c(
+    "asis",
+    "array",
+    "matrix",
+    "data.frame",
+    "data.table",
+    "tibble"
+  )
+) {
   value <- match.arg(value)
   .pkgenv[["return_as"]] <- value
 }
-
 
 ##' Save (or load) allocation size default preference in an optional
 ##' config file
@@ -121,8 +137,9 @@ set_return_as_preference <- function(value = c(
 ##' TileDB configuration object is used.
 ##' @title Store allocation size preference
 ##' @param value A numeric value with the desired allocation size (in bytes).
-##' @return For the setter, \code{TRUE} is returned invisibly but the function is invoked for the
-##' side effect of storing the value. For the getters, the value as a numeric.
+##' @return For the setter, \code{TRUE} is returned invisibly but the function is 
+##' invoked for the side effect of storing the value. For the getters, the 
+##' value as a numeric.
 ##' @export
 save_allocation_size_preference <- function(value) {
   stopifnot(
@@ -165,9 +182,6 @@ set_allocation_size_preference <- function(value) {
   stopifnot(`The 'value' has to be numeric` = is.numeric(value))
   .pkgenv[["allocation_size"]] <- value
 }
-
-
-
 
 is.scalar <- function(x, typestr) {
   (typeof(x) == typestr) && is.atomic(x) && length(x) == 1L
@@ -242,13 +256,14 @@ r_to_tiledb_type <- function(x) {
 
 ## conversion helper from (and to) legacy validity map for nullable strings
 .legacy_validity <- function(
-    inuri,
-    outdir = NULL,
-    fromlegacy = TRUE,
-    tolegacy = FALSE,
-    usetmp = FALSE,
-    verbose = FALSE,
-    debug = FALSE) {
+  inuri,
+  outdir = NULL,
+  fromlegacy = TRUE,
+  tolegacy = FALSE,
+  usetmp = FALSE,
+  verbose = FALSE,
+  debug = FALSE
+) {
   stopifnot("'inuri' must be an existing directory" = dir.exists(inuri))
 
   if (verbose) {

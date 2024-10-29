@@ -95,7 +95,8 @@ tiledb_filter <- function(name = "NONE", ctx = tiledb_get_context()) {
 #'
 #' @param object A filter object
 #' @export
-setMethod("show",
+setMethod(
+  "show",
   signature(object = "tiledb_filter"),
   definition = function(object) {
     cat(.as_text_filter(object), "\n")

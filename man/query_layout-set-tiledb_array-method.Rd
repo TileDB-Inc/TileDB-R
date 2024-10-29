@@ -12,14 +12,15 @@ query_layout(x) <- value
 \arguments{
 \item{x}{A \code{tiledb_array} object}
 
-\item{value}{A character variable for the query layout. Permitted values are
-\dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or \dQuote{UNORDERD}.}
+\item{value}{A character variable for the query layout. Permitted values
+are \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or
+\dQuote{UNORDERD}.}
 }
 \value{
 The modified \code{tiledb_array} array object
 }
 \description{
-A \code{tiledb_array} object can have an associated query with a specific layout.
-This methods sets the selection value for \sQuote{query_layout} from a character
-value.
+A \code{tiledb_array} object can have an associated query with a specific
+layout. This methods sets the selection value for \sQuote{query_layout}
+from a  character value.
 }

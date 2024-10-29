@@ -7,9 +7,11 @@
 tiledb_group_get_metadata(grp, key)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
-\item{key}{A character value with the key of the metadata object to be retrieved}
+\item{key}{A character value with the key of the metadata
+object to be retrieved}
 }
 \value{
 The requested object, or NULL is not found

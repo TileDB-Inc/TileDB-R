@@ -56,8 +56,13 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export tiledb_dim
 tiledb_dim <- function(
-    name, domain, tile, type,
-    filter_list = tiledb_filter_list(), ctx = tiledb_get_context()) {
+  name, 
+  domain, 
+  tile, 
+  type,
+  filter_list = tiledb_filter_list(), 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "Argument 'name' must be supplied when creating a dimension object" = !missing(name),
     "Argument 'name' must be a scalar string when creating a dimension object" = is.scalar(name, "character"),

@@ -7,18 +7,19 @@
 tiledb_group_delete(grp, uri, recursive = FALSE)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
 \item{uri}{Character variable with the URI of the group item to be deleted}
 
-\item{recursive}{A logical value indicating whether all data iniside the
-group is to be delet}
+\item{recursive}{A logical value indicating whether all data inside the
+group is to be deleted}
 }
 \value{
 Nothing is returned, the function is invoked for the side-effect of
 group data removal.
 }
 \description{
-The group must be opened in \sQuote{MODIFY_EXCLUSIVE} mode, otherwise the function
-will error out.
+The group must be opened in \sQuote{MODIFY_EXCLUSIVE} mode, otherwise
+the function will error out.
 }

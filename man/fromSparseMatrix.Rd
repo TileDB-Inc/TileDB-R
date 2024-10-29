@@ -43,16 +43,16 @@ The functions \code{fromSparseMatrix} and \code{toSparseMatrix} help in storing
 \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 \dontrun{
 if (requireNamespace("Matrix", quietly=TRUE)) {
-    library(Matrix)
-    set.seed(123)      # just to fix it
-    mat <- matrix(0, nrow=20, ncol=10)
-    mat[sample(seq_len(200), 20)] <- seq(1, 20)
-    spmat <- as(mat, "dgTMatrix")  # sparse matrix in dgTMatrix format
-    uri <- "sparse_matrix"
-    fromSparseMatrix(spmat, uri)   # now written
-    chk <- toSparseMatrix(uri)     # and re-read
-    print(chk)
-    all.equal(spmat, chk)
+  library(Matrix)
+  set.seed(123)      # just to fix it
+  mat <- matrix(0, nrow=20, ncol=10)
+  mat[sample(seq_len(200), 20)] <- seq(1, 20)
+  spmat <- as(mat, "dgTMatrix")  # sparse matrix in dgTMatrix format
+  uri <- "sparse_matrix"
+  fromSparseMatrix(spmat, uri)   # now written
+  chk <- toSparseMatrix(uri)     # and re-read
+  print(chk)
+  all.equal(spmat, chk)
 }
 }
 }

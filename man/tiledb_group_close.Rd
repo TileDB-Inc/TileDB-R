@@ -7,7 +7,8 @@
 tiledb_group_close(grp)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 }
 \value{
 The TileDB Group object but closed for reading or writing

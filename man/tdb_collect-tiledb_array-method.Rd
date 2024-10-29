@@ -12,8 +12,9 @@
 \item{...}{Ignored}
 }
 \value{
-The object returning from a tiledb_array query (the type of which can be
-set via the return preference mechanism, see the help for \code{"["} accessor)
+The object returning from a tiledb_array query (the type of which
+can be set via the return preference mechanism, see the help for
+\code{"["} accessor)
 }
 \description{
 Collect the query results to finalize piped expression

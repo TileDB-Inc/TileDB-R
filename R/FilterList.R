@@ -84,7 +84,8 @@ tiledb_filter_list <- function(filters = c(), ctx = tiledb_get_context()) {
 #'
 #' @param object A filter_list object
 #' @export
-setMethod("show",
+setMethod(
+  "show",
   signature(object = "tiledb_filter_list"),
   definition = function(object) {
     cat(.as_text_filter_list(object), "\n")
@@ -93,7 +94,9 @@ setMethod("show",
 
 #' @rdname tiledb_filter_list_set_max_chunk_size
 #' @export
-setGeneric("set_max_chunk_size", function(object, value) standardGeneric("set_max_chunk_size"))
+setGeneric(
+  "set_max_chunk_size", 
+  function(object, value) standardGeneric("set_max_chunk_size"))
 
 #' @rdname tiledb_filter_list_set_max_chunk_size
 #' @export
@@ -132,7 +135,10 @@ setGeneric("max_chunk_size", function(object) standardGeneric("max_chunk_size"))
 
 #' @rdname tiledb_filter_list_get_max_chunk_size
 #' @export
-setMethod("max_chunk_size", signature(object = "tiledb_filter_list"), function(object) {
+setMethod(
+  "max_chunk_size",
+  signature(object = "tiledb_filter_list"), 
+  function(object) {
   libtiledb_filter_list_get_max_chunk_size(object@ptr)
 })
 
@@ -175,15 +181,15 @@ setGeneric("nfilters", function(object) standardGeneric("nfilters"))
 #'
 #' @export
 setMethod(
-  "nfilters", signature(object = "tiledb_filter_list"),
+  "nfilters",
+  signature(object = "tiledb_filter_list"),
   function(object) {
     libtiledb_filter_list_get_nfilters(object@ptr)
   }
 )
 
 #' Returns the filter at given index
-
-
+#' 
 #' @param x `tiledb_config` object
 #' @param i parameter key string
 #' @param j parameter key string, currently unused.

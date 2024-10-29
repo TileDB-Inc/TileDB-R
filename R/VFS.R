@@ -24,7 +24,8 @@
 #'
 #' @slot ptr An external pointer to the underlying implementation
 #' @exportClass tiledb_vfs
-setClass("tiledb_vfs",
+setClass(
+  "tiledb_vfs",
   slots = list(ptr = "externalptr")
 )
 
@@ -319,8 +320,11 @@ tiledb_set_vfs <- function(vfs) {
 #' @return A TileDB VFS Filehandle object (as an external pointer)
 #' @export
 tiledb_vfs_open <- function(
-    binfile, mode = c("READ", "WRITE", "APPEND"),
-    vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
+  binfile, 
+  mode = c("READ", "WRITE", "APPEND"),
+  vfs = tiledb_get_vfs(),
+  ctx = tiledb_get_context()
+) {
   mode <- match.arg(mode)
   stopifnot(
     `Argument 'vfs' must be a tiledb_vfs object` = is(vfs, "tiledb_vfs"),
@@ -332,7 +336,8 @@ tiledb_vfs_open <- function(
 
 #' Close a TileDB VFS Filehandle
 #'
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the close operation is returned.
 #' @export
@@ -346,7 +351,8 @@ tiledb_vfs_close <- function(fh, ctx = tiledb_get_context()) {
 
 #' Sync a TileDB VFS Filehandle
 #'
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the sync operation is returned.
 #' @export
@@ -360,11 +366,13 @@ tiledb_vfs_sync <- function(fh, ctx = tiledb_get_context()) {
 
 #' Write to a TileDB VFS Filehandle
 #'
-#' This interface currently defaults to using an integer vector. This is suitable for R objects
-#' as the raw vector result from serialization can be mapped easily to an integer vector. It is
-#' also possible to \code{memcpy} to the contiguous memory of an integer vector should other
-#' (non-R) data be transferred.
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
+#' This interface currently defaults to using an integer vector. This is suitable 
+#' for R objects as the raw vector result from serialization can be mapped easily 
+#' to an integer vector. It is also possible to \code{memcpy} to the contiguous 
+#' memory of an integer vector should other (non-R) data be transferred.
+#' 
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
 #' @param vec An integer vector of content to be written
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the write operation is returned.
@@ -380,13 +388,15 @@ tiledb_vfs_write <- function(fh, vec, ctx = tiledb_get_context()) {
 
 #' Read from a TileDB VFS Filehandle
 #'
-#' This interface currently defaults to reading an integer vector. This is suitable for R objects
-#' as a raw vector used for (de)serialization can be mapped easily to an integer vector. It is
-#' also possible to \code{memcpy} to the contiguous memory of an integer vector should other
-#' (non-R) data be transferred.
-#' @param fh A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}
-#' @param offset A scalar value with the byte offset from the beginning of the file
-#' with a of zero.
+#' This interface currently defaults to reading an integer vector. This is 
+#' suitable for R objects as a raw vector used for (de)serialization can be 
+#' mapped easily to an integer vector. It is also possible to \code{memcpy} to 
+#' the contiguous memory of an integer vector should other (non-R) data 
+#' be transferred.
+#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' \code{tiledb_vfs_open}
+#' @param offset A scalar value with the byte offset from the beginning of the 
+#' file with a of zero.
 #' @param nbytes A scalar value with the number of bytes to be read.
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The binary file content is returned as an integer vector.
@@ -517,7 +527,11 @@ tiledb_vfs_copy_file <- function(file, uri, vfs = tiledb_get_vfs()) {
 #' @return A data.frame object with two columns for the full path and the object
 #' size in bytes
 #' @export
-tiledb_vfs_ls_recursive <- function(uri, vfs = tiledb_get_vfs(), ctx = tiledb_get_context()) {
+tiledb_vfs_ls_recursive <- function(
+  uri, 
+  vfs = tiledb_get_vfs(),
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
     "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),

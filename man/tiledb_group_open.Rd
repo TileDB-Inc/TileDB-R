@@ -7,10 +7,11 @@
 tiledb_group_open(grp, type = c("READ", "WRITE", "MODIFY_EXCLUSIVE"))
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
-\item{type}{A character value that must be either \sQuote{READ}, \sQuote{WRITE}
-or \sQuote{MODIFY_EXCLUSIVE}}
+\item{type}{A character value that must be either \sQuote{READ},
+\sQuote{WRITE} or \sQuote{MODIFY_EXCLUSIVE}}
 }
 \value{
 The TileDB Group object but opened for reading or writing

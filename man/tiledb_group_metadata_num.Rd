@@ -7,7 +7,8 @@
 tiledb_group_metadata_num(grp)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 }
 \value{
 A numeric value with the number of metadata objects

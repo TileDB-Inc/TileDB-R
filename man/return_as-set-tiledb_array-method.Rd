@@ -18,9 +18,10 @@ return_as(x) <- value
 The modified \code{tiledb_array} array object
 }
 \description{
-A \code{tiledb_array} object can be returned as a \sQuote{list} (default), \sQuote{array},
-\sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. This method
-This methods permits to set a preference of returning a \code{list}, \code{array},
-\code{matrix}, \code{data.frame}, a \code{data.table}, or a \code{tibble}. The default
-value of \dQuote{asis} means that no conversion is performed and a \code{list} is returned.
+A \code{tiledb_array} object can be returned as a \sQuote{list} (default),
+\sQuote{array}, \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or
+\sQuote{tibble}. This method This methods permits to set a preference of
+returning a \code{list}, \code{array}, \code{matrix}, \code{data.frame}, a
+\code{data.table}, or a \code{tibble}. The default value of \dQuote{asis}
+means that no conversion is performed and a \code{list} is returned.
 }

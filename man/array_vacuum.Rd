@@ -11,9 +11,11 @@ array_vacuum(uri, cfg = NULL, start_time, end_time, ctx = tiledb_get_context())
 
 \item{cfg}{An optional TileDB Configuration object}
 
-\item{start_time}{An optional timestamp value, if missing config default is used}
+\item{start_time}{An optional timestamp value, if missing config
+default is used}
 
-\item{end_time}{An optional timestamp value, if missing config default is used}
+\item{end_time}{An optional timestamp value, if missing config default
+is used}
 
 \item{ctx}{An option TileDB Context object}
 }
@@ -21,11 +23,11 @@ array_vacuum(uri, cfg = NULL, start_time, end_time, ctx = tiledb_get_context())
 NULL is returned invisibly
 }
 \description{
-This function can remove fragments following a consolidation step. Note that vacuuming
-should \emph{not} be run if one intends to use the TileDB \emph{time-traveling} feature
-of opening arrays at particular timestamps.
+This function can remove fragments following a consolidation step. Note that
+vacuuming should \emph{not} be run if one intends to use the TileDB
+\emph{time-traveling} feature of opening arrays at particular timestamps.
 }
 \details{
-Parameters affecting the operation can be set via an optional configuration object.
-Start and end timestamps can also be set directly.
+Parameters affecting the operation can be set via an optional configuration
+object. Start and end timestamps can also be set directly.
 }

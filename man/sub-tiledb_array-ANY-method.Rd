@@ -13,17 +13,18 @@
 \arguments{
 \item{x}{tiledb_array object}
 
-\item{i}{optional row index expression which can be a list in which case minimum and maximum
-of each list element determine a range; multiple list elements can be used to supply multiple
-ranges.}
+\item{i}{optional row index expression which can be a list in which case
+minimum and maximum of each list element determine a range; multiple list
+elements can be used to supply multiple ranges.}
 
-\item{j}{optional column index expression which can be a list in which case minimum and maximum
-of each list element determine a range; multiple list elements can be used to supply multiple
-ranges.}
+\item{j}{optional column index expression which can be a list in which case
+minimum and maximum of each list element determine a range; multiple list
+elements can be used to supply multiple ranges.}
 
 \item{...}{Extra parameters for method signature, currently unused.}
 
-\item{drop}{Optional logical switch to drop dimensions, default FALSE, currently unused.}
+\item{drop}{Optional logical switch to drop dimensions, default FALSE,
+currently unused.}
 }
 \value{
 The resulting elements in the selected format

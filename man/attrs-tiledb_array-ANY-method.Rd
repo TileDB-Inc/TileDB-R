@@ -15,6 +15,6 @@ a vector with attributes; \code{NA} means no attributes will be returned.
 }
 \description{
 By default, all attributes will be selected. But if a subset of attribute
-names is assigned to the internal slot \code{attrs}, then only those attributes
-will be queried.  This methods accesses the slot.
+names is assigned to the internal slot \code{attrs}, then only those
+attributes#' will be queried.  This methods accesses the slot.
 }

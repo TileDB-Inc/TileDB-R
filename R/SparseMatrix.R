@@ -40,27 +40,28 @@
 ##' \dontshow{ctx <- tiledb_ctx(limitTileDBCores())}
 ##' \dontrun{
 ##' if (requireNamespace("Matrix", quietly=TRUE)) {
-##'     library(Matrix)
-##'     set.seed(123)      # just to fix it
-##'     mat <- matrix(0, nrow=20, ncol=10)
-##'     mat[sample(seq_len(200), 20)] <- seq(1, 20)
-##'     spmat <- as(mat, "dgTMatrix")  # sparse matrix in dgTMatrix format
-##'     uri <- "sparse_matrix"
-##'     fromSparseMatrix(spmat, uri)   # now written
-##'     chk <- toSparseMatrix(uri)     # and re-read
-##'     print(chk)
-##'     all.equal(spmat, chk)
+##'   library(Matrix)
+##'   set.seed(123)      # just to fix it
+##'   mat <- matrix(0, nrow=20, ncol=10)
+##'   mat[sample(seq_len(200), 20)] <- seq(1, 20)
+##'   spmat <- as(mat, "dgTMatrix")  # sparse matrix in dgTMatrix format
+##'   uri <- "sparse_matrix"
+##'   fromSparseMatrix(spmat, uri)   # now written
+##'   chk <- toSparseMatrix(uri)     # and re-read
+##'   print(chk)
+##'   all.equal(spmat, chk)
 ##' }
 ##' }
 ##' @importFrom methods as
 ##' @export
 fromSparseMatrix <- function(
-    obj,
-    uri,
-    cell_order = "ROW_MAJOR",
-    tile_order = "ROW_MAJOR",
-    filter = "ZSTD",
-    capacity = 10000L) {
+  obj,
+  uri,
+  cell_order = "ROW_MAJOR",
+  tile_order = "ROW_MAJOR",
+  filter = "ZSTD",
+  capacity = 10000L
+) {
   stopifnot(
     `Argument 'obj' must be Matrix object` = inherits(obj, "Matrix"),
     `Argument 'obj' must be sparse` = is(obj, "sparseMatrix"),

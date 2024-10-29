@@ -13,8 +13,8 @@ selected_ranges(x) <- value
 \item{x}{A \code{tiledb_array} object}
 
 \item{value}{A list of two-column matrices where each list element \sQuote{i}
-corresponds to the dimension attribute \sQuote{i}. The matrices can contain rows
-where each row contains the minimum and maximum value of a range.}
+corresponds to the dimension attribute \sQuote{i}. The matrices can contain
+rows where each row contains the minimum and maximum value of a range.}
 }
 \value{
 The modified \code{tiledb_array} array object
@@ -23,6 +23,7 @@ The modified \code{tiledb_array} array object
 A \code{tiledb_array} object can have a range selection for each dimension
 attribute. This methods sets the selection value for \sQuote{selected_ranges}
 which is a list (with one element per dimension) of two-column matrices where
-each row describes one pair of minimum and maximum values. Alternatively, the list
-can be named with the names providing the match to the corresponding dimension.
+each row describes one pair of minimum and maximum values. Alternatively,
+the list can be named with the names providing the match to the
+corresponding dimension.
 }

@@ -18,7 +18,7 @@ extended(x) <- value
 The modified \code{tiledb_array} array object
 }
 \description{
-A \code{tiledb_array} object can be returned as \code{data.frame}. This methods
-set the selection value for \sQuote{extended} format including row (and column,
-if present) indices.
+A \code{tiledb_array} object can be returned as \code{data.frame}. This
+methods set the selection value for \sQuote{extended} format including row
+(and column, if present) indices.
 }

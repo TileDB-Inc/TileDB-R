@@ -62,13 +62,14 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export
 tiledb_attr <- function(
-    name,
-    type,
-    filter_list = tiledb_filter_list(),
-    ncells = 1,
-    nullable = FALSE,
-    enumeration = NULL,
-    ctx = tiledb_get_context()) {
+  name,
+  type,
+  filter_list = tiledb_filter_list(),
+  ncells = 1,
+  nullable = FALSE,
+  enumeration = NULL,
+  ctx = tiledb_get_context()
+) {
   if (missing(name)) name <- ""
   if (is.na(ncells)) ncells <- NA_integer_ # the specific NA for ints (as basic NA is bool)
   stopifnot(
@@ -197,7 +198,10 @@ setMethod(
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
 #' }
-#' attr <- tiledb_attr(type = "INT32", filter_list = tiledb_filter_list(list(tiledb_filter("ZSTD"))))
+#' attr <- tiledb_attr(
+#'   type = "INT32",
+#'   filter_list = tiledb_filter_list(list(tiledb_filter("ZSTD")))
+#' )
 #' filter_list(attr)
 #'
 #' @export
@@ -226,9 +230,13 @@ setGeneric("cell_val_num", function(object) standardGeneric("cell_val_num"))
 
 #' @rdname tiledb_attribute_get_cell_val_num
 #' @export
-setMethod("cell_val_num", signature(object = "tiledb_attr"), function(object) {
-  libtiledb_attribute_get_cell_val_num(object@ptr)
-})
+setMethod(
+  "cell_val_num", 
+  signature(object = "tiledb_attr"), 
+  definition = function(object) {
+    libtiledb_attribute_get_cell_val_num(object@ptr)
+  }
+)
 
 #' Return the number of scalar values per attribute cell
 #'
@@ -253,10 +261,14 @@ setGeneric("cell_val_num<-", function(x, value) standardGeneric("cell_val_num<-"
 
 #' @rdname tiledb_attribute_set_cell_val_num
 #' @export
-setReplaceMethod("cell_val_num", signature("tiledb_attr"), function(x, value) {
-  libtiledb_attribute_set_cell_val_num(x@ptr, value)
-  x
-})
+setReplaceMethod(
+  "cell_val_num", 
+  signature("tiledb_attr"), 
+  function(x, value) {
+    libtiledb_attribute_set_cell_val_num(x@ptr, value)
+    x
+  }
+)
 
 #' Set the number of scalar values per attribute cell
 #'
@@ -371,7 +383,10 @@ tiledb_attribute_get_nullable <- function(attr) {
 #' @param ctx A Tiledb Context object (optional)
 #' @return A logical value indicating if the attribute has an enumeration
 #' @export
-tiledb_attribute_has_enumeration <- function(attr, ctx = tiledb_get_context()) {
+tiledb_attribute_has_enumeration <- function(
+  attr, 
+  ctx = tiledb_get_context()
+) {
   stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"))
   libtiledb_attribute_has_enumeration(ctx@ptr, attr@ptr)
 }
@@ -383,7 +398,11 @@ tiledb_attribute_has_enumeration <- function(attr, ctx = tiledb_get_context()) {
 #' @param ctx A Tiledb Context object (optional)
 #' @return A character vector with the enumeration (of length zero if none)
 #' @export
-tiledb_attribute_get_enumeration <- function(attr, arr, ctx = tiledb_get_context()) {
+tiledb_attribute_get_enumeration <- function(
+  attr, 
+  arr, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
     "The 'arr' argument must be an array" = is(arr, "tiledb_array")
@@ -394,7 +413,11 @@ tiledb_attribute_get_enumeration <- function(attr, arr, ctx = tiledb_get_context
 #' @rdname tiledb_attribute_get_enumeration
 #' @param arrptr A Tiledb Array object pointer
 #' @export
-tiledb_attribute_get_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+tiledb_attribute_get_enumeration_ptr <- function(
+  attr, 
+  arrptr, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
     "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr")
@@ -409,7 +432,11 @@ tiledb_attribute_get_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_
 #' @param ctx A Tiledb Context object (optional)
 #' @return The modified TileDB Attribute object
 #' @export
-tiledb_attribute_set_enumeration_name <- function(attr, enum_name, ctx = tiledb_get_context()) {
+tiledb_attribute_set_enumeration_name <- function(
+  attr, 
+  enum_name, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
     "The 'enum_name' argument must be character" = is.character(enum_name)
@@ -425,7 +452,11 @@ tiledb_attribute_set_enumeration_name <- function(attr, enum_name, ctx = tiledb_
 #' @param ctx A Tiledb Context object (optional)
 #' @return A character vector with the enumeration (of length zero if none)
 #' @export
-tiledb_attribute_is_ordered_enumeration_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+tiledb_attribute_is_ordered_enumeration_ptr <- function(
+  attr, 
+  arrptr, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
     "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr")
@@ -435,7 +466,11 @@ tiledb_attribute_is_ordered_enumeration_ptr <- function(attr, arrptr, ctx = tile
 
 # internal function to access enumeration data type
 #' @noRd
-tiledb_attribute_get_enumeration_type <- function(attr, arr, ctx = tiledb_get_context()) {
+tiledb_attribute_get_enumeration_type <- function(
+  attr, 
+  arr, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
     "The 'arr' argument must be an array" = is(arr, "tiledb_array")
@@ -445,7 +480,11 @@ tiledb_attribute_get_enumeration_type <- function(attr, arr, ctx = tiledb_get_co
 
 # internal function to access enumeration data type
 #' @noRd
-tiledb_attribute_get_enumeration_type_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+tiledb_attribute_get_enumeration_type_ptr <- function(
+  attr, 
+  arrptr, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
     "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr")
@@ -455,7 +494,11 @@ tiledb_attribute_get_enumeration_type_ptr <- function(attr, arrptr, ctx = tiledb
 
 # internal function to get (non-string) enumeration vector
 #' @noRd
-tiledb_attribute_get_enumeration_vector_ptr <- function(attr, arrptr, ctx = tiledb_get_context()) {
+tiledb_attribute_get_enumeration_vector_ptr <- function(
+  attr, 
+  arrptr, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"),
     "The 'arrptr' argument must be an external pointer" = is(arrptr, "externalptr")

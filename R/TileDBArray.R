@@ -30,11 +30,12 @@
 #' @slot ctx A TileDB context object
 #' @slot uri A character despription with the array URI
 #' @slot is.sparse A logical value whether the array is sparse or not
-#' @slot attrs A character vector to select particular column \sQuote{attributes};
-#' default is an empty character vector implying \sQuote{all} columns, the special
-#' value \code{NA_character_} has the opposite effect and selects \sQuote{none}.
-#' @slot extended A logical value, defaults to \code{TRUE}, indicating whether index
-#' columns are returned as well.
+#' @slot attrs A character vector to select particular column 
+#' \sQuote{attributes}; default is an empty character vector implying 
+#' \sQuote{all} columns, the special value \code{NA_character_} has the opposite 
+#' effect and selects \sQuote{none}.
+#' @slot extended A logical value, defaults to \code{TRUE}, indicating whether 
+#' index columns are returned as well.
 #' @slot selected_ranges An optional list with matrices where each matrix i
 #' describes the (min,max) pair of ranges for dimension i
 #' @slot selected_points An optional list with vectors where each vector i
@@ -43,27 +44,34 @@
 #' @slot datetimes_as_int64 A logical value
 #' @slot encryption_key A character value
 #' @slot query_condition A Query Condition object
-#' @slot timestamp_start A POSIXct datetime variable for the inclusive interval start
-#' @slot timestamp_end A POSIXct datetime variable for the inclusive interval start
-#' @slot return_as A character value with the desired \code{tiledb_array} conversion,
-#' permitted values are \sQuote{asis} (default, returning a list of columns),
-#' \sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}
-#' \sQuote{tibble}, \sQuote{arrow_table} or \sQuote{arrow} (where the last two are synomyms);
-#' note that \sQuote{data.table}, \sQuote{tibble} and \sQuote{arrow} require the respective
-#' packages to installed.
-#' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
-#' query statistics are returned (as a JSON string) via the attribute
-#' \sQuote{query_statistics} of the return object.
-#' @slot sil An optional and internal list object with schema information, used for
-#' parsing queries.
-#' @slot dumpbuffers An optional character variable with a directory name (relative to
-#' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
-#' @slot buffers An optional list with full pathnames of shared memory buffers to read data from
-#' @slot strings_as_factors An optional logical to convert character columns to factor type
+#' @slot timestamp_start A POSIXct datetime variable for the inclusive 
+#' interval start
+#' @slot timestamp_end A POSIXct datetime variable for the inclusive 
+#' interval start
+#' @slot return_as A character value with the desired \code{tiledb_array} 
+#' conversion, permitted values are \sQuote{asis} (default, returning a list 
+#' of columns), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame}, 
+#' \sQuote{data.table} \sQuote{tibble}, \sQuote{arrow_table} or \sQuote{arrow} 
+#' (where the last two are synomyms); note that \sQuote{data.table}, 
+#' \sQuote{tibble} and \sQuote{arrow} require the respective packages 
+#' to be installed.
+#' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if 
+#' \sQuote{TRUE} the query statistics are returned (as a JSON string) via the 
+#' attribute \sQuote{query_statistics} of the return object.
+#' @slot sil An optional and internal list object with schema information, used 
+#' for parsing queries.
+#' @slot dumpbuffers An optional character variable with a directory name 
+#' (relative to \code{/dev/shm}) for writing out results buffers (for internal 
+#' use / testing)
+#' @slot buffers An optional list with full pathnames of shared memory buffers 
+#' to read data from
+#' @slot strings_as_factors An optional logical to convert character columns to 
+#' factor type
 #' @slot keep_open An optional logical to not close after read or write
 #' @slot ptr External pointer to the underlying implementation
 #' @exportClass tiledb_array
-setClass("tiledb_array",
+setClass(
+  "tiledb_array",
   slots = list(
     ctx = "tiledb_ctx",
     uri = "character",
@@ -95,7 +103,8 @@ setClass("tiledb_array",
 #'
 #' @param uri uri path to the tiledb dense array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
-#' @param is.sparse optional logical switch, defaults to "NA" letting array determine it
+#' @param is.sparse optional logical switch, defaults to "NA" 
+#' letting array determine it
 #' @param attrs optional character vector to select attributes, default is
 #' empty implying all are selected, the special value \code{NA_character_}
 #' has the opposite effect and implies no attributes are returned.
@@ -107,64 +116,74 @@ setClass("tiledb_array",
 #' describes the points selected in dimension i
 #' @param query_layout optional A value for the TileDB query layout, defaults to
 #' an empty character variable indicating no special layout is set
-#' @param datetimes_as_int64 optional A logical value selecting date and datetime value
-#' representation as \sQuote{raw} \code{integer64} and not as \code{Date},
-#' \code{POSIXct} or \code{nanotime} objects.
-#' @param encryption_key optional A character value with an AES-256 encryption key
-#' in case the array was written with encryption.
-#' @param query_condition optional \code{tiledb_query_condition} object, by default uninitialized
-#' without a condition; this functionality requires TileDB 2.3.0 or later
-#' @param timestamp_start optional A POSIXct Datetime value determining the inclusive time point
-#' at which the array is to be openened. No fragments written earlier will be considered.
-#' @param timestamp_end optional A POSIXct Datetime value determining the inclusive time point
-#' until which the array is to be openened. No fragments written earlier later be considered.
-#' @param return_as optional A character value with the desired \code{tiledb_array} conversion,
-#' permitted values are \sQuote{asis} (default, returning a list of columns), \sQuote{array},
-#' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, \sQuote{arrow_table},
-#' or \sQuote{arrow} (as an alias for \sQuote{arrow_table}; here \sQuote{data.table},
-#' \sQuote{tibble} and \sQuote{arrow} require the respective packages to be installed.
+#' @param datetimes_as_int64 optional A logical value selecting date  and 
+#' datetime value representation as \sQuote{raw} \code{integer64} and not as
+#' \code{Date}, \code{POSIXct} or \code{nanotime} objects.
+#' @param encryption_key optional A character value with an AES-256 encryption 
+#' key in case the array was written with encryption.
+#' @param query_condition optional \code{tiledb_query_condition} object, by 
+#' default uninitialized without a condition; this functionality requires 
+#' TileDB 2.3.0 or later
+#' @param timestamp_start optional A POSIXct Datetime value determining the 
+#' inclusive time point at which the array is to be openened. No fragments 
+#' written earlier will be considered.
+#' @param timestamp_end optional A POSIXct Datetime value determining the 
+#' inclusive time point until which the array is to be openened. No fragments 
+#' written earlier later be considered.
+#' @param return_as optional A character value with the desired 
+#' \code{tiledb_array} conversion, permitted values are \sQuote{asis} (default, 
+#' returning a list of columns), \sQuote{array}, \sQuote{matrix},
+#' \sQuote{data.frame}, \sQuote{data.table}, \sQuote{tibble}, 
+#' \sQuote{arrow_table}, or \sQuote{arrow} (as an alias for 
+#' \sQuote{arrow_table}; here \sQuote{data.table}, \sQuote{tibble} and 
+#' \sQuote{arrow} require the respective packages to be installed.
 #' The existing \code{as.*} arguments take precedent over this.
-#' @param query_statistics optional A logical value, defaults to \sQuote{FALSE}; if \sQuote{TRUE} the
-#' query statistics are returned (as a JSON string) via the attribute
-#' \sQuote{query_statistics} of the return object.
-#' @param strings_as_factors An optional logical to convert character columns to factor type; defaults
-#' to the value of \code{getOption("stringsAsFactors", FALSE)}.
+#' @param query_statistics optional A logical value, defaults to \sQuote{FALSE}; 
+#' if \sQuote{TRUE} the query statistics are returned (as a JSON string) via 
+#' the attribute \sQuote{query_statistics} of the return object.
+#' @param strings_as_factors An optional logical to convert character columns to 
+#' factor type; defaults to the value of 
+#' \code{getOption("stringsAsFactors", FALSE)}.
 #' @param keep_open An optional logical to not close after read or write
-#' @param sil optional A list, by default empty to store schema information when query objects are
-#' parsed.
-#' @param dumpbuffers An optional character variable with a directory name (relative to
-#' \code{/dev/shm}) for writing out results buffers (for internal use / testing)
-#' @param buffers An optional list with full pathnames of shared memory buffers to read data from
+#' @param sil optional A list, by default empty to store schema information 
+#' when query objects are parsed.
+#' @param dumpbuffers An optional character variable with a directory name 
+#' (relative to \code{/dev/shm}) for writing out results buffers (for 
+#' internal use / testing)
+#' @param buffers An optional list with full pathnames of shared memory buffers 
+#' to read data from
 #' @param ctx optional tiledb_ctx
-#' @param as.data.frame An optional deprecated alternative to \code{return_as="data.frame"} which has
-#' been deprecated and removed, but is still used in one BioConductor package; this argument will be removed
+#' @param as.data.frame An optional deprecated alternative to 
+#' \code{return_as="data.frame"} which has been deprecated and removed, but is 
+#' still used in one BioConductor package; this argument will be removed
 #' once the updated package has been released.
 #' @return tiledb_array object
 #' @importFrom spdl set_level
 #' @export
 tiledb_array <- function(
-    uri,
-    query_type = c("READ", "WRITE"),
-    is.sparse = NA,
-    attrs = character(),
-    extended = TRUE,
-    selected_ranges = list(),
-    selected_points = list(),
-    query_layout = character(),
-    datetimes_as_int64 = FALSE,
-    encryption_key = character(),
-    query_condition = new("tiledb_query_condition"),
-    timestamp_start = as.POSIXct(double(), origin = "1970-01-01"),
-    timestamp_end = as.POSIXct(double(), origin = "1970-01-01"),
-    return_as = get_return_as_preference(),
-    query_statistics = FALSE,
-    strings_as_factors = getOption("stringsAsFactors", FALSE),
-    keep_open = FALSE,
-    sil = list(),
-    dumpbuffers = character(),
-    buffers = list(),
-    ctx = tiledb_get_context(),
-    as.data.frame = FALSE) {
+  uri,
+  query_type = c("READ", "WRITE"),
+  is.sparse = NA,
+  attrs = character(),
+  extended = TRUE,
+  selected_ranges = list(),
+  selected_points = list(),
+  query_layout = character(),
+  datetimes_as_int64 = FALSE,
+  encryption_key = character(),
+  query_condition = new("tiledb_query_condition"),
+  timestamp_start = as.POSIXct(double(), origin = "1970-01-01"),
+  timestamp_end = as.POSIXct(double(), origin = "1970-01-01"),
+  return_as = get_return_as_preference(),
+  query_statistics = FALSE,
+  strings_as_factors = getOption("stringsAsFactors", FALSE),
+  keep_open = FALSE,
+  sil = list(),
+  dumpbuffers = character(),
+  buffers = list(),
+  ctx = tiledb_get_context(),
+  as.data.frame = FALSE
+) {
   stopifnot(
     "Argument 'ctx' must be a tiledb_ctx object" = is(ctx, "tiledb_ctx"),
     "Argument 'uri' must be a string scalar" = !missing(uri) && is.scalar(uri, "character"),
@@ -280,7 +299,8 @@ setMethod("schema", "character", function(object, ...) {
 #'
 #' @param object A tiledb array object
 #' @export
-setMethod("show",
+setMethod(
+  "show",
   signature = "tiledb_array",
   definition = function(object) {
     cat("tiledb_array\n",
@@ -485,14 +505,15 @@ setValidity("tiledb_array", function(object) {
 #' This function may still still change; the current implementation should be
 #' considered as an initial draft.
 #' @param x tiledb_array object
-#' @param i optional row index expression which can be a list in which case minimum and maximum
-#' of each list element determine a range; multiple list elements can be used to supply multiple
-#' ranges.
-#' @param j optional column index expression which can be a list in which case minimum and maximum
-#' of each list element determine a range; multiple list elements can be used to supply multiple
-#' ranges.
+#' @param i optional row index expression which can be a list in which case 
+#' minimum and maximum of each list element determine a range; multiple list 
+#' elements can be used to supply multiple ranges.
+#' @param j optional column index expression which can be a list in which case 
+#' minimum and maximum of each list element determine a range; multiple list 
+#' elements can be used to supply multiple ranges.
 #' @param ... Extra parameters for method signature, currently unused.
-#' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
+#' @param drop Optional logical switch to drop dimensions, default FALSE, 
+#' currently unused.
 #' @return The resulting elements in the selected format
 #' @import nanotime
 #' @importFrom nanoarrow as_nanoarrow_array
@@ -501,7 +522,8 @@ setValidity("tiledb_array", function(object) {
 #' @aliases [,tiledb_array,ANY,tiledb_array-method
 #' @aliases [,tiledb_array,ANY,ANY,tiledb_array-method
 setMethod(
-  "[", "tiledb_array",
+  "[",
+  "tiledb_array",
   function(x, i, j, ..., drop = FALSE) {
     ## add defaults
     if (missing(i)) i <- NULL
@@ -1258,7 +1280,8 @@ setMethod(
 #' @aliases [<-,tiledb_array,ANY,tiledb_array-method
 #' @aliases [<-,tiledb_array,ANY,ANY,tiledb_array-method
 setMethod(
-  "[<-", "tiledb_array",
+  "[<-", 
+  "tiledb_array",
   function(x, i, j, ..., value) {
     if (!is.data.frame(value) && !(is.list(value) && length(value) > 1)) {
       value <- as.data.frame(value)
@@ -1513,21 +1536,22 @@ setMethod(
   }
 )
 
-
 ## -- as.data.frame accessor (generic in DenseArray.R)
 
 #' Retrieve data.frame return toggle
 #'
 #' A \code{tiledb_array} object can be returned as an array (or list of arrays),
-#' or, if select, as a \code{data.frame}. This methods returns the selection value.
+#' or, if select, as a \code{data.frame}. This methods returns the 
+#' selection value.
 #' @param object A \code{tiledb_array} object
-#' @return A logical value indicating whether \code{data.frame} return is selected
+#' @return A logical value indicating whether \code{data.frame} return 
+#' is selected
 #' @export
-setMethod("return.data.frame",
+setMethod(
+  "return.data.frame",
   signature = "tiledb_array",
   function(object) object@as.data.frame
 )
-
 
 ## -- as.data.frame setter (generic in DenseArray.R)
 
@@ -1539,7 +1563,8 @@ setMethod("return.data.frame",
 #' @param value A logical value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("return.data.frame",
+setReplaceMethod(
+  "return.data.frame",
   signature = "tiledb_array",
   function(x, value) {
     x@as.data.frame <- value
@@ -1548,21 +1573,20 @@ setReplaceMethod("return.data.frame",
   }
 )
 
-
-
 ## -- attrs (generic in Attributes.R and DenseArray.R)
 
 #' Retrieve attributes from \code{tiledb_array} object
 #'
 #' By default, all attributes will be selected. But if a subset of attribute
-#' names is assigned to the internal slot \code{attrs}, then only those attributes
-#' will be queried.  This methods accesses the slot.
+#' names is assigned to the internal slot \code{attrs}, then only those 
+#' attributes#' will be queried.  This methods accesses the slot.
 #' @param object A \code{tiledb_array} object
 #' @return An empty character vector if no attributes have been selected or else
 #' a vector with attributes; \code{NA} means no attributes will be returned.
 #' @importFrom methods validObject
 #' @export
-setMethod("attrs",
+setMethod(
+  "attrs",
   signature = "tiledb_array",
   function(object) object@attrs
 )
@@ -1570,12 +1594,13 @@ setMethod("attrs",
 #' Selects attributes for the given TileDB array
 #'
 #' @param x A \code{tiledb_array} object
-#' @param value A character vector with attributes; the value \code{NA_character_}
-#' signals no attributes should be returned; default is an empty character vector
-#' implying all columns are returned.
+#' @param value A character vector with attributes; the value 
+#' \code{NA_character_} signals no attributes should be returned; default is an 
+#' empty character vector implying all columns are returned.
 #' @return The modified \code{tiledb_array} object
 #' @export
-setReplaceMethod("attrs",
+setReplaceMethod(
+  "attrs",
   signature = "tiledb_array",
   function(x, value) {
     nm <- names(attrs(schema(x)))
@@ -1597,7 +1622,6 @@ setReplaceMethod("attrs",
   }
 )
 
-
 ## -- extended accessor
 
 #' @rdname extended-tiledb_array-method
@@ -1610,30 +1634,32 @@ setGeneric("extended<-", function(x, value) standardGeneric("extended<-"))
 
 #' Retrieve data.frame extended returns columns toggle
 #'
-#' A \code{tiledb_array} object can be returned as \code{data.frame}. This methods
-#' returns the selection value for \sQuote{extended} format including row (and column,
-#' if present) indices.
+#' A \code{tiledb_array} object can be returned as \code{data.frame}. This 
+#' methods returns the selection value for \sQuote{extended} format including 
+#' row  (and column, if present) indices.
 #' @param object A \code{tiledb_array} object
-#' @return A logical value indicating whether an \code{extended} return is selected
+#' @return A logical value indicating whether an \code{extended} 
+#' return is selected
 #' @export
-setMethod("extended",
+setMethod(
+  "extended",
   signature = "tiledb_array",
   function(object) object@extended
 )
-
 
 ## -- extended setter (generic in DenseArray.R)
 
 #' Set data.frame extended return columns toggle
 #'
-#' A \code{tiledb_array} object can be returned as \code{data.frame}. This methods
-#' set the selection value for \sQuote{extended} format including row (and column,
-#' if present) indices.
+#' A \code{tiledb_array} object can be returned as \code{data.frame}. This 
+#' methods set the selection value for \sQuote{extended} format including row 
+#' (and column, if present) indices.
 #' @param x A \code{tiledb_array} object
 #' @param value A logical value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("extended",
+setReplaceMethod(
+  "extended",
   signature = "tiledb_array",
   function(x, value) {
     x@extended <- value
@@ -1642,28 +1668,33 @@ setReplaceMethod("extended",
   }
 )
 
-
 ## -- selected_ranges accessor
 
 #' @rdname selected_ranges-tiledb_array-method
 #' @export
-setGeneric("selected_ranges", function(object) standardGeneric("selected_ranges"))
+setGeneric(
+  "selected_ranges", 
+  function(object) standardGeneric("selected_ranges"))
 
 #' @rdname selected_ranges-set-tiledb_array-method
 #' @export
-setGeneric("selected_ranges<-", function(x, value) standardGeneric("selected_ranges<-"))
+setGeneric(
+  "selected_ranges<-", 
+  function(x, value) standardGeneric("selected_ranges<-"))
 
 #' Retrieve selected_ranges values for the array
 #'
 #' A \code{tiledb_array} object can have a range selection for each dimension
-#' attribute. This methods returns the selection value for \sQuote{selected_ranges}
-#' and returns a list (with one element per dimension) of two-column matrices where
-#' each row describes one pair of minimum and maximum values. Alternatively, the list
-#' can be named with the names providing the match to the corresponding dimension.
+#' attribute. This methods returns the selection value for 
+#' \sQuote{selected_ranges} and returns a list (with one element per dimension) 
+#' of two-column matrices where each row describes one pair of minimum and 
+#' maximum values. Alternatively, the list can be named with the names providing 
+#' the match to the corresponding dimension.
 #' @param object A \code{tiledb_array} object
 #' @return A list which can contain a matrix for each dimension
 #' @export
-setMethod("selected_ranges",
+setMethod(
+  "selected_ranges",
   signature = "tiledb_array",
   function(object) object@selected_ranges
 )
@@ -1673,15 +1704,17 @@ setMethod("selected_ranges",
 #' A \code{tiledb_array} object can have a range selection for each dimension
 #' attribute. This methods sets the selection value for \sQuote{selected_ranges}
 #' which is a list (with one element per dimension) of two-column matrices where
-#' each row describes one pair of minimum and maximum values. Alternatively, the list
-#' can be named with the names providing the match to the corresponding dimension.
+#' each row describes one pair of minimum and maximum values. Alternatively, 
+#' the list can be named with the names providing the match to the 
+#' corresponding dimension.
 #' @param x A \code{tiledb_array} object
 #' @param value A list of two-column matrices where each list element \sQuote{i}
-#' corresponds to the dimension attribute \sQuote{i}. The matrices can contain rows
-#' where each row contains the minimum and maximum value of a range.
+#' corresponds to the dimension attribute \sQuote{i}. The matrices can contain 
+#' rows where each row contains the minimum and maximum value of a range.
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("selected_ranges",
+setReplaceMethod(
+  "selected_ranges",
   signature = "tiledb_array",
   function(x, value) {
     x@selected_ranges <- value
@@ -1694,23 +1727,31 @@ setReplaceMethod("selected_ranges",
 
 #' @rdname selected_points-tiledb_array-method
 #' @export
-setGeneric("selected_points", function(object) standardGeneric("selected_points"))
+setGeneric(
+  "selected_points",
+  function(object) standardGeneric("selected_points")
+)
 
 #' @rdname selected_points-set-tiledb_array-method
 #' @export
-setGeneric("selected_points<-", function(x, value) standardGeneric("selected_points<-"))
+setGeneric(
+  "selected_points<-", 
+  function(x, value) standardGeneric("selected_points<-")
+)
 
 #' Retrieve selected_points values for the array
 #'
 #' A \code{tiledb_array} object can have a range selection for each dimension
-#' attribute. This methods returns the selection value for \sQuote{selected_points}
-#' and returns a list (with one element per dimension) of vectors where
-#' each row describes one selected points. Alternatively, the list
-#' can be named with the names providing the match to the corresponding dimension.
+#' attribute. This methods returns the selection value for 
+#' \sQuote{selected_points} and returns a list (with one element per dimension) 
+#' of vectors where each row describes one selected points. Alternatively, the 
+#' list can be named with the names providing the match to the 
+#' corresponding dimension.
 #' @param object A \code{tiledb_array} object
 #' @return A list which can contain a vector for each dimension
 #' @export
-setMethod("selected_points",
+setMethod(
+  "selected_points",
   signature = "tiledb_array",
   function(object) object@selected_points
 )
@@ -1720,14 +1761,16 @@ setMethod("selected_points",
 #' A \code{tiledb_array} object can have a range selection for each dimension
 #' attribute. This methods sets the selection value for \sQuote{selected_points}
 #' which is a list (with one element per dimension) of two-column matrices where
-#' each row describes one pair of minimum and maximum values. Alternatively, the list
-#' can be named with the names providing the match to the corresponding dimension.
+#' each row describes one pair of minimum and maximum values. Alternatively, the 
+#' list can be named with the names providing the match to the 
+#' corresponding dimension.
 #' @param x A \code{tiledb_array} object
 #' @param value A list of vectors where each list element \sQuote{i}
 #' corresponds to the dimension attribute \sQuote{i}.
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("selected_points",
+setReplaceMethod(
+  "selected_points",
   signature = "tiledb_array",
   function(x, value) {
     x@selected_points <- value
@@ -1735,7 +1778,6 @@ setReplaceMethod("selected_points",
     x
   }
 )
-
 
 ## -- query_layout accessor
 
@@ -1745,13 +1787,16 @@ setGeneric("query_layout", function(object) standardGeneric("query_layout"))
 
 #' @rdname query_layout-set-tiledb_array-method
 #' @export
-setGeneric("query_layout<-", function(x, value) standardGeneric("query_layout<-"))
+setGeneric(
+  "query_layout<-", 
+  function(x, value) standardGeneric("query_layout<-")
+)
 
 #' Retrieve query_layout values for the array
 #'
-#' A \code{tiledb_array} object can have a corresponding query with a given layout
-#' given layout. This methods returns the selection value for \sQuote{query_layout}
-#' as a character value.
+#' A \code{tiledb_array} object can have a corresponding query with a given 
+#' layout given layout. This methods returns the selection value for 
+#' \sQuote{query_layout} as a character value.
 #' @param object A \code{tiledb_array} object
 #' @return A character value describing the query layout
 #' @export
@@ -1759,61 +1804,74 @@ setMethod("query_layout", signature = "tiledb_array", function(object) object@qu
 
 #' Set query_layout return values for the array
 #'
-#' A \code{tiledb_array} object can have an associated query with a specific layout.
-#' This methods sets the selection value for \sQuote{query_layout} from a character
-#' value.
+#' A \code{tiledb_array} object can have an associated query with a specific 
+#' layout. This methods sets the selection value for \sQuote{query_layout} 
+#' from a  character value.
 #' @param x A \code{tiledb_array} object
 #'
-#' @param value A character variable for the query layout. Permitted values are
-#' \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or \dQuote{UNORDERD}.
+#' @param value A character variable for the query layout. Permitted values 
+#' are \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or 
+#' \dQuote{UNORDERD}.
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("query_layout", signature = "tiledb_array", function(x, value) {
-  x@query_layout <- value
-  validObject(x)
-  x
-})
-
-
+setReplaceMethod(
+  "query_layout", 
+  signature = "tiledb_array", 
+  function(x, value) {
+    x@query_layout <- value
+    validObject(x)
+    x
+  }
+)
 
 ## -- datetimes_as_int64 accessor
 
 #' @rdname datetimes_as_int64-tiledb_array-method
 #' @export
-setGeneric("datetimes_as_int64", function(object) standardGeneric("datetimes_as_int64"))
+setGeneric(
+  "datetimes_as_int64", 
+  function(object) standardGeneric("datetimes_as_int64")
+)
 
 #' @rdname datetimes_as_int64-set-tiledb_array-method
 #' @export
-setGeneric("datetimes_as_int64<-", function(x, value) standardGeneric("datetimes_as_int64<-"))
+setGeneric(
+  "datetimes_as_int64<-", 
+  function(x, value) standardGeneric("datetimes_as_int64<-")
+)
 
 #' Retrieve datetimes_as_int64 toggle
 #'
-#' A \code{tiledb_array} object may contain date and datetime objects. While their internal
-#' representation is generally shielded from the user, it can useful to access them as the
-#' \sQuote{native} format which is an \code{integer64}. This function retrieves the current
-#' value of the selection variable, which has a default of \code{FALSE}.
+#' A \code{tiledb_array} object may contain date and datetime objects. While 
+#' their internal representation is generally shielded from the user, it can 
+#' useful to access them as the \sQuote{native} format which is an 
+#' \code{integer64}. This function retrieves the current value of the selection 
+#' variable, which has a default of \code{FALSE}.
 #' @param object A \code{tiledb_array} object
-#' @return A logical value indicating whether \code{datetimes_as_int64} is selected
+#' @return A logical value indicating whether \code{datetimes_as_int64} 
+#' is selected
 #' @export
-setMethod("datetimes_as_int64",
+setMethod(
+  "datetimes_as_int64",
   signature = "tiledb_array",
   function(object) object@datetimes_as_int64
 )
-
 
 ## -- datetimes_as_int64 setter (generic in DenseArray.R)
 
 #' Set datetimes_as_int64 toggle
 #'
-#' A \code{tiledb_array} object may contain date and datetime objects. While their internal
-#' representation is generally shielded from the user, it can useful to access them as the
-#' \sQuote{native} format which is an \code{integer64}. This function set the current
-#' value of the selection variable, which has a default of \code{FALSE}.
+#' A \code{tiledb_array} object may contain date and datetime objects. While 
+#' their internal representation is generally shielded from the user, it can 
+#' useful to access them as the \sQuote{native} format which is an 
+#' \code{integer64}. This function set the current value of the selection 
+#' variable, which has a default of \code{FALSE}.
 #' @param x A \code{tiledb_array} object
 #' @param value A logical value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("datetimes_as_int64",
+setReplaceMethod(
+  "datetimes_as_int64",
   signature = "tiledb_array",
   function(x, value) {
     x@datetimes_as_int64 <- value
@@ -1822,25 +1880,28 @@ setReplaceMethod("datetimes_as_int64",
   }
 )
 
-
 ## -- consolitate wrapper
 
 #' Consolidate fragments of a TileDB Array
 #'
-#' This function invokes a consolidation operation. Parameters affecting the operation
-#' can be set via an optional configuration object. Start and end timestamps can also be
-#' set directly.
+#' This function invokes a consolidation operation. Parameters affecting the 
+#' operation can be set via an optional configuration object. Start and end 
+#' timestamps can also be set directly.
 #' @param uri A character value with the URI of a TileDB Array
-#' @param start_time An optional timestamp value, if missing config default is used
+#' @param start_time An optional timestamp value, if missing config 
+#' default is used
 #' @param end_time An optional timestamp value, if missing config default is used
 #' @param cfg An optional TileDB Configuration object
 #' @param ctx An option TileDB Context object
 #' @return NULL is returned invisibly
 #' @export
 array_consolidate <- function(
-    uri, cfg = NULL,
-    start_time, end_time,
-    ctx = tiledb_get_context()) {
+  uri, 
+  cfg = NULL,
+  start_time, 
+  end_time,
+  ctx = tiledb_get_context()
+) {
   stopifnot(`Argument 'uri' must be character` = is.character(uri))
   if (is.null(cfg)) {
     cfg <- config(ctx)
@@ -1865,24 +1926,29 @@ array_consolidate <- function(
 
 #' After consolidation, remove consolidated fragments of a TileDB Array
 #'
-#' This function can remove fragments following a consolidation step. Note that vacuuming
-#' should \emph{not} be run if one intends to use the TileDB \emph{time-traveling} feature
-#' of opening arrays at particular timestamps.
+#' This function can remove fragments following a consolidation step. Note that 
+#' vacuuming should \emph{not} be run if one intends to use the TileDB 
+#' \emph{time-traveling} feature of opening arrays at particular timestamps.
 #'
-#' Parameters affecting the operation can be set via an optional configuration object.
-#' Start and end timestamps can also be set directly.
+#' Parameters affecting the operation can be set via an optional configuration 
+#' object. Start and end timestamps can also be set directly.
 #'
 #' @param uri A character value with the URI of a TileDB Array
-#' @param start_time An optional timestamp value, if missing config default is used
-#' @param end_time An optional timestamp value, if missing config default is used
+#' @param start_time An optional timestamp value, if missing config 
+#' default is used
+#' @param end_time An optional timestamp value, if missing config default 
+#' is used
 #' @param cfg An optional TileDB Configuration object
 #' @param ctx An option TileDB Context object
 #' @return NULL is returned invisibly
 #' @export
 array_vacuum <- function(
-    uri, cfg = NULL,
-    start_time, end_time,
-    ctx = tiledb_get_context()) {
+  uri, 
+  cfg = NULL,
+  start_time, 
+  end_time,
+  ctx = tiledb_get_context()
+) {
   stopifnot(`Argument 'uri' must be character` = is.character(uri))
   if (is.null(cfg)) {
     cfg <- config(ctx)
@@ -1907,13 +1973,14 @@ array_vacuum <- function(
 
 #' Get the non-empty domain from a TileDB Array by index
 #'
-#' This functions works for both fixed- and variable-sized dimensions and switches
-#' internally.
+#' This functions works for both fixed- and variable-sized dimensions and 
+#' switches internally.
+#' 
 #' @param arr A TileDB Array
 #' @param idx An integer index between one the number of dimensions
 #' @return A two-element object is returned describing the domain of selected
 #' dimension; it will either be a numeric vector in case of a fixed-size
-#' fixed-sized dimensions, or a characer vector for a variable-sized one.
+#' fixed-sized dimensions, or a character vector for a variable-sized one.
 #' @export
 tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
   stopifnot(
@@ -1936,13 +2003,14 @@ tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
 
 #' Get the non-empty domain from a TileDB Array by name
 #'
-#' This functions works for both fixed- and variable-sized dimensions and switches
-#' internally.
+#' This functions works for both fixed- and variable-sized dimensions and 
+#' switches internally.
+#' 
 #' @param arr A TileDB Array
 #' @param name An character variable with a dimension name
 #' @return A two-element object is returned describing the domain of selected
 #' dimension; it will either be a numeric vector in case of a fixed-size
-#' fixed-sized dimensions, or a characer vector for a variable-sized one.
+#' fixed-sized dimensions, or a character vector for a variable-sized one.
 #' @export
 tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
   stopifnot(
@@ -1967,35 +2035,45 @@ tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
 #' @rdname return.matrix-tiledb_array-method
 #' @param ... Currently unused
 #' @export
-setGeneric("return.matrix", function(object, ...) standardGeneric("return.matrix"))
+setGeneric(
+  "return.matrix", 
+  function(object, ...) standardGeneric("return.matrix")
+)
 
 #' Retrieve matrix return toggle
 #'
 #' A \code{tiledb_array} object can be returned as an array (or list of arrays),
-#' or, if select, as a \code{data.frame} or as a \code{matrix}. This methods returns
-#' the selection value for the \code{matrix} selection.
+#' or, if select, as a \code{data.frame} or as a \code{matrix}. This methods
+#' returns the selection value for the \code{matrix} selection.
+#' 
 #' @param object A \code{tiledb_array} object
 #' @return A logical value indicating whether \code{matrix} return is selected
 #' @export
-setMethod("return.matrix",
+setMethod(
+  "return.matrix",
   signature = "tiledb_array",
   function(object) object@as.matrix
 )
 
 #' @rdname return.matrix-set-tiledb_array-method
 #' @export
-setGeneric("return.matrix<-", function(x, value) standardGeneric("return.matrix<-"))
+setGeneric(
+  "return.matrix<-", 
+  function(x, value) standardGeneric("return.matrix<-")
+)
 
 #' Set matrix return toggle
 #'
 #' A \code{tiledb_array} object can be returned as an array (or list of arrays),
-#' or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets the
-#' selection value for a \code{matrix}.
+#' or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets 
+#' the selection value for a \code{matrix}.
+#' 
 #' @param x A \code{tiledb_array} object
 #' @param value A logical value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("return.matrix",
+setReplaceMethod(
+  "return.matrix",
   signature = "tiledb_array",
   function(x, value) {
     x@as.matrix <- value
@@ -2004,41 +2082,57 @@ setReplaceMethod("return.matrix",
   }
 )
 
-
 ## -- query_condition accessors
 
 #' @rdname query_condition-tiledb_array-method
 #' @export
-setGeneric("query_condition", function(object) standardGeneric("query_condition"))
+setGeneric(
+  "query_condition",
+  function(object) standardGeneric("query_condition")
+)
 
 #' @rdname query_condition-set-tiledb_array-method
 #' @export
-setGeneric("query_condition<-", function(x, value) standardGeneric("query_condition<-"))
+setGeneric(
+  "query_condition<-", 
+  function(x, value) standardGeneric("query_condition<-")
+)
 
 #' Retrieve query_condition value for the array
 #'
 #' A \code{tiledb_array} object can have a corresponding query condition object.
 #' This methods returns it.
+#' 
 #' @param object A \code{tiledb_array} object
 #' @return A \code{tiledb_query_condition} object
 #' @export
-setMethod("query_condition", signature = "tiledb_array", function(object) object@query_condition)
+setMethod(
+  "query_condition", 
+  signature = "tiledb_array",
+  definition = function(object) object@query_condition
+)
 
 #' Set query_condition object for the array
 #'
-#' A \code{tiledb_array} object can have an associated query condition object to set
-#' conditions on the read queries. This methods sets the \sQuote{query_condition} object.
+#' A \code{tiledb_array} object can have an associated query condition object to 
+#' set conditions on the read queries. This methods sets the
+#' \sQuote{query_condition} object.
+#' 
 #' @param x A \code{tiledb_array} object
 #'
 #' @param value A \code{tiledb_query_conditon_object}
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("query_condition", signature = "tiledb_array", function(x, value) {
-  stopifnot(`need query_condition object` = is(value, "tiledb_query_condition"))
-  x@query_condition <- value
-  validObject(x)
-  x
-})
+setReplaceMethod(
+  "query_condition", 
+  signature = "tiledb_array",
+  function(x, value) {
+    stopifnot(`need query_condition object` = is(value, "tiledb_query_condition"))
+    x@query_condition <- value
+    validObject(x)
+    x
+  }
+)
 
 ## -- array return accessors
 
@@ -2050,30 +2144,37 @@ setGeneric("return.array", function(object, ...) standardGeneric("return.array")
 #' Retrieve array return toggle
 #'
 #' A \code{tiledb_array} object can be returned as an array (or list of arrays),
-#' or, if select, as a \code{data.frame} or as a \code{matrix}. This methods returns
-#' the selection value for the \code{array} selection.
+#' or, if select, as a \code{data.frame} or as a \code{matrix}. This methods 
+#' returns the selection value for the \code{array} selection.
+#' 
 #' @param object A \code{tiledb_array} object
 #' @return A logical value indicating whether \code{array} return is selected
 #' @export
-setMethod("return.array",
+setMethod(
+  "return.array",
   signature = "tiledb_array",
   function(object) object@as.array
 )
 
 #' @rdname return.array-set-tiledb_array-method
 #' @export
-setGeneric("return.array<-", function(x, value) standardGeneric("return.array<-"))
+setGeneric(
+  "return.array<-", 
+  function(x, value) standardGeneric("return.array<-")
+)
 
 #' Set array return toggle
 #'
 #' A \code{tiledb_array} object can be returned as an array (or list of arrays),
-#' or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets the
-#' selection value for a \code{array}.
+#' or, if select, as a \code{data.frame} or a \code{matrix}. This methods sets 
+#' the selection value for a \code{array}.
+#' 
 #' @param x A \code{tiledb_array} object
 #' @param value A logical value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("return.array",
+setReplaceMethod(
+  "return.array",
   signature = "tiledb_array",
   function(x, value) {
     x@as.array <- value
@@ -2081,8 +2182,6 @@ setReplaceMethod("return.array",
     x
   }
 )
-
-
 
 ## -- return_as conversion preference
 
@@ -2093,16 +2192,19 @@ setGeneric("return_as", function(object, ...) standardGeneric("return_as"))
 
 #' Retrieve return_as conversion preference
 #'
-#' A \code{tiledb_array} object can be returned as a \sQuote{list} (default), \sQuote{array},
-#' \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. This method
-#' permits to select a preference for the returned object. The default value of \sQuote{asis}
-#' means that no conversion is performed.
+#' A \code{tiledb_array} object can be returned as a \sQuote{list} (default), 
+#' \sQuote{array}, \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or 
+#' \sQuote{tibble}. This method permits to select a preference for the returned 
+#' object. The default value of \sQuote{asis} means that no conversion 
+#' is performed.
+#' 
 #' @param object A \code{tiledb_array} object
-#' @return A character value indicating the preferred conversion where the value is
-#' one of \sQuote{asis} (the default), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame},
-#' \sQuote{data.table}, or \sQuote{tibble}.
+#' @return A character value indicating the preferred conversion where the value 
+#' is one of \sQuote{asis} (the default), \sQuote{array}, 
+#' \sQuote{matrix},\sQuote{data.frame}, \sQuote{data.table}, or \sQuote{tibble}.
 #' @export
-setMethod("return_as",
+setMethod(
+  "return_as",
   signature = "tiledb_array",
   function(object) object@return_as
 )
@@ -2113,16 +2215,19 @@ setGeneric("return_as<-", function(x, value) standardGeneric("return_as<-"))
 
 #' Retrieve return_as conversion preference
 #'
-#' A \code{tiledb_array} object can be returned as a \sQuote{list} (default), \sQuote{array},
-#' \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or \sQuote{tibble}. This method
-#' This methods permits to set a preference of returning a \code{list}, \code{array},
-#' \code{matrix}, \code{data.frame}, a \code{data.table}, or a \code{tibble}. The default
-#' value of \dQuote{asis} means that no conversion is performed and a \code{list} is returned.
+#' A \code{tiledb_array} object can be returned as a \sQuote{list} (default), 
+#' \sQuote{array}, \sQuote{matrix}, \sQuote{data.frame}, \sQuote{data.table} or 
+#' \sQuote{tibble}. This method This methods permits to set a preference of 
+#' returning a \code{list}, \code{array}, \code{matrix}, \code{data.frame}, a 
+#' \code{data.table}, or a \code{tibble}. The default value of \dQuote{asis} 
+#' means that no conversion is performed and a \code{list} is returned.
+#' 
 #' @param x A \code{tiledb_array} object
 #' @param value A character value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("return_as",
+setReplaceMethod(
+  "return_as",
   signature = "tiledb_array",
   function(x, value) {
     x@return_as <- value
@@ -2131,42 +2236,52 @@ setReplaceMethod("return_as",
   }
 )
 
-
 ## -- query_statistics return toggle
 
 #' @rdname query_statistics-tiledb_array-method
 #' @param ... Currently unused
 #' @export
-setGeneric("query_statistics", function(object, ...) standardGeneric("query_statistics"))
+setGeneric(
+  "query_statistics", 
+  function(object, ...) standardGeneric("query_statistics")
+)
 
 #' Retrieve query_statistics toggle
 #'
-#' A \code{tiledb_array} object can, if requested, return query statistics as a JSON
-#' string in an attribute \sQuote{query_statistics} attached to the return object. The
-#' default value of the logical switch is \sQuote{FALSE}. This method returns the current
-#' value.
+#' A \code{tiledb_array} object can, if requested, return query statistics as a 
+#' JSON string in an attribute \sQuote{query_statistics} attached to the return 
+#' object. The default value of the logical switch is \sQuote{FALSE}. This 
+#' method returns the current value.
+#' 
 #' @param object A \code{tiledb_array} object
 #' @return A logical value indicating whether query statistics are returned.
 #' @export
-setMethod("query_statistics",
+setMethod(
+  "query_statistics",
   signature = "tiledb_array",
   function(object) object@query_statistics
 )
 
 #' @rdname query_statistics-set-tiledb_array-method
 #' @export
-setGeneric("query_statistics<-", function(x, value) standardGeneric("query_statistics<-"))
+setGeneric(
+  "query_statistics<-", 
+  function(x, value) standardGeneric("query_statistics<-")
+)
 
 #' Set query_statistics toggle
 #'
-#' A \code{tiledb_array} object can, if requested, return query statistics as a JSON
-#' string in an attribute \sQuote{query_statistics} attached to the return object. The
-#' default value of the logical switch is \sQuote{FALSE}. This method sets the value.
+#' A \code{tiledb_array} object can, if requested, return query statistics as a 
+#' JSON string in an attribute \sQuote{query_statistics} attached to the return 
+#' object. The default value of the logical switch is \sQuote{FALSE}. This 
+#' method  sets the value.
+#' 
 #' @param x A \code{tiledb_array} object
 #' @param value A logical value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("query_statistics",
+setReplaceMethod(
+  "query_statistics",
   signature = "tiledb_array",
   function(x, value) {
     x@query_statistics <- value
@@ -2175,38 +2290,50 @@ setReplaceMethod("query_statistics",
   }
 )
 
-
 ## -- strings_as_factors getter/setter
 
 #' @rdname strings_as_factors-tiledb_array-method
 #' @export
-setGeneric("strings_as_factors", function(object) standardGeneric("strings_as_factors"))
+setGeneric(
+  "strings_as_factors", 
+  function(object) standardGeneric("strings_as_factors")
+)
 
 #' @rdname strings_as_factors-set-tiledb_array-method
 #' @export
-setGeneric("strings_as_factors<-", function(x, value) standardGeneric("strings_as_factors<-"))
+setGeneric(
+  "strings_as_factors<-", 
+  function(x, value) standardGeneric("strings_as_factors<-")
+)
 
 #' Retrieve strings_as_factors conversion toggle
 #'
-#' A \code{tiledb_array} object containing character column can have those converted to
-#' factors variables. This methods returns the selection value for \sQuote{strings_as_factors}.
+#' A \code{tiledb_array} object containing character column can have those 
+#' converted to factors variables. This methods returns the selection value 
+#' for \sQuote{strings_as_factors}.
+#' 
 #' @param object A \code{tiledb_array} object
-#' @return A logical value indicating whether an \code{strings_as_factors} return is selected
+#' @return A logical value indicating whether an \code{strings_as_factors} 
+#' return is selected
 #' @export
-setMethod("strings_as_factors",
+setMethod(
+  "strings_as_factors",
   signature = "tiledb_array",
   function(object) object@strings_as_factors
 )
 
 #' Set strings_as_factors return toggle
 #'
-#' A \code{tiledb_array} object containing character column can have those converted to
-#' factors variables. This methods sets the selection value for \sQuote{strings_as_factors}.
+#' A \code{tiledb_array} object containing character column can have those 
+#' converted to factors variables. This methods sets the selection value for 
+#' \sQuote{strings_as_factors}.
+#' 
 #' @param x A \code{tiledb_array} object
 #' @param value A logical value with the selection
 #' @return The modified \code{tiledb_array} array object
 #' @export
-setReplaceMethod("strings_as_factors",
+setReplaceMethod(
+  "strings_as_factors",
   signature = "tiledb_array",
   function(x, value) {
     x@strings_as_factors <- value
@@ -2214,8 +2341,6 @@ setReplaceMethod("strings_as_factors",
     x
   }
 )
-
-
 
 ## piped query support
 
@@ -2227,22 +2352,27 @@ setGeneric("tdb_filter", function(x, ...) standardGeneric("tdb_filter"))
 #'
 #' @param x A tiledb_array object as first argument, permitting piping
 #' @param ... One or more expressions that are parsed as query_condition objects
-#' @param strict A boolean toogle to, if set, errors if a non-existing attribute is selected
-#' or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.
+#' @param strict A boolean toogle to, if set, errors if a non-existing attribute 
+#' is selected or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown 
+#' by execution proceeds.
 #' @return The tiledb_array object, permitting piping
 #' @export
-setMethod("tdb_filter", signature("tiledb_array"), function(x, ..., strict = TRUE) {
-  qc <- parse_query_condition(..., ta = x, debug = FALSE, strict = strict)
-  if (is.null(qc)) {
-    return(x)
+setMethod(
+  "tdb_filter",
+  signature("tiledb_array"), 
+  function(x, ..., strict = TRUE) {
+    qc <- parse_query_condition(..., ta = x, debug = FALSE, strict = strict)
+    if (is.null(qc)) {
+      return(x)
+    }
+    if (isTRUE(x@query_condition@init)) { # if prior qc exists, combine by AND
+      x@query_condition <- tiledb_query_condition_combine(x@query_condition, qc, "AND")
+    } else { # else just assign
+      x@query_condition <- qc
+    }
+    x
   }
-  if (isTRUE(x@query_condition@init)) { # if prior qc exists, combine by AND
-    x@query_condition <- tiledb_query_condition_combine(x@query_condition, qc, "AND")
-  } else { # else just assign
-    x@query_condition <- qc
-  }
-  x
-})
+)
 
 #' @rdname generics
 #' @export
@@ -2285,8 +2415,9 @@ setGeneric("tdb_collect", function(x, ...) standardGeneric("tdb_collect"))
 #'
 #' @param x A tiledb_array object as first argument, permitting piping
 #' @param ... Ignored
-#' @return The object returning from a tiledb_array query (the type of which can be
-#' set via the return preference mechanism, see the help for \code{"["} accessor)
+#' @return The object returning from a tiledb_array query (the type of which 
+#' can be set via the return preference mechanism, see the help for 
+#' \code{"["} accessor)
 #' @export
 setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
   x[]
@@ -2302,7 +2433,6 @@ setMethod("tdb_collect", signature("tiledb_array"), function(x, ...) {
     enum = tiledb_schema_get_enumeration_status(sch)
   )
 }
-
 
 ## Entry points for tiledb_dense and tiledb_sparse
 

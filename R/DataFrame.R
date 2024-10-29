@@ -83,13 +83,25 @@
 ##' all.equal(as.matrix(iris), as.matrix(newdf))	# also strips attribute
 ##' @export
 fromDataFrame <- function(
-    obj, uri, col_index = NULL, sparse = TRUE, allows_dups = sparse,
-    cell_order = "COL_MAJOR", tile_order = "COL_MAJOR", filter = "ZSTD",
-    capacity = 10000L, tile_domain = NULL, tile_extent = NULL,
-    mode = c("ingest", "schema_only", "append"), filter_list = NULL,
-    coords_filters = "ZSTD", offsets_filters = "ZSTD",
-    validity_filters = "RLE", debug = FALSE,
-    timestamps = as.POSIXct(double(), origin = "1970-01-01")) {
+  obj, 
+  uri, 
+  col_index = NULL, 
+  sparse = TRUE, 
+  allows_dups = sparse,
+  cell_order = "COL_MAJOR",
+  tile_order = "COL_MAJOR",
+  filter = "ZSTD",
+  capacity = 10000L, 
+  tile_domain = NULL, 
+  tile_extent = NULL,
+  mode = c("ingest", "schema_only", "append"),
+  filter_list = NULL,
+  coords_filters = "ZSTD",
+  offsets_filters = "ZSTD",
+  validity_filters = "RLE",
+  debug = FALSE,
+  timestamps = as.POSIXct(double(), origin = "1970-01-01")
+) {
   stopifnot(
     "Argument 'obj' should be a 'data.frame' (or a related object)" = inherits(obj, "data.frame"),
     "Argument 'uri' should be a character variable" = is.character(uri),

@@ -18,6 +18,7 @@ query_condition(x) <- value
 The modified \code{tiledb_array} array object
 }
 \description{
-A \code{tiledb_array} object can have an associated query condition object to set
-conditions on the read queries. This methods sets the \sQuote{query_condition} object.
+A \code{tiledb_array} object can have an associated query condition object to
+set conditions on the read queries. This methods sets the
+\sQuote{query_condition} object.
 }

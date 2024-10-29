@@ -7,9 +7,11 @@
 tiledb_group_delete_metadata(grp, key)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
-\item{key}{A character value with they index under which the data will be written}
+\item{key}{A character value with they index under which the
+data will be written}
 }
 \value{
 The TileDB Group object, invisibly

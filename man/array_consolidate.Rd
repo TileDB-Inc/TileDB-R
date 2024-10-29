@@ -17,7 +17,8 @@ array_consolidate(
 
 \item{cfg}{An optional TileDB Configuration object}
 
-\item{start_time}{An optional timestamp value, if missing config default is used}
+\item{start_time}{An optional timestamp value, if missing config
+default is used}
 
 \item{end_time}{An optional timestamp value, if missing config default is used}
 
@@ -27,7 +28,7 @@ array_consolidate(
 NULL is returned invisibly
 }
 \description{
-This function invokes a consolidation operation. Parameters affecting the operation
-can be set via an optional configuration object. Start and end timestamps can also be
-set directly.
+This function invokes a consolidation operation. Parameters affecting the
+operation can be set via an optional configuration object. Start and end
+timestamps can also be set directly.
 }

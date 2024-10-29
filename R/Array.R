@@ -73,12 +73,13 @@ tiledb_array_create <- function(uri, schema, encryption_key) { # , ctx = tiledb_
 ##' @importFrom methods .hasSlot
 ##' @export
 tiledb_array_open <- function(
-    arr,
-    type = if (tiledb_version(TRUE) >= "2.12.0") {
-      c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
-    } else {
-      c("READ", "WRITE")
-    }) {
+  arr,
+  type = if (tiledb_version(TRUE) >= "2.12.0") {
+    c("READ", "WRITE", "DELETE", "MODIFY_EXCLUSIVE")
+  } else {
+    c("READ", "WRITE")
+  }
+) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
   type <- match.arg(type)
 
@@ -179,7 +180,12 @@ tiledb_array_is_heterogeneous <- function(arr) {
 ##' @param ctx A tiledb_ctx object (optional)
 ##' @return A boolean indicating success
 ##' @export
-tiledb_array_delete_fragments <- function(arr, ts_start, ts_end, ctx = tiledb_get_context()) {
+tiledb_array_delete_fragments <- function(
+  arr, 
+  ts_start, 
+  ts_end, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'arr' argument must be a tiledb_array object" = .isArray(arr),
     "The 'ts_start' argument must be a time object" = inherits(ts_start, "POSIXct"),
@@ -191,12 +197,17 @@ tiledb_array_delete_fragments <- function(arr, ts_start, ts_end, ctx = tiledb_ge
 
 ##' Delete fragments written given by their URIs
 ##'
-##' @param arr A TileDB Array object as for example returned by \code{tiledb_array()}
+##' @param arr A TileDB Array object as for example returned by 
+##' \code{tiledb_array()}
 ##' @param fragments A character vector with fragment URIs
 ##' @param ctx A tiledb_ctx object (optional)
 ##' @return A boolean indicating success
 ##' @export
-tiledb_array_delete_fragments_list <- function(arr, fragments, ctx = tiledb_get_context()) {
+tiledb_array_delete_fragments_list <- function(
+  arr, 
+  fragments, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'arr' argument must be a tiledb_array object" = .isArray(arr),
     "The 'fragments' argument must be a character vector" = is.character(fragments)
@@ -236,12 +247,11 @@ tiledb_array_has_enumeration <- function(arr) {
 ##' @return The value of the aggregation
 ##' @export
 tiledb_array_apply_aggregate <- function(
-    array, attrname,
-    operation = c(
-      "Count", "NullCount", "Min", "Max",
-      "Mean", "Sum"
-    ),
-    nullable = TRUE) {
+  array, 
+  attrname,
+  operation = c("Count", "NullCount", "Min", "Max", "Mean", "Sum"),
+  nullable = TRUE
+) {
   stopifnot(
     "The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
     "The 'array' must be a sparse TileDB Array" = is.sparse(schema(array)),
@@ -272,7 +282,11 @@ tiledb_array_apply_aggregate <- function(
 ##' @param ctx A tiledb_ctx object (optional)
 ##' @return Nothing is returned as the function is invoked for its side effect
 ##' @export
-tiledb_array_upgrade_version <- function(array, config = NULL, ctx = tiledb_get_context()) {
+tiledb_array_upgrade_version <- function(
+  array, 
+  config = NULL, 
+  ctx = tiledb_get_context()
+) {
   stopifnot(
     "The 'array' argument must be a TileDB Array object" = is(array, "tiledb_array"),
     "The 'config' argument must be NULL or a TileDB Config" =

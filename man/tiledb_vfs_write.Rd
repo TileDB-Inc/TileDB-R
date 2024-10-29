@@ -7,7 +7,8 @@
 tiledb_vfs_write(fh, vec, ctx = tiledb_get_context())
 }
 \arguments{
-\item{fh}{A TileDB VFS Filehandle external pointer as returned from \code{tiledb_vfs_open}}
+\item{fh}{A TileDB VFS Filehandle external pointer as returned from
+\code{tiledb_vfs_open}}
 
 \item{vec}{An integer vector of content to be written}
 
@@ -17,8 +18,8 @@ tiledb_vfs_write(fh, vec, ctx = tiledb_get_context())
 The result of the write operation is returned.
 }
 \description{
-This interface currently defaults to using an integer vector. This is suitable for R objects
-as the raw vector result from serialization can be mapped easily to an integer vector. It is
-also possible to \code{memcpy} to the contiguous memory of an integer vector should other
-(non-R) data be transferred.
+This interface currently defaults to using an integer vector. This is suitable
+for R objects as the raw vector result from serialization can be mapped easily
+to an integer vector. It is also possible to \code{memcpy} to the contiguous
+memory of an integer vector should other (non-R) data be transferred.
 }

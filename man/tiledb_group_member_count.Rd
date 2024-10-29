@@ -7,7 +7,8 @@
 tiledb_group_member_count(grp)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 }
 \value{
 The Count of Members in the TileDB Group object

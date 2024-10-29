@@ -72,7 +72,8 @@ tiledb_domain <- function(dims, ctx = tiledb_get_context()) {
 #'
 #' @param object A domain object
 #' @export
-setMethod("raw_dump",
+setMethod(
+  "raw_dump",
   signature(object = "tiledb_domain"),
   definition = function(object) libtiledb_domain_dump(object@ptr)
 )
@@ -95,7 +96,9 @@ setMethod("raw_dump",
 #'
 #' @param object A domain object
 #' @export
-setMethod("show", "tiledb_domain",
+setMethod(
+  "show",
+  "tiledb_domain",
   definition = function(object) {
     cat(.as_text_domain(object), "\n")
   }
@@ -120,7 +123,8 @@ setMethod("show", "tiledb_domain",
 #'
 #' @export
 setMethod(
-  "dimensions", "tiledb_domain",
+  "dimensions",
+  "tiledb_domain",
   function(object) {
     dim_ptrs <- libtiledb_domain_get_dimensions(object@ptr)
     return(lapply(dim_ptrs, tiledb_dim.from_ptr))
@@ -142,7 +146,8 @@ setMethod(
 #'
 #' @export
 setMethod(
-  "datatype", "tiledb_domain",
+  "datatype",
+  "tiledb_domain",
   function(object) {
     ## return(libtiledb_domain_get_type(object@ptr))
     # generalize from   domaintype <- libtiledb_domain_get_type(dom@ptr)   to
@@ -172,7 +177,8 @@ setMethod(
 #'
 #' @export
 setMethod(
-  "tiledb_ndim", "tiledb_domain",
+  "tiledb_ndim", 
+  "tiledb_domain",
   function(object) {
     return(libtiledb_domain_get_ndim(object@ptr))
   }
@@ -197,7 +203,8 @@ setGeneric("is.integral", function(object) standardGeneric("is.integral"))
 #'
 #' @export
 setMethod(
-  "is.integral", "tiledb_domain",
+  "is.integral",
+  "tiledb_domain",
   function(object) {
     dtype <- datatype(object)
     res <- isTRUE(any(sapply(dtype, match, c("FLOAT32", "FLOAT32"))))

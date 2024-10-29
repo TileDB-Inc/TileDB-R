@@ -19,6 +19,6 @@ A logical value indicating whether \code{matrix} return is selected
 }
 \description{
 A \code{tiledb_array} object can be returned as an array (or list of arrays),
-or, if select, as a \code{data.frame} or as a \code{matrix}. This methods returns
-the selection value for the \code{matrix} selection.
+or, if select, as a \code{data.frame} or as a \code{matrix}. This methods
+returns the selection value for the \code{matrix} selection.
 }

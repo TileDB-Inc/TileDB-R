@@ -14,8 +14,8 @@ tiledb_group(
 \arguments{
 \item{uri}{Character variable with the URI of the new group object}
 
-\item{type}{Character variable with the query type value: one of \dQuote{READ}
-or \dQuote{WRITE}}
+\item{type}{Character variable with the query type value: one of
+\dQuote{READ} or \dQuote{WRITE}}
 
 \item{ctx}{(optional) A TileDB Context object; if not supplied the default
 context object is retrieved}

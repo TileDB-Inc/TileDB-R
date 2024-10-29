@@ -7,11 +7,12 @@
 tiledb_group_member_dump(grp, recursive = FALSE)
 }
 \arguments{
-\item{grp}{A TileDB Group object as for example returned by \code{tiledb_group()}}
+\item{grp}{A TileDB Group object as for example returned by
+\code{tiledb_group()}}
 
-\item{recursive}{A logical value indicating whether a recursive dump is desired, defaults
-to \sQuote{FALSE}. Note that recursive listings on remote object may be an expensive or
-slow operation.}
+\item{recursive}{A logical value indicating whether a recursive
+dump is desired, defaults to \sQuote{FALSE}. Note that recursive listings
+on remote object may be an expensive or slow operation.}
 }
 \value{
 A character string
