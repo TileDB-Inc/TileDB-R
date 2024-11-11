@@ -41,3 +41,45 @@ tiledb_version <- function(compact = FALSE) {
     libtiledb_version()
   }
 }
+
+#' Compiler Arguments for Using \code{libtiledb}
+#'
+#' @param opt A single character value with the package configuration variable
+#' to fetch; choose from
+#' \itemize{
+#'  \item \dQuote{\code{PKG_CXX_FLAGS}}: compiler flags for \code{libtiledb}
+#'  \item \dQuote{\code{PKG_CXX_LIBS}}: linking flags for \code{libtiledb}
+#' }
+#'
+#' @return ...
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+#' @examples
+#' .pkg_config()
+#' .pkg_config("PKG_CXX_LIBS")
+#'
+.pkg_config <- function(opt = c("PKG_CXX_FLAGS", "PKG_CXX_LIBS")) {
+  opt <- match.arg(opt)
+  if (nzchar(lib <- system.file("tiledb", package = .pkgenv$pkgname, lib.loc = .pkgenv$libname))) {
+    pkgdir <- system.file(package = .pkgenv$pkgname, lib.loc = .pkgenv$libname)
+    return(switch(
+      EXPR = opt,
+      PKG_CXX_FLAGS = sprintf("-I%s/include -I%s/include", pkgdir, lib),
+      PKG_CXX_LIBS = sprintf("-ltiledb -L%s/lib -L%s/lib", pkgdir, lib)
+    ))
+  }
+  if (nzchar(pkgconfig <- Sys.which("pkg-config"))) {
+    if (!system2(pkgconfig, args = c("--exists", "tiledb"))) {
+      flag <- switch(EXPR = opt, PKG_CXX_FLAGS = "--cflags", PKG_CXX_LIBS = "--libs")
+      return(system2(pkgconfig, args = c(flag, "tiledb"), stdout = TRUE))
+    }
+  }
+  return(switch(
+    EXPR = opt,
+    PKG_CXX_FLAGS = "",
+    PKG_CXX_LIBS = "-ltiledb"
+  ))
+}

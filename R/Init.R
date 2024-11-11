@@ -53,6 +53,10 @@
   ## set a preference for allocation size defaults
   .pkgenv[["allocation_size"]] <- load_allocation_size_preference()
 
+  # cache package name and path
+  .pkgenv[["pkgname"]] <- pkgname
+  .pkgenv[["libname"]] <- libname
+
   ## call setter for Rcpp plugin support
   .set_compile_link_options()
 
@@ -120,7 +124,6 @@ inlineCxxPlugin <- function(...) {
     .pkgenv[["tiledb_ldflag"]] <- ldflag
   }
 }
-
 
 #' @importFrom utils read.table
 .getLinuxFlavor <- function() {
