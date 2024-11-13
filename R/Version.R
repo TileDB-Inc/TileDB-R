@@ -51,7 +51,8 @@ tiledb_version <- function(compact = FALSE) {
 #'  \item \dQuote{\code{PKG_CXX_LIBS}}: linking flags for \code{libtiledb}
 #' }
 #'
-#' @return ...
+#' @return A single string containing either the include directories or linking
+#' directories for \code{libtiledb}
 #'
 #' @keywords internal
 #'
@@ -67,8 +68,37 @@ tiledb_version <- function(compact = FALSE) {
     pkgdir <- system.file(package = .pkgenv$pkgname, lib.loc = .pkgenv$libname)
     return(switch(
       EXPR = opt,
-      PKG_CXX_FLAGS = sprintf("-I%s/include -I%s/include", pkgdir, lib),
-      PKG_CXX_LIBS = sprintf("-ltiledb -L%s/lib -L%s/lib", pkgdir, lib)
+      PKG_CXX_FLAGS = switch(
+        EXPR = .Platform$OS.type,
+        # Adapted from Makevars.win, which includes libdir/include/tiledb in addition
+        # to libdir/include and pkgdir/include
+        windows = sprintf(
+          "-I%s/include -I%s/include -I%s/include/tiledb",
+          pkgdir,
+          lib,
+          lib
+        ),
+        sprintf("-I%s/include -I%s/include", pkgdir, lib)
+      ),
+      PKG_CXX_LIBS = switch(
+        EXPR = .Platform$OS.type,
+        # rwinlib-tiledb is structred slightly differently than libtiledb for
+        # Unix-alikes; R 4.2 and higher require ucrt
+        windows = {
+          arch <- .Platform$r_arch
+          libs <- as.vector(vapply(
+            c(pkgdir, lib),
+            FUN = \(x) c(
+              sprintf("%s/lib/%s", x, arch),
+              ifelse(getRversion() > '4.2.0', sprintf("%s/lib/%s-ucrt", x, arch), "")
+            ),
+            FUN.VALUE = character(2L),
+            USE.NAMES = FALSE
+          ))
+          paste('-ltiledb', paste0('-L', Filter(dir.exists, libs), collapse = ' '))
+        },
+        sprintf("-ltiledb -L%s/lib -L%s/lib", pkgdir, lib)
+      )
     ))
   }
   if (nzchar(pkgconfig <- Sys.which("pkg-config"))) {

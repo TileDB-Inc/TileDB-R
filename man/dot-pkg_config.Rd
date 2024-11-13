@@ -15,7 +15,8 @@ to fetch; choose from
 }}
 }
 \value{
-...
+A single string containing either the include directories or linking
+directories for \code{libtiledb}
 }
 \description{
 Compiler Arguments for Using \code{libtiledb}
