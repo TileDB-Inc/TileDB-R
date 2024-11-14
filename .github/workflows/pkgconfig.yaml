@@ -1,0 +1,73 @@
+on:
+  push:
+  pull_request:
+
+name: pkgconfig
+
+permissions: read-all
+
+jobs:
+  pkgconfig:
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} (r-${{ matrix.r }}) (${{ matrix.vendored }} libtiledb)
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        r:
+          - release
+          # - devel
+        vendored:
+          - 'vendored'
+          - 'system'
+        include:
+          - os: ubuntu-latest
+            use-public-rspm: true
+          # - os: ubuntu-latest
+          #   r: devel
+          #   http-user-agent: 'release'
+        exclude:
+          - os: macos-latest
+            r: devel
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_FORCE_SUGGESTS_: "FALSE"
+      _R_TILEDB_LIBTILEDB_: ${{ matrix.vendored }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r }}
+          http-user-agent: ${{ matrix.http-user-agent }}
+          use-public-rspm: ${{ matrix.use-public-rspm }}
+
+      - name: Setup libtiledb
+        if: ${{ matrix.vendored == 'system' }}
+        run: |
+          VERSION=$(grep version tools/tiledbVersion.txt  | cut -f 2 -d ':' | tr -d '[:space:]')
+          SHA=$(grep sha tools/tiledbVersion.txt  | cut -f 2 -d ':' | tr -d '[:space:]')
+          URL="https://github.com/TileDB-Inc/TileDB/releases/download/${VERSION}/tiledb-linux-x86_64-${VERSION}-${SHA}.tar.gz"
+          mkdir -vp libtiledb
+          cd libtiledb
+          wget -O libtiledb.tar.gz ${URL}
+          tar -xvzf libtiledb.tar.gz
+          /usr/bin/sudo cp -Rv include/* /usr/local/include/
+          /usr/bin/sudo cp -Rv lib/* /usr/local/lib/
+          cd ..
+          rm -rfv libtiledb
+          sudo ldconfig
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: local::.
+
+      - name: Test tiledb::.pkg_config()
+        run: Rscript tests/pkgconfig-test.R

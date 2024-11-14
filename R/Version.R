@@ -64,14 +64,19 @@ tiledb_version <- function(compact = FALSE) {
 #'
 .pkg_config <- function(opt = c("PKG_CXX_FLAGS", "PKG_CXX_LIBS")) {
   opt <- match.arg(opt)
-  if (nzchar(lib <- system.file("tiledb", package = .pkgenv$pkgname, lib.loc = .pkgenv$libname))) {
+  lib <- system.file(
+    "tiledb",
+    package = .pkgenv$pkgname,
+    lib.loc = .pkgenv$libname
+  )
+  if (nzchar(lib)) {
     pkgdir <- system.file(package = .pkgenv$pkgname, lib.loc = .pkgenv$libname)
     return(switch(
       EXPR = opt,
       PKG_CXX_FLAGS = switch(
         EXPR = .Platform$OS.type,
-        # Adapted from Makevars.win, which includes libdir/include/tiledb in addition
-        # to libdir/include and pkgdir/include
+        # Adapted from Makevars.win, which includes libdir/include/tiledb in
+        # addition to libdir/include and pkgdir/include
         windows = sprintf(
           "-I%s/include -I%s/include -I%s/include/tiledb",
           pkgdir,
@@ -82,7 +87,7 @@ tiledb_version <- function(compact = FALSE) {
       ),
       PKG_CXX_LIBS = switch(
         EXPR = .Platform$OS.type,
-        # rwinlib-tiledb is structred slightly differently than libtiledb for
+        # rwinlib-tiledb is structured slightly differently than libtiledb for
         # Unix-alikes; R 4.2 and higher require ucrt
         windows = {
           arch <- .Platform$r_arch
@@ -103,8 +108,12 @@ tiledb_version <- function(compact = FALSE) {
   }
   if (nzchar(pkgconfig <- Sys.which("pkg-config"))) {
     if (!system2(pkgconfig, args = c("--exists", "tiledb"))) {
-      flag <- switch(EXPR = opt, PKG_CXX_FLAGS = "--cflags", PKG_CXX_LIBS = "--libs")
-      return(system2(pkgconfig, args = c(flag, "tiledb"), stdout = TRUE))
+      flag <- switch(
+        EXPR = opt,
+        PKG_CXX_FLAGS = "--cflags",
+        PKG_CXX_LIBS = "--libs"
+      )
+      return(trimws(system2(pkgconfig, args = c(flag, "tiledb"), stdout = TRUE)))
     }
   }
   return(switch(
