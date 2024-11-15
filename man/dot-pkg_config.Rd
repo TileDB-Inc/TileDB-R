@@ -19,7 +19,8 @@ A single string containing either the include directories or linking
 directories for \code{libtiledb}
 }
 \description{
-Compiler Arguments for Using \code{libtiledb}
+Get compiler flags for using the core \code{libtiledb} install
+used by \pkg{tiledb}
 }
 \examples{
 .pkg_config()
