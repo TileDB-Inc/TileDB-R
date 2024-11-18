@@ -161,9 +161,9 @@ tiledb_version <- function(compact = FALSE) {
         # addition to libdir/include and pkgdir/include
         windows = sprintf(
           "-I%s/include -I%s/include -I%s/include/tiledb",
-          pkgdir,
-          lib,
-          lib
+          shQuote(pkgdir, type = "cmd"),
+          shQuote(lib, type = "cmd"),
+          shQuote(lib, type = "cmd")
         ),
         sprintf("-I%s/include -I%s/include", pkgdir, lib)
       ),
@@ -176,8 +176,12 @@ tiledb_version <- function(compact = FALSE) {
           libs <- as.vector(vapply(
             c(pkgdir, lib),
             FUN = \(x) c(
-              sprintf("%s/lib/%s", x, arch),
-              ifelse(getRversion() > '4.2.0', sprintf("%s/lib/%s-ucrt", x, arch), "")
+              sprintf("%s/lib/%s", shQuote(x, type = "cmd"), arch),
+              ifelse(
+                test = getRversion() > '4.2.0',
+                yes = sprintf("%s/lib/%s-ucrt", shQuote(x, type = "cmd"), arch),
+                no = ""
+              )
             ),
             FUN.VALUE = character(2L),
             USE.NAMES = FALSE
