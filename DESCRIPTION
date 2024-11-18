@@ -1,6 +1,6 @@
 Package: tiledb
 Type: Package
-Version: 0.30.2.3
+Version: 0.30.2.4
 Title: Modern Database Engine for Complex Data Based on Multi-Dimensional Arrays
 Authors@R: c(
   person("TileDB, Inc.", role = c("aut", "cph")),
@@ -24,7 +24,13 @@ SystemRequirements: A C++17 compiler is required; on macOS compilation version 1
   build selected); on x86_64 and M1 platforms pre-built TileDB Embedded libraries
   are available at GitHub and are used if no TileDB installation is detected, and
   no other option to build or download was specified by the user.
-Imports: methods, Rcpp (>= 1.0.8), nanotime, spdl, nanoarrow
+Imports: 
+    methods,
+    Rcpp (>= 1.0.8),
+    nanotime,
+    spdl,
+    nanoarrow,
+    tools
 LinkingTo: Rcpp, RcppInt64, nanoarrow
 Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble, arrow
 VignetteBuilder: simplermarkdown

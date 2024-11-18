@@ -6,6 +6,7 @@
 * Support parentheses in query conditions
 * memory alloc: Accomodate zero buffer size estimate v2
 * Apply `styler::style_pkg()`
+* Expose include/linking flags for re-using `libtiledb` in downstream packages
 
 # tiledb 0.30.2
 
