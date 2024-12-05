@@ -25,7 +25,7 @@
 #' @param uri URI specifying path to create the TileDB array object
 #' @param schema tiledb_array_schema object
 #' @param encryption_key optional A character value with an AES-256 encryption key
-#' in case the array should be encrypted
+#' in case the array should be encrypted.
 #'
 #' @examples
 #' \dontshow{
