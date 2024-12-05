@@ -25,7 +25,7 @@
 #' @param uri URI specifying path to create the TileDB array object
 #' @param schema tiledb_array_schema object
 #' @param encryption_key optional A character value with an AES-256 encryption key
-#' in case the array should be encryption.
+#' in case the array should be encrypted
 #'
 #' @examples
 #' \dontshow{
@@ -181,9 +181,9 @@ tiledb_array_is_heterogeneous <- function(arr) {
 ##' @return A boolean indicating success
 ##' @export
 tiledb_array_delete_fragments <- function(
-  arr, 
-  ts_start, 
-  ts_end, 
+  arr,
+  ts_start,
+  ts_end,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -197,15 +197,15 @@ tiledb_array_delete_fragments <- function(
 
 ##' Delete fragments written given by their URIs
 ##'
-##' @param arr A TileDB Array object as for example returned by 
+##' @param arr A TileDB Array object as for example returned by
 ##' \code{tiledb_array()}
 ##' @param fragments A character vector with fragment URIs
 ##' @param ctx A tiledb_ctx object (optional)
 ##' @return A boolean indicating success
 ##' @export
 tiledb_array_delete_fragments_list <- function(
-  arr, 
-  fragments, 
+  arr,
+  fragments,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -247,7 +247,7 @@ tiledb_array_has_enumeration <- function(arr) {
 ##' @return The value of the aggregation
 ##' @export
 tiledb_array_apply_aggregate <- function(
-  array, 
+  array,
   attrname,
   operation = c("Count", "NullCount", "Min", "Max", "Mean", "Sum"),
   nullable = TRUE
@@ -283,8 +283,8 @@ tiledb_array_apply_aggregate <- function(
 ##' @return Nothing is returned as the function is invoked for its side effect
 ##' @export
 tiledb_array_upgrade_version <- function(
-  array, 
-  config = NULL, 
+  array,
+  config = NULL,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
