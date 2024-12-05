@@ -7,8 +7,8 @@
 tiledb_fragment_info(uri, ctx = tiledb_get_context())
 }
 \arguments{
-\item{uri}{an character variable with the URI of the
-array for which fragment info is request}
+\item{uri}{A character variable with the URI of the
+array for which fragment info is requested}
 
 \item{ctx}{tiledb_ctx object (optional)}
 }
