@@ -7,7 +7,7 @@
 \S4method{tiledb_ndim}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
 }
 \value{
 integer number of dimensions

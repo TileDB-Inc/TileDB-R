@@ -7,13 +7,13 @@
 tiledb_array_schema_get_current_domain(schema, ctx = tiledb_get_context())
 }
 \arguments{
-\item{schema}{An Array Schema}
+\item{schema}{A TileDB Schema object}
 
 \item{ctx}{Optional tiledb_ctx object}
 }
 \value{
-A 'CurrendDomain' object
+An object of class \code{tiledb_current_domain}.
 }
 \description{
-Note that 'CurrendDomain' object may be empty.
+Note that \code{tiledb_current_domain} object may be empty.
 }

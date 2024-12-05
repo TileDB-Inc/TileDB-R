@@ -14,12 +14,12 @@ allows_dups(x) <- value
 tiledb_array_schema_set_allows_dups(x, value)
 }
 \arguments{
-\item{x}{tiledb_array_schema}
+\item{x}{A TileDB Schema object}
 
 \item{value}{logical value}
 }
 \value{
-the tiledb_array_schema object
+An object of class \code{tiledb_array_schema}.
 }
 \description{
 Sets toggle whether the array schema allows duplicate values or not.
