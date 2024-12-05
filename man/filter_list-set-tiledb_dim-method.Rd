@@ -7,7 +7,7 @@
 \S4method{filter_list}{tiledb_dim}(x) <- value
 }
 \arguments{
-\item{x}{TileDB Dimension}
+\item{x}{A \code{tiledb_dim} object}
 
 \item{value}{TileDB Filter List}
 }

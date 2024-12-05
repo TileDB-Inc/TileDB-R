@@ -31,7 +31,7 @@ is no filter}
 \item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
-\code{tiledb_dim} object
+A \code{tiledb_dim} object
 }
 \description{
 Constructs a \code{tiledb_dim} object
