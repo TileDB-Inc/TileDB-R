@@ -7,14 +7,14 @@
 \S4method{attrs}{tiledb_array_schema,numeric}(object, idx, ...)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
 
 \item{idx}{attribute index}
 
 \item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
-a \code{tiledb_attr} object
+A \code{tiledb_attr} object
 }
 \description{
 The attribute index is defined by the order the attributes were defined in the schema

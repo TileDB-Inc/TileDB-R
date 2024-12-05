@@ -13,7 +13,7 @@ capacity(object)
 tiledb_array_schema_get_capacity(object)
 }
 \arguments{
-\item{object}{An \code{array_schema} object}
+\item{object}{A TileDB Schema object}
 }
 \value{
 The tile capacity value

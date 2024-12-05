@@ -7,10 +7,10 @@
 \S4method{filter_list}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
 }
 \value{
-a list of tiledb_filter_list objects
+A list of \code{tiledb_filter_list} objects
 }
 \description{
 Returns the offsets and coordinate filter_lists associated with the \code{tiledb_array_schema}

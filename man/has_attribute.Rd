@@ -7,7 +7,7 @@
 has_attribute(schema, attr)
 }
 \arguments{
-\item{schema}{A schema for a TileDB Array}
+\item{schema}{A TileDB Schema object}
 
 \item{attr}{A character variable with an attribute name}
 }

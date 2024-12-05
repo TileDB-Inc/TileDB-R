@@ -7,14 +7,14 @@
 \S4method{attrs}{tiledb_array_schema,character}(object, idx, ...)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
 
 \item{idx}{attribute name string}
 
 \item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
-a \code{tiledb_attr} object
+A \code{tiledb_attr} object
 }
 \description{
 Returns a \code{tiledb_attr} object associated with the \code{tiledb_array_schema} with a given name.
