@@ -15,7 +15,7 @@ tiledb_array_schema_set_enumeration_empty(
 )
 }
 \arguments{
-\item{schema}{An Array Schema}
+\item{schema}{A TileDB Schema object}
 
 \item{attr}{An Attribute for which an empty Enumeration will be added}
 
@@ -30,6 +30,9 @@ flag the \code{NA} value use for character values}
 or \code{ordered} (when \code{TRUE})}
 
 \item{ctx}{Optional tiledb_ctx object}
+}
+\value{
+The modified \code{tiledb_array_schema} object.
 }
 \description{
 Add an empty Enumeration to a Schema

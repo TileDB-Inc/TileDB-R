@@ -46,7 +46,7 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' @param filter_list An optional \code{tiledb_filter_list} object, default
 #' is no filter
 #' @param ctx tiledb_ctx object (optional)
-#' @return `tiledb_dim` object
+#' @return A `tiledb_dim` object
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -56,11 +56,11 @@ tiledb_dim.from_ptr <- function(ptr) {
 #' @importFrom methods new
 #' @export tiledb_dim
 tiledb_dim <- function(
-  name, 
-  domain, 
-  tile, 
+  name,
+  domain,
+  tile,
   type,
-  filter_list = tiledb_filter_list(), 
+  filter_list = tiledb_filter_list(),
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -153,7 +153,7 @@ tiledb_dim <- function(
 
 #' Prints a dimension object
 #'
-#' @param object A dimension object
+#' @param object A `tiledb_dim` object
 #' @export
 setMethod("show",
   signature(object = "tiledb_dim"),
@@ -164,7 +164,7 @@ setMethod("show",
 
 #' Return the `tiledb_dim` name
 #'
-#' @param object `tiledb_dim` object
+#' @param object A `tiledb_dim` object
 #' @return string name, empty string if the dimension is anonymous
 #' @examples
 #' \dontshow{
@@ -186,7 +186,7 @@ setMethod(
 
 #' Return the `tiledb_dim` domain
 #'
-#' @param object `tiledb_dim` object
+#' @param object A `tiledb_dim` object
 #' @return a vector of (lb, ub) inclusive domain of the dimension
 #' @examples
 #' \dontshow{
@@ -209,8 +209,8 @@ setGeneric("tile", function(object) standardGeneric("tile"))
 
 #' Return the `tiledb_dim` tile extent
 #'
-#' @param object `tiledb_dim` object
-#' @return a scalar tile extent
+#' @param object A `tiledb_dim` object
+#' @return A scalar tile extent
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -228,8 +228,8 @@ setMethod(
 
 #' Return the `tiledb_dim` datatype
 #'
-#' @param object tiledb_dim object
-#' @return tiledb datatype string
+#' @param object A `tiledb_dim` object
+#' @return A character string with tiledb's datatype.
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -247,8 +247,8 @@ setMethod(
 
 #' Returns the number of dimensions for a tiledb domain object
 #'
-#' @param object tiledb_ndim object
-#' @return 1L
+#' @param object A `tiledb_dim` object
+#' @return An integer with the number of dimensions.
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -268,7 +268,7 @@ setMethod(
 #'
 #' A TileDB dimension is anonymous if no name/label is defined
 #'
-#' @param object `tiledb_dim` object
+#' @param object A `tiledb_dim` object
 #' @return TRUE or FALSE
 #' @examples
 #' \dontshow{
@@ -289,8 +289,8 @@ is.anonymous.tiledb_dim <- function(object) {
 
 #' Retrieves the dimension of the tiledb_dim domain
 #'
-#' @param x `tiledb_dim` object
-#' @return a vector of the tile_dim domain type, of the dim domain dimension (extent)
+#' @param x A `tiledb_dim` object
+#' @return A vector of the tile_dim domain type, of the dim domain dimension (extent)
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -313,8 +313,8 @@ dim.tiledb_dim <- function(x) {
 
 #' Returns the TileDB Filter List object associated with the given TileDB Dimension
 #'
-#' @param object TileDB_Dimension
-#' @return A TileDB_filter_list object
+#' @param object A `tiledb_dim` object
+#' @return A `tiledb_filter_list` object
 #' @export
 setMethod("filter_list", "tiledb_dim", function(object) {
   ptr <- libtiledb_dimension_get_filter_list(object@ptr)
@@ -325,7 +325,7 @@ setMethod("filter_list", "tiledb_dim", function(object) {
 
 #' Sets the TileDB Filter List for the TileDB Dimension object
 #'
-#' @param x TileDB Dimension
+#' @param x A `tiledb_dim` object
 #' @param value TileDB Filter List
 #' @return The modified TileDB Dimension object
 #' @export
@@ -344,7 +344,7 @@ setMethod("cell_val_num", signature(object = "tiledb_dim"), function(object) {
 
 #' Return the number of scalar values per dimension cell
 #'
-#' @param object `tiledb_dim` object
+#' @param object A `tiledb_dim` object
 #' @return integer number of cells
 #' @export
 tiledb_dim_get_cell_val_num <- function(object) {

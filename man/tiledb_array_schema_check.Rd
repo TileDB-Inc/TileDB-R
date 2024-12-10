@@ -19,7 +19,7 @@ check(object)
 tiledb_array_schema_check(object)
 }
 \arguments{
-\item{object}{An \code{array_schema} object}
+\item{object}{A TileDB Schema object}
 }
 \value{
 The boolean value \code{TRUE} is returned for a correct

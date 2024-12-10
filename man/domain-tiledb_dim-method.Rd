@@ -7,7 +7,7 @@
 \S4method{domain}{tiledb_dim}(object)
 }
 \arguments{
-\item{object}{\code{tiledb_dim} object}
+\item{object}{A \code{tiledb_dim} object}
 }
 \value{
 a vector of (lb, ub) inclusive domain of the dimension

@@ -7,10 +7,10 @@
 \S4method{is.sparse}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
 }
 \value{
-TRUE if tiledb_array_schema is sparse
+\code{TRUE} if \code{tiledb_array_schema} object is sparse
 }
 \description{
 Returns TRUE if the tiledb_array_schema is sparse, else FALSE

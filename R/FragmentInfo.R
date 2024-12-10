@@ -35,8 +35,8 @@ tiledb_fragment_info.from_ptr <- function(ptr) {
 
 #' Constructs a `tiledb_fragment_info` object
 #'
-#' @param uri an character variable with the URI of the
-#' array for which fragment info is request
+#' @param uri A character variable with the URI of the
+#' array for which fragment info is requested
 #' @param ctx tiledb_ctx object (optional)
 #' @return tiledb_fragment_info object
 #' @export tiledb_fragment_info
@@ -101,7 +101,7 @@ tiledb_fragment_info_get_non_empty_domain_index <- function(object, fid, did, ty
 #' @param fid A fragment object index
 #' @param dim_name A character variable with the dimension name
 #' @param typestr An optional character variable describing the data type which will
-#' be accessed from the schema if missinh
+#' be accessed from the schema if missing
 #' @return A TileDB Domain object
 #' @export
 tiledb_fragment_info_get_non_empty_domain_name <- function(object, fid, dim_name, typestr) {

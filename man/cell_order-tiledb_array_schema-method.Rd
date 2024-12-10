@@ -7,7 +7,10 @@
 \S4method{cell_order}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{tiledb object}
+\item{object}{A TileDB Schema object}
+}
+\value{
+A character string with cell's layout, e.g., \code{"COL_MAJOR"}.
 }
 \description{
 Returns the cell layout string associated with the \code{tiledb_array_schema}
