@@ -77,7 +77,7 @@ tiledb_ndrectangle <- function(dom, ctx = tiledb_get_context()) {
 tiledb_ndrectangle_set_range <- function(ndr, dimname, start, end) {
   stopifnot(
     "The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
-    "The second argument must a single character object" = is.character(dimname) &&
+    "The second argument must be a single character object" = is.character(dimname) &&
       length(dimname) == 1,
     "The third argument must be scalar" = length(start) == 1,
     "The fourth argument must be scalar" = length(end) == 1,
@@ -108,7 +108,7 @@ tiledb_ndrectangle_set_range <- function(ndr, dimname, start, end) {
 tiledb_ndrectangle_get_range <- function(ndr, dimname) {
   stopifnot(
     "The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
-    "The second argument must a single character object" = is.character(dimname) &&
+    "The second argument must be a single character object" = is.character(dimname) &&
       length(dimname) == 1,
     "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0"
   )
@@ -157,7 +157,7 @@ tiledb_ndrectangle_dim_num <- function(ndr) {
 tiledb_ndrectangle_datatype <- function(ndr, dimname) {
   stopifnot(
     "The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
-    "The second argument must a single character object" = is.character(dimname) &&
+    "The second argument must be a single character object" = is.character(dimname) &&
       length(dimname) == 1,
     "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0"
   )
@@ -182,7 +182,7 @@ tiledb_ndrectangle_datatype <- function(ndr, dimname) {
 tiledb_ndrectangle_datatype_by_ind <- function(ndr, dim) {
   stopifnot(
     "The first argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
-    "The second argument must a single numeric object" = is.numeric(dim) &&
+    "The second argument must be a single numeric object" = is.numeric(dim) &&
       length(dim) == 1,
     "This function needs TileDB 2.26.0 or later" = tiledb_version(TRUE) >= "2.26.0"
   )
