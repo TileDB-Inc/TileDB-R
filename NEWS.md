@@ -7,6 +7,7 @@
 * memory alloc: Accomodate zero buffer size estimate v2
 * Apply `styler::style_pkg()`
 * Expose include/linking flags for re-using `libtiledb` in downstream packages
+* Use TileDB Core 2.27.0
 
 # tiledb 0.30.2
 
