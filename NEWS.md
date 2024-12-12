@@ -1,4 +1,4 @@
-# Unreleased
+# tiledb 0.31.0
 
 * Update docs with correct S4 methods
 * Run `clang-format` on non-autogen C++ source code
