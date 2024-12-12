@@ -46,6 +46,8 @@
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dimensions-tiledb_domain-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/domain-tiledb_array_schema-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/domain-tiledb_dim-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dot-core_info.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/dot-pkg_config.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/extended-set-tiledb_array-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/extended-tiledb_array-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/fetchBatched.html</loc></url>
