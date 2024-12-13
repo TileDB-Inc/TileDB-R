@@ -7,7 +7,7 @@
 \S4method{raw_dump}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{An array_schema object}
+\item{object}{A TileDB Schema object}
 }
 \description{
 This method used the display method provided by the underlying

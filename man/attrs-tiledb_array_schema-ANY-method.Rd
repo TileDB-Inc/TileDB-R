@@ -7,14 +7,14 @@
 \S4method{attrs}{tiledb_array_schema,ANY}(object, idx, ...)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
 
 \item{idx}{index argument, currently unused.}
 
 \item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
-a list of tiledb_attr objects
+A list of \code{tiledb_attr} objects
 }
 \description{
 Returns a list of all \code{tiledb_attr} objects associated with the \code{tiledb_array_schema}
