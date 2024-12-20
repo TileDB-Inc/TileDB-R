@@ -11,6 +11,7 @@ TileDB-R.Rproj
 src/*.o
 src/*.so
 src/*.dll
+src/connection/*.o
 # Output files from R CMD build
 /*.tar.gz
 # Output files from R CMD check
@@ -49,3 +50,5 @@ vignettes/md/
 # vim
 .sw?
 .*.sw?
+inst/tiledb/
+inst/lib/
