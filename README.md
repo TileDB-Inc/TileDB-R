@@ -5,7 +5,7 @@
 [![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
 [![r-universe](https://tiledb-inc.r-universe.dev/badges/tiledb)](https://tiledb-inc.r-universe.dev/tiledb)
 
-# <a href="https://tiledb.com/"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
+# <a href="https://tiledb.com/"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
 
 The TileDB R package offers an [R](https://www.r-project.org/) interface to
 the [modern database](https://github.com/TileDB-Inc/TileDB) by [TileDB](https://tiledb.com/).
