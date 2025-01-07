@@ -1,3 +1,7 @@
+# Unreleased
+
+* Allow `parse_query_condition()` to work on dimensions when an array is passed
+
 # tiledb 0.31.0
 
 * Update docs with correct S4 methods
