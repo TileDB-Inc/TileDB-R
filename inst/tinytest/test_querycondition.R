@@ -11,8 +11,7 @@ if (Sys.getenv("CI") != "") set_allocation_size_preference(1024*1024*5)
 ctx <- tiledb_ctx(limitTileDBCores())
 
 ## simple data.frame to test against
-D <- data.frame(a=1:20,
-                b=seq(101,120)+0.5)
+D <- data.frame(a = 1:20, b = seq(101, 120) + 0.5)
 uri <- tempfile()
 fromDataFrame(D, uri, sparse=TRUE)
 arr <- tiledb_array(uri)
@@ -201,7 +200,28 @@ if (tiledb_version(TRUE) >= "2.17.0") {
     expect_true(all(res$body_mass_g > 3500))
 }
 
-unlink(uri, recursive=TRUE)
+unlink(uri, recursive = TRUE)
+
+# Check that query conditions works on dimensions
+uri <- tempfile()
+fromDataFrame(infert, uri, col_index = "education", sparse = TRUE)
+arr <- tiledb_array(uri)
+qc <- parse_query_condition(education == "0-5yrs", ta = arr)
+res <- tiledb_array(uri, query_condition = qc, return_as = "data.frame")[]
+expect_equal(nrow(res), sum(infert$education == "0-5yrs"))
+expect_identical(unique(res$education), "0-5yrs")
+
+if (tiledb_version(TRUE) >= "2.17.0") {
+    qc2 <- parse_query_condition(
+        education %in% c("0-5yrs", "12+ yrs"),
+        ta = arr
+    )
+    res <- tiledb_array(uri, query_condition = qc2, return_as = "data.frame")[]
+    expect_equal(nrow(res), sum(infert$education %in% c("0-5yrs", "12+ yrs")))
+    expect_true(all(res$education %in% c("0-5yrs", "12+ yrs")))
+}
+
+unlink(uri, recursive = TRUE)
 
 ## (some) r-universe builds are/were breaking here
 if (Sys.getenv("MY_UNIVERSE", "") != "") exit_file("Skip remainder at r-universe")
