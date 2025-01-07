@@ -163,10 +163,6 @@ parse_query_condition <- function(expr, ta = NULL, debug = FALSE, strict = TRUE,
       .errorFunction("No attribute '", attr, "' present.", call. = FALSE)
       return(NULL)
     }
-    if (ta@sil$status[ind] != 2) {
-      .errorFunction("Argument '", attr, "' is not an attribute.", call. = FALSE)
-      return(NULL)
-    }
     ind
   }
   .getType <- function(x, tp, use_int64 = FALSE) {
@@ -257,10 +253,6 @@ parse_query_condition <- function(expr, ta = NULL, debug = FALSE, strict = TRUE,
         ind <- match(attr, ta@sil$names)
         if (!is.finite(ind)) {
           .errorFunction("No attribute '", attr, "' present.", call. = FALSE)
-          return(NULL)
-        }
-        if (ta@sil$status[ind] != 2) {
-          .errorFunction("Argument '", attr, "' is not an attribute.", call. = FALSE)
           return(NULL)
         }
         dtype <- ta@sil$types[ind]
