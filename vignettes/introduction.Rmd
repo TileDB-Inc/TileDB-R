@@ -182,7 +182,7 @@ column *reduces to a vector* as this happens at the R side:
 
 Basic reading returns the coordinates and any attributes. The following
 examples use the array created by the
-[quickstart_sparse](https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc)
+[quickstart_sparse](https://github.com/TileDB-Inc/TileDB/blob/main/examples/cpp_api/quickstart_sparse.cc)
 example.
 
 ``` r

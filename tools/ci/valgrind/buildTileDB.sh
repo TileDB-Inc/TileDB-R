@@ -20,7 +20,7 @@ echo "::group::Setup sources"
 if [ ${isrelease} -eq 0 ]; then
     git clone --single-branch --branch ${version} https://github.com/TileDB-Inc/TileDB.git TileDB-${version}
     git log --graph --pretty=format:'%h - %d %s (%cr) <%an>' --abbrev-commit | head
-elif [ ${version} = "dev" ]; then
+elif [ ${version} = "main" ]; then
     wget https://github.com/TileDB-Inc/TileDB/archive/refs/heads/${version}.zip
     unzip ${version}.zip
     rm ${version}.zip
