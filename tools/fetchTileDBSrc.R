@@ -43,9 +43,9 @@ if (!file.exists("tiledb.tar.gz")) {
         cat("Converting zip to tar.gz ...\n")
         unzip("tiledb.tar.gz")
         unlink("tiledb.tar.gz")
-        Sys.chmod("TileDB-dev/bootstrap", mode="0755")
+        Sys.chmod("TileDB-main/bootstrap", mode="0755")
         options(warn=-1)
-        tar("tiledb.tar.gz", "TileDB-dev", compression="gzip")
+        tar("tiledb.tar.gz", "TileDB-main", compression="gzip")
     }
 
     options(op)
