@@ -7,7 +7,7 @@
 tiledb_array_schema_version(object)
 }
 \arguments{
-\item{object}{An \code{array_schema} object}
+\item{object}{A TileDB Schema object}
 }
 \value{
 An integer value describing the internal schema format version

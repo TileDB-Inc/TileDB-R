@@ -7,10 +7,10 @@
 \S4method{filter_list}{tiledb_dim}(object)
 }
 \arguments{
-\item{object}{TileDB_Dimension}
+\item{object}{A \code{tiledb_dim} object}
 }
 \value{
-A TileDB_filter_list object
+A \code{tiledb_filter_list} object
 }
 \description{
 Returns the TileDB Filter List object associated with the given TileDB Dimension

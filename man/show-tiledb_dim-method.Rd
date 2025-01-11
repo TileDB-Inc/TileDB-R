@@ -7,7 +7,7 @@
 \S4method{show}{tiledb_dim}(object)
 }
 \arguments{
-\item{object}{A dimension object}
+\item{object}{A \code{tiledb_dim} object}
 }
 \description{
 Prints a dimension object

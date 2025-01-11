@@ -7,7 +7,10 @@
 \S4method{domain}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
+}
+\value{
+A \code{tiledb_domain} object
 }
 \description{
 Returns the \code{tiledb_domain} object associated with a given \code{tiledb_array_schema}

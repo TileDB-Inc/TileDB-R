@@ -53,6 +53,8 @@ tiledb_array_schema.from_ptr <- function(ptr, arrptr = NULL) {
 #' @param allows_dups (optional, requires \sQuote{sparse} to be TRUE)
 #' @param enumerations (optional) named list of enumerations
 #' @param ctx tiledb_ctx object (optional)
+#'
+#' @return An object of class `tiledb_array_schema`.
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -154,7 +156,7 @@ tiledb_array_schema.from_array <- function(x, ctx = tiledb_get_context()) {
 #' This method used the display method provided by the underlying
 #' library.
 #'
-#' @param object An array_schema object
+#' @param object A TileDB Schema object
 #' @export
 setMethod("raw_dump",
   signature(object = "tiledb_array_schema"),
@@ -163,7 +165,7 @@ setMethod("raw_dump",
 
 #' Prints an array schema object
 #'
-#' @param object An array_schema object
+#' @param object A TileDB Schema object
 #' @export
 setMethod("show", signature(object = "tiledb_array_schema"),
   definition = function(object) {
@@ -194,7 +196,8 @@ setGeneric("domain", function(object, ...) standardGeneric("domain"))
 
 #' Returns the `tiledb_domain` object associated with a given `tiledb_array_schema`
 #'
-#' @param object tiledb_array_schema
+#' @param object A TileDB Schema object
+#' @return A `tiledb_domain` object
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -218,8 +221,8 @@ setGeneric("dimensions", function(object, ...) standardGeneric("dimensions"))
 
 #' Returns a list of `tiledb_dim` objects associated with the `tiledb_array_schema`
 #'
-#' @param object tiledb_array_schema
-#' @return a list of tiledb_dim objects
+#' @param object A TileDB Schema object
+#' @return A list of `tiledb_dim` objects
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -245,10 +248,10 @@ setGeneric("attrs", function(object, idx, ...) standardGeneric("attrs"))
 
 #' Returns a list of all `tiledb_attr` objects associated with the `tiledb_array_schema`
 #'
-#' @param object tiledb_array_schema
+#' @param object A TileDB Schema object
 #' @param idx index argument, currently unused.
 #' @param ... Extra parameter for method signature, currently unused.
-#' @return a list of tiledb_attr objects
+#' @return A list of `tiledb_attr` objects
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -278,10 +281,10 @@ setMethod(
 
 #' Returns a `tiledb_attr` object associated with the `tiledb_array_schema` with a given name.
 #'
-#' @param object tiledb_array_schema
+#' @param object A TileDB Schema object
 #' @param idx attribute name string
 #' @param ... Extra parameter for method signature, currently unused.
-#' @return a `tiledb_attr` object
+#' @return A `tiledb_attr` object
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -306,10 +309,10 @@ setMethod(
 #'
 #' The attribute index is defined by the order the attributes were defined in the schema
 #'
-#' @param object tiledb_array_schema
+#' @param object A TileDB Schema object
 #' @param idx attribute index
 #' @param ... Extra parameter for method signature, currently unused.
-#' @return a `tiledb_attr` object
+#' @return A `tiledb_attr` object
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -335,7 +338,8 @@ setMethod(
 setGeneric("cell_order", function(object, ...) standardGeneric("cell_order"))
 
 #' Returns the cell layout string associated with the `tiledb_array_schema`
-#' @param object tiledb object
+#' @param object A TileDB Schema object
+#' @return A character string with cell's layout, e.g., `"COL_MAJOR"`.
 #' @export
 setMethod(
   "cell_order", "tiledb_array_schema",
@@ -349,7 +353,8 @@ setMethod(
 setGeneric("tile_order", function(object, ...) standardGeneric("tile_order"))
 
 #' Returns the tile layout string associated with the `tiledb_array_schema`
-#' @param object tiledb object
+#' @param object A TileDB Schema object
+#' @return A character string with tile's layout, e.g., `"COL_MAJOR"`.
 #' @export
 setMethod(
   "tile_order", "tiledb_array_schema",
@@ -377,8 +382,8 @@ setGeneric("filter_list<-", function(x, value) standardGeneric("filter_list<-"))
 
 #' Returns the offsets and coordinate filter_lists associated with the `tiledb_array_schema`
 #'
-#' @param object tiledb_array_schema
-#' @return a list of tiledb_filter_list objects
+#' @param object A TileDB Schema object
+#' @return A list of `tiledb_filter_list` objects
 #' @export
 setMethod("filter_list", "tiledb_array_schema", function(object) {
   coords_ptr <- libtiledb_array_schema_get_coords_filter_list(object@ptr)
@@ -405,9 +410,9 @@ setMethod("filter_list", "tiledb_array_schema", function(object) {
 
 #' Set a Filter List for Coordinate of a TileDB Schema
 #'
-#' @param sch A TileDB Array Schema object
+#' @param sch A TileDB Schema object
 #' @param fl A TileDB Filter List object
-#' @return The modified Array Schema object
+#' @return The modified `tiledb_array_schema` object.
 #' @export
 tiledb_array_schema_set_coords_filter_list <- function(sch, fl) {
   stopifnot(
@@ -420,9 +425,9 @@ tiledb_array_schema_set_coords_filter_list <- function(sch, fl) {
 
 #' Set a Filter List for Variable-Sized Offsets of a TileDB Schema
 #'
-#' @param sch A TileDB Array Schema object
+#' @param sch A TileDB Schema object
 #' @param fl A TileDB Filter List object
-#' @return The modified Array Schema object
+#' @return The modified `tiledb_array_schema` object.
 #' @export
 tiledb_array_schema_set_offsets_filter_list <- function(sch, fl) {
   stopifnot(
@@ -435,9 +440,9 @@ tiledb_array_schema_set_offsets_filter_list <- function(sch, fl) {
 
 #' Set a Filter List for Validity of a TileDB Schema
 #'
-#' @param sch A TileDB Array Schema object
+#' @param sch A TileDB Schema object
 #' @param fl A TileDB Filter List object
-#' @return The modified Array Schema object
+#' @return The modified `tiledb_array_schema` object.
 #' @export
 tiledb_array_schema_set_validity_filter_list <- function(sch, fl) {
   stopifnot(
@@ -454,8 +459,8 @@ setGeneric("is.sparse", function(object, ...) standardGeneric("is.sparse"))
 
 #' Returns TRUE if the tiledb_array_schema is sparse, else FALSE
 #'
-#' @param object tiledb_array_schema
-#' @return TRUE if tiledb_array_schema is sparse
+#' @param object A TileDB Schema object
+#' @return `TRUE` if `tiledb_array_schema` object is sparse
 #' @export
 setMethod(
   "is.sparse", "tiledb_array_schema",
@@ -470,7 +475,7 @@ setGeneric("tiledb_ndim", function(object, ...) standardGeneric("tiledb_ndim"))
 
 #' Return the number of dimensions associated with the `tiledb_array_schema`
 #'
-#' @param object tiledb_array_schema
+#' @param object A TileDB Schema object
 #' @return integer number of dimensions
 #' @examples
 #' \dontshow{
@@ -496,7 +501,7 @@ setMethod(
 #'
 #' Only valid for integral (integer) domains
 #'
-#' @param x tiledb_array_schema
+#' @param x  A TileDB Schema object
 #' @return a dimension vector
 #' @examples
 #' \dontshow{
@@ -536,8 +541,8 @@ setMethod("allows_dups", signature = "tiledb_array_schema", function(x) {
 #' Returns logical value whether the array schema allows duplicate values or not.
 #' This is only valid for sparse arrays.
 #'
-#' @param x tiledb_array_schema
-#' @return the logical value
+#' @param x  A TileDB Schema object
+#' @return A logical value.
 #' @export
 tiledb_array_schema_get_allows_dups <- function(x) {
   stopifnot(`The 'x' argument must be a tiledb_array_schema object` = is(x, "tiledb_array_schema"))
@@ -551,8 +556,8 @@ setGeneric("allows_dups<-", function(x, value) standardGeneric("allows_dups<-"))
 #' @rdname tiledb_array_schema_set_allows_dups
 #' @export
 setMethod(
-  "allows_dups<-", 
-  signature = "tiledb_array_schema", 
+  "allows_dups<-",
+  signature = "tiledb_array_schema",
   definition = function(x, value) {
     libtiledb_array_schema_set_allows_dups(x@ptr, value)
     x
@@ -562,9 +567,9 @@ setMethod(
 #' Sets toggle whether the array schema allows duplicate values or not.
 #' This is only valid for sparse arrays.
 #'
-#' @param x tiledb_array_schema
+#' @param x A TileDB Schema object
 #' @param value logical value
-#' @return the tiledb_array_schema object
+#' @return An object of class `tiledb_array_schema`.
 #' @export
 tiledb_array_schema_set_allows_dups <- function(x, value) {
   stopifnot(
@@ -666,7 +671,7 @@ setMethod("capacity", signature = "tiledb_array_schema", function(object) {
 #' @export
 setReplaceMethod(
   "capacity",
-  signature = "tiledb_array_schema", 
+  signature = "tiledb_array_schema",
   function(x, value) {
     libtiledb_array_schema_set_capacity(x@ptr, value)
     x
@@ -676,7 +681,7 @@ setReplaceMethod(
 #' Retrieve schema capacity (for sparse fragments)
 #'
 #' Returns the \code{tiledb_array} schema tile capacity for sparse fragments.
-#' @param object An \code{array_schema} object
+#' @param object A TileDB Schema object
 #' @return The tile capacity value
 #' @export
 tiledb_array_schema_get_capacity <- function(object) {
@@ -687,14 +692,16 @@ tiledb_array_schema_get_capacity <- function(object) {
 #' Sets the schema capacity (for sparse fragments)
 #'
 #' Sets the \code{tiledb_array} schema tile capacity for sparse fragments.
-#' @param x An \code{array_schema} object
+#' @param x A TileDB Schema object
 #' @param value An integer or numeric value for the new tile capacity
-#' @return The modified \code{array_schema} object
+#'
+#' @return The modified `tiledb_array_schema` object.
+#'
 #' @export
 tiledb_array_schema_set_capacity <- function(x, value) {
   stopifnot(
     `The first argument must be a tiledb_array_schema object` = is(x, "tiledb_array_schema"),
-    `The second argumebt must be a int or numeric value` = is.numeric(value)
+    `The second argument must be a int or numeric value` = is.numeric(value)
   )
   libtiledb_array_schema_set_capacity(x@ptr, value)
   x
@@ -713,7 +720,7 @@ setGeneric("schema_check", function(object) standardGeneric("schema_check"))
 #' @export
 setMethod(
   "schema_check",
-  signature = "tiledb_array_schema", 
+  signature = "tiledb_array_schema",
   definition = function(object) {
     libtiledb_array_schema_check(object@ptr)
   }
@@ -736,7 +743,7 @@ setMethod("check", signature = "tiledb_array_schema", function(object) {
 #' Check the schema for correctness
 #'
 #' Returns the \code{tiledb_array} schema for correctness
-#' @param object An \code{array_schema} object
+#' @param object A TileDB Schema object
 #' @return The boolean value \code{TRUE} is returned for a correct
 #' schema; for an incorrect schema an error condition is triggered.
 #' @export
@@ -748,7 +755,7 @@ tiledb_array_schema_check <- function(object) {
 #' Check the version of the array schema
 #'
 #' Returns the (internal) version of the \code{tiledb_array} schema
-#' @param object An \code{array_schema} object
+#' @param object A TileDB Schema object
 #' @return An integer value describing the internal schema format version
 #' @export
 tiledb_array_schema_version <- function(object) {
@@ -762,7 +769,7 @@ tiledb_array_schema_version <- function(object) {
 
 #' Check a schema for a given attribute name
 #'
-#' @param schema A schema for a TileDB Array
+#' @param schema A TileDB Schema object
 #' @param attr A character variable with an attribute name
 #' @return A boolean value indicating if the attribute exists in the schema
 #' @export
@@ -1010,7 +1017,7 @@ describe <- function(arr) {
 
 #' Add an empty Enumeration to a Schema
 #'
-#' @param schema An Array Schema
+#' @param schema A TileDB Schema object
 #' @param attr An Attribute for which an empty Enumeration will be added
 #' @param enum_name A character value with the Enumeration name
 #' @param type_str A character value with the TileDB type, defaults to \sQuote{ASCII}
@@ -1019,14 +1026,17 @@ describe <- function(arr) {
 #' @param ordered A logical value indicated standard \code{factor} (when \code{FALSE}, the default)
 #' or \code{ordered} (when \code{TRUE})
 #' @param ctx Optional tiledb_ctx object
+#'
+#' @return The modified `tiledb_array_schema` object.
+#'
 #' @export
 tiledb_array_schema_set_enumeration_empty <- function(
-  schema, 
-  attr, 
+  schema,
+  attr,
   enum_name,
   type_str = "ASCII",
   cell_val_num = NA_integer_,
-  ordered = FALSE, 
+  ordered = FALSE,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -1048,13 +1058,16 @@ tiledb_array_schema_set_enumeration_empty <- function(
 
 #' Get the Current Domain of an Array Schema
 #'
-#' Note that 'CurrendDomain' object may be empty.
-#' @param schema An Array Schema
+#' Note that `tiledb_current_domain` object may be empty.
+#'
+#' @param schema A TileDB Schema object
 #' @param ctx Optional tiledb_ctx object
-#' @return A 'CurrendDomain' object
+#'
+#' @return An object of class `tiledb_current_domain`.
+#'
 #' @export
 tiledb_array_schema_get_current_domain <- function(
-  schema, 
+  schema,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -1067,14 +1080,16 @@ tiledb_array_schema_get_current_domain <- function(
 
 #' Set a Current Domain of an Array Schema
 #'
-#' @param schema An Array Schema
-#' @param cd An CurrendDomain object
+#' @param schema A TileDB Schema object
+#' @param cd A TileDB Current Domain object
 #' @param ctx Optional tiledb_ctx object
+#'
 #' @return Nothing is returned from this function (but an error, should it occur is reported)
+#'
 #' @export
 tiledb_array_schema_set_current_domain <- function(
-  schema, 
-  cd, 
+  schema,
+  cd,
   ctx = tiledb_get_context()
 ) {
   stopifnot(

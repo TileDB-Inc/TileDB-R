@@ -44,6 +44,9 @@ tiledb_array_schema(
 
 \item{ctx}{tiledb_ctx object (optional)}
 }
+\value{
+An object of class \code{tiledb_array_schema}.
+}
 \description{
 Constructs a \code{tiledb_array_schema} object
 }

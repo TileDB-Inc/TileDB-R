@@ -7,10 +7,10 @@
 \S4method{dimensions}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{tiledb_array_schema}
+\item{object}{A TileDB Schema object}
 }
 \value{
-a list of tiledb_dim objects
+A list of \code{tiledb_dim} objects
 }
 \description{
 Returns a list of \code{tiledb_dim} objects associated with the \code{tiledb_array_schema}

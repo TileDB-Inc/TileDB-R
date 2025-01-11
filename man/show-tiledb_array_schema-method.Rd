@@ -7,7 +7,7 @@
 \S4method{show}{tiledb_array_schema}(object)
 }
 \arguments{
-\item{object}{An array_schema object}
+\item{object}{A TileDB Schema object}
 }
 \description{
 Prints an array schema object

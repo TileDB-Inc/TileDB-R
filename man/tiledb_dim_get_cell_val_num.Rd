@@ -10,7 +10,7 @@
 tiledb_dim_get_cell_val_num(object)
 }
 \arguments{
-\item{object}{\code{tiledb_dim} object}
+\item{object}{A \code{tiledb_dim} object}
 }
 \value{
 integer number of cells

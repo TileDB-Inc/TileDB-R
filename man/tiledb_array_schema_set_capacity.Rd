@@ -13,12 +13,12 @@ capacity(x) <- value
 tiledb_array_schema_set_capacity(x, value)
 }
 \arguments{
-\item{x}{An \code{array_schema} object}
+\item{x}{A TileDB Schema object}
 
 \item{value}{An integer or numeric value for the new tile capacity}
 }
 \value{
-The modified \code{array_schema} object
+The modified \code{tiledb_array_schema} object.
 }
 \description{
 Sets the \code{tiledb_array} schema tile capacity for sparse fragments.

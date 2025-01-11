@@ -7,9 +7,9 @@
 tiledb_array_schema_set_current_domain(schema, cd, ctx = tiledb_get_context())
 }
 \arguments{
-\item{schema}{An Array Schema}
+\item{schema}{A TileDB Schema object}
 
-\item{cd}{An CurrendDomain object}
+\item{cd}{A TileDB Current Domain object}
 
 \item{ctx}{Optional tiledb_ctx object}
 }

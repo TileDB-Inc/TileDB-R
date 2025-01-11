@@ -7,12 +7,12 @@
 tiledb_array_schema_set_validity_filter_list(sch, fl)
 }
 \arguments{
-\item{sch}{A TileDB Array Schema object}
+\item{sch}{A TileDB Schema object}
 
 \item{fl}{A TileDB Filter List object}
 }
 \value{
-The modified Array Schema object
+The modified \code{tiledb_array_schema} object.
 }
 \description{
 Set a Filter List for Validity of a TileDB Schema
