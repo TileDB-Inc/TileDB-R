@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
-<script src="deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.31.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.31.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,7 @@
   <main id="main" class="col-md-9">
 <div class="section level1">
 <div class="page-header"><h1 id="section">
-<a href="https://tiledb.com/" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a><a class="anchor" aria-label="anchor" href="#section"></a>
+<a href="https://tiledb.com/" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a><a class="anchor" aria-label="anchor" href="#section"></a>
 </h1></div>
 <p>The TileDB R package offers an <a href="https://www.r-project.org/" class="external-link">R</a> interface to the <a href="https://github.com/TileDB-Inc/TileDB" class="external-link">modern database</a> by <a href="https://tiledb.com/" class="external-link">TileDB</a>.</p>
 <div class="section level2">
@@ -84,19 +84,19 @@
 </h2>
 <p>TileDB Embedded needs to be present, and can be installed first (from a package or from source) for the TileDB R package to build and link correctly. Alternatively, if no system installation is found, a precompiled shared library is used during the installation of this R package.</p>
 <p>The TileDB R package has been published on <a href="https://cran.r-project.org/" class="external-link">CRAN</a> and be installed directly via</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">install.packages</span>(<span class="st">"tiledb"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">install.packages</span>(<span class="st">"tiledb"</span>)</span></code></pre></div>
 <p>as usual.</p>
 <p>The most recent released version can be installed from <a href="https://github.com/TileDB-Inc/TileDB-R" class="external-link">Github</a> using the package <a href="https://cran.r-project.org/package=remotes" class="external-link">remotes</a>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"remotes"</span>,<span class="at">quietly=</span><span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="sc">&gt;</span> remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>...</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(tiledb)</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>TileDB R <span class="dv">0</span>.<span class="fl">31.0</span> with TileDB Embedded <span class="dv">2</span>.<span class="fl">27.0</span> on Ubuntu <span class="dv">24</span>.<span class="fl">04.</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>See https<span class="sc">:</span><span class="er">//</span>tiledb.com <span class="cf">for</span> more information about TileDB.</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">help</span>(<span class="at">package=</span>tiledb)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">"remotes"</span>,<span class="dt">quietly=</span><span class="ot">TRUE</span>)) <span class="kw">install.packages</span>(<span class="st">"remotes"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>...</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">library</span>(tiledb)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>TileDB R <span class="dv">0</span>.<span class="fl">31.0</span> with TileDB Embedded <span class="dv">2</span>.<span class="fl">27.0</span> on Ubuntu <span class="dv">24</span>.<span class="fl">04.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>See https<span class="op">:</span><span class="er">//</span>tiledb.com <span class="cf">for</span> more information about TileDB.</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span><span class="kw">help</span>(<span class="dt">package=</span>tiledb)</span></code></pre></div>
 <p>If the TileDB library is installed in a custom location, you need to pass the explicit path:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="sc">&gt;</span> remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>,</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>      <span class="at">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="op">&gt;</span><span class="st"> </span>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"TileDB-Inc/TileDB-R"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>      <span class="dt">args=</span><span class="st">"--configure-args='--with-tiledb=/path/to/tiledb'"</span>)</span></code></pre></div>
 <p>Note that the TileDB R package is always developed and tested against the latest stable version of TileDB, but should also build against the newest development version.</p>
 </div>
 <div class="section level2">
@@ -150,8 +150,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a> <br><small class="roles"> Author, copyright holder </small>  </li>
-<li>Dirk Eddelbuettel <br><small class="roles"> Author </small>  </li>
+<a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a> <br><small class="roles"> Author, copyright holder </small>  </li>
 <li>Isaiah Norton <br><small class="roles"> Maintainer </small>  </li>
 </ul>
 </div>
@@ -173,11 +172,11 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/dev/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a>, Dirk Eddelbuettel, Isaiah Norton.</p>
+  <p>Developed by <a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a>, Isaiah Norton.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
