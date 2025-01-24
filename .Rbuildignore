@@ -28,3 +28,4 @@
 ^codecov.yml
 ^notes.md
 ^pkgdown
+^\.github$

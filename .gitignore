@@ -7,10 +7,15 @@
 TileDB-R.Rproj
 # Example code in package build process
 *-Ex.R
+# pkgdown artifacts
+docs/
 # Build artifacts
 src/*.o
+src/*/*.o
 src/*.so
 src/*.dll
+inst/lib/*/*.dll
+inst/tiledb
 # Output files from R CMD build
 /*.tar.gz
 # Output files from R CMD check

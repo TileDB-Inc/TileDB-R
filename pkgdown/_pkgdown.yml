@@ -3,6 +3,9 @@ url: https://tiledb-inc.github.io/TileDB-R/
 template:
   bootstrap: 5
 
+development:
+  mode: auto
+
 articles:
 - title: TileDB R Introduction
   navbar: Introduction
