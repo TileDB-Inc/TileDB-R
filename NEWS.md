@@ -1,6 +1,7 @@
 # Unreleased
 
 * Allow `parse_query_condition()` to work on dimensions when an array is passed
+* Add `tiledb_vfs_copy_dir()`, a wrapper for the `vfs_copy_dir()` function
 
 # tiledb 0.31.0
 

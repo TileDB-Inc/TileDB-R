@@ -953,6 +953,10 @@ libtiledb_vfs_copy_file <- function(vfs, old_uri, new_uri) {
     .Call(`_tiledb_libtiledb_vfs_copy_file`, vfs, old_uri, new_uri)
 }
 
+libtiledb_vfs_copy_dir <- function(vfs, old_uri, new_uri) {
+    .Call(`_tiledb_libtiledb_vfs_copy_dir`, vfs, old_uri, new_uri)
+}
+
 libtiledb_vfs_fh_free <- function(fhxp) {
     invisible(.Call(`_tiledb_libtiledb_vfs_fh_free`, fhxp))
 }

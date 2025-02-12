@@ -4847,6 +4847,14 @@ std::string libtiledb_vfs_copy_file(XPtr<tiledb::VFS> vfs, std::string old_uri,
 }
 
 // [[Rcpp::export]]
+std::string libtiledb_vfs_copy_dir(XPtr<tiledb::VFS> vfs, std::string old_uri,
+  std::string new_uri) {
+check_xptr_tag<tiledb::VFS>(vfs);
+vfs->copy_dir(old_uri, new_uri);
+return new_uri;
+}
+
+// [[Rcpp::export]]
 void libtiledb_vfs_fh_free(XPtr<vfs_fh_t> fhxp) {
   check_xptr_tag<vfs_fh_t>(fhxp);
   spdl::trace("[libtiledb_vfs_clear_handle] entered");

@@ -505,7 +505,7 @@ tiledb_vfs_serialize <- function(obj, uri, vfs = tiledb_get_vfs()) {
 #' @param file Character variable with a local file path
 #' @param uri Character variable with a URI describing a file path
 #' @param vfs A TileDB VFS object; default is to use a cached value.
-#' @return The uri value of the removed file
+#' @return The uri value of the copied file
 #' @export
 tiledb_vfs_copy_file <- function(file, uri, vfs = tiledb_get_vfs()) {
   stopifnot(
@@ -515,6 +515,24 @@ tiledb_vfs_copy_file <- function(file, uri, vfs = tiledb_get_vfs()) {
       is.character(uri) && file.exists(file)
   )
   libtiledb_vfs_copy_file(vfs@ptr, file, uri)
+}
+
+#' Copy a directory recursively to VFS
+#'
+#' @param dir Character variable with a local directory path
+#' @param uri Character variable with a URI describing a directory path
+#' @param vfs A TileDB VFS object; default is to use a cached value.
+#' @return The uri value of the copied directory
+#' @export
+tiledb_vfs_copy_dir <- function(dir, uri, vfs = tiledb_get_vfs()) {
+  stopifnot(
+    "Argument 'vfs' must be a tiledb_vfs object" = is(vfs, "tiledb_vfs"),
+    "Argument 'uri' must be character" = is.character(uri),
+    "Argument 'dir' must be character and point to a directory" =
+      is.character(uri) && dir.exists(dir),
+    "Directory with 'uri' already exists" = !dir.exists(uri)
+  )
+  libtiledb_vfs_copy_dir(vfs@ptr, dir, uri)
 }
 
 #' Recursively list objects from given URI

@@ -26,7 +26,6 @@ Useful links:
 Authors:
 \itemize{
   \item TileDB, Inc. [copyright holder]
-  \item Dirk Eddelbuettel \email{dirk@tiledb.com}
 }
 
 }

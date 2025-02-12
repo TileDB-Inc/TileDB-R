@@ -2851,6 +2851,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_vfs_copy_dir
+std::string libtiledb_vfs_copy_dir(XPtr<tiledb::VFS> vfs, std::string old_uri, std::string new_uri);
+RcppExport SEXP _tiledb_libtiledb_vfs_copy_dir(SEXP vfsSEXP, SEXP old_uriSEXP, SEXP new_uriSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::VFS> >::type vfs(vfsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type old_uri(old_uriSEXP);
+    Rcpp::traits::input_parameter< std::string >::type new_uri(new_uriSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_vfs_copy_dir(vfs, old_uri, new_uri));
+    return rcpp_result_gen;
+END_RCPP
+}
 // libtiledb_vfs_fh_free
 void libtiledb_vfs_fh_free(XPtr<vfs_fh_t> fhxp);
 RcppExport SEXP _tiledb_libtiledb_vfs_fh_free(SEXP fhxpSEXP) {
@@ -3976,6 +3989,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_vfs_dir_size", (DL_FUNC) &_tiledb_libtiledb_vfs_dir_size, 2},
     {"_tiledb_libtiledb_vfs_ls", (DL_FUNC) &_tiledb_libtiledb_vfs_ls, 2},
     {"_tiledb_libtiledb_vfs_copy_file", (DL_FUNC) &_tiledb_libtiledb_vfs_copy_file, 3},
+    {"_tiledb_libtiledb_vfs_copy_dir", (DL_FUNC) &_tiledb_libtiledb_vfs_copy_dir, 3},
     {"_tiledb_libtiledb_vfs_fh_free", (DL_FUNC) &_tiledb_libtiledb_vfs_fh_free, 1},
     {"_tiledb_libtiledb_vfs_ls_recursive", (DL_FUNC) &_tiledb_libtiledb_vfs_ls_recursive, 3},
     {"_tiledb_libtiledb_stats_enable", (DL_FUNC) &_tiledb_libtiledb_stats_enable, 0},
