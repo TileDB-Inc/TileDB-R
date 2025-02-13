@@ -341,6 +341,7 @@
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_vfs-class.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_vfs.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_vfs_close.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_vfs_copy_dir.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_vfs_copy_file.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_vfs_create_bucket.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_vfs_create_dir.html</loc></url>
