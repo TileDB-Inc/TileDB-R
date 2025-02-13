@@ -14,7 +14,7 @@ tiledb_vfs_copy_file(file, uri, vfs = tiledb_get_vfs())
 \item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }
 \value{
-The uri value of the removed file
+The uri value of the copied file
 }
 \description{
 Copy a file to VFS

@@ -11,38 +11,98 @@ expect_true(is(vfs, "tiledb_vfs"))
 ## create/remove/is/is_empty/empty bucket hard to test without credentials
 
 #test_that("tiledb_vfs create / test / remove directory", {
+
+# Create/copy/move/remove directory
 vfs <- tiledb_vfs()
-uri <- tempfile()
+base_path <- tempdir()
+dir_uri <- file.path(base_path, "dir_uri")
 
-expect_equal(tiledb_vfs_create_dir(uri), uri)
-## check directly
-expect_true(dir.exists(uri))
-## check via VFS
-expect_true(tiledb_vfs_is_dir(uri))
+## Create directory
+expect_equal(tiledb_vfs_create_dir(dir_uri), dir_uri)
+### check directly
+expect_true(dir.exists(dir_uri))
+### check via VFS
+expect_true(tiledb_vfs_is_dir(dir_uri))
 
-newuri <- tempfile()
-expect_equal(tiledb_vfs_move_dir(uri, newuri), newuri)
-expect_equal(tiledb_vfs_remove_dir(newuri), newuri)
-expect_false(dir.exists(newuri))
+## Check dir size
+expect_equal(tiledb_vfs_dir_size(dir_uri), 0)
+
+## Create a file in dir_uri to make sure move_dir and copy_dir work
+file_name <- "test.txt"
+file_uri <- file.path(dir_uri, file_name)
+expect_equal(tiledb_vfs_touch(file_uri), file_uri)
+
+# Windows doesn't support copying directories yet
+if (tolower(Sys.info()["sysname"]) != "windows") {
+    ## Copy directory
+    copy_dir_uri <- file.path(base_path, "copy_dir_uri")
+    expect_equal(tiledb_vfs_copy_dir(dir_uri, copy_dir_uri), copy_dir_uri)
+
+    ### Check both directories exist
+    expect_true(dir.exists(dir_uri))
+    expect_true(dir.exists(copy_dir_uri))
+
+    ### Check both files exist
+    copy_file_uri <- file.path(copy_dir_uri, file_name)
+    expect_true(file.exists(file_uri))
+    expect_true(file.exists(copy_file_uri))
+}
+
+## Move directory
+move_dir_uri <- file.path(base_path, "move_dir_uri")
+expect_equal(tiledb_vfs_move_dir(dir_uri, move_dir_uri), move_dir_uri)
+
+### Check only new directory exists
+expect_false(dir.exists(dir_uri))
+
+### Check only new file exists
+move_file_uri <- file.path(move_dir_uri, file_name)
+expect_false(file.exists(file_uri))
+expect_true(file.exists(move_file_uri))
+
+## Remove directory
+expect_equal(tiledb_vfs_remove_dir(move_dir_uri), move_dir_uri)
+
+### Check the moved file and directory no longer exist
+expect_false(dir.exists(move_dir_uri))
+expect_false(file.exists(move_file_uri))
+
 #})
+
+# Create/copy/move/remove file
 
 #test_that("tiledb_vfs create / test / remove file", {
 vfs <- tiledb_vfs()
-uri <- tempfile()
+file_uri <- tempfile()
 
-expect_equal(tiledb_vfs_touch(uri), uri)
-expect_true(tiledb_vfs_is_file(uri))
+## Touch file
+expect_equal(tiledb_vfs_touch(file_uri), file_uri)
+expect_true(file.exists(file_uri))
+expect_true(tiledb_vfs_is_file(file_uri))
 
-## check via VFS
-expect_true(tiledb_vfs_is_file(uri))
+### Check file exists via VFS
+expect_true(tiledb_vfs_is_file(file_uri))
 
-## check via VFS
-expect_equal(tiledb_vfs_file_size(uri), 0)
+### check file size via VFS
+expect_equal(tiledb_vfs_file_size(file_uri), 0)
 
-newuri <- tempfile()
-expect_equal(tiledb_vfs_move_file(uri, newuri), newuri)
-expect_equal(tiledb_vfs_remove_file(newuri), newuri)
-expect_false(file.exists(newuri))
+if (tolower(Sys.info()["sysname"]) != "windows") {
+    ## Copy file
+    copy_file_uri <- tempfile()
+    expect_equal(tiledb_vfs_copy_file(file_uri, copy_file_uri), copy_file_uri)
+    expect_true(file.exists(file_uri))
+    expect_true(file.exists(copy_file_uri))
+}
+
+## Move file
+move_file_uri <- tempfile()
+expect_equal(tiledb_vfs_move_file(file_uri, move_file_uri), move_file_uri)
+expect_false(file.exists(file_uri))
+expect_true(file.exists(move_file_uri))
+
+## Remove file
+expect_equal(tiledb_vfs_remove_file(move_file_uri), move_file_uri)
+expect_false(file.exists(move_file_uri))
 
 #})
 
@@ -61,6 +121,9 @@ if (requireNamespace("palmerpenguins", quietly=TRUE)) {
 
     uriser <- tempfile()
     expect_equal(tiledb_vfs_serialize(pp, uriser), uriser)
+
+    ## Check file has contents
+    expect_false(tiledb_vfs_file_size(uriser) == 0)
 
     expect_equal(pp, tiledb_vfs_unserialize(uriser))
 }
