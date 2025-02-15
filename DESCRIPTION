@@ -23,15 +23,30 @@ SystemRequirements: A C++17 compiler is required; on macOS compilation version 1
   build selected); on x86_64 and M1 platforms pre-built TileDB Embedded libraries
   are available at GitHub and are used if no TileDB installation is detected, and
   no other option to build or download was specified by the user.
+Depends:
+    R (>= 4.2)
 Imports:
     methods,
-    Rcpp (>= 1.0.8),
-    nanotime,
-    spdl,
     nanoarrow,
+    nanotime,
+    Rcpp (>= 1.0.8),
+    spdl,
     tools
-LinkingTo: Rcpp, RcppInt64, nanoarrow
-Suggests: tinytest, simplermarkdown, curl, bit64, Matrix, palmerpenguins, nycflights13, data.table, tibble, arrow
+LinkingTo:
+    nanoarrow,
+    Rcpp,
+    RcppInt64
+Suggests:
+    arrow,
+    bit64,
+    curl,
+    data.table,
+    Matrix,
+    nycflights13,
+    palmerpenguins,
+    simplermarkdown,
+    tibble,
+    tinytest
 VignetteBuilder: simplermarkdown
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

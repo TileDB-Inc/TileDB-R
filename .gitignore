@@ -54,3 +54,5 @@ vignettes/md/
 # vim
 .sw?
 .*.sw?
+inst/tiledb/
+inst/lib/

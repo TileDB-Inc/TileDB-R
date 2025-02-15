@@ -159,12 +159,20 @@ tiledb_version <- function(compact = FALSE) {
         EXPR = .Platform$OS.type,
         # Adapted from Makevars.win, which includes libdir/include/tiledb in
         # addition to libdir/include and pkgdir/include
-        windows = sprintf(
-          "-I%s/include -I%s/include -I%s/include/tiledb",
-          shQuote(pkgdir, type = "cmd"),
-          shQuote(lib, type = "cmd"),
-          shQuote(lib, type = "cmd")
-        ),
+        windows = {
+          include <- file.path(
+            c(pkgdir, lib, lib),
+            c("include", "include", "include/tiledb")
+          )
+          # Windows likes spaces, but Make does not
+          if (any(idx <- grepl("[[:space:]]", include))) {
+            include[idx] <- shQuote(include[idx], type = "cmd")
+          }
+          paste(
+            paste0("-I", include, collapse = " "),
+            "-DTILEDB_STATIC_DEFINE -DTILEDB_SILENT_BUILD"
+          )
+        },
         sprintf("-I%s/include -I%s/include", pkgdir, lib)
       ),
       PKG_CXX_LIBS = switch(
@@ -173,20 +181,96 @@ tiledb_version <- function(compact = FALSE) {
         # Unix-alikes; R 4.2 and higher require ucrt
         windows = {
           arch <- .Platform$r_arch
-          libs <- as.vector(vapply(
-            c(pkgdir, lib),
-            FUN = \(x) c(
-              sprintf("%s/lib/%s", shQuote(x, type = "cmd"), arch),
-              ifelse(
-                test = getRversion() > '4.2.0',
-                yes = sprintf("%s/lib/%s-ucrt", shQuote(x, type = "cmd"), arch),
-                no = ""
-              )
+          libs <- c(
+            connection = sprintf("%s/lib/%s", pkgdir, arch),
+            libtiledb = sprintf("%s/lib/%s-ucrt", lib, arch)
+          )
+          libs <- Filter(dir.exists, libs)
+          # Windows requires additional linking flags, so we need flags for
+          # rwinlib-tiledb DLLs and Windows system DLLs; these have to be in
+          # a specific order so filter the rwinlib-tiledb DLLs to the ones
+          # we're using and interleave them with the Windows system DLLs
+          winlibs <- list(
+            c("Secur32", "Crypt32"),
+            "NCrypt",
+            c(
+              "BCrypt",
+              "Kernel32",
+              "Rpcrt4",
+              "Wininet",
+              "Winhttp",
+              "Ws2_32",
+              "Shlwapi",
+              "Userenv",
+              "version",
+              "ws2_32"
+            )
+          )
+          tiledblibs <- list(
+            c(
+              "tiledbstatic",
+              "bz2",
+              "zstd",
+              "lz4",
+              "z",
+              "spdlog",
+              "fmt",
+              "aws-cpp-sdk-identity-management",
+              "aws-cpp-sdk-cognito-identity",
+              "aws-cpp-sdk-sts",
+              "aws-cpp-sdk-s3",
+              "aws-cpp-sdk-core",
+              "libmagic",
+              "webp",
+              "pcre2-posix",
+              "pcre2-8",
+              "aws-crt-cpp",
+              "aws-c-mqtt",
+              "aws-c-event-stream",
+              "aws-c-s3",
+              "aws-c-auth",
+              "aws-c-http",
+              "aws-c-io"
             ),
-            FUN.VALUE = character(2L),
-            USE.NAMES = FALSE
-          ))
-          paste('-ltiledb', paste0('-L', Filter(dir.exists, libs), collapse = ' '))
+            c(
+              "aws-c-compression",
+              "aws-c-cal"
+            ),
+            c(
+              "aws-c-sdkutils",
+              "aws-checksums",
+              "aws-c-common"
+            ),
+            "sharpyuv"
+          )
+          flags <- if (!is.null(libs["libtiledb"])) {
+            dlls <- sub(
+              pattern = "^lib",
+              replacement = "",
+              tools::file_path_sans_ext(list.files(libs["libtiledb"]))
+            )
+            for (i in seq_along(tiledblibs)) {
+              tiledblibs[[i]] <- intersect(tiledblibs[[i]], dlls)
+              if (i > length(winlibs)) {
+                next
+              }
+              tiledblibs[[i]] <- if (length(tiledblibs[[i]])) {
+                c(tiledblibs[[i]], winlibs[[i]])
+              } else {
+                winlibs[[i]]
+              }
+            }
+            paste0("-l", unlist(tiledblibs), collapse = " ")
+          } else {
+            ""
+          }
+          # Windows likes spaces, but Make does not
+          # This has to come after the flags bit as R does not like quotes
+          # in directory names
+          if (any(idx <- grepl("[[:space:]]", libs))) {
+            libs[idx] <- shQuote(libs[idx], type = "cmd")
+          }
+          paste("-ltiledb", paste0("-L", libs, collapse = " "), flags)
         },
         sprintf("-ltiledb -L%s/lib -L%s/lib", pkgdir, lib)
       )
