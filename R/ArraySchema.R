@@ -594,7 +594,7 @@ tiledb_schema_get_names <- function(sch) {
   attrs <- tiledb::attrs(sch)
   attrnames <- unname(sapply(attrs, function(a) libtiledb_attribute_get_name(a@ptr)))
 
-  allnames <- c(dimnames, attrnames)
+  c(dimnames, attrnames)
 }
 
 ##' Get all Dimension and Attribute Types
@@ -612,7 +612,7 @@ tiledb_schema_get_types <- function(sch) {
   attrs <- tiledb::attrs(sch)
   attrtypes <- unname(sapply(attrs, function(a) libtiledb_attribute_get_type(a@ptr)))
 
-  alltypes <- c(dimtypes, attrtypes)
+  c(dimtypes, attrtypes)
 }
 
 ##' Get Dimension or Attribute Status
