@@ -123,6 +123,8 @@
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_is_heterogeneous.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_is_homogeneous.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_is_open.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_is_open_for_reading.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_is_open_for_writing.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_open.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_open_at.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/dev/reference/tiledb_array_schema-class.html</loc></url>
