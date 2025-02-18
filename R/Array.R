@@ -144,7 +144,6 @@ tiledb_array_is_open <- function(arr) {
 ##' @export
 tiledb_array_is_open_for_reading <- function(arr) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
-  libtiledb_array_is_open(arr@ptr) && tiledb:::libtiledb_array_query_type(arr@ptr) == "READ"
   return(libtiledb_array_is_open_for_reading(arr@ptr))
 }
 
@@ -156,7 +155,7 @@ tiledb_array_is_open_for_reading <- function(arr) {
 ##' @export
 tiledb_array_is_open_for_writing <- function(arr) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))
-  return(libtiledb_array_is_open_for_reading(arr@ptr))
+  return(libtiledb_array_is_open_for_writing(arr@ptr))
 }
 
 ##' Check for Homogeneous Domain
