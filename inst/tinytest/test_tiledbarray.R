@@ -1128,8 +1128,8 @@ schema <- tiledb_array_schema(tiledb_domain(dims=c(tiledb_dim("d1", c(1L, N), ti
                               attrs=tiledb_attr("x", type="FLOAT64"))
 tiledb_array_create(uri, schema)
 obj <- tiledb_array(uri, attrs="x", query_type="WRITE")
-expect_false(tiledb_array_is_open_for_reading(arr))
-expect_true(tiledb_array_is_open_for_writing(arr))
+expect_false(tiledb_array_is_open_for_reading(obj))
+expect_true(tiledb_array_is_open_for_writing(obj))
 M <- matrix(runif(N*K), N, K)
 obj[] <- M                              # prior to #246 this write had a write data type
 chk <- tiledb_array(uri, return_as="matrix")
