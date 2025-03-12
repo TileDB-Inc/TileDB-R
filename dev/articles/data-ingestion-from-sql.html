@@ -157,7 +157,7 @@ settings the SQL query could easily bucket by symbols, or date range, or
 <span>    <span class="va">sql</span> <span class="op">&lt;-</span> <span class="st">"select * from stockprices order by symbol, date;"</span></span>
 <span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">dbGetQuery</span><span class="op">(</span><span class="va">con</span>, <span class="va">sql</span><span class="op">)</span></span>
 <span>    <span class="fu">dbDisconnect</span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/setDT.html" class="external-link">setDT</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>                          <span class="co"># create data.table</span></span>
+<span>    <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/setDT.html" class="external-link">setDT</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>                          <span class="co"># create data.table</span></span>
 <span>    <span class="va">res</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
