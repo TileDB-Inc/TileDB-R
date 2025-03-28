@@ -135,7 +135,7 @@ AC_ARG_WITH([tiledb],
 #echo "with_tiledb: ${with_tiledb}"
 
 ## Sanity check
-if test ! -z "${with_tiledb}" -a x"${enable_building}" = x"yes"; then
+if test ! -z "${with_tiledb}" && test x"${enable_building}" = x"yes"; then
     AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling building TileDB.])
 fi
 
@@ -148,7 +148,7 @@ AC_ARG_WITH([download],
             [])
 
 ## Sanity checks
-if test ! -z "${with_tiledb}" -a x"${with_download}" = x"yes"; then
+if test ! -z "${with_tiledb}" && test x"${with_download}" = x"yes"; then
     AC_MSG_ERROR([Conflicting choice of preinstalled TileDB and enabling download of TileDB library.])
 fi
 ## -- We allow this now as --with-download implies enable_building
@@ -254,7 +254,7 @@ if test x"${have_tiledb}" = x"no"; then
     ##   - but also check we're on x86_64 before downloading
     else
 
-        if test x"${machine}" = x"x86_64" && test x"${uname}" = x"Linux" -o x"${uname}" = x"Darwin"; then
+        if test x"${machine}" = x"x86_64" && (test x"${uname}" = x"Linux" || test x"${uname}" = x"Darwin"); then
             AC_MSG_RESULT([downloading x86_64 TileDB library...])
 
             osrel=`tools/getOsRelease.sh`
