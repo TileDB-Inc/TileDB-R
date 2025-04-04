@@ -191,7 +191,7 @@ XPtr<query_buf_t> querybuf_from_shmem(std::string path, std::string dtype) {
                 << " vecsize:" << buf->size * buf->ncells;
 
   std::string validitypath =
-      std::regex_replace(path, std::regex("/data/"), "/validity/");
+      std::regex_replace(path, std::regex(std::string("/data/")), "/validity/");
   if (std::filesystem::is_regular_file(validitypath)) {
     if (debug)
       Rcpp::Rcout << " seeing " << validitypath;
@@ -216,8 +216,8 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
   // allocate buffer, then set up buffer
   XPtr<vlc_buf_t> buf = make_xptr<vlc_buf_t>(new vlc_buf_t);
   read_string(datapath, buf->str);
-  std::string offsetspath =
-      std::regex_replace(datapath, std::regex("/data/"), "/offsets/");
+  std::string offsetspath = std::regex_replace(
+      datapath, std::regex(std::string("/data/")), "/offsets/");
   read_buffer<uint64_t>(offsetspath, buf->offsets);
   buf->rows = buf->offsets.size();
   buf->cols = 2;         // value not used
@@ -228,8 +228,8 @@ XPtr<vlc_buf_t> vlcbuf_from_shmem(std::string datapath, std::string dtype) {
     Rcpp::Rcout << datapath << " " << offsetspath << " data:" << buf->str.size()
                 << " offsets:" << buf->offsets.size();
 
-  std::string validitypath =
-      std::regex_replace(datapath, std::regex("/data/"), "/validity/");
+  std::string validitypath = std::regex_replace(
+      datapath, std::regex(std::string("/data/")), "/validity/");
   if (std::filesystem::is_regular_file(validitypath)) {
     if (debug)
       Rcpp::Rcout << " validity: " << validitypath;
