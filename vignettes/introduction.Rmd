@@ -3,13 +3,12 @@ css: water.css
 title: First Steps with TileDB
 ---
 
-```{=html}
 <!--
 %\VignetteIndexEntry{Introduction to TileDB}
 %\VignetteEngine{simplermarkdown::mdweave_to_html}
 %\VignetteEncoding{UTF-8}
 -->
-```
+
 This document introduces TileDB via several simple examples. A
 corresponding document with more complete [API
 documentation](documentation.html) is also available.
@@ -27,7 +26,7 @@ Documentation for the TileDB R package is available via the `help()`
 function from within R as well as via the [package
 documentation](https://tiledb-inc.github.io/TileDB-R/) and an
 [introductory
-notebook](https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/notebooks/).
+notebook](https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/notebooks).
 Documentation about TileDB itself is [also
 available](https://docs.tiledb.com/main/).
 
@@ -146,12 +145,12 @@ array.
 >
 ```
 
-This also illustrated the effect of setting `as.data.frame=TRUE` when
-opening the array.
+This also illustrated the effect of setting `return_as = "data.frame"`
+when opening the array.
 
-This scheme can be generalized to variable cells, or cells where N>1, as
-we can expand each (atomistic) value over corresponding row and column
-indices.
+This scheme can be generalized to variable cells, or cells where N\>1,
+as we can expand each (atomistic) value over corresponding row and
+column indices.
 
 The column types correspond to the attribute typed in the array schema,
 subject to the constraint mentioned above on R types. (The char comes in
@@ -288,7 +287,7 @@ The TileDB R package is documented via R help functions (*e.g.*
 `help("tiledb_array")` shows information for the `tiledb_array()`
 function) as well as via a [website regrouping all
 documentation](https://tiledb-inc.github.io/TileDB-R/). Extended [API
-documentation](https://tiledb-inc.github.io/TileDB-R/documentation.html)
+documentation](https://tiledb-inc.github.io/TileDB-R/articles/documentation.html)
 is available, as is a
 [examples/](https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/examples)
 directory.
