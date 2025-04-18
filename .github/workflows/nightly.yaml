@@ -24,7 +24,7 @@ jobs:
         run: R CMD build --no-build-vignettes --no-manual .
       - name: Install Package
         # running an install step gives better logging on standard out than R CMD check which tucks this away
-        run: R CMD INSTALL --configure-args="--with-download=https://github.com/TileDB-Inc/TileDB/archive/refs/heads/main.zip" $(ls -1tr *.tar.gz | tail -1)
+        run: R CMD INSTALL --use-C17 --configure-args="--with-download=https://github.com/TileDB-Inc/TileDB/archive/refs/heads/main.zip" $(ls -1tr *.tar.gz | tail -1)
       - name: Run Tests
         # given that the package is installed and uses tinytest, we can easily run its tests
         run: Rscript -e 'tinytest::test_package("tiledb")'
