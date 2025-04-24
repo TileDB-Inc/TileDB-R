@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.31.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.31.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
       <h1>First Steps with TileDB</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/main/vignettes/introduction.Rmd" class="external-link"><code>vignettes/introduction.Rmd</code></a></small>
       <div class="d-none name"><code>introduction.Rmd</code></div>
     </div>
 
@@ -98,7 +98,7 @@ package</a>, on Linux and macOS via the <a href="https://anaconda.org/conda-forg
 from source.</p>
 <p>Documentation for the TileDB R package is available via the
 <code><a href="https://rdrr.io/r/utils/help.html" class="external-link">help()</a></code> function from within R as well as via the <a href="https://tiledb-inc.github.io/TileDB-R/">package documentation</a>
-and an <a href="https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/notebooks/" class="external-link">introductory
+and an <a href="https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/notebooks" class="external-link">introductory
 notebook</a>. Documentation about TileDB itself is <a href="https://docs.tiledb.com/main/" class="external-link">also available</a>.</p>
 <p>Several “quickstart” examples that are discussed on the website are
 available in the <a href="https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/examples" class="external-link">examples</a>
@@ -197,7 +197,7 @@ the array.</p>
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="dv">12</span> <span class="fl">122.5</span>     P</span>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="sc">&gt;</span></span></code></pre></div>
 <p>This also illustrated the effect of setting
-<code>as.data.frame=TRUE</code> when opening the array.</p>
+<code>return_as = "data.frame"</code> when opening the array.</p>
 <p>This scheme can be generalized to variable cells, or cells where
 N&gt;1, as we can expand each (atomistic) value over corresponding row
 and column indices.</p>
@@ -227,7 +227,7 @@ at the R side:</p>
 </h3>
 <p><em>Simple Examples</em></p>
 <p>Basic reading returns the coordinates and any attributes. The
-following examples use the array created by the <a href="https://github.com/TileDB-Inc/TileDB/blob/dev/examples/cpp_api/quickstart_sparse.cc" class="external-link">quickstart_sparse</a>
+following examples use the array created by the <a href="https://github.com/TileDB-Inc/TileDB/blob/main/examples/cpp_api/quickstart_sparse.cc" class="external-link">quickstart_sparse</a>
 example.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="sc">&gt;</span> A <span class="ot">&lt;-</span> <span class="fu">tiledb_array</span>(<span class="at">uri =</span> uri, <span class="at">is.sparse =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="sc">&gt;</span> A[]</span>
@@ -310,7 +310,7 @@ as well as character dimension.</p>
 <p>The TileDB R package is documented via R help functions
 (<em>e.g.</em> <code><a href="../reference/tiledb_array.html">help("tiledb_array")</a></code> shows information for
 the <code><a href="../reference/tiledb_array.html">tiledb_array()</a></code> function) as well as via a <a href="https://tiledb-inc.github.io/TileDB-R/">website regrouping all
-documentation</a>. Extended <a href="https://tiledb-inc.github.io/TileDB-R/documentation.html">API
+documentation</a>. Extended <a href="https://tiledb-inc.github.io/TileDB-R/articles/documentation.html">API
 documentation</a> is available, as is a <a href="https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/examples" class="external-link">examples/</a>
 directory.</p>
 <p>TileDB itself has extensive <a href="https://docs.tiledb.com/developer/installation" class="external-link">installation</a>,
@@ -324,7 +324,7 @@ documentation</a> as well as a <a href="https://forum.tiledb.com/" class="extern
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a>, Dirk Eddelbuettel, Isaiah Norton.</p>
+  <p>Developed by <a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a>, Isaiah Norton.</p>
 </div>
 
 <div class="pkgdown-footer-right">

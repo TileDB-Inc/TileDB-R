@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.31.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.31.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,9 +43,19 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.31.1" id="tiledb-0311">tiledb 0.31.1<a class="anchor" aria-label="anchor" href="#tiledb-0311"></a></h2>
+<ul><li>Allow <code><a href="../reference/parse_query_condition.html">parse_query_condition()</a></code> to work on dimensions when an array is passed</li>
+<li>Add <code><a href="../reference/tiledb_vfs_copy_dir.html">tiledb_vfs_copy_dir()</a></code>, a wrapper for the <code>vfs_copy_dir()</code> function</li>
+<li>Print values for <code><a href="../reference/tiledb_schema_get_types.html">tiledb_schema_get_types()</a></code> and <code><a href="../reference/tiledb_schema_get_names.html">tiledb_schema_get_names()</a></code> <a href="https://github.com/TileDB-Inc/TileDB-R/issues/805" class="external-link">#805</a>
+</li>
+<li>Add <code>tiledb_array_is_open_for_reading()/writing()</code> <a href="https://github.com/TileDB-Inc/TileDB-R/issues/806" class="external-link">#806</a>
+</li>
+<li>Fix static-linking checks for R &gt;= 4.5</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.31.0" id="tiledb-0310">tiledb 0.31.0<a class="anchor" aria-label="anchor" href="#tiledb-0310"></a></h2>
 <ul><li>Update docs with correct S4 methods</li>
@@ -53,7 +63,7 @@
 <li>Update unit tests to expect dense current domain</li>
 <li>Support parentheses in query conditions</li>
 <li>memory alloc: Accomodate zero buffer size estimate v2</li>
-<li>Apply <code><a href="https://styler.r-lib.org/reference/style_pkg.html" class="external-link">styler::style_pkg()</a></code>
+<li>Apply <code>styler::style_pkg()</code>
 </li>
 <li>Expose include/linking flags for re-using <code>libtiledb</code> in downstream packages</li>
 <li>Use TileDB Core 2.27.0</li>
@@ -1065,7 +1075,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a>, Dirk Eddelbuettel, Isaiah Norton.</p>
+  <p>Developed by <a href="https://tiledb.com" class="external-link"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" height="24"></a>, Isaiah Norton.</p>
 </div>
 
 <div class="pkgdown-footer-right">
