@@ -4477,6 +4477,16 @@ libtiledb_query_condition_combine(XPtr<tiledb::QueryCondition> lhs,
 }
 
 // [[Rcpp::export]]
+XPtr<tiledb::QueryCondition>
+libtiledb_query_condition_negate(XPtr<tiledb::QueryCondition> qc) {
+  check_xptr_tag<tiledb::QueryCondition>(qc);
+  tiledb::QueryCondition res = qc->negate();
+  auto query_cond =
+      make_xptr<tiledb::QueryCondition>(new tiledb::QueryCondition(res));
+  return query_cond;
+}
+
+// [[Rcpp::export]]
 void libtiledb_query_condition_set_use_enumeration(
     XPtr<tiledb::Context> ctx, XPtr<tiledb::QueryCondition> cond,
     bool use_enumeration) {

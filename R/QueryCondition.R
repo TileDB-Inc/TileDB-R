@@ -86,12 +86,11 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
 
 #' Combine two 'tiledb_query_condition' objects
 #'
-#' Combines two query condition object using a relatiional operator. Support for operator
-#' 'AND' is generally available, the 'OR' operator is available if TileDB 2.10 or newer is
-#' used.
+#' Combines two query condition objects using a relational operator. Support for operator
+#' 'AND' is generally available. The 'OR' operator is available in TileDB 2.10 and later.
 #' @param lhs A 'tiledb_query_condition' object on the left-hand side of the relation
 #' @param rhs A 'tiledb_query_condition' object on the left-hand side of the relation
-#' @param op A character value with then relation, this must be one of 'AND', 'OR' or 'NOT'.
+#' @param op A character value with then relation, this must be one of 'AND' or 'OR'.
 #' @return The combined 'tiledb_query_condition' object
 #' @export
 tiledb_query_condition_combine <- function(lhs, rhs, op) {
@@ -100,11 +99,27 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
     "Argument 'rhs' must be a query condition object" = is(rhs, "tiledb_query_condition"),
     "Argument 'op' must be a character" = is.character(op)
   )
-  op <- match.arg(op, c("AND", "OR", "NOT"))
+  op <- match.arg(op, c("AND", "OR"))
   qc <- tiledb_query_condition()
   qc@ptr <- libtiledb_query_condition_combine(lhs@ptr, rhs@ptr, op)
   qc@init <- TRUE
   invisible(qc)
+}
+
+#' Negate a 'tiledb_query_condition' object
+#'
+#' Takes a query condition object and negates it, similar to the '!' operator.
+#' @param qc A 'tiledb_query_condition' object to negate
+#' @return The negated 'tiledb_query_condition' object
+#' @export
+tiledb_query_condition_negate <- function(qc) {
+  stopifnot(
+    "Argument 'qc' must be a query condition object" = is(qc, "tiledb_query_condition")
+  )
+  res <- tiledb_query_condition()
+  res@ptr <- libtiledb_query_condition_negate(qc@ptr)
+  res@init <- TRUE
+  invisible(res)
 }
 
 #' Create a 'tiledb_query_condition' object from an expression
@@ -150,7 +165,8 @@ parse_query_condition <- function(expr, ta = NULL, debug = FALSE, strict = TRUE,
   if (.hasArray && length(ta@sil) == 0) ta@sil <- .fill_schema_info_list(ta@uri)
   `%!in%` <- Negate(`%in%`)
   .isComparisonOperator <- function(x) tolower(as.character(x)) %in% c(">", ">=", "<", "<=", "==", "!=", "%in%", "%nin%")
-  .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "!", "&", "|")
+  .isBooleanOperator <- function(x) as.character(x) %in% c("&&", "||", "&", "|")
+  .isNegationOperator <- function(x) as.character(x) == "!"
   .isAscii <- function(x) grepl("^[[:alnum:]_]+$", x)
   .isInteger <- function(x) grepl("^[[:digit:]]+$", as.character(x))
   .isDouble <- function(x) grepl("^[[:digit:]\\.]+$", as.character(x)) && length(grepRaw(".", as.character(x), fixed = TRUE, all = TRUE)) == 1
@@ -224,6 +240,12 @@ parse_query_condition <- function(expr, ta = NULL, debug = FALSE, strict = TRUE,
         .makeExpr(x[[3]]),
         .mapBoolToCharacter(as.character(x[1]))
       )
+    } else if (.isNegationOperator(x[1])) {
+      if (debug) {
+        cat("   ![", as.character(x[2]), "]")
+      }
+      .makeExpr(x[[2]], debug = debug)
+      tiledb_query_condition_negate(.makeExpr(x[[2]]))
     } else if (.isInOperator(x[1])) {
       if (debug) {
         cat("in: [", as.character(x[2]), "]",
