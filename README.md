@@ -54,7 +54,7 @@ of TileDB, but should also build against the newest development version.
 
 ## Quick Links
 
-- [TileDB Installation](https://docs.tiledb.com/main/how-to/installation/quick-install)
+- [TileDB Installation](https://cloud.tiledb.com/academy/structure/arrays/quickstart)
 - [TileDB R Package Docs](https://tiledb-inc.github.io/TileDB-R/)
 - [TileDB Support Forum](https://forum.tiledb.com/)
 
