@@ -1,9 +1,10 @@
-# Unreleased
+# tiledb 0.31.1
 
 * Allow `parse_query_condition()` to work on dimensions when an array is passed
 * Add `tiledb_vfs_copy_dir()`, a wrapper for the `vfs_copy_dir()` function
 * Print values for `tiledb_schema_get_types()` and `tiledb_schema_get_names()` [#805](https://github.com/TileDB-Inc/TileDB-R/issues/805)
 * Add `tiledb_array_is_open_for_reading()/writing()` [#806](https://github.com/TileDB-Inc/TileDB-R/issues/806)
+* Fix static-linking checks for R >= 4.5
 * Depend on TileDB Embedded 2.28.0-rc0 [#818](https://github.com/TileDB-Inc/TileDB-R/issues/818)
 
 # tiledb 0.31.0

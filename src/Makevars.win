@@ -18,7 +18,7 @@ PKG_LIBS = \
 
 LIB_CON = ../inst/lib$(R_ARCH)/libconnection.dll
 
-all: winlibs $(OBJECTS) $(SHLIB) $(LIB_CON)
+all: winlibs $(OBJECTS) $(SHLIB) $(LIB_CON) purify
 
 $(LIB_CON): connection/connection.o
 	mkdir -p $(dir $(LIB_CON))
@@ -30,4 +30,7 @@ winlibs:
 clean:
 	rm -f $(SHLIB) $(OBJECTS) $(LIB_CON) connection/connection.o
 
-.PHONY: all clean
+purify: $(OBJECTS) $(SHLIB) $(LIB_CON)
+	rm -rf $(RWINLIB)/lib/ || true
+
+.PHONY: all clean purify

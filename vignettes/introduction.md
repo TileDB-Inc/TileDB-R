@@ -261,7 +261,7 @@ and [overall documentation](https://docs.tiledb.com/developer/) as well as a [su
 
 [cran_tiledb]: https://cran.r-project.org/package=tiledb
 [tiledb-r_docs]: https://tiledb-inc.github.io/TileDB-R/
-[api_documentation]: https://tiledb-inc.github.io/TileDB-R/documentation.html
+[api_documentation]: https://tiledb-inc.github.io/TileDB-R/articles/documentation.html
 [tiledb_examples]: https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/examples
 [tiledb_notebook]: https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/notebooks
 
