@@ -75,6 +75,27 @@ expect_equal(nrow(ndf), 18)
 tiledb_array_close(arr)
 rm(qry)
 
+## check the negative of the previous condition
+qry <- tiledb_query(arr, "READ")
+rows <- integer(20)
+cola <- integer(20)
+colb <- numeric(20)
+tiledb_query_set_buffer(qry, "__tiledb_rows", rows)
+tiledb_query_set_buffer(qry, "a", cola)
+tiledb_query_set_buffer(qry, "b", colb)
+lhs <- tiledb_query_condition_init("a", 2L, "INT32", "NE")
+rhs <- tiledb_query_condition_init("a", 12L, "INT32", "NE")
+qc <- tiledb_query_condition_combine(lhs, rhs, "AND")
+qc_inv <- tiledb_query_condition_negate(qc)
+qry <- tiledb_query_set_condition(qry, qc_inv)
+tiledb_query_submit(qry)
+tiledb_query_finalize(qry)
+n <- tiledb_query_result_buffer_elements(qry, "a")
+ndf <- data.frame(rows=rows,a=cola,b=colb)[1:n,]
+expect_equal(nrow(ndf), 2)
+tiledb_array_close(arr)
+rm(qry)
+
 ## check a >=5 && b <= 115
 qry <- tiledb_query(arr, "READ")
 rows <- integer(20)

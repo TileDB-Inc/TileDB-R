@@ -1,3 +1,7 @@
+# tiledb 0.31.2
+
+* Add `tiledb_query_condition_negate()` function to act as a `NOT` operator for query conditions [#819](https://github.com/TileDB-Inc/TileDB-R/pull/819)
+
 # tiledb 0.31.1
 
 * Allow `parse_query_condition()` to work on dimensions when an array is passed

@@ -825,6 +825,10 @@ libtiledb_query_condition_combine <- function(lhs, rhs, str) {
     .Call(`_tiledb_libtiledb_query_condition_combine`, lhs, rhs, str)
 }
 
+libtiledb_query_condition_negate <- function(qc) {
+    .Call(`_tiledb_libtiledb_query_condition_negate`, qc)
+}
+
 libtiledb_query_condition_set_use_enumeration <- function(ctx, cond, use_enumeration) {
     invisible(.Call(`_tiledb_libtiledb_query_condition_set_use_enumeration`, ctx, cond, use_enumeration))
 }

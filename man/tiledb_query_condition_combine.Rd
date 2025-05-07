@@ -11,13 +11,12 @@ tiledb_query_condition_combine(lhs, rhs, op)
 
 \item{rhs}{A 'tiledb_query_condition' object on the left-hand side of the relation}
 
-\item{op}{A character value with then relation, this must be one of 'AND', 'OR' or 'NOT'.}
+\item{op}{A character value with then relation, this must be one of 'AND' or 'OR'.}
 }
 \value{
 The combined 'tiledb_query_condition' object
 }
 \description{
-Combines two query condition object using a relatiional operator. Support for operator
-'AND' is generally available, the 'OR' operator is available if TileDB 2.10 or newer is
-used.
+Combines two query condition objects using a relational operator. Support for operator
+'AND' is generally available. The 'OR' operator is available in TileDB 2.10 and later.
 }
