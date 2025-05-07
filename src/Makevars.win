@@ -13,7 +13,7 @@ PKG_LIBS = \
 	-laws-c-compression -laws-c-cal \
 	-lNCrypt \
 	-laws-c-sdkutils -laws-checksums -laws-c-common \
-	-lBCrypt -lKernel32 -lRpcrt4 -lWininet -lWinhttp -lWs2_32 -lShlwapi -lUserenv -lversion -lws2_32 \
+	-lBCrypt -lKernel32 -lRpcrt4 -lWininet -lWinhttp -lWs2_32 -lShlwapi -lUserenv -lversion -lOle32 -luuid \
 	-lsharpyuv
 
 LIB_CON = ../inst/lib$(R_ARCH)/libconnection.dll
