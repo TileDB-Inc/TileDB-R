@@ -6,6 +6,7 @@
 * Add `tiledb_array_is_open_for_reading()/writing()` [#806](https://github.com/TileDB-Inc/TileDB-R/issues/806)
 * Fix static-linking checks for R >= 4.5
 * Depend on TileDB Embedded 2.28.0-rc0 [#818](https://github.com/TileDB-Inc/TileDB-R/issues/818)
+* Depend on TileDB Embedded 2.28.0 [#820](https://github.com/TileDB-Inc/TileDB-R/issues/820)
 
 # tiledb 0.31.0
 
