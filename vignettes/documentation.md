@@ -1086,7 +1086,7 @@ print(res)
 ```r
 tiledb_object_mv("/tmp/my_group", "/tmp/my_group_2")
 
-tiledb_object_remove(ctx, "/tmp/my_group_2/dense_array")
+tiledb_object_rm("/tmp/my_group_2/dense_array")
 ```
 
 
