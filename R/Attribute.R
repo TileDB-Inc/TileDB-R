@@ -47,7 +47,7 @@ tiledb_attr.from_ptr <- function(ptr) {
 #' values
 #' @param enumeration (default NULL) A character vector of dictionary values
 #' @param ctx tiledb_ctx object (optional)
-#' @return `tiledb_dim` object
+#' @return A `tiledb_attr` object
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -85,7 +85,7 @@ tiledb_attr <- function(
   if (!is.null(enumeration)) {
     attr <- tiledb_attribute_set_enumeration_name(attr, name, ctx)
   }
-  invisible(attr)
+  return(attr)
 }
 
 #' Raw display of an attribute object
@@ -231,8 +231,8 @@ setGeneric("cell_val_num", function(object) standardGeneric("cell_val_num"))
 #' @rdname tiledb_attribute_get_cell_val_num
 #' @export
 setMethod(
-  "cell_val_num", 
-  signature(object = "tiledb_attr"), 
+  "cell_val_num",
+  signature(object = "tiledb_attr"),
   definition = function(object) {
     libtiledb_attribute_get_cell_val_num(object@ptr)
   }
@@ -262,8 +262,8 @@ setGeneric("cell_val_num<-", function(x, value) standardGeneric("cell_val_num<-"
 #' @rdname tiledb_attribute_set_cell_val_num
 #' @export
 setReplaceMethod(
-  "cell_val_num", 
-  signature("tiledb_attr"), 
+  "cell_val_num",
+  signature("tiledb_attr"),
   function(x, value) {
     libtiledb_attribute_set_cell_val_num(x@ptr, value)
     x
@@ -384,7 +384,7 @@ tiledb_attribute_get_nullable <- function(attr) {
 #' @return A logical value indicating if the attribute has an enumeration
 #' @export
 tiledb_attribute_has_enumeration <- function(
-  attr, 
+  attr,
   ctx = tiledb_get_context()
 ) {
   stopifnot("The 'attr' argument must be an attribute" = is(attr, "tiledb_attr"))
@@ -399,8 +399,8 @@ tiledb_attribute_has_enumeration <- function(
 #' @return A character vector with the enumeration (of length zero if none)
 #' @export
 tiledb_attribute_get_enumeration <- function(
-  attr, 
-  arr, 
+  attr,
+  arr,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -414,8 +414,8 @@ tiledb_attribute_get_enumeration <- function(
 #' @param arrptr A Tiledb Array object pointer
 #' @export
 tiledb_attribute_get_enumeration_ptr <- function(
-  attr, 
-  arrptr, 
+  attr,
+  arrptr,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -433,8 +433,8 @@ tiledb_attribute_get_enumeration_ptr <- function(
 #' @return The modified TileDB Attribute object
 #' @export
 tiledb_attribute_set_enumeration_name <- function(
-  attr, 
-  enum_name, 
+  attr,
+  enum_name,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -453,8 +453,8 @@ tiledb_attribute_set_enumeration_name <- function(
 #' @return A character vector with the enumeration (of length zero if none)
 #' @export
 tiledb_attribute_is_ordered_enumeration_ptr <- function(
-  attr, 
-  arrptr, 
+  attr,
+  arrptr,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -467,8 +467,8 @@ tiledb_attribute_is_ordered_enumeration_ptr <- function(
 # internal function to access enumeration data type
 #' @noRd
 tiledb_attribute_get_enumeration_type <- function(
-  attr, 
-  arr, 
+  attr,
+  arr,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -481,8 +481,8 @@ tiledb_attribute_get_enumeration_type <- function(
 # internal function to access enumeration data type
 #' @noRd
 tiledb_attribute_get_enumeration_type_ptr <- function(
-  attr, 
-  arrptr, 
+  attr,
+  arrptr,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
@@ -495,8 +495,8 @@ tiledb_attribute_get_enumeration_type_ptr <- function(
 # internal function to get (non-string) enumeration vector
 #' @noRd
 tiledb_attribute_get_enumeration_vector_ptr <- function(
-  attr, 
-  arrptr, 
+  attr,
+  arrptr,
   ctx = tiledb_get_context()
 ) {
   stopifnot(
