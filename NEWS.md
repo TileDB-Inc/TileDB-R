@@ -1,6 +1,11 @@
+# tiledb (development version)
+
+## Improvements
+
+* `tiledb_attr()` now prints the attribute object as expected and documentation has been corrected (@cgiachalis in [#823](https://github.com/TileDB-Inc/TileDB-R/pull/823))
+
 # tiledb 0.32.0
 
-* Depend on TileDB Embedded 2.28.0-rc0 [#818](https://github.com/TileDB-Inc/TileDB-R/issues/818)
 * Depend on TileDB Embedded 2.28.0 [#820](https://github.com/TileDB-Inc/TileDB-R/issues/820)
 
 # tiledb 0.31.1
@@ -157,7 +162,7 @@
 
 ## Improvements
 
-* The display of a `filter_list` is now labeled correctly as a filter list (@cgiachalis in #681 addressing #678)
+* The display of a `filter_list` is now labelled correctly as a filter list (@cgiachalis in #681 addressing #678)
 
 * The Arrow integration has been simplified using [nanoarrow](https://github.com/apache/arrow-nanoarrow) returning a single `nanoarrow` object; an unexported helper function `nanoarrow2list()` is provided to matching the previous interface (#682, #685)
 

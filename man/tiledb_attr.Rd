@@ -32,7 +32,7 @@ values}
 \item{ctx}{tiledb_ctx object (optional)}
 }
 \value{
-\code{tiledb_dim} object
+A \code{tiledb_attr} object
 }
 \description{
 Constructs a \code{tiledb_attr} object
