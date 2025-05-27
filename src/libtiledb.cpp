@@ -24,9 +24,26 @@
 #include "tiledb_version.h"
 
 #include <fstream>
+#include <algorithm>
 #include <unistd.h>
 
 using namespace Rcpp;
+
+// This is an auxiliary method for schema dumps wherein a fill value may include
+// the null character. It isn't a general-purpose C++ string-search-and-replace,
+// as C++ makes that a surprisingly non-straightforward operation. This suffices
+// for our purposes.
+std::string denull(const std::string& str) {
+  std::stringstream ss;
+  for (char c : str) {
+    if (c == '\0') {
+      ss << "\\0";
+    } else {
+      ss << c;
+    }
+  }
+  return ss.str();
+}
 
 const char *_tiledb_datatype_to_string(tiledb_datatype_t dtype) {
   switch (dtype) {
@@ -1302,13 +1319,14 @@ bool libtiledb_domain_has_dimension(XPtr<tiledb::Domain> domain,
   return domain->has_dimension(name.c_str());
 }
 
+
 // [[Rcpp::export]]
 void libtiledb_domain_dump(XPtr<tiledb::Domain> domain) {
   check_xptr_tag<tiledb::Domain>(domain);
 #if TILEDB_VERSION >= TileDB_Version(2, 25, 0)
   std::stringstream ss;
   ss << *domain;
-  Rcpp::Rcout << ss.str();
+  Rcpp::Rcout << denull(ss.str());
 #else
   domain->dump();
 #endif
@@ -1624,7 +1642,7 @@ void libtiledb_attribute_dump(XPtr<tiledb::Attribute> attr) {
 #if TILEDB_VERSION >= TileDB_Version(2, 25, 0)
   std::stringstream ss;
   ss << *attr;
-  Rcpp::Rcout << ss.str();
+  Rcpp::Rcout << denull(ss.str());
 #else
   attr->dump();
 #endif
@@ -2182,7 +2200,7 @@ void libtiledb_array_schema_dump(XPtr<tiledb::ArraySchema> schema) {
 #if TILEDB_VERSION >= TileDB_Version(2, 25, 0)
   std::stringstream ss;
   ss << *schema;
-  Rcpp::Rcout << ss.str();
+  Rcpp::Rcout << denull(ss.str());
 #else
   schema->dump();
 #endif
