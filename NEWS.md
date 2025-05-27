@@ -4,6 +4,10 @@
 
 * `tiledb_attr()` now prints the attribute object as expected and documentation has been corrected (@cgiachalis in [#823](https://github.com/TileDB-Inc/TileDB-R/pull/823))
 
+## Documentation
+
+*  The package documentation website was updated (@cgiachalis in [#822](https://github.com/TileDB-Inc/TileDB-R/pull/822))
+
 # tiledb 0.32.0
 
 * Depend on TileDB Embedded 2.28.0 [#820](https://github.com/TileDB-Inc/TileDB-R/issues/820)
