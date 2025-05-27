@@ -1,4 +1,4 @@
-# tiledb (developement version)
+# tiledb (development version)
 
 ## Improvements
 
