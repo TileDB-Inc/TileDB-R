@@ -115,7 +115,7 @@ reference:
 - title: MetaData
   desc: arrray metadata functionality
   contents:
-  - ends_with("metadata")
+  - matches("metadata")
 - title: Stats
   desc:  performance stat collection functions
   contents:
