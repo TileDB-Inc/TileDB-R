@@ -12,7 +12,7 @@
 \item{...}{Extra parameter for function signature, currently unused}
 }
 \value{
-The scheme for the object
+The schema for the object
 }
 \description{
 Return a schema from a tiledb_array object
