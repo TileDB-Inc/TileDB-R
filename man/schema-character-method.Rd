@@ -12,7 +12,7 @@
 \item{...}{Extra parameters such as \sQuote{enckey}, the encryption key}
 }
 \value{
-The scheme for the object
+The schema for the object
 }
 \description{
 Return a schema from a URI character value
