@@ -1517,6 +1517,10 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
   if (ncells < 1 && ncells != R_NaInt) {
     Rcpp::stop("ncells must be >= 1 (or NA for variable cells)");
   }
+  if (ncells == R_NaInt) {
+    ncells = TILEDB_VAR_NUM;
+  }
+
   // placeholder, overwritten in all branches below
   XPtr<tiledb::Attribute> attr =
       XPtr<tiledb::Attribute>(static_cast<tiledb::Attribute *>(nullptr));
