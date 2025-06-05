@@ -1517,6 +1517,10 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
   if (ncells < 1 && ncells != R_NaInt) {
     Rcpp::stop("ncells must be >= 1 (or NA for variable cells)");
   }
+  // R's NA is different from TileDB's NA so test for NA_integer_, else cast
+  uint64_t cell_val_num =
+      (ncells == R_NaInt) ? TILEDB_VAR_NUM : static_cast<uint64_t>(ncells);
+
   // placeholder, overwritten in all branches below
   XPtr<tiledb::Attribute> attr =
       XPtr<tiledb::Attribute>(static_cast<tiledb::Attribute *>(nullptr));
@@ -1536,7 +1540,6 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
       attr_dtype == TILEDB_DATETIME_AS) {
     attr = make_xptr<tiledb::Attribute>(
         new tiledb::Attribute(*ctx.get(), name, attr_dtype));
-    attr->set_cell_val_num(static_cast<uint64_t>(ncells));
   } else if (attr_dtype == TILEDB_CHAR || attr_dtype == TILEDB_STRING_ASCII ||
              attr_dtype == TILEDB_STRING_UTF8) {
     attr = make_xptr<tiledb::Attribute>(
@@ -1558,10 +1561,7 @@ XPtr<tiledb::Attribute> libtiledb_attribute(XPtr<tiledb::Context> ctx,
                "-- seeing %s which is not",
                type.c_str());
   }
-  // R's NA is different from TileDB's NA so test for NA_integer_, else cast
-  uint64_t num =
-      (ncells == R_NaInt) ? TILEDB_VAR_NUM : static_cast<uint64_t>(ncells);
-  attr->set_cell_val_num(num);
+  attr->set_cell_val_num(cell_val_num);
   attr->set_filter_list(*fltrlst);
   attr->set_nullable(nullable);
   return attr;
