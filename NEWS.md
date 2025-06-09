@@ -8,7 +8,7 @@
 
 ## Documentation
 
-*  The package documentation website was updated (@cgiachalis in [#822](https://github.com/TileDB-Inc/TileDB-R/pull/822))
+*  The package documentation website was updated (@cgiachalis in [#822](https://github.com/TileDB-Inc/TileDB-R/pull/822), [#826](https://github.com/TileDB-Inc/TileDB-R/pull/826))
 
 # tiledb 0.32.0
 
