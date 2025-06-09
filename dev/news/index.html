@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.32.0.3</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.32.0.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,8 @@
 <ul><li>Schema-dump output is no longer truncated in the case that there are any null fill values in the schema (<a href="https://github.com/johnkerl" class="external-link">@johnkerl</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/825" class="external-link">#825</a>)</li>
 <li>
 <code><a href="../reference/tiledb_attr.html">tiledb_attr()</a></code> now prints the attribute object as expected and documentation has been corrected (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/823" class="external-link">#823</a>)</li>
+<li>
+<code>tiledb_attr</code> now works when setting <code>ncells=NA</code> to signal variable length (<a href="https://github.com/johnkerl" class="external-link">@johnkerl</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/830" class="external-link">#830</a>)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h3>
