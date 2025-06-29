@@ -31,7 +31,7 @@ something that can be coerced to a data.frame, to a tiledb array.
 \details{
 For sparse matrices, row and column indices can either be supplied
 as part of the left-hand side object, or as part of the data.frame
-provided approrpiate column names.
+provided appropriate column names.
 
 This function may still still change; the current implementation should be
 considered as an initial draft.
