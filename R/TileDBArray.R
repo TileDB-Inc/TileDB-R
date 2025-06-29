@@ -393,7 +393,7 @@ setValidity("tiledb_array", function(object) {
       if (!is.null(object@selected_points[[i]])) {
         if (!is.vector(object@selected_points[[i]]) && !inherits(object@selected_points[[i]], "integer64")) {
           valid <- FALSE
-          msg <- c(msg, sprintf("Element '%d' of 'selected_ranges' is not a vector.", i))
+          msg <- c(msg, sprintf("Element '%d' of 'selected_points' is not a vector.", i))
         }
       }
     }
