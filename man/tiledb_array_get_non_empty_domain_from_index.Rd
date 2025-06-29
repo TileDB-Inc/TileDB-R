@@ -9,7 +9,7 @@ tiledb_array_get_non_empty_domain_from_index(arr, idx)
 \arguments{
 \item{arr}{A TileDB Array}
 
-\item{idx}{An integer index between one the number of dimensions}
+\item{idx}{An integer index between one and the number of dimensions}
 }
 \value{
 A two-element object is returned describing the domain of selected

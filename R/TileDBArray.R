@@ -101,7 +101,7 @@ setClass(
 #'
 #' tiledb_array returns a new object. This class is experimental.
 #'
-#' @param uri uri path to the tiledb dense array
+#' @param uri uri path to the tiledb array
 #' @param query_type optionally loads the array in "READ" or "WRITE" only modes.
 #' @param is.sparse optional logical switch, defaults to "NA"
 #' letting array determine it
@@ -1251,7 +1251,7 @@ setMethod(
 #'
 #' For sparse matrices, row and column indices can either be supplied
 #' as part of the left-hand side object, or as part of the data.frame
-#' provided approrpiate column names.
+#' provided appropriate column names.
 #'
 #' This function may still still change; the current implementation should be
 #' considered as an initial draft.
@@ -1977,7 +1977,7 @@ array_vacuum <- function(
 #' switches internally.
 #'
 #' @param arr A TileDB Array
-#' @param idx An integer index between one the number of dimensions
+#' @param idx An integer index between one and the number of dimensions
 #' @return A two-element object is returned describing the domain of selected
 #' dimension; it will either be a numeric vector in case of a fixed-size
 #' fixed-sized dimensions, or a character vector for a variable-sized one.
