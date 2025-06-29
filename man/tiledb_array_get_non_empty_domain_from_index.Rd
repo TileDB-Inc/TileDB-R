@@ -13,8 +13,8 @@ tiledb_array_get_non_empty_domain_from_index(arr, idx)
 }
 \value{
 A two-element object is returned describing the domain of selected
-dimension; it will either be a numeric vector in case of a fixed-size
-fixed-sized dimensions, or a character vector for a variable-sized one.
+dimension; it will either be a numeric vector in case of a fixed-sized
+dimension or a character vector for a variable-sized one.
 }
 \description{
 This functions works for both fixed- and variable-sized dimensions and

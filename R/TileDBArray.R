@@ -1979,8 +1979,8 @@ array_vacuum <- function(
 #' @param arr A TileDB Array
 #' @param idx An integer index between one and the number of dimensions
 #' @return A two-element object is returned describing the domain of selected
-#' dimension; it will either be a numeric vector in case of a fixed-size
-#' fixed-sized dimensions, or a character vector for a variable-sized one.
+#' dimension; it will either be a numeric vector in case of a fixed-sized
+#' dimension or a character vector for a variable-sized one.
 #' @export
 tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
   stopifnot(
@@ -2009,8 +2009,8 @@ tiledb_array_get_non_empty_domain_from_index <- function(arr, idx) {
 #' @param arr A TileDB Array
 #' @param name An character variable with a dimension name
 #' @return A two-element object is returned describing the domain of selected
-#' dimension; it will either be a numeric vector in case of a fixed-size
-#' fixed-sized dimensions, or a character vector for a variable-sized one.
+#' dimension; it will either be a numeric vector in case of a fixed-sized
+#' dimension or a character vector for a variable-sized one.
 #' @export
 tiledb_array_get_non_empty_domain_from_name <- function(arr, name) {
   stopifnot(
