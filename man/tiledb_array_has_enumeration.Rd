@@ -10,7 +10,7 @@ tiledb_array_has_enumeration(arr)
 \item{arr}{A TileDB Array object}
 }
 \value{
-A boolean indicating if the array has homogeneous domains
+A logical vector indicating which attribute has enumeration
 }
 \description{
 Check for Enumeration (aka Factor aka Dictionary)
