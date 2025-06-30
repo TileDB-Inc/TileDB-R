@@ -329,7 +329,7 @@ tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiled
 tiledb_query_condition_create <- function(name, values, op = "IN", ctx = tiledb_get_context()) {
   stopifnot(
     "Argument 'name' must be character" = is.character(name),
-    "Argument 'values' must be int, double, int64 ir char" =
+    "Argument 'values' must be int, double, int64 or char" =
       (is.numeric(values) || bit64::is.integer64(values) || is.character(values)),
     "Argument 'op' must be one of 'IN' or 'NOT_IN'" = op %in% c("IN", "NOT_IN"),
     "The 'ctx' argument must be a context object" = is(ctx, "tiledb_ctx"),
