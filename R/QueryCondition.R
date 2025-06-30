@@ -86,7 +86,7 @@ tiledb_query_condition_init <- function(attr, value, dtype, op, qc = tiledb_quer
 
 #' Combine two 'tiledb_query_condition' objects
 #'
-#' Combines two query condition object using a relatiional operator. Support for operator
+#' Combines two query condition object using a relational operator. Support for operator
 #' 'AND' is generally available, the 'OR' operator is available if TileDB 2.10 or newer is
 #' used.
 #' @param lhs A 'tiledb_query_condition' object on the left-hand side of the relation
@@ -116,7 +116,7 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #' around \code{%in%)} which extends R a little for this use case.
 #'
 #' Expressions are parsed locally by this function. The \code{debug=TRUE} option may help if an issue
-#' has to be diagnosed. In most cases of an errroneous parse, it generally helps to supply the
+#' has to be diagnosed. In most cases of an erroneous parse, it generally helps to supply the
 #' \code{tiledb_array} providing schema information. One example are numeric and integer columns where
 #' the data type is difficult to guess. Also, when using the \code{"%in%"} or \code{"%nin%"} operators,
 #' the argument is mandatory.
@@ -124,9 +124,9 @@ tiledb_query_condition_combine <- function(lhs, rhs, op) {
 #' @param expr An expression that is understood by the TileDB grammar for query conditions.
 #' @param ta A tiledb_array object that the query condition is applied to; this argument is optional
 #' in some cases but required in some others.
-#' @param debug A boolean toogle to enable more verbose operations, defaults
+#' @param debug A boolean toggle to enable more verbose operations, defaults
 #' to 'FALSE'.
-#' @param strict A boolean toogle to, if set, errors if a non-existing attribute is selected
+#' @param strict A boolean toggle to, if set, errors if a non-existing attribute is selected
 #' or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.
 #' @param use_int64 A boolean toggle to switch to \code{integer64} if \code{integer} is seen,
 #' default is false to remain as a default four-byte \code{int}
@@ -297,7 +297,7 @@ parse_query_condition <- function(expr, ta = NULL, debug = FALSE, strict = TRUE,
 
 #' Enable use of enumeration in query condition
 #'
-#' Set a boolean toggle to signal use of enumeration in query condtion (TileDB 2.17 or later)
+#' Set a boolean toggle to signal use of enumeration in query condition (TileDB 2.17 or later)
 #' @param qc A 'tiledb_query_condition' object
 #' @param use_enum A boolean to set (if TRUE) or unset (if FALSE) enumeration use
 #' @param ctx (optional) A TileDB Ctx object; if not supplied the default
@@ -317,9 +317,9 @@ tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiled
 #' Create a query condition for vector 'IN' and 'NOT_IN' operations
 #'
 #' Uses \sQuote{IN} and \sQuote{NOT_IN} operators on given attribute
-#' @param name A character value with the scheme attribute name
-#' @param values A vector wiith the given values, supported types are integer, double,
-#' integer64 and charactor
+#' @param name A character value with attribute name
+#' @param values A vector with the given values, supported types are integer, double,
+#' integer64 and character
 #' @param op (optional) A character value with the chosen set operation, this must be one of
 #' \sQuote{IN} or \sQuote{NOT_IN}; default to \sQuote{IN}
 #' @param ctx (optional) A TileDB Ctx object; if not supplied the default
