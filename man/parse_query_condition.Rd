@@ -18,10 +18,10 @@ parse_query_condition(
 \item{ta}{A tiledb_array object that the query condition is applied to; this argument is optional
 in some cases but required in some others.}
 
-\item{debug}{A boolean toogle to enable more verbose operations, defaults
+\item{debug}{A boolean toggle to enable more verbose operations, defaults
 to 'FALSE'.}
 
-\item{strict}{A boolean toogle to, if set, errors if a non-existing attribute is selected
+\item{strict}{A boolean toggle to, if set, errors if a non-existing attribute is selected
 or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.}
 
 \item{use_int64}{A boolean toggle to switch to \code{integer64} if \code{integer} is seen,
@@ -39,7 +39,7 @@ around \code{\%in\%)} which extends R a little for this use case.
 }
 \details{
 Expressions are parsed locally by this function. The \code{debug=TRUE} option may help if an issue
-has to be diagnosed. In most cases of an errroneous parse, it generally helps to supply the
+has to be diagnosed. In most cases of an erroneous parse, it generally helps to supply the
 \code{tiledb_array} providing schema information. One example are numeric and integer columns where
 the data type is difficult to guess. Also, when using the \code{"\%in\%"} or \code{"\%nin\%"} operators,
 the argument is mandatory.

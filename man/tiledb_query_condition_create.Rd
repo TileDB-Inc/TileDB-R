@@ -12,10 +12,10 @@ tiledb_query_condition_create(
 )
 }
 \arguments{
-\item{name}{A character value with the scheme attribute name}
+\item{name}{A character value with attribute name}
 
-\item{values}{A vector wiith the given values, supported types are integer, double,
-integer64 and charactor}
+\item{values}{A vector with the given values, supported types are integer, double,
+integer64 and character}
 
 \item{op}{(optional) A character value with the chosen set operation, this must be one of
 \sQuote{IN} or \sQuote{NOT_IN}; default to \sQuote{IN}}

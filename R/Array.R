@@ -245,7 +245,7 @@ tiledb_array_delete_fragments_list <- function(
 ##' Check for Enumeration (aka Factor aka Dictionary)
 ##'
 ##' @param arr A TileDB Array object
-##' @return A boolean indicating if the array has homogeneous domains
+##' @return A logical vector indicating which attribute has enumeration
 ##' @export
 tiledb_array_has_enumeration <- function(arr) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))

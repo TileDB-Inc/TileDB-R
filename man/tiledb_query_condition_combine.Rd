@@ -17,7 +17,7 @@ tiledb_query_condition_combine(lhs, rhs, op)
 The combined 'tiledb_query_condition' object
 }
 \description{
-Combines two query condition object using a relatiional operator. Support for operator
+Combines two query condition object using a relational operator. Support for operator
 'AND' is generally available, the 'OR' operator is available if TileDB 2.10 or newer is
 used.
 }
