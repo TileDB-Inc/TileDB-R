@@ -22,5 +22,5 @@ context object is retrieved}
 Nothing is retuned, the function is invoked for the side effect
 }
 \description{
-Set a boolean toggle to signal use of enumeration in query condtion (TileDB 2.17 or later)
+Set a boolean toggle to signal use of enumeration in query condition (TileDB 2.17 or later)
 }

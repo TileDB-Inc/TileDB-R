@@ -36,7 +36,7 @@ tiledb_dense(...)
 tiledb_sparse(...)
 }
 \arguments{
-\item{uri}{uri path to the tiledb dense array}
+\item{uri}{uri path to the tiledb array}
 
 \item{query_type}{optionally loads the array in "READ" or "WRITE" only modes.}
 
