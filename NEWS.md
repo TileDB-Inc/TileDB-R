@@ -3,9 +3,14 @@
 ## Improvements
 
 * Schema-dump output is no longer truncated in the case that there are any null fill values in the schema (@johnkerl in [#825](https://github.com/TileDB-Inc/TileDB-R/pull/825))
+
 * `tiledb_attr()` now prints the attribute object as expected and documentation has been corrected (@cgiachalis in [#823](https://github.com/TileDB-Inc/TileDB-R/pull/823))
+
 * `tiledb_attr()` now works when setting `ncells=NA` to signal variable length (@johnkerl in [#830](https://github.com/TileDB-Inc/TileDB-R/pull/830))
-* `tiledb_array()` now emits the correct error message when using `selected_points` argument (@cgiachalis in [#833](https://github.com/TileDB-Inc/TileDB-R/issues/833)
+
+* `tiledb_array()` now emits the correct error message when using `selected_points` argument (@cgiachalis in [#833](https://github.com/TileDB-Inc/TileDB-R/issues/833))
+
+* `tiledb_group_open()` now respects and defaults to the first option in `type` argument (@cgiachalis in [#838](https://github.com/TileDB-Inc/TileDB-R/issues/838))
 
 ## Documentation
 
