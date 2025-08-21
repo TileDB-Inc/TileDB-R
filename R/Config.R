@@ -272,7 +272,8 @@ tiledb_config_unset <- function(config, param) {
     `The 'config' argument must be a tiledb_config object` = is(config, "tiledb_config"),
     `The 'param' argument must be of type character` = is.character(param)
   )
-  libtiledb_config_unset(config@ptr, param)
+  ptr <- libtiledb_config_unset(config@ptr, param)
+  tiledb_config.from_ptr(ptr)
 }
 
 #' Display the 'AsBuilt' JSON string
