@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ tiledb_config.from_ptr <- function(ptr) {
   new("tiledb_config", ptr = ptr)
 }
 
-#' Creates a `tiledb_config` object
+#' Creates a TileDB Config object
 #'
 #' Note that for actually setting persistent values, the (altered) config
 #' object needs to used to create (or update) the \code{tiledb_ctx} object. Similarly,
@@ -70,12 +70,13 @@ tiledb_config <- function(config = NA_character_) {
 
 #' Gets a config parameter value
 #'
-#' @param x `tiledb_config` object
+#' @param x A `tiledb_config` object
 #' @param i parameter key string
 #' @param j parameter key string, currently unused.
 #' @param ... Extra parameter for method signature, currently unused.
 #' @param drop Optional logical switch to drop dimensions, default FALSE, currently unused.
-#' @return a config string value if parameter exists, else NA
+#' @return A config string value if parameter exists, else NA
+#'
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -97,11 +98,11 @@ setMethod("[", "tiledb_config", function(x, i, j, ..., drop = FALSE) {
 
 #' Sets a config parameter value
 #'
-#' @param x `tiledb_config` object
+#' @param x A `tiledb_config` object
 #' @param i parameter key string
 #' @param j parameter key string
 #' @param value value to set, will be converted into a stringa
-#' @return updated `tiledb_config` object
+#' @return The updated `tiledb_config` object
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -134,7 +135,7 @@ setMethod("[<-", "tiledb_config", function(x, i, j, value) {
 
 #' Prints the config object to STDOUT
 #'
-#' @param object `tiledb_config` object
+#' @param object A `tiledb_config` object
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -146,9 +147,9 @@ setMethod("show", signature(object = "tiledb_config"), function(object) {
   libtiledb_config_dump(object@ptr)
 })
 
-#' Save a `tiledb_config` object ot a local text file
+#' Save a TileDB Config object to a local text file
 #'
-#' @param config The `tiledb_config` object
+#' @param config A `tiledb_config` object
 #' @param path The path to config file to be created
 #' @return path to created config file
 #' @examples
@@ -170,9 +171,9 @@ tiledb_config_save <- function(config, path) {
   libtiledb_config_save_to_file(config@ptr, path)
 }
 
-#' Load a saved `tiledb_config` file from disk
+#' Load a saved TileDB Config file from disk
 #'
-#' @param path path to the config file
+#' @param path The path to the config file to be loaded
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -190,11 +191,12 @@ tiledb_config_load <- function(path) {
   tiledb_config.from_ptr(ptr)
 }
 
-#' Convert a `tiledb_config` object to a R vector
+#' Convert a TileDB Config object to a R vector
 #'
-#' @param x `tiledb_config` object
-#' @param mode Character value `"any"`, currently unused
-#' @return a character vector of config parameter names, values
+#' @param x A `tiledb_config` object
+#' @param mode A character value `"any"`, currently unused
+#'
+#' @return A character vector of config parameter names, values
 #' @examples
 #' \dontshow{
 #' ctx <- tiledb_ctx(limitTileDBCores())
@@ -208,8 +210,9 @@ as.vector.tiledb_config <- function(x, mode = "any") {
   libtiledb_config_vector(x@ptr)
 }
 
-#' Convert a `tiledb_config` object to a R data.frame
-#' @param x `tiledb_config` object
+#' Convert a TileDB Config object to `data.frame`
+#'
+#' @param x A `tiledb_config` object
 #' @param ... Extra parameter for method signature, currently unused.
 #' @return a data.frame wth parameter, value columns
 #' @examples
@@ -230,7 +233,7 @@ as.data.frame.tiledb_config <- function(x, ...) {
 #' By default, TileDB will use all available cores on a given machine. In multi-user or
 #' multi-process settings, one may want to reduce the number of core. This function will
 #' take a given number, or default to smaller of the \sQuote{Ncpus} options value or the
-#' \sQuote{"OMP_THREAD_LIMIT"} enviroment variable (or two as hard fallback).
+#' \sQuote{"OMP_THREAD_LIMIT"} environment variable (or two as hard fallback).
 #'
 #' As this function returns a config object, its intended use is as argument to the context
 #' creating functions: \code{ctx <- tiledb_ctx(limitTileDBCores())}. To check that the values
@@ -263,9 +266,9 @@ limitTileDBCores <- function(ncores, verbose = FALSE) {
 
 #' Unset a TileDB Config parameter to its default value
 #'
-#' @param config A TileDB Config object
+#' @param config A `tiledb_config` object
 #' @param param A character variable with the parameter name
-#' @return The modified TileDB Config object
+#' @return The modified `tiledb_config` object
 #' @export
 tiledb_config_unset <- function(config, param) {
   stopifnot(

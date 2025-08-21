@@ -11,7 +11,7 @@
 \S4method{[}{tiledb_config,ANY,ANY,ANY}(x, i, j) <- value
 }
 \arguments{
-\item{x}{\code{tiledb_config} object}
+\item{x}{A \code{tiledb_config} object}
 
 \item{i}{parameter key string}
 
@@ -20,7 +20,7 @@
 \item{value}{value to set, will be converted into a stringa}
 }
 \value{
-updated \code{tiledb_config} object
+The updated \code{tiledb_config} object
 }
 \description{
 Sets a config parameter value
