@@ -11,7 +11,7 @@
 \S4method{[}{tiledb_config,ANY}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
-\item{x}{\code{tiledb_config} object}
+\item{x}{A \code{tiledb_config} object}
 
 \item{i}{parameter key string}
 
@@ -22,7 +22,7 @@
 \item{drop}{Optional logical switch to drop dimensions, default FALSE, currently unused.}
 }
 \value{
-a config string value if parameter exists, else NA
+A config string value if parameter exists, else NA
 }
 \description{
 Gets a config parameter value

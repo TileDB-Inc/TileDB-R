@@ -2,20 +2,20 @@
 % Please edit documentation in R/Config.R
 \name{as.vector.tiledb_config}
 \alias{as.vector.tiledb_config}
-\title{Convert a \code{tiledb_config} object to a R vector}
+\title{Convert a TileDB Config object to a R vector}
 \usage{
 \method{as.vector}{tiledb_config}(x, mode = "any")
 }
 \arguments{
-\item{x}{\code{tiledb_config} object}
+\item{x}{A \code{tiledb_config} object}
 
-\item{mode}{Character value \code{"any"}, currently unused}
+\item{mode}{A character value \code{"any"}, currently unused}
 }
 \value{
-a character vector of config parameter names, values
+A character vector of config parameter names, values
 }
 \description{
-Convert a \code{tiledb_config} object to a R vector
+Convert a TileDB Config object to a R vector
 }
 \examples{
 \dontshow{

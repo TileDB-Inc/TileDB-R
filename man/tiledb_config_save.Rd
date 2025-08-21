@@ -2,12 +2,12 @@
 % Please edit documentation in R/Config.R
 \name{tiledb_config_save}
 \alias{tiledb_config_save}
-\title{Save a \code{tiledb_config} object ot a local text file}
+\title{Save a TileDB Config object to a local text file}
 \usage{
 tiledb_config_save(config, path)
 }
 \arguments{
-\item{config}{The \code{tiledb_config} object}
+\item{config}{A \code{tiledb_config} object}
 
 \item{path}{The path to config file to be created}
 }
@@ -15,7 +15,7 @@ tiledb_config_save(config, path)
 path to created config file
 }
 \description{
-Save a \code{tiledb_config} object ot a local text file
+Save a TileDB Config object to a local text file
 }
 \examples{
 \dontshow{

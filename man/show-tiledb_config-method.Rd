@@ -7,7 +7,7 @@
 \S4method{show}{tiledb_config}(object)
 }
 \arguments{
-\item{object}{\code{tiledb_config} object}
+\item{object}{A \code{tiledb_config} object}
 }
 \description{
 Prints the config object to STDOUT

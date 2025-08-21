@@ -12,6 +12,8 @@
 
 * `tiledb_group_open()` now respects and defaults to the first option in `type` argument (@cgiachalis in [#838](https://github.com/TileDB-Inc/TileDB-R/issues/838))
 
+* `tiledb_config_unset()` now correctly returns the modified configuration object (@cgiachalis in [#841](https://github.com/TileDB-Inc/TileDB-R/issues/841))
+
 ## Documentation
 
 *  The package documentation website was updated (@cgiachalis in [#822](https://github.com/TileDB-Inc/TileDB-R/pull/822), [#826](https://github.com/TileDB-Inc/TileDB-R/pull/826))

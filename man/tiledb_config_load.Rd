@@ -2,15 +2,15 @@
 % Please edit documentation in R/Config.R
 \name{tiledb_config_load}
 \alias{tiledb_config_load}
-\title{Load a saved \code{tiledb_config} file from disk}
+\title{Load a saved TileDB Config file from disk}
 \usage{
 tiledb_config_load(path)
 }
 \arguments{
-\item{path}{path to the config file}
+\item{path}{The path to the config file to be loaded}
 }
 \description{
-Load a saved \code{tiledb_config} file from disk
+Load a saved TileDB Config file from disk
 }
 \examples{
 \dontshow{
