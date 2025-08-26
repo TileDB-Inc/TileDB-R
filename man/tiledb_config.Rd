@@ -2,7 +2,7 @@
 % Please edit documentation in R/Config.R
 \name{tiledb_config}
 \alias{tiledb_config}
-\title{Creates a \code{tiledb_config} object}
+\title{Creates a TileDB Config object}
 \usage{
 tiledb_config(config = NA_character_)
 }

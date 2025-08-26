@@ -7,12 +7,12 @@
 tiledb_config_unset(config, param)
 }
 \arguments{
-\item{config}{A TileDB Config object}
+\item{config}{A \code{tiledb_config} object}
 
 \item{param}{A character variable with the parameter name}
 }
 \value{
-The modified TileDB Config object
+The modified \code{tiledb_config} object
 }
 \description{
 Unset a TileDB Config parameter to its default value

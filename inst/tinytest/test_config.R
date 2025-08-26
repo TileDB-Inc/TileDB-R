@@ -70,6 +70,17 @@ expect_equal(tiledb:::libtiledb_config_get(cfg@ptr, param)[[1]], newval)
 
 tiledb:::libtiledb_config_unset(cfg@ptr, param) # resets, not unsets
 expect_equal(tiledb:::libtiledb_config_get(cfg@ptr, param)[[1]], origval)
+
+# test 'tiledb_config_unset()'
+origval <- cfg["sm.group.timestamp_end"]
+
+# new value
+cfg["sm.group.timestamp_end"] <- 1000
+
+cfg <- tiledb_config_unset(cfg, "sm.group.timestamp_end")
+expect_equal(is(cfg), "tiledb_config")
+expect_equal(cfg["sm.group.timestamp_end"], origval)
+
 #})
 
 

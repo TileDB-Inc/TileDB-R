@@ -21,7 +21,7 @@ The modified configuration object is returned invisibly.
 By default, TileDB will use all available cores on a given machine. In multi-user or
 multi-process settings, one may want to reduce the number of core. This function will
 take a given number, or default to smaller of the \sQuote{Ncpus} options value or the
-\sQuote{"OMP_THREAD_LIMIT"} enviroment variable (or two as hard fallback).
+\sQuote{"OMP_THREAD_LIMIT"} environment variable (or two as hard fallback).
 }
 \details{
 As this function returns a config object, its intended use is as argument to the context

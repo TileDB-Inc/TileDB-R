@@ -2,12 +2,12 @@
 % Please edit documentation in R/Config.R
 \name{as.data.frame.tiledb_config}
 \alias{as.data.frame.tiledb_config}
-\title{Convert a \code{tiledb_config} object to a R data.frame}
+\title{Convert a TileDB Config object to \code{data.frame}}
 \usage{
 \method{as.data.frame}{tiledb_config}(x, ...)
 }
 \arguments{
-\item{x}{\code{tiledb_config} object}
+\item{x}{A \code{tiledb_config} object}
 
 \item{...}{Extra parameter for method signature, currently unused.}
 }
@@ -15,7 +15,7 @@
 a data.frame wth parameter, value columns
 }
 \description{
-Convert a \code{tiledb_config} object to a R data.frame
+Convert a TileDB Config object to \code{data.frame}
 }
 \examples{
 cfg <- tiledb_config()
