@@ -1035,6 +1035,64 @@ if (tiledb_version(TRUE) >= "2.10.0") {
     expect_equal(nrow(A[]), 6)
 }
 
+## Repeat test process as above but using 'tiledb_array_open_at()'
+
+tmp <- tempfile()
+dir.create(tmp)
+dom <- tiledb_domain(dims = c(tiledb_dim("rows", c(1L, 10L), 5L, "INT32"),
+                              tiledb_dim("cols", c(1L, 10L), 5L, "INT32")))
+schema <- tiledb_array_schema(dom, attrs=c(tiledb_attr("a", type = "INT32")), sparse = TRUE)
+invisible( tiledb_array_create(tmp, schema) )
+
+I <- c(1, 2, 2)
+J <- c(1, 4, 3)
+data <- c(1L, 2L, 3L)
+now1 <- Sys.time()
+
+A <- tiledb_array(uri = tmp)
+A <- tiledb_array_open_at(A, type = "WRITE", timestamp = now1)
+expect_true(tiledb_array_is_open_for_writing(A))
+A[I, J] <- data
+
+twot <- 1 + isMacOS*5
+onet <- twot/2
+Sys.sleep(twot)
+
+now2 <- Sys.time()
+I <- c(8, 6, 9)
+J <- c(5, 7, 8)
+data <- c(11L, 22L, 33L)
+A <- tiledb_array_open_at(A, type = "WRITE", timestamp = now2)
+A[I, J] <- data
+
+# tiledb_array_open_at reset timestamp slots to <origin, timestamp_end>
+expect_equal(A@timestamp_start, as.POSIXct(double(), origin = "1970-01-01"))
+expect_equal(A@timestamp_end, now2)
+
+A <- tiledb_array_close(A)
+
+return_as(A) <- "data.frame"
+A <- tiledb_array_open_at(A, type = "READ", timestamp = now1 - onet)
+expect_true(tiledb_array_is_open_for_reading(A))
+expect_equal(nrow(A[]), 0)
+
+# This must be reset with tiledb_array_open_at
+A@timestamp_start <- now1 + onet
+A <- tiledb_array_open_at(A, type = "READ", timestamp = now1 + onet)
+expect_equal(nrow(A[]), 3)
+
+# Check we have  <origin, timestamp_end>
+expect_equal(A@timestamp_start, as.POSIXct(double(), origin = "1970-01-01"))
+expect_equal(A@timestamp_end, now1 + onet)
+
+A <- tiledb_array_open_at(A, type = "READ", timestamp = now2 - onet)
+expect_equal(nrow(A[]), 3)
+
+A <- tiledb_array_open_at(A, type = "READ", timestamp = now2 + onet)
+expect_equal(nrow(A[]), 6)
+
+rm(A)
+
 ## n=118
 ## as.matrix
 tmp <- tempfile()
