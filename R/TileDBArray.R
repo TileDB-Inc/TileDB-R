@@ -1485,10 +1485,6 @@ setMethod(
                 colnam, length(added_enums), length(dictionary), alltypes[k], maxval
               ), call. = FALSE)
             }
-            levels <- unique(c(dictionary, new_levels))
-            is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
-            value[[k]] <- factor(value[[k]], levels = levels, ordered = is_ordered)
-            spdl::trace("[tiledb_array] '[<-' releveled column {} {}", k, is_ordered)
             ase <- tiledb_array_schema_evolution()
             if (!tiledb_array_is_open(x)) {
               arr <- tiledb_array_open(x)
@@ -1498,6 +1494,14 @@ setMethod(
             ase <- tiledb_array_schema_evolution_extend_enumeration(ase, arr, allnames[k], added_enums)
             tiledb::tiledb_array_schema_evolution_array_evolve(ase, uri)
             value[[k]] <- factor(value[[k]], levels = unique(c(dictionary, added_enums)), ordered = is.ordered(value[[k]]))
+
+            } else if (isFALSE(setequal(new_levels, dictionary))) {
+            # relevel when having a subset of existing levels, e.g "c" out of c("a","b","c")
+            # See issue: https://github.com/TileDB-Inc/TileDB-R/issues/843
+            levels <- unique(c(dictionary, new_levels))
+            is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
+            value[[k]] <- factor(value[[k]], levels = levels, ordered = is_ordered)
+            spdl::trace("[tiledb_array] '[<-' releveled column {} {}", k, is_ordered)
           }
         }
 
