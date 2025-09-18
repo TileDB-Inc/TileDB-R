@@ -1485,6 +1485,10 @@ setMethod(
                 colnam, length(added_enums), length(dictionary), alltypes[k], maxval
               ), call. = FALSE)
             }
+            levels <- unique(c(dictionary, new_levels))
+            is_ordered <- tiledb_attribute_is_ordered_enumeration_ptr(attr, arrptr)
+            value[[k]] <- factor(value[[k]], levels = levels, ordered = is_ordered)
+            spdl::trace("[tiledb_array] '[<-' releveled column {} {}", k, is_ordered)
             ase <- tiledb_array_schema_evolution()
             if (!tiledb_array_is_open(x)) {
               arr <- tiledb_array_open(x)
