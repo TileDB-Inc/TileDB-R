@@ -25,9 +25,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: System
-        run: sysctl -a
-        env:
-          RVER: ${{matrix.r}}
+        run: |
+         sysctl -a
+         echo "RVER=${{ matrix.r}}" >> $GITHUB_ENV
         if: ${{ matrix.os == 'macOS-latest' }}
 
       - name: Bootstrap
