@@ -1,5 +1,7 @@
 # tiledb (development version)
 
+* This release of the R package builds against [TileDB 2.29.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.29.0), and has also been tested against earlier releases as well as the development version
+
 ## Improvements
 
 * Schema-dump output is no longer truncated in the case that there are any null fill values in the schema (@johnkerl in [#825](https://github.com/TileDB-Inc/TileDB-R/pull/825))
