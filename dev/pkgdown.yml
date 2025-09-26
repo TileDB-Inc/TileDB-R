@@ -7,7 +7,7 @@ articles:
   installation-options: installation-options.html
   introduction: introduction.html
   tiledb-mariadb-examples: tiledb-mariadb-examples.html
-last_built: 2025-09-23T15:44Z
+last_built: 2025-09-26T19:29Z
 urls:
   reference: https://tiledb-inc.github.io/TileDB-R/reference
   article: https://tiledb-inc.github.io/TileDB-R/articles
