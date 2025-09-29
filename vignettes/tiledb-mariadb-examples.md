@@ -12,7 +12,7 @@ css: "water.css"
 
 [TileDB](https://www.tiledb.com/) provides the _Universal Data Engine_ that
 can be accessed in a variety of ways. The C/C++ library offered by [TileDB
-Embedded](https://www.tiledb.com/embedded) is one approach, and the [R
+Embedded](https://github.com/TileDB-Inc/TileDB) is one approach, and the [R
 package](https://github.com/TileDB-Inc/TileDB-R), as well as the [Python
 package](https://github.com/TileDB-Inc/TileDB-Py) and other language
 bindings use it. Another interface is provided by the [MariaDB Integration
