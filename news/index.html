@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.32.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.33.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,14 +43,29 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/0.32.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.33.0" id="tiledb-0330">tiledb 0.33.0<a class="anchor" aria-label="anchor" href="#tiledb-0330"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.29.0" class="external-link">TileDB 2.29.0</a>, and has also been tested against earlier releases as well as the development version</li>
+</ul><div class="section level3">
+<h3 id="improvements-0-33-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-33-0"></a></h3>
+<ul><li><p>Schema-dump output is no longer truncated in the case that there are any null fill values in the schema (<a href="https://github.com/johnkerl" class="external-link">@johnkerl</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/825" class="external-link">#825</a>)</p></li>
+<li><p><code><a href="../reference/tiledb_attr.html">tiledb_attr()</a></code> now prints the attribute object as expected and documentation has been corrected (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/823" class="external-link">#823</a>)</p></li>
+<li><p><code><a href="../reference/tiledb_attr.html">tiledb_attr()</a></code> now works when setting <code>ncells=NA</code> to signal variable length (<a href="https://github.com/johnkerl" class="external-link">@johnkerl</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/830" class="external-link">#830</a>)</p></li>
+<li><p><code><a href="../reference/tiledb_array.html">tiledb_array()</a></code> now emits the correct error message when using <code>selected_points</code> argument (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/issues/833" class="external-link">#833</a>)</p></li>
+<li><p><code><a href="../reference/tiledb_group_open.html">tiledb_group_open()</a></code> now respects and defaults to the first option in <code>type</code> argument (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/issues/838" class="external-link">#838</a>)</p></li>
+<li><p><code><a href="../reference/tiledb_config_unset.html">tiledb_config_unset()</a></code> now correctly returns the modified configuration object (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/issues/841" class="external-link">#841</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-33-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-33-0"></a></h3>
+<ul><li>The package documentation website was updated (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/822" class="external-link">#822</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/pull/826" class="external-link">#826</a>)</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.32.0" id="tiledb-0320">tiledb 0.32.0<a class="anchor" aria-label="anchor" href="#tiledb-0320"></a></h2>
-<ul><li>Depend on TileDB Embedded 2.28.0-rc0 <a href="https://github.com/TileDB-Inc/TileDB-R/issues/818" class="external-link">#818</a>
-</li>
-<li>Depend on TileDB Embedded 2.28.0 <a href="https://github.com/TileDB-Inc/TileDB-R/issues/820" class="external-link">#820</a>
+<ul><li>Depend on TileDB Embedded 2.28.0 <a href="https://github.com/TileDB-Inc/TileDB-R/issues/820" class="external-link">#820</a>
 </li>
 </ul></div>
     <div class="section level2">
@@ -187,7 +202,7 @@
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.22.0" class="external-link">TileDB 2.22.0</a>, and has also been tested against earlier releases as well as the development version (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/679" class="external-link">#679</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/686" class="external-link">#686</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/693" class="external-link">#693</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/696" class="external-link">#696</a>)</li>
 </ul><div class="section level3">
 <h3 id="improvements-0-26-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-26-0"></a></h3>
-<ul><li><p>The display of a <code>filter_list</code> is now labeled correctly as a filter list (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/issues/681" class="external-link">#681</a> addressing <a href="https://github.com/TileDB-Inc/TileDB-R/issues/678" class="external-link">#678</a>)</p></li>
+<ul><li><p>The display of a <code>filter_list</code> is now labelled correctly as a filter list (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/issues/681" class="external-link">#681</a> addressing <a href="https://github.com/TileDB-Inc/TileDB-R/issues/678" class="external-link">#678</a>)</p></li>
 <li><p>The Arrow integration has been simplified using <a href="https://github.com/apache/arrow-nanoarrow" class="external-link">nanoarrow</a> returning a single <code>nanoarrow</code> object; an unexported helper function <code>nanoarrow2list()</code> is provided to matching the previous interface (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/682" class="external-link">#682</a>, <a href="https://github.com/TileDB-Inc/TileDB-R/issues/685" class="external-link">#685</a>)</p></li>
 <li><p>An new accessor for recursive listings of (currently S3-only) URI is now available (with TileDB Core &gt;= 2.22.0) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/691" class="external-link">#691</a>)</p></li>
 <li><p>Initial support for TILEDB_GEOM_WKB and TILEB_GEOM_WKT has been added (with TileDB Core &gt;= 2.21.0) (<a href="https://github.com/TileDB-Inc/TileDB-R/issues/692" class="external-link">#692</a>)</p></li>
@@ -1086,7 +1101,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

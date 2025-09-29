@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.32.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.33.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,7 +132,7 @@
           <code><a href="tiledb_config.html">tiledb_config()</a></code>
 
         </dt>
-        <dd>Creates a <code>tiledb_config</code> object</dd>
+        <dd>Creates a TileDB Config object</dd>
       </dl><dl><dt>
 
           <code><a href="tiledb_config_as_built_json.html">tiledb_config_as_built_json()</a></code>
@@ -150,13 +150,13 @@
           <code><a href="tiledb_config_load.html">tiledb_config_load()</a></code>
 
         </dt>
-        <dd>Load a saved <code>tiledb_config</code> file from disk</dd>
+        <dd>Load a saved TileDB Config file from disk</dd>
       </dl><dl><dt>
 
           <code><a href="tiledb_config_save.html">tiledb_config_save()</a></code>
 
         </dt>
-        <dd>Save a <code>tiledb_config</code> object ot a local text file</dd>
+        <dd>Save a TileDB Config object to a local text file</dd>
       </dl><dl><dt>
 
           <code><a href="tiledb_config_unset.html">tiledb_config_unset()</a></code>
@@ -168,13 +168,13 @@
           <code><a href="as.vector.tiledb_config.html">as.vector(<i>&lt;tiledb_config&gt;</i>)</a></code>
 
         </dt>
-        <dd>Convert a <code>tiledb_config</code> object to a R vector</dd>
+        <dd>Convert a TileDB Config object to a R vector</dd>
       </dl><dl><dt>
 
           <code><a href="as.data.frame.tiledb_config.html">as.data.frame(<i>&lt;tiledb_config&gt;</i>)</a></code>
 
         </dt>
-        <dd>Convert a <code>tiledb_config</code> object to a R data.frame</dd>
+        <dd>Convert a TileDB Config object to <code>data.frame</code></dd>
       </dl><dl><dt>
 
           <code><a href="show-tiledb_config-method.html">show(<i>&lt;tiledb_config&gt;</i>)</a></code>
@@ -2116,6 +2116,12 @@
         <dd>Delete a TileDB Array Metadata object given by key</dd>
       </dl><dl><dt>
 
+          <code><a href="tiledb_fragment_info_get_unconsolidated_metadata_num.html">tiledb_fragment_info_get_unconsolidated_metadata_num()</a></code>
+
+        </dt>
+        <dd>Return fragment info number of unconsolidated metadata</dd>
+      </dl><dl><dt>
+
           <code><a href="tiledb_fragment_info_has_consolidated_metadata.html">tiledb_fragment_info_has_consolidated_metadata()</a></code>
 
         </dt>
@@ -2152,10 +2158,22 @@
         <dd>Accesses Metadata from a TileDB Group</dd>
       </dl><dl><dt>
 
+          <code><a href="tiledb_group_get_metadata_from_index.html">tiledb_group_get_metadata_from_index()</a></code>
+
+        </dt>
+        <dd>Accesses Metadata by Index from a TileDB Group</dd>
+      </dl><dl><dt>
+
           <code><a href="tiledb_group_has_metadata.html">tiledb_group_has_metadata()</a></code>
 
         </dt>
         <dd>Checks for Metadata in a TileDB Group</dd>
+      </dl><dl><dt>
+
+          <code><a href="tiledb_group_metadata_num.html">tiledb_group_metadata_num()</a></code>
+
+        </dt>
+        <dd>Returns Number of Metadata Objects a TileDB Group</dd>
       </dl><dl><dt>
 
           <code><a href="tiledb_group_put_metadata.html">tiledb_group_put_metadata()</a></code>
@@ -2648,7 +2666,7 @@
           <code><a href="as.data.frame.tiledb_config.html">as.data.frame(<i>&lt;tiledb_config&gt;</i>)</a></code>
 
         </dt>
-        <dd>Convert a <code>tiledb_config</code> object to a R data.frame</dd>
+        <dd>Convert a TileDB Config object to <code>data.frame</code></dd>
       </dl></div><div class="section level2">
       <h2 id="sparsematrix">SparseMatrix<a class="anchor" aria-label="anchor" href="#sparsematrix"></a></h2>
 
@@ -2912,7 +2930,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>

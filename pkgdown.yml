@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   data-ingestion-from-sql: data-ingestion-from-sql.html
@@ -7,7 +7,7 @@ articles:
   installation-options: installation-options.html
   introduction: introduction.html
   tiledb-mariadb-examples: tiledb-mariadb-examples.html
-last_built: 2025-05-14T15:54Z
+last_built: 2025-09-29T20:14Z
 urls:
   reference: https://tiledb-inc.github.io/TileDB-R/reference
   article: https://tiledb-inc.github.io/TileDB-R/articles

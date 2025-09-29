@@ -15,7 +15,7 @@ around %in%) which extends R a little for this use case.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.32.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.33.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@ around %in%) which extends R a little for this use case.'></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create a 'tiledb_query_condition' object from an expression</h1>
-      <small class="dont-index">Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/0.32.0/R/QueryCondition.R" class="external-link"><code>R/QueryCondition.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/main/R/QueryCondition.R" class="external-link"><code>R/QueryCondition.R</code></a></small>
       <div class="d-none name"><code>parse_query_condition.Rd</code></div>
     </div>
 
@@ -88,12 +88,12 @@ in some cases but required in some others.</p></dd>
 
 
 <dt id="arg-debug">debug<a class="anchor" aria-label="anchor" href="#arg-debug"></a></dt>
-<dd><p>A boolean toogle to enable more verbose operations, defaults
+<dd><p>A boolean toggle to enable more verbose operations, defaults
 to 'FALSE'.</p></dd>
 
 
 <dt id="arg-strict">strict<a class="anchor" aria-label="anchor" href="#arg-strict"></a></dt>
-<dd><p>A boolean toogle to, if set, errors if a non-existing attribute is selected
+<dd><p>A boolean toggle to, if set, errors if a non-existing attribute is selected
 or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown by execution proceeds.</p></dd>
 
 
@@ -109,7 +109,7 @@ default is false to remain as a default four-byte <code>int</code></p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Expressions are parsed locally by this function. The <code>debug=TRUE</code> option may help if an issue
-has to be diagnosed. In most cases of an errroneous parse, it generally helps to supply the
+has to be diagnosed. In most cases of an erroneous parse, it generally helps to supply the
 <code>tiledb_array</code> providing schema information. One example are numeric and integer columns where
 the data type is difficult to guess. Also, when using the <code>"%in%"</code> or <code>"%nin%"</code> operators,
 the argument is mandatory.</p>
@@ -137,7 +137,7 @@ the argument is mandatory.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
