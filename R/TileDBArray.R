@@ -1499,7 +1499,7 @@ setMethod(
             tiledb::tiledb_array_schema_evolution_array_evolve(ase, uri)
             value[[k]] <- factor(value[[k]], levels = unique(c(dictionary, added_enums)), ordered = is.ordered(value[[k]]))
 
-            } else if (isFALSE(setequal(new_levels, dictionary)) && isFALSE(is.null(new_levels))) {
+            } else if (!setequal(new_levels, dictionary) && !is.null(new_levels)) {
             # relevel when having a subset of existing levels, e.g "c" out of c("a","b","c")
             # See issue: https://github.com/TileDB-Inc/TileDB-R/issues/843
             levels <- unique(c(dictionary, new_levels))
