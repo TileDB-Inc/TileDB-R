@@ -4,6 +4,8 @@
 
 * The factor levels are now remapped as expected when updating an array with values that include no additional factor levels (@cgiachalis in [#844](https://github.com/TileDB-Inc/TileDB-R/pull/844))
 
+* `tiledb_array_open_at()` now resets  timestamp slots to `<origin, timestamp>` before opening the array (@cgiachalis in [#842](https://github.com/TileDB-Inc/TileDB-R/pull/842))
+
 # tiledb 0.33.0
 
 * This release of the R package builds against [TileDB 2.29.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.29.0), and has also been tested against earlier releases as well as the development version
