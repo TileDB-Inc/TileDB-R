@@ -179,6 +179,79 @@ ref <- rbind(df1, df2)
 expect_equivalent(res, ref) # equivalent because of query status attribute
 
 
+## test that factor levels are re-leveled with new updates
+## but existing levels (case with subset of current levels fixing issue 843)
+uri <- tempfile()
+df1 <- data.frame(id = 1:3, obs = factor(c("A", "B", "C")))
+fromDataFrame(df1, uri, col_index=1, tile_domain=c(1L, 5L))
+df2 <- data.frame(id = 4:5, obs = factor(c("B", "C")))
+fromDataFrame(df2, uri, col_index=1, mode="append")
+
+res <- tiledb_array(uri, return_as="data.frame")[]
+
+expect_equal(nrow(res), 5)
+expect_equal(nlevels(res[["obs"]]), 3)
+expect_equal(levels(res[["obs"]]), c("A", "B", "C"))
+expect_equal(as.integer(res[["obs"]]), c(1L, 2L, 3L, 2L, 3L))
+
+ref <- rbind(df1, df2)
+expect_equivalent(res, ref) # equivalent because of query status attribute
+
+## test that factor levels are re-leveled with new updates
+## but existing levels (case with all current levels)
+uri <- tempfile()
+df1 <- data.frame(id = 1:3, obs = factor(c("A", "B", "C")))
+fromDataFrame(df1, uri, col_index=1, tile_domain=c(1L, 6L))
+df2 <- data.frame(id = 4:6, obs = factor(c("B", "C", "A")))
+fromDataFrame(df2, uri, col_index=1, mode="append")
+
+res <- tiledb_array(uri, return_as="data.frame")[]
+
+expect_equal(nrow(res), 6)
+expect_equal(nlevels(res[["obs"]]), 3)
+expect_equal(levels(res[["obs"]]), c("A", "B", "C"))
+expect_equal(as.integer(res[["obs"]]), c(1L, 2L, 3L, 2L, 3L, 1L))
+
+ref <- rbind(df1, df2)
+expect_equivalent(res, ref) # equivalent because of query status attribute
+
+
+## test that ordered factor levels are re-leveled with new updates
+## but existing levels (case with subset of current levels fixing issue 843)
+uri <- tempfile()
+df1 <- data.frame(id = 1:3, obs = ordered(c("A", "B", "C")))
+fromDataFrame(df1, uri, col_index=1, tile_domain=c(1L, 5L))
+df2 <- data.frame(id = 4:5, obs = ordered(c("B", "C")))
+fromDataFrame(df2, uri, col_index=1, mode="append")
+
+res <- tiledb_array(uri, return_as="data.frame")[]
+
+expect_equal(nrow(res), 5)
+expect_equal(nlevels(res[["obs"]]), 3)
+expect_equal(levels(res[["obs"]]), c("A", "B", "C"))
+expect_equal(as.integer(res[["obs"]]), c(1L, 2L, 3L, 2L, 3L))
+
+ref <- rbind(df1, df2)
+expect_equivalent(res, ref) # equivalent because of query status attribute
+
+## test that ordered factor levels are re-leveled with new updates
+## but existing levels (case with all current levels)
+uri <- tempfile()
+df1 <- data.frame(id = 1:3, obs = ordered(c("A", "B", "C")))
+fromDataFrame(df1, uri, col_index=1, tile_domain=c(1L, 6L))
+df2 <- data.frame(id = 4:6, obs = ordered(c("B", "C", "A")))
+fromDataFrame(df2, uri, col_index=1, mode="append")
+
+res <- tiledb_array(uri, return_as="data.frame")[]
+
+expect_equal(nrow(res), 6)
+expect_equal(nlevels(res[["obs"]]), 3)
+expect_equal(levels(res[["obs"]]), c("A", "B", "C"))
+expect_equal(as.integer(res[["obs"]]), c(1L, 2L, 3L, 2L, 3L, 1L))
+
+ref <- rbind(df1, df2)
+expect_equivalent(res, ref) # equivalent because of query status attribute
+
 ## another test for growing
 uri <- tempfile()
 df1 <- data.frame(rows=11:14, a=200+0:3, b=factor(rep(c("blue", "ornage"), each=2)))
