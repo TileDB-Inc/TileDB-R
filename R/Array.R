@@ -106,6 +106,10 @@ tiledb_array_open_at <- function(arr, type = c("READ", "WRITE"), timestamp) {
   )
   type <- match.arg(type)
   ctx <- tiledb_get_context()
+
+  arr@timestamp_start <- as.POSIXct(double(), origin = "1970-01-01")
+  arr@timestamp_end <- timestamp
+
   if (.hasSlot(arr, "encryption_key") && length(arr@encryption_key) > 0) {
     arr@ptr <- libtiledb_array_open_at_with_key(ctx@ptr, arr@uri, type, arr@encryption_key, timestamp)
   } else {
