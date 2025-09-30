@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.33.0.1</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.33.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,8 @@
 <h2 class="pkg-version" data-toc-text="development version" id="tiledb-development-version">tiledb (development version)<a class="anchor" aria-label="anchor" href="#tiledb-development-version"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li>The factor levels are now remapped as expected when updating an array with values that include no additional factor levels (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/844" class="external-link">#844</a>)</li>
+<ul><li><p>The factor levels are now remapped as expected when updating an array with values that include no additional factor levels (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/844" class="external-link">#844</a>)</p></li>
+<li><p><code><a href="../reference/tiledb_array_open_at.html">tiledb_array_open_at()</a></code> now resets timestamp slots to <code>&lt;origin, timestamp&gt;</code> before opening the array (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/842" class="external-link">#842</a>)</p></li>
 </ul></div>
 </div>
     <div class="section level2">
