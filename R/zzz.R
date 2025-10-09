@@ -72,10 +72,11 @@
 
 .onAttach <- function(libname, pkgname) {
   if (interactive()) {
+    os_version <- utils::osVersion
     packageStartupMessage(
       "TileDB R ", packageVersion("tiledb"),
       " with TileDB Embedded ", format(tiledb_version(TRUE)),
-      " on ", utils::osVersion,
+      " on ", if (is.null(os_version)) "<unknown OS>" else os_version,
       ".\nSee https://tiledb.com for more information about TileDB."
     )
   }
