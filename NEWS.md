@@ -1,5 +1,9 @@
 # tiledb (development version)
 
+# tiledb 0.33.1
+
+* This release of the R package builds against [TileDB 2.29.1](https://github.com/TileDB-Inc/TileDB/releases/tag/2.29.1), and has also been tested against earlier releases as well as the development version
+
 ## Bug Fixes
 
 * The factor levels are now remapped as expected when updating an array with values that include no additional factor levels (@cgiachalis in [#844](https://github.com/TileDB-Inc/TileDB-R/pull/844))
