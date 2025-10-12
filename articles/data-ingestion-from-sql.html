@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.33.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.33.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
             
             <h4 data-toc-skip class="date">2022-01-25</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/0.33.0/vignettes/data-ingestion-from-sql.Rmd" class="external-link"><code>vignettes/data-ingestion-from-sql.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/main/vignettes/data-ingestion-from-sql.Rmd" class="external-link"><code>vignettes/data-ingestion-from-sql.Rmd</code></a></small>
       <div class="d-none name"><code>data-ingestion-from-sql.Rmd</code></div>
     </div>
 
@@ -155,7 +155,7 @@ settings the SQL query could easily bucket by symbols, or date range, or
 <span>    <span class="va">sql</span> <span class="op">&lt;-</span> <span class="st">"select * from stockprices order by symbol, date;"</span></span>
 <span>    <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">dbGetQuery</span><span class="op">(</span><span class="va">con</span>, <span class="va">sql</span><span class="op">)</span></span>
 <span>    <span class="fu">dbDisconnect</span><span class="op">(</span><span class="va">con</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/setDT.html" class="external-link">setDT</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>                          <span class="co"># create data.table</span></span>
+<span>    <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/setDT.html" class="external-link">setDT</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>                          <span class="co"># create data.table</span></span>
 <span>    <span class="va">res</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>

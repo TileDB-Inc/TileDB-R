@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tiledb</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.33.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.33.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,9 +43,21 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/0.33.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/TileDB-Inc/TileDB-R/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="tiledb-development-version">tiledb (development version)<a class="anchor" aria-label="anchor" href="#tiledb-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.33.1" id="tiledb-0331">tiledb 0.33.1<a class="anchor" aria-label="anchor" href="#tiledb-0331"></a></h2>
+<ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.29.1" class="external-link">TileDB 2.29.1</a>, and has also been tested against earlier releases as well as the development version</li>
+</ul><div class="section level3">
+<h3 id="bug-fixes-0-33-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-33-1"></a></h3>
+<ul><li><p>The factor levels are now remapped as expected when updating an array with values that include no additional factor levels (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/844" class="external-link">#844</a>)</p></li>
+<li><p><code><a href="../reference/tiledb_array_open_at.html">tiledb_array_open_at()</a></code> now resets timestamp slots to <code>&lt;origin, timestamp&gt;</code> before opening the array (<a href="https://github.com/cgiachalis" class="external-link">@cgiachalis</a> in <a href="https://github.com/TileDB-Inc/TileDB-R/pull/842" class="external-link">#842</a>)</p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.33.0" id="tiledb-0330">tiledb 0.33.0<a class="anchor" aria-label="anchor" href="#tiledb-0330"></a></h2>
 <ul><li>This release of the R package builds against <a href="https://github.com/TileDB-Inc/TileDB/releases/tag/2.29.0" class="external-link">TileDB 2.29.0</a>, and has also been tested against earlier releases as well as the development version</li>
