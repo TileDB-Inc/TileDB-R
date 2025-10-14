@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2024 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -60,7 +60,7 @@ tiledb_array_schema.from_ptr <- function(ptr, arrptr = NULL) {
 #' ctx <- tiledb_ctx(limitTileDBCores())
 #' }
 #' schema <- tiledb_array_schema(
-#'   dom = tiledb_domain(
+#'   domain = tiledb_domain(
 #'     dims = c(
 #'       tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
 #'       tiledb_dim("cols", c(1L, 4L), 4L, "INT32")
@@ -95,7 +95,7 @@ tiledb_array_schema <- function(
     } # make it a list so that lapply works below
     stopifnot(
       "length of 'attrs' cannot be zero" = length(attrs) > 0,
-      "'attrs' must be a list of one or tiled_attr objects" = all(vapply(attrs, is_attr, logical(1)))
+      "'attrs' must be a list of 'tiledb_attr' objects" = all(vapply(attrs, is_attr, logical(1)))
     )
   } else {
     attrs <- NULL
