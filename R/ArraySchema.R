@@ -114,7 +114,22 @@ tiledb_array_schema <- function(
   )
   # if (allows_dups && !sparse) stop("'allows_dups' requires 'sparse' TRUE")
 
-  attr_ptr_list <- if (is.list(attrs)) lapply(attrs, function(obj) slot(obj, "ptr")) else list()
+  if (is.list(attrs)) {
+    attr_names <- sapply(attrs, name)
+    attr_ptr_list <- lapply(attrs, function(obj) slot(obj, "ptr"))
+    names(attr_ptr_list) <- attr_names
+
+    # Do not allow enum named list to have different names than attributes
+    if (!is.null(enumerations)) {
+      if (!all(names(enumerations) %in% attr_names)) {
+        stop("'enumerations' should be a named list mapped to attributes names")
+      }
+    }
+
+  } else {
+    attr_ptr_list <- list()
+  }
+
   coords_filter_list_ptr <- if (!is.null(coords_filter_list)) coords_filter_list@ptr else NULL
   offsets_filter_list_ptr <- if (!is.null(offsets_filter_list)) offsets_filter_list@ptr else NULL
   validity_filter_list_ptr <- if (!is.null(validity_filter_list)) validity_filter_list@ptr else NULL
