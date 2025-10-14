@@ -217,6 +217,8 @@ trg <- c(col1 = FALSE, enum1 = TRUE, col2 = FALSE, enum2 = TRUE, enum3 = TRUE)
 
 expect_equal(tiledb_array_has_enumeration(arr), trg)
 
+unlink(uri)
+
 # case 2 (unordered enums)
 uri <- tempfile()
 
@@ -231,6 +233,8 @@ tiledb_array_create(uri, sch)
 arr <- tiledb_array(uri)
 
 expect_equal(tiledb_array_has_enumeration(arr), trg)
+
+unlink(uri)
 
 # case 3 (unordered map all attributes)
 uri <- tempfile()
