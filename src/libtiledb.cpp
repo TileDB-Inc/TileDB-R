@@ -1918,6 +1918,8 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
             as<std::vector<std::string>>(enumerations[i]);
         std::string enum_name = std::string(enumnames[i]);
 
+        // Get attribute by enum name ('attributes' list is named from R level)
+        // See https://github.com/TileDB-Inc/TileDB-R/issues/853
         XPtr<tiledb::Attribute> attr =
             as<XPtr<tiledb::Attribute>>(attributes[enum_name]);
 
