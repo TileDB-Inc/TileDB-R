@@ -153,3 +153,116 @@ if (tiledb_version(TRUE) < "2.27.0") {
 } else {
   expect_silent(tiledb_array_schema_set_current_domain(dsch, cd))
 }
+
+## enumerations
+if (tiledb_version(TRUE) >= "2.17.0") {
+
+dom <- tiledb_domain(c(tiledb_dim(
+  name = "id",
+  domain = c(NULL, NULL),
+  tile = NULL,
+  type = "ASCII")))
+
+attrs <- c(
+
+  tiledb_attr(
+    name = "col1",
+    type = "INT32",
+    ncells = 1,
+    nullable = FALSE),
+  tiledb_attr(
+    name = "enum1",
+    type = "INT32",
+    ncells = 1,
+    nullable = FALSE,
+    enumeration = TRUE
+  ),
+  tiledb_attr(
+    name = "col2",
+    type = "INT32",
+    ncells = 1,
+    nullable = FALSE
+  ),
+  tiledb_attr(
+    name = "enum2",
+    type = "INT32",
+    ncells = 1,
+    nullable = FALSE,
+    enumeration = TRUE
+  ),
+  tiledb_attr(
+    name = "enum3",
+    type = "INT32",
+    ncells = 1,
+    nullable = FALSE,
+    enumeration = TRUE
+  )
+)
+
+# case 1 (ordered enums)
+uri <- tempfile()
+
+enums <- list(
+  enum1 =  c("A", "B"),
+  enum2 = c("yes", "no"),
+  enum3 = c("aa")
+)
+
+sch <- tiledb_array_schema(domain = dom, attrs = attrs, sparse = TRUE, enumerations = enums)
+tiledb_array_create(uri, sch)
+arr <- tiledb_array(uri)
+
+# columns with enums
+trg <- c(col1 = FALSE, enum1 = TRUE, col2 = FALSE, enum2 = TRUE, enum3 = TRUE)
+
+expect_equal(tiledb_array_has_enumeration(arr), trg)
+
+# case 2 (unordered enums)
+uri <- tempfile()
+
+enums <- list(
+  enum2 = c("yes", "no"),
+  enum1 =  c("A", "B"),
+  enum3 = c("aa")
+)
+
+sch <- tiledb_array_schema(domain = dom, attrs = attrs, sparse = TRUE, enumerations = enums)
+tiledb_array_create(uri, sch)
+arr <- tiledb_array(uri)
+
+expect_equal(tiledb_array_has_enumeration(arr), trg)
+
+# case 3 (unordered map all attributes)
+uri <- tempfile()
+
+enums <- list(
+  enum1 =  c("A", "B"),
+  col1 = NULL,
+  enum2 = c("yes", "no"),
+  enum3 = c("aa"),
+  col2 = NULL
+)
+
+
+sch <- tiledb_array_schema(domain = dom, attrs = attrs, sparse = TRUE, enumerations = enums)
+tiledb_array_create(uri, sch)
+arr <- tiledb_array(uri)
+
+expect_equal(tiledb_array_has_enumeration(arr), trg)
+
+# case 4 (unknown mapping name)
+uri <- tempfile()
+
+enums <- list(
+  name =  c("A", "B"),
+  col1 = NULL,
+  enum2 = c("yes", "no"),
+  enum3 = c("aa"),
+  col2 = NULL
+)
+
+# enums contains a named element that is not found in attributes
+expect_error(tiledb_array_schema(domain = dom, attrs = attrs, sparse = TRUE, enumerations = enums))
+
+unlink(uri)
+}
