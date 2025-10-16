@@ -11,7 +11,7 @@ tiledb_set_context(ctx)
 }
 \value{
 NULL, invisibly. The function is invoked for the side-effect of
-storing the VFS object.
+storing the Ctx object.
 }
 \description{
 Store a TileDB context object in the package cache
