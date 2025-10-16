@@ -33,7 +33,7 @@ For sparse matrices, row and column indices can either be supplied
 as part of the left-hand side object, or as part of the data.frame
 provided appropriate column names.
 
-This function may still still change; the current implementation should be
+This function may still change; the current implementation should be
 considered as an initial draft.
 }
 \examples{

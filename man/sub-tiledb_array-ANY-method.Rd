@@ -11,7 +11,7 @@
 \S4method{[}{tiledb_array,ANY}(x, i, j, ..., drop = FALSE)
 }
 \arguments{
-\item{x}{tiledb_array object}
+\item{x}{A \code{tiledb_array} object.}
 
 \item{i}{optional row index expression which can be a list in which case
 minimum and maximum of each list element determine a range; multiple list
@@ -33,6 +33,6 @@ The resulting elements in the selected format
 Heterogenous domains are supported, including timestamps and characters.
 }
 \details{
-This function may still still change; the current implementation should be
+This function may still change; the current implementation should be
 considered as an initial draft.
 }

@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2024 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 #' based on a refactored implementation utilising newer TileDB features.
 #'
 #' @slot ctx A TileDB context object
-#' @slot uri A character despription with the array URI
+#' @slot uri A character description with the array URI
 #' @slot is.sparse A logical value whether the array is sparse or not
 #' @slot attrs A character vector to select particular column
 #' \sQuote{attributes}; default is an empty character vector implying
@@ -52,7 +52,7 @@
 #' conversion, permitted values are \sQuote{asis} (default, returning a list
 #' of columns), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame},
 #' \sQuote{data.table} \sQuote{tibble}, \sQuote{arrow_table} or \sQuote{arrow}
-#' (where the last two are synomyms); note that \sQuote{data.table},
+#' (where the last two are synonyms); note that \sQuote{data.table},
 #' \sQuote{tibble} and \sQuote{arrow} require the respective packages
 #' to be installed.
 #' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if
@@ -125,10 +125,10 @@ setClass(
 #' default uninitialized without a condition; this functionality requires
 #' TileDB 2.3.0 or later
 #' @param timestamp_start optional A POSIXct Datetime value determining the
-#' inclusive time point at which the array is to be openened. No fragments
+#' inclusive time point at which the array is to be opened. No fragments
 #' written earlier will be considered.
 #' @param timestamp_end optional A POSIXct Datetime value determining the
-#' inclusive time point until which the array is to be openened. No fragments
+#' inclusive time point until which the array is to be opened. No fragments
 #' written earlier later be considered.
 #' @param return_as optional A character value with the desired
 #' \code{tiledb_array} conversion, permitted values are \sQuote{asis} (default,
@@ -502,9 +502,9 @@ setValidity("tiledb_array", function(object) {
 #'
 #' Heterogenous domains are supported, including timestamps and characters.
 #'
-#' This function may still still change; the current implementation should be
+#' This function may still change; the current implementation should be
 #' considered as an initial draft.
-#' @param x tiledb_array object
+#' @param x A `tiledb_array` object.
 #' @param i optional row index expression which can be a list in which case
 #' minimum and maximum of each list element determine a range; multiple list
 #' elements can be used to supply multiple ranges.
@@ -1253,7 +1253,7 @@ setMethod(
 #' as part of the left-hand side object, or as part of the data.frame
 #' provided appropriate column names.
 #'
-#' This function may still still change; the current implementation should be
+#' This function may still change; the current implementation should be
 #' considered as an initial draft.
 #' @param x sparse or dense TileDB array object
 #' @param i parameter row index
@@ -1819,7 +1819,7 @@ setMethod("query_layout", signature = "tiledb_array", function(object) object@qu
 #'
 #' @param value A character variable for the query layout. Permitted values
 #' are \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or
-#' \dQuote{UNORDERD}.
+#' \dQuote{UNORDERED}.
 #' @return The modified \code{tiledb_array} array object
 #' @export
 setReplaceMethod(
