@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2022-2024 TileDB Inc.
+#  Copyright (c) 2022-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -262,7 +262,8 @@ tiledb_group_get_metadata <- function(grp, key) {
 ##' \code{tiledb_group()}
 ##' @param key A character value with they index under which the
 ##' data will be written
-##' @return A boolean value indicating with the object is present
+##' @return A logical value indicating if the given key exists in the
+##'  metadata of the given group
 ##' @export
 tiledb_group_has_metadata <- function(grp, key) {
   stopifnot(
