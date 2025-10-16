@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2024 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -31,13 +31,13 @@ setClass("tiledb_query",
 ## could add arr of type 'ANY' (using shortcut to not have to deal with collate order)
 ## if array was needed for query object
 
-#' Creates a 'tiledb_query' object
+#' Creates a `tiledb_query` object
 #'
 #' @param array A TileDB Array object
 #' @param type A character value that must be one of 'READ', 'WRITE', or
-#' 'DELETE' (for TileDB >= 2.12.0)
+#' 'DELETE', 'MODIFY_EXCLUSIVE' (for TileDB >= 2.12.0)
 #' @param ctx (optional) A TileDB Ctx object
-#' @return 'tiledb_query' object
+#' @return A `tiledb_query` object
 #' @export tiledb_query
 tiledb_query <- function(
   array,
@@ -59,7 +59,7 @@ tiledb_query <- function(
 #' Return TileDB Query type
 #'
 #' @param query A TileDB Query object
-#' @return A character value, either 'READ' or 'WRITE'
+#' @return A character value, either 'READ', 'WRITE', 'DELETE' or 'MODIFY_EXCLUSIVE'
 #' @export
 tiledb_query_type <- function(query) {
   stopifnot(`Argument 'query' must be a tiledb_query object` = is(query, "tiledb_query"))
@@ -74,7 +74,7 @@ tiledb_query_type <- function(query) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_layout <- function(
-  query, 
+  query,
   layout = c(
     "COL_MAJOR", "ROW_MAJOR",
     "GLOBAL_ORDER", "UNORDERED"
@@ -99,7 +99,7 @@ tiledb_query_get_layout <- function(query) {
 #' Set subarray for TileDB Query object
 #'
 #' @param query A TileDB Query object
-#' @param subarray A subarry vector object
+#' @param subarray A subarray vector object
 #' @param type An optional type as a character, if missing type is
 #'   inferred from the vector.
 #' @return The modified query object, invisibly
@@ -123,7 +123,7 @@ tiledb_query_set_subarray <- function(query, subarray, type) {
 #' @param query A TileDB Query object
 #' @param attr A character value containing the attribute
 #' @param buffer A vector providing the query buffer
-#' @return The modified query object, invisisibly
+#' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_buffer <- function(query, attr, buffer) {
   stopifnot(
@@ -165,8 +165,8 @@ tiledb_query_create_buffer_ptr_char <- function(query, varvec) {
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_alloc_buffer_ptr_char <- function(
-  sizeoffsets, 
-  sizedata, 
+  sizeoffsets,
+  sizedata,
   nullable = FALSE
 ) {
   stopifnot(
@@ -221,15 +221,15 @@ tiledb_query_set_buffer_ptr_char <- function(query, attr, bufptr) {
 #' @param ncells A number of elements (not bytes)
 #' @param nullable Optional boolean parameter indicating whether missing values
 #' are allowed (for which another column is allocated), default is FALSE
-#' @param varnum Option intgeter parameter for the number of elemements per variable,
+#' @param varnum Optional integer parameter for the number of elements per variable,
 #' default is one
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_buffer_alloc_ptr <- function(
-  query, 
-  datatype, 
-  ncells, 
-  nullable = FALSE, 
+  query,
+  datatype,
+  ncells,
+  nullable = FALSE,
   varnum = 1
 ) {
   stopifnot(
@@ -303,7 +303,7 @@ tiledb_query_get_buffer_ptr <- function(bufptr) {
 #' @return An R object as resulting from the query
 #' @export
 tiledb_query_get_buffer_char <- function(
-  bufptr, 
+  bufptr,
   sizeoffsets = 0,
   sizestring = 0
 ) {
@@ -378,7 +378,7 @@ tiledb_query_status <- function(query) {
 #' @param attr A character value containing the attribute
 #' @return A integer with the number of elements in the results buffer
 #' for the given attribute
-#' @seealso tiledb_query_result_buffer_elements_vec
+#' @seealso [tiledb_query_result_buffer_elements_vec]
 #' @export
 tiledb_query_result_buffer_elements <- function(query, attr) {
   stopifnot(
@@ -407,11 +407,11 @@ tiledb_query_result_buffer_elements <- function(query, attr) {
 #' for fixed-size attribute or dimensions), the number elements in the results
 #' buffer for the given attribute, and (if nullable) a third element with the validity
 #' buffer size.
-#' @seealso tiledb_query_result_buffer_elements
+#' @seealso [tiledb_query_result_buffer_elements]
 #' @export
 tiledb_query_result_buffer_elements_vec <- function(
-  query, 
-  attr, 
+  query,
+  attr,
   nullable = FALSE
 ) {
   stopifnot(
@@ -433,10 +433,10 @@ tiledb_query_result_buffer_elements_vec <- function(
 #' @return The query object, invisibly
 #' @export
 tiledb_query_add_range <- function(
-  query, 
-  schema, 
-  attr, lowval, 
-  highval, 
+  query,
+  schema,
+  attr, lowval,
+  highval,
   stride = NULL
 ) {
   stopifnot(
@@ -465,11 +465,11 @@ tiledb_query_add_range <- function(
 #' @return The query object, invisibly
 #' @export
 tiledb_query_add_range_with_type <- function(
-  query, 
-  idx, 
-  datatype, 
-  lowval, 
-  highval, 
+  query,
+  idx,
+  datatype,
+  lowval,
+  highval,
   stride = NULL
 ) {
   stopifnot(
@@ -677,7 +677,7 @@ tiledb_query_ctx <- function(query) {
 #    query@arr
 # }
 
-##' Run an aggregate oprtation on the given query attribute
+##' Run an aggregate operation on the given query attribute
 ##'
 ##' @param query A TileDB Query object
 ##' @param attrname The name of an attribute
@@ -686,7 +686,7 @@ tiledb_query_ctx <- function(query) {
 ##' @return The value of the aggregation
 ##' @export
 tiledb_query_apply_aggregate <- function(
-  query, 
+  query,
   attrname,
   operation = c("Count", "NullCount", "Min", "Max", "Mean",  "Sum"),
   nullable = TRUE

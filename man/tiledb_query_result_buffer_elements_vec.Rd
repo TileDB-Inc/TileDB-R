@@ -31,5 +31,5 @@ In the case of a nullable attribute, a third element is returned with the size o
 the validity buffer.
 }
 \seealso{
-tiledb_query_result_buffer_elements
+\link{tiledb_query_result_buffer_elements}
 }
