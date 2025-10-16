@@ -22,7 +22,7 @@ tiledb_query_buffer_alloc_ptr(
 \item{nullable}{Optional boolean parameter indicating whether missing values
 are allowed (for which another column is allocated), default is FALSE}
 
-\item{varnum}{Option intgeter parameter for the number of elemements per variable,
+\item{varnum}{Optional integer parameter for the number of elements per variable,
 default is one}
 }
 \value{

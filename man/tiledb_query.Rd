@@ -2,7 +2,7 @@
 % Please edit documentation in R/Query.R
 \name{tiledb_query}
 \alias{tiledb_query}
-\title{Creates a 'tiledb_query' object}
+\title{Creates a \code{tiledb_query} object}
 \usage{
 tiledb_query(
   array,
@@ -19,13 +19,13 @@ tiledb_query(
 \item{array}{A TileDB Array object}
 
 \item{type}{A character value that must be one of 'READ', 'WRITE', or
-'DELETE' (for TileDB >= 2.12.0)}
+'DELETE', 'MODIFY_EXCLUSIVE' (for TileDB >= 2.12.0)}
 
 \item{ctx}{(optional) A TileDB Ctx object}
 }
 \value{
-'tiledb_query' object
+A \code{tiledb_query} object
 }
 \description{
-Creates a 'tiledb_query' object
+Creates a \code{tiledb_query} object
 }
