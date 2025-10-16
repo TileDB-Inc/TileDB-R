@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2024 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -102,7 +102,7 @@ tiledb_vfs_remove_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' cfg["vfs.s3.region"] <- "us-west-1"
 #' ctx <- tiledb_ctx(cfg)
 #' vfs <- tiledb_vfs()
-#' tiledb_vfs_is_bucket(vfs, "s3://tiledb-public-us-west-1/test-array-4x4")
+#' tiledb_vfs_is_bucket("s3://tiledb-public-us-west-1/test-array-4x4", vfs = vfs)
 #' }
 tiledb_vfs_is_bucket <- function(uri, vfs = tiledb_get_vfs()) {
   stopifnot(
@@ -167,7 +167,7 @@ tiledb_vfs_create_dir <- function(uri, vfs = tiledb_get_vfs()) {
 
 #' Test for VFS Directory
 #'
-#' @param uri Character variable with a URI describing a diretory path
+#' @param uri Character variable with a URI describing a directory path
 #' @param vfs A TileDB VFS object; default is to use a cached value.
 #' @return A boolean value indicating if it is a directory
 #' @export
@@ -181,7 +181,7 @@ tiledb_vfs_is_dir <- function(uri, vfs = tiledb_get_vfs()) {
 
 #' Remove a VFS Directory
 #'
-#' @param uri Character variable with a URI describing a diretory path
+#' @param uri Character variable with a URI describing a directory path
 #' @param vfs A TileDB VFS object; default is to use a cached value.
 #' @return The uri value of the removed directory
 #' @export
@@ -320,7 +320,7 @@ tiledb_set_vfs <- function(vfs) {
 #' @return A TileDB VFS Filehandle object (as an external pointer)
 #' @export
 tiledb_vfs_open <- function(
-  binfile, 
+  binfile,
   mode = c("READ", "WRITE", "APPEND"),
   vfs = tiledb_get_vfs(),
   ctx = tiledb_get_context()
@@ -336,7 +336,7 @@ tiledb_vfs_open <- function(
 
 #' Close a TileDB VFS Filehandle
 #'
-#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' @param fh A TileDB VFS Filehandle external pointer as returned from
 #' \code{tiledb_vfs_open}
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the close operation is returned.
@@ -351,7 +351,7 @@ tiledb_vfs_close <- function(fh, ctx = tiledb_get_context()) {
 
 #' Sync a TileDB VFS Filehandle
 #'
-#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' @param fh A TileDB VFS Filehandle external pointer as returned from
 #' \code{tiledb_vfs_open}
 #' @param ctx (optional) A TileDB Ctx object
 #' @return The result of the sync operation is returned.
@@ -366,12 +366,12 @@ tiledb_vfs_sync <- function(fh, ctx = tiledb_get_context()) {
 
 #' Write to a TileDB VFS Filehandle
 #'
-#' This interface currently defaults to using an integer vector. This is suitable 
-#' for R objects as the raw vector result from serialization can be mapped easily 
-#' to an integer vector. It is also possible to \code{memcpy} to the contiguous 
+#' This interface currently defaults to using an integer vector. This is suitable
+#' for R objects as the raw vector result from serialization can be mapped easily
+#' to an integer vector. It is also possible to \code{memcpy} to the contiguous
 #' memory of an integer vector should other (non-R) data be transferred.
-#' 
-#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#'
+#' @param fh A TileDB VFS Filehandle external pointer as returned from
 #' \code{tiledb_vfs_open}
 #' @param vec An integer vector of content to be written
 #' @param ctx (optional) A TileDB Ctx object
@@ -388,14 +388,14 @@ tiledb_vfs_write <- function(fh, vec, ctx = tiledb_get_context()) {
 
 #' Read from a TileDB VFS Filehandle
 #'
-#' This interface currently defaults to reading an integer vector. This is 
-#' suitable for R objects as a raw vector used for (de)serialization can be 
-#' mapped easily to an integer vector. It is also possible to \code{memcpy} to 
-#' the contiguous memory of an integer vector should other (non-R) data 
+#' This interface currently defaults to reading an integer vector. This is
+#' suitable for R objects as a raw vector used for (de)serialization can be
+#' mapped easily to an integer vector. It is also possible to \code{memcpy} to
+#' the contiguous memory of an integer vector should other (non-R) data
 #' be transferred.
-#' @param fh A TileDB VFS Filehandle external pointer as returned from 
+#' @param fh A TileDB VFS Filehandle external pointer as returned from
 #' \code{tiledb_vfs_open}
-#' @param offset A scalar value with the byte offset from the beginning of the 
+#' @param offset A scalar value with the byte offset from the beginning of the
 #' file with a of zero.
 #' @param nbytes A scalar value with the number of bytes to be read.
 #' @param ctx (optional) A TileDB Ctx object
@@ -546,7 +546,7 @@ tiledb_vfs_copy_dir <- function(dir, uri, vfs = tiledb_get_vfs()) {
 #' size in bytes
 #' @export
 tiledb_vfs_ls_recursive <- function(
-  uri, 
+  uri,
   vfs = tiledb_get_vfs(),
   ctx = tiledb_get_context()
 ) {
