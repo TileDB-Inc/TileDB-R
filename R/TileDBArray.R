@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2024 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 #' based on a refactored implementation utilising newer TileDB features.
 #'
 #' @slot ctx A TileDB context object
-#' @slot uri A character despription with the array URI
+#' @slot uri A character description with the array URI
 #' @slot is.sparse A logical value whether the array is sparse or not
 #' @slot attrs A character vector to select particular column
 #' \sQuote{attributes}; default is an empty character vector implying
@@ -502,9 +502,9 @@ setValidity("tiledb_array", function(object) {
 #'
 #' Heterogeneous domains are supported, including timestamps and characters.
 #'
-#' This function may still still change; the current implementation should be
+#' This function may still change; the current implementation should be
 #' considered as an initial draft.
-#' @param x tiledb_array object
+#' @param x A `tiledb_array` object.
 #' @param i optional row index expression which can be a list in which case
 #' minimum and maximum of each list element determine a range; multiple list
 #' elements can be used to supply multiple ranges.
@@ -1252,7 +1252,7 @@ setMethod(
 #' as part of the left-hand side object, or as part of the data.frame
 #' provided appropriate column names.
 #'
-#' This function may still still change; the current implementation should be
+#' This function may still change; the current implementation should be
 #' considered as an initial draft.
 #' @param x sparse or dense TileDB array object
 #' @param i parameter row index
