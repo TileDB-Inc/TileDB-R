@@ -1803,7 +1803,7 @@ setGeneric(
 #' Retrieve query_layout values for the array
 #'
 #' A \code{tiledb_array} object can have a corresponding query with a given
-#' layout given layout. This methods returns the selection value for
+#' layout. This method returns the selection value for
 #' \sQuote{query_layout} as a character value.
 #' @param object A \code{tiledb_array} object
 #' @return A character value describing the query layout
