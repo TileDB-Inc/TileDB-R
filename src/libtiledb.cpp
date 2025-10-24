@@ -26,6 +26,7 @@
 #include <fstream>
 #include <algorithm>
 #include <unistd.h>
+#include <optional>
 
 using namespace Rcpp;
 
@@ -5924,4 +5925,83 @@ bool libtiledb_current_domain_is_empty(XPtr<tiledb::CurrentDomain> cd) {
 #else
   return false;
 #endif
+}
+
+
+/**
+ * Profile (2.29.0 or later)
+ */
+
+
+// [[Rcpp::export]]
+XPtr<tiledb::Profile> libtiledb_profile_new(Nullable<CharacterVector> name = R_NilValue, Nullable<CharacterVector> dir  = R_NilValue) {
+    std::optional<std::string> name_ = std::nullopt;
+    std::optional<std::string> dir_ = std::nullopt;
+    if (name.isNotNull()) {
+        name_ = as<std::string>(name);
+    }
+    if (name.isNotNull()) {
+        dir_ = as<std::string>(dir);
+    }
+     return make_xptr<tiledb::Profile>(new tiledb::Profile(name_, dir_));
+}
+
+// [[Rcpp::export]]
+XPtr<tiledb::Profile> libtiledb_profile_load(Nullable<CharacterVector> name = R_NilValue, Nullable<CharacterVector> dir = R_NilValue) {
+    std::optional<std::string> name_ = std::nullopt;
+    std::optional<std::string> dir_ = std::nullopt;
+    if (name.isNotNull()) {
+        name_ = as<std::string>(name);
+    }
+    if (name.isNotNull()) {
+        dir_ = as<std::string>(dir);
+    }
+    return make_xptr<tiledb::Profile>(new tiledb::Profile(tiledb::Profile::load(name_, dir_)));
+}
+
+// [[Rcpp:export]]
+void libtiledb_profile_remove(Nullable<CharacterVector> name = R_NilValue, Nullable<CharacterVector> dir = R_NilValue) {
+    std::optional<std::string> name_ = std::nullopt;
+    std::optional<std::string> dir_ = std::nullopt;
+    if (name.isNotNull()) {
+        name_ = as<std::string>(name);
+    }
+    if (name.isNotNull()) {
+        dir_ = as<std::string>(dir);
+    }
+    return tiledb::Profile::remove(name_, dir_);
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_profile_name(XPtr<tiledb::Profile> profile) {
+    return profile->name();
+}
+
+// [[Rcpp::export]]
+std::string libtiledb_profile_dir(XPtr<tiledb::Profile> profile) {
+    return profile->dir();
+}
+
+// [[Rcpp::export]]
+void libtiledb_profile_set_param(XPtr<tiledb::Profile> profile, const std::string& param, const std::string& value) {
+    return profile->set_param(param, value);
+}
+
+// [[Rcpp::export]]
+Nullable<CharacterVector> libtiledb_profile_get_param(XPtr<tiledb::Profile> profile, const std::string& param) {
+    auto maybe_value = profile->get_param(param);
+    if (maybe_value.has_value()) {
+        return wrap<CharacterVector>(maybe_value.value());
+    }
+    return R_NilValue;
+}
+
+// [[Rcpp::export]]
+void libtiledb_profile_save(XPtr<tiledb::Profile> profile) {
+    return profile->save();
+}
+
+// [[Rcpp:export]]
+std::string libtiledb_profile_dump(XPtr<tiledb::Profile> profile) {
+    return profile->dump();
 }

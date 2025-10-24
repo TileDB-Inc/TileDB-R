@@ -120,11 +120,14 @@ const tiledb_xptr_object tiledb_xptr_object_subarray{200};
 const tiledb_xptr_object tiledb_xptr_column_buffer{210};
 const tiledb_xptr_object tiledb_xptr_array_buffers{220};
 const tiledb_xptr_object tiledb_xptr_map_to_col_buf_t{230};
+const tiledb_xptr_object tiledb_xptr_profile{240};
 
 // the definitions above are internal to tiledb-r but we need a new value here
 // if we want tag the external pointer
 const tiledb_xptr_object tiledb_arrow_array_t{300};
 const tiledb_xptr_object tiledb_arrow_schema_t{310};
+
+
 
 // templated checkers for external pointer tags
 template <typename T>
@@ -188,6 +191,8 @@ template <> inline const int32_t XPtrTagType<ArrowArray> = tiledb_arrow_array_t;
 template <>
 inline const int32_t XPtrTagType<ArrowSchema> = tiledb_arrow_schema_t;
 
+template <> inline const int32_t XPtrTagType<tiledb::Profile> = tiledb_xptr_profile;
+
 constexpr const char *xptrObjToString(tiledb_xptr_object xp) {
   switch (xp) {
   case tiledb_xptr_default:
@@ -238,6 +243,8 @@ constexpr const char *xptrObjToString(tiledb_xptr_object xp) {
     return "ArrayBuffers";
   case tiledb_xptr_map_to_col_buf_t:
     return "map_to_col_buf_t";
+  case tiledb_xptr_profile:
+    return "Profile";
   case tiledb_arrow_array_t:
     return "ArrowArray";
   case tiledb_arrow_schema_t:
