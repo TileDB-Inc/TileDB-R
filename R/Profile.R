@@ -27,7 +27,7 @@ tiledb_profile <- function(name = NULL, dir = NULL) {
   stopifnot(`The 'dir' for the profile must be null or a character type` = is.null(name) || is.character(name))
   ptr <- libtiledb_profile_new(name, dir)
   profile <- new("tiledb_profile", ptr = ptr)
-  invisible(profile)
+  return(profile)
 }
 
 
@@ -36,14 +36,14 @@ tiledb_profile_load <- function(name = NULL, dir = NULL) {
   stopifnot(`The 'dir' for the profile must be null or a character type` = is.null(name) || is.character(name))
   ptr <- libtiledb_profile_load(name, dir)
   profile <- new("tiledb_profile", ptr = ptr)
-  invisible(profile)
+  return(profile)
 }
 
 tiledb_profile_remove <- function(name = NULL, dir = NULL) {
   stopifnot(`The 'name' for the profile must be null or a character type` = is.null(name) || is.character(name))
   stopifnot(`The 'dir' for the profile must be null or a character type` = is.null(name) || is.character(name))
   libtiledb_profile_remove(name, dir)
-  return()
+  return(invisible(NULL))
 }
 
 tiledb_profile_name <- function(profile) {
@@ -63,7 +63,7 @@ tiledb_profile_set_param <- function(profile, param, value) {
   stopifnot(`The 'param' arugment must have character type` = is.character(param))
   stopifnot(`The 'value' arugment must have character type` = is.character(value))
   libtiledb_profile_set_param(profile@ptr, param, value)
-  return()
+  return(invisible(NULL))
 }
 
 tiledb_profile_get_param <- function(profile, param) {
@@ -76,5 +76,5 @@ tiledb_profile_get_param <- function(profile, param) {
 tiledb_profile_save <- function(profile) {
   stopifnot(`The 'profile' argument must be a tiledb_profile object` = is(profile, "tiledb_profile"))
   libtiledb_profile_save(profile)
-  return()
+  return(invisible(NULL))
 }
