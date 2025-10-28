@@ -5955,7 +5955,7 @@ XPtr<tiledb::Profile> libtiledb_profile_load(Nullable<CharacterVector> name = R_
     return make_xptr<tiledb::Profile>(new tiledb::Profile(tiledb::Profile::load(name_, dir_)));
 }
 
-// [[Rcpp:export]]
+// [[Rcpp::export]]
 void libtiledb_profile_remove(Nullable<CharacterVector> name = R_NilValue, Nullable<CharacterVector> dir = R_NilValue) {
     auto name_ = as_optional_string(name);
     auto dir_ = as_optional_string(dir);

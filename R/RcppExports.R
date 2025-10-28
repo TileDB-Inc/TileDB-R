@@ -1241,6 +1241,10 @@ libtiledb_profile_load <- function(name = NULL, dir = NULL) {
     .Call(`_tiledb_libtiledb_profile_load`, name, dir)
 }
 
+libtiledb_profile_remove <- function(name = NULL, dir = NULL) {
+    invisible(.Call(`_tiledb_libtiledb_profile_remove`, name, dir))
+}
+
 libtiledb_profile_name <- function(profile) {
     .Call(`_tiledb_libtiledb_profile_name`, profile)
 }

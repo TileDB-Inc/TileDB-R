@@ -3702,6 +3702,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_profile_remove
+void libtiledb_profile_remove(Nullable<CharacterVector> name, Nullable<CharacterVector> dir);
+RcppExport SEXP _tiledb_libtiledb_profile_remove(SEXP nameSEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dir(dirSEXP);
+    libtiledb_profile_remove(name, dir);
+    return R_NilValue;
+END_RCPP
+}
 // libtiledb_profile_name
 std::string libtiledb_profile_name(XPtr<tiledb::Profile> profile);
 RcppExport SEXP _tiledb_libtiledb_profile_name(SEXP profileSEXP) {
@@ -4152,6 +4163,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_current_domain_is_empty", (DL_FUNC) &_tiledb_libtiledb_current_domain_is_empty, 1},
     {"_tiledb_libtiledb_profile_new", (DL_FUNC) &_tiledb_libtiledb_profile_new, 2},
     {"_tiledb_libtiledb_profile_load", (DL_FUNC) &_tiledb_libtiledb_profile_load, 2},
+    {"_tiledb_libtiledb_profile_remove", (DL_FUNC) &_tiledb_libtiledb_profile_remove, 2},
     {"_tiledb_libtiledb_profile_name", (DL_FUNC) &_tiledb_libtiledb_profile_name, 1},
     {"_tiledb_libtiledb_profile_dir", (DL_FUNC) &_tiledb_libtiledb_profile_dir, 1},
     {"_tiledb_libtiledb_profile_set_param", (DL_FUNC) &_tiledb_libtiledb_profile_set_param, 3},
