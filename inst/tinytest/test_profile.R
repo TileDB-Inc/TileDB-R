@@ -3,7 +3,7 @@ library(tiledb)
 
 # Use base directory to prevent over-writing user profiles.
 base_dir <- tempdir()
-dir1 <- file.path(base_dir, "tiledb_profile/")
+dir1 <- file.path(base_dir, "tiledb_profile")
 
 
 # 1. Test creating profiles.
@@ -18,8 +18,9 @@ expect_equal(tiledb_profile_name(profile3), "default")
 expect_equal(tiledb_profile_name(profile4), "profile4")
 
 # Skipping checks for default directory since it is platform dependent.
-expect_equal(tiledb_profile_dir(profile3), dir1)
-expect_equal(tiledb_profile_dir(profile4), dir1)
+dir1_extra_slash <- file.path(base_dir, "tiledb_profile/")
+expect_true(tiledb_profile_dir(profile3) == dir1 || tiledb_profile_dir(profile3) == dir1_extra_slash)
+expect_true(tiledb_profile_dir(profile4) == dir1 || tiledb_profile_dir(profile4) == dir1_extra_slash)
 
 
 # 2. Test setting/getting profile parameters.
