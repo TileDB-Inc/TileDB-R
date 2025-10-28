@@ -18,9 +18,26 @@ expect_equal(tiledb_profile_name(profile3), "default")
 expect_equal(tiledb_profile_name(profile4), "profile4")
 
 # Skipping checks for default directory since it is platform dependent.
-dir1_extra_slash <- file.path(base_dir, "tiledb_profile/")
-expect_true(tiledb_profile_dir(profile3) == dir1 || tiledb_profile_dir(profile3) == dir1_extra_slash)
-expect_true(tiledb_profile_dir(profile4) == dir1 || tiledb_profile_dir(profile4) == dir1_extra_slash)
+# Normalize paths on Windows to UNIX-style
+profile3_dir <- normalizePath(
+  path = tiledb_profile_dir(profile3), 
+  winslash = "/", 
+  mustWork = FALSE
+)
+expect_identical(
+  # trim trailing slashes
+  current = sub(pattern = "/+$", replacement = "", x = profile3_dir),
+  target = dir1
+)
+profile4_dir <- normalizePath(
+  path = tiledb_profile_dir(profile4), 
+  winslash = "/", 
+  mustWork = FALSE
+)
+expect_identical(
+  current = sub(pattern = "/+$", replacement = "", x = profile4_dir),
+  target = dir1
+)
 
 
 # 2. Test setting/getting profile parameters.
