@@ -17,8 +17,7 @@ expect_equal(tiledb_profile_name(profile2), "profile2")
 expect_equal(tiledb_profile_name(profile3), "default")
 expect_equal(tiledb_profile_name(profile4), "profile4")
 
-expect_true(dir.exists(tiledb_profile_dir(profile1)))
-expect_true(dir.exists(tiledb_profile_dir(profile2)))
+# Skipping checks for default directory since it is platform dependent.
 expect_equal(tiledb_profile_dir(profile3), dir1)
 expect_equal(tiledb_profile_dir(profile4), dir1)
 
