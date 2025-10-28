@@ -5932,43 +5932,33 @@ bool libtiledb_current_domain_is_empty(XPtr<tiledb::CurrentDomain> cd) {
  * Profile (2.29.0 or later)
  */
 
+std::optional<std::string> as_optional_string(Nullable<CharacterVector> param) {
+    if (param.isNull()) {
+        return std::nullopt;
+    }
+    CharacterVector tmp(param);
+    return std::string(tmp[0]);
+}
+
 
 // [[Rcpp::export]]
 XPtr<tiledb::Profile> libtiledb_profile_new(Nullable<CharacterVector> name = R_NilValue, Nullable<CharacterVector> dir  = R_NilValue) {
-    std::optional<std::string> name_ = std::nullopt;
-    std::optional<std::string> dir_ = std::nullopt;
-    if (name.isNotNull()) {
-        name_ = as<std::string>(name);
-    }
-    if (name.isNotNull()) {
-        dir_ = as<std::string>(dir);
-    }
-     return make_xptr<tiledb::Profile>(new tiledb::Profile(name_, dir_));
+    auto name_ = as_optional_string(name);
+    auto dir_ = as_optional_string(dir);
+    return make_xptr<tiledb::Profile>(new tiledb::Profile(name_, dir_));
 }
 
 // [[Rcpp::export]]
 XPtr<tiledb::Profile> libtiledb_profile_load(Nullable<CharacterVector> name = R_NilValue, Nullable<CharacterVector> dir = R_NilValue) {
-    std::optional<std::string> name_ = std::nullopt;
-    std::optional<std::string> dir_ = std::nullopt;
-    if (name.isNotNull()) {
-        name_ = as<std::string>(name);
-    }
-    if (name.isNotNull()) {
-        dir_ = as<std::string>(dir);
-    }
+    auto name_ = as_optional_string(name);
+    auto dir_ = as_optional_string(dir);
     return make_xptr<tiledb::Profile>(new tiledb::Profile(tiledb::Profile::load(name_, dir_)));
 }
 
 // [[Rcpp:export]]
 void libtiledb_profile_remove(Nullable<CharacterVector> name = R_NilValue, Nullable<CharacterVector> dir = R_NilValue) {
-    std::optional<std::string> name_ = std::nullopt;
-    std::optional<std::string> dir_ = std::nullopt;
-    if (name.isNotNull()) {
-        name_ = as<std::string>(name);
-    }
-    if (name.isNotNull()) {
-        dir_ = as<std::string>(dir);
-    }
+    auto name_ = as_optional_string(name);
+    auto dir_ = as_optional_string(dir);
     return tiledb::Profile::remove(name_, dir_);
 }
 
@@ -6001,7 +5991,8 @@ void libtiledb_profile_save(XPtr<tiledb::Profile> profile) {
     return profile->save();
 }
 
-// [[Rcpp:export]]
+// [[Rcpp::export]]
 std::string libtiledb_profile_dump(XPtr<tiledb::Profile> profile) {
     return profile->dump();
 }
+

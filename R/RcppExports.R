@@ -1261,6 +1261,10 @@ libtiledb_profile_save <- function(profile) {
     invisible(.Call(`_tiledb_libtiledb_profile_save`, profile))
 }
 
+libtiledb_profile_dump <- function(profile) {
+    .Call(`_tiledb_libtiledb_profile_dump`, profile)
+}
+
 vecbuf_to_shmem <- function(dir, name, buf, sz, numvar) {
     invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz, numvar))
 }
