@@ -6,6 +6,9 @@
 \usage{
 tiledb_profile_dir(profile)
 }
+\arguments{
+\item{profile}{A TileDB profile object}
+}
 \value{
 The directory of the 'tiledb_profile' object
 }

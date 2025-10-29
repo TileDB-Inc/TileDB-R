@@ -7,6 +7,8 @@
 tiledb_profile_get_param(profile, param)
 }
 \arguments{
+\item{profile}{A TileDB profile object}
+
 \item{param}{The key for the parameter to fetch}
 }
 \value{

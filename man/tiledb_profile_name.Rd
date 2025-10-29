@@ -6,6 +6,9 @@
 \usage{
 tiledb_profile_name(profile)
 }
+\arguments{
+\item{profile}{A TileDB profile object}
+}
 \value{
 The name of the 'tiledb_profile' object
 }

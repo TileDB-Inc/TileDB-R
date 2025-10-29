@@ -7,6 +7,8 @@
 tiledb_profile_set_param(profile, param, value)
 }
 \arguments{
+\item{profile}{A TileDB profile object}
+
 \item{param}{The key for the new parameter}
 
 \item{value}{The value for the new parameter}

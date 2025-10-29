@@ -10,6 +10,12 @@ setClass("tiledb_profile",
   slots = list(ptr = "externalptr")
 )
 
+#' Raw display of a profile object
+#'
+#' This method uses the display method provided by the underlying library.
+#'
+#' @param object A profile object
+#' @export
 setMethod(
   "raw_dump",
   signature(object = "tiledb_profile"),
@@ -58,6 +64,7 @@ tiledb_profile_remove <- function(name = NULL, dir = NULL) {
 
 #' Get the name of a 'tiledb_profile' object
 #'
+#' @param profile A TileDB profile object
 #' @return The name of the 'tiledb_profile' object
 #' @export
 tiledb_profile_name <- function(profile) {
@@ -68,6 +75,7 @@ tiledb_profile_name <- function(profile) {
 
 #' Get the directory of a 'tiledb_profile' object
 #'
+#' @param profile A TileDB profile object
 #' @return The directory of the 'tiledb_profile' object
 #' @export
 tiledb_profile_dir <- function(profile) {
@@ -78,6 +86,7 @@ tiledb_profile_dir <- function(profile) {
 
 #' Set a parameter on the 'tiledb_profile' object
 #'
+#' @param profile A TileDB profile object
 #' @param param The key for the new parameter
 #' @param value The value for the new parameter
 #' @export
@@ -91,6 +100,7 @@ tiledb_profile_set_param <- function(profile, param, value) {
 
 #' Get the value of a parameter set on the 'tiledb_profile' object
 #'
+#' @param profile A TileDB profile object
 #' @param param The key for the parameter to fetch
 #' @return The value of the requested parameter or NULL if no such parameter exists
 #' @export
