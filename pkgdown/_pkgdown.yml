@@ -98,12 +98,12 @@ reference:
   - matches("tiledb_get_query_status")
   - matches("tiledb_error_message")
   - matches("completedBatched")
-  - title: Profile
-    contents:
-    - starts_with("tiledb_profile")
   - matches("createBatched")
   - matches("fetchBatched")
   - matches("statusBatched")
+- title: Profile
+  contents:
+  - starts_with("tiledb_profile")
 - title: Group
   contents:
   - starts_with("tiledb_group")
