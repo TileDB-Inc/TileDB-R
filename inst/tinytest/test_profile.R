@@ -19,24 +19,29 @@ expect_equal(tiledb_profile_name(profile4), "profile4")
 
 # Skipping checks for default directory since it is platform dependent.
 # Normalize paths on Windows to UNIX-style
-profile3_dir <- normalizePath(
-  path = tiledb_profile_dir(profile3), 
-  winslash = "/", 
+expected_dir <- normalizePath(
+  path = dir1,
+  winslash = "/",
+  mustWork = FALSE
+)
+actual_dir_profile3 <- normalizePath(
+  path = tiledb_profile_dir(profile3),
+  winslash = "/",
   mustWork = FALSE
 )
 expect_identical(
   # trim trailing slashes
-  current = sub(pattern = "/+$", replacement = "", x = profile3_dir),
-  target = dir1
+  current = sub(pattern = "/+$", replacement = "", x = actual_dir_profile3),
+  target = expected_dir
 )
-profile4_dir <- normalizePath(
-  path = tiledb_profile_dir(profile4), 
-  winslash = "/", 
+actual_dir_profile4 <- normalizePath(
+  path = tiledb_profile_dir(profile4),
+  winslash = "/",
   mustWork = FALSE
 )
 expect_identical(
-  current = sub(pattern = "/+$", replacement = "", x = profile4_dir),
-  target = dir1
+  current = sub(pattern = "/+$", replacement = "", x = actual_dir_profile4),
+  target = expected_dir
 )
 
 
