@@ -101,6 +101,10 @@ reference:
   - matches("createBatched")
   - matches("fetchBatched")
   - matches("statusBatched")
+- title: Profile
+  contents:
+  - starts_with("tiledb_profile")
+  - ends_with("tiledb_profile-method")
 - title: Group
   contents:
   - starts_with("tiledb_group")

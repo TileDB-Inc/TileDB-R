@@ -1233,6 +1233,42 @@ libtiledb_current_domain_is_empty <- function(cd) {
     .Call(`_tiledb_libtiledb_current_domain_is_empty`, cd)
 }
 
+libtiledb_profile_new <- function(name = NULL, dir = NULL) {
+    .Call(`_tiledb_libtiledb_profile_new`, name, dir)
+}
+
+libtiledb_profile_load <- function(name = NULL, dir = NULL) {
+    .Call(`_tiledb_libtiledb_profile_load`, name, dir)
+}
+
+libtiledb_profile_remove <- function(name = NULL, dir = NULL) {
+    invisible(.Call(`_tiledb_libtiledb_profile_remove`, name, dir))
+}
+
+libtiledb_profile_name <- function(profile) {
+    .Call(`_tiledb_libtiledb_profile_name`, profile)
+}
+
+libtiledb_profile_dir <- function(profile) {
+    .Call(`_tiledb_libtiledb_profile_dir`, profile)
+}
+
+libtiledb_profile_set_param <- function(profile, param, value) {
+    invisible(.Call(`_tiledb_libtiledb_profile_set_param`, profile, param, value))
+}
+
+libtiledb_profile_get_param <- function(profile, param) {
+    .Call(`_tiledb_libtiledb_profile_get_param`, profile, param)
+}
+
+libtiledb_profile_save <- function(profile) {
+    invisible(.Call(`_tiledb_libtiledb_profile_save`, profile))
+}
+
+libtiledb_profile_dump <- function(profile) {
+    .Call(`_tiledb_libtiledb_profile_dump`, profile)
+}
+
 vecbuf_to_shmem <- function(dir, name, buf, sz, numvar) {
     invisible(.Call(`_tiledb_vecbuf_to_shmem`, dir, name, buf, sz, numvar))
 }

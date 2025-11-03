@@ -3678,6 +3678,108 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// libtiledb_profile_new
+XPtr<tiledb::Profile> libtiledb_profile_new(Nullable<CharacterVector> name, Nullable<CharacterVector> dir);
+RcppExport SEXP _tiledb_libtiledb_profile_new(SEXP nameSEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dir(dirSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_profile_new(name, dir));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_profile_load
+XPtr<tiledb::Profile> libtiledb_profile_load(Nullable<CharacterVector> name, Nullable<CharacterVector> dir);
+RcppExport SEXP _tiledb_libtiledb_profile_load(SEXP nameSEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dir(dirSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_profile_load(name, dir));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_profile_remove
+void libtiledb_profile_remove(Nullable<CharacterVector> name, Nullable<CharacterVector> dir);
+RcppExport SEXP _tiledb_libtiledb_profile_remove(SEXP nameSEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< Nullable<CharacterVector> >::type dir(dirSEXP);
+    libtiledb_profile_remove(name, dir);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_profile_name
+std::string libtiledb_profile_name(XPtr<tiledb::Profile> profile);
+RcppExport SEXP _tiledb_libtiledb_profile_name(SEXP profileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Profile> >::type profile(profileSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_profile_name(profile));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_profile_dir
+std::string libtiledb_profile_dir(XPtr<tiledb::Profile> profile);
+RcppExport SEXP _tiledb_libtiledb_profile_dir(SEXP profileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Profile> >::type profile(profileSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_profile_dir(profile));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_profile_set_param
+void libtiledb_profile_set_param(XPtr<tiledb::Profile> profile, const std::string& param, const std::string& value);
+RcppExport SEXP _tiledb_libtiledb_profile_set_param(SEXP profileSEXP, SEXP paramSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Profile> >::type profile(profileSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type value(valueSEXP);
+    libtiledb_profile_set_param(profile, param, value);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_profile_get_param
+Nullable<CharacterVector> libtiledb_profile_get_param(XPtr<tiledb::Profile> profile, const std::string& param);
+RcppExport SEXP _tiledb_libtiledb_profile_get_param(SEXP profileSEXP, SEXP paramSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Profile> >::type profile(profileSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type param(paramSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_profile_get_param(profile, param));
+    return rcpp_result_gen;
+END_RCPP
+}
+// libtiledb_profile_save
+void libtiledb_profile_save(XPtr<tiledb::Profile> profile);
+RcppExport SEXP _tiledb_libtiledb_profile_save(SEXP profileSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Profile> >::type profile(profileSEXP);
+    libtiledb_profile_save(profile);
+    return R_NilValue;
+END_RCPP
+}
+// libtiledb_profile_dump
+std::string libtiledb_profile_dump(XPtr<tiledb::Profile> profile);
+RcppExport SEXP _tiledb_libtiledb_profile_dump(SEXP profileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< XPtr<tiledb::Profile> >::type profile(profileSEXP);
+    rcpp_result_gen = Rcpp::wrap(libtiledb_profile_dump(profile));
+    return rcpp_result_gen;
+END_RCPP
+}
 // vecbuf_to_shmem
 void vecbuf_to_shmem(std::string dir, std::string name, XPtr<query_buf_t> buf, int sz, int numvar);
 RcppExport SEXP _tiledb_vecbuf_to_shmem(SEXP dirSEXP, SEXP nameSEXP, SEXP bufSEXP, SEXP szSEXP, SEXP numvarSEXP) {
@@ -4059,6 +4161,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tiledb_libtiledb_current_domain_set_ndrectangle", (DL_FUNC) &_tiledb_libtiledb_current_domain_set_ndrectangle, 2},
     {"_tiledb_libtiledb_current_domain_get_ndrectangle", (DL_FUNC) &_tiledb_libtiledb_current_domain_get_ndrectangle, 1},
     {"_tiledb_libtiledb_current_domain_is_empty", (DL_FUNC) &_tiledb_libtiledb_current_domain_is_empty, 1},
+    {"_tiledb_libtiledb_profile_new", (DL_FUNC) &_tiledb_libtiledb_profile_new, 2},
+    {"_tiledb_libtiledb_profile_load", (DL_FUNC) &_tiledb_libtiledb_profile_load, 2},
+    {"_tiledb_libtiledb_profile_remove", (DL_FUNC) &_tiledb_libtiledb_profile_remove, 2},
+    {"_tiledb_libtiledb_profile_name", (DL_FUNC) &_tiledb_libtiledb_profile_name, 1},
+    {"_tiledb_libtiledb_profile_dir", (DL_FUNC) &_tiledb_libtiledb_profile_dir, 1},
+    {"_tiledb_libtiledb_profile_set_param", (DL_FUNC) &_tiledb_libtiledb_profile_set_param, 3},
+    {"_tiledb_libtiledb_profile_get_param", (DL_FUNC) &_tiledb_libtiledb_profile_get_param, 2},
+    {"_tiledb_libtiledb_profile_save", (DL_FUNC) &_tiledb_libtiledb_profile_save, 1},
+    {"_tiledb_libtiledb_profile_dump", (DL_FUNC) &_tiledb_libtiledb_profile_dump, 1},
     {"_tiledb_vecbuf_to_shmem", (DL_FUNC) &_tiledb_vecbuf_to_shmem, 5},
     {"_tiledb_vlcbuf_to_shmem", (DL_FUNC) &_tiledb_vlcbuf_to_shmem, 4},
     {"_tiledb_querybuf_from_shmem", (DL_FUNC) &_tiledb_querybuf_from_shmem, 2},
