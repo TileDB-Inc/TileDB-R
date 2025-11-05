@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@ getContext <- function() tiledb_get_context()
 #'
 #' @param ctx A TileDB context object
 #' @return NULL, invisibly. The function is invoked for the side-effect of
-#' storing the VFS object.
+#' storing the Ctx object.
 #' @export
 tiledb_set_context <- function(ctx) {
   stopifnot(`The 'ctx' argument must be a tiledb_ctx object` = is(ctx, "tiledb_ctx"))

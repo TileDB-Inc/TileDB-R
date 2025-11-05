@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2023 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 ##' @param arr A TileDB Array object
 ##' @param key A character value describing a metadata key
 ##' @return A logical value indicating if the given key exists in the
-##'   metdata of the given array
+##'   metadata of the given array
 ##' @export
 tiledb_has_metadata <- function(arr, key) {
   stopifnot(

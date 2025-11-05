@@ -9,7 +9,7 @@ tiledb_query_set_subarray(query, subarray, type)
 \arguments{
 \item{query}{A TileDB Query object}
 
-\item{subarray}{A subarry vector object}
+\item{subarray}{A subarray vector object}
 
 \item{type}{An optional type as a character, if missing type is
 inferred from the vector.}
