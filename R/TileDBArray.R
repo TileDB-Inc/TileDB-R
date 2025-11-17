@@ -1061,7 +1061,6 @@ setMethod(
               if (has_dumpbuffers) {
                 vecbuf_to_shmem(x@dumpbuffers, name, buf, estsz, varnum)
               }
-              libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
               spdl::debug("[getResult] calling libtiledb_query_get_buffer_ptr")
               col <- libtiledb_query_get_buffer_ptr(buf, asint64)[seq_len(estsz)]
               if (!is.null(dictionaries[[name]])) { # if there is a dictionary
