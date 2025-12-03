@@ -95,7 +95,7 @@ tiledb_array_schema <- function(
     } # make it a list so that lapply works below
     stopifnot(
       "length of 'attrs' cannot be zero" = length(attrs) > 0,
-      "'attrs' must be a list of one or tiled_attr objects" = all(vapply(attrs, is_attr, logical(1)))
+      "'attrs' must be a list of one or tiledb_attr objects" = all(vapply(attrs, is_attr, logical(1)))
     )
   } else {
     attrs <- NULL
