@@ -1,0 +1,1594 @@
+# Package index
+
+## Ctx
+
+- [`tiledb_ctx-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx-class.md)
+  : An S4 class for a TileDB context
+
+- [`tiledb_ctx()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx.md)
+  :
+
+  Creates a `tiledb_ctx` object
+
+- [`tiledb_ctx_set_default_tags()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx_set_default_tags.md)
+  : Sets default context tags
+
+- [`tiledb_ctx_set_tag()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx_set_tag.md)
+  : Sets a string:string "tag" on the Ctx
+
+- [`tiledb_ctx_stats()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ctx_stats.md)
+  : Return context statistics as a JSON string
+
+- [`tiledb_is_supported_fs()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_is_supported_fs.md)
+  : Query if a TileDB backend is supported
+
+- [`tiledb_get_context()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_context.md)
+  : Retrieve a TileDB context object from the package cache
+
+- [`tiledb_set_context()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_set_context.md)
+  : Store a TileDB context object in the package cache
+
+- [`config(`*`<tiledb_ctx>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/config-tiledb_ctx-method.md)
+  :
+
+  Retrieve the `tiledb_config` object from the `tiledb_ctx`
+
+## Config
+
+- [`tiledb_config-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config-class.md)
+  : An S4 class for a TileDB configuration
+
+- [`tiledb_config()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config.md)
+  : Creates a TileDB Config object
+
+- [`tiledb_config_as_built_json()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_as_built_json.md)
+  : Return the 'AsBuilt' JSON string
+
+- [`tiledb_config_as_built_show()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_as_built_show.md)
+  : Display the 'AsBuilt' JSON string
+
+- [`tiledb_config_load()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_load.md)
+  : Load a saved TileDB Config file from disk
+
+- [`tiledb_config_save()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_save.md)
+  : Save a TileDB Config object to a local text file
+
+- [`tiledb_config_unset()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_config_unset.md)
+  : Unset a TileDB Config parameter to its default value
+
+- [`as.vector(`*`<tiledb_config>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/as.vector.tiledb_config.md)
+  : Convert a TileDB Config object to a R vector
+
+- [`as.data.frame(`*`<tiledb_config>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/as.data.frame.tiledb_config.md)
+  :
+
+  Convert a TileDB Config object to `data.frame`
+
+- [`show(`*`<tiledb_config>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_config-method.md)
+  : Prints the config object to STDOUT
+
+- [`` `[`( ``*`<tiledb_config>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_config-ANY-method.md)
+  : Gets a config parameter value
+
+- [`` `[<-`( ``*`<tiledb_config>`*`,`*`<ANY>`*`,`*`<ANY>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_config-ANY-ANY-ANY-method.md)
+  : Sets a config parameter value
+
+- [`save_allocation_size_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_allocation_size_preference.md)
+  [`load_allocation_size_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_allocation_size_preference.md)
+  [`get_allocation_size_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_allocation_size_preference.md)
+  [`set_allocation_size_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_allocation_size_preference.md)
+  : Store allocation size preference
+
+## Array
+
+- [`tiledb_array_create()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_create.md)
+  : Creates a new TileDB array given an input schema.
+
+- [`tiledb_array()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array.md)
+  [`tiledb_dense()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array.md)
+  [`tiledb_sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array.md)
+  : Constructs a tiledb_array object backed by a persisted tiledb array
+  uri
+
+- [`` `attrs<-`( ``*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-set-tiledb_array-method.md)
+  : Selects attributes for the given TileDB array
+
+- [`attrs(`*`<tiledb_array>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array-ANY-method.md)
+  :
+
+  Retrieve attributes from `tiledb_array` object
+
+- [`attrs(`*`<tiledb_array_schema>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-ANY-method.md)
+  :
+
+  Returns a list of all `tiledb_attr` objects associated with the
+  `tiledb_array_schema`
+
+- [`attrs(`*`<tiledb_array_schema>`*`,`*`<character>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-character-method.md)
+  :
+
+  Returns a `tiledb_attr` object associated with the
+  `tiledb_array_schema` with a given name.
+
+- [`attrs(`*`<tiledb_array_schema>`*`,`*`<numeric>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-numeric-method.md)
+  :
+
+  Returns a `tiledb_attr` object associated with the
+  `tiledb_array_schema` with a given index
+
+- [`cell_order(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/cell_order-tiledb_array_schema-method.md)
+  :
+
+  Returns the cell layout string associated with the
+  `tiledb_array_schema`
+
+- [`` `datetimes_as_int64<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/datetimes_as_int64-set-tiledb_array-method.md)
+  : Set datetimes_as_int64 toggle
+
+- [`datetimes_as_int64()`](https://tiledb-inc.github.io/TileDB-R/reference/datetimes_as_int64-tiledb_array-method.md)
+  : Retrieve datetimes_as_int64 toggle
+
+- [`dim(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dim.tiledb_array_schema.md)
+  : Retrieve the dimension (domain extent) of the domain
+
+- [`dimensions(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dimensions-tiledb_array_schema-method.md)
+  :
+
+  Returns a list of `tiledb_dim` objects associated with the
+  `tiledb_array_schema`
+
+- [`domain(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/domain-tiledb_array_schema-method.md)
+  :
+
+  Returns the `tiledb_domain` object associated with a given
+  `tiledb_array_schema`
+
+- [`` `extended<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/extended-set-tiledb_array-method.md)
+  : Set data.frame extended return columns toggle
+
+- [`extended()`](https://tiledb-inc.github.io/TileDB-R/reference/extended-tiledb_array-method.md)
+  : Retrieve data.frame extended returns columns toggle
+
+- [`filter_list(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_array_schema-method.md)
+  :
+
+  Returns the offsets and coordinate filter_lists associated with the
+  `tiledb_array_schema`
+
+- [`is.sparse(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/is.sparse-tiledb_array_schema-method.md)
+  : Returns TRUE if the tiledb_array_schema is sparse, else FALSE
+
+- [`` `query_condition<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/query_condition-set-tiledb_array-method.md)
+  : Set query_condition object for the array
+
+- [`query_condition()`](https://tiledb-inc.github.io/TileDB-R/reference/query_condition-tiledb_array-method.md)
+  : Retrieve query_condition value for the array
+
+- [`` `query_layout<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/query_layout-set-tiledb_array-method.md)
+  : Set query_layout return values for the array
+
+- [`query_layout()`](https://tiledb-inc.github.io/TileDB-R/reference/query_layout-tiledb_array-method.md)
+  : Retrieve query_layout values for the array
+
+- [`` `query_statistics<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/query_statistics-set-tiledb_array-method.md)
+  : Set query_statistics toggle
+
+- [`query_statistics()`](https://tiledb-inc.github.io/TileDB-R/reference/query_statistics-tiledb_array-method.md)
+  : Retrieve query_statistics toggle
+
+- [`raw_dump(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_array_schema-method.md)
+  : Raw display of an array schema object
+
+- [`` `return.array<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/return.array-set-tiledb_array-method.md)
+  : Set array return toggle
+
+- [`return.array()`](https://tiledb-inc.github.io/TileDB-R/reference/return.array-tiledb_array-method.md)
+  : Retrieve array return toggle
+
+- [`` `return.data.frame<-`( ``*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-set-tiledb_array-method.md)
+  : Set data.frame return toggle
+
+- [`return.data.frame(`*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-tiledb_array-method.md)
+  : Retrieve data.frame return toggle
+
+- [`` `return.matrix<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/return.matrix-set-tiledb_array-method.md)
+  : Set matrix return toggle
+
+- [`return.matrix()`](https://tiledb-inc.github.io/TileDB-R/reference/return.matrix-tiledb_array-method.md)
+  : Retrieve matrix return toggle
+
+- [`` `return_as<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/return_as-set-tiledb_array-method.md)
+  : Retrieve return_as conversion preference
+
+- [`return_as()`](https://tiledb-inc.github.io/TileDB-R/reference/return_as-tiledb_array-method.md)
+  : Retrieve return_as conversion preference
+
+- [`schema(`*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/schema-tiledb_array-method.md)
+  : Return a schema from a tiledb_array object
+
+- [`` `selected_points<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/selected_points-set-tiledb_array-method.md)
+  : Set selected_points return values for the array
+
+- [`selected_points()`](https://tiledb-inc.github.io/TileDB-R/reference/selected_points-tiledb_array-method.md)
+  : Retrieve selected_points values for the array
+
+- [`` `selected_ranges<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/selected_ranges-set-tiledb_array-method.md)
+  : Set selected_ranges return values for the array
+
+- [`selected_ranges()`](https://tiledb-inc.github.io/TileDB-R/reference/selected_ranges-tiledb_array-method.md)
+  : Retrieve selected_ranges values for the array
+
+- [`show(`*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_array-method.md)
+  : Prints a tiledb_array object
+
+- [`show(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_array_schema-method.md)
+  : Prints an array schema object
+
+- [`` `strings_as_factors<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/strings_as_factors-set-tiledb_array-method.md)
+  : Set strings_as_factors return toggle
+
+- [`strings_as_factors()`](https://tiledb-inc.github.io/TileDB-R/reference/strings_as_factors-tiledb_array-method.md)
+  : Retrieve strings_as_factors conversion toggle
+
+- [`` `[`( ``*`<tiledb_array>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_array-ANY-method.md)
+  : Returns a TileDB array, allowing for specific subset ranges.
+
+- [`` `[<-`( ``*`<tiledb_array>`*`,`*`<ANY>`*`,`*`<ANY>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/subset-tiledb_array-ANY-ANY-ANY-method.md)
+  : Sets a tiledb array value or value range
+
+- [`tdb_collect(`*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tdb_collect-tiledb_array-method.md)
+  : Collect the query results to finalize piped expression
+
+- [`tdb_filter(`*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tdb_filter-tiledb_array-method.md)
+  : Filter from array for query via logical conditions
+
+- [`tdb_select(`*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tdb_select-tiledb_array-method.md)
+  : Select attributes from array for query
+
+- [`tile_order(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tile_order-tiledb_array_schema-method.md)
+  :
+
+  Returns the tile layout string associated with the
+  `tiledb_array_schema`
+
+- [`tiledb_array-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array-class.md)
+  : An S4 class for a TileDB Array
+
+- [`tiledb_array_apply_aggregate()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_apply_aggregate.md)
+  : Run an aggregate query on the given (sparse) array and attribute
+
+- [`tiledb_array_close()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_close.md)
+  : Close a TileDB Array
+
+- [`tiledb_array_delete_fragments()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_delete_fragments.md)
+  : Delete fragments written between the start and end times given
+
+- [`tiledb_array_delete_fragments_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_delete_fragments_list.md)
+  : Delete fragments written given by their URIs
+
+- [`tiledb_array_get_non_empty_domain_from_index()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_get_non_empty_domain_from_index.md)
+  : Get the non-empty domain from a TileDB Array by index
+
+- [`tiledb_array_get_non_empty_domain_from_name()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_get_non_empty_domain_from_name.md)
+  : Get the non-empty domain from a TileDB Array by name
+
+- [`tiledb_array_has_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_has_enumeration.md)
+  : Check for Enumeration (aka Factor aka Dictionary)
+
+- [`tiledb_array_is_heterogeneous()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_heterogeneous.md)
+  : Check for Heterogeneous Domain
+
+- [`tiledb_array_is_homogeneous()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_homogeneous.md)
+  : Check for Homogeneous Domain
+
+- [`tiledb_array_is_open()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_open.md)
+  : Test if TileDB Array is open
+
+- [`tiledb_array_is_open_for_reading()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_open_for_reading.md)
+  : Test if TileDB Array is open for reading
+
+- [`tiledb_array_is_open_for_writing()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_is_open_for_writing.md)
+  : Test if TileDB Array is open for writing
+
+- [`tiledb_array_open()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_open.md)
+  : Open a TileDB Array
+
+- [`tiledb_array_open_at()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_open_at.md)
+  : Open a TileDB Array at Timestamp
+
+- [`tiledb_array_schema-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema-class.md)
+  : An S4 class for the TileDB array schema
+
+- [`tiledb_array_schema()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema.md)
+  :
+
+  Constructs a `tiledb_array_schema` object
+
+- [`schema_check()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_check.md)
+  [`check()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_check.md)
+  [`tiledb_array_schema_check()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_check.md)
+  : Check the schema for correctness
+
+- [`tiledb_array_schema_evolution-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution-class.md)
+  : An S4 class for a TileDB ArraySchemaEvolution object
+
+- [`tiledb_array_schema_evolution()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution.md)
+  : Creates a 'tiledb_array_schema_evolution' object
+
+- [`tiledb_array_schema_evolution_add_attribute()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_attribute.md)
+  : Add an Attribute to a TileDB Array Schema Evolution object
+
+- [`tiledb_array_schema_evolution_add_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration.md)
+  : Add an Enumeration to a TileDB Array Schema Evolution object
+
+- [`tiledb_array_schema_evolution_add_enumeration_empty()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration_empty.md)
+  : Evolve an Array Schema by adding an empty Enumeration
+
+- [`tiledb_array_schema_evolution_array_evolve()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_array_evolve.md)
+  : Evolve an Array Schema
+
+- [`tiledb_array_schema_evolution_drop_attribute()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_drop_attribute.md)
+  : Drop an attribute given by name from a TileDB Array Schema Evolution
+  object
+
+- [`tiledb_array_schema_evolution_drop_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_drop_enumeration.md)
+  : Drop an Enumeration given by name from a TileDB Array Schema
+  Evolution object
+
+- [`tiledb_array_schema_evolution_expand_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_expand_current_domain.md)
+  : Expand an the Current Domain of an Array via Array Schema Evolution
+
+- [`tiledb_array_schema_evolution_extend_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_extend_enumeration.md)
+  : Extend an Evolution via Array Schema Evolution
+
+- [`allows_dups()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_allows_dups.md)
+  [`tiledb_array_schema_get_allows_dups()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_allows_dups.md)
+  : Returns logical value whether the array schema allows duplicate
+  values or not. This is only valid for sparse arrays.
+
+- [`capacity()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_capacity.md)
+  [`tiledb_array_schema_get_capacity()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_capacity.md)
+  : Retrieve schema capacity (for sparse fragments)
+
+- [`tiledb_array_schema_get_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_current_domain.md)
+  : Get the Current Domain of an Array Schema
+
+- [`` `allows_dups<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_allows_dups.md)
+  [`tiledb_array_schema_set_allows_dups()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_allows_dups.md)
+  : Sets toggle whether the array schema allows duplicate values or not.
+  This is only valid for sparse arrays.
+
+- [`` `capacity<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_capacity.md)
+  [`tiledb_array_schema_set_capacity()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_capacity.md)
+  : Sets the schema capacity (for sparse fragments)
+
+- [`tiledb_array_schema_set_coords_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_coords_filter_list.md)
+  : Set a Filter List for Coordinate of a TileDB Schema
+
+- [`tiledb_array_schema_set_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_current_domain.md)
+  : Set a Current Domain of an Array Schema
+
+- [`tiledb_array_schema_set_enumeration_empty()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_enumeration_empty.md)
+  : Add an empty Enumeration to a Schema
+
+- [`tiledb_array_schema_set_offsets_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_offsets_filter_list.md)
+  : Set a Filter List for Variable-Sized Offsets of a TileDB Schema
+
+- [`tiledb_array_schema_set_validity_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_validity_filter_list.md)
+  : Set a Filter List for Validity of a TileDB Schema
+
+- [`tiledb_array_schema_version()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_version.md)
+  : Check the version of the array schema
+
+- [`tiledb_array_upgrade_version()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_upgrade_version.md)
+  : Upgrade an Array to the current TileDB Array Schema Format
+
+- [`tiledb_ndim(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_array_schema-method.md)
+  :
+
+  Return the number of dimensions associated with the
+  `tiledb_array_schema`
+
+- [`tiledb_subarray-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_subarray-class.md)
+  : An S4 class for a TileDB Subarray
+
+- [`tiledb_subarray()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_subarray.md)
+  :
+
+  Constructs a `tiledb_subarray` object from a TileDB Query
+
+- [`tiledb_subarray_to_query()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_subarray_to_query.md)
+  : Apply a Subarray to a Query
+
+- [`save_return_as_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_return_as_preference.md)
+  [`load_return_as_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_return_as_preference.md)
+  [`get_return_as_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_return_as_preference.md)
+  [`set_return_as_preference()`](https://tiledb-inc.github.io/TileDB-R/reference/save_return_as_preference.md)
+  : Store object conversion preference
+
+- [`tiledb_datatype_R_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_datatype_R_type.md)
+  : Map from TileDB type to R datatype
+
+## ArraySchema
+
+- [`tiledb_array_schema-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema-class.md)
+  : An S4 class for the TileDB array schema
+
+- [`tiledb_array_schema()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema.md)
+  :
+
+  Constructs a `tiledb_array_schema` object
+
+- [`schema_check()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_check.md)
+  [`check()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_check.md)
+  [`tiledb_array_schema_check()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_check.md)
+  : Check the schema for correctness
+
+- [`tiledb_array_schema_evolution-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution-class.md)
+  : An S4 class for a TileDB ArraySchemaEvolution object
+
+- [`tiledb_array_schema_evolution()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution.md)
+  : Creates a 'tiledb_array_schema_evolution' object
+
+- [`tiledb_array_schema_evolution_add_attribute()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_attribute.md)
+  : Add an Attribute to a TileDB Array Schema Evolution object
+
+- [`tiledb_array_schema_evolution_add_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration.md)
+  : Add an Enumeration to a TileDB Array Schema Evolution object
+
+- [`tiledb_array_schema_evolution_add_enumeration_empty()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration_empty.md)
+  : Evolve an Array Schema by adding an empty Enumeration
+
+- [`tiledb_array_schema_evolution_array_evolve()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_array_evolve.md)
+  : Evolve an Array Schema
+
+- [`tiledb_array_schema_evolution_drop_attribute()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_drop_attribute.md)
+  : Drop an attribute given by name from a TileDB Array Schema Evolution
+  object
+
+- [`tiledb_array_schema_evolution_drop_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_drop_enumeration.md)
+  : Drop an Enumeration given by name from a TileDB Array Schema
+  Evolution object
+
+- [`tiledb_array_schema_evolution_expand_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_expand_current_domain.md)
+  : Expand an the Current Domain of an Array via Array Schema Evolution
+
+- [`tiledb_array_schema_evolution_extend_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_extend_enumeration.md)
+  : Extend an Evolution via Array Schema Evolution
+
+- [`allows_dups()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_allows_dups.md)
+  [`tiledb_array_schema_get_allows_dups()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_allows_dups.md)
+  : Returns logical value whether the array schema allows duplicate
+  values or not. This is only valid for sparse arrays.
+
+- [`capacity()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_capacity.md)
+  [`tiledb_array_schema_get_capacity()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_capacity.md)
+  : Retrieve schema capacity (for sparse fragments)
+
+- [`tiledb_array_schema_get_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_current_domain.md)
+  : Get the Current Domain of an Array Schema
+
+- [`` `allows_dups<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_allows_dups.md)
+  [`tiledb_array_schema_set_allows_dups()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_allows_dups.md)
+  : Sets toggle whether the array schema allows duplicate values or not.
+  This is only valid for sparse arrays.
+
+- [`` `capacity<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_capacity.md)
+  [`tiledb_array_schema_set_capacity()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_capacity.md)
+  : Sets the schema capacity (for sparse fragments)
+
+- [`tiledb_array_schema_set_coords_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_coords_filter_list.md)
+  : Set a Filter List for Coordinate of a TileDB Schema
+
+- [`tiledb_array_schema_set_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_current_domain.md)
+  : Set a Current Domain of an Array Schema
+
+- [`tiledb_array_schema_set_enumeration_empty()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_enumeration_empty.md)
+  : Add an empty Enumeration to a Schema
+
+- [`tiledb_array_schema_set_offsets_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_offsets_filter_list.md)
+  : Set a Filter List for Variable-Sized Offsets of a TileDB Schema
+
+- [`tiledb_array_schema_set_validity_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_validity_filter_list.md)
+  : Set a Filter List for Validity of a TileDB Schema
+
+- [`tiledb_array_schema_version()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_version.md)
+  : Check the version of the array schema
+
+- [`r_to_tiledb_type()`](https://tiledb-inc.github.io/TileDB-R/reference/r_to_tiledb_type.md)
+  : Look up TileDB type corresponding to the type of an R object
+
+- [`tiledb_schema_get_names()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_names.md)
+  : Get all Dimension and Attribute Names
+
+- [`tiledb_schema_get_types()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_types.md)
+  : Get all Dimension and Attribute Types
+
+- [`tiledb_schema_get_dim_attr_status()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_dim_attr_status.md)
+  : Get Dimension or Attribute Status
+
+- [`attrs(`*`<tiledb_array_schema>`*`,`*`<character>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-character-method.md)
+  :
+
+  Returns a `tiledb_attr` object associated with the
+  `tiledb_array_schema` with a given name.
+
+- [`schema(`*`<character>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/schema-character-method.md)
+  : Return a schema from a URI character value
+
+- [`tiledb_schema_object()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_object.md)
+  : Succinctly describe a TileDB array schema
+
+- [`describe()`](https://tiledb-inc.github.io/TileDB-R/reference/describe.md)
+  : Describe a TileDB array schema via code to create it
+
+## Attribute
+
+- [`tiledb_attr-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attr-class.md)
+  : An S4 class for a TileDB attribute
+
+- [`tiledb_attr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attr.md)
+  :
+
+  Constructs a `tiledb_attr` object
+
+- [`tiledb_attribute_get_cell_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_cell_size.md)
+  : Get the TileDB Attribute cell size
+
+- [`cell_val_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_cell_val_num.md)
+  [`tiledb_attribute_get_cell_val_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_cell_val_num.md)
+  : Return the number of scalar values per attribute cell
+
+- [`tiledb_attribute_get_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_enumeration.md)
+  [`tiledb_attribute_get_enumeration_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_enumeration.md)
+  : Get the TileDB Attribute Enumeration
+
+- [`tiledb_attribute_get_fill_value()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_fill_value.md)
+  : Get the fill value for a TileDB Attribute
+
+- [`tiledb_attribute_get_nullable()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_nullable.md)
+  : Get the TileDB Attribute Nullable flag value
+
+- [`tiledb_attribute_has_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_has_enumeration.md)
+  : Test if TileDB Attribute has an Enumeration
+
+- [`tiledb_attribute_is_ordered_enumeration_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_is_ordered_enumeration_ptr.md)
+  : Check if TileDB Attribute Enumeration is Ordered
+
+- [`tiledb_attribute_is_variable_sized()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_is_variable_sized.md)
+  : Check whether TileDB Attribute is variable-sized
+
+- [`` `cell_val_num<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_cell_val_num.md)
+  [`tiledb_attribute_set_cell_val_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_cell_val_num.md)
+  : Set the number of scalar values per attribute cell
+
+- [`tiledb_attribute_set_enumeration_name()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_enumeration_name.md)
+  : Set a TileDB Attribute Enumeration Name
+
+- [`tiledb_attribute_set_fill_value()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_fill_value.md)
+  : Set the fill value for a TileDB Attribute
+
+- [`tiledb_attribute_set_nullable()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_nullable.md)
+  : Set the TileDB Attribute Nullable flags
+
+- [`` `attrs<-`( ``*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-set-tiledb_array-method.md)
+  : Selects attributes for the given TileDB array
+
+- [`attrs(`*`<tiledb_array>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array-ANY-method.md)
+  :
+
+  Retrieve attributes from `tiledb_array` object
+
+- [`attrs(`*`<tiledb_array_schema>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-ANY-method.md)
+  :
+
+  Returns a list of all `tiledb_attr` objects associated with the
+  `tiledb_array_schema`
+
+- [`attrs(`*`<tiledb_array_schema>`*`,`*`<character>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-character-method.md)
+  :
+
+  Returns a `tiledb_attr` object associated with the
+  `tiledb_array_schema` with a given name.
+
+- [`attrs(`*`<tiledb_array_schema>`*`,`*`<numeric>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/attrs-tiledb_array_schema-numeric-method.md)
+  :
+
+  Returns a `tiledb_attr` object associated with the
+  `tiledb_array_schema` with a given index
+
+- [`schema()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`return.data.frame()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `return.data.frame<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `attrs<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`raw_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`domain()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`dimensions()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`attrs()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`cell_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `filter_list<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tiledb_ndim()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`name()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`datatype()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`config()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.integral()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`nfilters()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_filter()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_select()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_collect()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  : Generic Methods
+
+- [`datatype(`*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/datatype-tiledb_attr-method.md)
+  :
+
+  Return the `tiledb_attr` datatype
+
+- [`` `filter_list<-`( ``*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_attr-method.md)
+  : Sets the TileDB Filter List for the TileDB Attribute object
+
+- [`filter_list(`*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_attr-method.md)
+  : Returns the TileDB Filter List object associated with the given
+  TileDB Attribute
+
+- [`name(`*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/name-tiledb_attr-method.md)
+  :
+
+  Return the `tiledb_attr` name
+
+- [`raw_dump(`*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_attr-method.md)
+  : Raw display of an attribute object
+
+- [`show(`*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_attr-method.md)
+  : Prints an attribute object
+
+- [`has_attribute()`](https://tiledb-inc.github.io/TileDB-R/reference/has_attribute.md)
+  : Check a schema for a given attribute name
+
+## Filter
+
+- [`tiledb_filter-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter-class.md)
+  : An S4 class for a TileDB filter
+
+- [`tiledb_filter()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter.md)
+  :
+
+  Constructs a `tiledb_filter` object
+
+- [`tiledb_filter_get_option()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_get_option.md)
+  : Returns the filter's option
+
+- [`tiledb_filter_list-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list-class.md)
+  : An S4 class for a TileDB filter list
+
+- [`tiledb_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list.md)
+  :
+
+  Constructs a `tiledb_filter_list` object
+
+- [`max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_get_max_chunk_size.md)
+  [`tiledb_filter_list_get_max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_get_max_chunk_size.md)
+  : Returns the filter_list's max_chunk_size
+
+- [`set_max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_set_max_chunk_size.md)
+  [`tiledb_filter_list_set_max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_set_max_chunk_size.md)
+  : Set the filter_list's max_chunk_size
+
+- [`tiledb_filter_set_option()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_set_option.md)
+  : Set the option for a filter
+
+- [`tiledb_filter_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_type.md)
+  : Returns the type of the filter used
+
+- [`` `filter_list<-`( ``*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_attr-method.md)
+  : Sets the TileDB Filter List for the TileDB Attribute object
+
+- [`` `filter_list<-`( ``*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_dim-method.md)
+  : Sets the TileDB Filter List for the TileDB Dimension object
+
+- [`filter_list(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_array_schema-method.md)
+  :
+
+  Returns the offsets and coordinate filter_lists associated with the
+  `tiledb_array_schema`
+
+- [`filter_list(`*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_attr-method.md)
+  : Returns the TileDB Filter List object associated with the given
+  TileDB Attribute
+
+- [`filter_list(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_dim-method.md)
+  : Returns the TileDB Filter List object associated with the given
+  TileDB Dimension
+
+- [`schema()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`return.data.frame()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `return.data.frame<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `attrs<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`raw_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`domain()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`dimensions()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`attrs()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`cell_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `filter_list<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tiledb_ndim()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`name()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`datatype()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`config()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.integral()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`nfilters()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_filter()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_select()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_collect()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  : Generic Methods
+
+- [`show(`*`<tiledb_filter>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_filter-method.md)
+  : Prints a filter object
+
+## FilterList
+
+- [`nfilters(`*`<tiledb_filter_list>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/nfilters-tiledb_filter_list-method.md)
+  : Returns the filter_list's number of filters
+
+- [`show(`*`<tiledb_filter_list>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_filter_list-method.md)
+  : Prints a filter_list object
+
+- [`` `[`( ``*`<tiledb_filter_list>`*`,`*`<ANY>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/sub-tiledb_filter_list-ANY-method.md)
+  : Returns the filter at given index
+
+- [`tiledb_filter_list-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list-class.md)
+  : An S4 class for a TileDB filter list
+
+- [`tiledb_filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list.md)
+  :
+
+  Constructs a `tiledb_filter_list` object
+
+- [`max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_get_max_chunk_size.md)
+  [`tiledb_filter_list_get_max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_get_max_chunk_size.md)
+  : Returns the filter_list's max_chunk_size
+
+- [`set_max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_set_max_chunk_size.md)
+  [`tiledb_filter_list_set_max_chunk_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filter_list_set_max_chunk_size.md)
+  : Set the filter_list's max_chunk_size
+
+- [`` `filter_list<-`( ``*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_attr-method.md)
+  : Sets the TileDB Filter List for the TileDB Attribute object
+
+- [`` `filter_list<-`( ``*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_dim-method.md)
+  : Sets the TileDB Filter List for the TileDB Dimension object
+
+- [`filter_list(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_array_schema-method.md)
+  :
+
+  Returns the offsets and coordinate filter_lists associated with the
+  `tiledb_array_schema`
+
+- [`filter_list(`*`<tiledb_attr>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_attr-method.md)
+  : Returns the TileDB Filter List object associated with the given
+  TileDB Attribute
+
+- [`filter_list(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_dim-method.md)
+  : Returns the TileDB Filter List object associated with the given
+  TileDB Dimension
+
+- [`schema()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`return.data.frame()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `return.data.frame<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `attrs<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`raw_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`domain()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`dimensions()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`attrs()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`cell_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `filter_list<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tiledb_ndim()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`name()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`datatype()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`config()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.integral()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`nfilters()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_filter()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_select()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_collect()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  : Generic Methods
+
+## Domain
+
+- [`tiledb_domain-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain-class.md)
+  : An S4 class for a TileDB domain
+
+- [`tiledb_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain.md)
+  :
+
+  Constructs a `tiledb_domain` object
+
+- [`tiledb_domain_get_dimension_from_index()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain_get_dimension_from_index.md)
+  : Returns a Dimension indicated by index for the given TileDB Domain
+
+- [`tiledb_domain_get_dimension_from_name()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain_get_dimension_from_name.md)
+  : Returns a Dimension indicated by name for the given TileDB Domain
+
+- [`tiledb_domain_has_dimension()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_domain_has_dimension.md)
+  : Check a domain for a given dimension name
+
+- [`schema()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`return.data.frame()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `return.data.frame<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `attrs<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`raw_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`domain()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`dimensions()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`attrs()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`cell_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `filter_list<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tiledb_ndim()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`name()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`datatype()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`config()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.integral()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`nfilters()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_filter()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_select()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_collect()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  : Generic Methods
+
+- [`tiledb_ndim(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_array_schema-method.md)
+  :
+
+  Return the number of dimensions associated with the
+  `tiledb_array_schema`
+
+- [`tiledb_ndim(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_dim-method.md)
+  : Returns the number of dimensions for a tiledb domain object
+
+- [`tiledb_ndim(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_domain-method.md)
+  :
+
+  Returns the number of dimensions of the `tiledb_domain`
+
+- [`datatype(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/datatype-tiledb_domain-method.md)
+  : Returns the tiledb_domain TileDB type string
+
+- [`dimensions(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dimensions-tiledb_domain-method.md)
+  : Returns a list of the tiledb_domain dimension objects
+
+- [`is.integral(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/is.integral-tiledb_domain-method.md)
+  : Returns TRUE is tiledb_domain is an integral (integer) domain
+
+- [`raw_dump(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_domain-method.md)
+  : Raw display of a domain object
+
+- [`show(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_domain-method.md)
+  : Prints a domain object
+
+## Dim
+
+- [`tiledb_dim-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dim-class.md)
+  : An S4 class for a TileDB dimension object
+
+- [`tiledb_dim()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dim.md)
+  :
+
+  Constructs a `tiledb_dim` object
+
+- [`cell_val_num(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dim_get_cell_val_num.md)
+  [`tiledb_dim_get_cell_val_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_dim_get_cell_val_num.md)
+  : Return the number of scalar values per dimension cell
+
+- [`dim(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dim.tiledb_array_schema.md)
+  : Retrieve the dimension (domain extent) of the domain
+
+- [`dim(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dim.tiledb_dim.md)
+  : Retrieves the dimension of the tiledb_dim domain
+
+- [`dim(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dim.tiledb_domain.md)
+  : Retrieve the dimension (domain extent) of the domain
+
+- [`dimensions(`*`<tiledb_array_schema>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dimensions-tiledb_array_schema-method.md)
+  :
+
+  Returns a list of `tiledb_dim` objects associated with the
+  `tiledb_array_schema`
+
+- [`dimensions(`*`<tiledb_domain>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/dimensions-tiledb_domain-method.md)
+  : Returns a list of the tiledb_domain dimension objects
+
+- [`schema()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`return.data.frame()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `return.data.frame<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `attrs<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`raw_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`domain()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`dimensions()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`attrs()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`cell_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `filter_list<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tiledb_ndim()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`name()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`datatype()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`config()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.integral()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`nfilters()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_filter()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_select()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_collect()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  : Generic Methods
+
+- [`datatype(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/datatype-tiledb_dim-method.md)
+  :
+
+  Return the `tiledb_dim` datatype
+
+- [`domain(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/domain-tiledb_dim-method.md)
+  :
+
+  Return the `tiledb_dim` domain
+
+- [`` `filter_list<-`( ``*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-set-tiledb_dim-method.md)
+  : Sets the TileDB Filter List for the TileDB Dimension object
+
+- [`filter_list(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/filter_list-tiledb_dim-method.md)
+  : Returns the TileDB Filter List object associated with the given
+  TileDB Dimension
+
+- [`name(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/name-tiledb_dim-method.md)
+  :
+
+  Return the `tiledb_dim` name
+
+- [`show(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_dim-method.md)
+  : Prints a dimension object
+
+- [`tile(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tile-tiledb_dim-method.md)
+  :
+
+  Return the `tiledb_dim` tile extent
+
+- [`tiledb_ndim(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndim-tiledb_dim-method.md)
+  : Returns the number of dimensions for a tiledb domain object
+
+- [`is.anonymous(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/is.anonymous.tiledb_dim.md)
+  : Returns TRUE if the tiledb_dim is anonymous
+
+## Query
+
+query object functions
+
+- [`tiledb_query-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query-class.md)
+  : An S4 class for a TileDB Query object
+- [`tiledb_query()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query.md)
+  : Creates a 'tiledb_query' object
+- [`tiledb_query_add_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_add_range.md)
+  : Set a range for a given query
+- [`tiledb_query_add_range_with_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_add_range_with_type.md)
+  : Set a range for a given query, also supplying type
+- [`tiledb_query_alloc_buffer_ptr_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_alloc_buffer_ptr_char.md)
+  : Allocate a Query buffer for reading a character attribute
+- [`tiledb_query_apply_aggregate()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_apply_aggregate.md)
+  : Run an aggregate oprtation on the given query attribute
+- [`tiledb_query_buffer_alloc_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_buffer_alloc_ptr.md)
+  : Allocate a Query buffer for a given type
+- [`tiledb_query_condition-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition-class.md)
+  : An S4 class for a TileDB QueryCondition object
+- [`tiledb_query_condition()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition.md)
+  : Creates a 'tiledb_query_condition' object
+- [`tiledb_query_condition_combine()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_combine.md)
+  : Combine two 'tiledb_query_condition' objects
+- [`tiledb_query_condition_create()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_create.md)
+  : Create a query condition for vector 'IN' and 'NOT_IN' operations
+- [`tiledb_query_condition_init()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_init.md)
+  : Initialize a 'tiledb_query_condition' object
+- [`tiledb_query_condition_set_use_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_set_use_enumeration.md)
+  : Enable use of enumeration in query condition
+- [`tiledb_query_create_buffer_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_create_buffer_ptr.md)
+  : Allocate and populate a Query buffer for a given object of a given
+  data type.
+- [`tiledb_query_create_buffer_ptr_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_create_buffer_ptr_char.md)
+  : Allocate and populate a Query buffer for writing the given char
+  vector
+- [`tiledb_query_ctx()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_ctx.md)
+  : Return query context object
+- [`tiledb_query_export_buffer()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_export_buffer.md)
+  : Export Query Buffer to Pair of Arrow IO Pointers
+- [`tiledb_query_finalize()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_finalize.md)
+  : Finalize TileDB Query
+- [`tiledb_query_get_buffer_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_buffer_char.md)
+  : Retrieve content from a Query character buffer
+- [`tiledb_query_get_buffer_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_buffer_ptr.md)
+  : Retrieve content from a Query buffer
+- [`tiledb_query_get_est_result_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_est_result_size.md)
+  : Retrieve the estimated result size for a query and attribute
+- [`tiledb_query_get_est_result_size_var()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_est_result_size_var.md)
+  : Retrieve the estimated result size for a query and variable-sized
+  attribute
+- [`tiledb_query_get_fragment_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_num.md)
+  : Retrieve the Number of Fragments for Query
+- [`tiledb_query_get_fragment_timestamp_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_timestamp_range.md)
+  : Retrieve the timestamp range for a given Query Fragment
+- [`tiledb_query_get_fragment_uri()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_uri.md)
+  : Retrieve the URI for a given Query Fragment
+- [`tiledb_query_get_layout()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_layout.md)
+  : Get TileDB Query layout
+- [`tiledb_query_get_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range.md)
+  : Retrieve the query range for a query dimension and range index
+- [`tiledb_query_get_range_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range_num.md)
+  : Retrieve the number of ranges for a query dimension
+- [`tiledb_query_get_range_var()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range_var.md)
+  : Retrieve the query range for a variable-sized query dimension and
+  range index
+- [`tiledb_query_import_buffer()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_import_buffer.md)
+  : Import to Query Buffer from Pair of Arrow IO Pointers
+- [`tiledb_query_result_buffer_elements()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements.md)
+  : Get TileDB Query result buffer element size
+- [`tiledb_query_result_buffer_elements_vec()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements_vec.md)
+  : Get TileDB Query result buffer element size pair as vector
+- [`tiledb_query_set_buffer()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer.md)
+  : Set TileDB Query buffer
+- [`tiledb_query_set_buffer_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer_ptr.md)
+  : Assigns to a Query buffer for a given attribute
+- [`tiledb_query_set_buffer_ptr_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer_ptr_char.md)
+  : Assign a buffer to a Query attribute
+- [`tiledb_query_set_condition()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_condition.md)
+  : Set a query combination object for a query
+- [`tiledb_query_set_layout()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_layout.md)
+  : Set TileDB Query layout
+- [`tiledb_query_set_subarray()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_subarray.md)
+  : Set subarray for TileDB Query object
+- [`tiledb_query_stats()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_stats.md)
+  : Return query statistics as a JSON string
+- [`tiledb_query_status()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_status.md)
+  : Get TileDB Query status
+- [`tiledb_query_submit()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_submit.md)
+  : Submit TileDB Query
+- [`tiledb_query_submit_async()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_submit_async.md)
+  : Submit TileDB Query asynchronously without a callback returning
+  immediately
+- [`tiledb_query_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_type.md)
+  : Return TileDB Query type
+- [`parse_query_condition()`](https://tiledb-inc.github.io/TileDB-R/reference/parse_query_condition.md)
+  : Create a 'tiledb_query_condition' object from an expression
+- [`tiledb_get_query_status()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_query_status.md)
+  : Retrieve the cached status of the last finalized query
+- [`tiledb_error_message()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_error_message.md)
+  : Return the error message for a given context
+- [`completedBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/completedBatched.md)
+  : Check ‘batched’ query for completion
+- [`createBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/createBatched.md)
+  : Create a ‘batched’ query object
+- [`fetchBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/fetchBatched.md)
+  : Run a ‘batched’ query
+- [`statusBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/statusBatched.md)
+  : Return ‘batched’ status
+
+## Profile
+
+- [`tiledb_profile-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile-class.md)
+  : An S4 class for a TileDB Profile object
+- [`tiledb_profile()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile.md)
+  : Create a 'tiledb_profile' object
+- [`tiledb_profile_dir()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_dir.md)
+  : Get the directory of a 'tiledb_profile' object
+- [`tiledb_profile_get_param()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_get_param.md)
+  : Get the value of a parameter set on the 'tiledb_profile' object
+- [`tiledb_profile_load()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_load.md)
+  : Load a saved 'tiledb_profile' object
+- [`tiledb_profile_name()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_name.md)
+  : Get the name of a 'tiledb_profile' object
+- [`tiledb_profile_remove()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_remove.md)
+  : Remove a saved 'tiledb_profile'
+- [`tiledb_profile_save()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_save.md)
+  : Save the 'tiledb_profile' object
+- [`tiledb_profile_set_param()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_set_param.md)
+  : Set a parameter on the 'tiledb_profile' object
+- [`raw_dump(`*`<tiledb_profile>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_profile-method.md)
+  : Raw display of a profile object
+
+## Group
+
+- [`tiledb_group-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group-class.md)
+  : An S4 class for a TileDB Group object
+- [`tiledb_group()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group.md)
+  : Creates a 'tiledb_group' object
+- [`tiledb_group_add_member()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_add_member.md)
+  : Add Member to TileDB Group
+- [`tiledb_group_close()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_close.md)
+  : Close a TileDB Group
+- [`tiledb_group_create()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_create.md)
+  : Create a TileDB Group at the given path
+- [`tiledb_group_delete()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_delete.md)
+  : Deletes all written data from a 'tiledb_group' object
+- [`tiledb_group_delete_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_delete_metadata.md)
+  : Deletes Metadata from a TileDB Group
+- [`tiledb_group_get_all_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_all_metadata.md)
+  : Return all Metadata from a TileDB Group
+- [`tiledb_group_get_config()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_config.md)
+  : Get a TileDB Config from a TileDB Group
+- [`tiledb_group_get_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_metadata.md)
+  : Accesses Metadata from a TileDB Group
+- [`tiledb_group_get_metadata_from_index()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_metadata_from_index.md)
+  : Accesses Metadata by Index from a TileDB Group
+- [`tiledb_group_has_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_has_metadata.md)
+  : Checks for Metadata in a TileDB Group
+- [`tiledb_group_is_open()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_is_open.md)
+  : Test if TileDB Group is open
+- [`tiledb_group_is_relative()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_is_relative.md)
+  : Test if a Named Group is Using a Relative URI
+- [`tiledb_group_member()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_member.md)
+  : Get a Member (Description) by Index from TileDB Group
+- [`tiledb_group_member_count()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_member_count.md)
+  : Get Member Count from TileDB Group
+- [`tiledb_group_member_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_member_dump.md)
+  : Dump the TileDB Group to String
+- [`tiledb_group_metadata_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_metadata_num.md)
+  : Returns Number of Metadata Objects a TileDB Group
+- [`tiledb_group_open()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_open.md)
+  : Open a TileDB Group
+- [`tiledb_group_put_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_put_metadata.md)
+  : Write Metadata to a TileDB Group
+- [`tiledb_group_query_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_query_type.md)
+  : Return a TileDB Group query type
+- [`tiledb_group_remove_member()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_remove_member.md)
+  : Remove Member from TileDB Group
+- [`tiledb_group_set_config()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_set_config.md)
+  : Set a TileDB Config for a TileDB Group
+- [`tiledb_group_uri()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_uri.md)
+  : Return a TileDB Group URI
+- [`show(`*`<tiledb_group>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/show-tiledb_group-method.md)
+  : Display the TileDB Group object to STDOUT
+
+## Object
+
+object management functions
+
+- [`tiledb_object_ls()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_ls.md)
+  : List TileDB resources at a given root URI path
+- [`tiledb_object_mv()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_mv.md)
+  : Move a TileDB resource to new uri path
+- [`tiledb_object_rm()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_rm.md)
+  : Removes a TileDB resource
+- [`tiledb_object_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_type.md)
+  : Return the TileDB object type string of a TileDB resource
+- [`tiledb_object_walk()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_walk.md)
+  : Recursively discover TileDB resources at a given root URI path
+- [`is.anonymous()`](https://tiledb-inc.github.io/TileDB-R/reference/is.anonymous.md)
+  : Returns TRUE if the tiledb_dim is anonymous
+- [`is.anonymous(`*`<tiledb_dim>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/is.anonymous.tiledb_dim.md)
+  : Returns TRUE if the tiledb_dim is anonymous
+- [`array_consolidate()`](https://tiledb-inc.github.io/TileDB-R/reference/array_consolidate.md)
+  : Consolidate fragments of a TileDB Array
+- [`array_vacuum()`](https://tiledb-inc.github.io/TileDB-R/reference/array_vacuum.md)
+  : After consolidation, remove consolidated fragments of a TileDB Array
+
+## MetaData
+
+arrray metadata functionality
+
+- [`print(`*`<tiledb_metadata>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/print.tiledb_metadata.md)
+  : Print a TileDB Array Metadata object
+- [`tiledb_delete_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_delete_metadata.md)
+  : Delete a TileDB Array Metadata object given by key
+- [`tiledb_fragment_info_get_unconsolidated_metadata_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_unconsolidated_metadata_num.md)
+  : Return fragment info number of unconsolidated metadata
+- [`tiledb_fragment_info_has_consolidated_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_has_consolidated_metadata.md)
+  : Return if a fragment info index has consolidated metadata
+- [`tiledb_get_all_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_all_metadata.md)
+  : Return all TileDB Array Metadata objects as a named list
+- [`tiledb_get_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_metadata.md)
+  : Return a TileDB Array Metadata object given by key
+- [`tiledb_group_delete_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_delete_metadata.md)
+  : Deletes Metadata from a TileDB Group
+- [`tiledb_group_get_all_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_all_metadata.md)
+  : Return all Metadata from a TileDB Group
+- [`tiledb_group_get_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_metadata.md)
+  : Accesses Metadata from a TileDB Group
+- [`tiledb_group_get_metadata_from_index()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_get_metadata_from_index.md)
+  : Accesses Metadata by Index from a TileDB Group
+- [`tiledb_group_has_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_has_metadata.md)
+  : Checks for Metadata in a TileDB Group
+- [`tiledb_group_metadata_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_metadata_num.md)
+  : Returns Number of Metadata Objects a TileDB Group
+- [`tiledb_group_put_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_group_put_metadata.md)
+  : Write Metadata to a TileDB Group
+- [`tiledb_has_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_has_metadata.md)
+  : Test if TileDB Array has Metadata
+- [`tiledb_num_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_num_metadata.md)
+  : Return count of TileDB Array Metadata objects
+- [`tiledb_put_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_put_metadata.md)
+  : Store an object in TileDB Array Metadata under given key
+
+## Stats
+
+performance stat collection functions
+
+- [`tiledb_stats_disable()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_disable.md)
+  : Disable internal TileDB statistics counters
+- [`tiledb_stats_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_dump.md)
+  : Dumps internal TileDB statistics to file or stdout
+- [`tiledb_stats_enable()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_enable.md)
+  : Enable internal TileDB statistics counters
+- [`tiledb_stats_print()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_print.md)
+  : Print internal TileDB statistics
+- [`tiledb_stats_raw_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_raw_dump.md)
+  : Dumps internal TileDB statistics as JSON to a string
+- [`tiledb_stats_raw_get()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_raw_get.md)
+  : Gets internal TileDB statistics as JSON string
+- [`tiledb_stats_raw_print()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_raw_print.md)
+  : Print internal TileDB statistics as JSON
+- [`tiledb_stats_reset()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_stats_reset.md)
+  : Reset internal TileDB statistics counters
+
+## VFS
+
+virtual file system functions
+
+- [`tiledb_vfs-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs-class.md)
+  : An S4 class for a TileDB VFS object
+
+- [`tiledb_vfs()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs.md)
+  :
+
+  Creates a `tiledb_vfs` object
+
+- [`tiledb_vfs_close()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_close.md)
+  : Close a TileDB VFS Filehandle
+
+- [`tiledb_vfs_copy_dir()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_copy_dir.md)
+  : Copy a directory recursively to VFS
+
+- [`tiledb_vfs_copy_file()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_copy_file.md)
+  : Copy a file to VFS
+
+- [`tiledb_vfs_create_bucket()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_create_bucket.md)
+  : Create a VFS Bucket
+
+- [`tiledb_vfs_create_dir()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_create_dir.md)
+  : Create a VFS Directory
+
+- [`tiledb_vfs_dir_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_dir_size.md)
+  : Return VFS Directory Size
+
+- [`tiledb_vfs_empty_bucket()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_empty_bucket.md)
+  : Empty a VFS Bucket
+
+- [`tiledb_vfs_file_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_file_size.md)
+  : Return VFS File Size
+
+- [`tiledb_vfs_is_bucket()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_bucket.md)
+  : Check for VFS Bucket
+
+- [`tiledb_vfs_is_dir()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_dir.md)
+  : Test for VFS Directory
+
+- [`tiledb_vfs_is_empty_bucket()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_empty_bucket.md)
+  : Check for empty VFS Bucket
+
+- [`tiledb_vfs_is_file()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_is_file.md)
+  : Test for VFS File
+
+- [`tiledb_vfs_ls()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_ls.md)
+  : Return VFS Directory Listing
+
+- [`tiledb_vfs_ls_recursive()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_ls_recursive.md)
+  : Recursively list objects from given URI
+
+- [`tiledb_vfs_move_dir()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_move_dir.md)
+  : Move (or rename) a VFS Directory
+
+- [`tiledb_vfs_move_file()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_move_file.md)
+  : Move (or rename) a VFS File
+
+- [`tiledb_vfs_open()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_open.md)
+  : Open a TileDB VFS Filehandle for reading or writing
+
+- [`tiledb_vfs_read()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_read.md)
+  : Read from a TileDB VFS Filehandle
+
+- [`tiledb_vfs_remove_bucket()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_remove_bucket.md)
+  : Remove a VFS Bucket
+
+- [`tiledb_vfs_remove_dir()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_remove_dir.md)
+  : Remove a VFS Directory
+
+- [`tiledb_vfs_remove_file()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_remove_file.md)
+  : Remove a VFS File
+
+- [`tiledb_vfs_serialize()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_serialize.md)
+  : Serialize an R Object to a VFS-accessible URI
+
+- [`tiledb_vfs_sync()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_sync.md)
+  : Sync a TileDB VFS Filehandle
+
+- [`tiledb_vfs_touch()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_touch.md)
+  : Touch a VFS URI Resource
+
+- [`tiledb_vfs_unserialize()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_unserialize.md)
+  : Unserialize an R Object from a VFS-accessible URI
+
+- [`tiledb_vfs_write()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_vfs_write.md)
+  : Write to a TileDB VFS Filehandle
+
+- [`tiledb_get_vfs()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_vfs.md)
+  : Retrieve a TileDB VFS object from the package environment and cache
+
+- [`tiledb_set_vfs()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_set_vfs.md)
+  : Store a TileDB VFS object in the package environment
+
+- [`vfs_file()`](https://tiledb-inc.github.io/TileDB-R/reference/vfs_file.md)
+  : Create a custom file connection
+
+## Filestore
+
+filestore functionality
+
+- [`tiledb_filestore_buffer_export()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_buffer_export.md)
+  : Export from a TileDB Filestore to a character variable
+- [`tiledb_filestore_buffer_import()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_buffer_import.md)
+  : Import size bytes from a string into a TileDB Filestore
+- [`tiledb_filestore_schema_create()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_schema_create.md)
+  : Create an array schema from a given URI with schema
+- [`tiledb_filestore_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_size.md)
+  : Return (uncompressed) TileDB Filestore size
+- [`tiledb_filestore_uri_export()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_uri_export.md)
+  : Export a file from a TileDB Filestore
+- [`tiledb_filestore_uri_import()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_filestore_uri_import.md)
+  : Import a file into a TileDB Filestore
+
+## Fragment
+
+- [`tiledb_fragment_info-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info-class.md)
+  : An S4 class for a TileDB fragment info object
+
+- [`tiledb_fragment_info()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info.md)
+  :
+
+  Constructs a `tiledb_fragment_info` object
+
+- [`tiledb_fragment_info_dense()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_dense.md)
+  : Return if a fragment info index is dense
+
+- [`tiledb_fragment_info_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_dump.md)
+  : Dump the fragment info to console
+
+- [`tiledb_fragment_info_get_cell_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_cell_num.md)
+  : Return a fragment info number of cells for a given fragment index
+
+- [`tiledb_fragment_info_get_non_empty_domain_index()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_index.md)
+  : Return a fragment info non-empty domain from index
+
+- [`tiledb_fragment_info_get_non_empty_domain_name()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_name.md)
+  : Return a fragment info non-empty domain from name
+
+- [`tiledb_fragment_info_get_non_empty_domain_var_index()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_var_index.md)
+  : Return a fragment info non-empty domain variable from index
+
+- [`tiledb_fragment_info_get_non_empty_domain_var_name()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_non_empty_domain_var_name.md)
+  : Return a fragment info non-empty domain variable from name
+
+- [`tiledb_fragment_info_get_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_num.md)
+  : Return a fragment info number of fragments
+
+- [`tiledb_fragment_info_get_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_size.md)
+  : Return a fragment info fragment size for a given fragment index
+
+- [`tiledb_fragment_info_get_timestamp_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_timestamp_range.md)
+  : Return a fragment info timestamp range for a given fragment index
+
+- [`tiledb_fragment_info_get_to_vacuum_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_to_vacuum_num.md)
+  : Return the number of fragment info elements to be vacuumed
+
+- [`tiledb_fragment_info_get_to_vacuum_uri()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_to_vacuum_uri.md)
+  : Return fragment info URI of the to be vacuumed index
+
+- [`tiledb_fragment_info_get_unconsolidated_metadata_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_unconsolidated_metadata_num.md)
+  : Return fragment info number of unconsolidated metadata
+
+- [`tiledb_fragment_info_get_version()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_get_version.md)
+  : Return a fragment info version for a given fragment index
+
+- [`tiledb_fragment_info_has_consolidated_metadata()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_has_consolidated_metadata.md)
+  : Return if a fragment info index has consolidated metadata
+
+- [`tiledb_fragment_info_sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_sparse.md)
+  : Return if a fragment info index is sparse
+
+- [`tiledb_fragment_info_uri()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_fragment_info_uri.md)
+  : Return a fragment info URI given its index
+
+## DataFrame
+
+data.frame functionality functions
+
+- [`fromDataFrame()`](https://tiledb-inc.github.io/TileDB-R/reference/fromDataFrame.md)
+  :
+
+  Create a TileDB dense or sparse array from a given `data.frame` Object
+
+- [`schema()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`return.data.frame()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `return.data.frame<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `attrs<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`raw_dump()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`domain()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`dimensions()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`attrs()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`cell_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile_order()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`filter_list()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`` `filter_list<-`() ``](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.sparse()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tiledb_ndim()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`name()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`datatype()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`config()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tile()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`is.integral()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`nfilters()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_filter()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_select()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  [`tdb_collect()`](https://tiledb-inc.github.io/TileDB-R/reference/generics.md)
+  : Generic Methods
+
+- [`` `return.data.frame<-`( ``*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-set-tiledb_array-method.md)
+  : Set data.frame return toggle
+
+- [`return.data.frame(`*`<tiledb_array>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-tiledb_array-method.md)
+  : Retrieve data.frame return toggle
+
+- [`as.data.frame(`*`<tiledb_config>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/as.data.frame.tiledb_config.md)
+  :
+
+  Convert a TileDB Config object to `data.frame`
+
+## SparseMatrix
+
+matrix and sparse matrices helper functions
+
+- [`fromMatrix()`](https://tiledb-inc.github.io/TileDB-R/reference/fromMatrix.md)
+  [`toMatrix()`](https://tiledb-inc.github.io/TileDB-R/reference/fromMatrix.md)
+  : Create a TileDB array from an R matrix, or return an R matrix
+- [`fromSparseMatrix()`](https://tiledb-inc.github.io/TileDB-R/reference/fromSparseMatrix.md)
+  [`toSparseMatrix()`](https://tiledb-inc.github.io/TileDB-R/reference/fromSparseMatrix.md)
+  : Create (or return) a TileDB sparse array
+
+## Arrow
+
+interface to Arrow in-memory representation
+
+- [`tiledb_arrow_array_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_arrow_array_ptr.md)
+  [`tiledb_arrow_schema_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_arrow_array_ptr.md)
+  [`tiledb_arrow_array_del()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_arrow_array_ptr.md)
+  [`tiledb_arrow_schema_del()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_arrow_array_ptr.md)
+  : (Deprecated) Allocate (or Release) Arrow Array and Schema Pointers
+
+## Package
+
+package and version information
+
+- [`tiledb_version()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_version.md)
+  : The version of the libtiledb library
+- [`limitTileDBCores()`](https://tiledb-inc.github.io/TileDB-R/reference/limitTileDBCores.md)
+  : Limit TileDB core use to a given number of cores
+
+## Enumeration
+
+support for factor and ordered
+
+- [`tiledb_array_has_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_has_enumeration.md)
+  : Check for Enumeration (aka Factor aka Dictionary)
+- [`tiledb_array_schema_evolution_add_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration.md)
+  : Add an Enumeration to a TileDB Array Schema Evolution object
+- [`tiledb_array_schema_evolution_add_enumeration_empty()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_add_enumeration_empty.md)
+  : Evolve an Array Schema by adding an empty Enumeration
+- [`tiledb_array_schema_evolution_drop_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_drop_enumeration.md)
+  : Drop an Enumeration given by name from a TileDB Array Schema
+  Evolution object
+- [`tiledb_array_schema_evolution_extend_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_extend_enumeration.md)
+  : Extend an Evolution via Array Schema Evolution
+- [`tiledb_array_schema_set_enumeration_empty()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_enumeration_empty.md)
+  : Add an empty Enumeration to a Schema
+- [`tiledb_attribute_get_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_enumeration.md)
+  [`tiledb_attribute_get_enumeration_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_get_enumeration.md)
+  : Get the TileDB Attribute Enumeration
+- [`tiledb_attribute_has_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_has_enumeration.md)
+  : Test if TileDB Attribute has an Enumeration
+- [`tiledb_attribute_is_ordered_enumeration_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_is_ordered_enumeration_ptr.md)
+  : Check if TileDB Attribute Enumeration is Ordered
+- [`tiledb_attribute_set_enumeration_name()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_attribute_set_enumeration_name.md)
+  : Set a TileDB Attribute Enumeration Name
+- [`tiledb_query_condition_set_use_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_set_use_enumeration.md)
+  : Enable use of enumeration in query condition
+- [`tiledb_schema_get_enumeration_status()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_schema_get_enumeration_status.md)
+  : Get Dimension or Attribute Status
+
+## CurrentDomain
+
+support for current domain of sparse array
+
+- [`tiledb_array_schema_evolution_expand_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_evolution_expand_current_domain.md)
+  : Expand an the Current Domain of an Array via Array Schema Evolution
+
+- [`tiledb_array_schema_get_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_get_current_domain.md)
+  : Get the Current Domain of an Array Schema
+
+- [`tiledb_array_schema_set_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_array_schema_set_current_domain.md)
+  : Set a Current Domain of an Array Schema
+
+- [`tiledb_current_domain-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain-class.md)
+  : An S4 class for a TileDB CurrentDomain object
+
+- [`tiledb_current_domain()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain.md)
+  :
+
+  Creates a `tiledb_current_domain` object
+
+- [`tiledb_current_domain_get_ndrectangle()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_get_ndrectangle.md)
+  :
+
+  Get a `tiledb_ndrectangle` from a `tiledb_current_domain` object
+
+- [`tiledb_current_domain_get_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_get_type.md)
+  :
+
+  Get `tiledb_current_domain` data type as string
+
+- [`tiledb_current_domain_is_empty()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_is_empty.md)
+  :
+
+  Test `tiledb_current_domain` object for being empty
+
+- [`tiledb_current_domain_set_ndrectangle()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_current_domain_set_ndrectangle.md)
+  :
+
+  Set a `tiledb_ndrectangle` in a `tiledb_current_domain` object
+
+- [`tiledb_ndrectangle-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle-class.md)
+  : An S4 class for a TileDB NDRectangle object
+
+- [`tiledb_ndrectangle()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle.md)
+  :
+
+  Creates a `tiledb_ndrectangle` object
+
+- [`tiledb_ndrectangle_datatype()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_datatype.md)
+  :
+
+  Get the datatype of a named `tiledb_ndrectangle` dimension
+
+- [`tiledb_ndrectangle_datatype_by_ind()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_datatype_by_ind.md)
+  :
+
+  Get the datatype of a `tiledb_ndrectangle` dimension by index
+
+- [`tiledb_ndrectangle_dim_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_dim_num.md)
+  :
+
+  Get the number of dimensions for `tiledb_ndrectangle` object
+
+- [`tiledb_ndrectangle_get_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_get_range.md)
+  :
+
+  Get a range from a `tiledb_ndrectangle` object
+
+- [`tiledb_ndrectangle_set_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_ndrectangle_set_range.md)
+  :
+
+  Set a range on a `tiledb_ndrectangle` object

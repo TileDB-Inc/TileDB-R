@@ -72,6 +72,7 @@
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_array_schema-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_attr-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_domain-method.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/raw_dump-tiledb_profile-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.array-set-tiledb_array-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.array-tiledb_array-method.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/return.data.frame-set-tiledb_array-method.html</loc></url>
@@ -278,6 +279,15 @@
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_rm.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_type.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_object_walk.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile-class.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_dir.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_get_param.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_load.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_name.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_remove.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_save.html</loc></url>
+<url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_profile_set_param.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_put_metadata.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query-class.html</loc></url>
 <url><loc>https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query.html</loc></url>
