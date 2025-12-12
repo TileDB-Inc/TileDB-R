@@ -5,8 +5,6 @@ if (!file.exists(dcffile)) stop("TileDB Version file not found.")
 dcf <- read.dcf(dcffile)
 ver <- dcf[[1, "version"]]
 
-ver <- "test-2.30.0mavx2"
-
 if (!file.exists("../inst/tiledb/include/tiledb/tiledb.h") || !dir.exists("../inst/tiledb/lib/")) {
   if (getRversion() < "4") stop("This package requires Rtools40 or newer")
   if (dir.exists("../inst/tiledb")) unlink("../inst/tiledb", recursive = TRUE, force = TRUE)
