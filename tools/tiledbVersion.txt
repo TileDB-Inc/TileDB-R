@@ -1,2 +1,2 @@
-version: test-2.30.0mavx2
+version: 2.30.0
 sha: 9b5305d
