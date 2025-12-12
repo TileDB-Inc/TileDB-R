@@ -25,7 +25,7 @@ $(LIB_CON): connection/connection.o
 	$(SHLIB_LINK) $(LIBR) -o $@ $^
 
 winlibs:
-	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" "-v" "../tools/winlibs.R"
+	"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript.exe" "../tools/winlibs.R"
 
 clean:
 	rm -f $(SHLIB) $(OBJECTS) $(LIB_CON) connection/connection.o
