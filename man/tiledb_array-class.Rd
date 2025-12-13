@@ -14,7 +14,7 @@ based on a refactored implementation utilising newer TileDB features.
 \describe{
 \item{\code{ctx}}{A TileDB context object}
 
-\item{\code{uri}}{A character despription with the array URI}
+\item{\code{uri}}{A character description with the array URI}
 
 \item{\code{is.sparse}}{A logical value whether the array is sparse or not}
 
@@ -50,7 +50,7 @@ interval start}
 conversion, permitted values are \sQuote{asis} (default, returning a list
 of columns), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame},
 \sQuote{data.table} \sQuote{tibble}, \sQuote{arrow_table} or \sQuote{arrow}
-(where the last two are synomyms); note that \sQuote{data.table},
+(where the last two are synonyms); note that \sQuote{data.table},
 \sQuote{tibble} and \sQuote{arrow} require the respective packages
 to be installed.}
 

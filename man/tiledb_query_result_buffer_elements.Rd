@@ -28,5 +28,5 @@ As this function was first made available when only a scalar (corresponding to
 the second result) was returned, we still return that value.
 }
 \seealso{
-tiledb_query_result_buffer_elements_vec
+\link{tiledb_query_result_buffer_elements_vec}
 }

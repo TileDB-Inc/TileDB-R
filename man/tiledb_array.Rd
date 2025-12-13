@@ -71,11 +71,11 @@ default uninitialized without a condition; this functionality requires
 TileDB 2.3.0 or later}
 
 \item{timestamp_start}{optional A POSIXct Datetime value determining the
-inclusive time point at which the array is to be openened. No fragments
+inclusive time point at which the array is to be opened. No fragments
 written earlier will be considered.}
 
 \item{timestamp_end}{optional A POSIXct Datetime value determining the
-inclusive time point until which the array is to be openened. No fragments
+inclusive time point until which the array is to be opened. No fragments
 written earlier later be considered.}
 
 \item{return_as}{optional A character value with the desired

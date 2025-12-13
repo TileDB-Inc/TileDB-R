@@ -2,7 +2,7 @@
 % Please edit documentation in R/Query.R
 \name{tiledb_query_apply_aggregate}
 \alias{tiledb_query_apply_aggregate}
-\title{Run an aggregate oprtation on the given query attribute}
+\title{Run an aggregate operation on the given query attribute}
 \usage{
 tiledb_query_apply_aggregate(
   query,
@@ -24,5 +24,5 @@ tiledb_query_apply_aggregate(
 The value of the aggregation
 }
 \description{
-Run an aggregate oprtation on the given query attribute
+Run an aggregate operation on the given query attribute
 }
