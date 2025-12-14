@@ -37,8 +37,8 @@ setClass("tiledb_group",
 #' \dQuote{READ} or \dQuote{WRITE}
 #' @param ctx (optional) A TileDB Context object; if not supplied the default
 #' context object is retrieved
-#' @param cfg (optional) A TileConfig object
-#' @return A 'group' object
+#' @param cfg (optional) A TileDB Config object
+#' @return A TileDB Group object
 #' @export
 tiledb_group <- function(
   uri,

@@ -20,10 +20,10 @@ tiledb_group(
 \item{ctx}{(optional) A TileDB Context object; if not supplied the default
 context object is retrieved}
 
-\item{cfg}{(optional) A TileConfig object}
+\item{cfg}{(optional) A TileDB Config object}
 }
 \value{
-A 'group' object
+A TileDB Group object
 }
 \description{
 Creates a 'tiledb_group' object
