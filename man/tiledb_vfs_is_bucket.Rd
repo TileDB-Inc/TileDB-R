@@ -26,6 +26,6 @@ cfg <- tiledb_config()
 cfg["vfs.s3.region"] <- "us-west-1"
 ctx <- tiledb_ctx(cfg)
 vfs <- tiledb_vfs()
-tiledb_vfs_is_bucket(vfs, "s3://tiledb-public-us-west-1/test-array-4x4")
+tiledb_vfs_is_bucket("s3://tiledb-public-us-west-1/test-array-4x4", vfs = vfs)
 }
 }
