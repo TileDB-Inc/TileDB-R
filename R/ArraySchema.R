@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2024 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -60,7 +60,7 @@ tiledb_array_schema.from_ptr <- function(ptr, arrptr = NULL) {
 #' ctx <- tiledb_ctx(limitTileDBCores())
 #' }
 #' schema <- tiledb_array_schema(
-#'   dom = tiledb_domain(
+#'   domain = tiledb_domain(
 #'     dims = c(
 #'       tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
 #'       tiledb_dim("cols", c(1L, 4L), 4L, "INT32")
@@ -95,7 +95,7 @@ tiledb_array_schema <- function(
     } # make it a list so that lapply works below
     stopifnot(
       "length of 'attrs' cannot be zero" = length(attrs) > 0,
-      "'attrs' must be a list of one or tiled_attr objects" = all(vapply(attrs, is_attr, logical(1)))
+      "'attrs' must be a list of 'tiledb_attr' objects" = all(vapply(attrs, is_attr, logical(1)))
     )
   } else {
     attrs <- NULL
@@ -114,7 +114,22 @@ tiledb_array_schema <- function(
   )
   # if (allows_dups && !sparse) stop("'allows_dups' requires 'sparse' TRUE")
 
-  attr_ptr_list <- if (is.list(attrs)) lapply(attrs, function(obj) slot(obj, "ptr")) else list()
+  if (is.list(attrs)) {
+    attr_names <- sapply(attrs, name)
+    attr_ptr_list <- lapply(attrs, function(obj) slot(obj, "ptr"))
+    names(attr_ptr_list) <- attr_names
+
+    # Do not allow enum named list to have different names than attributes
+    if (!is.null(enumerations)) {
+      if (!all(names(enumerations) %in% attr_names)) {
+        stop("'enumerations' should be a named list mapped to attributes names")
+      }
+    }
+
+  } else {
+    attr_ptr_list <- list()
+  }
+
   coords_filter_list_ptr <- if (!is.null(coords_filter_list)) coords_filter_list@ptr else NULL
   offsets_filter_list_ptr <- if (!is.null(offsets_filter_list)) offsets_filter_list@ptr else NULL
   validity_filter_list_ptr <- if (!is.null(validity_filter_list)) validity_filter_list@ptr else NULL
