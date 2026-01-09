@@ -10,16 +10,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/TileDB-Inc/TileDB-R/blob/0.34.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/TileDB-Inc/TileDB-R/blob/main/DESCRIPTION)
 
-TileDB, Inc. (2025). *tiledb: Modern Database Engine for Complex Data
+TileDB, Inc. (2026). *tiledb: Modern Database Engine for Complex Data
 Based on Multi-Dimensional Arrays*. R package version 0.34.0,
 <https://github.com/TileDB-Inc/TileDB-R>.
 
     @Manual{,
       title = {tiledb: Modern Database Engine for Complex Data Based on Multi-Dimensional Arrays},
       author = {{TileDB, Inc.}},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.34.0},
       url = {https://github.com/TileDB-Inc/TileDB-R},
     }
