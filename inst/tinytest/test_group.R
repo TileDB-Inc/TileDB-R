@@ -198,7 +198,12 @@ grp <- tiledb_group_close(grp)
 
 grp <- tiledb_group_open(grp, "MODIFY_EXCLUSIVE")
 expect_true(tiledb_group_is_open(grp))
-expect_equal(tiledb_group_query_type(grp), "MODIFY_EXCLUSIVE")
+if (tiledb_version(TRUE) > "2.30.0") {
+  expect_equal(tiledb_group_query_type(grp), "WRITE")
+} else {
+  expect_equal(tiledb_group_query_type(grp), "MODIFY_EXCLUSIVE")
+}
+
 tiledb_group_delete(grp, uri)
 
 if (tiledb_version(TRUE) >= "2.16.0") expect_error(grp <- tiledb_group(uri))  # no longer exists
