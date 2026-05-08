@@ -2,7 +2,9 @@ name: nightly
 
 on:
   schedule:
-    - cron: "21 01 * * *"
+    # Run early Monday UTC, which is late Sunday ET
+    # https://crontab.guru/#21_01_*_*_1
+    - cron: "21 01 * * 1"
   workflow_dispatch:
   # push:
 
