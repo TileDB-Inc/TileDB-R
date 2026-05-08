@@ -12,6 +12,7 @@ simply to create array data on disk to refer to later in examples that
 follow.
 
 ``` r
+
 library(tiledb)
 
 tdir <- tempdir()
@@ -97,6 +98,7 @@ close_and_reopen <- function(arr, txt) {
 #### Creating Dimensions
 
 ``` r
+
 library(tiledb)
 
 # Create dimension
@@ -109,6 +111,7 @@ strdim <- tiledb_dim("dim2", NULL, NULL, "ASCII")
 #### Creating the Array Domain
 
 ``` r
+
 library(tiledb)
 
 #  .. create dimensions `dim1`, `dim2`
@@ -123,6 +126,7 @@ dom <- tiledb_domain(dims = c(dim1, dim2))
 #### Creating Attributes
 
 ``` r
+
 # Create attribute
 attr <- tiledb_attr("attr", type = "INT32")
 
@@ -145,6 +149,7 @@ tiledb_attribute_set_cell_val_num(attr, NA)
 ##### Setting Fill Values
 
 ``` r
+
 # ... create int attribute attr
 attr <- tiledb_attr("a1", type = "INT32")
 # set fill value to 42L
@@ -160,6 +165,7 @@ tiledb_attribute_set_fill_value(attr, "...")
 ##### Setting a Compressor
 
 ``` r
+
 comp <- tiledb_filter("GZIP")
 tiledb_filter_set_option(comp,"COMPRESSION_LEVEL", 10)
 
@@ -173,6 +179,7 @@ attr <- tiledb_attr("attr", "INT32", filter_list = filter_list)
 ##### Setting Other Filters
 
 ``` r
+
 # Create filters
 f1 <- tiledb_filter("BIT_WIDTH_REDUCTION")
 f2 <- tiledb_filter("ZSTD")
@@ -187,6 +194,7 @@ attr <- tiledb_attr("attr", "INT32", filter_list = filter_list)
 #### Creating the Array Schema
 
 ``` r
+
 # ... create domain dom
 attr1 <- tiledb_attr("attr1", "INT32", filter_list = filter_list)
 attr2 <- tiledb_attr("attr2", "FLOAT64", filter_list = filter_list)
@@ -200,6 +208,7 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2), sparse = FALSE)
 ##### Setting the Tile and Cell Order
 
 ``` r
+
 # ... create domain dom
 # ... create attributes attr1, attr2
 
@@ -212,6 +221,7 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 ##### Setting the Data Tile Capacity
 
 ``` r
+
 # set capacity
 capacity(schema) <- 100000
 tiledb_array_schema_set_capacity(schema, 10000)
@@ -224,6 +234,7 @@ tiledb_array_schema_get_capacity(schema)
 ##### Allowing Duplicates
 
 ``` r
+
 sch <- schema(urisparse)
 
 # get 'duplicates allowed?' status
@@ -238,6 +249,7 @@ tiledb_array_schema_set_allows_dups(sch, TRUE)
 ##### Checking Correctness
 
 ``` r
+
 check(sch)
 tiledb_array_schema_check(sch)
 ```
@@ -247,6 +259,7 @@ tiledb_array_schema_check(sch)
 ##### Creating a Filter List
 
 ``` r
+
 # create a "GZIP" compression filter
 flt <- tiledb_filter("GZIP")
 # set the option 'COMPRESSION_LEVEL' to 10
@@ -259,6 +272,7 @@ fltlst <- tiledb_filter_list(flt)
 ##### Other Filters
 
 ``` r
+
 # create a filter list object with both
 fltlst <- tiledb_filter_list(c(flt1, flt2))
 ```
@@ -266,6 +280,7 @@ fltlst <- tiledb_filter_list(c(flt1, flt2))
 ##### Setting the Tile Chunk Size
 
 ``` r
+
 # ... create filter list
 set_max_chunk_size(filter_list, 10000)
 tiledb_filter_list_set_max_chunk_size(filter_list, 10000)
@@ -277,6 +292,7 @@ tiledb_filter_list_get_max_chunk_size(filter_list)
 ##### Setting a Filter List for an Attribute
 
 ``` r
+
 # create (or access) an attribute
 attr <- tiledb_attr("a", "INT32")
 
@@ -292,6 +308,7 @@ filter_list(attr) <- fltlst
 ##### Setting a Filter List for a Dimension
 
 ``` r
+
 d <- tiledb_dim("d", c(1L, 10L), 1L, "INT32")
 
 # create a filter list
@@ -306,6 +323,7 @@ filter_list(d) <- fltlst
 ##### Setting a Filter List for All Dimensions
 
 ``` r
+
 # ... create (or retrieve) array schema sch
 # ... create filter list fl
 
@@ -319,6 +337,7 @@ sch <- tiledb_array_schema(dom, c(attr1, attr2), coords_filter_list = fl)
 ##### Setting a Filter List for Variable-Sized Value Offsets
 
 ``` r
+
 # ... create (or retrieve) array schema sch
 # ... create filter list fl
 
@@ -332,6 +351,7 @@ sch <- tiledb_array_schema(dom, c(attr1, attr2), offsets_filter_list = fl)
 ##### Setting Coordinate and Offset Filters
 
 ``` r
+
 # ... create domain dom
 # ... create attributes attr1, attr2
 # ... create filter lists fl1, fl2, similar to attributes
@@ -349,6 +369,7 @@ schema <- tiledb_array_schema(dom, c(attr1, attr2),
 #### Creating the Array
 
 ``` r
+
 # ... create array schema
 
 # Create the array
@@ -358,6 +379,7 @@ tiledb_array_create(uridense, schema)
 #### Creating Encrypted Arrays
 
 ``` r
+
 # assume previously created schema 'sch'
 # use encryption key
 encryption_key <- "0123456789abcdeF0123456789abcdeF"
@@ -371,6 +393,7 @@ tiledb_array_create(uridensewkey, sch, encryption_key)
 #### Writing in Dense Subarrays
 
 ``` r
+
 ## prepare a larger 5 x 5 to embed into
 tmp <- tempfile()
 d1  <- tiledb_dim("d1", domain = c(1L, 5L))
@@ -403,6 +426,7 @@ unlink(tmp, recursive=TRUE)
 ##### Basic Writing using Low-Level Code
 
 ``` r
+
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "WRITE")
 
@@ -421,6 +445,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 #### Writing Sparse Cells
 
 ``` r
+
 tmp <- urisparse
 unlink(tmp, recursive=TRUE)
 
@@ -446,6 +471,7 @@ A[I, J] <- data
 #### Writing Encrypted Arrays
 
 ``` r
+
 # open for writing with corresponding encryption key
 A <- tiledb_array(uridensewkey, encryption_key = encryption_key)
 # access array as usual
@@ -454,6 +480,7 @@ A <- tiledb_array(uridensewkey, encryption_key = encryption_key)
 #### Fixed-length Attributes
 
 ``` r
+
 if (dir.exists(uridensefix)) unlink(uridensefix, recursive=TRUE)
 d1  <- tiledb_dim("d1", domain = c(1L, 4L))
 d2  <- tiledb_dim("d2", domain = c(1L, 4L))
@@ -484,6 +511,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 #### Var-length Attributes
 
 ``` r
+
 if (dir.exists(uridensevar)) unlink(uridensevar, recursive=TRUE)
 ## Define array
 ## The array will be 4x4 with dimensions "rows" and "cols", with domain [1,4].
@@ -527,6 +555,7 @@ tiledb:::libtiledb_array_close(arrptr)
 #### Writing at a Timestamp
 
 ``` r
+
 # 'at' uses Sys.time() from R in seconds, and shifts back 10 minutes
 at <- Sys.time() - 10*60
 
@@ -539,6 +568,7 @@ arr <- tiledb_array_open_at(arr, "WRITE", Sys.time() - 600)
 #### Getting the Fragment Info
 
 ``` r
+
 # continuing from previous example on dense variable length array
 # (but this works of course with any array after a write is needed
 
@@ -559,6 +589,7 @@ tsrange <- tiledb_query_get_fragment_timestamp_range(qry, idx)
 ##### Inspecting the array schema
 
 ``` r
+
 # get a schema directly from storage, uri holds a valid array URI
 uri <- "<array_uri>"
 sch <- schema(uri)
@@ -580,6 +611,7 @@ sch <- schema(A)
 ```
 
 ``` r
+
 # Get array schema, this shows the sparse accessor
 # and it is similar for tiledb_dense()
 A <- tiledb_array(uri = urisparse, is.sparse = TRUE)
@@ -619,6 +651,7 @@ show(schema)
 ##### Inspecting Domain
 
 ``` r
+
 # ... get array schema
 # ... get domain from schema
 
@@ -647,6 +680,7 @@ show(dom)
 ##### Inspecting Dimensions
 
 ``` r
+
 # ... get array schema
 # ... get domain
 # ... get dimension by index or name
@@ -670,6 +704,7 @@ show(dim)
 ##### Inspecting Attributes
 
 ``` r
+
 # ... get array schema
 # ... get attribute by index or name
 
@@ -701,6 +736,7 @@ show(attr)
 ##### Inspecting Filters
 
 ``` r
+
 # dim hold a previously created or load Dimension object
 fltrlst <- filter_list(dim)
 # or fltrlst <- filter_list(attr) for some attribute `attr`
@@ -728,6 +764,7 @@ tiledb_filter_type(fltr)
 #### Basic Reading
 
 ``` r
+
 # Open a dense array
 A <- tiledb_array(uri = uridense)
 
@@ -742,6 +779,7 @@ show(data)
 ##### Basic Reading using Low-Level Code
 
 ``` r
+
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
 ## subarray of rows 1,2 and cols 2,3,4
@@ -760,6 +798,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 ##### Variable-length Attributes
 
 ``` r
+
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridensevar, "READ")
 
@@ -781,6 +820,7 @@ print(mat, quote=FALSE)
 ##### Getting the Non-empty Domain
 
 ``` r
+
 # example with one fixed- and one variable-sized domain
 dom <- tiledb_domain(dims = c(tiledb_dim("d1", c(1L, 4L), 4L, "INT32"),
                               tiledb_dim("d2", NULL, NULL, "ASCII")))
@@ -799,6 +839,7 @@ tiledb_array_get_non_empty_domain_from_name(arr, "d2")
 ##### Reopening Arrays
 
 ``` r
+
 # Arrays are reopened automatically for you based on
 # read or write being performed. For direct pointer-based
 # access you can also explicitly reopen
@@ -808,6 +849,7 @@ arr@ptr <- tiledb:::libtiledb_array_reopen(arr@ptr)
 #### Reading Encrypted Arrays
 
 ``` r
+
 # Open the array and read as a data.frame from it.
 A <- tiledb_array(uri = array_name, return_as = "data.frame",
                   encryption_key = encryption_key)
@@ -826,6 +868,7 @@ A <- tiledb_array_open_at(A, "READ", tstamp)
 #### Multi-range Subarrays
 
 ``` r
+
 # create query, allocate result buffer, ...
 
 # add two query range on the first dimension
@@ -849,6 +892,7 @@ strrng <- tiledb_query_get_range_var(qry, idx, i)
 #### Incomplete Queries
 
 ``` r
+
 ctx <- tiledb_ctx()
 arrptr <- tiledb:::libtiledb_array_open(ctx@ptr, uridense, "READ")
 qryptr <- tiledb:::libtiledb_query(ctx@ptr, arrptr, "READ")
@@ -868,6 +912,7 @@ res <- tiledb:::libtiledb_array_close(arrptr)
 #### Result Estimation
 
 ``` r
+
 # ...create query object
 
 # estimated size of a fixed-length attribute in sparse array
@@ -880,6 +925,7 @@ sz <- tiledb_query_get_est_result_size_var(qry, "b")
 #### Time Traveling
 
 ``` r
+
 # time traveling is currently only accessible via the lower-level API
 # we use the R Datetime type; internally TileDB uses milliseconds since epoch
 tstamp <- Sys.time() - 60*60 # one hour ago
@@ -907,6 +953,7 @@ arrptr <- tiledb:::libtiledb_array_open_at_with_key(ctx@ptr, uridensewkey, "READ
 ### Asynchronous Queries
 
 ``` r
+
 #  ... create read or write query
 
 # Instead of using tiledb_query_submit(), use tiledb_query_submit_async()
@@ -919,6 +966,7 @@ tiledb_query_submit_async(qry)
 ##### Basic Usage
 
 ``` r
+
 # Create a configuration object
 config <- tiledb_config()
 
@@ -935,6 +983,7 @@ tiledb_config_unset(config, "sm.tile_cache_size")
 ##### Save and Load to File
 
 ``` r
+
 # Save to file
 config <- tiledb_config()
 config["sm.tile_cache_size"] <- 0;
@@ -949,6 +998,7 @@ tile_cache_size = config_loaded["sm.tile_cache_size"]
 ##### Configuration Iterator
 
 ``` r
+
 # R has no native iterator but one loop over the config elements
 # by retrieving the configuration as a vector
 
@@ -965,6 +1015,7 @@ for (n in names(cfg))
 ##### Writing Array Metadata
 
 ``` r
+
 # 'array' can be a URI, or an array opened for writing
 tiledb_put_metadata(array, "aaa", 100L)
 tiledb_put_metadata(array, "bb", c(1.1, 2.2))
@@ -975,6 +1026,7 @@ tiledb_put_metadata(array, "bb", c(1.1, 2.2))
 One can read by key:
 
 ``` r
+
 # 'array' can be a URI, or an array opened for reading
 tiledb_get_metadata(array, "aaa")
 ```
@@ -982,6 +1034,7 @@ tiledb_get_metadata(array, "aaa")
 Or one can retrieve all metadata at once:
 
 ``` r
+
 # 'array' can be a URI, or an array opened for reading
 md <- tiledb_get_all_metadata(array)
 
@@ -992,6 +1045,7 @@ print(md)
 ##### Deleting Array Metadata
 
 ``` r
+
 # 'array' can be a URI, or an array opened for writing
 tiledb_delete_metadata(array, "aaa")
 ```
@@ -1001,6 +1055,7 @@ tiledb_delete_metadata(array, "aaa")
 ##### Fragments
 
 ``` r
+
 # An array URI
 uri <- "<array_uri>"
 
@@ -1017,6 +1072,7 @@ array_consolidate(uri, cfg)
 ##### Vacuuming
 
 ``` r
+
 # An array URI
 uri <- "<array_uri>"
 
@@ -1034,18 +1090,21 @@ array_vacuum(uri, cfg)
 ##### Creating TileDB Groups
 
 ``` r
+
 tiledb_group_create("/tmp/my_group")
 ```
 
 ##### Getting the Object Type
 
 ``` r
+
 type <- tiledb_object_type("<path>")
 ```
 
 ##### List the Object Hierarchy
 
 ``` r
+
 # List arrays (defaults to default "PREORDER" traversal)
 tiledb_object_ls(uri)
 
@@ -1059,6 +1118,7 @@ print(res)
 ##### Move / Remove Object
 
 ``` r
+
 tiledb_object_mv("/tmp/my_group", "/tmp/my_group_2")
 
 tiledb_object_rm("/tmp/my_group_2/dense_array")
@@ -1069,6 +1129,7 @@ tiledb_object_rm("/tmp/my_group_2/dense_array")
 ##### Writing
 
 ``` r
+
 # binary file to be written
 uri <- tempfile(pattern = "tiledb_vfs", fileext = ".bin")
 # open file
@@ -1096,6 +1157,7 @@ tiledb_vfs_close(fhbuf)
 ##### Reading
 
 ``` r
+
 # open a binary file for reading
 fhbuf <- tiledb_vfs_open(uri, "READ")
 vec <- tiledb_vfs_read(fhbuf, as.integer64(0), as.integer64(488))
@@ -1105,6 +1167,7 @@ tiledb_vfs_close(fhbuf)
 ##### Managing
 
 ``` r
+
 # Creating a directory
 if (!tiledb_vfs_is_dir("dir_A")) {
     tiledb_vfs_create_dir("dir_A")
@@ -1136,6 +1199,7 @@ tiledb_vfs_remove_dir("dir_A")
 ##### S3
 
 ``` r
+
 tiledb_vfs_create_bucket("s3://my_bucket")
 
 tiledb_vfs_remove_bucket("s3://my_bucket")
@@ -1144,6 +1208,7 @@ tiledb_vfs_remove_bucket("s3://my_bucket")
 ##### Configuring VFS
 
 ``` r
+
 ctx <- tiledb_get_context()
 
 config <- tiledb_config()
@@ -1157,6 +1222,7 @@ vfs <- tiledb_vfs(config, ctx)
 ### Using Performance Statistics
 
 ``` r
+
 # Start collecting statistics
 tiledb_stats_enable()
 
@@ -1180,6 +1246,7 @@ tiledb_stats_reset()
 ### Catching Errors
 
 ``` r
+
 result <- tryCatch({
     # Create a group. The code below creates a group `my_group` and prints a
     # message because (normally) it will succeed.

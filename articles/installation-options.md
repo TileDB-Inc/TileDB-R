@@ -14,6 +14,7 @@ Network, or CRAN. CRAN generally provides binaries for the two most
 widely operating systems, Windows and macOS. So issueing the command
 
 ``` r
+
 install.packages("tiledb")
 ```
 
@@ -47,6 +48,7 @@ to pass the `configure` argument on. From within R, the equivalent
 command is
 
 ``` r
+
 install.packages("tiledb", repos=NULL, configure.args="--with-tiledb=/some/path")
 ```
 
@@ -61,6 +63,7 @@ R CMD INSTALL --configure-args='--with-download=https://some.where.net/file.tgz'
 and
 
 ``` r
+
 install.packages("tiledb_0.11.0.tar.gz", repos=NULL,
                  configure.args="--with-download=https://some.where.net/file.tgz")
 ```

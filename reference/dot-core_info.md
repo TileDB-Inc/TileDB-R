@@ -30,9 +30,11 @@ build-time constant to cache the version of `libtiledb` was built with.
 For example, in `zzz.R`, put the following line to cache the `libtiledb`
 information during package build
 
+
     .built_with <- list(libtiledb = tiledb::.core_hash())
 
 Then, in the load hook, add the following check
+
 
     .onLoad <- function(libname, pkgname) {
       if (.built_with$libtiledb != tiledb::.core_hash()) {

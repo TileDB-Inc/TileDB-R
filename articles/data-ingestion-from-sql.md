@@ -39,6 +39,7 @@ print method, the [tibble](https://cran.r-project.org/package=tibble)
 package offers an alternative):
 
 ``` r
+
 library(RPostgreSQL)
 library(data.table)
 library(tiledb)
@@ -57,6 +58,7 @@ backend, this can be as simple as
 (and likely transient) database.
 
 ``` r
+
 ## a local SQL db we have here -- about 617k rows
 dbSetup <- function() {
     drv <- dbDriver("PostgreSQL")
@@ -76,6 +78,7 @@ In the next step we fetch the data—and for simplicity issue just one
 could easily bucket by symbols, or date range, or …
 
 ``` r
+
 getDataFromSQL <- function() {
     con <- dbSetup()
     sql <- "select * from stockprices order by symbol, date;"
@@ -96,6 +99,7 @@ being text, do not set a domain set. For the date we set two ‘safe’
 outer values for the range.
 
 ``` r
+
 storeDataTDB <- function(dat, uri) {
     fromDataFrame(dat, uri,
                   col_index=1:2,
@@ -115,6 +119,7 @@ dimension values, or attributes. Here, for simplicity, we just read
 everything.
 
 ``` r
+
 getDataTDB <- function(uri) {
     set_allocation_size_preference(1e7) # larger than local default value
     arr <- tiledb_array(uri, return_as="data.frame")

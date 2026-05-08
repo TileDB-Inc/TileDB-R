@@ -154,6 +154,7 @@ We can connect directly using the `DBI` package along with the
 `RMariaDB` package and its MyTile bindings:
 
 ``` r
+
 library(DBI)
 con <- dbConnect(RMariaDB::MariaDB(), dbname="test")
 res <- dbSendQuery(con, "select * from `/work/penguins` as `q91` limit 10")
