@@ -14,7 +14,7 @@ jobs:
     container:
       image: rocker/r2u:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: SessionInfo
         run: Rscript -e 'sessionInfo()'
       - name: System Dependencies
@@ -38,7 +38,7 @@ jobs:
     needs: dev
     if: failure() || cancelled()
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Create Issue if Build Fails
         uses: TileDB-Inc/github-actions/open-issue@main
         with:
