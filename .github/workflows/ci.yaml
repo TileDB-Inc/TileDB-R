@@ -15,7 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: macOS-latest, r: '4.5.1' }
+          - {os: macOS-latest, r: '4.6.0' }
+          # The value of `r` for Ubuntu is a placeholder that has no effect. R
+          # is installed from r2u via APT, and thus corresponds to the current
+          # release version
           - {os: ubuntu-latest, r: 'release'}
 
     runs-on: ${{ matrix.os }}
