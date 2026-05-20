@@ -39,7 +39,7 @@ jobs:
       _R_TILEDB_LIBTILEDB_: ${{ matrix.vendored }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: r-lib/actions/setup-pandoc@v2
 

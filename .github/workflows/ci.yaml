@@ -22,7 +22,7 @@ jobs:
     name: ${{ matrix.os }} (${{ matrix.r }})
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: System
         run: |
