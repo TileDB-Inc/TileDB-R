@@ -30,7 +30,7 @@ currently unused.}
 The resulting elements in the selected format
 }
 \description{
-Heterogenous domains are supported, including timestamps and characters.
+Heterogeneous domains are supported, including timestamps and characters.
 }
 \details{
 This function may still still change; the current implementation should be

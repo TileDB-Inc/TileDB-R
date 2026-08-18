@@ -19,7 +19,7 @@ tiledb_query_condition_set_use_enumeration(
 context object is retrieved}
 }
 \value{
-Nothing is retuned, the function is invoked for the side effect
+Nothing is returned, the function is invoked for the side effect
 }
 \description{
 Set a boolean toggle to signal use of enumeration in query condition (TileDB 2.17 or later)

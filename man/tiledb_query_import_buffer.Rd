@@ -26,5 +26,5 @@ The update Query external pointer is returned
 }
 \description{
 This function imports to the named buffer for a \sQuote{WRITE} query
-from two Arrow exerternal pointers.
+from two Arrow external pointers.
 }

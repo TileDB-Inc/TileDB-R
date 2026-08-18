@@ -10,7 +10,7 @@ tiledb_array_is_heterogeneous(arr)
 \item{arr}{A TileDB Array object}
 }
 \value{
-A boolean indicating if the array has heterogenous domains
+A boolean indicating if the array has heterogeneous domains
 }
 \description{
 Check for Heterogeneous Domain

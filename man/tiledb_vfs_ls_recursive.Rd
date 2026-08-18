@@ -13,7 +13,7 @@ tiledb_vfs_ls_recursive(
 \arguments{
 \item{uri}{Character variable with a URI describing a file path}
 
-\item{vfs}{(optiona) A TileDB VFS object; default is to use a cached value.}
+\item{vfs}{(optional) A TileDB VFS object; default is to use a cached value.}
 
 \item{ctx}{(optional) A TileDB Ctx object}
 }

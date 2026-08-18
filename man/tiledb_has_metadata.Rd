@@ -13,7 +13,7 @@ tiledb_has_metadata(arr, key)
 }
 \value{
 A logical value indicating if the given key exists in the
-metdata of the given array
+metadata of the given array
 }
 \description{
 Test if TileDB Array has Metadata

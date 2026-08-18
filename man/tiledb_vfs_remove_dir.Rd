@@ -7,7 +7,7 @@
 tiledb_vfs_remove_dir(uri, vfs = tiledb_get_vfs())
 }
 \arguments{
-\item{uri}{Character variable with a URI describing a diretory path}
+\item{uri}{Character variable with a URI describing a directory path}
 
 \item{vfs}{A TileDB VFS object; default is to use a cached value.}
 }

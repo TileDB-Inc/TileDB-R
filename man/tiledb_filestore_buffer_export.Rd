@@ -14,7 +14,7 @@ tiledb_filestore_buffer_export(
 \arguments{
 \item{filestore_uri}{Character with an TileDB Array Schema URI}
 
-\item{offset}{(optional) Numeric variable with offset from beginnig, default is zero}
+\item{offset}{(optional) Numeric variable with offset from beginning, default is zero}
 
 \item{bytes}{(optional) Numeric variable with number of bytes to read, default is zero}
 

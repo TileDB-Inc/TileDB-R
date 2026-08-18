@@ -50,7 +50,7 @@ interval start}
 conversion, permitted values are \sQuote{asis} (default, returning a list
 of columns), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame},
 \sQuote{data.table} \sQuote{tibble}, \sQuote{arrow_table} or \sQuote{arrow}
-(where the last two are synomyms); note that \sQuote{data.table},
+(where the last two are synonyms); note that \sQuote{data.table},
 \sQuote{tibble} and \sQuote{arrow} require the respective packages
 to be installed.}
 
