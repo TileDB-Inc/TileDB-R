@@ -53,7 +53,7 @@ _string_to_tiledb_encryption_type_t(std::string encstr) {
   int rc = tiledb_encryption_type_from_str(encstr.c_str(), &enc);
   if (rc == TILEDB_OK)
     return enc;
-  Rcpp::stop("Unknow TileDB encryption type '%s'", encstr.c_str());
+  Rcpp::stop("Unknown TileDB encryption type '%s'", encstr.c_str());
 }
 
 // Deprecated in Core April 2024, removed July 2024

@@ -46,7 +46,7 @@ setClass("tiledb_ndrectangle",
 tiledb_ndrectangle <- function(dom, ctx = tiledb_get_context()) {
   stopifnot(
     "The first argument must be a TileDB Domain object" = is(dom, "tiledb_domain"),
-    "The second argment must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
+    "The second argument must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
     "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
   )
   ptr <- libtiledb_ndrectangle_create(ctx@ptr, dom@ptr)

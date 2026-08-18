@@ -25,7 +25,7 @@
 ##' @param arr A TileDB Array object
 ##' @param key A character value describing a metadata key
 ##' @return A logical value indicating if the given key exists in the
-##'   metdata of the given array
+##'   metadata of the given array
 ##' @export
 tiledb_has_metadata <- function(arr, key) {
   stopifnot(

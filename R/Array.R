@@ -183,7 +183,7 @@ tiledb_array_is_homogeneous <- function(arr) {
 ##' Check for Heterogeneous Domain
 ##'
 ##' @param arr A TileDB Array object
-##' @return A boolean indicating if the array has heterogenous domains
+##' @return A boolean indicating if the array has heterogeneous domains
 ##' @export
 tiledb_array_is_heterogeneous <- function(arr) {
   stopifnot("The 'arr' argument must be a tiledb_array object" = .isArray(arr))

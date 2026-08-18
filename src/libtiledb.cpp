@@ -844,7 +844,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
     std::array<int64_t, 2> _domain = {domain_vec[0], domain_vec[1]};
     Rcpp::NumericVector ext(tile_extent);
     if (!isInteger64(ext)) {
-      Rcpp::stop("tile exent for INT64 domain must be an integer64 type in R");
+      Rcpp::stop("tile extent for INT64 domain must be an integer64 type in R");
     }
     int64_t _tile_extent = fromInteger64(ext[0]);
     auto dim = new tiledb::Dimension(tiledb::Dimension::create<int64_t>(
@@ -867,7 +867,7 @@ XPtr<tiledb::Dimension> libtiledb_dim(XPtr<tiledb::Context> ctx,
                                        static_cast<uint64_t>(domain_vec[1])};
     Rcpp::NumericVector ext(tile_extent);
     if (!isInteger64(ext)) {
-      Rcpp::stop("tile exent for UINT64 domain must be an integer64 type in R");
+      Rcpp::stop("tile extent for UINT64 domain must be an integer64 type in R");
     }
     uint64_t _tile_extent = static_cast<uint64_t>(fromInteger64(ext[0]));
     auto dim = new tiledb::Dimension(tiledb::Dimension::create<uint64_t>(
@@ -1381,7 +1381,7 @@ double _domain_datatype_time_scale_factor(tiledb_datatype_t dtype) {
   case TILEDB_DATETIME_AS:
     return 1e-9;
   default:
-    Rcpp::stop("Unsupport datatype (%d)", dtype);
+    Rcpp::stop("Unsupported datatype (%d)", dtype);
   }
   return R_NaReal; // not reached
 }
@@ -2081,7 +2081,7 @@ int libtiledb_array_schema_get_capacity(XPtr<tiledb::ArraySchema> schema) {
   check_xptr_tag<tiledb::ArraySchema>(schema);
   uint64_t cap = schema->capacity();
   if (cap > std::numeric_limits<int32_t>::max()) {
-    Rcpp::stop("Overflow on schema capcity at '%ld'", cap);
+    Rcpp::stop("Overflow on schema capacity at '%ld'", cap);
   }
   return static_cast<int>(cap);
 }
@@ -5995,4 +5995,3 @@ void libtiledb_profile_save(XPtr<tiledb::Profile> profile) {
 std::string libtiledb_profile_dump(XPtr<tiledb::Profile> profile) {
     return profile->dump();
 }
-

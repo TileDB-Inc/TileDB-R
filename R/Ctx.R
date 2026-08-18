@@ -142,7 +142,7 @@ setMethod(
 
 #' Query if a TileDB backend is supported
 #'
-#' The scheme corresponds to the URI scheme for TileDB resouces.
+#' The scheme corresponds to the URI scheme for TileDB resources.
 #'
 #' Ex:
 #'  * `{file}:///path/to/file`

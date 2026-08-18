@@ -74,7 +74,7 @@ tiledb_query_type <- function(query) {
 #' @return The modified query object, invisibly
 #' @export
 tiledb_query_set_layout <- function(
-  query, 
+  query,
   layout = c(
     "COL_MAJOR", "ROW_MAJOR",
     "GLOBAL_ORDER", "UNORDERED"
@@ -165,8 +165,8 @@ tiledb_query_create_buffer_ptr_char <- function(query, varvec) {
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_alloc_buffer_ptr_char <- function(
-  sizeoffsets, 
-  sizedata, 
+  sizeoffsets,
+  sizedata,
   nullable = FALSE
 ) {
   stopifnot(
@@ -221,15 +221,15 @@ tiledb_query_set_buffer_ptr_char <- function(query, attr, bufptr) {
 #' @param ncells A number of elements (not bytes)
 #' @param nullable Optional boolean parameter indicating whether missing values
 #' are allowed (for which another column is allocated), default is FALSE
-#' @param varnum Option intgeter parameter for the number of elemements per variable,
+#' @param varnum Option integer parameter for the number of elements per variable,
 #' default is one
 #' @return An external pointer to the allocated buffer object
 #' @export
 tiledb_query_buffer_alloc_ptr <- function(
-  query, 
-  datatype, 
-  ncells, 
-  nullable = FALSE, 
+  query,
+  datatype,
+  ncells,
+  nullable = FALSE,
   varnum = 1
 ) {
   stopifnot(
@@ -303,7 +303,7 @@ tiledb_query_get_buffer_ptr <- function(bufptr) {
 #' @return An R object as resulting from the query
 #' @export
 tiledb_query_get_buffer_char <- function(
-  bufptr, 
+  bufptr,
   sizeoffsets = 0,
   sizestring = 0
 ) {
@@ -410,8 +410,8 @@ tiledb_query_result_buffer_elements <- function(query, attr) {
 #' @seealso tiledb_query_result_buffer_elements
 #' @export
 tiledb_query_result_buffer_elements_vec <- function(
-  query, 
-  attr, 
+  query,
+  attr,
   nullable = FALSE
 ) {
   stopifnot(
@@ -433,10 +433,10 @@ tiledb_query_result_buffer_elements_vec <- function(
 #' @return The query object, invisibly
 #' @export
 tiledb_query_add_range <- function(
-  query, 
-  schema, 
-  attr, lowval, 
-  highval, 
+  query,
+  schema,
+  attr, lowval,
+  highval,
   stride = NULL
 ) {
   stopifnot(
@@ -465,11 +465,11 @@ tiledb_query_add_range <- function(
 #' @return The query object, invisibly
 #' @export
 tiledb_query_add_range_with_type <- function(
-  query, 
-  idx, 
-  datatype, 
-  lowval, 
-  highval, 
+  query,
+  idx,
+  datatype,
+  lowval,
+  highval,
   stride = NULL
 ) {
   stopifnot(
@@ -517,7 +517,7 @@ tiledb_query_get_fragment_uri <- function(query, idx) {
 #' Retrieve the timestamp range for a given Query Fragment
 #'
 #' This function is only applicable to \sQuote{WRITE} queries. The time resolution in
-#' TileDB is millseconds since the epoch so an R \code{Datetime} vector is returned.
+#' TileDB is milliseconds since the epoch so an R \code{Datetime} vector is returned.
 #' @param query A TileDB Query object
 #' @param idx An integer (or numeric) index ranging from zero to the number of fragments minus 1
 #' @return A two-element datetime vector with the start and end time of the fragment write.
@@ -686,7 +686,7 @@ tiledb_query_ctx <- function(query) {
 ##' @return The value of the aggregation
 ##' @export
 tiledb_query_apply_aggregate <- function(
-  query, 
+  query,
   attrname,
   operation = c("Count", "NullCount", "Min", "Max", "Mean",  "Sum"),
   nullable = TRUE
