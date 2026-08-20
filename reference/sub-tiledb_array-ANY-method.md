@@ -14,7 +14,7 @@ x[i, j, ..., drop = FALSE]
 
 - x:
 
-  tiledb_array object
+  A `tiledb_array` object.
 
 - i:
 
@@ -43,5 +43,5 @@ The resulting elements in the selected format
 
 ## Details
 
-This function may still still change; the current implementation should
-be considered as an initial draft.
+This function may still change; the current implementation should be
+considered as an initial draft.

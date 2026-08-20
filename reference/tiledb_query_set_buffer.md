@@ -26,4 +26,4 @@ tiledb_query_set_buffer(query, attr, buffer)
 
 ## Value
 
-The modified query object, invisisibly
+The modified query object, invisibly

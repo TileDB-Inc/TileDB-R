@@ -16,4 +16,5 @@ tiledb_query_type(query)
 
 ## Value
 
-A character value, either 'READ' or 'WRITE'
+A character value, either 'READ', 'WRITE', 'DELETE' or
+'MODIFY_EXCLUSIVE'

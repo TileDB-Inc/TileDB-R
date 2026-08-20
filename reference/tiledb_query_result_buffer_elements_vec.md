@@ -39,4 +39,4 @@ the validity buffer size.
 
 ## See also
 
-tiledb_query_result_buffer_elements
+[tiledb_query_result_buffer_elements](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements.md)

@@ -1,8 +1,8 @@
 # Retrieve query_layout values for the array
 
 A `tiledb_array` object can have a corresponding query with a given
-layout given layout. This methods returns the selection value for
-‘query_layout’ as a character value.
+layout. This method returns the selection value for ‘query_layout’ as a
+character value.
 
 ## Usage
 

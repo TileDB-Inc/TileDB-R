@@ -21,4 +21,5 @@ tiledb_group_has_metadata(grp, key)
 
 ## Value
 
-A boolean value indicating with the object is present
+A logical value indicating if the given key exists in the metadata of
+the given group

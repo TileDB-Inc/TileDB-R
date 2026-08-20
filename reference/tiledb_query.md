@@ -1,6 +1,6 @@
-# Creates a 'tiledb_query' object
+# Creates a `tiledb_query` object
 
-Creates a 'tiledb_query' object
+Creates a `tiledb_query` object
 
 ## Usage
 
@@ -25,8 +25,8 @@ tiledb_query(
 
 - type:
 
-  A character value that must be one of 'READ', 'WRITE', or 'DELETE'
-  (for TileDB \>= 2.12.0)
+  A character value that must be one of 'READ', 'WRITE', or 'DELETE',
+  'MODIFY_EXCLUSIVE' (for TileDB \>= 2.12.0)
 
 - ctx:
 
@@ -34,4 +34,4 @@ tiledb_query(
 
 ## Value
 
-'tiledb_query' object
+A `tiledb_query` object

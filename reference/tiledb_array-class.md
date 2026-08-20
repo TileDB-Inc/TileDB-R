@@ -12,7 +12,7 @@ refactored implementation utilising newer TileDB features.
 
 - `uri`:
 
-  A character despription with the array URI
+  A character description with the array URI
 
 - `is.sparse`:
 

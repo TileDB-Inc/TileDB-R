@@ -16,7 +16,7 @@ tiledb_query_set_subarray(query, subarray, type)
 
 - subarray:
 
-  A subarry vector object
+  A subarray vector object
 
 - type:
 

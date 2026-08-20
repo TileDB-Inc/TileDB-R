@@ -1,6 +1,6 @@
-# Run an aggregate oprtation on the given query attribute
+# Run an aggregate operation on the given query attribute
 
-Run an aggregate oprtation on the given query attribute
+Run an aggregate operation on the given query attribute
 
 ## Usage
 

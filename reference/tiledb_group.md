@@ -30,8 +30,8 @@ tiledb_group(
 
 - cfg:
 
-  (optional) A TileConfig object
+  (optional) A TileDB Config object
 
 ## Value
 
-A 'group' object
+A TileDB Group object

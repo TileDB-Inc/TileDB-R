@@ -1045,107 +1045,158 @@ query object functions
 
 - [`tiledb_query-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query-class.md)
   : An S4 class for a TileDB Query object
+
 - [`tiledb_query()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query.md)
-  : Creates a 'tiledb_query' object
+  :
+
+  Creates a `tiledb_query` object
+
 - [`tiledb_query_add_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_add_range.md)
   : Set a range for a given query
+
 - [`tiledb_query_add_range_with_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_add_range_with_type.md)
   : Set a range for a given query, also supplying type
+
 - [`tiledb_query_alloc_buffer_ptr_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_alloc_buffer_ptr_char.md)
   : Allocate a Query buffer for reading a character attribute
+
 - [`tiledb_query_apply_aggregate()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_apply_aggregate.md)
-  : Run an aggregate oprtation on the given query attribute
+  : Run an aggregate operation on the given query attribute
+
 - [`tiledb_query_buffer_alloc_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_buffer_alloc_ptr.md)
   : Allocate a Query buffer for a given type
+
 - [`tiledb_query_condition-class`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition-class.md)
   : An S4 class for a TileDB QueryCondition object
+
 - [`tiledb_query_condition()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition.md)
   : Creates a 'tiledb_query_condition' object
+
 - [`tiledb_query_condition_combine()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_combine.md)
   : Combine two 'tiledb_query_condition' objects
+
 - [`tiledb_query_condition_create()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_create.md)
   : Create a query condition for vector 'IN' and 'NOT_IN' operations
+
 - [`tiledb_query_condition_init()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_init.md)
   : Initialize a 'tiledb_query_condition' object
+
 - [`tiledb_query_condition_set_use_enumeration()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_condition_set_use_enumeration.md)
   : Enable use of enumeration in query condition
+
 - [`tiledb_query_create_buffer_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_create_buffer_ptr.md)
   : Allocate and populate a Query buffer for a given object of a given
   data type.
+
 - [`tiledb_query_create_buffer_ptr_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_create_buffer_ptr_char.md)
   : Allocate and populate a Query buffer for writing the given char
   vector
+
 - [`tiledb_query_ctx()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_ctx.md)
   : Return query context object
+
 - [`tiledb_query_export_buffer()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_export_buffer.md)
   : Export Query Buffer to Pair of Arrow IO Pointers
+
 - [`tiledb_query_finalize()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_finalize.md)
   : Finalize TileDB Query
+
 - [`tiledb_query_get_buffer_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_buffer_char.md)
   : Retrieve content from a Query character buffer
+
 - [`tiledb_query_get_buffer_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_buffer_ptr.md)
   : Retrieve content from a Query buffer
+
 - [`tiledb_query_get_est_result_size()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_est_result_size.md)
   : Retrieve the estimated result size for a query and attribute
+
 - [`tiledb_query_get_est_result_size_var()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_est_result_size_var.md)
   : Retrieve the estimated result size for a query and variable-sized
   attribute
+
 - [`tiledb_query_get_fragment_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_num.md)
   : Retrieve the Number of Fragments for Query
+
 - [`tiledb_query_get_fragment_timestamp_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_timestamp_range.md)
   : Retrieve the timestamp range for a given Query Fragment
+
 - [`tiledb_query_get_fragment_uri()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_fragment_uri.md)
   : Retrieve the URI for a given Query Fragment
+
 - [`tiledb_query_get_layout()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_layout.md)
   : Get TileDB Query layout
+
 - [`tiledb_query_get_range()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range.md)
   : Retrieve the query range for a query dimension and range index
+
 - [`tiledb_query_get_range_num()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range_num.md)
   : Retrieve the number of ranges for a query dimension
+
 - [`tiledb_query_get_range_var()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_get_range_var.md)
   : Retrieve the query range for a variable-sized query dimension and
   range index
+
 - [`tiledb_query_import_buffer()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_import_buffer.md)
   : Import to Query Buffer from Pair of Arrow IO Pointers
+
 - [`tiledb_query_result_buffer_elements()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements.md)
   : Get TileDB Query result buffer element size
+
 - [`tiledb_query_result_buffer_elements_vec()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements_vec.md)
   : Get TileDB Query result buffer element size pair as vector
+
 - [`tiledb_query_set_buffer()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer.md)
   : Set TileDB Query buffer
+
 - [`tiledb_query_set_buffer_ptr()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer_ptr.md)
   : Assigns to a Query buffer for a given attribute
+
 - [`tiledb_query_set_buffer_ptr_char()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_buffer_ptr_char.md)
   : Assign a buffer to a Query attribute
+
 - [`tiledb_query_set_condition()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_condition.md)
   : Set a query combination object for a query
+
 - [`tiledb_query_set_layout()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_layout.md)
   : Set TileDB Query layout
+
 - [`tiledb_query_set_subarray()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_set_subarray.md)
   : Set subarray for TileDB Query object
+
 - [`tiledb_query_stats()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_stats.md)
   : Return query statistics as a JSON string
+
 - [`tiledb_query_status()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_status.md)
   : Get TileDB Query status
+
 - [`tiledb_query_submit()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_submit.md)
   : Submit TileDB Query
+
 - [`tiledb_query_submit_async()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_submit_async.md)
   : Submit TileDB Query asynchronously without a callback returning
   immediately
+
 - [`tiledb_query_type()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_type.md)
   : Return TileDB Query type
+
 - [`parse_query_condition()`](https://tiledb-inc.github.io/TileDB-R/reference/parse_query_condition.md)
   : Create a 'tiledb_query_condition' object from an expression
+
 - [`tiledb_get_query_status()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_get_query_status.md)
   : Retrieve the cached status of the last finalized query
+
 - [`tiledb_error_message()`](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_error_message.md)
   : Return the error message for a given context
+
 - [`completedBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/completedBatched.md)
   : Check ‘batched’ query for completion
+
 - [`createBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/createBatched.md)
   : Create a ‘batched’ query object
+
 - [`fetchBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/fetchBatched.md)
   : Run a ‘batched’ query
+
 - [`statusBatched()`](https://tiledb-inc.github.io/TileDB-R/reference/statusBatched.md)
   : Return ‘batched’ status
 

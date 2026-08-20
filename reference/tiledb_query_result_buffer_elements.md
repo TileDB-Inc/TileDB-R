@@ -37,4 +37,4 @@ value.
 
 ## See also
 
-tiledb_query_result_buffer_elements_vec
+[tiledb_query_result_buffer_elements_vec](https://tiledb-inc.github.io/TileDB-R/reference/tiledb_query_result_buffer_elements_vec.md)

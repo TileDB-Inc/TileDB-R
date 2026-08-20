@@ -17,4 +17,4 @@ tiledb_set_context(ctx)
 ## Value
 
 NULL, invisibly. The function is invoked for the side-effect of storing
-the VFS object.
+the Ctx object.
