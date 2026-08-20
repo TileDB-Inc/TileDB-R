@@ -1914,11 +1914,15 @@ XPtr<tiledb::ArraySchema> libtiledb_array_schema(
     for (R_xlen_t i = 0; i < nenum; i++) {
       bool nn = enumerations[i] == R_NilValue;
       if (nn == false) {
-        XPtr<tiledb::Attribute> attr =
-            as<XPtr<tiledb::Attribute>>(attributes[i]);
         std::vector<std::string> enums =
             as<std::vector<std::string>>(enumerations[i]);
         std::string enum_name = std::string(enumnames[i]);
+
+        // Get attribute by enum name ('attributes' list is named from R level)
+        // See https://github.com/TileDB-Inc/TileDB-R/issues/853
+        XPtr<tiledb::Attribute> attr =
+            as<XPtr<tiledb::Attribute>>(attributes[enum_name]);
+
         bool is_ordered = false; // default
         // 'ordered' is an attribute off the CharacterVector
         CharacterVector enumvect = enumerations[i];
