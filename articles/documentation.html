@@ -187,7 +187,7 @@ that follow.</p>
 <span><span class="co"># Create dimension</span></span>
 <span><span class="va">dim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_dim.html">tiledb_dim</a></span><span class="op">(</span><span class="st">"dim1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">4L</span><span class="op">)</span>, <span class="fl">2L</span>, <span class="st">"INT32"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># String dimenions: no values for domain and extent</span></span>
+<span><span class="co"># String dimensions: no values for domain and extent</span></span>
 <span><span class="va">strdim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_dim.html">tiledb_dim</a></span><span class="op">(</span><span class="st">"dim2"</span>, <span class="cn">NULL</span>, <span class="cn">NULL</span>, <span class="st">"ASCII"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -658,7 +658,7 @@ that follow.</p>
 <span><span class="co"># get an encrypted scheme directory from storage, enc_key is the AES-256 key</span></span>
 <span><span class="va">sch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generics.html">schema</a></span><span class="op">(</span><span class="va">uri</span>, <span class="va">enc_key</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># get a schema from an already openened array</span></span>
+<span><span class="co"># get a schema from an already opened array</span></span>
 <span><span class="co"># using a sparse array example, works the same for dense arrays</span></span>
 <span><span class="va">array_name</span> <span class="op">&lt;-</span> <span class="va">urisparse</span></span>
 <span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_array.html">tiledb_array</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="va">array_name</span>, is.sparse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1102,7 +1102,7 @@ that follow.</p>
 <span><span class="co"># Consolidate with default configuration</span></span>
 <span><span class="fu"><a href="../reference/array_consolidate.html">array_consolidate</a></span><span class="op">(</span><span class="va">uri</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Alteratively, create and pass a configuration object</span></span>
+<span><span class="co"># Alternatively, create and pass a configuration object</span></span>
 <span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">cfg</span><span class="op">[</span><span class="st">"sm.consolidation.steps"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"3"</span></span>
 <span><span class="va">cfg</span><span class="op">[</span><span class="st">"sm.consolidation.mode"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"fragments"</span></span>
@@ -1118,7 +1118,7 @@ that follow.</p>
 <span><span class="co"># Vacuum with default configuration</span></span>
 <span><span class="fu"><a href="../reference/array_vacuum.html">array_vacuum</a></span><span class="op">(</span><span class="va">uri</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Alteratively, create and pass a configuration object</span></span>
+<span><span class="co"># Alternatively, create and pass a configuration object</span></span>
 <span><span class="va">cfg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tiledb_config.html">tiledb_config</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">cfg</span><span class="op">[</span><span class="st">"sm.vacuum.mode"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"fragments"</span></span>
 <span><span class="fu"><a href="../reference/array_vacuum.html">array_vacuum</a></span><span class="op">(</span><span class="va">uri</span>, <span class="va">cfg</span><span class="op">)</span></span></code></pre></div>

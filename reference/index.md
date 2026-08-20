@@ -1180,7 +1180,7 @@ object management functions
 
 ## MetaData
 
-arrray metadata functionality
+array metadata functionality
 
 - [`print(`*`<tiledb_metadata>`*`)`](https://tiledb-inc.github.io/TileDB-R/reference/print.tiledb_metadata.md)
   : Print a TileDB Array Metadata object

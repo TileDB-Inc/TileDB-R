@@ -147,7 +147,7 @@ The [TileDB R Tutorial at useR!
 2021](https://dirk.eddelbuettel.com/papers/useR2021_tiledb_tutorial.pdf)
 contained a worked example of writing *much* larger data set in chunks.
 The process is very similar to the simple example we showed here – and
-in addition requires a suffient domain range for the dimension along
+in addition requires a sufficient domain range for the dimension along
 with a (sequential or parallel) loop of reading chunks and writing them
 to TileDB.
 

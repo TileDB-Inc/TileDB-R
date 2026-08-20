@@ -12,7 +12,7 @@ tiledb_vfs_create_dir(uri, vfs = tiledb_get_vfs())
 
 - uri:
 
-  Character variable with a URI describing a diretory path
+  Character variable with a URI describing a directory path
 
 - vfs:
 

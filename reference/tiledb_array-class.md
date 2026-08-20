@@ -68,7 +68,7 @@ refactored implementation utilising newer TileDB features.
   A character value with the desired `tiledb_array` conversion,
   permitted values are ‘asis’ (default, returning a list of columns),
   ‘array’, ‘matrix’,‘data.frame’, ‘data.table’ ‘tibble’, ‘arrow_table’
-  or ‘arrow’ (where the last two are synomyms); note that ‘data.table’,
+  or ‘arrow’ (where the last two are synonyms); note that ‘data.table’,
   ‘tibble’ and ‘arrow’ require the respective packages to be installed.
 
 - `query_statistics`:

@@ -97,7 +97,7 @@ fromDataFrame(
 
   A named list specifying filter choices per column, default is an empty
   `list` object. This argument applies for all named arguments and the
-  matchin dimensions or attributes. The `filter` argument still applies
+  matching dimensions or attributes. The `filter` argument still applies
   for all unnamed arguments.
 
 - coords_filters:

@@ -1,6 +1,7 @@
 # Returns a TileDB array, allowing for specific subset ranges.
 
-Heterogenous domains are supported, including timestamps and characters.
+Heterogeneous domains are supported, including timestamps and
+characters.
 
 ## Usage
 

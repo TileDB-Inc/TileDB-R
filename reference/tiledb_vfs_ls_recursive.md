@@ -20,7 +20,7 @@ tiledb_vfs_ls_recursive(
 
 - vfs:
 
-  (optiona) A TileDB VFS object; default is to use a cached value.
+  (optional) A TileDB VFS object; default is to use a cached value.
 
 - ctx:
 

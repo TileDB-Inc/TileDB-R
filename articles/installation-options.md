@@ -11,7 +11,7 @@ package.
 
 The TileDB R package is released via the Comprehensive R Archive
 Network, or CRAN. CRAN generally provides binaries for the two most
-widely operating systems, Windows and macOS. So issueing the command
+widely operating systems, Windows and macOS. So issuing the command
 
 ``` r
 

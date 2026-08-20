@@ -94,13 +94,13 @@ tiledb_sparse(...)
 - timestamp_start:
 
   optional A POSIXct Datetime value determining the inclusive time point
-  at which the array is to be openened. No fragments written earlier
-  will be considered.
+  at which the array is to be opened. No fragments written earlier will
+  be considered.
 
 - timestamp_end:
 
   optional A POSIXct Datetime value determining the inclusive time point
-  until which the array is to be openened. No fragments written earlier
+  until which the array is to be opened. No fragments written earlier
   later be considered.
 
 - return_as:

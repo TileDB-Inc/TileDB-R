@@ -21,7 +21,8 @@ tiledb_filestore_buffer_export(
 
 - offset:
 
-  (optional) Numeric variable with offset from beginnig, default is zero
+  (optional) Numeric variable with offset from beginning, default is
+  zero
 
 - bytes:
 

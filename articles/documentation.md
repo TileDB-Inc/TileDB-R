@@ -104,7 +104,7 @@ library(tiledb)
 # Create dimension
 dim <- tiledb_dim("dim1", c(1L, 4L), 2L, "INT32")
 
-# String dimenions: no values for domain and extent
+# String dimensions: no values for domain and extent
 strdim <- tiledb_dim("dim2", NULL, NULL, "ASCII")
 ```
 
@@ -597,7 +597,7 @@ sch <- schema(uri)
 # get an encrypted scheme directory from storage, enc_key is the AES-256 key
 sch <- schema(uri, enc_key)
 
-# get a schema from an already openened array
+# get a schema from an already opened array
 # using a sparse array example, works the same for dense arrays
 array_name <- urisparse
 A <- tiledb_array(uri = array_name, is.sparse = TRUE)
@@ -1062,7 +1062,7 @@ uri <- "<array_uri>"
 # Consolidate with default configuration
 array_consolidate(uri)
 
-# Alteratively, create and pass a configuration object
+# Alternatively, create and pass a configuration object
 cfg <- tiledb_config()
 cfg["sm.consolidation.steps"] <- "3"
 cfg["sm.consolidation.mode"] <- "fragments"
@@ -1079,7 +1079,7 @@ uri <- "<array_uri>"
 # Vacuum with default configuration
 array_vacuum(uri)
 
-# Alteratively, create and pass a configuration object
+# Alternatively, create and pass a configuration object
 cfg <- tiledb_config()
 cfg["sm.vacuum.mode"] <- "fragments"
 array_vacuum(uri, cfg)

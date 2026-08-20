@@ -12,7 +12,7 @@ tiledb_version(compact = FALSE)
 
 - compact:
 
-  Logical value indicating wheter a compact `package_version` object
+  Logical value indicating whether a compact `package_version` object
   should be returned
 
 ## Value

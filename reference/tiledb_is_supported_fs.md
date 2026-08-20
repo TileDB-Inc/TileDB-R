@@ -1,6 +1,6 @@
 # Query if a TileDB backend is supported
 
-The scheme corresponds to the URI scheme for TileDB resouces.
+The scheme corresponds to the URI scheme for TileDB resources.
 
 ## Usage
 

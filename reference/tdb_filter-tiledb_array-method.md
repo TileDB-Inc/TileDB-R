@@ -21,7 +21,7 @@ tdb_filter(x, ..., strict = TRUE)
 
 - strict:
 
-  A boolean toogle to, if set, errors if a non-existing attribute is
+  A boolean toggle to, if set, errors if a non-existing attribute is
   selected or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is
   shown by execution proceeds.
 

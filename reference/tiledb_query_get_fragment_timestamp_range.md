@@ -1,7 +1,7 @@
 # Retrieve the timestamp range for a given Query Fragment
 
 This function is only applicable to ‘WRITE’ queries. The time resolution
-in TileDB is millseconds since the epoch so an R `Datetime` vector is
+in TileDB is milliseconds since the epoch so an R `Datetime` vector is
 returned.
 
 ## Usage

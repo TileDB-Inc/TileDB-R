@@ -22,7 +22,7 @@ query_layout(x) <- value
 - value:
 
   A character variable for the query layout. Permitted values are
-  “ROW_MAJOR”, “COL_MAJOR”, “GLOBAL_ORDER”, or “UNORDERD”.
+  “ROW_MAJOR”, “COL_MAJOR”, “GLOBAL_ORDER”, or “UNORDERED”.
 
 ## Value
 

@@ -16,4 +16,4 @@ tiledb_array_is_heterogeneous(arr)
 
 ## Value
 
-A boolean indicating if the array has heterogenous domains
+A boolean indicating if the array has heterogeneous domains

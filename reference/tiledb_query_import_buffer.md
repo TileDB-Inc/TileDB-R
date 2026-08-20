@@ -1,7 +1,7 @@
 # Import to Query Buffer from Pair of Arrow IO Pointers
 
 This function imports to the named buffer for a ‘WRITE’ query from two
-Arrow exerternal pointers.
+Arrow external pointers.
 
 ## Usage
 

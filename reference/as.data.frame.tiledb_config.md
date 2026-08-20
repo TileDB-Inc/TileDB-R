@@ -21,7 +21,7 @@ as.data.frame(x, ...)
 
 ## Value
 
-a data.frame wth parameter, value columns
+a data.frame with parameter, value columns
 
 ## Examples
 

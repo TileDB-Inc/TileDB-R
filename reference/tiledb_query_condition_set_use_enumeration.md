@@ -30,4 +30,4 @@ tiledb_query_condition_set_use_enumeration(
 
 ## Value
 
-Nothing is retuned, the function is invoked for the side effect
+Nothing is returned, the function is invoked for the side effect

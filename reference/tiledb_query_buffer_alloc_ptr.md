@@ -35,7 +35,7 @@ tiledb_query_buffer_alloc_ptr(
 
 - varnum:
 
-  Option intgeter parameter for the number of elemements per variable,
+  Option integer parameter for the number of elements per variable,
   default is one
 
 ## Value

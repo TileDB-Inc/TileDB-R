@@ -20,5 +20,5 @@ tiledb_has_metadata(arr, key)
 
 ## Value
 
-A logical value indicating if the given key exists in the metdata of the
-given array
+A logical value indicating if the given key exists in the metadata of
+the given array
