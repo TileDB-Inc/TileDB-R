@@ -14,7 +14,7 @@ based on a refactored implementation utilising newer TileDB features.
 \describe{
 \item{\code{ctx}}{A TileDB context object}
 
-\item{\code{uri}}{A character despription with the array URI}
+\item{\code{uri}}{A character description with the array URI}
 
 \item{\code{is.sparse}}{A logical value whether the array is sparse or not}
 

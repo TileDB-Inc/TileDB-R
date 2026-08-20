@@ -17,6 +17,6 @@ A character value describing the query layout
 }
 \description{
 A \code{tiledb_array} object can have a corresponding query with a given
-layout given layout. This methods returns the selection value for
+layout. This method returns the selection value for
 \sQuote{query_layout} as a character value.
 }

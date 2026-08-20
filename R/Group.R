@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2022-2024 TileDB Inc.
+#  Copyright (c) 2022-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,8 @@ setClass("tiledb_group",
 #' \dQuote{READ} or \dQuote{WRITE}
 #' @param ctx (optional) A TileDB Context object; if not supplied the default
 #' context object is retrieved
-#' @param cfg (optional) A TileConfig object
-#' @return A 'group' object
+#' @param cfg (optional) A TileDB Config object
+#' @return A TileDB Group object
 #' @export
 tiledb_group <- function(
   uri,
@@ -262,7 +262,8 @@ tiledb_group_get_metadata <- function(grp, key) {
 ##' \code{tiledb_group()}
 ##' @param key A character value with they index under which the
 ##' data will be written
-##' @return A boolean value indicating with the object is present
+##' @return A logical value indicating if the given key exists in the
+##'  metadata of the given group
 ##' @export
 tiledb_group_has_metadata <- function(grp, key) {
   stopifnot(

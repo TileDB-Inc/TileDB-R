@@ -10,7 +10,7 @@ tiledb_query_type(query)
 \item{query}{A TileDB Query object}
 }
 \value{
-A character value, either 'READ' or 'WRITE'
+A character value, either 'READ', 'WRITE', 'DELETE' or 'MODIFY_EXCLUSIVE'
 }
 \description{
 Return TileDB Query type

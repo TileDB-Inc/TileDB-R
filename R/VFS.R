@@ -1,6 +1,6 @@
 #  MIT License
 #
-#  Copyright (c) 2017-2024 TileDB Inc.
+#  Copyright (c) 2017-2025 TileDB Inc.
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -102,7 +102,7 @@ tiledb_vfs_remove_bucket <- function(uri, vfs = tiledb_get_vfs()) {
 #' cfg["vfs.s3.region"] <- "us-west-1"
 #' ctx <- tiledb_ctx(cfg)
 #' vfs <- tiledb_vfs()
-#' tiledb_vfs_is_bucket(vfs, "s3://tiledb-public-us-west-1/test-array-4x4")
+#' tiledb_vfs_is_bucket("s3://tiledb-public-us-west-1/test-array-4x4", vfs = vfs)
 #' }
 tiledb_vfs_is_bucket <- function(uri, vfs = tiledb_get_vfs()) {
   stopifnot(
