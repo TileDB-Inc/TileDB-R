@@ -62,7 +62,7 @@
 ##' writing to the newly-created array) and \sQuote{append} (to only append to an already existing
 ##' array).
 ##' @param filter_list A named list specifying filter choices per column, default is an empty
-##' \code{list} object. This argument applies for all named arguments and the matchin dimensions
+##' \code{list} object. This argument applies for all named arguments and the matching dimensions
 ##' or attributes. The \code{filter} argument still applies for all unnamed arguments.
 ##' @param coords_filters A character vector with filters for coordinates, default is \code{ZSTD}.
 ##' @param offsets_filters A character vector with filters for coordinates, default is \code{ZSTD}.
@@ -83,16 +83,16 @@
 ##' all.equal(as.matrix(iris), as.matrix(newdf))	# also strips attribute
 ##' @export
 fromDataFrame <- function(
-  obj, 
-  uri, 
-  col_index = NULL, 
-  sparse = TRUE, 
+  obj,
+  uri,
+  col_index = NULL,
+  sparse = TRUE,
   allows_dups = sparse,
   cell_order = "COL_MAJOR",
   tile_order = "COL_MAJOR",
   filter = "ZSTD",
-  capacity = 10000L, 
-  tile_domain = NULL, 
+  capacity = 10000L,
+  tile_domain = NULL,
   tile_extent = NULL,
   mode = c("ingest", "schema_only", "append"),
   filter_list = NULL,

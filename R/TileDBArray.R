@@ -52,7 +52,7 @@
 #' conversion, permitted values are \sQuote{asis} (default, returning a list
 #' of columns), \sQuote{array}, \sQuote{matrix},\sQuote{data.frame},
 #' \sQuote{data.table} \sQuote{tibble}, \sQuote{arrow_table} or \sQuote{arrow}
-#' (where the last two are synomyms); note that \sQuote{data.table},
+#' (where the last two are synonyms); note that \sQuote{data.table},
 #' \sQuote{tibble} and \sQuote{arrow} require the respective packages
 #' to be installed.
 #' @slot query_statistics A logical value, defaults to \sQuote{FALSE}; if
@@ -125,10 +125,10 @@ setClass(
 #' default uninitialized without a condition; this functionality requires
 #' TileDB 2.3.0 or later
 #' @param timestamp_start optional A POSIXct Datetime value determining the
-#' inclusive time point at which the array is to be openened. No fragments
+#' inclusive time point at which the array is to be opened. No fragments
 #' written earlier will be considered.
 #' @param timestamp_end optional A POSIXct Datetime value determining the
-#' inclusive time point until which the array is to be openened. No fragments
+#' inclusive time point until which the array is to be opened. No fragments
 #' written earlier later be considered.
 #' @param return_as optional A character value with the desired
 #' \code{tiledb_array} conversion, permitted values are \sQuote{asis} (default,
@@ -500,7 +500,7 @@ setValidity("tiledb_array", function(object) {
 
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
-#' Heterogenous domains are supported, including timestamps and characters.
+#' Heterogeneous domains are supported, including timestamps and characters.
 #'
 #' This function may still still change; the current implementation should be
 #' considered as an initial draft.
@@ -1429,10 +1429,10 @@ setMethod(
           }
         } else {
           if (length(tstamp) > 0) {
-            spdl::debug("['[<-'] openning for WRITE at {}", tstamp)
+            spdl::debug("['[<-'] opening for WRITE at {}", tstamp)
             arrptr <- libtiledb_array_open_at(ctx@ptr, uri, "WRITE", tstamp)
           } else {
-            spdl::debug("['[<-'] openning for WRITE")
+            spdl::debug("['[<-'] opening for WRITE")
             arrptr <- libtiledb_array_open(ctx@ptr, uri, "WRITE")
           }
         }
@@ -1818,7 +1818,7 @@ setMethod("query_layout", signature = "tiledb_array", function(object) object@qu
 #'
 #' @param value A character variable for the query layout. Permitted values
 #' are \dQuote{ROW_MAJOR}, \dQuote{COL_MAJOR}, \dQuote{GLOBAL_ORDER}, or
-#' \dQuote{UNORDERD}.
+#' \dQuote{UNORDERED}.
 #' @return The modified \code{tiledb_array} array object
 #' @export
 setReplaceMethod(
@@ -2359,7 +2359,7 @@ setGeneric("tdb_filter", function(x, ...) standardGeneric("tdb_filter"))
 #'
 #' @param x A tiledb_array object as first argument, permitting piping
 #' @param ... One or more expressions that are parsed as query_condition objects
-#' @param strict A boolean toogle to, if set, errors if a non-existing attribute
+#' @param strict A boolean toggle to, if set, errors if a non-existing attribute
 #' is selected or filtered on, defaults to 'TRUE'; if 'FALSE' a warning is shown
 #' by execution proceeds.
 #' @return The tiledb_array object, permitting piping

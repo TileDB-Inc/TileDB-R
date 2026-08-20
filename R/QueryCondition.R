@@ -302,7 +302,7 @@ parse_query_condition <- function(expr, ta = NULL, debug = FALSE, strict = TRUE,
 #' @param use_enum A boolean to set (if TRUE) or unset (if FALSE) enumeration use
 #' @param ctx (optional) A TileDB Ctx object; if not supplied the default
 #' context object is retrieved
-#' @return Nothing is retuned, the function is invoked for the side effect
+#' @return Nothing is returned, the function is invoked for the side effect
 #' @export
 tiledb_query_condition_set_use_enumeration <- function(qc, use_enum, ctx = tiledb_get_context()) {
   stopifnot(

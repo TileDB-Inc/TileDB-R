@@ -22,7 +22,7 @@
 
 #' The version of the libtiledb library
 #'
-#' @param compact Logical value indicating wheter a compact
+#' @param compact Logical value indicating whether a compact
 #' \code{package_version} object should be returned
 #' @return An named int vector c(major, minor, patch), or if select,
 #' a \code{package_version} object

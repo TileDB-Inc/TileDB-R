@@ -65,7 +65,7 @@ writing to the newly-created array) and \sQuote{append} (to only append to an al
 array).}
 
 \item{filter_list}{A named list specifying filter choices per column, default is an empty
-\code{list} object. This argument applies for all named arguments and the matchin dimensions
+\code{list} object. This argument applies for all named arguments and the matching dimensions
 or attributes. The \code{filter} argument still applies for all unnamed arguments.}
 
 \item{coords_filters}{A character vector with filters for coordinates, default is \code{ZSTD}.}

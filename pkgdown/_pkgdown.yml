@@ -117,7 +117,7 @@ reference:
   - matches("array_consolidate")
   - matches("array_vacuum")
 - title: MetaData
-  desc: arrray metadata functionality
+  desc: array metadata functionality
   contents:
   - matches("metadata")
 - title: Stats

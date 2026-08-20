@@ -214,7 +214,7 @@ as.vector.tiledb_config <- function(x, mode = "any") {
 #'
 #' @param x A `tiledb_config` object
 #' @param ... Extra parameter for method signature, currently unused.
-#' @return a data.frame wth parameter, value columns
+#' @return a data.frame with parameter, value columns
 #' @examples
 #' cfg <- tiledb_config()
 #' as.data.frame(cfg)

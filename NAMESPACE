@@ -413,20 +413,24 @@ exportMethods(tile_order)
 exportMethods(tiledb_ndim)
 import(nanotime)
 importFrom(Rcpp,sourceCpp)
-importFrom(methods,.hasSlot)
-importFrom(methods,as)
-importFrom(methods,is)
-importFrom(methods,new)
-importFrom(methods,setClass)
-importFrom(methods,setGeneric)
-importFrom(methods,setMethod)
-importFrom(methods,slot)
-importFrom(methods,validObject)
+importFrom(methods,
+  .hasSlot,
+  as,
+  is,
+  new,
+  setClass,
+  setGeneric,
+  setMethod,
+  slot,
+  validObject
+)
 importFrom(nanoarrow,as_nanoarrow_array)
 importFrom(spdl,set_level)
 importFrom(stats,na.omit)
-importFrom(utils,head)
-importFrom(utils,packageVersion)
-importFrom(utils,read.table)
-importFrom(utils,tail)
+importFrom(utils,
+  head,
+  packageVersion,
+  read.table,
+  tail
+)
 useDynLib(tiledb, .registration = TRUE)

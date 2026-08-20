@@ -15,7 +15,7 @@ tiledb_is_supported_fs(scheme, object = tiledb_get_context())
 TRUE if tiledb backend is supported, FALSE otherwise
 }
 \description{
-The scheme corresponds to the URI scheme for TileDB resouces.
+The scheme corresponds to the URI scheme for TileDB resources.
 }
 \details{
 Ex:

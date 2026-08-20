@@ -18,7 +18,8 @@ Sys.setenv("TZ"="UTC")
 
 ## Overview
 
-TileDB supports a wide range of date and time types as shown in the [documention for
+
+TileDB supports a wide range of date and time types as shown in the [documentation for
 Datetimes][doc_datetimes].
 
 The supported range of dates and times correspond to the dates and times supported by the Python

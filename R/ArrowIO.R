@@ -42,7 +42,7 @@ tiledb_query_export_buffer <- function(query, name, ctx = tiledb_get_context()) 
 ##' Import to Query Buffer from Pair of Arrow IO Pointers
 ##'
 ##' This function imports to the named buffer for a \sQuote{WRITE} query
-##' from two Arrow exerternal pointers.
+##' from two Arrow external pointers.
 ##' @param query A TileDB Query object
 ##' @param name A character variable identifying the buffer
 ##' @param nanoarrowptr A \code{nanoarrow} object (which is an external pointer to an Arrow Array

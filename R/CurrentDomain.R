@@ -43,7 +43,7 @@ setClass("tiledb_current_domain",
 #' @export
 tiledb_current_domain <- function(ctx = tiledb_get_context()) {
   stopifnot(
-    "The first argment must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
+    "The first argument must be a TileDB Ctx object" = is(ctx, "tiledb_ctx"),
     "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
   )
   ptr <- libtiledb_current_domain_create(ctx@ptr)
@@ -57,7 +57,7 @@ tiledb_current_domain <- function(ctx = tiledb_get_context()) {
 #' @export
 tiledb_current_domain_get_type <- function(cd) {
   stopifnot(
-    "The first argment must be a TileDB CurrentDomain object" =
+    "The first argument must be a TileDB CurrentDomain object" =
       is(cd, "tiledb_current_domain"),
     "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
   )
@@ -72,7 +72,7 @@ tiledb_current_domain_get_type <- function(cd) {
 #' @export
 tiledb_current_domain_set_ndrectangle <- function(cd, ndr) {
   stopifnot(
-    "The first argment must be a TileDB CurrentDomain object" =
+    "The first argument must be a TileDB CurrentDomain object" =
       is(cd, "tiledb_current_domain"),
     "The second argument must be a TileDB NDRectangle object" = is(ndr, "tiledb_ndrectangle"),
     "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
@@ -88,7 +88,7 @@ tiledb_current_domain_set_ndrectangle <- function(cd, ndr) {
 #' @export
 tiledb_current_domain_get_ndrectangle <- function(cd) {
   stopifnot(
-    "The first argment must be a TileDB CurrentDomain object" =
+    "The first argument must be a TileDB CurrentDomain object" =
       is(cd, "tiledb_current_domain"),
     "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
   )
@@ -103,7 +103,7 @@ tiledb_current_domain_get_ndrectangle <- function(cd) {
 #' @export
 tiledb_current_domain_is_empty <- function(cd) {
   stopifnot(
-    "The first argment must be a TileDB CurrentDomain object" =
+    "The first argument must be a TileDB CurrentDomain object" =
       is(cd, "tiledb_current_domain"),
     "This function needs TileDB 2.25.0 or later" = tiledb_version(TRUE) >= "2.25.0"
   )

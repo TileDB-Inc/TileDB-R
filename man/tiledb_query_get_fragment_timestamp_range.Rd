@@ -16,5 +16,5 @@ A two-element datetime vector with the start and end time of the fragment write.
 }
 \description{
 This function is only applicable to \sQuote{WRITE} queries. The time resolution in
-TileDB is millseconds since the epoch so an R \code{Datetime} vector is returned.
+TileDB is milliseconds since the epoch so an R \code{Datetime} vector is returned.
 }

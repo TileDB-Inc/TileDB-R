@@ -12,7 +12,7 @@
 \item{...}{Extra parameter for method signature, currently unused.}
 }
 \value{
-a data.frame wth parameter, value columns
+a data.frame with parameter, value columns
 }
 \description{
 Convert a TileDB Config object to \code{data.frame}

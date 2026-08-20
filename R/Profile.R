@@ -92,8 +92,8 @@ tiledb_profile_dir <- function(profile) {
 #' @export
 tiledb_profile_set_param <- function(profile, param, value) {
   stopifnot(`The 'profile' argument must be a tiledb_profile object` = is(profile, "tiledb_profile"))
-  stopifnot(`The 'param' arugment must have character type` = is.character(param))
-  stopifnot(`The 'value' arugment must have character type` = is.character(value))
+  stopifnot(`The 'param' argument must have character type` = is.character(param))
+  stopifnot(`The 'value' argument must have character type` = is.character(value))
   libtiledb_profile_set_param(profile@ptr, param, value)
   return(invisible(NULL))
 }
@@ -106,7 +106,7 @@ tiledb_profile_set_param <- function(profile, param, value) {
 #' @export
 tiledb_profile_get_param <- function(profile, param) {
   stopifnot(`The 'profile' argument must be a tiledb_profile object` = is(profile, "tiledb_profile"))
-  stopifnot(`The 'param' arugment must have character type` = is.character(param))
+  stopifnot(`The 'param' argument must have character type` = is.character(param))
   value <- libtiledb_profile_get_param(profile@ptr, param)
   return(value)
 }

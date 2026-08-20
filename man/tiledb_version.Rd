@@ -7,7 +7,7 @@
 tiledb_version(compact = FALSE)
 }
 \arguments{
-\item{compact}{Logical value indicating wheter a compact
+\item{compact}{Logical value indicating whether a compact
 \code{package_version} object should be returned}
 }
 \value{
