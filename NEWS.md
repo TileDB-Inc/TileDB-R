@@ -1,3 +1,21 @@
+# tiledb (development version)
+
+## Bug Fixes
+
+* `[<-` on dense arrays with a single attribute now writes one-column and three-column right-hand sides; these were previously silently dropped or rejected as dimension/attribute columns ([#877](https://github.com/TileDB-Inc/TileDB-R/issues/877))
+
+* `[<-` on dense arrays with multiple attributes now writes to the region given by `[i, j]`; previously the indices were ignored and the write failed unless it covered the full domain ([#877](https://github.com/TileDB-Inc/TileDB-R/issues/877))
+
+* `[<-` now raises an error when the assigned value does not match the array, instead of silently writing nothing ([#877](https://github.com/TileDB-Inc/TileDB-R/issues/877))
+
+## Improvements
+
+* `[<-` on dense arrays now supports a third index, as in `arr[i, j, k] <- value`, matching `[`; previously a third index was ignored for two-dimensional arrays, and is now an error ([#877](https://github.com/TileDB-Inc/TileDB-R/issues/877))
+
+* `[<-` on dense arrays now honors `selected_ranges()` and supports arrays with any number of dimensions and with non-`INT32` dimension types; previously only `INT32` `[i, j]` indices were used and `selected_ranges()` was ignored. Ranges set on an array object, e.g. for an earlier read, now also apply to writes through it. Selecting more than one range per dimension, or setting `selected_points()`, is now an error for writes ([#877](https://github.com/TileDB-Inc/TileDB-R/issues/877))
+
+* Indices for `[<-` on dense arrays must be contiguous increasing sequences; previously, other indices were silently widened to their range ([#877](https://github.com/TileDB-Inc/TileDB-R/issues/877))
+
 # tiledb 0.34.0
 
 * This release of the R package builds against [TileDB 2.30.0](https://github.com/TileDB-Inc/TileDB/releases/tag/2.30.0), and has also been tested against earlier releases as well as the development version

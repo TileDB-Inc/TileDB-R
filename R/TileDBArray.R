@@ -498,6 +498,101 @@ setValidity("tiledb_array", function(object) {
   bit64::as.integer64(val)
 }
 
+## Compute the (low, high) range per dimension for a write to a dense array
+## from the [i,j,k] indices and the selected_ranges() of the array object.
+## Dimensions without a selection span their full domain. Returns NULL if no
+## selection was made at all, in which case no subarray is set.
+.dense_write_ranges <- function(x, dims, dimnames, dimtypes, index) {
+  ndims <- length(dims)
+  idxnames <- c("i", "j", "k")
+
+  if (any(!vapply(x@selected_points, is.null, logical(1)))) {
+    stop(
+      "Writes to dense arrays do not support 'selected_points'.",
+      call. = FALSE
+    )
+  }
+
+  ## expand (or reorder) a named selected_ranges list, pad an unnamed one
+  sr <- x@selected_ranges
+  if (length(sr) > 0 && !is.null(names(sr))) {
+    ind <- match(names(sr), dimnames)
+    if (anyNA(ind)) {
+      stop(
+        "Name for selected ranges does not match dimension names.",
+        call. = FALSE
+      )
+    }
+    fulllist <- vector(mode = "list", length = ndims)
+    fulllist[ind] <- sr
+    sr <- fulllist
+  }
+  if (length(sr) > ndims) {
+    stop(
+      "More selected ranges than dimensions in array.",
+      call. = FALSE
+    )
+  }
+  length(sr) <- ndims
+
+  ## fold the [i,j,k] indices into the selected ranges
+  for (m in seq_along(index)) {
+    if (is.null(index[[m]])) next
+    nm <- idxnames[m]
+    if (m > ndims) {
+      stop(sprintf(
+        "Setting dimension '%s' requires at least %d dimensions.", nm, m
+      ), call. = FALSE)
+    }
+    if (!is.null(sr[[m]])) {
+      stop(sprintf(
+        "Cannot set both '%s' and element %d of 'selected_ranges'.", nm, m
+      ), call. = FALSE)
+    }
+    vec <- .map2integer64(index[[m]], dimtypes[m])
+    if (length(vec) == 0) {
+      stop(sprintf("Index '%s' is empty.", nm), call. = FALSE)
+    }
+    if (length(vec) > 1 && !all(diff(vec) == 1)) {
+      stop(sprintf(
+        paste(
+          "Index '%s' must be a contiguous increasing sequence",
+          "for writes to dense arrays."
+        ),
+        nm
+      ), call. = FALSE)
+    }
+    sr[[m]] <- vec[c(1L, length(vec))]
+  }
+
+  if (all(vapply(sr, is.null, logical(1)))) {
+    return(NULL)
+  }
+
+  ranges <- vector(mode = "list", length = ndims)
+  for (m in seq_len(ndims)) {
+    rng <- sr[[m]]
+    if (is.null(rng)) {
+      rng <- domain(dims[[m]])
+    } else if (!is.null(nrow(rng))) {
+      if (nrow(rng) != 1) {
+        stop(sprintf(
+          paste(
+            "Writes to dense arrays need a single range per dimension,",
+            "but 'selected_ranges' has %d for dimension '%s'."
+          ),
+          nrow(rng), dimnames[m]
+        ), call. = FALSE)
+      }
+      rng <- c(rng[1, 1], rng[1, 2])
+    } else {
+      rng <- c(min(rng), max(rng))
+    }
+    ranges[[m]] <- .map2integer64(rng, dimtypes[m])
+  }
+  return(ranges)
+}
+
 #' Returns a TileDB array, allowing for specific subset ranges.
 #'
 #' Heterogeneous domains are supported, including timestamps and characters.
@@ -1252,12 +1347,29 @@ setMethod(
 #' as part of the left-hand side object, or as part of the data.frame
 #' provided appropriate column names.
 #'
+#' For dense arrays, the region written to is given by the indices \code{i},
+#' \code{j} and (for arrays with three or more dimensions) \code{k}, or by
+#' the \code{\link{selected_ranges}} of the array object. Each index must be
+#' a contiguous increasing sequence, and each selected range a single range.
+#' Dimensions without an index or selected range span their full domain.
+#' Arrays with more than three dimensions can be written to via
+#' \code{\link{selected_ranges}}. Note that selected ranges set on an array
+#' object, e.g. for an earlier read, also apply to writes through it.
+#'
+#' For dense arrays, an error is raised for an index that is not a
+#' contiguous increasing sequence, an index for a dimension the array does
+#' not have, more than three indices, more than one selected range for a
+#' dimension, or any \code{\link{selected_points}}. For all arrays, an error
+#' is raised if the assigned value does not match the attributes (and, where
+#' given, dimensions) of the array.
+#'
 #' This function may still change; the current implementation should be
 #' considered as an initial draft.
 #' @param x sparse or dense TileDB array object
 #' @param i parameter row index
 #' @param j parameter column index
-#' @param ... Extra parameter for method signature, currently unused.
+#' @param ... For dense arrays, an optional third index \code{k}; further
+#' indices are not supported.
 #' @param value The value being assigned
 #' @return The modified object
 #' @examples
@@ -1294,7 +1406,17 @@ setMethod(
     ## add defaults
     if (missing(i)) i <- NULL
     if (missing(j)) j <- NULL
+    k <- NULL
     spdl::debug("[tiledb_array] '[<-' accessor started")
+
+    ## deal with possible n-dim indexing
+    ndlist <- nd_index_from_syscall(sys.call(), parent.frame())
+    if (length(ndlist) >= 3 && !is.null(ndlist[[3]])) k <- ndlist[[3]]
+    if (length(ndlist) >= 4) {
+      stop("Indices beyond the third dimension not supported in [i,j,k] form. Use selected_ranges().", call. = FALSE)
+    }
+    ## keep the indices together as 'k' is reused as a loop index below
+    index <- list(i, j, k)
 
     ctx <- x@ctx
     uri <- x@uri
@@ -1351,7 +1473,10 @@ setMethod(
     ## There is more to do here but it is a start
 
     ## Case 1
-    if (length(colnames(value)) == length(allnames)) {
+    ## for dense arrays, a matrix or array RHS can have as many columns as
+    ## there are dimensions and attributes, so also require matching names
+    if (length(colnames(value)) == length(allnames) &&
+      (sparse || any(colnames(value) %in% allnames))) {
       ## same length is good
       if (length(intersect(colnames(value), allnames)) == length(allnames)) {
         ## all good, proceed
@@ -1382,10 +1507,10 @@ setMethod(
       ## is.null(i) && is.null(j) &&
       length(attrnames) == 1) {
       d <- dim(value)
-      if ((d[2] > 1) &&
-        (inherits(value, "data.frame") || inherits(value, "matrix")) &&
+      if ((inherits(value, "data.frame") || inherits(value, "matrix")) &&
         !any(grepl("rows", colnames(value))) &&
-        !any(grepl("cols", colnames(value)))) {
+        !any(grepl("cols", colnames(value))) &&
+        !any(colnames(value) %in% dimnames)) {
         ## turn the 2-d RHS in 1-d and align the names for the test that follows
         ## in effect, we just rewrite the query for the user
         value <- data.frame(x = as.matrix(value)[seq(1, d[1] * d[2])])
@@ -1418,6 +1543,13 @@ setMethod(
     nm <- if (is.list(value)) names(value) else colnames(value)
 
     if (isTRUE(all.equal(sort(allnames), sort(nm)))) {
+      ## case of dense array with subarray writes needs to set the subarray,
+      ## computed before opening the array so that errors leave nothing open
+      ranges <- NULL
+      if (!sparse && !any(dimnames %in% allnames)) {
+        ranges <- .dense_write_ranges(x, dims, dimnames, dimtypes, index)
+      }
+
       if (libtiledb_array_is_open_for_writing(x@ptr)) { # if open for writing
         arrptr <- x@ptr #   use array
       } else { # else open appropriately
@@ -1529,15 +1661,25 @@ setMethod(
         }
       }
 
-      ## case of dense array with subarray writes needs to set the subarray
-      if (!sparse && !is.null(i) && !is.null(j) && length(allnames) == 1) {
-        if (!is.vector(i) || !is.vector(j)) message("'i' and 'j' should be simple vectors.")
-        subarr <- as.integer(c(range(i), range(j)))
-        qryptr <- libtiledb_query_set_subarray(qryptr, subarr)
+      if (!is.null(ranges)) {
+        sbrptr <- libtiledb_subarray(qryptr)
+        for (m in seq_along(ranges)) {
+          sbrptr <- libtiledb_subarray_add_range_with_type(
+            sbrptr, m - 1, dimtypes[m], ranges[[m]][1], ranges[[m]][2]
+          )
+        }
+        qryptr <- libtiledb_query_set_subarray_object(qryptr, sbrptr)
       }
 
       qryptr <- libtiledb_query_submit(qryptr)
       if (!x@keep_open) libtiledb_array_close(arrptr)
+    } else {
+      stop(
+        "Assigned value does not match the array: expected columns '",
+        paste(allnames, collapse = ", "), "' but got '",
+        paste(nm, collapse = ", "), "'.",
+        call. = FALSE
+      )
     }
     invisible(x)
   }
