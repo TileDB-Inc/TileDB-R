@@ -17,7 +17,8 @@
 
 \item{j}{parameter column index}
 
-\item{...}{Extra parameter for method signature, currently unused.}
+\item{...}{For dense arrays, an optional third index \code{k}; further
+indices are not supported.}
 
 \item{value}{The value being assigned}
 }
@@ -32,6 +33,22 @@ something that can be coerced to a data.frame, to a tiledb array.
 For sparse matrices, row and column indices can either be supplied
 as part of the left-hand side object, or as part of the data.frame
 provided appropriate column names.
+
+For dense arrays, the region written to is given by the indices \code{i},
+\code{j} and (for arrays with three or more dimensions) \code{k}, or by
+the \code{\link{selected_ranges}} of the array object. Each index must be
+a contiguous increasing sequence, and each selected range a single range.
+Dimensions without an index or selected range span their full domain.
+Arrays with more than three dimensions can be written to via
+\code{\link{selected_ranges}}. Note that selected ranges set on an array
+object, e.g. for an earlier read, also apply to writes through it.
+
+For dense arrays, an error is raised for an index that is not a
+contiguous increasing sequence, an index for a dimension the array does
+not have, more than three indices, more than one selected range for a
+dimension, or any \code{\link{selected_points}}. For all arrays, an error
+is raised if the assigned value does not match the attributes (and, where
+given, dimensions) of the array.
 
 This function may still change; the current implementation should be
 considered as an initial draft.

@@ -190,8 +190,15 @@ is.scalar <- function(x, typestr) {
 ## Adapted from the DelayedArray package
 ##' @importFrom utils tail
 nd_index_from_syscall <- function(call, env_frame) {
+  idx <- seq_len(length(call) - 2L)
+  argnames <- tail(names(call), n = -2L)
+  if (!is.null(argnames)) {
+    ## drop named arguments before evaluating, so that e.g. the (possibly
+    ## large) 'value' of an assignment is not evaluated a second time
+    idx <- idx[!(argnames %in% c("drop", "exact", "value"))]
+  }
   index <- lapply(
-    seq_len(length(call) - 2L),
+    idx,
     function(idx) {
       subscript <- call[[2L + idx]]
       if (missing(subscript)) {
@@ -201,10 +208,6 @@ nd_index_from_syscall <- function(call, env_frame) {
       return(subscript)
     }
   )
-  argnames <- tail(names(call), n = -2L)
-  if (!is.null(argnames)) {
-    index <- index[!(argnames %in% c("drop", "exact", "value"))]
-  }
   if (length(index) == 1L && is.null(index[[1L]])) {
     index <- list()
   }
