@@ -1,0 +1,4 @@
+# License
+
+    YEAR: 2017-2025
+    COPYRIGHT HOLDER: TileDB Inc.
