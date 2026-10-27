@@ -55,7 +55,7 @@ Constructs a \code{tiledb_array_schema} object
 ctx <- tiledb_ctx(limitTileDBCores())
 }
 schema <- tiledb_array_schema(
-  dom = tiledb_domain(
+  domain = tiledb_domain(
     dims = c(
       tiledb_dim("rows", c(1L, 4L), 4L, "INT32"),
       tiledb_dim("cols", c(1L, 4L), 4L, "INT32")
