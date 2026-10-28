@@ -77,7 +77,7 @@
       "TileDB R ", packageVersion("tiledb"),
       " with TileDB Embedded ", format(tiledb_version(TRUE)),
       " on ", if (is.null(os_version)) "<unknown OS>" else os_version,
-      ".\nSee https://tiledb.com for more information about TileDB."
+      ".\nSee https://tile.ai for more information about TileDB."
     )
   }
 }

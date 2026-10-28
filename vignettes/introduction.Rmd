@@ -28,7 +28,7 @@ documentation](https://tiledb-inc.github.io/TileDB-R/) and an
 [introductory
 notebook](https://github.com/TileDB-Inc/TileDB-R/tree/main/inst/notebooks).
 Documentation about TileDB itself is [also
-available](https://docs.tiledb.com/main/).
+available](https://cloud.tiledb.com/academy/home/).
 
 Several "quickstart" examples that are discussed on the website are
 available in the
@@ -293,6 +293,5 @@ is available, as is a
 directory.
 
 TileDB itself has extensive
-[installation](https://docs.tiledb.com/developer/installation), and
-[overall documentation](https://docs.tiledb.com/developer/) as well as a
+[overall documentation](https://cloud.tiledb.com/academy/home/) as well as a
 [support forum](https://forum.tiledb.com/).

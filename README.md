@@ -5,17 +5,17 @@
 [![CRAN](https://www.r-pkg.org/badges/version/tiledb)](https://cran.r-project.org/package=tiledb)
 [![r-universe](https://tiledb-inc.r-universe.dev/badges/tiledb)](https://tiledb-inc.r-universe.dev/tiledb)
 
-# <a href="https://tiledb.com/"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
+# <a href="https://tile.ai/"><img src="https://github.com/TileDB-Inc/TileDB/raw/main/doc/source/_static/tiledb-logo_color_no_margin_@4x.png" alt="TileDB logo" width="400"></a>
 
 The TileDB R package offers an [R](https://www.r-project.org/) interface to
-the [modern database](https://github.com/TileDB-Inc/TileDB) by [TileDB](https://tiledb.com/).
+the [modern database](https://github.com/TileDB-Inc/TileDB) by [TileDB](https://tile.ai/).
 
 
 ## Documentation
 
 Documentation is available for [the R
 package](https://tiledb-inc.github.io/TileDB-R/) as well as for the [TileDB
-API](https://docs.tiledb.com/main/).
+API](https://cloud.tiledb.com/academy/home/).
 
 
 ## Installation
@@ -40,7 +40,7 @@ The most recent released version can be installed from
     ...
     > library(tiledb)
     TileDB R 0.33.0 with TileDB Embedded 2.29.0 on Ubuntu 24.04.
-    See https://tiledb.com for more information about TileDB.
+    See https://tile.ai for more information about TileDB.
     > help(package=tiledb)
 
 If the TileDB library is installed in a custom location, you need to pass the explicit path:
@@ -54,7 +54,7 @@ of TileDB, but should also build against the newest development version.
 
 ## Quick Links
 
-- [TileDB Installation](https://docs.tiledb.com/main/how-to/installation/quick-install)
+- [TileDB Installation](https://cloud.tiledb.com/academy/structure/arrays/quickstart/)
 - [TileDB R Package Docs](https://tiledb-inc.github.io/TileDB-R/)
 - [TileDB Support Forum](https://forum.tiledb.com/)
 

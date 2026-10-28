@@ -13,7 +13,7 @@ title: "Date Ingestion from SQL: A Commented Example"
 ```
 ## Introduction
 
-[TileDB](https://www.tiledb.com/) provides the *Universal Data Engine*
+[TileDB](https://www.tile.ai/) provides the *Universal Data Engine*
 that can be accessed in a variety of ways. Users sometimes wonder how to
 transfer data from existing databases. This short vignettes shows an
 example relying on the [DBI](https://cran.r-project.org/package=DBI)

@@ -356,5 +356,5 @@ arr[]
 
 
 
-[doc_datetimes]: https://docs.tiledb.com/main/concepts/internal-mechanics/datetimes
+[doc_datetimes]: https://cloud.tiledb.com/academy/structure/arrays/foundation/key-concepts/storage/datetimes/index.html
 [numpy_datetime]: https://numpy.org/doc/stable/reference/arrays.datetime.html
