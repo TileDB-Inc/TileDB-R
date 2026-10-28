@@ -8,7 +8,7 @@ title: "TileDB API Documentation"
 css: "water.css"
 ---
 
-This document follows the [TileDB API usage examples](https://docs.tiledb.com/main/how-to).
+This document follows the [TileDB API usage examples](https://cloud.tiledb.com/academy/home/).
 A shorter [introductory vignette](introduction.html) is also available.
 
 # Prelimaries

@@ -16,7 +16,7 @@ Embedded](https://github.com/TileDB-Inc/TileDB) is one approach, and the [R
 package](https://github.com/TileDB-Inc/TileDB-R), as well as the [Python
 package](https://github.com/TileDB-Inc/TileDB-Py) and other language
 bindings use it. Another interface is provided by the [MariaDB Integration
-via the MyTile storage plugin](https://docs.tiledb.com/mariadb/).
+via the MyTile storage plugin](https://cloud.tiledb.com/academy/structure/tables/tutorials/basics/running-locally/index.html).
 
 This provides TileDB integration with any frontend that interfaces with
 MariaDB---such as the

@@ -15,7 +15,7 @@ the [modern database](https://github.com/TileDB-Inc/TileDB) by [TileDB](https://
 
 Documentation is available for [the R
 package](https://tiledb-inc.github.io/TileDB-R/) as well as for the [TileDB
-API](https://docs.tiledb.com/main/).
+API](https://cloud.tiledb.com/academy/home/).
 
 
 ## Installation
@@ -54,7 +54,7 @@ of TileDB, but should also build against the newest development version.
 
 ## Quick Links
 
-- [TileDB Installation](https://docs.tiledb.com/main/how-to/installation/quick-install)
+- [TileDB Installation](https://cloud.tiledb.com/academy/structure/arrays/quickstart/)
 - [TileDB R Package Docs](https://tiledb-inc.github.io/TileDB-R/)
 - [TileDB Support Forum](https://forum.tiledb.com/)
 

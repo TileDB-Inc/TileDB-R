@@ -19,7 +19,7 @@ macOS via the [conda](https://anaconda.org/conda-forge) package as well as from 
 
 Documentation for the TileDB R package is available via the `help()` function from within R as well
 as via the [package documentation][tiledb-r_docs] and an [introductory notebook][tiledb_notebook].
-Documentation about TileDB itself is [also available](https://docs.tiledb.com/main/).
+Documentation about TileDB itself is [also available](https://cloud.tiledb.com/academy/home/).
 
 Several "quickstart" examples that are discussed on the website are available in the
 [examples][tiledb_examples] directory. This vignette discusses similar examples.
@@ -255,8 +255,8 @@ information for the `tiledb_array()` function) as well as via a [website regroup
 documentation][tiledb-r_docs].  Extended [API documentation][api_documentation] is available, as is a
 [examples/][tiledb_examples] directory.
 
-TileDB itself has extensive [installation](https://docs.tiledb.com/developer/installation),
-and [overall documentation](https://docs.tiledb.com/developer/) as well as a [support forum](https://forum.tiledb.com/).
+TileDB itself has extensive
+[overall documentation](https://cloud.tiledb.com/academy/home/) as well as a [support forum](https://forum.tiledb.com/).
 
 
 [cran_tiledb]: https://cran.r-project.org/package=tiledb
