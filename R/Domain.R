@@ -177,7 +177,7 @@ setMethod(
 #'
 #' @export
 setMethod(
-  "tiledb_ndim", 
+  "tiledb_ndim",
   "tiledb_domain",
   function(object) {
     return(libtiledb_domain_get_ndim(object@ptr))
@@ -207,7 +207,7 @@ setMethod(
   "tiledb_domain",
   function(object) {
     dtype <- datatype(object)
-    res <- isTRUE(any(sapply(dtype, match, c("FLOAT32", "FLOAT32"))))
+    res <- isTRUE(any(sapply(dtype, match, c("FLOAT32", "FLOAT64"))))
     return(!res)
   }
 )
